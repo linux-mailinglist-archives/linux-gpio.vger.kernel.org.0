@@ -1,431 +1,145 @@
-Return-Path: <linux-gpio+bounces-36352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2KcVJLlS/GlOOAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36352-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 10:52:09 +0200
+	id gKIvJpJO/GlOOAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36353-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 10:34:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC25B4E5279
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 10:52:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14CF74E4E65
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 10:34:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0ED8130C5BC5
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 08:20:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D320A3096059
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 08:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0BE39EF1A;
-	Thu,  7 May 2026 08:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D301237FF75;
+	Thu,  7 May 2026 08:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7qiVokw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E6739479B;
-	Thu,  7 May 2026 08:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90100349AFF;
+	Thu,  7 May 2026 08:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778141923; cv=none; b=JvM4gIggePp12lz2V0g/t2qi2m/J9oo0D3/M/osA/iv5gzJpK+d5oq5Q/w1agFREaw6OBW1pdEX7aKi/dWhQtapA5F4oyB7geIY+CrqxQCUixyM7sQGRCl26p9J7jsTcY7oxyl33JbrlT45snAmCX2vBiKta/5ChIL3lH83ouXU=
+	t=1778142092; cv=none; b=pH+i0m9mVNnOPfTDtv+8Iggnz+goDfnTCxIN6sfowzF8NIOhwSl5VeMFn6jSQPeW7CIvm1j/xtr+YRgUxN1+zaj1OU9lfdiGcEGo8Tz8FN1V5nEIMQgDUaRauz8qaTSpGlebAaUsb4fbO7MlkDInkVTrikS4o9TZbkw/WQHNJfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778141923; c=relaxed/simple;
-	bh=h7sTvISkUYumragki0w7tNE4xYJN84l/i451JPt25iI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LH8EvkOp4kLCO1Nkc3oPX4NiY/V7s576+8BoaQkyDMy4K+MWxULCGzPNQExtRiMATDTlcctALOLTcgtkDjTMFb7VpV9vTfgZSYNxIsKc2bpfWn9qB9nYBchwkPAj3zGjWMf/rA7khmbdF4yb2vFNEsUPbultq7trXAiTezjyJZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from edelgard.fodlan.icenowy.me (unknown [112.94.100.82])
-	by APP-03 (Coremail) with SMTP id rQCowAC3m+KLSvxpI_pNEA--.42168S14;
-	Thu, 07 May 2026 16:17:42 +0800 (CST)
-From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-To: Drew Fustini <fustini@kernel.org>,
-	Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Jisheng Zhang <jszhang@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-riscv@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-usb@vger.kernel.org,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Han Gao <rabenda.cn@gmail.com>,
-	Yao Zi <ziyao@disroot.org>,
-	Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Subject: [PATCH 12/12] riscv: dts: thead: enable USB3 ports on Lichee Pi 4A
-Date: Thu,  7 May 2026 16:17:10 +0800
-Message-ID: <20260507081710.4090814-13-zhengxingda@iscas.ac.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260507081710.4090814-1-zhengxingda@iscas.ac.cn>
-References: <20260507081710.4090814-1-zhengxingda@iscas.ac.cn>
+	s=arc-20240116; t=1778142092; c=relaxed/simple;
+	bh=ADtYUrAasvGOltfd9FShuLbJhinKTxBPxoHCICnXTv0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h8wMbrUu8cIQhV4MHe9lQyYWK1oEL1o6JIRiOLpPTXf9j8gRNsWhfFXTyYtQQMqbD9GwzKU5WlpN6OQW2a0II7OFH3Vp0gpsa4baHWC6ZPb4i+ARNY+9zMA/QjChgO1ubHnNihORBYHACRqhR+cAXZ0ktIIZj4Unc/cooc+UV88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7qiVokw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 43478C2BCB2;
+	Thu,  7 May 2026 08:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778142092;
+	bh=ADtYUrAasvGOltfd9FShuLbJhinKTxBPxoHCICnXTv0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=i7qiVokwvsXAC/sUis4JV+ecyTT7U+VbOhqUONVnGGDfRYGui3xgy6rLXBPQV4znC
+	 VYXmQGm7tY4YglsevSuvUXSaWZTWT1sfFiXl9wBqOG97aYBcJ4I4F/ATG/CN45kePo
+	 QnS8qlV3CI4eXJLjKk+wTwMt1apK8ijNpBEIGFBS1XKNxxHbR8NNj0Mnf8N3/bFIZC
+	 HMQO3C20Ir1g2uCZC8V2mhmY05M1WiUMzhx7wbH5q178jPVt4dtrIQC9psogaINED/
+	 oJl8617MGDODwoe+xYHHBriqKH94jkl77rsj/GysDY2JWPqnuu/RW6b6WGU+SivbTi
+	 ImK8dCz/zPgQg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E0FCD3427;
+	Thu,  7 May 2026 08:21:32 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v2 0/2] pinctrl: add support amlogic a9
+Date: Thu, 07 May 2026 08:21:05 +0000
+Message-Id: <20260507-a9-pinctrl-v2-0-49774feff2ef@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAC3m+KLSvxpI_pNEA--.42168S14
-X-Coremail-Antispam: 1UD129KBjvJXoWxuw1rWw15ZF1rXr4xWF1fXrb_yoW7Cr4Dp3
-	ZxCFsY9FWrCryUKw43Zryvqa15Grs5ua4kCr15GryUA3y7XFZrK34SyFsYyF1kJF4xX3sI
-	yr4DZr1Iqr17K3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUma14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-	xdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
-	vfC2KfnxnUUI43ZEXa7sRiHUDtUUUUU==
-X-CM-SenderInfo: x2kh0wp0lqwv3d6l2u1dvotugofq/
-X-Rspamd-Queue-Id: BC25B4E5279
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHFL/GkC/02NwQqDMBBEf0X23C1mUak99T+KhyQmuqCJJBIs4
+ r832ktv82YY3g7RBDYRnsUOwSSO7F0GuhWgR+kGg9xnBiqpKQW1KFtc2Ok1TDnWQkhJVCkL+aB
+ kNKiCdHo8L9YHdGZbz2kJxvJ2ed5d5pHj6sPn0iZxtj9DRY9/QxJYou4bIZSqbU39S86TH1jft
+ Z+hO47jCxssS6zBAAAA
+X-Change-ID: 20260129-a9-pinctrl-a9511aa224bf
+To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778142090; l=833;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=ADtYUrAasvGOltfd9FShuLbJhinKTxBPxoHCICnXTv0=;
+ b=+WPtDI+UlHraHDXBTPvl2FM/S60lk+5x68/SNLerSm/CfB7+/O7viEMzuv4ZAUaWnS6YseElv
+ 3trpOG25Uf1DbIa9FB3fm7J1h0rS0e7B4OD5g3UmGfF6ya2xc+isLPO
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
+X-Rspamd-Queue-Id: 14CF74E4E65
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [6.34 / 15.00];
-	SEM_URIBL(3.50)[0.0.0.0:email];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
-	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36352-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	GREYLIST(0.00)[pass,body];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	DMARC_NA(0.00)[iscas.ac.cn];
+	TAGGED_FROM(0.00)[bounces-36353-lists,linux-gpio=lfdr.de,xianwei.zhao.amlogic.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,linaro.org,baylibre.com,googlemail.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[pengutronix.de,lists.infradead.org,vger.kernel.org,icenowy.me,gmail.com,disroot.org,iscas.ac.cn];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.957];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhengxingda@iscas.ac.cn,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	R_DKIM_NA(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip6:2600:3c04:e001:36c::/64:c];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Action: add header
-X-Spam: Yes
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com]
+X-Rspamd-Action: no action
 
-The Lichee Pi 4A board features an onboard VIA VL817 hub connected to
-the SoC's USB3 as upstream and 4 USB-3.0-capable Type-A ports as
-downstream.
+Add pinctrl bindings and driver about for amlogic a9.
 
-Enable SoC USB3 and the hub on Lichee Pi 4A.
-
-Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- .../dts/thead/th1520-lichee-module-4a.dtsi    |  15 ++
- .../boot/dts/thead/th1520-lichee-pi-4a.dts    | 231 ++++++++++++++++++
- 2 files changed, 246 insertions(+)
+Changes in v2:
+- Add a commit message explaining why it is not compatible with previous SoCs and rebase code.
+- Link to v1: https://lore.kernel.org/r/20260428-a9-pinctrl-v1-0-cd611bb5f52d@amlogic.com
 
-diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-index 8e76b63e0100a..bfda5a6b56b8f 100644
---- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-+++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-@@ -20,6 +20,16 @@ memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x00000000 0x2 0x00000000>;
- 	};
-+
-+	/* TODO: Switch to AON regulator when it's available. */
-+	avdd33_usb3: regulator-avdd33-usb3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "AVDD33_USB3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		/* Marked as always on on the schematics */
-+		regulator-always-on;
-+	};
- };
- 
- &osc {
-@@ -202,3 +212,8 @@ &sdio0 {
- 	max-frequency = <198000000>;
- 	status = "okay";
- };
-+
-+&usb_phy {
-+	avdd33-usb3-supply = <&avdd33_usb3>;
-+	status = "okay";
-+};
-diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index 354f3893aa8cf..de38f1f457e6b 100644
---- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-+++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-@@ -4,6 +4,7 @@
-  */
- 
- #include "th1520-lichee-module-4a.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Sipeed Lichee Pi 4A";
-@@ -97,6 +98,141 @@ fan: pwm-fan {
- 		cooling-levels = <0 66 196 255>;
- 	};
- 
-+	hub_5v: regulator-hub-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HUB_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&ioexp3 3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vcc5v_usb: regulator-vcc5v-usb {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC5V_USB";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		/*
-+		 * Workaround for Linux currently being not able to power on
-+		 * Vbus for USB Type-A connectors.
-+		 */
-+		regulator-always-on;
-+	};
-+
-+	connector-usb-a-1 {
-+		compatible = "usb-a-connector";
-+		vbus-supply = <&vcc5v_usb>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				usb_a_1_hs_ep: endpoint {
-+					remote-endpoint = <&hub_hs_port1_ep>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				usb_a_1_ss_ep: endpoint {
-+					remote-endpoint = <&hub_ss_port1_ep>;
-+				};
-+			};
-+		};
-+	};
-+
-+	connector-usb-a-2 {
-+		compatible = "usb-a-connector";
-+		vbus-supply = <&vcc5v_usb>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				usb_a_2_hs_ep: endpoint {
-+					remote-endpoint = <&hub_hs_port2_ep>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				usb_a_2_ss_ep: endpoint {
-+					remote-endpoint = <&hub_ss_port2_ep>;
-+				};
-+			};
-+		};
-+	};
-+
-+	connector-usb-a-3 {
-+		compatible = "usb-a-connector";
-+		vbus-supply = <&vcc5v_usb>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				usb_a_3_hs_ep: endpoint {
-+					remote-endpoint = <&hub_hs_port3_ep>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				usb_a_3_ss_ep: endpoint {
-+					remote-endpoint = <&hub_ss_port3_ep>;
-+				};
-+			};
-+		};
-+	};
-+
-+	connector-usb-a-4 {
-+		compatible = "usb-a-connector";
-+		vbus-supply = <&vcc5v_usb>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				usb_a_4_hs_ep: endpoint {
-+					remote-endpoint = <&hub_hs_port4_ep>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				usb_a_4_ss_ep: endpoint {
-+					remote-endpoint = <&hub_ss_port4_ep>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&aogpio {
-+	/* Route USB2 to the onboard hub for normal operation */
-+	sel-usb-hub-hog {
-+		gpio-hog;
-+		gpios = <4 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+	};
- };
- 
- &dpu {
-@@ -262,3 +398,98 @@ &uart0 {
- 	pinctrl-0 = <&uart0_pins>;
- 	status = "okay";
- };
-+
-+&usb {
-+	dr_mode = "host";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	hub_hs: hub@1 {
-+		compatible = "usb2109,2817";
-+		reg = <1>;
-+		peer-hub = <&hub_ss>;
-+		vdd-supply = <&hub_5v>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				hub_hs_port1_ep: endpoint {
-+					remote-endpoint = <&usb_a_1_hs_ep>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+
-+				hub_hs_port2_ep: endpoint {
-+					remote-endpoint = <&usb_a_2_hs_ep>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+
-+				hub_hs_port3_ep: endpoint {
-+					remote-endpoint = <&usb_a_3_hs_ep>;
-+				};
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+
-+				hub_hs_port4_ep: endpoint {
-+					remote-endpoint = <&usb_a_4_hs_ep>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hub_ss: hub@2 {
-+		compatible = "usb2109,817";
-+		reg = <2>;
-+		peer-hub = <&hub_hs>;
-+		vdd-supply = <&hub_5v>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				hub_ss_port1_ep: endpoint {
-+					remote-endpoint = <&usb_a_1_ss_ep>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+
-+				hub_ss_port2_ep: endpoint {
-+					remote-endpoint = <&usb_a_2_ss_ep>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+
-+				hub_ss_port3_ep: endpoint {
-+					remote-endpoint = <&usb_a_3_ss_ep>;
-+				};
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+
-+				hub_ss_port4_ep: endpoint {
-+					remote-endpoint = <&usb_a_4_ss_ep>;
-+				};
-+			};
-+		};
-+	};
-+};
+---
+Xianwei Zhao (2):
+      dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for A9
+      pinctrl: meson: support amlogic A9 SoC
+
+ .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       |  1 +
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 61 ++++++++++++++++++++--
+ 2 files changed, 57 insertions(+), 5 deletions(-)
+---
+base-commit: eccd2fde7dbc398a6aba9120c01247beeca55aec
+change-id: 20260129-a9-pinctrl-a9511aa224bf
+
+Best regards,
 -- 
-2.52.0
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
 
