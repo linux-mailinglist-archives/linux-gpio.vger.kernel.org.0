@@ -1,204 +1,167 @@
-Return-Path: <linux-gpio+bounces-36362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36364-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNEGAeJf/Gm7OwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36362-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 11:48:18 +0200
+	id YAv8M9pv/GknQAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36364-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 12:56:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91D8C4E63AD
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 11:48:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36C9B4E718B
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 12:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 28A5F304293E
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 09:44:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 562E0304351E
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 10:52:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E24A837105A;
-	Thu,  7 May 2026 09:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4A7372B32;
+	Thu,  7 May 2026 10:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqjGNMvV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO+zmxmo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D3D389444
-	for <linux-gpio@vger.kernel.org>; Thu,  7 May 2026 09:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778147085; cv=none; b=MZ/pkVJY7QJo/TBBCE26wsQN6LqjJf0wFRQ9/2+b9NnPtNEuei8MPbuiz/CwOy40zSMWvGdGy1wYtqj3xt5Z/8F86Aq1kf5E9bE3n4S9GWqdUIReZ0ZBt+GcvRk4I7uS/j8nb+F9Cj2ds5zJ0mmDafmpP7en247r4btC1qsJ8+8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778147085; c=relaxed/simple;
-	bh=Jjnn4yrDTrZX08ni2x7bn720XfEgnPw2PfUE6M7ahIw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB0F313558
+	for <linux-gpio@vger.kernel.org>; Thu,  7 May 2026 10:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778151153; cv=pass; b=tL8REYuN8LszIVZmaUBH3knVJ51dzJFggHSlJj1105karhu1wve3ude7yfBL1dSQCWtatkSrmfiLQgK456/fXLtQSokyGWgV47SxNqkbhrSafkIBjf537Zgp+Hay/nbqjTbiUeK+OH1XZfTA/Ti2c8su/UcG6E83O/fMCF4S/3M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778151153; c=relaxed/simple;
+	bh=YNNeAsfs7JcoYjxby1YcE2mmZW7lwHPCmh5QFkWkICc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LNUvWONyOaRkxHpNkBMm6J0SUBL7uUaJBHtFZNG85S0TRQzcYe7tgwVFmv0Jivk5J6y9W5yQMNpsk4s3IxWxEODYwrCw34f3LG0BtmJ8qlENMKktHS+OatmpM4rCcHKGzfXGUhVecWDwhr/1xlIjC3i7vWyYEXXYnHRln26McAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqjGNMvV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54552C2BCFB
-	for <linux-gpio@vger.kernel.org>; Thu,  7 May 2026 09:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778147085;
-	bh=Jjnn4yrDTrZX08ni2x7bn720XfEgnPw2PfUE6M7ahIw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qqjGNMvV31nKILNRLnEfl9xhDx2UrF0buO2OdXbecwgZvZpWUc2PWF6VcD/Xi9zdW
-	 w/J/5Tu1wRL5Ce2ZE7Hc5gQj4uYOVCR4KwpaxbwrPzqMjZptUDDcqSFD5NnxcA+1k3
-	 uZ/p+VROYY7lxK7Jp0fD6gcBcTEYDUAGnBEhudvQ8vdP8/OlxK8XKvh8PhjO3v2CVb
-	 D6mbYl3pQd16JmGt8gkQZiUWmRSBePbLKnlDI7l3IHazpidknz+dxXQj8PwBgzZBOJ
-	 UsBlxairo1QZyNDZilFJT5OIGw61w+FDKPcIz2vkDPtyw8K1c9kncnO+nmwl5jAMve
-	 mi82bMQ+wqhkw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a887ebb416so550151e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2026 02:44:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/b7WUeEDigRJ3H4mWp8zCM0sRL+5FF4Y6/wqlQ+KTYqwQYxbpYMXZ9aSsW9Qta0MmvdQ6ay7XXajKP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvhBoEZVmVCJeXc2W8TWfOBlZhMWS9ssA81GlJxuedINAkQyVY
-	9dH0GUk0PJQrMxfzbKoCAts7zAL7RFf0YFlCnS3jsU/OehdvGTkGgheo0aDl7hGk5BO6x5JzCPk
-	lv3L6kSZ6rIbsRYvZ3SLf4HzyejcQTmw=
-X-Received: by 2002:a05:6512:3f23:b0:5a8:638d:6f53 with SMTP id
- 2adb3069b0e04-5a887adaa88mr2727485e87.6.1778147083932; Thu, 07 May 2026
- 02:44:43 -0700 (PDT)
+	 To:Cc:Content-Type; b=ZnnqUBjt2OP/LHUnJvy92S7Q4YjTWmQDHI8y8+kmrLKrU2iwFCpLlZMuYXVOR27tZrcMkj7+kjp7Ukiy13UBOBca/kajv4dsxmeBpYHN9xHclkfktL7WGiNsI415TSsDTFF4cBlhIjQxVM8NqcItaUKtC4RtPHRPgXu2BOo8YtM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jO+zmxmo; arc=pass smtp.client-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12db2e415a7so483666c88.1
+        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2026 03:52:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778151149; cv=none;
+        d=google.com; s=arc-20240605;
+        b=lfaJZ0BdjNSerQX9PB7gfoQzLZEQc4veGycTIPVoHSFAIuhYk9RHNIQSODTFUk5BZh
+         DbqKrziQUYOxSUSKeLEJnNRM9++Wslyq8qDqblieVuBq/KeB3wxlbLflH8ye59EBKrGR
+         Ut84PeljfwuRuG59oaFDWrpAjI2ofl+S+CFK3t4iC2yofYagQ+sMoDeIDeDESw9TWzSi
+         7mmIJY1LNnVcqqbiENFd2N0Mavg2RlqMYO4Ec6nmKEiZvGbDYwWDXo53a9/cZeXnL1EB
+         dqcc2Q9SIj4RIWqmHAQbRCbwLMA5cWoW/wJ7WTb4xoci/pyjiWMsLv71Si4eJxqrdJkv
+         hFcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4jVRWDs7ZOsfWC76HqXJ0EedYmB9d7RsLi9QWsIvwJg=;
+        fh=PxNtPwbDcoRZ5Oix4GdWqcrwCrYd4A6dAkHVklhQwWE=;
+        b=Uugcj+Q5D3R/1R4zQRI8cgO6FVNBOvmeSQJWfwuiK30y84aJGJ9GObRhFmiLUgxvlR
+         pMssoMnK89AeK4PkZHwg+sMmWeh/BIpfYRKZM4UGQCLB8UojU3YChbyV3jVasdRNIRDl
+         k9mLI5OOyV7o8Roa+yyhSYQ/WdIwWN3HJOURGjfDrQoDunkq72zjNMNC082kOZyS66qG
+         SIvQwtMtZ21QgLwpH4lOPuEHY7eb8UEbHxos4bKfiUM6q2mBMcM8a1CQWbL11X5oxtbY
+         swiOZHdbGvJSF5ys7oLMMrAaL1tQDlhv4XU+AVOGnjerdRMNgDfMcPDc5ZK0+BCK3P/a
+         ilhQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778151149; x=1778755949; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4jVRWDs7ZOsfWC76HqXJ0EedYmB9d7RsLi9QWsIvwJg=;
+        b=jO+zmxmoiRgTtDQVTe7WteXX3r83T9o6Wl/HxQtbHTSM/nE7yXP57AE2X6qg0NLaUu
+         b+Y4pcUbAZwljKOhmoDMLFrVsfLJ/x1V44+ABojtWlQTvI7ywdvK91BTsDvW28I8TVy+
+         ejdtg67V2pOqU7y/JquIbEQuQAfWZsAXDGJJziPTFHgARn7o9wBhyP1yGn5SkWI60DMK
+         cCYVsAkP/9Ot689JrmWyuUk+8k1HEF1g0YaKqPb3gObtxVPD6aY9MYkyAu1luXvFEYRE
+         khIfR3ZeMAYRhb3sClchfkWWntIYQKM0+xcKZPQBFYaMMBxGyjGKcUcGfZpcYe81vFK1
+         aQSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778151149; x=1778755949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4jVRWDs7ZOsfWC76HqXJ0EedYmB9d7RsLi9QWsIvwJg=;
+        b=VMV4QZlgqUD+Y6kJbAtb+Ghr6CVJVo2ISTsjq1NQlLtO/3nUKH6fppduzCltLTCs4i
+         QZMZtajFNv3sPHHmIpoYD86haVFMEBNtsL+SKBC4858UqoUsvOu30wT2pnmLDk2fWw1k
+         SM5tpBnSVLWJhNmSwUw2qB7hsmr0Hb0zvijw2Xgkph5w1JVsM2MUITJr3p4Hmeytgb7P
+         QnX3hLlHSYgyyJtdEMCJZLy/b/09u2Mx5xTaeuTjhJdBqPinnosaK4CcA2xIKND9nVH/
+         WyhDaKBCo+p50yJvQNnTOYENO9itOfYRf/cPHldVPP+IvYmYTJnAEKRH1IoXao0fs5n0
+         AOwQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+CicBM6L9nxEpge4Ew4t2RaB0A+GMFYTnCmyotBKcYZex2HGbvabEMiz54c7AyfKPoASHRkU3nVQ3k@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw+Llit+4x6uA4iHJ0sZ+EMA2jBS0soXwwPr8wPgrztOmAJPMX
+	ci4CCE1tYqt/LUCN/3alGLiNqxs0sLvLHA/sH+St7q0zkQRrzdDae69CP+dj1W05O64ld0d6AQU
+	yCofINDpuv1hD9AW4eKWT04i7wuGWDjN9DQ==
+X-Gm-Gg: AeBDievkkXW3DSD3dwCB9vN4Z1l5q/m9RmHuw+zWd/aM/6Fz10V+D04A8pgvwUCoJjV
+	JzQYEekabhS+fVxwAawRq4nylDukFAbnbf/wZ0ZcbU7yN+FrR7RCnN8/SBgnbJsQU0Og6dMWs3a
+	vUKkq3lTrDgPu5wgLZsFQo8il7OO9cqU2QUC65bxOzeZ2oo/wlDtg968ZHIU2kltjAzmgTWcV/W
+	ZshYMP60hgpyq9KSsepw7uQv6hf7YUWyyr9t31uleEMDW73DfvrpKp2dwqLQiAp2S7n46aGYnrJ
+	jq8mCb652Phri9ZQWNsrJOQW0w==
+X-Received: by 2002:a05:7022:43a6:b0:12b:f881:d8f6 with SMTP id
+ a92af1059eb24-1319d05636cmr3552491c88.29.1778151148977; Thu, 07 May 2026
+ 03:52:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
- <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com> <106b7b64-ed6e-499f-b5ac-60c1277f2f03@axiado.com>
-In-Reply-To: <106b7b64-ed6e-499f-b5ac-60c1277f2f03@axiado.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 7 May 2026 11:44:32 +0200
-X-Gmail-Original-Message-ID: <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
-X-Gm-Features: AVHnY4KA8TveR2zDsS46EaI7LI2muWnzNFMg-HaAe4yTbCLUY8SRows5ieuqqDs
-Message-ID: <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
-To: Petar Stepanovic <pstepanovic@axiado.com>
-Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>, 
-	Prasad Bolisetty <pbolisetty@axiado.com>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Harshit Shah <hshah@axiado.com>, SriNavmani A <srinavmani@axiado.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <CAAMcf8C_A9dJ_v4QRKtb9eGNOpJ7BZNOGsFP4i2WFOZxOVBPnQ@mail.gmail.com>
+ <CAD++jLn9DpaknOm3S9ZUOY6Jyo=SuhVSv-vzNaw=S1uuOeYoRg@mail.gmail.com>
+ <87lddyx7gg.ffs@tglx> <CAMhs-H_FnFGg1LDM2UWCUWC423udcm0dKOaDYJxMae2JdQh5wg@mail.gmail.com>
+ <CAAMcf8AdoTsT33W4-HF8VKGDzo0j7nTKGY3f44DDsNCWo1ARZg@mail.gmail.com>
+ <CAMhs-H-SM1uhoqQVLU+gmM+ZEYGv=dS8-x-1QJ9kND0dc-JAAQ@mail.gmail.com>
+ <CAAMcf8BJkidsyuFQwsuO5A8iujXVgM=NkHka0eD4es4X4uUCfg@mail.gmail.com>
+ <CAMhs-H9+BfWWpaEP6UCpQvcSSzphGPre2GB0CeLfoPn9ePVwuA@mail.gmail.com> <CAD++jL=UZ1_eSf5rpef4vaAdSHGjwsctPsa+UCLH6U3YPL+XJA@mail.gmail.com>
+In-Reply-To: <CAD++jL=UZ1_eSf5rpef4vaAdSHGjwsctPsa+UCLH6U3YPL+XJA@mail.gmail.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Thu, 7 May 2026 12:52:16 +0200
+X-Gm-Features: AVHnY4KvzIG1e-SuyLoob72Oizk68aFHCsqWKNJb_WzZ8MWZlpseqczvaw8Eal8
+Message-ID: <CAMhs-H-bU45vhV4XhBEmxV+6Yo2AmcMo55P=mRJ9ikKB5CRVhg@mail.gmail.com>
+Subject: Re: gpio-mt7621 unroutable IRQs to bank0
+To: Linus Walleij <linusw@kernel.org>
+Cc: Vicente Bergas <vicencb@gmail.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 91D8C4E63AD
+X-Rspamd-Queue-Id: 36C9B4E718B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36362-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36364-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,secretlab.ca,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,axiado.com:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Hi Petar,
-
-On Thu, May 7, 2026 at 10:06=E2=80=AFAM Petar Stepanovic <pstepanovic@axiad=
-o.com> wrote:
-
-> >> +  '#gpio-cells':
-> >> +    const: 2
-> > Are you sure you don't want to use 3 here instead and split the 128
-> > GPIOs into 4 "banks" second cell being the bank number?
-> > <&gpio 2 4>; ?
-> >
-> > Maybe this also solves the 512 GPIO by grouping the GPIOs into
-> > 8 banks...?
+On Thu, May 7, 2026 at 10:54=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
+rote:
 >
-> Thank you for the suggestion. We would prefer to keep #gpio-cells =3D <2>
-> to stay aligned with existing SGPIO drivers and current DTS usage.
-> A single linear offset is sufficient to identify each GPIO, so introducin=
-g a
-> bank cell would add additional complexity without a clear benefit.
-> Any internal bank handling can remain within the driver if needed.
-
-If each bank also has its own associated IRQ line, for instance, then
-this also reflects the hardware in a better way. But it seems this
-controller has just one single IRQ line for all GPIOs, so maybe
-this is better.
-
-> >> +  ngpios:
-> >> +    description: The number of gpios this controller has.
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > Same here, certainly the 128 variant has 128 gpios and
-> > the 512 has 512 GPIOs? Just use the compatible string
-> > to infer this.
+> On Thu, May 7, 2026 at 6:06=E2=80=AFAM Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> wrote:
 >
-> This seems to be platform-specific rather than strictly hardware-dependen=
-t.
-> We were considering keeping it as a separate property (possibly renamed t=
-o |axiado,sgpio-ngpios|).
-> Would you prefer that, or deriving it from the compatible string?
-
-In this case it is fine to use ngpios.
-
-ngpios is used when the hardware can actually do more
-GPIO lines, but they are not routed out on the package of
-the silicon, for example.
-
-> >> +  dout-init:
-> >> +    description: Initial values for the dout registers.
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    minItems: 4
-> >> +    maxItems: 4
-> > In:
-> > Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-> >
-> > you find:
-> >
-> >   lines-initial-states:
-> >     $ref: /schemas/types.yaml#/definitions/uint32
-> >     description:
-> >       Bitmask that specifies the initial state of each line.
-> >       When a bit is set to zero, the corresponding line will be initial=
-ized to
-> >       the input (pulled-up) state.
-> >       When the  bit is set to one, the line will be initialized to the
-> >       low-level output state.
-> >       If the property is not specified all lines will be initialized to=
- the
-> >       input state.
-> >
-> > If this is what you want, use this standard binding instead.
+> > Linus, Bartosz, any advice regarding this?
 >
-> In our case, the hardware provides dedicated DOUT registers where
-> each bit directly controls the output level (0 =3D low, 1 =3D high).
->
-> The lines-initial-states property also encodes input state semantics,
-> so it does not map directly to this hardware.
->
-> Would you prefer adapting to lines-initial-states despite this,
-> or using a separate property for output initialization?
+> I sent the advice to try to use an external irqdomain already?
 
-Please use lines-initial-states, support also input mode setting
-and write more than one register if necessary.
+True. Sorry, I missed that somehow.
 
-Setting up the dout-states for lines which are supposed to be used
-as inputs just doesn't make sense does it?
-
-It is better if the device tree has this deeper semantic which
-provides useful information for the developer and makes the
-author of the device tree be more careful and detail-oriented
-around the actual usecase.
-
-Yours,
-Linus Walleij
+Best regards,
+   Sergio Paracuellos
 
