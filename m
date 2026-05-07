@@ -1,336 +1,243 @@
-Return-Path: <linux-gpio+bounces-36373-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36374-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EKtsFHOZ/Gk6RwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36373-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 15:53:55 +0200
+	id UOwBF1eb/Gk6RwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36374-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:01:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C49284E9AA0
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 15:53:54 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C9D74E9C37
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:01:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 494623086550
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 13:50:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0E3CA3035256
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 13:57:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119273FB7CD;
-	Thu,  7 May 2026 13:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gKoJyqTW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FD6F3FB7FF;
+	Thu,  7 May 2026 13:57:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0BC3F65E0
-	for <linux-gpio@vger.kernel.org>; Thu,  7 May 2026 13:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438933F7A93;
+	Thu,  7 May 2026 13:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778161799; cv=none; b=eRMdqwJ24Mwqv94fgxYgfyOZLAbfYnuD6sBRg7K6ZmOlFVEv2Ena+PJ/m07bEBAwmHYmuULeBIiQs+BAK+t3qX2+9fQlAtfD+LieaInoLNPf3TpDMQ8qCrLmaaYvy5CpQiq8qXSI18L92IR7EGUwE0tw/vrAfyRmk6AJ6ujZdbo=
+	t=1778162264; cv=none; b=C7Xi0dpaS+fHbsARkHUSqI2JjjMBMAMlvHWSZvOfy/QfObY/2lCvU+RmjoRTZY/VYvsYnGUgpsV6NbN2Ew6NWok1j2Ma8f64vfAoOMn+Br4wrWZQLjDVAEjewjs2TmK6ipN44BItOZmHsaYFKRjdl+V1H+3xeA2sJSl3KUahfJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778161799; c=relaxed/simple;
-	bh=vE34aa8irBWGItLvceE08MShCY5W/tJiiLdf7e89uiM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=su5ttN5x8JJHm7fB0SwO6u49o7jCHh1GJkFPFMvGf1EI/6JstZ+ihExPKK+wObaeRJi4qsFYIE7goLlNEX/6DsCJrfsseg2KZzG4g4GJ9078niAB0oMaw2/IiLmMWb60bV61+xytZMW2Nu6bTBM0EFFCVWJKNTtbIuDO5mlNHX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gKoJyqTW; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778161798; x=1809697798;
-  h=date:from:to:cc:subject:message-id;
-  bh=vE34aa8irBWGItLvceE08MShCY5W/tJiiLdf7e89uiM=;
-  b=gKoJyqTWNnpjwKisVKCDTN/8i4Te1HQoqAtS/6lcr0VnlGsroaVNK/zu
-   YK2hLvk4xHSSMDhjZ4QV4ktFEZXtJvjxoq2YACyNrbwzpgXmPB6FFADfE
-   xI3i78Wqc1BQVxvfjjT949elYdiVUC7IjN45pLGU9LIgVtPVX1kp5r3xu
-   R6+umq0ruwhFb3KluG84bxF/Gl0QpP2tKNkfLqY3g5SrwuN5uQ+WcSSV0
-   n0lcVa4At8AViKUJ5rHjSp7cZPvICkWSPB3UZ/CKLVG5N3yaZmofw56jq
-   sCz/9MPpiVQomsS0lQKs7r2DmYl+3d/NR1zxQdK1fIIx+AcMHUJ2SgFSA
-   g==;
-X-CSE-ConnectionGUID: 4OHt9ebnSaWQ1rBEcBJKrg==
-X-CSE-MsgGUID: sKi1z0TbTvKd/ftM7pWQ8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="82981030"
-X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="82981030"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:49:56 -0700
-X-CSE-ConnectionGUID: CemxDXy1R8epRnSn7+5Rkg==
-X-CSE-MsgGUID: M8mLCXumT4Cf36HA1p6yBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="236575325"
-Received: from lkp-server01.sh.intel.com (HELO d6e19f2f5857) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 May 2026 06:49:54 -0700
-Received: from kbuild by d6e19f2f5857 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wKz6t-0000000006r-3sr3;
-	Thu, 07 May 2026 13:49:51 +0000
-Date: Thu, 07 May 2026 21:49:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:ib-qcom-configs] BUILD SUCCESS
- c8aa5cf994bdd664d4b5efa4c952ce5ff864e351
-Message-ID: <202605072143.KTb9OHss-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1778162264; c=relaxed/simple;
+	bh=RrvyEgcHRqqCMyU2TKBmBS7TG/av5sEF0ZDxFme6H7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AI6RyjRwNcXudRUIBvvn1L7VeIjaUgVEa6fJrRksUPU0vZuKfHzGL6+KFLWMZ+MHW1UpweRWNgHtdkx4v1xJ+3b+ICh1yzNH965r3OeC/0OdC11ZojEEjTOJViHDnLAPu7uoyIJPmbqEqRVKeN1jfKNKKBKy6wrZLQ+h+YaFRUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: esmtpgz13t1778162251tb46c22e2
+X-QQ-Originating-IP: p1YkURIHeJrROEemiAkk20u/XtKBsAHtUI9xGIh+rLI=
+Received: from [127.0.0.1] ( [116.234.74.217])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 07 May 2026 21:57:26 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 16399775298209443856
+Message-ID: <3A5C0389E7C0D241+21a4f16b-1af8-46ac-8831-0c1b49694df0@radxa.com>
+Date: Thu, 7 May 2026 21:57:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: C49284E9AA0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+To: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
+ a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
+ boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
+ inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
+ livelycarpet87@gmail.com, matthew.gerlach@altera.com,
+ mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <DD71CDEABC7C16D5+02d052ff-13bb-4712-a847-91416f76c578@radxa.com>
+ <7f3a0f16-5159-4bbc-8b15-9b5841603bf6@riscstar.com>
+Content-Language: en-US
+From: Xilin Wu <sophon@radxa.com>
+In-Reply-To: <7f3a0f16-5159-4bbc-8b15-9b5841603bf6@riscstar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: M4KskqzZmkYy+CtMFd0wtJAPEtfXJ1C6cQnPhB+E3Wyt8z65shOIUuPY
+	8fPhgltw0VSOiI8lWTRpbmL2XRSOBLkXTTrZoLsPDzhP8+yaaOY05Fz7uDkT5CYKinAnhUv
+	POjyUcce8Cg1WE7qDEafq/6m2vM3rf/REiya/RO12HfujuuHDJ2hMnL0pe5FP9zTnOFOGhV
+	hJftK21jwxsr1/HzlxkZ5NWpRvU6oD965eKJJe0cksbX7YKrJy9G7SEnYRoa4aRftEO8MVy
+	2qwPOQAzTKnXjOfXay58q/NqwWiMVWUaiIzh1Qi0+MxIFuCWrAO9Po1MRE7A47axBlPdhUw
+	Dn155ow1/NO4LogW7S3KIS2IgqhpQDfOmvEh14ufQDPJPSHdyeV6Jj0GEdC5GF40GvVZ6kZ
+	IY0Bt/iL1VjL4GTd0JYq7Qc19fcvsW+MMCpXuvlvid9Lhs4QjCiyA7q8yySZOZNtcE0/ccw
+	8jCdfLAKta3kJ+UYMX8LS8OiWLQfVtagxrpA3N0AiGojnVy2G1lyA8ZudsPHTjg1z9bz1nK
+	T6ubH6EyO+W/TxRkuRcZJ00tRrvkwDzNL+zbFXRx6pcxW/oLEJNPGazlMhLpJ7ayP1Xzytg
+	juVgILybDwBep8U5XjZEXAwuLwBjKLVShhgCmXRdBufIJJ99ncp9rN70pNtW5YonroML8up
+	24HhBzeI8vwLP9mEzEZlncifswTi47B2/vE3VIwCUkPGfvqPspUJvg4UT43iBby/GYog+RI
+	rTr3/q7VzeOKpIKr4e/sxJhdjA/Iy3CzPK8QHKLkxknYOFgrqjH4g65XiqUtquOLnc8RR9Z
+	bfCb8eigZ6g7SLBg1KG40GYVGc8GBaVP9UsbwPXP/wjXI7D3V4QiyR6Qwp7oiVd1BvHZ2j3
+	iYAxKnDDti+oPZJp4mX4yIHIvuE2i1as1zAg5MfVO/8bBIBt3hi9o6zyY8zV8umP8tp09xx
+	IeDDzfDJzXrYjC9v2hT0upCx7it1wbnp57lAtw+2+qJiaQ1JDMM4OXjnLOBeM52W4k2l1I4
+	EoVXwxc+smkt1KevVs
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: 0C9D74E9C37
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWO(0.00)[2];
+	TAGGED_FROM(0.00)[bounces-36374-lists,linux-gpio=lfdr.de];
+	FORGED_MUA_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36373-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:mid,intel.com:dkim]
+	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.975];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[radxa.com:email,radxa.com:mid,riscstar.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-qcom-configs
-branch HEAD: c8aa5cf994bdd664d4b5efa4c952ce5ff864e351  pinctrl: qcom: Make important drivers default (2)
+On 5/7/2026 1:44 AM, Alex Elder wrote:
+> On 5/5/26 9:30 PM, Xilin Wu wrote:
+>> On 5/1/2026 11:54 PM, Alex Elder wrote:
+>>> From: Daniel Thompson <daniel@riscstar.com>
+>>>
+>>> Toshiba TC956x is an Ethernet AVB/TSN bridge and is essentially a
+>>> small and highly-specialized SoC. TC956x includes an "eMAC" subsystem
+>>> that can be accessed, along with several other peripherals, via two
+>>> PCIe endpoint functions. There is a main driver for the endpoint that
+>>> decomposes things and creates auxiliary bus devices to model the SoC.
+>>>
+>>> The eMAC consists of a Designware XGMAC, XPCS and PMA. Each eMAC is
+>>> supported by an MSIGEN that bridges TC956x level interrupts to PCIe
+>>> MSIs.
+>>>
+>>> Add a driver for the eMAC/MSIGEN combination.
+>>>
+>>> Co-developed-by: Alex Elder <elder@riscstar.com>
+>>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>>> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+>>> ---
+>>>   drivers/net/ethernet/stmicro/stmmac/Kconfig   |  13 +
+>>>   drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +
+>>>   .../ethernet/stmicro/stmmac/dwmac-tc956x.c    | 791 ++++++++++++++++++
+>>>   include/soc/toshiba/tc956x-dwmac.h            |  84 ++
+>>>   4 files changed, 890 insertions(+)
+>>>   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
+>>>   create mode 100644 include/soc/toshiba/tc956x-dwmac.h
+>>>
+>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/ 
+>>> net/ethernet/stmicro/stmmac/Kconfig
+>>> index e3dd5adda5aca..66bcfaccbe21f 100644
+>>> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
+>>> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+>>> @@ -404,6 +404,19 @@ config DWMAC_MOTORCOMM
+>>>         This enables glue driver for Motorcomm DWMAC-based PCI Ethernet
+>>>         controllers. Currently only YT6801 is supported.
+>>> +config DWMAC_TC956X
+>>> +    tristate "Toshiba TC956X DWMAC support"
+>>> +    depends on PCI
+>>> +    depends on COMMON_CLK
+>>> +    depends on TOSHIBA_TC956X_PCI
+>>> +    default m if TOSHIBA_TC956X_PCI
+>>
+>> Hi Alex,
+>>
+>> I think GENERIC_IRQ_CHIP should be selected here.
+> 
+> Yes there are a number of things missing in the Kconfig definitions
+> and I'm working through them this week.  And yes, since we use
+> irq_generic_chip_ops we must ensure CONFIG_GENERIC_IRQ_CHIP is
+> enabled here.
+> 
+>> Thank you for the driver.
+> 
+> Thank you for your feedback (this and others I see).
+> 
+>                      -Alex
+> 
+> 
+> 
 
-elapsed time: 727m
+Hi Alex,
 
-configs tested: 211
-configs skipped: 233
+Do you think if a shutdown callback like this is required? It looks like 
+the driver sometimes does a MDIO MMIO read when the PCIe link is down, 
+causing the board to reset due to SoC side PCIe NoC timeout.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+After this change, the board can always shutdown gracefully.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-23
-arc                                 defconfig    gcc-15.2.0
-arc                            randconfig-001    gcc-8.5.0
-arc                   randconfig-001-20260507    gcc-14.3.0
-arc                   randconfig-001-20260507    gcc-8.5.0
-arc                            randconfig-002    gcc-8.5.0
-arc                   randconfig-002-20260507    gcc-14.3.0
-arc                   randconfig-002-20260507    gcc-8.5.0
-arm                               allnoconfig    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                                 defconfig    gcc-15.2.0
-arm                            randconfig-001    gcc-8.5.0
-arm                   randconfig-001-20260507    gcc-14.3.0
-arm                   randconfig-001-20260507    gcc-8.5.0
-arm                            randconfig-002    gcc-8.5.0
-arm                   randconfig-002-20260507    gcc-14.3.0
-arm                   randconfig-002-20260507    gcc-8.5.0
-arm                            randconfig-003    gcc-8.5.0
-arm                   randconfig-003-20260507    gcc-14.3.0
-arm                   randconfig-003-20260507    gcc-8.5.0
-arm                            randconfig-004    gcc-8.5.0
-arm                   randconfig-004-20260507    gcc-14.3.0
-arm                   randconfig-004-20260507    gcc-8.5.0
-arm64                            allmodconfig    clang-23
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                          randconfig-001    gcc-15.2.0
-arm64                 randconfig-001-20260507    gcc-15.2.0
-arm64                          randconfig-002    gcc-15.2.0
-arm64                 randconfig-002-20260507    gcc-15.2.0
-arm64                          randconfig-003    gcc-15.2.0
-arm64                 randconfig-003-20260507    gcc-15.2.0
-arm64                          randconfig-004    gcc-15.2.0
-arm64                 randconfig-004-20260507    gcc-15.2.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                           randconfig-001    gcc-15.2.0
-csky                  randconfig-001-20260507    gcc-15.2.0
-csky                           randconfig-002    gcc-15.2.0
-csky                  randconfig-002-20260507    gcc-15.2.0
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260507    clang-23
-hexagon               randconfig-002-20260507    clang-23
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386                 buildonly-randconfig-001    clang-20
-i386        buildonly-randconfig-001-20260507    clang-20
-i386                 buildonly-randconfig-002    clang-20
-i386        buildonly-randconfig-002-20260507    clang-20
-i386                 buildonly-randconfig-003    clang-20
-i386        buildonly-randconfig-003-20260507    clang-20
-i386                 buildonly-randconfig-004    clang-20
-i386        buildonly-randconfig-004-20260507    clang-20
-i386                 buildonly-randconfig-005    clang-20
-i386        buildonly-randconfig-005-20260507    clang-20
-i386                 buildonly-randconfig-006    clang-20
-i386        buildonly-randconfig-006-20260507    clang-20
-i386                                defconfig    gcc-15.2.0
-i386                           randconfig-001    gcc-14
-i386                  randconfig-001-20260507    gcc-14
-i386                           randconfig-002    gcc-14
-i386                  randconfig-002-20260507    gcc-14
-i386                           randconfig-003    gcc-14
-i386                  randconfig-003-20260507    gcc-14
-i386                           randconfig-004    gcc-14
-i386                  randconfig-004-20260507    gcc-14
-i386                           randconfig-005    gcc-14
-i386                  randconfig-005-20260507    gcc-14
-i386                           randconfig-006    gcc-14
-i386                  randconfig-006-20260507    gcc-14
-i386                           randconfig-007    gcc-14
-i386                  randconfig-007-20260507    gcc-14
-i386                           randconfig-011    clang-20
-i386                  randconfig-011-20260507    clang-20
-i386                           randconfig-012    clang-20
-i386                  randconfig-012-20260507    clang-20
-i386                           randconfig-013    clang-20
-i386                  randconfig-013-20260507    clang-20
-i386                           randconfig-014    clang-20
-i386                  randconfig-014-20260507    clang-20
-i386                           randconfig-015    clang-20
-i386                  randconfig-015-20260507    clang-20
-i386                           randconfig-016    clang-20
-i386                  randconfig-016-20260507    clang-20
-i386                           randconfig-017    clang-20
-i386                  randconfig-017-20260507    clang-20
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260507    clang-23
-loongarch             randconfig-002-20260507    clang-23
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                                defconfig    clang-19
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                    maltaup_xpa_defconfig    gcc-15.2.0
-nios2                             allnoconfig    clang-23
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20260507    clang-23
-nios2                 randconfig-002-20260507    clang-23
-openrisc                          allnoconfig    clang-23
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-23
-parisc                           allyesconfig    clang-19
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260507    gcc-8.5.0
-parisc                randconfig-002-20260507    gcc-8.5.0
-parisc64                            defconfig    clang-19
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-23
-powerpc                       eiger_defconfig    clang-23
-powerpc                 mpc836x_rdk_defconfig    clang-23
-powerpc               randconfig-001-20260507    gcc-8.5.0
-powerpc               randconfig-002-20260507    gcc-8.5.0
-powerpc                     redwood_defconfig    clang-23
-powerpc64             randconfig-001-20260507    gcc-8.5.0
-powerpc64             randconfig-002-20260507    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-15.2.0
-riscv             nommu_k210_sdcard_defconfig    gcc-15.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    gcc-15.2.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-23
-sh                               allyesconfig    clang-19
-sh                         ap325rxa_defconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sparc                             allnoconfig    clang-23
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260507    gcc-12.5.0
-sparc                 randconfig-002-20260507    gcc-12.5.0
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260507    gcc-12.5.0
-sparc64               randconfig-002-20260507    gcc-12.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260507    gcc-12.5.0
-um                    randconfig-002-20260507    gcc-12.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260507    clang-20
-x86_64      buildonly-randconfig-002-20260507    clang-20
-x86_64      buildonly-randconfig-003-20260507    clang-20
-x86_64      buildonly-randconfig-004-20260507    clang-20
-x86_64      buildonly-randconfig-005-20260507    clang-20
-x86_64      buildonly-randconfig-006-20260507    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260507    gcc-14
-x86_64                randconfig-002-20260507    gcc-14
-x86_64                randconfig-003-20260507    gcc-14
-x86_64                randconfig-004-20260507    gcc-14
-x86_64                randconfig-005-20260507    gcc-14
-x86_64                randconfig-006-20260507    gcc-14
-x86_64                randconfig-011-20260507    gcc-14
-x86_64                randconfig-012-20260507    gcc-14
-x86_64                randconfig-013-20260507    gcc-14
-x86_64                randconfig-014-20260507    gcc-14
-x86_64                randconfig-015-20260507    gcc-14
-x86_64                randconfig-016-20260507    gcc-14
-x86_64                         randconfig-071    clang-20
-x86_64                randconfig-071-20260507    clang-20
-x86_64                         randconfig-072    clang-20
-x86_64                randconfig-072-20260507    clang-20
-x86_64                         randconfig-073    clang-20
-x86_64                randconfig-073-20260507    clang-20
-x86_64                         randconfig-074    clang-20
-x86_64                randconfig-074-20260507    clang-20
-x86_64                         randconfig-075    clang-20
-x86_64                randconfig-075-20260507    clang-20
-x86_64                         randconfig-076    clang-20
-x86_64                randconfig-076-20260507    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-23
-xtensa                randconfig-001-20260507    gcc-12.5.0
-xtensa                randconfig-002-20260507    gcc-12.5.0
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c 
+b/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
+index 4e8b4a185583..34b8e3fe1b51 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
+@@ -767,6 +767,17 @@ static void tc956x_dwmac_remove(struct 
+auxiliary_device *adev)
+         tc956x_mac_disable(td);
+  }
+
++static void tc956x_dwmac_shutdown(struct auxiliary_device *adev)
++{
++       struct device *dev = &adev->dev;
++       int ret;
++
++       ret = stmmac_suspend(dev);
++       if (ret)
++               dev_warn(dev, "failed to suspend MAC during shutdown: %d\n",
++                        ret);
++}
++
+  static const struct auxiliary_device_id tc956x_dwmac_ids[] = {
+         { .name = TC956X_PCIE_DRIVER_NAME "." TC956X_XGMAC_DEV_NAME, },
+         { },
+@@ -777,6 +788,7 @@ static struct auxiliary_driver tc956x_dwmac_driver = {
+         .name           = DRIVER_NAME,
+         .probe          = tc956x_dwmac_probe,
+         .remove         = tc956x_dwmac_remove,
++       .shutdown       = tc956x_dwmac_shutdown,
+         .id_table       = tc956x_dwmac_ids,
+         .driver = {
+                 .name   = DRIVER_NAME,
+
+-- 
+Best regards,
+Xilin Wu <sophon@radxa.com>
+
 
