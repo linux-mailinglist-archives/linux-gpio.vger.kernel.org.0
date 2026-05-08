@@ -1,84 +1,47 @@
-Return-Path: <linux-gpio+bounces-36464-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36465-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKtHE4/f/Wn0jwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36464-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 15:05:19 +0200
+	id yMa1OJ3g/Wn0jwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36465-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 15:09:49 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B62B74F6C31
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 15:05:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90C744F6CE7
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 15:09:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6D1F7306CB02
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 13:03:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 01B3A3031AF4
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 13:09:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1F53E1220;
-	Fri,  8 May 2026 13:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="qtRUiz5Z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 180933E121F;
+	Fri,  8 May 2026 13:09:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F202773CA
-	for <linux-gpio@vger.kernel.org>; Fri,  8 May 2026 13:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936C41F8691;
+	Fri,  8 May 2026 13:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778245429; cv=none; b=go4MaVJVhcd6iDJ/W0CoXvRdvRTwm5CpKFXOmyEa2yLqKDt6F103ydvBsAlDm1EapwqfhIGOUJwvPuYQvMJwARZWGobrzimlDcJ+XdCVyNqWN/jN4/tQOWl6k8/OS8GR9fFTd29ZjFgGBmmR6jy8uYPzK4EOElNt0vwAuwZhc5U=
+	t=1778245781; cv=none; b=cRID1vfVWmeytbb6zeY9cfEztyJbVK1ejFaS1jH57wpO+538JgrQAtKPefzfoqfP44NpZYTybX9Cr3OC+KHX2EB+Z7jHOd4k3qFa9cnIJUyz3EjpcQeFGVHJPDV1piDEppJGSzzeiNNe+WD66QiYg3PSlBkq0E6qozAl40MlodU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778245429; c=relaxed/simple;
-	bh=pt7XlsbOA9tv1TtrGt/RRq/85eL+D59/sDcgqu5C8XY=;
+	s=arc-20240116; t=1778245781; c=relaxed/simple;
+	bh=6S4huXMF9Eta3Yguft6rRPtDlnuPmLRdDWOyNOIjQWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qgMqpc72q2gktvZhcoq+EipdGgIpKjxv/r9pO7CtlTmgvPbqHXh3NkUTFl3+UumBnnojRj3hqAlHWr8vWcQtpRlqUTAF9rU7rbiAQXtvWE4Tdz7ewYGz9ajAImZP8cYqEeUNl9c0zEiRXPR7IdBXrNZY3rxhlzN2LT0jwV/IPyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=qtRUiz5Z; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-682fce74c06so1324446eaf.3
-        for <linux-gpio@vger.kernel.org>; Fri, 08 May 2026 06:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778245426; x=1778850226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4uYSKJlZDlhRVMvkmCmHZTLX4HWfRTth6fnS9HRLT2Q=;
-        b=qtRUiz5Zogp3NkjZ8rJ1gsIAuVw4z0S3IiBZ+KIRiR5dMd9eY60gnVWlS8uCwYSMMy
-         vJoEu9JeREoEWV4aicuzkk43TKP6iN8SjivnhOLOBaYIQpJH3YUXY7fNJ5bM50OKazoo
-         Vgneib5nQaxVDJZyBXZZmSVgZ44auQlUElKIrrGJFiGjDb/kqoFSe0h3Vsaymy8hpdCX
-         RG5n/dWMxi+ghJdmHCMQBPQLXBQOUPHjam2PvCnJV8M1wW6QQuS1/xNGwJFBuV3CpkAo
-         A9YVOOAhFpTMcA5uyQQe8x+iS7Cwh6Q5APAMtG/Y120qrx/3SejU42+F1hyKU9P2HH1R
-         Il2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778245426; x=1778850226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4uYSKJlZDlhRVMvkmCmHZTLX4HWfRTth6fnS9HRLT2Q=;
-        b=cA197GMtbCvwvLQXbemVNISwDbNr2hrQ4wb7pFTp5rbnEB872pzii8tSeGWajjggaH
-         CpI6+BVLBFpvoDfCcjma72Y2RyT+IwoFKrCiHuTqW0fGjeo+U33Buva1fbTcCbUlSsR5
-         6xUiNct7006F0dv7gEKXeEmuw8+AOldlfCwl1L6YsVKhsSFmn9x1Xp5k/7l8HiGua7hL
-         ZuWTGKL/QhmI9ULFFr2eau59pqEXr2YNLVH2kk+XN3EWSpvS/6wNQAghJH4DAuplmxX2
-         QqcwBOJySC/VoPnNmxKxTGCoZRtJa1nVk8jOqTCyjMmW5CVdg0AT3KOglgLo0VJ1yV2g
-         /lmw==
-X-Gm-Message-State: AOJu0YylRqBhQReTPnJLcAEJrUViN5B6loLpqQmav3oWmhx0FZ9/rCA+
-	xU2OIVqaUthiWYJdsK4iXKSkY3oBxYXDYYgw4PmVWAHw0zCHdIXigLcOifZsG4JnBEA=
-X-Gm-Gg: AeBDieuwEZBvsHfmhEWzlwO8tcun8h7tm+Upu/8+d7CSZNnlBEW7lEKx08qAAlGNorF
-	gFBazWM88YI6zVKtueNRxwzTfhSoZNhqExkUfU5khZeK1nfFqnY1j7+D+L1SCmQPeM3yH9/ViYo
-	VnxwwVisri2ibXv1tbFtK2NsEmObl+M08eb+k1Wdhbgl4iC3varRcWxRNQtOyh/eRB9/Irn4KkA
-	9ap2JVsE5y8JyptkvvXkmfR2g4LLXkFV08WuLYSofkSmndsHARidFVhnxHo1N1atSBsPQitSI8P
-	wEqP5ryvzP82Wehz4D8nbE5fiSAM+9dbz1r38eLykp1wMu+rOCq8rTXghidzpSLfCUQ69V2JpNa
-	/+4zHZuEdWMg58BJuWZ2eUasRGbrvFtEjK0nbgAVLidRCDMSRi/IOSEZsh6QeP6QHgJ+pPpaLNf
-	LsCCqVRT6R5N8VJa9gkj+FwAAG3uWiKzerzlcErsdi9liMPTQ3jt5q0qREPzYT4LKf+Do9axSQr
-	g==
-X-Received: by 2002:a05:6820:160a:b0:680:89db:fd86 with SMTP id 006d021491bc7-69998cd7cd3mr7066137eaf.13.1778245425501;
-        Fri, 08 May 2026 06:03:45 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8bf39c7dd09sm17034776d6.31.2026.05.08.06.03.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2026 06:03:44 -0700 (PDT)
-Message-ID: <6f15ed94-c52d-41c6-9e96-68e96c70d287@riscstar.com>
-Date: Fri, 8 May 2026 08:03:43 -0500
+	 In-Reply-To:Content-Type; b=Zly17A7dUA3i8SjBCZCD42yJB0qiqzBM/lcDacpaeSUAVI7MeywJg6v4DGWzAKt7RP+JmtPSQ1oC2nvxz/6+EsDm0iVmzUOFz9L0RFst8EgoE42cQHDQNfMwSBs+n1kK8X3cwSBrhy8l41RLDU/2kDoEQ6Smtxmo1kTmSu09q9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: esmtpsz21t1778245760te8ff9860
+X-QQ-Originating-IP: oDfTC3UmzXvWtX1d3MtBp/Xfjq9qMy3Zm4+IG/bmLQ4=
+Received: from [127.0.0.1] ( [116.234.74.217])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 08 May 2026 21:09:14 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10512550886452153488
+Message-ID: <6744F8FEFD290FFD+4973b8ba-7d3b-45e4-8478-0b3334b81960@radxa.com>
+Date: Fri, 8 May 2026 21:09:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,206 +49,131 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] gpio: regmap: Support sparsed fixed direction
-To: Linus Walleij <linusw@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260508-regmap-gpio-sparse-fixed-dir-v2-0-deee84df3027@kernel.org>
- <20260508-regmap-gpio-sparse-fixed-dir-v2-1-deee84df3027@kernel.org>
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+To: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
+ a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
+ boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
+ inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
+ livelycarpet87@gmail.com, matthew.gerlach@altera.com,
+ mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+ <ae90a4c9-f027-4373-a378-d0d4b7796ff3@riscstar.com>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20260508-regmap-gpio-sparse-fixed-dir-v2-1-deee84df3027@kernel.org>
+From: Xilin Wu <sophon@radxa.com>
+In-Reply-To: <ae90a4c9-f027-4373-a378-d0d4b7796ff3@riscstar.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B62B74F6C31
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: Nt+z/y60tPnUntNr0h37IREVots3RaLwrPULh0GA79jGtOpfwKEdcvBB
+	vGDhDCFVCVDGkxyRE2OTvoJ3BAC5PxlqIDN/JJD4AXSK/ikl0jyX/GSVQGKFFkz4ENdEUSS
+	jVXeX8iIz18DyrTydrM2dT8KiFby0YfBminxUOL4J5AlH5kCMgkXuyKePKNiHWGlFK+yBQv
+	SRVy4V6iARJyXlvbI1rbJ1Dngayn4XErNHsXR0Kg6smHfZQdkinU29+j+A6LtvM6yZUbS4t
+	QVQptLZzaaJ4WQvRP74OndQJsbw1vv1nmsXyg0PvpJnR4E3kbenRf7lh2UQrWCAfnYWhxcG
+	hTAd64lSERlfpmuk9ijl7MHnkLFb+kT+JhDfn0EbwWHpNLpnzJlzMszqlfuaXd1hwc4nDs4
+	Ptr2Y85lsLV/akVhLZ1+rrmVHL5PiC3YijY+AWaatV34T0VxlBj6F8/QWgEBQSR7nOH8bXQ
+	XHo4x+A7+OOLAYUoEpxHHu2jQBnq4W40kBbHQZFQcx2uX3k9qxLStign4ItRLp83ezdKGG3
+	rXIy7z63D4JRXnth+L/LMCgCOPIZX6UbSeKhC9UhQunoQKllBcQEkKDh5ygpTooEHPICCWN
+	v0NJ3AVXTCKg6RKp5kRQji0h3ubCOuk69Ca/CWOhkExCsuc7W4Gt18DmMOI73hWUNVt/ZpJ
+	Xegb8FAgVlmlXrGb9znklqo0dwEPFirhVlvSBYtwqFD0A+8ja53Su/2ws9tOkRBaTVgwQ8y
+	9A52Vd9IzSmDXvRutmZ56mbDo0QML6AmH+JXOF1+N98BQ6kl+Oroy003IPxqdeoroKdzWoW
+	7ajNQ78e3UhIMmJwN0Vzj9r/TIEN0VSKF89diPqkVlE0OitsvnUNFQHnnw96hl+q0o7uSQx
+	qPUMp9N0FI5EOZQjZweOFJ9azZ8DPpS884uDoNmmdcnERsJD7LQeKa9uc/wF/706zGwfDfE
+	NvYT+qtbE9RcFiJA28y7jSs17ND2F9A/LO72INNmSpnullpo/DF8C5pCvK/V+oUxNUDaK1L
+	Pplxx2FKqdHoQ5JbP002M+X2JYw0kTRtD1WNuV8r1C1HA66FuZ
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: 90C744F6CE7
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.56 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36464-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36465-lists,linux-gpio=lfdr.de];
+	FORGED_MUA_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.962];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[riscstar-com.20251104.gappssmtp.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,riscstar.com:email,riscstar.com:mid]
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On 5/8/26 7:51 AM, Linus Walleij wrote:
-> On some regmapped GPIOs apparently only a sparser selection
-> of the lines (not all) are actually fixed direction.
+On 5/8/2026 2:44 AM, Alex Elder wrote:
+> On 5/6/26 7:59 AM, Xilin Wu wrote:
+>> On 5/1/2026 11:54 PM, Alex Elder wrote:
+>>> +    /* AXI Configuration */
+>>> +    axi = &td->axi;
+>>> +    axi->axi_lpi_en = 1;
+>>> +    axi->axi_wr_osr_lmt = 31;
+>>> +    axi->axi_rd_osr_lmt = 31;
+>>> +    /* All sizes (2^2..2^8) are supported */
+>>> +    axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
+>>> +    plat->axi = axi;
+>>> +
+>>> +    plat->mac_port_sel_speed = speed;
+>>> +    plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
+>>
+>> I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I 
+>> guess it's required, since the driver clocks down the MAC/PMA/XPCS in 
+>> its suspend hook?
 > 
-> Support this situation by adding an optional bitmap indicating
-> which GPIOs are actually fixed direction and which are not.
+> I just want to respond to this with a summary of our plans.
 > 
-> Cc: Alex Elder <elder@riscstar.com>
-> Link: https://lore.kernel.org/linux-gpio/20260501155421.3329862-10-elder@riscstar.com/
-> Tested-by: Alex Elder <elder@riscstar.com>
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
-
-
-
-In addition, it would be fine with me if you merged this together
-iwth your new patch:
-
-  
-https://lore.kernel.org/lkml/20260508-regmap-gpio-sparse-fixed-dir-v2-2-deee84df3027@kernel.org/
-
-It makes sense and it is logically part of the same change.
-
-I even tested with that change applied, even though I know
-just by inspection it will do what's desired.
-
-Anyway, for both (or a combined single patch), these apply:
-
-Tested-by: Alex Elder <elder@riscstar.com>
-Reviewed-by: Alex Elder <elder@riscstar.com>
-
-
-					-Alex
-
-> ---
->   drivers/gpio/gpio-regmap.c  | 37 +++++++++++++++++++++++++++++++++----
->   include/linux/gpio/regmap.h |  7 +++++++
->   2 files changed, 40 insertions(+), 4 deletions(-)
+> We will *not* be implementing wake-on-LAN (WoL) initially.  We
+> will work to get support for the eMACs upstream for TC956x, and
+> then as a separate step, we will enable WoL.
 > 
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 9ae4a41a2427..f45a432e8ebe 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -31,6 +31,7 @@ struct gpio_regmap {
->   	unsigned int reg_clr_base;
->   	unsigned int reg_dir_in_base;
->   	unsigned int reg_dir_out_base;
-> +	unsigned long *fixed_direction_sparse;
->   	unsigned long *fixed_direction_output;
->   
->   #ifdef CONFIG_REGMAP_IRQ
-> @@ -138,6 +139,20 @@ static int gpio_regmap_set_with_clear(struct gpio_chip *chip,
->   	return regmap_write(gpio->regmap, reg, mask);
->   }
->   
-> +static bool gpio_regmap_fixed_direction(struct gpio_regmap *gpio,
-> +					unsigned int offset)
-> +{
-> +	if (!gpio->fixed_direction_output)
-> +		return false;
-> +
-> +	/* In this case only some GPIOs are fixed as input/output */
-> +	if (gpio->fixed_direction_sparse &&
-> +	    !test_bit(offset, gpio->fixed_direction_sparse))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->   static int gpio_regmap_get_direction(struct gpio_chip *chip,
->   				     unsigned int offset)
->   {
-> @@ -145,7 +160,7 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
->   	unsigned int base, val, reg, mask;
->   	int invert, ret;
->   
-> -	if (gpio->fixed_direction_output) {
-> +	if (gpio_regmap_fixed_direction(gpio, offset)) {
->   		if (test_bit(offset, gpio->fixed_direction_output))
->   			return GPIO_LINE_DIRECTION_OUT;
->   		else
-> @@ -302,12 +317,23 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->   			goto err_free_gpio;
->   	}
->   
-> +	if (config->fixed_direction_sparse) {
-> +		gpio->fixed_direction_sparse = bitmap_alloc(chip->ngpio,
-> +							    GFP_KERNEL);
-> +		if (!gpio->fixed_direction_sparse) {
-> +			ret = -ENOMEM;
-> +			goto err_free_gpio;
-> +		}
-> +		bitmap_copy(gpio->fixed_direction_sparse,
-> +			    config->fixed_direction_sparse, chip->ngpio);
-> +	}
-> +
->   	if (config->fixed_direction_output) {
->   		gpio->fixed_direction_output = bitmap_alloc(chip->ngpio,
->   							    GFP_KERNEL);
->   		if (!gpio->fixed_direction_output) {
->   			ret = -ENOMEM;
-> -			goto err_free_gpio;
-> +			goto err_free_bitmap_sparse;
->   		}
->   		bitmap_copy(gpio->fixed_direction_output,
->   			    config->fixed_direction_output, chip->ngpio);
-> @@ -329,7 +355,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->   
->   	ret = gpiochip_add_data(chip, gpio);
->   	if (ret < 0)
-> -		goto err_free_bitmap;
-> +		goto err_free_bitmap_output;
->   
->   #ifdef CONFIG_REGMAP_IRQ
->   	if (config->regmap_irq_chip) {
-> @@ -355,8 +381,10 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->   
->   err_remove_gpiochip:
->   	gpiochip_remove(chip);
-> -err_free_bitmap:
-> +err_free_bitmap_output:
->   	bitmap_free(gpio->fixed_direction_output);
-> +err_free_bitmap_sparse:
-> +	bitmap_free(gpio->fixed_direction_sparse);
->   err_free_gpio:
->   	kfree(gpio);
->   	return ERR_PTR(ret);
-> @@ -376,6 +404,7 @@ void gpio_regmap_unregister(struct gpio_regmap *gpio)
->   
->   	gpiochip_remove(&gpio->gpio_chip);
->   	bitmap_free(gpio->fixed_direction_output);
-> +	bitmap_free(gpio->fixed_direction_sparse);
->   	kfree(gpio);
->   }
->   EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
-> diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-> index 12d154732ca9..ff00b4aeaf1c 100644
-> --- a/include/linux/gpio/regmap.h
-> +++ b/include/linux/gpio/regmap.h
-> @@ -38,6 +38,12 @@ struct regmap;
->    *			offset to a register/bitmask pair. If not
->    *			given the default gpio_regmap_simple_xlate()
->    *			is used.
-> + * @fixed_direction_sparse:
-> + *			(Optional) Bitmap representing the GPIO lines that
-> + *			make use of the @fixed_direction_output list to
-> + *			enforce direction of the GPIO. If this is NULL
-> + *			and @fixed_direction_output is defined, ALL GPIOs
-> + *			are assumed to be fixed direction (out or in).
->    * @fixed_direction_output:
->    *			(Optional) Bitmap representing the fixed direction of
->    *			the GPIO lines. Useful when there are GPIO lines with a
-> @@ -89,6 +95,7 @@ struct gpio_regmap_config {
->   	int reg_stride;
->   	int ngpio_per_reg;
->   	struct irq_domain *irq_domain;
-> +	unsigned long *fixed_direction_sparse;
->   	unsigned long *fixed_direction_output;
->   
->   #ifdef CONFIG_REGMAP_IRQ
+> It's great to know you have it working, and our plan is to
+> implement it via the PHYs and not involve the MAC.  It seems
+> it will be relatively easy, but we have no plans to add it to
+> the current series.
+> 
+>                      -Alex
 > 
 
+Hi Alex,
+
+Maybe I missed something, but I already have WoL working *without* 
+changes in the tc956x driver.
+
+https://lore.kernel.org/all/859776B5671B36B9+577c19e4-3e66-4036-b26f-fe20287a1d43@radxa.com/
+
+
+-- 
+Best regards,
+Xilin Wu <sophon@radxa.com>
 
