@@ -1,173 +1,219 @@
-Return-Path: <linux-gpio+bounces-36443-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36444-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6KhoM4qz/WkXhwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36443-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 11:57:30 +0200
+	id mNFxJLrB/WkpigAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36444-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:58:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F4A54F4960
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 11:57:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31E934F55FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:58:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B0CFB309CF04
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 09:53:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 51B713013A7F
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 10:55:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 378D83C7DF5;
-	Fri,  8 May 2026 09:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 397113290DC;
+	Fri,  8 May 2026 10:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8o0cLcR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KY2XxI5e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5903D090C;
-	Fri,  8 May 2026 09:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8081862A;
+	Fri,  8 May 2026 10:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778233993; cv=none; b=KJ6tp54y8/k6fRW3soKTItoHPfmxtyQvEC9VBKWgW0bL46RcfEBW908jthG7VqvSfCrWqZmh+sdn3fC+doU+U4DvyDvHlnBR7IZDipGOR5IHW50gVwGTIZCOlxIBqy8awbztX5tuDRSA3EQNaHj4EtH5FQnp7ZVisfZ5XdxgETU=
+	t=1778237721; cv=none; b=q7URh7EYDyjnEm9jLIbNdaZtTPwSk7yZl4Z+WwNUSRwtz2ZggFhpjpuT1aVfaW6/ywmZyn+dB42qcNO8YOmaY3ebMjA7QO16bRu/CXCSsVAPGtL9nxwtypZpCihWA3j8u3mPhZ9AD5ZHCM5QN8mi670dB/MBbKhcy9gonuwpzV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778233993; c=relaxed/simple;
-	bh=+tVHEo+/Nt03Cy9uyxf775msOIXb0KrcIitMV3PtYbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=plgR6YovXSX0LCaQnploslSMziJP7G6mD+4ug89cbZz4LU3jy6lGkQX6PztczaZPWmf6ed7CXj+Nk1O8Evk+toDY8ECsyziNVManGzNDHIcGOIp5TUqSqJws3nf0mZ7Bv5+E4eDbX0OndqRseI8MUvVPvTSGjPqA8+rf8lwnUpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8o0cLcR; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778233991; x=1809769991;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+tVHEo+/Nt03Cy9uyxf775msOIXb0KrcIitMV3PtYbM=;
-  b=L8o0cLcR8/+Ji9dEyyusWw8JE9VO9IYnOvie8VBCre69VtYcY+XaNNri
-   9+sYjWieNgacBfY0uwkOug5RFdaUY47aL0SUpLNDX/pdpkEp7Tdiq8y1U
-   03qwo1GZUyQGbLRN07qJbARteozW4GlqClAxIKVNp467xZNxa2gDDjnqv
-   wMQ4BwP8B+QiPUcLTHOr5F0sF3nRhYM4AtkhUz4Gic+YYsiKWmgj0mydk
-   K3FJO4kTOO8ilEtNK4EEdDp082Zb9UjWwAbqsAHidJU4lvJTrCEW4TycD
-   f041Kfug6ZvmeuJ5wsjo6VKHWk92taOOboxDP/Ckp3q0FWNkP5uZzaTtR
-   A==;
-X-CSE-ConnectionGUID: cW21zshzSJ6CEe4k/Y8IHw==
-X-CSE-MsgGUID: B1y05kuOQ2+qI+SNmd3lcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="79219248"
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="79219248"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 02:53:10 -0700
-X-CSE-ConnectionGUID: XvaFWmBrSKWiKFgv0ISKSg==
-X-CSE-MsgGUID: yzycu+dbS7avcCqVAVipGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="267101041"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.237])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 02:53:04 -0700
-Date: Fri, 8 May 2026 12:53:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	s=arc-20240116; t=1778237721; c=relaxed/simple;
+	bh=sZoKk2j+9/Xh2m14M9z96ycQqA159DiqMv2u5K6uIAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=klXsy8IfHHQH+pVaVx4gm1IH/u4h1h2OXzbwUmmvxJj1PPCF7gGuQTTCKQaznVAkmWR/kIbd+zGk6BmGjYrOsPZDizCXR5zF2v9oY19dCpwHrLyj6nIN3xkhWaz3+sYjzMK5PDj3u8dHzD94FJz2OIe9J3jyvHrLqkE9kKP8lgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KY2XxI5e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A77C2BCB0;
+	Fri,  8 May 2026 10:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778237720;
+	bh=sZoKk2j+9/Xh2m14M9z96ycQqA159DiqMv2u5K6uIAg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KY2XxI5e4Ann33s+XxOVYt4V8lYlI1fwmVjf9E8afHTLfxPH0r/Zl1m9i/3L8+SBm
+	 xwh49j/LLGdCFDgU/AIoHAGIyY5duAtxbFUsH3IcyNAmALVi3CBilk0lWxpFMOigpw
+	 GfKppZLtKPCE/+irov3FQdutr5nYEW0FwE2vUb4orM457uIt937k5GhJOrWLqr2wYH
+	 91GkHBTxoOXNYCMmIs4U2Xd+MNGQSxJ9b80SFF1z5z808yTakuEq/XRpQhQ7Ttn01C
+	 SZwHEsa8uD4zFmg6KhI4Qs/0s9S55R//o/+YvJa2+3llM9WjRm1jFtQykV7d7Vbt6g
+	 ps0FFB7aG2w7Q==
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>,
+	tzungbi@kernel.org,
+	linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	driver-core@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v9 2/6] iio: adc: ad4691: add initial driver for AD4691
- family
-Message-ID: <af2yfhe3vYOAOOKZ@ashevche-desk.local>
-References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
- <20260430-ad4692-multichannel-sar-adc-driver-v9-2-33e439e4fb87@analog.com>
- <LV9PR03MB841460307B0CF4C6F267A631F73C2@LV9PR03MB8414.namprd03.prod.outlook.com>
- <20260507151549.61e4e8fb@jic23-huawei>
- <af1qN1Bvio1v6TKG@ashevche-desk.local>
+	Shuah Khan <shuah@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Johan Hovold <johan@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH v10 0/9] drivers/base: Introduce revocable
+Date: Fri,  8 May 2026 18:54:39 +0800
+Message-ID: <20260508105448.31799-1-tzungbi@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af1qN1Bvio1v6TKG@ashevche-desk.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 3F4A54F4960
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 31E934F55FD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	TAGGED_FROM(0.00)[bounces-36443-lists,linux-gpio=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-36444-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email,intel.com:dkim,ashevche-desk.local:mid]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Fri, May 08, 2026 at 07:44:39AM +0300, Andy Shevchenko wrote:
-> On Thu, May 07, 2026 at 03:15:49PM +0100, Jonathan Cameron wrote:
-> > On Thu, 7 May 2026 09:26:00 +0000
-> > "Sabau, Radu bogdan" <Radu.Sabau@analog.com> wrote:
+This series introduces the "revocable" mechanism, a synchronization
+primitive designed to prevent Use-After-Free errors.
 
-...
+- Patch 1 introduces the revocable which is an implementation of ideas
+  from the talk [1].
 
-> > > > +	st->info = spi_get_device_match_data(spi);  
-> > > 
-> > > "Is it possible for st->info to be NULL here?
-> > > If the driver is manually bound to a device with a non-matching name using
-> > > the sysfs bind interface in combination with driver_override,
-> > > spi_get_device_match_data() could return NULL, which would cause a NULL
-> > > pointer dereference later in the probe sequence."
-> > > 
-> > > Agreed, will add the NULL check with -ENODEV immediately after
-> > > spi_get_device_match_data().
-> > 
-> > Andy, you seeing this one?  Looks like we are putting these checks back in again.
-> > Whilst anyone forcing a bind like this is onto a looser anyway we shouldn't
-> > crash due to a null dereference.
-> 
-> We should find a way how to disable that combination from the start. The driver
-> makes no sense to be instantiated from user space. Actually most of the drivers
-> nowadays should not be bound to the devices without driver data.
+- Patch 2 adds KUnit test cases.
 
-The 20260508095224.1275645-1-andriy.shevchenko@linux.intel.com has been just sent.
+- Patches 3 to 7 transitions the UAF prevention logic within the GPIO
+  core (gpiolib) to use the "revocable" mechanism.
+
+  The existing code aims to prevent UAF issues when the underlying GPIO
+  chip is removed.  They replace that custom logic with the generic
+  "revocable" API, which is designed to handle such lifecycle
+  dependencies.  There should be no changes in behavior.
+
+- Patches 8 to 9 uses "revocable" mechanism to fix an UAF in
+  cros_ec_chardev driver.  Alternatively, [2] is a series for fixing the
+  same issue without using "revocable".
+
+Since v9, there are two ways to manage the resource provider handle.
+- Embedded allocation: patches 3 to 7 might be the potential user.
+- Dynamic allocation: patches 8 to 9 might be the potential user.
+
+[1] https://lpc.events/event/17/contributions/1627/
+[2] https://lore.kernel.org/all/20260427134659.95181-1-tzungbi@kernel.org
+
+---
+v10:
+- Unify handling of embedded and dynamic allocation.
+
+v9: https://lore.kernel.org/all/20260427135841.96266-1-tzungbi@kernel.org
+- Rebase onto v7.1-rc1.
+- Remove the selftests patch as it makes less sense to test revocable
+  APIs via kselftests.
+- Merge patches 7 to 11 from
+  https://lore.kernel.org/all/20260213092958.864411-1-tzungbi@kernel.org
+  into the series.
+- Merge patch from
+  https://lore.kernel.org/all/20250923075302.591026-5-tzungbi@kernel.org
+- Merge patch from
+  https://lore.kernel.org/all/20250912081718.3827390-6-tzungbi@kernel.org
+
+v8: https://lore.kernel.org/all/20260213092307.858908-1-tzungbi@kernel.org
+- Rework on the revocable APIs.  See changelog in [PATCH v8 1/3] for details.
+
+v7: https://lore.kernel.org/all/20260116080235.350305-1-tzungbi@kernel.org
+- Rebase onto next-20260115.
+
+v6: https://lore.kernel.org/all/20251106152330.11733-1-tzungbi@kernel.org
+- Rebase onto next-20251106.
+- Separate revocable core and use cases.
+
+v5: https://lore.kernel.org/all/20251016054204.1523139-1-tzungbi@kernel.org
+- Rebase onto next-20251015.
+- Add more context about the PoC.
+- Support multiple revocable providers in the PoC.
+
+v4: https://lore.kernel.org/all/20250923075302.591026-1-tzungbi@kernel.org
+- Rebase onto next-20250922.
+- Remove the 5th patch from v3.
+- Add fops replacement PoC in 5th - 7th patches.
+
+v3: https://lore.kernel.org/all/20250912081718.3827390-1-tzungbi@kernel.org
+- Rebase onto https://lore.kernel.org/all/20250828083601.856083-1-tzungbi@kernel.org
+  and next-20250912.
+- The 4th patch changed accordingly.
+
+v2: https://lore.kernel.org/all/20250820081645.847919-1-tzungbi@kernel.org
+- Rename "ref_proxy" -> "revocable".
+- Add test cases in Kunit and selftest.
+
+v1: https://lore.kernel.org/all/20250814091020.1302888-1-tzungbi@kernel.org
+
+Tzung-Bi Shih (9):
+  revocable: Revocable resource management
+  revocable: Add KUnit test cases
+  gpio: Add revocable provider handle for struct gpio_chip
+  gpio: cdev: Leverage revocable for accessing struct gpio_chip
+  gpio: Remove gpio_chip_guard by using revocable
+  gpio: Leverage revocable for accessing struct gpio_chip
+  gpio: Remove unused `chip` and `srcu` in struct gpio_device
+  platform/chrome: Protect cros_ec_device lifecycle with revocable
+  platform/chrome: cros_ec_chardev: Consume cros_ec_device via revocable
+
+ .../driver-api/driver-model/index.rst         |   1 +
+ .../driver-api/driver-model/revocable.rst     | 384 +++++++++++++++++
+ MAINTAINERS                                   |  10 +
+ drivers/base/Kconfig                          |   5 +
+ drivers/base/Makefile                         |   5 +-
+ drivers/base/revocable.c                      | 267 ++++++++++++
+ drivers/base/revocable_test.c                 | 405 ++++++++++++++++++
+ drivers/gpio/gpiolib-cdev.c                   |  77 ++--
+ drivers/gpio/gpiolib-sysfs.c                  |  31 +-
+ drivers/gpio/gpiolib.c                        | 263 +++++-------
+ drivers/gpio/gpiolib.h                        |  28 +-
+ drivers/platform/chrome/cros_ec.c             |  11 +
+ drivers/platform/chrome/cros_ec_chardev.c     |  80 +++-
+ include/linux/platform_data/cros_ec_proto.h   |   3 +
+ include/linux/revocable.h                     | 204 +++++++++
+ 15 files changed, 1505 insertions(+), 269 deletions(-)
+ create mode 100644 Documentation/driver-api/driver-model/revocable.rst
+ create mode 100644 drivers/base/revocable.c
+ create mode 100644 drivers/base/revocable_test.c
+ create mode 100644 include/linux/revocable.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.0
 
 
