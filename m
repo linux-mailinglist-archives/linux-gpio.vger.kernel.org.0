@@ -1,299 +1,193 @@
-Return-Path: <linux-gpio+bounces-36438-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36439-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mBZ9AYmX/WnBgAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36438-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 09:58:01 +0200
+	id uFp9JEOj/Wl0ggAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36439-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 10:48:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C8754F3693
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 09:58:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C7C04F3DFB
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 10:48:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9E4EE30104B1
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 07:57:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0BEB93019B93
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 08:48:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC213376490;
-	Fri,  8 May 2026 07:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3BA35CB9C;
+	Fri,  8 May 2026 08:48:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="aq4YcE2/"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XabZ4duL";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="d4JhIli0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020103.outbound.protection.outlook.com [52.101.46.103])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0A3815E1;
-	Fri,  8 May 2026 07:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778227074; cv=fail; b=g8XGSgyRQx6yv//H360DnLdBXnNAuxpLFfCAeOBBEumlkuz/AnSHVj2hWnrf3VjmjIvcYFQU/9f+GlslG8ak6XjhtnFhUEDji31P96lhM6Dv/mk/YvIxNTgPwMJtk4BCnS3zcYKJsFeCNlzyfydj06s47+pEzLm0QVXtsqxuPhs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778227074; c=relaxed/simple;
-	bh=7JXjCUHr3bZW2XCWFI1nq08x/u78dzkW2IE/+diA5zg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nUGS4hJqEM/cQWTcgy8sy/Y+ZRbcjNhwIl0o2XUPfH82MtCKChLLNtAhgHcEu4lJjCVecyg2A8U6gFzy8gBKc7xcMLq+CwGJeRgva85MgKKNLmj/jRCG01vWis7uTYMI2SY8GxkSRWchQ/7IR21+2MX1g317HfSalZOQfc/0F5Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=aq4YcE2/; arc=fail smtp.client-ip=52.101.46.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TErgyUTQZonhThWeFTUr9qs3WfOy6J6jfYyZdti+klIteMcBrcxe8pgap315mwYWQn/CF2xuzAeRwy1XacxlbNUgfCNnzBYahU1imb52W4Bti6q+/TyTtvCruqh1olTxkM+lxLBQ7ssBW5McDf0UWmIa7Pd65ka34v2ZGbpP7UUrJgpk8Bow5DLICaNRbYCsoJh/hBbDCjxzqkYCY0mroT7OF3fwCFqX+9RQ+v/j4K8vlzVQzpYCJwHsj2mm4jCbaiOaiukVpyiJb3pUaCQqfBxk7Vi+IcvK4Ba457KA3zcxvMvL/ge57mMZkfXo9LvsoV7y8hWRAJuPWCNmly5CBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xQyPmDMam7UHZoT0de7LtgeG+B6kk2T77DSa3D9Lh6M=;
- b=i+BT3VGyY+O8s7hO+yKiMMl9lhZQMZTS3UYZcnP7XqvyDJ4XpzK3wfmFCcmkGpoV8vw++n5a4/6eijgmMwnp4e4ahYARxtCROiJfyc304uZQMH2xanDcN+SdAgSCzgndsTsOy3PDA3hc5FwOSprtiNtIcmknoP46yXeHZVB/Wa0PupzJZ4QXzlE1KTfonA3DGGjpVB4SCMX+lIo0wm43LbwTn7xwC4nIBAjbmJTwi5+T4Q2hhPUrlhuWeKG3qkAOlcGEToeJvGh/KBGuCDvprbck4nDd07Bq/X5LbuxuRbCI3AGZyS16mb/EX8Xh99lQMzNbuZxTJUgKQ+wShjUUaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axiado.com; dmarc=pass action=none header.from=axiado.com;
- dkim=pass header.d=axiado.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xQyPmDMam7UHZoT0de7LtgeG+B6kk2T77DSa3D9Lh6M=;
- b=aq4YcE2/iESFrn5/HmOheGJP+bOdGWORWil1UxBFJvrHVmXhuizXdsh2OkHCKsrpWFUsJ7a0g0Ux5Ly9oOYVAKnq05WqSwKIhP9l9oTQKESZebB/HzFQQIXoATtBkERsNTfNqvbjeCnfemlrwgXN64DVZZL1OBDPJKqu/4YKjNRUc3CNccVtNgdg6BcHBfuO4U6ZI+lw2wS8sr59Z2BxSvgufi0jXacNfjPv8mxeBmZRKvg3oMV4pHf7NRJ5yDE6oXKvsMhV4uRawhbG2AUn/0LGyqpO4ttmEb2nci6u7zZWM9H+8YpqA3Lu9VUWMOPsevZgJPdW9D68UL7rkRbong==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axiado.com;
-Received: from DM4PR18MB4144.namprd18.prod.outlook.com (2603:10b6:5:38b::8) by
- DM8PR18MB4440.namprd18.prod.outlook.com (2603:10b6:8:32::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.16; Fri, 8 May 2026 07:57:49 +0000
-Received: from DM4PR18MB4144.namprd18.prod.outlook.com
- ([fe80::cb97:ca8a:e55a:b11]) by DM4PR18MB4144.namprd18.prod.outlook.com
- ([fe80::cb97:ca8a:e55a:b11%6]) with mapi id 15.20.9891.019; Fri, 8 May 2026
- 07:57:49 +0000
-Message-ID: <fd2ee102-db52-4a37-b96e-c16211e3d8e3@axiado.com>
-Date: Fri, 8 May 2026 09:57:42 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
-Content-Language: en-GB
-To: Linus Walleij <linusw@kernel.org>
-Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>,
- Prasad Bolisetty <pbolisetty@axiado.com>,
- Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Harshit Shah <hshah@axiado.com>,
- SriNavmani A <srinavmani@axiado.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
- <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com>
- <106b7b64-ed6e-499f-b5ac-60c1277f2f03@axiado.com>
- <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
-From: Petar Stepanovic <pstepanovic@axiado.com>
-In-Reply-To: <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AS4P191CA0028.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d9::20) To DM4PR18MB4144.namprd18.prod.outlook.com
- (2603:10b6:5:38b::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D182E62B4
+	for <linux-gpio@vger.kernel.org>; Fri,  8 May 2026 08:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778230079; cv=none; b=u1y2PtlRuuakriVUImXIYF+Adh6HVGjkwHXCrzsFlaNCPgbCo1iMz2cUOG50cBhvDNnBgE1E/OtNxPu4DhmyZNkR9k2GhRKwFr3rU6k3ZgLwUjUViDSwN9BA+QSzmYx8/olR6HKSK3OSl2pIIns5tRQH+7o4p7eTa3SQ92gm7vQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778230079; c=relaxed/simple;
+	bh=Pyw20vUTLDkdwfwf+/4R/pq/83GquxoH5fBoAfkz0bg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vBWGkoFTwStr3UOirnjGGBr5uPf24gN06ILAZVY0/j8DXRRahYqwouPq2X6SbEtYHHjAdYKeUZ90bnCd5iVp+jkdBKI2/d0pDbLB3Wlj2Vsh2yc6wvBL75J5BlWdFLxZMxUgmMH4HvT6roapeePa/K1UuzOwMM9gsMcTEiVcASw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XabZ4duL; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=d4JhIli0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6484X4E92532079
+	for <linux-gpio@vger.kernel.org>; Fri, 8 May 2026 08:47:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	InPAKn66aqiCxP/NuARC91sQ4atWXO5vXfq8uLfsK4I=; b=XabZ4duLFwxhsgel
+	7a/+TtJaXXaR3qLpKpZHMHnI1Fjie81iftdEc+JHRnFVDLy1VboDn8ka7dgWcbcQ
+	01OsQgCWR1e48LbJyf2haiHshDOuS5KT7fIVt3zyJVhIu0iPEYLglRyyR6MuH5a6
+	z7Ev28gv7kXtmuW9qlAkFgyq1TIu8USokioLZuaqB7eoVmgag6QdFsY2zUR9Fzlt
+	YSLtccQ/y3N9V0l2fPBUkhkChhy8iLQlP2x23hTUY0x+ZxL4QI3TY1J7EIXbch8O
+	WCywekve74601mzNCZ2RnpJHP5B97mfU0lUbaXPsKMrp4mC2g2TDdQZlmbG4RbnG
+	bkTRfw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e10m9tj0q-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 08 May 2026 08:47:57 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8d59968444aso46949385a.3
+        for <linux-gpio@vger.kernel.org>; Fri, 08 May 2026 01:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1778230077; x=1778834877; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=InPAKn66aqiCxP/NuARC91sQ4atWXO5vXfq8uLfsK4I=;
+        b=d4JhIli0iBSrJqo+2TrWyINicTuWnVZC1T6DawOglAOpOqmXx9J0tkFZ+SjQhYIw4p
+         G1UhDWHCiN+5k2rBDGJvIm+bmh15cnQilM98qDO1LbAAf54Act3olW6I8aiCf9jeCVbN
+         r3NWWq7xwrtkhq/2Er6hTfDz6NjJxs7HRlrqArAjHS79VnsksKPa/x54t52E6ejZ6WeZ
+         WOIunMI36oqtVPWXQsGtvz8z+IAhet4lHo/ZtN39nMvujNu4yJ69e04SLPGMPybZfbt5
+         XIoRkB7Q6Sl2txdgooPDofz6syEI39WLsKOlSim4l8Kms7M9rMAWD7KB1CBJ4nsxVbFT
+         wSIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778230077; x=1778834877;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=InPAKn66aqiCxP/NuARC91sQ4atWXO5vXfq8uLfsK4I=;
+        b=RrTYb3vKGTARQmyKUOqXawI6R0VYJ+zAauUZjkF/fTCU55K37PoV/h8bvB65gUFEHm
+         F4dtBgY/nplYGkju02f6cDhaHYGNiiXVlUv1pbwCShXnm/TmBZ14x528lmtVHbNuO4HY
+         haJm7E5YaKehI0/JxeLJcZe99sq1adOjhfYSurKhNSA2Kks3SMQ4LfVedaPGq5khMryK
+         rllmGPU4rXYnEdDVG0RYHDjmWlMFA3dgD1oe313OGjX8SE0arU201Vo0ChKS2GVVbe8O
+         wRUowJukfbFxBj9l9unLiLV0m9+185iXDduZckHMrxTk8H4UWzwCe1857C+QiWD1fW8g
+         zEiA==
+X-Forwarded-Encrypted: i=1; AFNElJ+lDbNC0WhnNEuys5exIA0/UZ0SsCqdl7M9R4vJlrox0PwGoM1Uh7PF9RB94rrs0GcbHD0Uzhc8tP0X@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx464NBSyDny4FVBZsynDdJAE9ptVNRhdfxtOB1mtJIMNSOcpLW
+	DhnIqtLum1wiyUpYeoCYUUzzsnKnS7LNayerEJCWNPBZn7ahSLKmOoWuZ8mF8363H3Ap/8vofti
+	VsZjSjO93R5fSVJjRSS9lMl/I48FyrH0fbZYAhoeB5xZgAS+0MlPSLzPNSCQ10X1P
+X-Gm-Gg: AeBDiev+CRmOJwgMD9YWqHvho6yZgaSAIcFeHx05lOXwia+kWfrmY0V5+d6JX6soyRz
+	N3nEUEfT08GOf/qPbhVJtLR2RTdnmBqyueDoB61ILddM/mPDWDI7YnLD6iIeuu7Ib+QyqFlxIB5
+	NJ2Rvz8vQ+mOSITsSr0F0aMjKwBDeqL2jTUL4w0eg+flAwIZgNbGYyhiW/KyV+MPy+yA5WQiE5N
+	vfi92St0/KpeW5ygBaapUhk3IsRYnlT9ncAWVPmlb+FCgQL9fIGcbZaeHunTidWR0uKuW5xPYbk
+	h4sPF8trfM5JnSMzLfUeYbw/FB+ONUt4Fjqu5uvp4iMCPrr/+SLoplccqltKFU+7ACzireMlzrP
+	/xSd1Jpo2X1ezCJJSlT6kcToLVd3SHE1dsba5tcr2qEarGuNkVemVpqTaklRQ5KNoPYhVRoOFk1
+	wKU1k=
+X-Received: by 2002:a05:620a:4095:b0:8f0:7516:da94 with SMTP id af79cd13be357-9051b259487mr1096400785a.1.1778230077061;
+        Fri, 08 May 2026 01:47:57 -0700 (PDT)
+X-Received: by 2002:a05:620a:4095:b0:8f0:7516:da94 with SMTP id af79cd13be357-9051b259487mr1096399485a.1.1778230076584;
+        Fri, 08 May 2026 01:47:56 -0700 (PDT)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67ef0b8a939sm402893a12.13.2026.05.08.01.47.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2026 01:47:54 -0700 (PDT)
+Message-ID: <a248ac04-38bb-4251-91d6-d99c21e3f3d0@oss.qualcomm.com>
+Date: Fri, 8 May 2026 10:47:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR18MB4144:EE_|DM8PR18MB4440:EE_
-X-MS-Office365-Filtering-Correlation-Id: 450edb3e-7db7-4fff-f256-08deacd77f45
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|3023799003|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	b+p/3DuNq1k3qUswH78gmGLRe/SjI0l0smfxgCv9FhNOA+a2g/GqDhRI2vuiSRpPJO6ZX4cn1C6g8M7OKjUyj7nIj5gnxUoIQTGleEE/Gf11s88rtO/SGLzG/e/dLtu2cjXJJh7VFogdePyfKbdrnNvz5DXDUckYTtj3m9b5LCLhU14kgBoKGhY7+e/8VniE08H4mH3iAxFExQJ8EN2ReqKw4/KmnQ91BFwcQ1gngA5FbUEppm/9mH0s8k4uLCqqmZIz39xRC88k86gTHg0twoG7AUXM9tEa7ahCLsw0Y/BUfsgTJF8eHzCaEu7HamKP6uOiMpte4UK4cQtQ6EIn5rbihyMqRggzjJzUUVZ/K2af7QiXs49cDqxQXE9hH9XdiHBGTyuLJt06sPfD+gpaGsWJq5p7/M2ylE1m/gRl3frTq2xcLvK2dndVorRqp5KHESfqm3xl1wamjUke6tzmHAStPTSjyaDQl8mfCrDirQae/6hff3J4GS6yjGWVvmdddd0upMB9rkGNnAsoNYXfITERUhDSo9DkCt90c8BXwvf5HeCOJ7FT5sqGK33WFV+QKs3AoaE6Tbv7iwQXC9No3E0Papjxgs+bScOdm+5jmznAn2oLvrJuxkrfuySP/Cx/D9ArlczsGdHOGZ2VNDr3GcB8GXSlsyVpIHLwS7ezabzyOLMXTSTZrAb/Cvvx72Dl
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR18MB4144.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(3023799003)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bGVXdkNaVWx0ejBWNC8xclE4dE5RRVBpSEVhS2QyQ3RLaDcxWWNpREcyRVFy?=
- =?utf-8?B?UE04RUhndDNRZEhsNlR3SEc0TFo4b1FhYjd5Ni9ZSGR2V2p5M0dWQW9wWGdz?=
- =?utf-8?B?R2NQRkp5Q2c2M1IyZ2VRa1pvSHRQYVhQSlR5RSs0RkxJeXFtTlorU3Q1eFdj?=
- =?utf-8?B?Y0MyRURkdmgxSFM0UWQ0eWtaMU51VzlhUzBUUEl0TTVaekIwWHdVSXJCSjJz?=
- =?utf-8?B?SUtCRlZFUlBpaUV6OUVyR2JFTWp0dXBaM016SWI1U2tQYXNxWTdCU0o2eWgy?=
- =?utf-8?B?OGZSWFhXMFhjR3B5SlRnS3RHb2s3dmVmeWhVQ0xRN1BuWEJIZ0JDaTZnRitO?=
- =?utf-8?B?UW52RDJOV1gvck5LeWVnQmZrbDF0SlFWY21jU3RTSUpCWlVhMHRoeHFPRWgv?=
- =?utf-8?B?WDRQd0xvN0RPSUw5YWpWRWN0WHdNYlBhYjE2TUE5bHlEL0dJeENpcFdVU2dX?=
- =?utf-8?B?VHZBZyt4WldNNHpCSHkxZ2V2TzA1c1pEN2NsU1hRZXc2WVRvOFNvSmo2SGta?=
- =?utf-8?B?bnB4RnJYeW1ITnI5SFJHaXNhUmxEUVh4eGJGNG5WbnVHRUVzNWh0elVBc3gr?=
- =?utf-8?B?VEd2Rld5dEhnN2VBbzl5VmFNNHpkenExLzllYU9JL0lqNm1aUmJhL3ZiOTFF?=
- =?utf-8?B?eDdZR09HZ3dvUS9pNVIxTzFnT2hmK1ZrOXJLRXZCcXllZFRwcGU1K1c2ZzRB?=
- =?utf-8?B?K2pyT1FCMXdsRlNuSzhuKzd6Si9sbVVwYkFaRnV4cWNmZFJlSHZQbVl4OWVv?=
- =?utf-8?B?R3ZYM1RPcDNPUEI2dHhUMzQ3Vi8rdlVqUllUaHdPTnFrQkdVOVd6MlEvS3Rq?=
- =?utf-8?B?U3RLWStuVDZnQ3BwQjVvUERwMDlMVlQzRmtBSzNnbW1TMFdBbnVtcHBsZWli?=
- =?utf-8?B?ZENLRnhMWGJ2cU5QTU1Ram9ObmQ1ZzJvaXcxazQ1QzZmWTJ4eHZrZHdnNG5O?=
- =?utf-8?B?ajlmdmd5WFBJdTFzbktPK05GR1BTUVFtUHRnUWRKUk5JY1R1S09SNE5pWWwy?=
- =?utf-8?B?TkNYNEVwaVBYM3JOeTgwdlh1bGJvMFRySUw4OGpFdENZVmc4OEhQVTFPaXRI?=
- =?utf-8?B?SjNodDB0bWpVWCsxS2FBb1F2NG9SNVlvR0RHT0p4bjJ6RHhKZXhvMjNzN0hD?=
- =?utf-8?B?U3liNk5sVGN5bUlFazVDcWYzMkc5akppWmprQlllc0xFbDZDU2Q3ZjhXTG5u?=
- =?utf-8?B?Wm9SUnBEbDYwWFpzNmsxT3lXSE9qUXRlOXBZajFoWkM4V09aZEpLeHdqeG40?=
- =?utf-8?B?Y213TXZvLzRPaXVrUWVXWlh1RXM0cHJwT0tMRXBiSWpnbHV3ZTh1ZExVUzFr?=
- =?utf-8?B?UExiS3V1SXlwU0RpbnZUUWFZYUVoMmhEUmsyc1hBK0ExRnRyUGhkNm52QzZm?=
- =?utf-8?B?Q1ZyU0tlK2xrYkpMRGcvdXdRb01pOUpTdFREa05Hbk41d3hOaHdxTUFBOHZw?=
- =?utf-8?B?TnQxMWExVjR0YU4vRGFleFEyeVRYcE02T3RqNFZNcWxzSm54RFZJT1crbWVz?=
- =?utf-8?B?NFJmTzlPZGZhK1BKeW9Rc0x0UTc2UnRDeUlKTjBXcC84SWVzQ1I2VVJ2c0Nx?=
- =?utf-8?B?Z0RudHpZN1NBZm1OT1BXWFRWeVpCT1A1d0JJQ0p1TzRRM3hqQ3drMk96MU9s?=
- =?utf-8?B?SWMzSS9sc01oLzNWSVEzNGFURnVJRTY5K1g4b254cHV4ODRGUlhkakcwdkls?=
- =?utf-8?B?K2ZKOUxNYXI5V01EL0g1UTV3clVqSFg3VmhOUC9hbGtRaDBLTUZjU2RYQU8z?=
- =?utf-8?B?UUZwbFJNT0NVZktCK1FyUDRrb3h4M3Q2SmlxZ3pLcW5VWExDQUo2dXlRQTlE?=
- =?utf-8?B?QW5NYUF0NXdVSlJQSzFTWVZXMUxRbmpNM0VLN1lTYTFvVzVBVS8xR3lFcDVt?=
- =?utf-8?B?MVM3cHEwSTJMVzF2bFkrU1pHcmE2YXhRRDdIdzZKREVlWEFNeFU5Rng3WktZ?=
- =?utf-8?B?aFBBV0pZNkVnQ0RGSDJpYktnK1B6SzBRR2pkOSthNS80SStMdkxqOFZlVmVL?=
- =?utf-8?B?WlBuaWkzdStuYk1hLzhhZlBDTXJLSUVGUStrYWxtY1FqSTExdno1eGlubW5w?=
- =?utf-8?B?NTl3NGIrdFY0dGx4TGkwU3J1RkY3bmJsZWpjVHlQblNBSHRubGdIU2o3VjJl?=
- =?utf-8?B?NnZQSWY4dUprMmhEWUVyME1UVGdERVdUN0NwNmVOWDJaZm16bkJmeXFtQUtW?=
- =?utf-8?B?RDhFMjZSSUZjTUk2V1B3WDMvM3RFMGFpNXpXL0JUc1FLOGdBanVGQXJjL3g2?=
- =?utf-8?B?MWV1UkRER2xCekdJVkdWYXp4WWEwUEFHTytCcTRodFcyRVhjTVVnNzRwdDM5?=
- =?utf-8?B?UXhDSWpBcjJHY2VGMllEU3JyektZcnJvdUFGaU9UL2traVp5eDhSQT09?=
-X-OriginatorOrg: axiado.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 450edb3e-7db7-4fff-f256-08deacd77f45
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR18MB4144.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2026 07:57:48.9147
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: ff2db17c-4338-408e-9036-2dee8e3e17d7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FFOdgle4yPuCY9Trokz3MrK0QbpEeEAK7BkRFca1KdZJLnunFiWEuAZArrfP14V1cJe1boIjAGbJFQYlVF+OdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR18MB4440
-X-Rspamd-Queue-Id: 6C8754F3693
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] pinctrl: qcom: spmi-gpio: Add PM8010 GPIO support
+To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        David Collins
+ <david.collins@oss.qualcomm.com>,
+        kamal.wadhwa@oss.qualcomm.com, kernel@oss.qualcomm.com
+References: <20260507-pm8010_gpio-v1-0-3bce9da8d2ba@oss.qualcomm.com>
+ <20260507-pm8010_gpio-v1-2-3bce9da8d2ba@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260507-pm8010_gpio-v1-2-3bce9da8d2ba@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: _4ohrTHHqgn9FvJ-K9n6ntyJRsRNOpda
+X-Authority-Analysis: v=2.4 cv=VP3tWdPX c=1 sm=1 tr=0 ts=69fda33d cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=EUspDBNiAAAA:8 a=WZlt3gIzTKT3u8vpA5YA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA4MDA4OSBTYWx0ZWRfXzmfaUfRZQLEe
+ 10fs3iGOg7IVH923RDzO4/+5zOCN9tyk4iC7X+0dDvNjLl3Si+WpCrXUUSqm9kzE/sUdu6YFAdg
+ yfbEY9bQKlQntvf00earBRgzhd5b4bqvZyFbP0dN+s0yFPYzwHLN/99V5fYFOS+UQG+1Jp55FWK
+ WHRRI5mDH+nsral9MezMuYLqllWYk9c7lqDRjvtubcn9dKJoSuCm594VlTnGPiyUQkxy4X1DbAN
+ Ijrq4Q6TFts0Ux7VowDK6izHR03XtebIohDYEWHWndA5R/2TkpbvbKp08Adkct4sPeSAiYlV1ui
+ w6cf0F2yzDrePFJMtvBCTGH60wjasIZgM5jN5d8PwzZ39GhslszZkOdA3MCQvj/WdHeI4SRG5+9
+ n5eUmVHaLg+v6ISJZuCID09OAuHiYyrURx6y9XjMkoFbqiZUJrT0hk1zF7pMrOo+mUHvrfKgzg5
+ Bc0hmn35Imrc/V7Bl3Q==
+X-Proofpoint-ORIG-GUID: _4ohrTHHqgn9FvJ-K9n6ntyJRsRNOpda
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-07_02,2026-05-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 phishscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605080089
+X-Rspamd-Queue-Id: 3C7C04F3DFB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_DKIM_ALLOW(-0.20)[axiado.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36438-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[axiado.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[axiado.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	TAGGED_FROM(0.00)[bounces-36439-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,qualcomm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pstepanovic@axiado.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,axiado.com:email,axiado.com:mid,axiado.com:dkim]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-Hi Linus,
-Thanks for the feedback.
+On 5/8/26 7:34 AM, Fenglin Wu wrote:
+> Add PM8010 GPIO support with its compatible string and match data.
+> 
+> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> ---
 
-On 5/7/2026 11:44 AM, Linus Walleij wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
->
->
-> Hi Petar,
->
-> On Thu, May 7, 2026 at 10:06 AM Petar Stepanovic <pstepanovic@axiado.com> wrote:
->
->>>> +  '#gpio-cells':
->>>> +    const: 2
->>> Are you sure you don't want to use 3 here instead and split the 128
->>> GPIOs into 4 "banks" second cell being the bank number?
->>> <&gpio 2 4>; ?
->>>
->>> Maybe this also solves the 512 GPIO by grouping the GPIOs into
->>> 8 banks...?
->> Thank you for the suggestion. We would prefer to keep #gpio-cells = <2>
->> to stay aligned with existing SGPIO drivers and current DTS usage.
->> A single linear offset is sufficient to identify each GPIO, so introducing a
->> bank cell would add additional complexity without a clear benefit.
->> Any internal bank handling can remain within the driver if needed.
-> If each bank also has its own associated IRQ line, for instance, then
-> this also reflects the hardware in a better way. But it seems this
-> controller has just one single IRQ line for all GPIOs, so maybe
-> this is better.
->
->>>> +  ngpios:
->>>> +    description: The number of gpios this controller has.
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> Same here, certainly the 128 variant has 128 gpios and
->>> the 512 has 512 GPIOs? Just use the compatible string
->>> to infer this.
->> This seems to be platform-specific rather than strictly hardware-dependent.
->> We were considering keeping it as a separate property (possibly renamed to |axiado,sgpio-ngpios|).
->> Would you prefer that, or deriving it from the compatible string?
-> In this case it is fine to use ngpios.
->
-> ngpios is used when the hardware can actually do more
-> GPIO lines, but they are not routed out on the package of
-> the silicon, for example.
->
->>>> +  dout-init:
->>>> +    description: Initial values for the dout registers.
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +    minItems: 4
->>>> +    maxItems: 4
->>> In:
->>> Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
->>>
->>> you find:
->>>
->>>   lines-initial-states:
->>>     $ref: /schemas/types.yaml#/definitions/uint32
->>>     description:
->>>       Bitmask that specifies the initial state of each line.
->>>       When a bit is set to zero, the corresponding line will be initialized to
->>>       the input (pulled-up) state.
->>>       When the  bit is set to one, the line will be initialized to the
->>>       low-level output state.
->>>       If the property is not specified all lines will be initialized to the
->>>       input state.
->>>
->>> If this is what you want, use this standard binding instead.
->> In our case, the hardware provides dedicated DOUT registers where
->> each bit directly controls the output level (0 = low, 1 = high).
->>
->> The lines-initial-states property also encodes input state semantics,
->> so it does not map directly to this hardware.
->>
->> Would you prefer adapting to lines-initial-states despite this,
->> or using a separate property for output initialization?
-> Please use lines-initial-states, support also input mode setting
-> and write more than one register if necessary.
->
-> Setting up the dout-states for lines which are supposed to be used
-> as inputs just doesn't make sense does it?
->
-> It is better if the device tree has this deeper semantic which
-> provides useful information for the developer and makes the
-> author of the device tree be more careful and detail-oriented
-> around the actual usecase.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-For example, when SGPIO is configured for 128 lines, the hardware provides
-128 input bits (DIN) and 128 output bits (DOUT). If modeled directly, this
-corresponds to 256 GPIOs in Linux, since the input and output signals are
-independent and are not bidirectional.
-
-Similar to the gpio-aspeed-sgpio.c driver, the input and output paths are
-fixed by hardware and cannot be configured dynamically per line. These are
-not interchangeable directions of the same GPIO line; they are separate input
-and output signals. Because of that, combining them into a single logical GPIO
-abstraction would not accurately represent the hardware model.
-
-Because the direction is fixed by hardware, the standard
-lines-initial-states property, which encodes both direction and initial state,
-does not map cleanly to this design.
-
-For the output lines (DOUT), should their initial values be described in the
-device tree, or should they be configured by userspace, with the driver only
-providing default initialization?
-
->
-> Yours,
-> Linus Walleij
-
-Thanks again for the guidance.
-
-Best regards,
-Petar Stepanovic
-
+Konrad
 
