@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-36451-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AFcXGYzB/WnEigAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36451-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:57:16 +0200
+	id aC0qBHjB/WkpigAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36452-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:56:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23E8B4F55C0
-	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:57:16 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DCD24F55A7
+	for <lists+linux-gpio@lfdr.de>; Fri, 08 May 2026 12:56:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2C6193074ADB
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 10:56:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 53D88302008F
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2026 10:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67EE63603DA;
-	Fri,  8 May 2026 10:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4490936166A;
+	Fri,  8 May 2026 10:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmBCNkXY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXJGYRyx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B371D5147;
-	Fri,  8 May 2026 10:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F6318BB3;
+	Fri,  8 May 2026 10:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778237748; cv=none; b=bbswSGRACBFD/ECa2Ha1VOgIqQUl821h6jMFgVo/zsx5WNOpEzAZy98wpgF7cBgzVVit+y3LcuQ7ESVuRd2sX5zNR93xm1g106wL5+ei2/VQ6+Lhdms7ix4YfR+gpNZzDrZCc4Dip6fjXqCIRWR61Y+4pRHMQdstTTVLPtt1/i0=
+	t=1778237752; cv=none; b=J5mFSKVdGnRAFBmCaYiOPxVfaGofJ8QBd1Lom6uJle/+r+VAFnyTu1+pcDJBWLigS8mWe0VrWdchY+1sUogB2qK03RO3jUl37D1iEGUqIuvPHjTFa8LXfrKnubqtr/FC8mQVoGhyZMf8rhhWQyF3/txBPUDhmtYUvjGu3aeaE8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778237748; c=relaxed/simple;
-	bh=Ymg3TCq7DX+ntINjdzsNs6+Gc+nY6vehgZqOomECS9g=;
+	s=arc-20240116; t=1778237752; c=relaxed/simple;
+	bh=1DmEc2GErHK0mCxvKEZD9XQqL2KQLPzOSBbYLDoi/+c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g4d4uaWqD4eQJnSFno6BZ9Za2m6qUZ5/VLIhHbPuTadrWGpNj5lOvD/uG/2MfAVxP36mrdK562AJyCjmhxdh2J3tVONrWd6BKjffKDxHe8BuvJMl1IiJhW44MZEDRLPoQNnfFM4Hp7BaPI2RWONhEXiTqKZDt+pLiiAR4jUIlRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmBCNkXY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57849C2BCC7;
-	Fri,  8 May 2026 10:55:44 +0000 (UTC)
+	 MIME-Version; b=ADJPS+7+MTwULpeGWr4QMpOeKQhxKXX5EPyeNuaKRmYLdLwuVJbfgdlTIxQtTBKsTDJA5GukO2VmbJW/CezREGjxmqIFTXRcH+H00NpyIuqVJOk19x7H9TufgX0VEhxWUkKK7Zm2KBtOLBa31RCTYqQLvNznmGxdgxtkTB/eotY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXJGYRyx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30407C2BCB0;
+	Fri,  8 May 2026 10:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778237747;
-	bh=Ymg3TCq7DX+ntINjdzsNs6+Gc+nY6vehgZqOomECS9g=;
+	s=k20201202; t=1778237751;
+	bh=1DmEc2GErHK0mCxvKEZD9XQqL2KQLPzOSBbYLDoi/+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kmBCNkXYhfH3HcQddaisskqlCblAE6d/+SaJUja2CmGsFEDTOAUNy7jTuE9RSdkiS
-	 7hsWWTZln8UPuN2gqn4KMij/gktT/XqOK0Qf/SNy6d8RePilCxQq+GYgJTqrAl3qXl
-	 s5vYCrV4FWbQszIZDQGnYs6IbP0tG57KQAvdmHCDoA1iDunRbgGitaFyu0QL1QaNSR
-	 B0UNR+IUeFgDhX5fviT8J/HPDej7ML7omL/KwgtvpmUBINchasfIRKyOd2GwcbYFEk
-	 UXOIqj7iO9fW/DI3ovSTMruIrta4TRbWOildGB8KkJS6qd40zc8OmNSCbQFdZx4o5K
-	 JlnVZDR/oZEBQ==
+	b=sXJGYRyxgVUlE9u1TeueMhuBakpCo3M0BlG9TiZDZAF3n+vKWYBstijRzTI4KCD3A
+	 Xi/WZuXJ9JFk8YA2qXce+Err4rAFrxIhaSATVKapJIU5MTLpGhg65GjjJyd9UBLWW9
+	 2Ul/T3mIdnwPMShbfpAmp1UiYEh33i3CfiQnuSOlji2QiAXAZU0FjW672T4wtNQrMW
+	 a5+nROgh99YrX7Lqdl+5bMMMyna8m9Zm1RS5Yxwl+mKgoLu8F/sR9Pahi7TSa8ybln
+	 RH6UFoztm8Iwzjdinn5+lRsy4RJSCeSiAwZMUC9kaXusc/hGh1D6DZ1QJHPP36n4pT
+	 RqJ4jsbzmUMmw==
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -65,9 +65,9 @@ Cc: Benson Leung <bleung@chromium.org>,
 	Jason Gunthorpe <jgg@nvidia.com>,
 	Johan Hovold <johan@kernel.org>,
 	"Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH v10 7/9] gpio: Remove unused `chip` and `srcu` in struct gpio_device
-Date: Fri,  8 May 2026 18:54:46 +0800
-Message-ID: <20260508105448.31799-8-tzungbi@kernel.org>
+Subject: [PATCH v10 8/9] platform/chrome: Protect cros_ec_device lifecycle with revocable
+Date: Fri,  8 May 2026 18:54:47 +0800
+Message-ID: <20260508105448.31799-9-tzungbi@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260508105448.31799-1-tzungbi@kernel.org>
 References: <20260508105448.31799-1-tzungbi@kernel.org>
@@ -78,211 +78,139 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 23E8B4F55C0
+X-Rspamd-Queue-Id: 1DCD24F55A7
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[20];
-	TAGGED_FROM(0.00)[bounces-36451-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36452-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-`chip` and `srcu` in struct gpio_device are unused as their usages are
-replaced to use revocable.  Remove them.
+The cros_ec_device can be unregistered when the underlying device is
+removed.  Other kernel drivers that interact with the EC may hold a
+pointer to the cros_ec_device, creating a risk of a use-after-free
+error if the EC device is removed while still being referenced.
+
+To prevent this, leverage the revocable and convert the underlying
+device drivers to resource providers of cros_ec_device.
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 ---
 v10:
 - No changes.
 
-v9: https://lore.kernel.org/all/20260427135841.96266-8-tzungbi@kernel.org
+v9: https://lore.kernel.org/all/20260427135841.96266-9-tzungbi@kernel.org
 - New to the series.
-- No changes.
+- Change revocable API usages accordingly.
+- Rename "revocable_provider" -> "its_rev".
 
-v4 - v8:
+v5 - v8:
 - Doesn't exist.
 
-v3: https://lore.kernel.org/all/20260213092958.864411-12-tzungbi@kernel.org
+v4: https://lore.kernel.org/all/20250923075302.591026-5-tzungbi@kernel.org
 - No changes.
 
-v2: https://lore.kernel.org/all/20260203061059.975605-12-tzungbi@kernel.org
-- No changes.
+v3: https://lore.kernel.org/all/20250912081718.3827390-5-tzungbi@kernel.org
+- Initialize the revocable provider in cros_ec_device_alloc() instead of
+  spreading in protocol device drivers.
 
-v1: https://lore.kernel.org/all/20260116081036.352286-24-tzungbi@kernel.org
+v2: https://lore.kernel.org/all/20250820081645.847919-5-tzungbi@kernel.org
+- Rename "ref_proxy" -> "revocable".
+
+v1: https://lore.kernel.org/all/20250814091020.1302888-3-tzungbi@kernel.org
 
 ---
- drivers/gpio/gpiolib.c | 26 +-------------------------
- drivers/gpio/gpiolib.h |  4 ----
- 2 files changed, 1 insertion(+), 29 deletions(-)
+ drivers/platform/chrome/cros_ec.c           | 11 +++++++++++
+ include/linux/platform_data/cros_ec_proto.h |  3 +++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d2d9807da98d..5ce12f3b753f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -428,8 +428,6 @@ static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int offset)
- {
- 	int ret;
+diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+index 1da79e3d215b..2702a1bbfeb5 100644
+--- a/drivers/platform/chrome/cros_ec.c
++++ b/drivers/platform/chrome/cros_ec.c
+@@ -16,6 +16,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
++#include <linux/revocable.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
  
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (WARN_ON(!gc->get_direction))
- 		return -EOPNOTSUPP;
+@@ -37,6 +38,7 @@ static void cros_ec_device_free(void *data)
  
-@@ -879,7 +877,6 @@ static void gpiodev_release(struct device *dev)
- 	ida_free(&gpio_ida, gdev->id);
- 	kfree_const(gdev->label);
- 	kfree(gdev->descs);
--	cleanup_srcu_struct(&gdev->srcu);
- 	kfree(gdev);
+ 	mutex_destroy(&ec_dev->lock);
+ 	lockdep_unregister_key(&ec_dev->lockdep_key);
++	revocable_revoke(ec_dev->its_rev);
  }
  
-@@ -1154,14 +1151,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		goto err_free_gdev;
- 	gdev->id = ret;
+ struct cros_ec_device *cros_ec_device_alloc(struct device *dev)
+@@ -47,6 +49,15 @@ struct cros_ec_device *cros_ec_device_alloc(struct device *dev)
+ 	if (!ec_dev)
+ 		return NULL;
  
--	ret = init_srcu_struct(&gdev->srcu);
--	if (ret)
--		goto err_free_ida;
--	rcu_assign_pointer(gdev->chip, gc);
--
- 	ret = init_srcu_struct(&gdev->desc_srcu);
- 	if (ret)
--		goto err_cleanup_gdev_srcu;
-+		goto err_free_ida;
++	ec_dev->its_rev = revocable_alloc(ec_dev);
++	if (!ec_dev->its_rev)
++		return NULL;
++	/*
++	 * Drop the extra reference for the caller as the caller is the
++	 * resource provider.
++	 */
++	revocable_put(ec_dev->its_rev);
++
+ 	ec_dev->din_size = sizeof(struct ec_host_response) +
+ 			   sizeof(struct ec_response_get_protocol_info) +
+ 			   EC_MAX_RESPONSE_OVERHEAD;
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index de14923720a5..e8c3bd03403c 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -12,6 +12,7 @@
+ #include <linux/lockdep_types.h>
+ #include <linux/mutex.h>
+ #include <linux/notifier.h>
++#include <linux/revocable.h>
  
- 	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
- 	if (ret)
-@@ -1355,8 +1347,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ #include <linux/platform_data/cros_ec_commands.h>
  
- err_cleanup_desc_srcu:
- 	cleanup_srcu_struct(&gdev->desc_srcu);
--err_cleanup_gdev_srcu:
--	cleanup_srcu_struct(&gdev->srcu);
- err_free_ida:
- 	ida_free(&gpio_ida, gdev->id);
- err_free_gdev:
-@@ -1393,8 +1383,6 @@ void gpiochip_remove(struct gpio_chip *gc)
- 	synchronize_srcu(&gpio_devices_srcu);
+@@ -165,6 +166,7 @@ struct cros_ec_command {
+  * @pd: The platform_device used by the mfd driver to interface with the
+  *      PD behind an EC.
+  * @panic_notifier: EC panic notifier.
++ * @its_rev: The revocable_provider to this device.
+  */
+ struct cros_ec_device {
+ 	/* These are used by other drivers that want to talk to the EC */
+@@ -211,6 +213,7 @@ struct cros_ec_device {
+ 	struct platform_device *pd;
  
- 	/* Numb the device, cancelling all outstanding operations */
--	rcu_assign_pointer(gdev->chip, NULL);
--	synchronize_srcu(&gdev->srcu);
- 	revocable_revoke(&gdev->chip_rev);
- 	gpio_device_teardown_shared(gdev);
- 	gpiochip_irqchip_remove(gc);
-@@ -2905,8 +2893,6 @@ static int gpiochip_direction_input(struct gpio_chip *gc, unsigned int offset)
- {
- 	int ret;
+ 	struct blocking_notifier_head panic_notifier;
++	struct revocable *its_rev;
+ };
  
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (WARN_ON(!gc->direction_input))
- 		return -EOPNOTSUPP;
- 
-@@ -2922,8 +2908,6 @@ static int gpiochip_direction_output(struct gpio_chip *gc, unsigned int offset,
- {
- 	int ret;
- 
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (WARN_ON(!gc->direction_output))
- 		return -EOPNOTSUPP;
- 
-@@ -3011,8 +2995,6 @@ static int gpiochip_set(struct gpio_chip *gc, unsigned int offset, int value)
- {
- 	int ret;
- 
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (WARN_ON(unlikely(!gc->set)))
- 		return -EOPNOTSUPP;
- 
-@@ -3360,8 +3342,6 @@ static int gpiochip_get(struct gpio_chip *gc, unsigned int offset)
- {
- 	int ret;
- 
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	/* Make sure this is called after checking for gc->get(). */
- 	ret = gc->get(gc, offset);
- 	if (ret > 1) {
-@@ -3417,8 +3397,6 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
- static int gpio_chip_get_multiple(struct gpio_chip *gc,
- 				  unsigned long *mask, unsigned long *bits)
- {
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (gc->get_multiple) {
- 		int ret;
- 
-@@ -3762,8 +3740,6 @@ static int gpiochip_set_multiple(struct gpio_chip *gc,
- 	unsigned int i;
- 	int ret;
- 
--	lockdep_assert_held(&gc->gpiodev->srcu);
--
- 	if (gc->set_multiple) {
- 		ret = gc->set_multiple(gc, mask, bits);
- 		if (ret > 0)
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 90ad9b7fdfdd..efbff4a1cd4e 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -32,7 +32,6 @@ struct fwnode_handle;
-  * @chrdev: character device for the GPIO device
-  * @id: numerical ID number for the GPIO chip
-  * @owner: helps prevent removal of modules exporting active GPIOs
-- * @chip: pointer to the corresponding gpiochip, holding static
-  * data for this device
-  * @descs: array of ngpio descriptors.
-  * @valid_mask: If not %NULL, holds bitmask of GPIOs which are valid to be
-@@ -55,7 +54,6 @@ struct fwnode_handle;
-  *                 process context
-  * @device_notifier: used to notify character device wait queues about the GPIO
-  *                   device being unregistered
-- * @srcu: protects the pointer to the underlying GPIO chip
-  * @chip_rev: revocable provider handle for the corresponding struct gpio_chip.
-  * @pin_ranges: range of pins served by the GPIO driver
-  *
-@@ -69,7 +67,6 @@ struct gpio_device {
- 	struct cdev		chrdev;
- 	int			id;
- 	struct module		*owner;
--	struct gpio_chip __rcu	*chip;
- 	struct gpio_desc	*descs;
- 	unsigned long		*valid_mask;
- 	struct srcu_struct	desc_srcu;
-@@ -83,7 +80,6 @@ struct gpio_device {
- 	rwlock_t		line_state_lock;
- 	struct workqueue_struct	*line_state_wq;
- 	struct blocking_notifier_head device_notifier;
--	struct srcu_struct	srcu;
- 	struct revocable	chip_rev;
- 
- #ifdef CONFIG_PINCTRL
+ /**
 -- 
 2.51.0
 
