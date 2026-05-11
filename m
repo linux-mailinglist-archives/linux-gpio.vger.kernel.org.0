@@ -1,1754 +1,423 @@
-Return-Path: <linux-gpio+bounces-36502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WBrTCqBKAWqKTwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36502-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 05:18:56 +0200
+	id SLGPFwpiAWp+XQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36503-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 06:58:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 786025078F1
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 05:18:54 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB406507EDD
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 06:58:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6ECEA3008756
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 03:18:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 12DAB30028AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 04:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E99B637AA8A;
-	Mon, 11 May 2026 03:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67A9364E92;
+	Mon, 11 May 2026 04:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5kFyLAj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MOt3OaHm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011018.outbound.protection.outlook.com [40.93.194.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D8E37C91F
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 03:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778469481; cv=none; b=ZK1L1qq9dAiShksOwz1fuUG7UVQTdGLebLF6vyn0iltyFkcy+crv70l40XJax8bSuk0kMqsRrAcBSj+iphWEATj5Agc5uMyW2AzT6SG+g/gcfb5TIY4h2nulX2YVqXtUCnOZzytWQHQYpDBf1vr1IzFQ+BcHMwaFMvvf8o1Zkws=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778469481; c=relaxed/simple;
-	bh=fdj/IKt2c51bdgnAB/AP9vQHD053g1ENiRz9KHktyHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fCqRk/aIYHV9+IoAP15aDAhEE7ef9t1MokRgS7QzqKsejZxNFYjoRlYUjHTjxAZxq9LdlSLOkVHvMTVjgQL044PPiEkg8mB2HpcTy2zUHRqlPvYwXCIU9QcITEH5dbEaDt0/M1SpTTPMdr/k0bzg3zafQbZsonxROUYR9+J/O2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k5kFyLAj; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b9705613ddso22795995ad.1
-        for <linux-gpio@vger.kernel.org>; Sun, 10 May 2026 20:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778469478; x=1779074278; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=obbNxLKykF4TMBctgFlEf5GpjhO5uHugI0B485O83o4=;
-        b=k5kFyLAjz8aU5PixPF+SRNAb4THLmIreJJjlpQoRo2gQp7nAu6Ghdg+mjbmXy5Y6xN
-         4ctyBabFDG7SlO5SpZAEffdQPJrTo+846RWvOhMGi/tWwXkOUdVR4qnngSoscxgRsH79
-         ZN6M8pDBsN9V2TyGuaZ19zURFWCOPYWbVev5x19Vy5QxWq6g+cdqItlPbKAb5GngrGKf
-         Gn9uBjbRIp3U1t0+mjpZXhQyPHbg7j1pDWeZW0ZjTtjp0gu0yfAothZqRiIkaWhk+KJx
-         xtZ+7G/kR/D7zKoKYa/u0sLBPB1rMNBUnfq0cqDqMMtr16kE6o0eVYGB2gs/pSOaXlHY
-         toyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778469478; x=1779074278;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=obbNxLKykF4TMBctgFlEf5GpjhO5uHugI0B485O83o4=;
-        b=Dyka+wgewYGGVSNk7e76tv4U9CvCJ7CjiZXYVqUbEVy98FPxwlVVtluEZyubCMnsu+
-         KAcnAXcisDtmXmWGfaacQofj9uuy4OKFLJXFrb0tdewSITH6RLVPTHf2A6+hVm1lRN20
-         fcF9emQSEyHt18+uWP3HAzV/XCe2bYsOce9AcV87P1lOvbh0Z8RjecJj6WM/N9/KDI6R
-         VKL4cY6rBj/lv5baPAjPGjFkh0rmAo0DcC8M1hsCDOousdXFCKOxzIfQ3BnlbRqF262x
-         wIIh72o3fJVA1Ehzb5IqdY/x9p8Vn972HCc9blu4ZpOSR8dVgN6WJUinmDESpC3jGihk
-         tOug==
-X-Forwarded-Encrypted: i=1; AFNElJ+LdXsGzt4ovCmN54v5ZTm76e4KlrWw3AekRc11d19AFQfp5ylE4drFr2szS6oFsmLLPVTqHdcIv5fI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ5GSCcZEQMVMBATO+KIZw8NNy16wfDgOJZWxIKZvxRqLcNvzE
-	2DjXfMmPdW+hU587Umbufxw7tSIVJHkbiLTlxYmjN9Fbu+1bKUT4slrI
-X-Gm-Gg: Acq92OHQGeyUOz5RoU/hEcRCwdokgZfoCmAW5aDry1kQjkirgQW8JTzFMWq7MhpqIBa
-	Go3yKG4KzAhXCm6Xi0DYDDmaBD8bjtUE0QLxJB5dslUcV9H0+tfQ4i9kx1qSPTnboGG+D69wS8B
-	zbvfAlyDeEN2Uzeg4jo6UeiidgHDCMn+4GB9lisLyD748OwOt87ao8wI24XMhcq+yE98Hrr7Al8
-	CNPzVspWkcM2RHTLmTo4N/RiLYrEGyxyfilknZXCotscx6qHPjdaAzzbcUnQ9oI0wnTu5g/R82f
-	iHQ4cmw0xj3NqWUhLgRi3xHqsj3hI78x5jzOzRu577UnLwhnVlADLkLXDOCzYde4vVsbx1N+8Vr
-	IhToeuavE236nmcJu15rQNIAXs/Hhvyy/qSKuxQi+Vqpz1NndDYouvTcr4mJzKBdUNTz0FmuwLe
-	guMDj4tKEf/7dn+J/II0V5trJlNbPqz0xuDzgd16ToGZHbZZ9Jovv2L5slFD2VHGb4fuldoAYRL
-	LAiBl/lLL9Y
-X-Received: by 2002:a17:902:bc82:b0:2b2:ccfb:8387 with SMTP id d9443c01a7336-2ba799d7368mr169209265ad.28.1778469477310;
-        Sun, 10 May 2026 20:17:57 -0700 (PDT)
-Received: from localhost.localdomain (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1e374besm90267675ad.47.2026.05.10.20.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2026 20:17:56 -0700 (PDT)
-From: Joey Lu <a0987203069@gmail.com>
-To: linusw@kernel.org
-Cc: ychuang3@nuvoton.com,
-	schung@nuvoton.com,
-	yclu4@nuvoton.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Joey Lu <a0987203069@gmail.com>
-Subject: [PATCH 1/1] pinctrl: nuvoton: ma35d1: fix MFP register offset and pin table
-Date: Mon, 11 May 2026 11:17:49 +0800
-Message-ID: <20260511031749.32643-2-a0987203069@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260511031749.32643-1-a0987203069@gmail.com>
-References: <20260511031749.32643-1-a0987203069@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB2581ACA;
+	Mon, 11 May 2026 04:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778475527; cv=fail; b=PHBfkeJ4MNnuLZ2XcDz539QohUDLf6aFU/DQEChJ2vVIBSUxc+G75CYomqhQGEuYX7doTqzNpTFhrztKBHyYREcX2vzKlTJqi8rDqJ++V9ffdDrFH61AdB0U+wWC84dBxN1bG3ftKosrmaYlTGD1sjXyQuk0HcvT0GAMAnHQsXw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778475527; c=relaxed/simple;
+	bh=bkRDw7aU/ZER+EJZUXSfpzw3WIShzdWXONJoI2FKiFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qduNZrHRbrrwUr+XV7/glrW940PNpKrJsbdODaJLzND8s9fENLRUSOBJo0XgyQvoYDOFmQWlC8VdaLgA1NNcSwr1MBxrpbDftfKUSmkXoJk9syFovOCV+t9EDcP8TBjwMdNdGp44OhI6LhOujCVpyI701ewnKJ4v18xwMtWvvQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MOt3OaHm; arc=fail smtp.client-ip=40.93.194.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hVRhc8U4c5KcsVajCsZgoWdi/giJElYDzIBiUSCfNreiK1gMLoZGfOWFO1xgUecv2Kws5p9SiiAUaTc6NOqQByICCfdpLGBbQK3Qtn85v/C6lyInuNy60Pl9BzojxPfGovpXIBpSaFs+Xs42W1BEHeAQhtkb5CBIdylsbhMhfhH5tGeXQEWnWf/90Mb8jDifJuRmcKJbxMpQ9j5A249SLEs/3rmUsHmthIQswXgpAR8/vkyo40rrMYA7btOzn/s1ik1+fjBZpE6Xz6T46FwLTEWHCzNyt+go9otCmVhbXN2T+1+CTHND0EuBc+3u9eaO06DnWHZtIcLdyg8SscXTig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kuzrfR/Mxgy+d8rXhjvSkFvDcWPZJwXKSWBS7v4vGbQ=;
+ b=ZS12Sf3cpl7TqThCwvUK5GIfDJrWaeD9+Z39Eqjt5XzGEQarWa1B9XWB9ZxC1mag0dLHvbyk8UDDTuVmEmSMDUpRwJ1PcwmbYMqKJJ3isJ7a4gffbu4TEE6H28zZ3xN7HvXeP2jn7WkhSsITAfr8ic/6jXYHI2vg0veqlWr+Yv2KYMQZaGh6DQebM0IU5c5Ql4VhxRbDcX2yYKmnAG6FS+hk/ubsyLHnjHuiULYjOlrgAPdC3dRsiily4t9Ta1e7eFOdD3cCvfwFU96B7ag7EHUjz203kDHp1BAF/AS8MxVktYpW2rvxZOYlXktfHfV5+JxFNw41OOErJjX1PBYG5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.21.195) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kuzrfR/Mxgy+d8rXhjvSkFvDcWPZJwXKSWBS7v4vGbQ=;
+ b=MOt3OaHms7OTBsCywHsmoFHeYdUjFhWrN9mCIieb41ERLQMU123vQl+xwXQVoF+vQymx41nfwfru57FzllEdJ7iWFbrPP8X1laYcZUgCRc7JqoO6MDJy1d41rpWhVVNexYtFy+nXnwdiuJV6jyuV0zQPkjTad6fXD/yT43hUqOo=
+Received: from BYAPR05CA0004.namprd05.prod.outlook.com (2603:10b6:a03:c0::17)
+ by CO6PR10MB5634.namprd10.prod.outlook.com (2603:10b6:303:149::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Mon, 11 May
+ 2026 04:58:43 +0000
+Received: from MWH0EPF000C6191.namprd02.prod.outlook.com
+ (2603:10b6:a03:c0:cafe::a1) by BYAPR05CA0004.outlook.office365.com
+ (2603:10b6:a03:c0::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.25.14 via Frontend Transport; Mon, 11
+ May 2026 04:58:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ MWH0EPF000C6191.mail.protection.outlook.com (10.167.249.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.25.13 via Frontend Transport; Mon, 11 May 2026 04:58:39 +0000
+Received: from DFLE204.ent.ti.com (10.64.6.62) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Sun, 10 May
+ 2026 23:58:38 -0500
+Received: from DFLE202.ent.ti.com (10.64.6.60) by DFLE204.ent.ti.com
+ (10.64.6.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Sun, 10 May
+ 2026 23:58:38 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE202.ent.ti.com
+ (10.64.6.60) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
+ Transport; Sun, 10 May 2026 23:58:38 -0500
+Received: from [172.24.18.18] (ltpw09g66v.dhcp.ti.com [172.24.18.18])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 64B4wQLD2625874;
+	Sun, 10 May 2026 23:58:27 -0500
+Message-ID: <99819177-5911-4271-96b2-6f0eb7f9c42d@ti.com>
+Date: Mon, 11 May 2026 10:28:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Arnaud POULIQUEN
+	<arnaud.pouliquen@foss.st.com>
+CC: Shenwei Wang <shenwei.wang@nxp.com>, Andrew Lunn <andrew@lunn.ch>, "Linus
+ Walleij" <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+	"Jonathan Corbet" <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Shuah Khan <skhan@linuxfoundation.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"Peng Fan" <peng.fan@nxp.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-remoteproc@vger.kernel.org"
+	<linux-remoteproc@vger.kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+References: <CANLsYkwvL0Z3+12MD=J+Dc2yAU2T8ypizyG=6AhYoWOh55odHA@mail.gmail.com>
+ <472f85bd-42c2-40c6-abfd-b76924797069@ti.com>
+ <CANLsYkzt9xUczxSU28u-TfZAAjr0ufZKXAj8Eqfq=45gufXW3w@mail.gmail.com>
+ <f7ef3417-eb84-4467-ac72-a9bc8b0c81e8@foss.st.com>
+ <21de8440-adf7-454b-acfc-06e50882e075@ti.com>
+ <4c526816-b127-43e7-86e9-eee4dc1152bc@foss.st.com>
+ <268f8e00-91bc-43ea-ba95-077cf859e7f3@ti.com>
+ <9e2492d3-8753-46c7-8db6-5f1a80b4f2e9@foss.st.com>
+ <db4c18be-1c8d-4227-9fcc-1d25cec50e37@ti.com>
+ <6917e3d7-8c6c-4e63-8eca-5308621ec3e8@foss.st.com> <afzIABSh1xtMEGbf@p14s>
+Content-Language: en-US
+From: "Padhi, Beleswar" <b-padhi@ti.com>
+In-Reply-To: <afzIABSh1xtMEGbf@p14s>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 786025078F1
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000C6191:EE_|CO6PR10MB5634:EE_
+X-MS-Office365-Filtering-Correlation-Id: a713aac1-a590-47ff-2ff8-08deaf19f7d3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700016|82310400026|3023799003|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	0l8M33VNjrJmmAL1vlwh62ffIswToR2MzaHhF3jrP/dRQ/sAiRPRJHJ54zN3LuYDpqNVX344iMXqZ75GC+XPbriowahUJBvBkUAXviEWRm2s1yhrn4ScalsV92n43Ib9RRZiwrbrXSvEcI2REpTXQ/wZ/69cejdMlSoLbYDFJpTLyZALgJf2K+flyD40fvVFUD8o9tEyHcacL63Odqt2oqCPJAYioSzhAp0Nm/rfx2LA2W2i8gQwZuiPaMI2+pVjZap1JXMQAV4wJQz2Hc9/OmNW7cTVmTuNWWseijjxdLxzMmeh7U36Fnkr3YOieb9MSUHtOHwsSB0zpM2SyIIC8V38e4zp1495F+HbUYuhZ7y2yJiOKpLMXp0Fzlq+vJbd2PYuIDWAJD9BQlgGIzw7sCwwGkKO35+VJOQc/dodHuDRg4zOHbS23PNXkV5DGKRIRhFI9mH65IiCmM34xz+et16MW9ruW528u8WUFHuIRTazG8bnegOqZtaDVurRQ+qHiyIjBsiy5YRNHiZlPheDQ7Ch/4V7VpTyrpEfyCaaw6wNxvYgyBtttuUuZKpNlg6s1RANV7fohoA4iCOJLyB7qbmh1vbAwmUAFAT0PaNZhPP1LbIJPiy5lz0iPSr8ygXHgzCJTmwvqvVfM12tCbtHmsCffwikK44TKBaFWTrdNcvDGLIH7r+IbgMkU6ZuVDkKOMY5vRM6+ngppxXsPh3IbK5R9cG4COdUOWU4kvO5i2U=
+X-Forefront-Antispam-Report:
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700016)(82310400026)(3023799003)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	tIGpsyd34siFj55QdOsRPFCB+7ljgbt8aE/CpnyLzhKFxKo4Na0+ocO4eabSXR6hahjJGHz2La1+ID2DDhJYw8D0qbe0k9C4FNvDMZVt66cXVOT4p5BiPCoALUr6If0LvNp1ibXzQvqqy2rLA9VLtiQmVGFH3R+IRai4SHKUbOoGSUBND5AMw5a85VuUSCpyOXAktxVgkFOERfb8BmxaHJtzQOMJrOqegsBpV7aqvVAzHuD89+NTbWsESSyCS00zl5CRjNwk1pWArAqMqzm0hai32NeeoXOsLEwPCCdndKpCdljnspB5/BmSwLYuyeSdYHdzstl7fKvuTj1JJpipgU02dqaRQ3eZeXFkDL8oUm6u3kgCDuz5cB3gDoA+dKHxLTZzk3k9wNNWEAz5ZLT8kPsKsZMdySeel/Sy6g0L3uVXX98dn3yVGGhwflIy6jC+
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 04:58:39.8752
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a713aac1-a590-47ff-2ff8-08deaf19f7d3
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000C6191.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5634
+X-Rspamd-Queue-Id: EB406507EDD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[nxp.com,lunn.ch,kernel.org,lwn.net,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
+	TAGGED_FROM(0.00)[bounces-36503-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:mid,ti.com:dkim,0.0.0.35:email];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[nuvoton.com,lists.infradead.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-36502-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ti.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[a0987203069@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.999];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FROM_NEQ_ENVFROM(0.00)[b-padhi@ti.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	DBL_PROHIBIT(0.00)[0.0.0.32:email,0.0.0.25:email];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[10]
 X-Rspamd-Action: no action
 
-Each GPIO bank has two 32-bit MFP registers: MFPL covering pins 0-7
-at the bank base offset, and MFPH covering pins 8-15 at base offset+4.
-ma35_pinctrl_parse_groups() computed the register address without
-accounting for this split, so any pin with an index >= 8 within its
-bank was written to the wrong register.
+Hi Mathieu,
 
-Also fix the pin descriptor table in pinctrl-ma35d1.c: switch from
-sequential to 16-per-bank pin numbering, add missing PC8-PC11 pins
-and their mux options, and remove the duplicate PN10-PN15 entries.
+On 5/7/2026 10:42 PM, Mathieu Poirier wrote:
+> On Tue, May 05, 2026 at 10:46:11AM +0200, Arnaud POULIQUEN wrote:
+>> Hi Beleswar
+>>
+>> On 5/5/26 07:25, Beleswar Prasad Padhi wrote:
+>>> Hi Arnaud,
+>>>
+>>> On 04/05/26 22:34, Arnaud POULIQUEN wrote:
+>>>> Hi Beleswar,
+>>>>
+>>>> On 5/4/26 10:17, Beleswar Prasad Padhi wrote:
+>>>>
+>>> [...]
+>>>
+>>>>>> I may have misunderstood your solution. Could you please help me
+>>>>>> understand your proposal by explaining how you would handle three
+>>>>>> GPIO ports defined in the DT, considering that the endpoint
+>>>>>> addresses on the Linux side can be random?
+>>>>>> If I assume there is a unique endpoint on the remote side,
+>>>>>> I do not understand how you can match, on the firmware side,
+>>>>>> the Linux endpoint address to the GPIO port.
+>>>>>
+>>>>> Sure, let me take an example:
+>>>>> Assumptions: 3 GPIO ports in DT, 3 endpoints in Linux (one per port),
+>>>>> 1 endpoint in remote (0xd) and 1 rpmsg channel (rpmsg-io)
+>>>>>
+>>>>>           rpmsg {
+>>>>>             rpmsg-io {
+>>>>>               #address-cells = <1>;
+>>>>>               #size-cells = <0>;
+>>>>>
+>>>>>               gpio@25 {
+>>>>>                 compatible = "rpmsg-gpio";
+>>>>>                 reg = <25>;
+>>>>>                 gpio-controller;
+>>>>>                 #gpio-cells = <2>;
+>>>>>                 #interrupt-cells = <2>;
+>>>>>                 interrupt-controller;
+>>>>>               };
+>>>>>
+>>>>>               gpio@32 {
+>>>>>                 compatible = "rpmsg-gpio";
+>>>>>                 reg = <32>;
+>>>>>                 gpio-controller;
+>>>>>                 #gpio-cells = <2>;
+>>>>>                 #interrupt-cells = <2>;
+>>>>>                 interrupt-controller;
+>>>>>               };
+>>>>>
+>>>>>               gpio@35 {
+>>>>>                 compatible = "rpmsg-gpio";
+>>>>>                 reg = <35>;
+>>>>>                 gpio-controller;
+>>>>>                 #gpio-cells = <2>;
+>>>>>                 #interrupt-cells = <2>;
+>>>>>                 interrupt-controller;
+>>>>>               };
+>>>>>             };
+>>>>>           };
+>>>>>
+>>>>> Code Flow:
+>>>>> 1. "rpmsg-io" channel is announced from remote firmware with unique dst
+>>>>>        ept = 0xd.
+>>>>>
+>>>>> 2. rpmsg_core.c creates the default dynamic local ept for the channel
+>>>>>        ept = 0x405.
+>>>>>
+>>>>> 3. rpmsg_core.c assigns the allocated addr to rpdev device:
+>>>>>        rpdev->src = 0x405 and rpdev->dst = 0xd.
+>>>>>
+>>>>> 4. rpmsg_gpio_channel_probe() is triggered. For *each* of the GPIO ports
+>>>>>        in DT, it will trigger rpmsg_gpiochip_register() which will now:
+>>>>>           a. Call port->ept = rpmsg_create_ept(rpdev,
+>>>>>                                                                       rpmsg_gpio_channel_callback,
+>>>>>                                                                       port,
+>>>>>                                                                      {rpdev.id.name,
+>>>>>                                                                       RPMSG_ADDR_ANY,
+>>>>>                                                                       RPMSG_ADDR_ANY});
+>>>>>               Ex- port->ept->addr = 0x408
+>>>>>
+>>>>>           b. Prepare a 8-byte message having 2 fields:
+>>>>>               port->ept->addr (0x408) and port->idx (25)
+>>>>>
+>>>>>           c. Send this message to remote firmware on default channel ept
+>>>>>               (0x405 -> 0xd) by:
+>>>>>               rpmsg_send(rpdev->ept, &message, sizeof(message));
+>>>>>
+>>>>>           d. Remote side receives this message and creates a map of the
+>>>>>               linux_ept_addr to gpio_port. (0x408 <-> 25)
+>>>>>
+>>>>> 5. After this point, any gpio messages sent from Linux from gpio port
+>>>>>        endpoints (Ex- 0x408) can be decoded at remote side by looking up
+>>>>>        its map (Ex- map[0x408] = 25).
+>>>>>
+>>>>> 6. Any messages sent from remote to Linux for a particular gpio port can
+>>>>>        also be decoded at Linux by simply fetching the priv pointer to get
+>>>>>        the per-port device:
+>>>>>        struct rpmsg_gpio_port *port = priv;
+>>>>>
+>>>> Thanks for the details!
+>>>>
+>>>> To sum up:
+>>>> - the default endpoint acts as the GPIO controller (0x405),
+>>>> - one extra Linux endpoint is created per port defined in DT.
+>>>>
+>>>> This should work, but my concerns remain the same:
+>>>>
+>>>>     1) This implementation forces the remote processor to handle a single
+>>>>        endpoint instead of one endpoint per port. This may add complexity to
+>>>>        the remote firmware if each port is managed in a separate thread.
+>>>
+>>> A. Not really, I just chose 1 remote endpoint for this example as you
+>>>       suggested to. We can scale it for two-way communication via the
+>>>       get_config message like you suggested below.
+>>>
+>>> B. Isn't it a bad design of the firmware if it is handling 10 gpio ports
+>>>       in 10 threads? The logic to handle all the ports is the same, only
+>>>       the parameters (e.g. line number, msg) is different.
+>>>
+>>>>     2) Linux, as a consumer, should not expose its capabilities to the remote
+>>>>        side (in your proposal it enumerates the ports defined in the DT).     In my view, the remote processor should expose its capabilities as the
+>>>>        provider.
+>>>
+>>> Agreed on this.
+>>>
+>>>>   From my perspective, based on your proposal:
+>>>>    1) Linux should send a get_config message to the remote proc (0x405 -> 0xD). 2) The remote processor would respond with the list of ports, associated
+>>>>       with an remote endpoint addresses.
+>>>
+>>> Agreed, we can scale it for multiple remote endpoints like this.
+>>>
+>>>>    3) Linux would parse the response, compare it with the DT, enable the GPIO
+>>>>       ports accordingly, creating it local endpoint and associating it with
+>>>>       the remote endpoint.
+>>>> Using name service to identify the ports should avoid step 1 & 2 ...
+>>>
+>>> Yes, but won't that make a lot of hard-codings in the driver?
+>>>
+>>> +static struct rpmsg_device_id rpmsg_gpio_channel_id_table[] = {
+>>> +    { .name = "rpmsg-io-25" },
+>>> +    { .name = "rpmsg-io-32" },
+>>> +    { .name = "rpmsg-io-35" },
+>>> +    { },
+>>> +};
+>>>
+>>> What if tomorrow another vendor decides to add more remoteproc
+>>> controlled GPIO ports to Linux, they would have to update this struct in
+>>> the driver everytime. And the port indexes (25/32/35) could also differ
+>>> between vendors. We should make the driver dynamic i.e. vendor
+>>> agnostic.
+>>>
+>>> I think querying the remote firmware at runtime (step 1 & 2 above) is a
+>>> common design pattern and makes the driver vendor agnostic. But feel
+>>> free to correct me.
+>>>
+>> You are right. My proposal would require a patch in rpmsg-core. The idea of
+>> allowing a postfix in the compatible string has been discussed before, but,
+>> if I remember correctly, it was not concluded.
+>>
+> I also remember discussing this.  I even reviewed one of Arnaud's patch
+> and submitted one myself.  This must have been in 2020 and the reason why it
+> wasn't merged has escaped my memory.
+>   
+>> /* rpmsg devices and drivers are matched using the service name */
+>> static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
+>> 				  const struct rpmsg_device_id *id)
+>> {
+>> 	size_t len;
+>>
+>> +	len = strnlen(id->name, RPMSG_NAME_SIZE);
+>> +	if (len && id->name[len - 1] == '*')
+>> +		return !strncmp(id->name, rpdev->id.name, len - 1);
+>>
+>> 	return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
+>> }
+>>
+>> Then, in rpmsg-gpio, and possibly in other drivers such as rpmsg-tty and
+>> a future rpmsg-i2c, we could use:
+>> static struct rpmsg_device_id rpmsg_gpio_channel_id_table[] = {
+>>      { .name = "rpmsg-io" },
+>>      { .name = "rpmsg-io-*" },
+>>      { },
+>> };
+> That was my initial approach.  We don't even need an additional "rpmsg-io-*" in
+> rpmsg_gpio_channel_id_table[].  All we need is:
+>
+> /* rpmsg devices and drivers are matched using the service name */
+> static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
+>                                   const struct rpmsg_device_id *id)
+> {
+>   +     size_t len = strnlen(id->name, RPMSG_NAME_SIZE);
+>
+>   -     return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
+>   +     return strncmp(id->name, rpdev->id.name, len) == 0;
+> }
 
-Fixes: f805e356313b ("pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver")
-Signed-off-by: Joey Lu <a0987203069@gmail.com>
----
- drivers/pinctrl/nuvoton/pinctrl-ma35.c   |   3 +-
- drivers/pinctrl/nuvoton/pinctrl-ma35d1.c | 470 +++++++++++++++++--------------
- 2 files changed, 263 insertions(+), 210 deletions(-)
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35.c b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-index f01344201628..dafa85c105a1 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-@@ -1014,7 +1014,8 @@ static int ma35_pinctrl_parse_groups(struct fwnode_handle *fwnode, struct group_
- 	grp->data = pin;
- 
- 	for (i = 0, j = 0; i < count; i += 3, j++) {
--		pin->offset = elems[i] * MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE;
-+		pin->offset = elems[i] * MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE +
-+			      (elems[i + 1] >= 8 ? 4 : 0);
- 		pin->shift = (elems[i + 1] * MA35_MFP_BITS_PER_PORT) % 32;
- 		pin->muxval = elems[i + 2];
- 		pin->configs = configs;
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c b/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
-index eafa06ca0879..9d4627c80a52 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
-@@ -113,6 +113,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x0, "GPA14"),
- 		MA35_MUX(0x2, "UART7_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL3_DM"),
- 		MA35_MUX(0x6, "NAND_nWP"),
- 		MA35_MUX(0x7, "EBI_AD14"),
- 		MA35_MUX(0x9, "EBI_ADR14")),
-@@ -123,6 +124,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x3, "UART6_RXD"),
- 		MA35_MUX(0x4, "I2C4_SDA"),
- 		MA35_MUX(0x5, "CAN2_RXD"),
-+		MA35_MUX(0x6, "USBHL0_DM"),
- 		MA35_MUX(0x7, "EBI_ALE"),
- 		MA35_MUX(0x9, "QEI0_A"),
- 		MA35_MUX(0xb, "TM1"),
-@@ -187,6 +189,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x1, "EPWM2_CH5"),
- 		MA35_MUX(0x2, "UART2_RXD"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL2_DM"),
- 		MA35_MUX(0x5, "SPI0_MOSI"),
- 		MA35_MUX(0x6, "EBI_MCLK"),
- 		MA35_MUX(0x7, "CCAP1_VSYNC"),
-@@ -202,6 +205,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x1, "EPWM2_BRAKE1"),
- 		MA35_MUX(0x2, "UART2_TXD"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL2_DP"),
- 		MA35_MUX(0x5, "SPI0_MISO"),
- 		MA35_MUX(0x6, "I2S1_MCLK"),
- 		MA35_MUX(0x7, "CCAP1_SFIELD"),
-@@ -220,6 +224,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x4, "I2C3_SDA"),
- 		MA35_MUX(0x5, "CAN2_RXD"),
- 		MA35_MUX(0x6, "I2S1_LRCK"),
-+		MA35_MUX(0x7, "USBHL1_DM"),
- 		MA35_MUX(0x8, "ADC0_CH4"),
- 		MA35_MUX(0x9, "EBI_ADR16"),
- 		MA35_MUX(0xe, "ECAP2_IC0")),
-@@ -231,6 +236,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x4, "I2C3_SCL"),
- 		MA35_MUX(0x5, "CAN2_TXD"),
- 		MA35_MUX(0x6, "I2S1_BCLK"),
-+		MA35_MUX(0x7, "USBHL1_DP"),
- 		MA35_MUX(0x8, "ADC0_CH5"),
- 		MA35_MUX(0x9, "EBI_ADR17"),
- 		MA35_MUX(0xe, "ECAP2_IC1")),
-@@ -239,6 +245,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x1, "EPWM2_CH2"),
- 		MA35_MUX(0x2, "UART4_RXD"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL3_DM"),
- 		MA35_MUX(0x5, "I2C4_SDA"),
- 		MA35_MUX(0x6, "I2S1_DI"),
- 		MA35_MUX(0x8, "ADC0_CH6"),
-@@ -249,6 +256,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x1, "EPWM2_CH3"),
- 		MA35_MUX(0x2, "UART4_TXD"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL3_DP"),
- 		MA35_MUX(0x5, "I2C4_SCL"),
- 		MA35_MUX(0x6, "I2S1_DO"),
- 		MA35_MUX(0x8, "ADC0_CH7"),
-@@ -264,10 +272,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 	MA35_PIN(34, PC2, 0x90, 0x8,
- 		MA35_MUX(0x0, "GPC2"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x6, "SD0_DAT0/eMMC0_DAT0")),
- 	MA35_PIN(35, PC3, 0x90, 0xc,
- 		MA35_MUX(0x0, "GPC3"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x6, "SD0_DAT1/eMMC0_DAT1")),
- 	MA35_PIN(36, PC4, 0x90, 0x10,
- 		MA35_MUX(0x0, "GPC4"),
-@@ -280,65 +290,100 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 	MA35_PIN(38, PC6, 0x90, 0x18,
- 		MA35_MUX(0x0, "GPC6"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL5_DM"),
- 		MA35_MUX(0x6, "SD0_nCD")),
- 	MA35_PIN(39, PC7, 0x90, 0x1c,
- 		MA35_MUX(0x0, "GPC7"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL5_DP"),
- 		MA35_MUX(0x6, "SD0_WP")),
--	MA35_PIN(40, PC12, 0x94, 0x10,
-+	MA35_PIN(40, PC8, 0x94, 0x0,
-+		MA35_MUX(0x0, "GPC8"),
-+		MA35_MUX(0x1, "EPWM2_CH0"),
-+		MA35_MUX(0x2, "UART10_nCTS"),
-+		MA35_MUX(0x3, "UART9_RXD"),
-+		MA35_MUX(0x4, "I2C0_SDA"),
-+		MA35_MUX(0x5, "SPI1_SS0"),
-+		MA35_MUX(0x6, "SD0_DAT4/eMMC0_DAT4")),
-+	MA35_PIN(41, PC9, 0x94, 0x4,
-+		MA35_MUX(0x0, "GPC9"),
-+		MA35_MUX(0x1, "EPWM2_CH1"),
-+		MA35_MUX(0x2, "UART10_nRTS"),
-+		MA35_MUX(0x3, "UART9_TXD"),
-+		MA35_MUX(0x4, "I2C0_SCL"),
-+		MA35_MUX(0x5, "SPI1_CLK"),
-+		MA35_MUX(0x6, "SD0_DAT5/eMMC0_DAT5")),
-+	MA35_PIN(42, PC10, 0x94, 0x8,
-+		MA35_MUX(0x0, "GPC10"),
-+		MA35_MUX(0x1, "EPWM2_CH2"),
-+		MA35_MUX(0x2, "UART10_RXD"),
-+		MA35_MUX(0x3, "CAN2_RXD"),
-+		MA35_MUX(0x4, "USBHL0_DM"),
-+		MA35_MUX(0x5, "SPI1_MOSI"),
-+		MA35_MUX(0x6, "SD0_DAT6/eMMC0_DAT6")),
-+	MA35_PIN(43, PC11, 0x94, 0xc,
-+		MA35_MUX(0x0, "GPC11"),
-+		MA35_MUX(0x1, "EPWM2_CH3"),
-+		MA35_MUX(0x2, "UART10_TXD"),
-+		MA35_MUX(0x3, "CAN2_TXD"),
-+		MA35_MUX(0x4, "USBHL0_DP"),
-+		MA35_MUX(0x5, "SPI1_MISO"),
-+		MA35_MUX(0x6, "SD0_DAT7/eMMC0_DAT7")),
-+	MA35_PIN(44, PC12, 0x94, 0x10,
- 		MA35_MUX(0x0, "GPC12"),
- 		MA35_MUX(0x2, "UART12_nCTS"),
- 		MA35_MUX(0x3, "UART11_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA16")),
--	MA35_PIN(41, PC13, 0x94, 0x14,
-+	MA35_PIN(45, PC13, 0x94, 0x14,
- 		MA35_MUX(0x0, "GPC13"),
- 		MA35_MUX(0x2, "UART12_nRTS"),
- 		MA35_MUX(0x3, "UART11_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA17")),
--	MA35_PIN(42, PC14, 0x94, 0x18,
-+	MA35_PIN(46, PC14, 0x94, 0x18,
- 		MA35_MUX(0x0, "GPC14"),
- 		MA35_MUX(0x2, "UART12_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA18")),
--	MA35_PIN(43, PC15, 0x94, 0x1c,
-+	MA35_PIN(47, PC15, 0x94, 0x1c,
- 		MA35_MUX(0x0, "GPC15"),
- 		MA35_MUX(0x2, "UART12_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA19"),
- 		MA35_MUX(0x7, "LCM_MPU_TE"),
- 		MA35_MUX(0x8, "LCM_MPU_VSYNC")),
--	MA35_PIN(44, PD0, 0x98, 0x0,
-+	MA35_PIN(48, PD0, 0x98, 0x0,
- 		MA35_MUX(0x0, "GPD0"),
- 		MA35_MUX(0x2, "UART3_nCTS"),
- 		MA35_MUX(0x3, "UART4_RXD"),
- 		MA35_MUX(0x5, "QSPI0_SS0")),
--	MA35_PIN(45, PD1, 0x98, 0x4,
-+	MA35_PIN(49, PD1, 0x98, 0x4,
- 		MA35_MUX(0x0, "GPD1"),
- 		MA35_MUX(0x2, "UART3_nRTS"),
- 		MA35_MUX(0x3, "UART4_TXD"),
- 		MA35_MUX(0x5, "QSPI0_CLK")),
--	MA35_PIN(46, PD2, 0x98, 0x8,
-+	MA35_PIN(50, PD2, 0x98, 0x8,
- 		MA35_MUX(0x0, "GPD2"),
- 		MA35_MUX(0x2, "UART3_RXD"),
- 		MA35_MUX(0x5, "QSPI0_MOSI0")),
--	MA35_PIN(47, PD3, 0x98, 0xc,
-+	MA35_PIN(51, PD3, 0x98, 0xc,
- 		MA35_MUX(0x0, "GPD3"),
- 		MA35_MUX(0x2, "UART3_TXD"),
- 		MA35_MUX(0x5, "QSPI0_MISO0")),
--	MA35_PIN(48, PD4, 0x98, 0x10,
-+	MA35_PIN(52, PD4, 0x98, 0x10,
- 		MA35_MUX(0x0, "GPD4"),
- 		MA35_MUX(0x2, "UART1_nCTS"),
- 		MA35_MUX(0x3, "UART2_RXD"),
- 		MA35_MUX(0x4, "I2C2_SDA"),
- 		MA35_MUX(0x5, "QSPI0_MOSI1")),
--	MA35_PIN(49, PD5, 0x98, 0x14,
-+	MA35_PIN(53, PD5, 0x98, 0x14,
- 		MA35_MUX(0x0, "GPD5"),
- 		MA35_MUX(0x2, "UART1_nRTS"),
- 		MA35_MUX(0x3, "UART2_TXD"),
- 		MA35_MUX(0x4, "I2C2_SCL"),
- 		MA35_MUX(0x5, "QSPI0_MISO1")),
--	MA35_PIN(50, PD6, 0x98, 0x18,
-+	MA35_PIN(54, PD6, 0x98, 0x18,
- 		MA35_MUX(0x0, "GPD6"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_IN"),
- 		MA35_MUX(0x2, "UART1_RXD"),
-+		MA35_MUX(0x4, "USBHL3_DM"),
- 		MA35_MUX(0x5, "QSPI1_MOSI1"),
- 		MA35_MUX(0x6, "I2C0_SDA"),
- 		MA35_MUX(0x7, "I2S0_MCLK"),
-@@ -346,10 +391,11 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD5"),
- 		MA35_MUX(0xa, "SPI3_SS1"),
- 		MA35_MUX(0xb, "TRACE_CLK")),
--	MA35_PIN(51, PD7, 0x98, 0x1c,
-+	MA35_PIN(55, PD7, 0x98, 0x1c,
- 		MA35_MUX(0x0, "GPD7"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_OUT"),
- 		MA35_MUX(0x2, "UART1_TXD"),
-+		MA35_MUX(0x4, "USBHL3_DP"),
- 		MA35_MUX(0x5, "QSPI1_MISO1"),
- 		MA35_MUX(0x6, "I2C0_SCL"),
- 		MA35_MUX(0x7, "I2S1_MCLK"),
-@@ -357,7 +403,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD6"),
- 		MA35_MUX(0xa, "SC1_nCD"),
- 		MA35_MUX(0xb, "EADC0_ST")),
--	MA35_PIN(52, PD8, 0x9c, 0x0,
-+	MA35_PIN(56, PD8, 0x9c, 0x0,
- 		MA35_MUX(0x0, "GPD8"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE0"),
- 		MA35_MUX(0x2, "UART16_nCTS"),
-@@ -368,7 +414,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD7"),
- 		MA35_MUX(0xa, "SC1_CLK"),
- 		MA35_MUX(0xb, "TM0")),
--	MA35_PIN(53, PD9, 0x9c, 0x4,
-+	MA35_PIN(57, PD9, 0x9c, 0x4,
- 		MA35_MUX(0x0, "GPD9"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE1"),
- 		MA35_MUX(0x2, "UART16_nRTS"),
-@@ -379,7 +425,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD8"),
- 		MA35_MUX(0xa, "SC1_DAT"),
- 		MA35_MUX(0xb, "TM0_EXT")),
--	MA35_PIN(54, PD10, 0x9c, 0x8,
-+	MA35_PIN(58, PD10, 0x9c, 0x8,
- 		MA35_MUX(0x0, "GPD10"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE0"),
- 		MA35_MUX(0x2, "UART16_RXD"),
-@@ -389,7 +435,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD9"),
- 		MA35_MUX(0xa, "SC1_RST"),
- 		MA35_MUX(0xb, "TM2")),
--	MA35_PIN(55, PD11, 0x9c, 0xc,
-+	MA35_PIN(59, PD11, 0x9c, 0xc,
- 		MA35_MUX(0x0, "GPD11"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE1"),
- 		MA35_MUX(0x2, "UART16_TXD"),
-@@ -399,7 +445,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EBI_AD10"),
- 		MA35_MUX(0xa, "SC1_PWR"),
- 		MA35_MUX(0xb, "TM2_EXT")),
--	MA35_PIN(56, PD12, 0x9c, 0x10,
-+	MA35_PIN(60, PD12, 0x9c, 0x10,
- 		MA35_MUX(0x0, "GPD12"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE0"),
- 		MA35_MUX(0x2, "UART11_TXD"),
-@@ -412,7 +458,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM5"),
- 		MA35_MUX(0xc, "I2S1_LRCK"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(57, PD13, 0x9c, 0x14,
-+	MA35_PIN(61, PD13, 0x9c, 0x14,
- 		MA35_MUX(0x0, "GPD13"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE1"),
- 		MA35_MUX(0x2, "UART11_RXD"),
-@@ -424,11 +470,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "ECAP0_IC0"),
- 		MA35_MUX(0xb, "TM5_EXT"),
- 		MA35_MUX(0xc, "I2S1_BCLK")),
--	MA35_PIN(58, PD14, 0x9c, 0x18,
-+	MA35_PIN(62, PD14, 0x9c, 0x18,
- 		MA35_MUX(0x0, "GPD14"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_IN"),
- 		MA35_MUX(0x2, "UART11_nCTS"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL5_DM"),
- 		MA35_MUX(0x6, "TRACE_DATA2"),
- 		MA35_MUX(0x7, "EBI_MCLK"),
- 		MA35_MUX(0x8, "EBI_AD6"),
-@@ -436,116 +483,117 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM6"),
- 		MA35_MUX(0xc, "I2S1_DI"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(59, PD15, 0x9c, 0x1c,
-+	MA35_PIN(63, PD15, 0x9c, 0x1c,
- 		MA35_MUX(0x0, "GPD15"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_OUT"),
- 		MA35_MUX(0x2, "UART11_nRTS"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL5_DP"),
- 		MA35_MUX(0x6, "TRACE_DATA3"),
- 		MA35_MUX(0x7, "EBI_ALE"),
- 		MA35_MUX(0x8, "EBI_AD7"),
- 		MA35_MUX(0x9, "ECAP0_IC2"),
- 		MA35_MUX(0xb, "TM6_EXT"),
- 		MA35_MUX(0xc, "I2S1_DO")),
--	MA35_PIN(60, PE0, 0xa0, 0x0,
-+	MA35_PIN(64, PE0, 0xa0, 0x0,
- 		MA35_MUX(0x0, "GPE0"),
- 		MA35_MUX(0x2, "UART9_nCTS"),
- 		MA35_MUX(0x3, "UART8_RXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA0"),
- 		MA35_MUX(0x8, "RGMII0_MDC"),
- 		MA35_MUX(0x9, "RMII0_MDC")),
--	MA35_PIN(61, PE1, 0xa0, 0x4,
-+	MA35_PIN(65, PE1, 0xa0, 0x4,
- 		MA35_MUX(0x0, "GPE1"),
- 		MA35_MUX(0x2, "UART9_nRTS"),
- 		MA35_MUX(0x3, "UART8_TXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA1"),
- 		MA35_MUX(0x8, "RGMII0_MDIO"),
- 		MA35_MUX(0x9, "RMII0_MDIO")),
--	MA35_PIN(62, PE2, 0xa0, 0x8,
-+	MA35_PIN(66, PE2, 0xa0, 0x8,
- 		MA35_MUX(0x0, "GPE2"),
- 		MA35_MUX(0x2, "UART9_RXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA2"),
- 		MA35_MUX(0x8, "RGMII0_TXCTL"),
- 		MA35_MUX(0x9, "RMII0_TXEN")),
--	MA35_PIN(63, PE3, 0xa0, 0xc,
-+	MA35_PIN(67, PE3, 0xa0, 0xc,
- 		MA35_MUX(0x0, "GPE3"),
- 		MA35_MUX(0x2, "UART9_TXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA3"),
- 		MA35_MUX(0x8, "RGMII0_TXD0"),
- 		MA35_MUX(0x9, "RMII0_TXD0")),
--	MA35_PIN(64, PE4, 0xa0, 0x10,
-+	MA35_PIN(68, PE4, 0xa0, 0x10,
- 		MA35_MUX(0x0, "GPE4"),
- 		MA35_MUX(0x2, "UART4_nCTS"),
- 		MA35_MUX(0x3, "UART3_RXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA4"),
- 		MA35_MUX(0x8, "RGMII0_TXD1"),
- 		MA35_MUX(0x9, "RMII0_TXD1")),
--	MA35_PIN(65, PE5, 0xa0, 0x14,
-+	MA35_PIN(69, PE5, 0xa0, 0x14,
- 		MA35_MUX(0x0, "GPE5"),
- 		MA35_MUX(0x2, "UART4_nRTS"),
- 		MA35_MUX(0x3, "UART3_TXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA5"),
- 		MA35_MUX(0x8, "RGMII0_RXCLK"),
- 		MA35_MUX(0x9, "RMII0_REFCLK")),
--	MA35_PIN(66, PE6, 0xa0, 0x18,
-+	MA35_PIN(70, PE6, 0xa0, 0x18,
- 		MA35_MUX(0x0, "GPE6"),
- 		MA35_MUX(0x2, "UART4_RXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA6"),
- 		MA35_MUX(0x8, "RGMII0_RXCTL"),
- 		MA35_MUX(0x9, "RMII0_CRSDV")),
--	MA35_PIN(67, PE7, 0xa0, 0x1c,
-+	MA35_PIN(71, PE7, 0xa0, 0x1c,
- 		MA35_MUX(0x0, "GPE7"),
- 		MA35_MUX(0x2, "UART4_TXD"),
- 		MA35_MUX(0x7, "CCAP1_DATA7"),
- 		MA35_MUX(0x8, "RGMII0_RXD0"),
- 		MA35_MUX(0x9, "RMII0_RXD0")),
--	MA35_PIN(68, PE8, 0xa4, 0x0,
-+	MA35_PIN(72, PE8, 0xa4, 0x0,
- 		MA35_MUX(0x0, "GPE8"),
- 		MA35_MUX(0x2, "UART13_nCTS"),
- 		MA35_MUX(0x3, "UART12_RXD"),
- 		MA35_MUX(0x7, "CCAP1_SCLK"),
- 		MA35_MUX(0x8, "RGMII0_RXD1"),
- 		MA35_MUX(0x9, "RMII0_RXD1")),
--	MA35_PIN(69, PE9, 0xa4, 0x4,
-+	MA35_PIN(73, PE9, 0xa4, 0x4,
- 		MA35_MUX(0x0, "GPE9"),
- 		MA35_MUX(0x2, "UART13_nRTS"),
- 		MA35_MUX(0x3, "UART12_TXD"),
- 		MA35_MUX(0x7, "CCAP1_PIXCLK"),
- 		MA35_MUX(0x8, "RGMII0_RXD2"),
- 		MA35_MUX(0x9, "RMII0_RXERR")),
--	MA35_PIN(70, PE10, 0xa4, 0x8,
-+	MA35_PIN(74, PE10, 0xa4, 0x8,
- 		MA35_MUX(0x0, "GPE10"),
- 		MA35_MUX(0x2, "UART15_nCTS"),
- 		MA35_MUX(0x3, "UART14_RXD"),
- 		MA35_MUX(0x5, "SPI1_SS0"),
- 		MA35_MUX(0x7, "CCAP1_HSYNC"),
- 		MA35_MUX(0x8, "RGMII0_RXD3")),
--	MA35_PIN(71, PE11, 0xa4, 0xc,
-+	MA35_PIN(75, PE11, 0xa4, 0xc,
- 		MA35_MUX(0x0, "GPE11"),
- 		MA35_MUX(0x2, "UART15_nRTS"),
- 		MA35_MUX(0x3, "UART14_TXD"),
- 		MA35_MUX(0x5, "SPI1_CLK"),
- 		MA35_MUX(0x7, "CCAP1_VSYNC"),
- 		MA35_MUX(0x8, "RGMII0_TXCLK")),
--	MA35_PIN(72, PE12, 0xa4, 0x10,
-+	MA35_PIN(76, PE12, 0xa4, 0x10,
- 		MA35_MUX(0x0, "GPE12"),
- 		MA35_MUX(0x2, "UART15_RXD"),
- 		MA35_MUX(0x5, "SPI1_MOSI"),
- 		MA35_MUX(0x7, "CCAP1_DATA8"),
- 		MA35_MUX(0x8, "RGMII0_TXD2")),
--	MA35_PIN(73, PE13, 0xa4, 0x14,
-+	MA35_PIN(77, PE13, 0xa4, 0x14,
- 		MA35_MUX(0x0, "GPE13"),
- 		MA35_MUX(0x2, "UART15_TXD"),
- 		MA35_MUX(0x5, "SPI1_MISO"),
- 		MA35_MUX(0x7, "CCAP1_DATA9"),
- 		MA35_MUX(0x8, "RGMII0_TXD3")),
--	MA35_PIN(74, PE14, 0xa4, 0x18,
-+	MA35_PIN(78, PE14, 0xa4, 0x18,
- 		MA35_MUX(0x0, "GPE14"),
- 		MA35_MUX(0x1, "UART0_TXD")),
--	MA35_PIN(75, PE15, 0xa4, 0x1c,
-+	MA35_PIN(79, PE15, 0xa4, 0x1c,
- 		MA35_MUX(0x0, "GPE15"),
- 		MA35_MUX(0x1, "UART0_RXD")),
--	MA35_PIN(76, PF0, 0xa8, 0x0,
-+	MA35_PIN(80, PF0, 0xa8, 0x0,
- 		MA35_MUX(0x0, "GPF0"),
- 		MA35_MUX(0x2, "UART2_nCTS"),
- 		MA35_MUX(0x3, "UART1_RXD"),
-@@ -553,7 +601,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "RGMII1_MDC"),
- 		MA35_MUX(0x9, "RMII1_MDC"),
- 		MA35_MUX(0xe, "KPI_COL0")),
--	MA35_PIN(77, PF1, 0xa8, 0x4,
-+	MA35_PIN(81, PF1, 0xa8, 0x4,
- 		MA35_MUX(0x0, "GPF1"),
- 		MA35_MUX(0x2, "UART2_nRTS"),
- 		MA35_MUX(0x3, "UART1_TXD"),
-@@ -561,21 +609,21 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "RGMII1_MDIO"),
- 		MA35_MUX(0x9, "RMII1_MDIO"),
- 		MA35_MUX(0xe, "KPI_COL1")),
--	MA35_PIN(78, PF2, 0xa8, 0x8,
-+	MA35_PIN(82, PF2, 0xa8, 0x8,
- 		MA35_MUX(0x0, "GPF2"),
- 		MA35_MUX(0x2, "UART2_RXD"),
- 		MA35_MUX(0x6, "RGMII0_TXD2"),
- 		MA35_MUX(0x8, "RGMII1_TXCTL"),
- 		MA35_MUX(0x9, "RMII1_TXEN"),
- 		MA35_MUX(0xe, "KPI_COL2")),
--	MA35_PIN(79, PF3, 0xa8, 0xc,
-+	MA35_PIN(83, PF3, 0xa8, 0xc,
- 		MA35_MUX(0x0, "GPF3"),
- 		MA35_MUX(0x2, "UART2_TXD"),
- 		MA35_MUX(0x6, "RGMII0_TXD3"),
- 		MA35_MUX(0x8, "RGMII1_TXD0"),
- 		MA35_MUX(0x9, "RMII1_TXD0"),
- 		MA35_MUX(0xe, "KPI_COL3")),
--	MA35_PIN(80, PF4, 0xa8, 0x10,
-+	MA35_PIN(84, PF4, 0xa8, 0x10,
- 		MA35_MUX(0x0, "GPF4"),
- 		MA35_MUX(0x2, "UART11_nCTS"),
- 		MA35_MUX(0x3, "UART10_RXD"),
-@@ -583,9 +631,10 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x5, "SPI1_SS0"),
- 		MA35_MUX(0x8, "RGMII1_TXD1"),
- 		MA35_MUX(0x9, "RMII1_TXD1"),
-+		MA35_MUX(0xc, "USBHL0_DM"),
- 		MA35_MUX(0xd, "CAN2_RXD"),
- 		MA35_MUX(0xe, "KPI_ROW0")),
--	MA35_PIN(81, PF5, 0xa8, 0x14,
-+	MA35_PIN(85, PF5, 0xa8, 0x14,
- 		MA35_MUX(0x0, "GPF5"),
- 		MA35_MUX(0x2, "UART11_nRTS"),
- 		MA35_MUX(0x3, "UART10_TXD"),
-@@ -593,9 +642,10 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x5, "SPI1_CLK"),
- 		MA35_MUX(0x8, "RGMII1_RXCLK"),
- 		MA35_MUX(0x9, "RMII1_REFCLK"),
-+		MA35_MUX(0xc, "USBHL0_DP"),
- 		MA35_MUX(0xd, "CAN2_TXD"),
- 		MA35_MUX(0xe, "KPI_ROW1")),
--	MA35_PIN(82, PF6, 0xa8, 0x18,
-+	MA35_PIN(86, PF6, 0xa8, 0x18,
- 		MA35_MUX(0x0, "GPF6"),
- 		MA35_MUX(0x2, "UART11_RXD"),
- 		MA35_MUX(0x4, "I2S0_DI"),
-@@ -605,7 +655,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "I2C4_SDA"),
- 		MA35_MUX(0xd, "SC0_CLK"),
- 		MA35_MUX(0xe, "KPI_ROW2")),
--	MA35_PIN(83, PF7, 0xa8, 0x1c,
-+	MA35_PIN(87, PF7, 0xa8, 0x1c,
- 		MA35_MUX(0x0, "GPF7"),
- 		MA35_MUX(0x2, "UART11_TXD"),
- 		MA35_MUX(0x4, "I2S0_DO"),
-@@ -615,7 +665,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "I2C4_SCL"),
- 		MA35_MUX(0xd, "SC0_DAT"),
- 		MA35_MUX(0xe, "KPI_ROW3")),
--	MA35_PIN(84, PF8, 0xac, 0x0,
-+	MA35_PIN(88, PF8, 0xac, 0x0,
- 		MA35_MUX(0x0, "GPF8"),
- 		MA35_MUX(0x2, "UART13_RXD"),
- 		MA35_MUX(0x4, "I2C5_SDA"),
-@@ -624,7 +674,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "RMII1_RXD1"),
- 		MA35_MUX(0xd, "SC0_RST"),
- 		MA35_MUX(0xe, "KPI_COL4")),
--	MA35_PIN(85, PF9, 0xac, 0x4,
-+	MA35_PIN(89, PF9, 0xac, 0x4,
- 		MA35_MUX(0x0, "GPF9"),
- 		MA35_MUX(0x2, "UART13_TXD"),
- 		MA35_MUX(0x4, "I2C5_SCL"),
-@@ -633,7 +683,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "RMII1_RXERR"),
- 		MA35_MUX(0xd, "SC0_PWR"),
- 		MA35_MUX(0xe, "KPI_COL5")),
--	MA35_PIN(86, PF10, 0xac, 0x8,
-+	MA35_PIN(90, PF10, 0xac, 0x8,
- 		MA35_MUX(0x0, "GPF10"),
- 		MA35_MUX(0x2, "UART13_nCTS"),
- 		MA35_MUX(0x5, "I2S0_LRCK"),
-@@ -641,7 +691,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "RGMII1_RXD3"),
- 		MA35_MUX(0x9, "SC0_CLK"),
- 		MA35_MUX(0xe, "KPI_COL6")),
--	MA35_PIN(87, PF11, 0xac, 0xc,
-+	MA35_PIN(91, PF11, 0xac, 0xc,
- 		MA35_MUX(0x0, "GPF11"),
- 		MA35_MUX(0x2, "UART13_nRTS"),
- 		MA35_MUX(0x5, "I2S0_BCLK"),
-@@ -649,21 +699,21 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "RGMII1_TXCLK"),
- 		MA35_MUX(0x9, "SC0_DAT"),
- 		MA35_MUX(0xe, "KPI_COL7")),
--	MA35_PIN(88, PF12, 0xac, 0x10,
-+	MA35_PIN(92, PF12, 0xac, 0x10,
- 		MA35_MUX(0x0, "GPF12"),
- 		MA35_MUX(0x5, "I2S0_DI"),
- 		MA35_MUX(0x6, "SPI1_MOSI"),
- 		MA35_MUX(0x8, "RGMII1_TXD2"),
- 		MA35_MUX(0x9, "SC0_RST"),
- 		MA35_MUX(0xe, "KPI_ROW4")),
--	MA35_PIN(89, PF13, 0xac, 0x14,
-+	MA35_PIN(93, PF13, 0xac, 0x14,
- 		MA35_MUX(0x0, "GPF13"),
- 		MA35_MUX(0x5, "I2S0_DO"),
- 		MA35_MUX(0x6, "SPI1_MISO"),
- 		MA35_MUX(0x8, "RGMII1_TXD3"),
- 		MA35_MUX(0x9, "SC0_PWR"),
- 		MA35_MUX(0xe, "KPI_ROW5")),
--	MA35_PIN(90, PF14, 0xac, 0x18,
-+	MA35_PIN(94, PF14, 0xac, 0x18,
- 		MA35_MUX(0x0, "GPF14"),
- 		MA35_MUX(0x1, "EPWM2_BRAKE0"),
- 		MA35_MUX(0x2, "EADC0_ST"),
-@@ -679,10 +729,10 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xd, "SPI1_SS1"),
- 		MA35_MUX(0xe, "QEI2_INDEX"),
- 		MA35_MUX(0xf, "I2S0_MCLK")),
--	MA35_PIN(91, PF15, 0xac, 0x1c,
-+	MA35_PIN(95, PF15, 0xac, 0x1c,
- 		MA35_MUX(0x0, "GPF15"),
- 		MA35_MUX(0x1, "HSUSB0_VBUSVLD")),
--	MA35_PIN(92, PG0, 0xb0, 0x0,
-+	MA35_PIN(96, PG0, 0xb0, 0x0,
- 		MA35_MUX(0x0, "GPG0"),
- 		MA35_MUX(0x1, "EPWM0_CH0"),
- 		MA35_MUX(0x2, "UART7_TXD"),
-@@ -696,19 +746,20 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xc, "CLKO"),
- 		MA35_MUX(0xd, "INT0"),
- 		MA35_MUX(0xf, "EBI_ADR15")),
--	MA35_PIN(93, PG1, 0xb0, 0x4,
-+	MA35_PIN(97, PG1, 0xb0, 0x4,
- 		MA35_MUX(0x0, "GPG1"),
- 		MA35_MUX(0x1, "EPWM0_CH3"),
- 		MA35_MUX(0x2, "UART9_nRTS"),
- 		MA35_MUX(0x3, "UART6_TXD"),
- 		MA35_MUX(0x4, "I2C4_SCL"),
- 		MA35_MUX(0x5, "CAN2_TXD"),
-+		MA35_MUX(0x6, "USBHL0_DP"),
- 		MA35_MUX(0x7, "EBI_nCS0"),
- 		MA35_MUX(0x9, "QEI0_B"),
- 		MA35_MUX(0xb, "TM1_EXT"),
- 		MA35_MUX(0xe, "RGMII1_PPS"),
- 		MA35_MUX(0xf, "RMII1_PPS")),
--	MA35_PIN(94, PG2, 0xb0, 0x8,
-+	MA35_PIN(98, PG2, 0xb0, 0x8,
- 		MA35_MUX(0x0, "GPG2"),
- 		MA35_MUX(0x1, "EPWM0_CH4"),
- 		MA35_MUX(0x2, "UART9_RXD"),
-@@ -719,7 +770,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "QEI0_A"),
- 		MA35_MUX(0xb, "TM3"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(95, PG3, 0xb0, 0xc,
-+	MA35_PIN(99, PG3, 0xb0, 0xc,
- 		MA35_MUX(0x0, "GPG3"),
- 		MA35_MUX(0x1, "EPWM0_CH5"),
- 		MA35_MUX(0x2, "UART9_TXD"),
-@@ -731,7 +782,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "QEI0_B"),
- 		MA35_MUX(0xb, "TM3_EXT"),
- 		MA35_MUX(0xc, "I2S1_MCLK")),
--	MA35_PIN(96, PG4, 0xb0, 0x10,
-+	MA35_PIN(100, PG4, 0xb0, 0x10,
- 		MA35_MUX(0x0, "GPG4"),
- 		MA35_MUX(0x1, "EPWM1_CH0"),
- 		MA35_MUX(0x2, "UART5_nCTS"),
-@@ -745,7 +796,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM4"),
- 		MA35_MUX(0xd, "INT2"),
- 		MA35_MUX(0xe, "ECAP1_IC2")),
--	MA35_PIN(97, PG5, 0xb0, 0x14,
-+	MA35_PIN(101, PG5, 0xb0, 0x14,
- 		MA35_MUX(0x0, "GPG5"),
- 		MA35_MUX(0x1, "EPWM1_CH1"),
- 		MA35_MUX(0x2, "UART5_nRTS"),
-@@ -757,7 +808,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "I2S1_DI"),
- 		MA35_MUX(0xa, "SC1_DAT"),
- 		MA35_MUX(0xb, "TM4_EXT")),
--	MA35_PIN(98, PG6, 0xb0, 0x18,
-+	MA35_PIN(102, PG6, 0xb0, 0x18,
- 		MA35_MUX(0x0, "GPG6"),
- 		MA35_MUX(0x1, "EPWM1_CH2"),
- 		MA35_MUX(0x2, "UART5_RXD"),
-@@ -769,7 +820,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "SC1_RST"),
- 		MA35_MUX(0xb, "TM7"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(99, PG7, 0xb0, 0x1c,
-+	MA35_PIN(103, PG7, 0xb0, 0x1c,
- 		MA35_MUX(0x0, "GPG7"),
- 		MA35_MUX(0x1, "EPWM1_CH3"),
- 		MA35_MUX(0x2, "UART5_TXD"),
-@@ -780,27 +831,29 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "I2S1_LRCK"),
- 		MA35_MUX(0xa, "SC1_PWR"),
- 		MA35_MUX(0xb, "TM7_EXT")),
--	MA35_PIN(100, PG8, 0xb4, 0x0,
-+	MA35_PIN(104, PG8, 0xb4, 0x0,
- 		MA35_MUX(0x0, "GPG8"),
- 		MA35_MUX(0x1, "EPWM1_CH4"),
- 		MA35_MUX(0x2, "UART12_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "SPI2_SS0"),
- 		MA35_MUX(0x6, "LCM_VSYNC"),
- 		MA35_MUX(0x7, "I2C3_SDA"),
- 		MA35_MUX(0xc, "EBI_AD7"),
- 		MA35_MUX(0xd, "EBI_nCS0")),
--	MA35_PIN(101, PG9, 0xb4, 0x4,
-+	MA35_PIN(105, PG9, 0xb4, 0x4,
- 		MA35_MUX(0x0, "GPG9"),
- 		MA35_MUX(0x1, "EPWM1_CH5"),
- 		MA35_MUX(0x2, "UART12_TXD"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "SPI2_CLK"),
- 		MA35_MUX(0x6, "LCM_HSYNC"),
- 		MA35_MUX(0x7, "I2C3_SCL"),
- 		MA35_MUX(0xc, "EBI_AD8"),
- 		MA35_MUX(0xd, "EBI_nCS1")),
--	MA35_PIN(102, PG10, 0xb4, 0x8,
-+	MA35_PIN(106, PG10, 0xb4, 0x8,
- 		MA35_MUX(0x0, "GPG10"),
- 		MA35_MUX(0x2, "UART12_nRTS"),
- 		MA35_MUX(0x3, "UART13_TXD"),
-@@ -808,7 +861,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x6, "LCM_CLK"),
- 		MA35_MUX(0xc, "EBI_AD9"),
- 		MA35_MUX(0xd, "EBI_nWRH")),
--	MA35_PIN(103, PG11, 0xb4, 0xc,
-+	MA35_PIN(107, PG11, 0xb4, 0xc,
- 		MA35_MUX(0x0, "GPG11"),
- 		MA35_MUX(0x3, "JTAG_TDO"),
- 		MA35_MUX(0x5, "I2S0_MCLK"),
-@@ -816,93 +869,93 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x7, "EBI_nWRH"),
- 		MA35_MUX(0x8, "EBI_nCS1"),
- 		MA35_MUX(0xa, "EBI_AD0")),
--	MA35_PIN(104, PG12, 0xb4, 0x10,
-+	MA35_PIN(108, PG12, 0xb4, 0x10,
- 		MA35_MUX(0x0, "GPG12"),
- 		MA35_MUX(0x3, "JTAG_TCK/SW_CLK"),
- 		MA35_MUX(0x5, "I2S0_LRCK"),
- 		MA35_MUX(0x7, "EBI_nWRL"),
- 		MA35_MUX(0xa, "EBI_AD1")),
--	MA35_PIN(105, PG13, 0xb4, 0x14,
-+	MA35_PIN(109, PG13, 0xb4, 0x14,
- 		MA35_MUX(0x0, "GPG13"),
- 		MA35_MUX(0x3, "JTAG_TMS/SW_DIO"),
- 		MA35_MUX(0x5, "I2S0_BCLK"),
- 		MA35_MUX(0x7, "EBI_MCLK"),
- 		MA35_MUX(0xa, "EBI_AD2")),
--	MA35_PIN(106, PG14, 0xb4, 0x18,
-+	MA35_PIN(110, PG14, 0xb4, 0x18,
- 		MA35_MUX(0x0, "GPG14"),
- 		MA35_MUX(0x3, "JTAG_TDI"),
- 		MA35_MUX(0x5, "I2S0_DI"),
- 		MA35_MUX(0x6, "NAND_nCS1"),
- 		MA35_MUX(0x7, "EBI_ALE"),
- 		MA35_MUX(0xa, "EBI_AD3")),
--	MA35_PIN(107, PG15, 0xb4, 0x1c,
-+	MA35_PIN(111, PG15, 0xb4, 0x1c,
- 		MA35_MUX(0x0, "GPG15"),
- 		MA35_MUX(0x3, "JTAG_nTRST"),
- 		MA35_MUX(0x5, "I2S0_DO"),
- 		MA35_MUX(0x7, "EBI_nCS0"),
- 		MA35_MUX(0xa, "EBI_AD4")),
--	MA35_PIN(108, PH0, 0xb8, 0x0,
-+	MA35_PIN(112, PH0, 0xb8, 0x0,
- 		MA35_MUX(0x0, "GPH0"),
- 		MA35_MUX(0x2, "UART8_nCTS"),
- 		MA35_MUX(0x3, "UART7_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA8")),
--	MA35_PIN(109, PH1, 0xb8, 0x4,
-+	MA35_PIN(113, PH1, 0xb8, 0x4,
- 		MA35_MUX(0x0, "GPH1"),
- 		MA35_MUX(0x2, "UART8_nRTS"),
- 		MA35_MUX(0x3, "UART7_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA9")),
--	MA35_PIN(110, PH2, 0xb8, 0x8,
-+	MA35_PIN(114, PH2, 0xb8, 0x8,
- 		MA35_MUX(0x0, "GPH2"),
- 		MA35_MUX(0x2, "UART8_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA10")),
--	MA35_PIN(111, PH3, 0xb8, 0xc,
-+	MA35_PIN(115, PH3, 0xb8, 0xc,
- 		MA35_MUX(0x0, "GPH3"),
- 		MA35_MUX(0x2, "UART8_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA11")),
--	MA35_PIN(112, PH4, 0xb8, 0x10,
-+	MA35_PIN(116, PH4, 0xb8, 0x10,
- 		MA35_MUX(0x0, "GPH4"),
- 		MA35_MUX(0x2, "UART10_nCTS"),
- 		MA35_MUX(0x3, "UART9_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA12")),
--	MA35_PIN(113, PH5, 0xb8, 0x14,
-+	MA35_PIN(117, PH5, 0xb8, 0x14,
- 		MA35_MUX(0x0, "GPH5"),
- 		MA35_MUX(0x2, "UART10_nRTS"),
- 		MA35_MUX(0x3, "UART9_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA13")),
--	MA35_PIN(114, PH6, 0xb8, 0x18,
-+	MA35_PIN(118, PH6, 0xb8, 0x18,
- 		MA35_MUX(0x0, "GPH6"),
- 		MA35_MUX(0x2, "UART10_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA14")),
--	MA35_PIN(115, PH7, 0xb8, 0x1c,
-+	MA35_PIN(119, PH7, 0xb8, 0x1c,
- 		MA35_MUX(0x0, "GPH7"),
- 		MA35_MUX(0x2, "UART10_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA15")),
--	MA35_PIN(116, PH8, 0xbc, 0x0,
-+	MA35_PIN(120, PH8, 0xbc, 0x0,
- 		MA35_MUX(0x0, "GPH8"),
- 		MA35_MUX(0x6, "TAMPER0")),
--	MA35_PIN(117, PH9, 0xbc, 0x4,
-+	MA35_PIN(121, PH9, 0xbc, 0x4,
- 		MA35_MUX(0x0, "GPH9"),
- 		MA35_MUX(0x4, "CLK_32KOUT"),
- 		MA35_MUX(0x6, "TAMPER1")),
--	MA35_PIN(118, PH12, 0xbc, 0x10,
-+	MA35_PIN(124, PH12, 0xbc, 0x10,
- 		MA35_MUX(0x0, "GPH12"),
- 		MA35_MUX(0x2, "UART14_nCTS"),
- 		MA35_MUX(0x3, "UART13_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA20")),
--	MA35_PIN(119, PH13, 0xbc, 0x14,
-+	MA35_PIN(125, PH13, 0xbc, 0x14,
- 		MA35_MUX(0x0, "GPH13"),
- 		MA35_MUX(0x2, "UART14_nRTS"),
- 		MA35_MUX(0x3, "UART13_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA21")),
--	MA35_PIN(120, PH14, 0xbc, 0x18,
-+	MA35_PIN(126, PH14, 0xbc, 0x18,
- 		MA35_MUX(0x0, "GPH14"),
- 		MA35_MUX(0x2, "UART14_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA22")),
--	MA35_PIN(121, PH15, 0xbc, 0x1c,
-+	MA35_PIN(127, PH15, 0xbc, 0x1c,
- 		MA35_MUX(0x0, "GPH15"),
- 		MA35_MUX(0x2, "UART14_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA23")),
--	MA35_PIN(122, PI0, 0xc0, 0x0,
-+	MA35_PIN(128, PI0, 0xc0, 0x0,
- 		MA35_MUX(0x0, "GPI0"),
- 		MA35_MUX(0x1, "EPWM0_CH0"),
- 		MA35_MUX(0x2, "UART12_nCTS"),
-@@ -913,7 +966,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_ADR0"),
- 		MA35_MUX(0xb, "TM0"),
- 		MA35_MUX(0xc, "ECAP1_IC0")),
--	MA35_PIN(123, PI1, 0xc0, 0x4,
-+	MA35_PIN(129, PI1, 0xc0, 0x4,
- 		MA35_MUX(0x0, "GPI1"),
- 		MA35_MUX(0x1, "EPWM0_CH1"),
- 		MA35_MUX(0x2, "UART12_nRTS"),
-@@ -924,26 +977,28 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_ADR1"),
- 		MA35_MUX(0xb, "TM0_EXT"),
- 		MA35_MUX(0xc, "ECAP1_IC1")),
--	MA35_PIN(124, PI2, 0xc0, 0x8,
-+	MA35_PIN(130, PI2, 0xc0, 0x8,
- 		MA35_MUX(0x0, "GPI2"),
- 		MA35_MUX(0x1, "EPWM0_CH2"),
- 		MA35_MUX(0x2, "UART12_RXD"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL2_DM"),
- 		MA35_MUX(0x5, "SPI3_MOSI"),
- 		MA35_MUX(0x7, "SC0_DAT"),
- 		MA35_MUX(0x8, "EBI_ADR2"),
- 		MA35_MUX(0xb, "TM1"),
- 		MA35_MUX(0xc, "ECAP1_IC2")),
--	MA35_PIN(125, PI3, 0xc0, 0xc,
-+	MA35_PIN(131, PI3, 0xc0, 0xc,
- 		MA35_MUX(0x0, "GPI3"),
- 		MA35_MUX(0x1, "EPWM0_CH3"),
- 		MA35_MUX(0x2, "UART12_TXD"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL2_DP"),
- 		MA35_MUX(0x5, "SPI3_MISO"),
- 		MA35_MUX(0x7, "SC0_RST"),
- 		MA35_MUX(0x8, "EBI_ADR3"),
- 		MA35_MUX(0xb, "TM1_EXT")),
--	MA35_PIN(126, PI4, 0xc0, 0x10,
-+	MA35_PIN(132, PI4, 0xc0, 0x10,
- 		MA35_MUX(0x0, "GPI4"),
- 		MA35_MUX(0x1, "EPWM0_CH4"),
- 		MA35_MUX(0x2, "UART14_nCTS"),
-@@ -953,7 +1008,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x6, "I2S1_LRCK"),
- 		MA35_MUX(0x8, "EBI_ADR4"),
- 		MA35_MUX(0xd, "INT0")),
--	MA35_PIN(127, PI5, 0xc0, 0x14,
-+	MA35_PIN(133, PI5, 0xc0, 0x14,
- 		MA35_MUX(0x0, "GPI5"),
- 		MA35_MUX(0x1, "EPWM0_CH5"),
- 		MA35_MUX(0x2, "UART14_nRTS"),
-@@ -962,65 +1017,67 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x6, "I2S1_BCLK"),
- 		MA35_MUX(0x8, "EBI_ADR5"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(128, PI6, 0xc0, 0x18,
-+	MA35_PIN(134, PI6, 0xc0, 0x18,
- 		MA35_MUX(0x0, "GPI6"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE0"),
- 		MA35_MUX(0x2, "UART14_RXD"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL3_DM"),
- 		MA35_MUX(0x6, "I2S1_DI"),
- 		MA35_MUX(0x8, "EBI_ADR6"),
- 		MA35_MUX(0xc, "QEI1_INDEX"),
- 		MA35_MUX(0xd, "INT2")),
--	MA35_PIN(129, PI7, 0xc0, 0x1c,
-+	MA35_PIN(135, PI7, 0xc0, 0x1c,
- 		MA35_MUX(0x0, "GPI7"),
- 		MA35_MUX(0x1, "EPWM0_BRAKE1"),
- 		MA35_MUX(0x2, "UART14_TXD"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL3_DP"),
- 		MA35_MUX(0x6, "I2S1_DO"),
- 		MA35_MUX(0x8, "EBI_ADR7"),
- 		MA35_MUX(0xc, "ECAP0_IC0"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(130, PI8, 0xc4, 0x0,
-+	MA35_PIN(136, PI8, 0xc4, 0x0,
- 		MA35_MUX(0x0, "GPI8"),
- 		MA35_MUX(0x2, "UART4_nCTS"),
- 		MA35_MUX(0x3, "UART3_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA0"),
- 		MA35_MUX(0xc, "EBI_AD11")),
--	MA35_PIN(131, PI9, 0xc4, 0x4,
-+	MA35_PIN(137, PI9, 0xc4, 0x4,
- 		MA35_MUX(0x0, "GPI9"),
- 		MA35_MUX(0x2, "UART4_nRTS"),
- 		MA35_MUX(0x3, "UART3_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA1"),
- 		MA35_MUX(0xc, "EBI_AD12")),
--	MA35_PIN(132, PI10, 0xc4, 0x8,
-+	MA35_PIN(138, PI10, 0xc4, 0x8,
- 		MA35_MUX(0x0, "GPI10"),
- 		MA35_MUX(0x2, "UART4_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA2"),
- 		MA35_MUX(0xc, "EBI_AD13")),
--	MA35_PIN(133, PI11, 0xC4, 0xc,
-+	MA35_PIN(139, PI11, 0xC4, 0xc,
- 		MA35_MUX(0x0, "GPI11"),
- 		MA35_MUX(0x2, "UART4_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA3"),
- 		MA35_MUX(0xc, "EBI_AD14")),
--	MA35_PIN(134, PI12, 0xc4, 0x10,
-+	MA35_PIN(140, PI12, 0xc4, 0x10,
- 		MA35_MUX(0x0, "GPI12"),
- 		MA35_MUX(0x2, "UART6_nCTS"),
- 		MA35_MUX(0x3, "UART5_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA4")),
--	MA35_PIN(135, PI13, 0xc4, 0x14,
-+	MA35_PIN(141, PI13, 0xc4, 0x14,
- 		MA35_MUX(0x0, "GPI13"),
- 		MA35_MUX(0x2, "UART6_nRTS"),
- 		MA35_MUX(0x3, "UART5_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA5")),
--	MA35_PIN(136, PI14, 0xc4, 0x18,
-+	MA35_PIN(142, PI14, 0xc4, 0x18,
- 		MA35_MUX(0x0, "GPI14"),
- 		MA35_MUX(0x2, "UART6_RXD"),
- 		MA35_MUX(0x6, "LCM_DATA6")),
--	MA35_PIN(137, PI15, 0xc4, 0x1c,
-+	MA35_PIN(143, PI15, 0xc4, 0x1c,
- 		MA35_MUX(0x0, "GPI15"),
- 		MA35_MUX(0x2, "UART6_TXD"),
- 		MA35_MUX(0x6, "LCM_DATA7")),
--	MA35_PIN(138, PJ0, 0xc8, 0x0,
-+	MA35_PIN(144, PJ0, 0xc8, 0x0,
- 		MA35_MUX(0x0, "GPJ0"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE0"),
- 		MA35_MUX(0x2, "UART8_nCTS"),
-@@ -1034,7 +1091,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "EBI_ADR16"),
- 		MA35_MUX(0xb, "EBI_nCS0"),
- 		MA35_MUX(0xc, "EBI_AD7")),
--	MA35_PIN(139, PJ1, 0xc8, 0x4,
-+	MA35_PIN(145, PJ1, 0xc8, 0x4,
- 		MA35_MUX(0x0, "GPJ1"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE1"),
- 		MA35_MUX(0x2, "UART8_nRTS"),
-@@ -1048,11 +1105,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "EBI_ADR17"),
- 		MA35_MUX(0xb, "EBI_nCS1"),
- 		MA35_MUX(0xc, "EBI_AD8")),
--	MA35_PIN(140, PJ2, 0xc8, 0x8,
-+	MA35_PIN(146, PJ2, 0xc8, 0x8,
- 		MA35_MUX(0x0, "GPJ2"),
- 		MA35_MUX(0x1, "EPWM1_CH4"),
- 		MA35_MUX(0x2, "UART8_RXD"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL5_DM"),
- 		MA35_MUX(0x5, "SPI2_MOSI"),
- 		MA35_MUX(0x6, "eMMC1_DAT6"),
- 		MA35_MUX(0x7, "I2S0_DI"),
-@@ -1061,11 +1119,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "EBI_ADR18"),
- 		MA35_MUX(0xb, "EBI_nWRH"),
- 		MA35_MUX(0xc, "EBI_AD9")),
--	MA35_PIN(141, PJ3, 0xc8, 0xc,
-+	MA35_PIN(147, PJ3, 0xc8, 0xc,
- 		MA35_MUX(0x0, "GPJ3"),
- 		MA35_MUX(0x1, "EPWM1_CH5"),
- 		MA35_MUX(0x2, "UART8_TXD"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL5_DP"),
- 		MA35_MUX(0x5, "SPI2_MISO"),
- 		MA35_MUX(0x6, "eMMC1_DAT7"),
- 		MA35_MUX(0x7, "I2S0_DO"),
-@@ -1074,39 +1133,43 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "EBI_ADR19"),
- 		MA35_MUX(0xb, "EBI_nWRL"),
- 		MA35_MUX(0xc, "EBI_AD10")),
--	MA35_PIN(142, PJ4, 0xc8, 0x10,
-+	MA35_PIN(148, PJ4, 0xc8, 0x10,
- 		MA35_MUX(0x0, "GPJ4"),
- 		MA35_MUX(0x4, "I2C3_SDA"),
- 		MA35_MUX(0x6, "SD1_WP")),
--	MA35_PIN(143, PJ5, 0xc8, 0x14,
-+	MA35_PIN(149, PJ5, 0xc8, 0x14,
- 		MA35_MUX(0x0, "GPJ5"),
- 		MA35_MUX(0x4, "I2C3_SCL"),
- 		MA35_MUX(0x6, "SD1_nCD")),
--	MA35_PIN(144, PJ6, 0xc8, 0x18,
-+	MA35_PIN(150, PJ6, 0xc8, 0x18,
- 		MA35_MUX(0x0, "GPJ6"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL0_DM"),
- 		MA35_MUX(0x6, "SD1_CMD/eMMC1_CMD")),
--	MA35_PIN(145, PJ7, 0xc8, 0x1c,
-+	MA35_PIN(151, PJ7, 0xc8, 0x1c,
- 		MA35_MUX(0x0, "GPJ7"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL0_DP"),
- 		MA35_MUX(0x6, "SD1_CLK/eMMC1_CLK")),
--	MA35_PIN(146, PJ8, 0xcc, 0x0,
-+	MA35_PIN(152, PJ8, 0xcc, 0x0,
- 		MA35_MUX(0x0, "GPJ8"),
- 		MA35_MUX(0x4, "I2C4_SDA"),
- 		MA35_MUX(0x6, "SD1_DAT0/eMMC1_DAT0")),
--	MA35_PIN(147, PJ9, 0xcc, 0x4,
-+	MA35_PIN(153, PJ9, 0xcc, 0x4,
- 		MA35_MUX(0x0, "GPJ9"),
- 		MA35_MUX(0x4, "I2C4_SCL"),
- 		MA35_MUX(0x6, "SD1_DAT1/eMMC1_DAT1")),
--	MA35_PIN(148, PJ10, 0xcc, 0x8,
-+	MA35_PIN(154, PJ10, 0xcc, 0x8,
- 		MA35_MUX(0x0, "GPJ10"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL1_DM"),
- 		MA35_MUX(0x6, "SD1_DAT2/eMMC1_DAT2")),
--	MA35_PIN(149, PJ11, 0xcc, 0xc,
-+	MA35_PIN(155, PJ11, 0xcc, 0xc,
- 		MA35_MUX(0x0, "GPJ11"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL1_DP"),
- 		MA35_MUX(0x6, "SD1_DAT3/eMMC1_DAT3")),
--	MA35_PIN(150, PJ12, 0xcc, 0x10,
-+	MA35_PIN(156, PJ12, 0xcc, 0x10,
- 		MA35_MUX(0x0, "GPJ12"),
- 		MA35_MUX(0x1, "EPWM1_CH2"),
- 		MA35_MUX(0x2, "UART2_nCTS"),
-@@ -1117,7 +1180,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_ADR12"),
- 		MA35_MUX(0xb, "TM2"),
- 		MA35_MUX(0xc, "QEI0_INDEX")),
--	MA35_PIN(151, PJ13, 0xcc, 0x14,
-+	MA35_PIN(157, PJ13, 0xcc, 0x14,
- 		MA35_MUX(0x0, "GPJ13"),
- 		MA35_MUX(0x1, "EPWM1_CH3"),
- 		MA35_MUX(0x2, "UART2_nRTS"),
-@@ -1127,27 +1190,29 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x7, "SC1_DAT"),
- 		MA35_MUX(0x8, "EBI_ADR13"),
- 		MA35_MUX(0xb, "TM2_EXT")),
--	MA35_PIN(152, PJ14, 0xcc, 0x18,
-+	MA35_PIN(158, PJ14, 0xcc, 0x18,
- 		MA35_MUX(0x0, "GPJ14"),
- 		MA35_MUX(0x1, "EPWM1_CH4"),
- 		MA35_MUX(0x2, "UART2_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL5_DM"),
- 		MA35_MUX(0x5, "SPI3_MISO"),
- 		MA35_MUX(0x7, "SC1_RST"),
- 		MA35_MUX(0x8, "EBI_ADR14"),
- 		MA35_MUX(0xb, "TM3")),
--	MA35_PIN(153, PJ15, 0xcc, 0x1c,
-+	MA35_PIN(159, PJ15, 0xcc, 0x1c,
- 		MA35_MUX(0x0, "GPJ15"),
- 		MA35_MUX(0x1, "EPWM1_CH5"),
- 		MA35_MUX(0x2, "UART2_TXD"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL5_DP"),
- 		MA35_MUX(0x5, "SPI3_CLK"),
- 		MA35_MUX(0x6, "EADC0_ST"),
- 		MA35_MUX(0x7, "SC1_PWR"),
- 		MA35_MUX(0x8, "EBI_ADR15"),
- 		MA35_MUX(0xb, "TM3_EXT"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(154, PK0, 0xd0, 0x0,
-+	MA35_PIN(160, PK0, 0xd0, 0x0,
- 		MA35_MUX(0x0, "GPK0"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_IN"),
- 		MA35_MUX(0x2, "UART16_nCTS"),
-@@ -1157,7 +1222,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_ADR8"),
- 		MA35_MUX(0xb, "TM7"),
- 		MA35_MUX(0xc, "ECAP0_IC1")),
--	MA35_PIN(155, PK1, 0xd0, 0x4,
-+	MA35_PIN(161, PK1, 0xd0, 0x4,
- 		MA35_MUX(0x0, "GPK1"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_OUT"),
- 		MA35_MUX(0x2, "UART16_nRTS"),
-@@ -1167,25 +1232,27 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_ADR9"),
- 		MA35_MUX(0xb, "TM7_EXT"),
- 		MA35_MUX(0xc, "ECAP0_IC2")),
--	MA35_PIN(156, PK2, 0xd0, 0x8,
-+	MA35_PIN(162, PK2, 0xd0, 0x8,
- 		MA35_MUX(0x0, "GPK2"),
- 		MA35_MUX(0x1, "EPWM1_CH0"),
- 		MA35_MUX(0x2, "UART16_RXD"),
- 		MA35_MUX(0x3, "CAN2_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "SPI3_I2SMCLK"),
- 		MA35_MUX(0x7, "SC0_PWR"),
- 		MA35_MUX(0x8, "EBI_ADR10"),
- 		MA35_MUX(0xc, "QEI0_A")),
--	MA35_PIN(157, PK3, 0xd0, 0xc,
-+	MA35_PIN(163, PK3, 0xd0, 0xc,
- 		MA35_MUX(0x0, "GPK3"),
- 		MA35_MUX(0x1, "EPWM1_CH1"),
- 		MA35_MUX(0x2, "UART16_TXD"),
- 		MA35_MUX(0x3, "CAN2_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "SPI3_SS1"),
- 		MA35_MUX(0x7, "SC1_nCD"),
- 		MA35_MUX(0x8, "EBI_ADR11"),
- 		MA35_MUX(0xc, "QEI0_B")),
--	MA35_PIN(158, PK4, 0xd0, 0x10,
-+	MA35_PIN(164, PK4, 0xd0, 0x10,
- 		MA35_MUX(0x0, "GPK4"),
- 		MA35_MUX(0x2, "UART12_nCTS"),
- 		MA35_MUX(0x3, "UART13_RXD"),
-@@ -1193,7 +1260,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x6, "LCM_DEN"),
- 		MA35_MUX(0xc, "EBI_AD10"),
- 		MA35_MUX(0xd, "EBI_nWRL")),
--	MA35_PIN(159, PK5, 0xd0, 0x14,
-+	MA35_PIN(165, PK5, 0xd0, 0x14,
- 		MA35_MUX(0x0, "GPK5"),
- 		MA35_MUX(0x1, "EPWM1_CH1"),
- 		MA35_MUX(0x2, "UART12_nRTS"),
-@@ -1205,28 +1272,30 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "EADC0_ST"),
- 		MA35_MUX(0xb, "TM8_EXT"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(160, PK6, 0xd0, 0x18,
-+	MA35_PIN(166, PK6, 0xd0, 0x18,
- 		MA35_MUX(0x0, "GPK6"),
- 		MA35_MUX(0x1, "EPWM1_CH2"),
- 		MA35_MUX(0x2, "UART12_RXD"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "SPI2_MOSI"),
- 		MA35_MUX(0x7, "I2S1_BCLK"),
- 		MA35_MUX(0x8, "SC0_RST"),
- 		MA35_MUX(0xb, "TM6"),
- 		MA35_MUX(0xd, "INT2")),
--	MA35_PIN(161, PK7, 0xd0, 0x1c,
-+	MA35_PIN(167, PK7, 0xd0, 0x1c,
- 		MA35_MUX(0x0, "GPK7"),
- 		MA35_MUX(0x1, "EPWM1_CH3"),
- 		MA35_MUX(0x2, "UART12_TXD"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "SPI2_MISO"),
- 		MA35_MUX(0x7, "I2S1_LRCK"),
- 		MA35_MUX(0x8, "SC0_PWR"),
- 		MA35_MUX(0x9, "CLKO"),
- 		MA35_MUX(0xb, "TM6_EXT"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(162, PK8, 0xd4, 0x0,
-+	MA35_PIN(168, PK8, 0xd4, 0x0,
- 		MA35_MUX(0x0, "GPK8"),
- 		MA35_MUX(0x1, "EPWM1_CH0"),
- 		MA35_MUX(0x4, "I2C3_SDA"),
-@@ -1237,25 +1306,27 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xa, "EBI_ADR15"),
- 		MA35_MUX(0xb, "TM8"),
- 		MA35_MUX(0xc, "QEI1_INDEX")),
--	MA35_PIN(163, PK9, 0xd4, 0x4,
-+	MA35_PIN(169, PK9, 0xd4, 0x4,
- 		MA35_MUX(0x0, "GPK9"),
- 		MA35_MUX(0x4, "I2C3_SCL"),
- 		MA35_MUX(0x6, "CCAP0_SCLK"),
- 		MA35_MUX(0x8, "EBI_AD0"),
- 		MA35_MUX(0xa, "EBI_ADR0")),
--	MA35_PIN(164, PK10, 0xd4, 0x8,
-+	MA35_PIN(170, PK10, 0xd4, 0x8,
- 		MA35_MUX(0x0, "GPK10"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL3_DM"),
- 		MA35_MUX(0x6, "CCAP0_PIXCLK"),
- 		MA35_MUX(0x8, "EBI_AD1"),
- 		MA35_MUX(0xa, "EBI_ADR1")),
--	MA35_PIN(165, PK11, 0xd4, 0xc,
-+	MA35_PIN(171, PK11, 0xd4, 0xc,
- 		MA35_MUX(0x0, "GPK11"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL3_DP"),
- 		MA35_MUX(0x6, "CCAP0_HSYNC"),
- 		MA35_MUX(0x8, "EBI_AD2"),
- 		MA35_MUX(0xa, "EBI_ADR2")),
--	MA35_PIN(166, PK12, 0xd4, 0x10,
-+	MA35_PIN(172, PK12, 0xd4, 0x10,
- 		MA35_MUX(0x0, "GPK12"),
- 		MA35_MUX(0x1, "EPWM2_CH0"),
- 		MA35_MUX(0x2, "UART1_nCTS"),
-@@ -1266,7 +1337,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "SC0_CLK"),
- 		MA35_MUX(0xb, "TM10"),
- 		MA35_MUX(0xd, "INT2")),
--	MA35_PIN(167, PK13, 0xd4, 0x14,
-+	MA35_PIN(173, PK13, 0xd4, 0x14,
- 		MA35_MUX(0x0, "GPK13"),
- 		MA35_MUX(0x1, "EPWM2_CH1"),
- 		MA35_MUX(0x2, "UART1_nRTS"),
-@@ -1276,28 +1347,30 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x6, "SPI1_CLK"),
- 		MA35_MUX(0x8, "SC0_DAT"),
- 		MA35_MUX(0xb, "TM10_EXT")),
--	MA35_PIN(168, PK14, 0xd4, 0x18,
-+	MA35_PIN(174, PK14, 0xd4, 0x18,
- 		MA35_MUX(0x0, "GPK14"),
- 		MA35_MUX(0x1, "EPWM2_CH2"),
- 		MA35_MUX(0x2, "UART1_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "I2S0_DI"),
- 		MA35_MUX(0x6, "SPI1_MOSI"),
- 		MA35_MUX(0x8, "SC0_RST"),
- 		MA35_MUX(0xa, "I2C5_SDA"),
- 		MA35_MUX(0xb, "TM11"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(169, PK15, 0xd4, 0x1c,
-+	MA35_PIN(175, PK15, 0xd4, 0x1c,
- 		MA35_MUX(0x0, "GPK15"),
- 		MA35_MUX(0x1, "EPWM2_CH3"),
- 		MA35_MUX(0x2, "UART1_TXD"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "I2S0_DO"),
- 		MA35_MUX(0x6, "SPI1_MISO"),
- 		MA35_MUX(0x8, "SC0_PWR"),
- 		MA35_MUX(0xa, "I2C5_SCL"),
- 		MA35_MUX(0xb, "TM11_EXT")),
--	MA35_PIN(170, PL0, 0xd8, 0x0,
-+	MA35_PIN(176, PL0, 0xd8, 0x0,
- 		MA35_MUX(0x0, "GPL0"),
- 		MA35_MUX(0x1, "EPWM1_CH0"),
- 		MA35_MUX(0x2, "UART11_nCTS"),
-@@ -1310,7 +1383,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC1_CLK"),
- 		MA35_MUX(0xb, "TM5"),
- 		MA35_MUX(0xc, "QEI1_A")),
--	MA35_PIN(171, PL1, 0xd8, 0x4,
-+	MA35_PIN(177, PL1, 0xd8, 0x4,
- 		MA35_MUX(0x0, "GPL1"),
- 		MA35_MUX(0x1, "EPWM1_CH1"),
- 		MA35_MUX(0x2, "UART11_nRTS"),
-@@ -1323,11 +1396,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC1_DAT"),
- 		MA35_MUX(0xb, "TM5_EXT"),
- 		MA35_MUX(0xc, "QEI1_B")),
--	MA35_PIN(172, PL2, 0xd8, 0x8,
-+	MA35_PIN(178, PL2, 0xd8, 0x8,
- 		MA35_MUX(0x0, "GPL2"),
- 		MA35_MUX(0x1, "EPWM1_CH2"),
- 		MA35_MUX(0x2, "UART11_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "SPI2_SS0"),
- 		MA35_MUX(0x6, "QSPI1_SS1"),
- 		MA35_MUX(0x7, "I2S0_DI"),
-@@ -1335,11 +1409,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC1_RST"),
- 		MA35_MUX(0xb, "TM7"),
- 		MA35_MUX(0xc, "QEI1_INDEX")),
--	MA35_PIN(173, PL3, 0xd8, 0xc,
-+	MA35_PIN(179, PL3, 0xd8, 0xc,
- 		MA35_MUX(0x0, "GPL3"),
- 		MA35_MUX(0x1, "EPWM1_CH3"),
- 		MA35_MUX(0x2, "UART11_TXD"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "SPI2_CLK"),
- 		MA35_MUX(0x6, "QSPI1_CLK"),
- 		MA35_MUX(0x7, "I2S0_DO"),
-@@ -1347,7 +1422,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC1_PWR"),
- 		MA35_MUX(0xb, "TM7_EXT"),
- 		MA35_MUX(0xc, "ECAP0_IC0")),
--	MA35_PIN(174, PL4, 0xd8, 0x10,
-+	MA35_PIN(180, PL4, 0xd8, 0x10,
- 		MA35_MUX(0x0, "GPL4"),
- 		MA35_MUX(0x1, "EPWM1_CH4"),
- 		MA35_MUX(0x2, "UART2_nCTS"),
-@@ -1360,7 +1435,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC1_nCD"),
- 		MA35_MUX(0xb, "TM9"),
- 		MA35_MUX(0xc, "ECAP0_IC1")),
--	MA35_PIN(175, PL5, 0xd8, 0x14,
-+	MA35_PIN(181, PL5, 0xd8, 0x14,
- 		MA35_MUX(0x0, "GPL5"),
- 		MA35_MUX(0x1, "EPWM1_CH5"),
- 		MA35_MUX(0x2, "UART2_nRTS"),
-@@ -1373,28 +1448,30 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC0_nCD"),
- 		MA35_MUX(0xb, "TM9_EXT"),
- 		MA35_MUX(0xc, "ECAP0_IC2")),
--	MA35_PIN(176, PL6, 0xd8, 0x18,
-+	MA35_PIN(182, PL6, 0xd8, 0x18,
- 		MA35_MUX(0x0, "GPL6"),
- 		MA35_MUX(0x1, "EPWM0_CH0"),
- 		MA35_MUX(0x2, "UART2_RXD"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL5_DM"),
- 		MA35_MUX(0x6, "QSPI1_MOSI1"),
- 		MA35_MUX(0x7, "TRACE_CLK"),
- 		MA35_MUX(0x8, "EBI_AD5"),
- 		MA35_MUX(0xb, "TM3"),
- 		MA35_MUX(0xc, "ECAP1_IC0"),
- 		MA35_MUX(0xd, "INT0")),
--	MA35_PIN(177, PL7, 0xd8, 0x1c,
-+	MA35_PIN(183, PL7, 0xd8, 0x1c,
- 		MA35_MUX(0x0, "GPL7"),
- 		MA35_MUX(0x1, "EPWM0_CH1"),
- 		MA35_MUX(0x2, "UART2_TXD"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL5_DP"),
- 		MA35_MUX(0x6, "QSPI1_MISO1"),
- 		MA35_MUX(0x8, "EBI_AD6"),
- 		MA35_MUX(0xb, "TM3_EXT"),
- 		MA35_MUX(0xc, "ECAP1_IC1"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(178, PL8, 0xdc, 0x0,
-+	MA35_PIN(184, PL8, 0xdc, 0x0,
- 		MA35_MUX(0x0, "GPL8"),
- 		MA35_MUX(0x1, "EPWM0_CH2"),
- 		MA35_MUX(0x2, "UART14_nCTS"),
-@@ -1408,7 +1485,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM4"),
- 		MA35_MUX(0xc, "ECAP1_IC2"),
- 		MA35_MUX(0xd, "INT2")),
--	MA35_PIN(179, PL9, 0xdc, 0x4,
-+	MA35_PIN(185, PL9, 0xdc, 0x4,
- 		MA35_MUX(0x0, "GPL9"),
- 		MA35_MUX(0x1, "EPWM0_CH3"),
- 		MA35_MUX(0x2, "UART14_nRTS"),
-@@ -1422,11 +1499,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM4_EXT"),
- 		MA35_MUX(0xc, "QEI0_A"),
- 		MA35_MUX(0xd, "INT3")),
--	MA35_PIN(180, PL10, 0xdc, 0x8,
-+	MA35_PIN(186, PL10, 0xdc, 0x8,
- 		MA35_MUX(0x0, "GPL10"),
- 		MA35_MUX(0x1, "EPWM0_CH4"),
- 		MA35_MUX(0x2, "UART14_RXD"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL2_DM"),
- 		MA35_MUX(0x5, "SPI3_MOSI"),
- 		MA35_MUX(0x6, "EPWM0_CH5"),
- 		MA35_MUX(0x7, "I2S1_DI"),
-@@ -1434,11 +1512,12 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC0_RST"),
- 		MA35_MUX(0xb, "EBI_nWRH"),
- 		MA35_MUX(0xc, "QEI0_B")),
--	MA35_PIN(181, PL11, 0xdc, 0xc,
-+	MA35_PIN(187, PL11, 0xdc, 0xc,
- 		MA35_MUX(0x0, "GPL11"),
- 		MA35_MUX(0x1, "EPWM0_CH5"),
- 		MA35_MUX(0x2, "UART14_TXD"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL2_DP"),
- 		MA35_MUX(0x5, "SPI3_MISO"),
- 		MA35_MUX(0x6, "EPWM1_CH5"),
- 		MA35_MUX(0x7, "I2S1_DO"),
-@@ -1446,7 +1525,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x9, "SC0_PWR"),
- 		MA35_MUX(0xb, "EBI_nWRL"),
- 		MA35_MUX(0xc, "QEI0_INDEX")),
--	MA35_PIN(182, PL12, 0xdc, 0x10,
-+	MA35_PIN(188, PL12, 0xdc, 0x10,
- 		MA35_MUX(0x0, "GPL12"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_IN"),
- 		MA35_MUX(0x2, "UART7_nCTS"),
-@@ -1463,7 +1542,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xd, "EBI_AD11"),
- 		MA35_MUX(0xe, "RGMII0_PPS"),
- 		MA35_MUX(0xf, "RMII0_PPS")),
--	MA35_PIN(183, PL13, 0xdc, 0x14,
-+	MA35_PIN(189, PL13, 0xdc, 0x14,
- 		MA35_MUX(0x0, "GPL13"),
- 		MA35_MUX(0x1, "EPWM0_SYNC_OUT"),
- 		MA35_MUX(0x2, "UART7_nRTS"),
-@@ -1480,7 +1559,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xd, "EBI_AD12"),
- 		MA35_MUX(0xe, "RGMII1_PPS"),
- 		MA35_MUX(0xf, "RMII1_PPS")),
--	MA35_PIN(184, PL14, 0xdc, 0x18,
-+	MA35_PIN(190, PL14, 0xdc, 0x18,
- 		MA35_MUX(0x0, "GPL14"),
- 		MA35_MUX(0x1, "EPWM0_CH2"),
- 		MA35_MUX(0x2, "UART7_RXD"),
-@@ -1492,7 +1571,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM2"),
- 		MA35_MUX(0xc, "INT0"),
- 		MA35_MUX(0xd, "EBI_AD13")),
--	MA35_PIN(185, PL15, 0xdc, 0x1c,
-+	MA35_PIN(191, PL15, 0xdc, 0x1c,
- 		MA35_MUX(0x0, "GPL15"),
- 		MA35_MUX(0x1, "EPWM0_CH1"),
- 		MA35_MUX(0x2, "UART7_TXD"),
-@@ -1505,86 +1584,92 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0xb, "TM2_EXT"),
- 		MA35_MUX(0xc, "INT2"),
- 		MA35_MUX(0xd, "EBI_AD14")),
--	MA35_PIN(186, PM0, 0xe0, 0x0,
-+	MA35_PIN(192, PM0, 0xe0, 0x0,
- 		MA35_MUX(0x0, "GPM0"),
- 		MA35_MUX(0x4, "I2C4_SDA"),
- 		MA35_MUX(0x6, "CCAP0_VSYNC"),
- 		MA35_MUX(0x8, "EBI_AD3"),
- 		MA35_MUX(0xa, "EBI_ADR3")),
--	MA35_PIN(187, PM1, 0xe0, 0x4,
-+	MA35_PIN(193, PM1, 0xe0, 0x4,
- 		MA35_MUX(0x0, "GPM1"),
- 		MA35_MUX(0x4, "I2C4_SCL"),
- 		MA35_MUX(0x5, "SPI3_I2SMCLK"),
- 		MA35_MUX(0x6, "CCAP0_SFIELD"),
- 		MA35_MUX(0x8, "EBI_AD4"),
- 		MA35_MUX(0xa, "EBI_ADR4")),
--	MA35_PIN(188, PM2, 0xe0, 0x8,
-+	MA35_PIN(194, PM2, 0xe0, 0x8,
- 		MA35_MUX(0x0, "GPM2"),
- 		MA35_MUX(0x3, "CAN3_RXD"),
-+		MA35_MUX(0x4, "USBHL0_DM"),
- 		MA35_MUX(0x6, "CCAP0_DATA0"),
- 		MA35_MUX(0x8, "EBI_AD5"),
- 		MA35_MUX(0xa, "EBI_ADR5")),
--	MA35_PIN(189, PM3, 0xe0, 0xc,
-+	MA35_PIN(195, PM3, 0xe0, 0xc,
- 		MA35_MUX(0x0, "GPM3"),
- 		MA35_MUX(0x3, "CAN3_TXD"),
-+		MA35_MUX(0x4, "USBHL0_DP"),
- 		MA35_MUX(0x6, "CCAP0_DATA1"),
- 		MA35_MUX(0x8, "EBI_AD6"),
- 		MA35_MUX(0xa, "EBI_ADR6")),
--	MA35_PIN(190, PM4, 0xe0, 0x10,
-+	MA35_PIN(196, PM4, 0xe0, 0x10,
- 		MA35_MUX(0x0, "GPM4"),
- 		MA35_MUX(0x4, "I2C5_SDA"),
- 		MA35_MUX(0x6, "CCAP0_DATA2"),
- 		MA35_MUX(0x8, "EBI_AD7"),
- 		MA35_MUX(0xa, "EBI_ADR7")),
--	MA35_PIN(191, PM5, 0xe0, 0x14,
-+	MA35_PIN(197, PM5, 0xe0, 0x14,
- 		MA35_MUX(0x0, "GPM5"),
- 		MA35_MUX(0x4, "I2C5_SCL"),
- 		MA35_MUX(0x6, "CCAP0_DATA3"),
- 		MA35_MUX(0x8, "EBI_AD8"),
- 		MA35_MUX(0xa, "EBI_ADR8")),
--	MA35_PIN(192, PM6, 0xe0, 0x18,
-+	MA35_PIN(198, PM6, 0xe0, 0x18,
- 		MA35_MUX(0x0, "GPM6"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL1_DM"),
- 		MA35_MUX(0x6, "CCAP0_DATA4"),
- 		MA35_MUX(0x8, "EBI_AD9"),
- 		MA35_MUX(0xa, "EBI_ADR9")),
--	MA35_PIN(193, PM7, 0xe0, 0x1c,
-+	MA35_PIN(199, PM7, 0xe0, 0x1c,
- 		MA35_MUX(0x0, "GPM7"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL1_DP"),
- 		MA35_MUX(0x6, "CCAP0_DATA5"),
- 		MA35_MUX(0x8, "EBI_AD10"),
- 		MA35_MUX(0xa, "EBI_ADR10")),
--	MA35_PIN(194, PM8, 0xe4, 0x0,
-+	MA35_PIN(200, PM8, 0xe4, 0x0,
- 		MA35_MUX(0x0, "GPM8"),
- 		MA35_MUX(0x4, "I2C0_SDA"),
- 		MA35_MUX(0x6, "CCAP0_DATA6"),
- 		MA35_MUX(0x8, "EBI_AD11"),
- 		MA35_MUX(0xa, "EBI_ADR11")),
--	MA35_PIN(195, PM9, 0xe4, 0x4,
-+	MA35_PIN(201, PM9, 0xe4, 0x4,
- 		MA35_MUX(0x0, "GPM9"),
- 		MA35_MUX(0x4, "I2C0_SCL"),
- 		MA35_MUX(0x6, "CCAP0_DATA7"),
- 		MA35_MUX(0x8, "EBI_AD12"),
- 		MA35_MUX(0xa, "EBI_ADR12")),
--	MA35_PIN(196, PM10, 0xe4, 0x8,
-+	MA35_PIN(202, PM10, 0xe4, 0x8,
- 		MA35_MUX(0x0, "GPM10"),
- 		MA35_MUX(0x1, "EPWM1_CH2"),
- 		MA35_MUX(0x3, "CAN2_RXD"),
-+		MA35_MUX(0x4, "USBHL4_DM"),
- 		MA35_MUX(0x5, "SPI3_SS0"),
- 		MA35_MUX(0x6, "CCAP0_DATA8"),
- 		MA35_MUX(0x7, "SPI2_I2SMCLK"),
- 		MA35_MUX(0x8, "EBI_AD13"),
- 		MA35_MUX(0xa, "EBI_ADR13")),
--	MA35_PIN(197, PM11, 0xe4, 0xc,
-+	MA35_PIN(203, PM11, 0xe4, 0xc,
- 		MA35_MUX(0x0, "GPM11"),
- 		MA35_MUX(0x1, "EPWM1_CH3"),
- 		MA35_MUX(0x3, "CAN2_TXD"),
-+		MA35_MUX(0x4, "USBHL4_DP"),
- 		MA35_MUX(0x5, "SPI3_SS1"),
- 		MA35_MUX(0x6, "CCAP0_DATA9"),
- 		MA35_MUX(0x7, "SPI2_SS1"),
- 		MA35_MUX(0x8, "EBI_AD14"),
- 		MA35_MUX(0xa, "EBI_ADR14")),
--	MA35_PIN(198, PM12, 0xe4, 0x10,
-+	MA35_PIN(204, PM12, 0xe4, 0x10,
- 		MA35_MUX(0x0, "GPM12"),
- 		MA35_MUX(0x1, "EPWM1_CH4"),
- 		MA35_MUX(0x2, "UART10_nCTS"),
-@@ -1595,7 +1680,7 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_AD8"),
- 		MA35_MUX(0x9, "I2S1_MCLK"),
- 		MA35_MUX(0xb, "TM8")),
--	MA35_PIN(199, PM13, 0xe4, 0x14,
-+	MA35_PIN(205, PM13, 0xe4, 0x14,
- 		MA35_MUX(0x0, "GPM13"),
- 		MA35_MUX(0x1, "EPWM1_CH5"),
- 		MA35_MUX(0x2, "UART10_nRTS"),
-@@ -1605,99 +1690,66 @@ static const struct pinctrl_pin_desc ma35d1_pins[] = {
- 		MA35_MUX(0x8, "EBI_AD9"),
- 		MA35_MUX(0x9, "ECAP1_IC0"),
- 		MA35_MUX(0xb, "TM8_EXT")),
--	MA35_PIN(200, PM14, 0xe4, 0x18,
-+	MA35_PIN(206, PM14, 0xe4, 0x18,
- 		MA35_MUX(0x0, "GPM14"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE0"),
- 		MA35_MUX(0x2, "UART10_RXD"),
- 		MA35_MUX(0x3, "TRACE_DATA2"),
- 		MA35_MUX(0x4, "CAN2_RXD"),
-+		MA35_MUX(0x5, "USBHL3_DM"),
- 		MA35_MUX(0x6, "I2C3_SDA"),
- 		MA35_MUX(0x8, "EBI_AD10"),
- 		MA35_MUX(0x9, "ECAP1_IC1"),
- 		MA35_MUX(0xb, "TM10"),
- 		MA35_MUX(0xd, "INT1")),
--	MA35_PIN(201, PM15, 0xe4, 0x1c,
-+	MA35_PIN(207, PM15, 0xe4, 0x1c,
- 		MA35_MUX(0x0, "GPM15"),
- 		MA35_MUX(0x1, "EPWM1_BRAKE1"),
- 		MA35_MUX(0x2, "UART10_TXD"),
- 		MA35_MUX(0x3, "TRACE_DATA3"),
- 		MA35_MUX(0x4, "CAN2_TXD"),
-+		MA35_MUX(0x5, "USBHL3_DP"),
- 		MA35_MUX(0x6, "I2C3_SCL"),
- 		MA35_MUX(0x8, "EBI_AD11"),
- 		MA35_MUX(0x9, "ECAP1_IC2"),
- 		MA35_MUX(0xb, "TM10_EXT"),
- 		MA35_MUX(0xd, "INT2")),
--	MA35_PIN(202, PN0, 0xe8, 0x0,
-+	MA35_PIN(208, PN0, 0xe8, 0x0,
- 		MA35_MUX(0x0, "GPN0"),
- 		MA35_MUX(0x4, "I2C2_SDA"),
- 		MA35_MUX(0x6, "CCAP1_DATA0")),
--	MA35_PIN(203, PN1, 0xe8, 0x4,
-+	MA35_PIN(209, PN1, 0xe8, 0x4,
- 		MA35_MUX(0x0, "GPN1"),
- 		MA35_MUX(0x4, "I2C2_SCL"),
- 		MA35_MUX(0x6, "CCAP1_DATA1")),
--	MA35_PIN(204, PN2, 0xe8, 0x8,
-+	MA35_PIN(210, PN2, 0xe8, 0x8,
- 		MA35_MUX(0x0, "GPN2"),
- 		MA35_MUX(0x3, "CAN0_RXD"),
-+		MA35_MUX(0x4, "USBHL0_DM"),
- 		MA35_MUX(0x6, "CCAP1_DATA2")),
--	MA35_PIN(205, PN3, 0xe8, 0xc,
-+	MA35_PIN(211, PN3, 0xe8, 0xc,
- 		MA35_MUX(0x0, "GPN3"),
- 		MA35_MUX(0x3, "CAN0_TXD"),
-+		MA35_MUX(0x4, "USBHL0_DP"),
- 		MA35_MUX(0x6, "CCAP1_DATA3")),
--	MA35_PIN(206, PN4, 0xe8, 0x10,
-+	MA35_PIN(212, PN4, 0xe8, 0x10,
- 		MA35_MUX(0x0, "GPN4"),
- 		MA35_MUX(0x4, "I2C1_SDA"),
- 		MA35_MUX(0x6, "CCAP1_DATA4")),
--	MA35_PIN(207, PN5, 0xe8, 0x14,
-+	MA35_PIN(213, PN5, 0xe8, 0x14,
- 		MA35_MUX(0x0, "GPN5"),
- 		MA35_MUX(0x4, "I2C1_SCL"),
- 		MA35_MUX(0x6, "CCAP1_DATA5")),
--	MA35_PIN(208, PN6, 0xe8, 0x18,
-+	MA35_PIN(214, PN6, 0xe8, 0x18,
- 		MA35_MUX(0x0, "GPN6"),
- 		MA35_MUX(0x3, "CAN1_RXD"),
-+		MA35_MUX(0x4, "USBHL1_DM"),
- 		MA35_MUX(0x6, "CCAP1_DATA6")),
--	MA35_PIN(209, PN7, 0xe8, 0x1c,
-+	MA35_PIN(215, PN7, 0xe8, 0x1c,
- 		MA35_MUX(0x0, "GPN7"),
- 		MA35_MUX(0x3, "CAN1_TXD"),
-+		MA35_MUX(0x4, "USBHL1_DP"),
- 		MA35_MUX(0x6, "CCAP1_DATA7")),
--	MA35_PIN(210, PN10, 0xec, 0x8,
--		MA35_MUX(0x0, "GPN10"),
--		MA35_MUX(0x3, "CAN2_RXD"),
--		MA35_MUX(0x6, "CCAP1_SCLK")),
--	MA35_PIN(211, PN11, 0xec, 0xc,
--		MA35_MUX(0x0, "GPN11"),
--		MA35_MUX(0x3, "CAN2_TXD"),
--		MA35_MUX(0x6, "CCAP1_PIXCLK")),
--	MA35_PIN(212, PN12, 0xec, 0x10,
--		MA35_MUX(0x0, "GPN12"),
--		MA35_MUX(0x2, "UART6_nCTS"),
--		MA35_MUX(0x3, "UART12_RXD"),
--		MA35_MUX(0x4, "I2C5_SDA"),
--		MA35_MUX(0x6, "CCAP1_HSYNC")),
--	MA35_PIN(213, PN13, 0xec, 0x14,
--		MA35_MUX(0x0, "GPN13"),
--		MA35_MUX(0x2, "UART6_nRTS"),
--		MA35_MUX(0x3, "UART12_TXD"),
--		MA35_MUX(0x4, "I2C5_SCL"),
--		MA35_MUX(0x6, "CCAP1_VSYNC")),
--	MA35_PIN(214, PN14, 0xec, 0x18,
--		MA35_MUX(0x0, "GPN14"),
--		MA35_MUX(0x2, "UART6_RXD"),
--		MA35_MUX(0x3, "CAN3_RXD"),
--		MA35_MUX(0x5, "SPI1_SS1"),
--		MA35_MUX(0x6, "CCAP1_SFIELD"),
--		MA35_MUX(0x7, "SPI1_I2SMCLK")),
--	MA35_PIN(215, PN15, 0xec, 0x1c,
--		MA35_MUX(0x0, "GPN15"),
--		MA35_MUX(0x1, "EPWM2_CH4"),
--		MA35_MUX(0x2, "UART6_TXD"),
--		MA35_MUX(0x3, "CAN3_TXD"),
--		MA35_MUX(0x5, "I2S0_MCLK"),
--		MA35_MUX(0x6, "SPI1_SS1"),
--		MA35_MUX(0x7, "SPI1_I2SMCLK"),
--		MA35_MUX(0x8, "SC0_nCD"),
--		MA35_MUX(0x9, "EADC0_ST"),
--		MA35_MUX(0xa, "CLKO"),
--		MA35_MUX(0xb, "TM6")),
- 	MA35_PIN(216, PN8, 0xec, 0x0,
- 		MA35_MUX(0x0, "GPN8"),
- 		MA35_MUX(0x1, "EPWM2_CH4"),
----
-2.49.0
+This wildcard channel matching is interesting. It would be good to know
+the reasons/cons why this patch was not concluded.
+
+>
+> And let the rpmsg-virtio-gpio driver parse @rpdev->id.name to match with a
+> GPIO controller in the DT.
+>
+>> If exact name matching is strongly required, then this proposal would not be
+>> suitablea.
+>>
+>> A third option would be a combination of both approaches: instantiate the
+>> device using the same name service from the remote side, as done in
+>> rpmsg-tty. In that case, a get_config message, or a similar mechanism, would
+>> also be needed to retrieve the port information from the remote side.
+>>
+> I'm not overly fond of a get_config message because it is one more thing we
+> have to define and maintain.
+>
+> Arnaud: is there a get_config message already defined for rpmsg_tty?
+>
+> Beleswar: Can you provide a link to a virtio device that would use a get_config
+> message?
+
+
+VirtIO typically uses the feature bits for negotiation and discovery.
+And such a get_config message would not be needed in VirtIO layer, as
+there is no multiplexing. It's a 1:1 mapping of device to driver
+instance.
+
+Thanks,
+Beleswar
+
+[...]
+
 
