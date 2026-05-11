@@ -1,181 +1,178 @@
-Return-Path: <linux-gpio+bounces-36582-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36583-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLx/ESn6AWrjmwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36582-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 17:47:53 +0200
+	id IPWfDgL7AWrjmwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36583-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 17:51:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2E6651181E
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 17:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E5751192F
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 17:51:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 080B6306CC8A
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 15:42:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 10AC23044A22
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 15:44:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9355D407594;
-	Mon, 11 May 2026 15:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC523406281;
+	Mon, 11 May 2026 15:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="Heko3cGu"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="VudydDlp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A40340628C
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 15:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB89402BA8
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 15:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778514096; cv=none; b=D+9OMjlE+pffJQdxMyxvk4kI7VT2i422wczJQVnBrs4mbY4q9rrkwGbltk5JkQ0KkkCzaS0oCLq9laS67yr3nfXUqt7VYE+rc/cjAGJ06yCJyImzA3Ie9oQ2YPsHfL0oQAbaBP2BaQ1B8fMtuhf+p93SZSV4lp+YCZyVwiOq3CI=
+	t=1778514192; cv=none; b=LlB9UWlt82ME6Sew5OmjQxaRxkTUXzdqYbzXeXtNMz0IsdPbEtujbbXsOpxwg2I5VG+hsf4evTCoT67/qYGYMojq3ToXBmpsvSvJzxGI2DqWjrRiNsB8zAFKeoYaejCdvmCh0q2q9L+pZuspb15oYh+LzuxAKmY1odntpZfIeSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778514096; c=relaxed/simple;
-	bh=QYUz8b5kzsmvQFipBJ/YClQFCzx8AI1CLI1nrVUTxv0=;
+	s=arc-20240116; t=1778514192; c=relaxed/simple;
+	bh=XWv4iooXM+kZV542ynD7PIkUs+GMb+r0XpgE3uv/HbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bzQbQlm7EbNNIXj4ujRYcTg1QD9ErR9XLJRNdo9qiZkHcOguN+lYQ8mUPtxlAibXsUY33stk70Jgv0nUAh/nFHsV9OQW4wOfOYm+lOGOIZAxgDO930FLhWI4Q6EOAEfxhIQTI2hwYnYCpBm/D2ZHCOgZXmaWNYx5HGHYkv6JrYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=Heko3cGu; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so44347315e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 08:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778514093; x=1779118893; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QYUz8b5kzsmvQFipBJ/YClQFCzx8AI1CLI1nrVUTxv0=;
-        b=Heko3cGu0Pyebt5bmYaWD5pTPrs+ZlplJer06F5Q3e9Ipc3Hi+pgI51EIhUU1T0ncf
-         c4gO5Em2u4wlHWzDpeHA3DKtgyvG/TC2z3IoMk96Ekl6HoiCL7TdKph+bb5n4SXJ6g0P
-         /opjNxoxU4YepoTNEddD9i5yfspCTDqhwkCPHZpy6MP6pQHszoGnw+I0gAqxHglOk1td
-         UX/nAq9/M1jppHUduHWyQFPlGUWPQZt2oBTccyRjSok+olkdvR+SLawsm+GtGJ7SjoMO
-         4yUg9H0xC3yWKaHycUvgIdVK4SRQpAQg89Z1D43EhU1IglbucyJojJXkmJkcQcz9YkR4
-         gd1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778514093; x=1779118893;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QYUz8b5kzsmvQFipBJ/YClQFCzx8AI1CLI1nrVUTxv0=;
-        b=MYyaNJiNjSWH6Cm1SgGe9WrtmDLdUzvaNpCKPLuIsqhWTA+VCPir/6OEt1DAmgwU0t
-         IJyVQIwe0wvnsBUsfXprLS34FFcS6uVJw55l5dngIOtzTueYVFa6ETvaj6JiQrpM8/Tk
-         kwQIuifE9xGx5coXr1ACyYcUsonlJMa7dJK8ekwjF0ORSt6G8eLk8+r3HleZcUYWYc4e
-         p0N37iEqjv1UEMzLJ87/p9dK0xTUVeCymK1yfF/3Xu7XS0FKu+rkUXt6dli3J0uT0kGe
-         6teucpDTSvY1NhrD9K58WH5iOddYjxy5/55XDG9tg8TptLIz04cn1jLaVS3f7/xwNsD3
-         0aiw==
-X-Forwarded-Encrypted: i=1; AFNElJ/dX5rtm9ZFnm9aM7mbnp+lx5miBF9hF2it4NQ2EJrgOwLl5QLQ/HtpQn1/n6zEq02SpjeiVS5gSG3i@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZvzx2bd1bRA6FGUsqlUQjbL/YtLlHqbOjDARDZlQdXInHC1h9
-	sFltAfzblsQ/90VjmiSFraiyBVe9VNJJfrzq7W4rKNb1XuXLNDThz9K83azd6KRnhIs=
-X-Gm-Gg: Acq92OGxLpFdI/G/By9JvXupDbeA3K8uCSfg78rKSWgRtj6dk/J++mt6k1h6t+3Sqiz
-	aek7aE2afB5QNk7LaT67vi4y0FlBPaerD3jwdzG1ToDcWtvggQyR0ddJ+5ihlgC4SRmg5iVaqox
-	Pqlfx8s4AqigTwCb9smD1SxwugfZrJbc5i0XAHPByFVKm9ujD1Q5DvqNacFjW/FNvIwKmm2nbd1
-	slzj1uoO2qs+1ZEL6OC7/HD2KrMungHS6hYF3dZDfz08vPCAlBvjMH4kdbj58a+RNqPXIdzB1SY
-	VJKXhiW2f/GRGUyw/HcCLroYYJ296p1x/iQm0AkmYP7vhcvsvmRHVnOJY3Q7PbmP+swacNF+6Yk
-	y3ksloICB8Ivz7G3ySoOf0Ni3GQ3POQweTbgL41OfwlxL3DR2piJtPxXxrImDV1c+uASgLa9Uge
-	DYlFmfWO8OJlIrl1/WzFXTVmyZI5tb3mHFbHXQAOdB06Q+ZG2EXu0wau8OEJZ3RZpWp770W8Knb
-	unXg0mK280+6lm80Kvh5/1eX2IJ4cRyrEpwdWWEXTIrwroXIgBsair7S5ADLGGaBv0cdw/sxSNx
-	G1MqjNhO
-X-Received: by 2002:a05:600c:1f89:b0:48e:8741:fd42 with SMTP id 5b1f17b1804b1-48e8741ff8cmr37216095e9.12.1778514092586;
-        Mon, 11 May 2026 08:41:32 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e6d8e3247sm64622295e9.8.2026.05.11.08.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 08:41:31 -0700 (PDT)
-Date: Mon, 11 May 2026 16:41:28 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Xilin Wu <sophon@radxa.com>
-Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, maxime.chevallier@bootlin.com,
-	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org,
-	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
-	alexandre.torgue@foss.st.com, ast@kernel.org,
-	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
-	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
-	julianbraha@gmail.com, livelycarpet87@gmail.com,
-	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
-	rohan.g.thomas@altera.com, sdf@fomichev.me,
-	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
-	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
- support
-Message-ID: <agH4qC74A540koDl@aspen.lan>
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-11-elder@riscstar.com>
- <DD71CDEABC7C16D5+02d052ff-13bb-4712-a847-91416f76c578@radxa.com>
- <7f3a0f16-5159-4bbc-8b15-9b5841603bf6@riscstar.com>
- <3A5C0389E7C0D241+21a4f16b-1af8-46ac-8831-0c1b49694df0@radxa.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=p0I0ikuSTPf0YIcd88OrScAmUv02gXrMMoYofOcWU1VqvOeNShdJSRpKpAz0Kh85uO2TgVf/UASRm+NsLyAqiLXst4BonzlhMwTBCqEVWwSmf4nptYh8jlyPstZDizQzqkV7ybJ5twiyC/EnGQqqSc8jrwbXGO2KOtZ9sfAkUnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=VudydDlp; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=DPY+
+	hoF/sOYbmyB24QB0NWidccjogborPML2UWBBho0=; b=VudydDlpEZts65HdQ+Rz
+	451TuuxkgUR0VpmkBHN/yKWQpMkKdAGppi85NzeBaamhOTLRa2MEvTfKjlwlEPeS
+	wTnSR5T3u4nUC2NQvYUDSQOWY+LDb0AlZQ0LBV/i5XxV5Gv30jnwgxH/82Aqhse5
+	rDRVmHEKsEAssgDuC/YigvuaPkebRQC1PT6tHCv9TtSuPTwameV/w87lTIj1MKdz
+	WOnf32wRkSIPVO6K8uZcJkziekGukGWDGVM2OlZ4abj+mmrbvJszxYLhU1Eza0PX
+	G/eLyvrNVHLKr9eLLHL690gVV/4fz/Zk8aOyF3uaLigppbuuarDFFvT9wZHMSHoN
+	hQ==
+Received: (qmail 2643739 invoked from network); 11 May 2026 17:43:02 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 May 2026 17:43:02 +0200
+X-UD-Smtp-Session: l3s3148p1@NEMSmoxResoujnue
+Date: Mon, 11 May 2026 17:43:01 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Andi Shyti <andi.shyti@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jie Li <jie.i.li@nokia.com>
+Subject: Re: [GIT PULL] Immutable branch between the GPIO and I2C trees for
+ v7.2-rc1
+Message-ID: <agH5BU4-9Y0lgi-2@ninjato>
+References: <20260511123042.64315-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m0j7MFLm2//8bEfW"
 Content-Disposition: inline
-In-Reply-To: <3A5C0389E7C0D241+21a4f16b-1af8-46ac-8831-0c1b49694df0@radxa.com>
-X-Rspamd-Queue-Id: E2E6651181E
+In-Reply-To: <20260511123042.64315-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Rspamd-Queue-Id: E0E5751192F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-36582-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[sang-engineering.com];
+	TAGGED_FROM(0.00)[bounces-36583-lists,linux-gpio=lfdr.de,renesas];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[aspen.lan:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ozlabs.org:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sang-engineering.com:dkim]
 X-Rspamd-Action: no action
 
-Hi Xilin
 
-On Thu, May 07, 2026 at 09:57:26PM +0800, Xilin Wu wrote:
-> Do you think if a shutdown callback like this is required? It looks like the
-> driver sometimes does a MDIO MMIO read when the PCIe link is down, causing
-> the board to reset due to SoC side PCIe NoC timeout.
->
-> After this change, the board can always shutdown gracefully.
+--m0j7MFLm2//8bEfW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've preferred controlled reboots to power cycles throughout development
-and I hadn't spotted any major problems with graceful shutdown (which
-isn't to say there have never crashes but generally I expect `reboot`
-to provoke a reboot successfully).
+On Mon, May 11, 2026 at 02:30:42PM +0200, Bartosz Golaszewski wrote:
+> Wolfram,
 
-Just to be sure configured my board with irq=POLL (to match your setup)
-and still can't reproduce.
+Forwarding it to Andi who will take over I2C maintainership from 7.2
+onwards...
 
-We mostly run Debian/systemd so there might be something happening in
-userspace to sequence things nicely. However I have ruled out
-NetworkManager.service and networking.service (stopped this services
-does *not* tear down the network link).
+Andi, you will need to merge this branch, so you can then apply
 
-Can you share a bit more about how to reproduce the problem (including
-reliability of reproduction)?
+https://patchwork.ozlabs.org/project/linux-i2c/patch/20260511113726.49041-3=
+-jie.i.li@nokia.com/
 
+on top of it.
 
-Daniel.
+>=20
+> Please pull the following changes adding the gpiod_is_single_ended() help=
+er
+> for v7.2-rc1.
+>=20
+> Thanks,
+> Bartosz
+>=20
+> The following changes since commit 254f49634ee16a731174d2ae34bc50bd5f45e7=
+31:
+>=20
+>   Linux 7.1-rc1 (2026-04-26 14:19:00 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/ib-gp=
+io-add-gpiod-is-single-ended-for-v7.2
+>=20
+> for you to fetch changes up to b5fafa01bdaade5253bd39317f5455d13e6efc7d:
+>=20
+>   gpiolib: add gpiod_is_single_ended() helper (2026-05-11 14:25:25 +0200)
+>=20
+> ----------------------------------------------------------------
+> Immutable branch betweeb the GPIO and I2C trees for v7.2-rc1
+>=20
+> - add the gpiod_is_single_ended() helper function
+>=20
+> ----------------------------------------------------------------
+> Jie Li (1):
+>       gpiolib: add gpiod_is_single_ended() helper
+>=20
+>  drivers/gpio/gpiolib.c        | 22 ++++++++++++++++++++++
+>  include/linux/gpio/consumer.h |  5 +++++
+>  2 files changed, 27 insertions(+)
+
+--m0j7MFLm2//8bEfW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmoB+QUACgkQFA3kzBSg
+KbajWg//aLttIzl1KTr0NYb2C8Bp16ii2jOHJI6jlJcrMpVCN7ybVXToTcGVGQI7
+gn5WskFnrRwxkT/b40EVN56Fqj1Z5/djQINQwEwARsjTdcClSA8Wn3TxcyiOtI2z
+vkKufIEuyDO2/whK3wutImI6nQnkCGIwqqowAmQsPKKQLXtV0N90vqYwKr20XJDN
+wWaNA94qmH9V8o0MymdaNb0ub/N+k7dM6QkDsfK/E7BlnXL7oN4Qwf+RKsuxz1tz
+E40k3zK/T8+Awye268dxYyt0SZU3hLhy9xoWNsJaivNRBcZrZWb3BGDXMNqZ3fo6
+nH4iM+KZ8k5T/SQz8xokHupGhIHStG6ZN5xvamojf0Et26AadH8A7MCkmDtNG1ny
+S7O7gtFVyCkwU2DO+otxLjD+U5RSnFBcPR/PVC6AnzrdzFOSRAu8Y+S8ua9TTZTe
+N9Q/wCDa0mQEfQWol6XeRsjCoiHy8w81PCqJ1gy4A85Lq/aTar3YeuiFQvWzPSBZ
+U+puaEcmoamQ5F9OIN5FbSPd6rpMxu76+m/UFG2soSqui4Fzp9bMTXz+OZwSB5TJ
+uflu4p2WiSxLz5kS4/16z1UaVovuI9BWrcTETmXqDD+Do1nUY8pmEfs75BR+dKwu
+4du59f+BPGqo6fCo6F5LEV9h6mi5NmQ9F5nSVlMcHkTLlRMEZI8=
+=Dc3Q
+-----END PGP SIGNATURE-----
+
+--m0j7MFLm2//8bEfW--
 
