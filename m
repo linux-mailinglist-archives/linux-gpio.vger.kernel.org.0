@@ -1,157 +1,144 @@
-Return-Path: <linux-gpio+bounces-36571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uCMqIjzNAWrajwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36571-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:36:12 +0200
+	id AKJILlXPAWryjwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36572-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:45:09 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C0CE50DF50
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:36:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20DCD50E1D0
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 487AC3032675
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:35:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1196730566D0
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B978D38E5ED;
-	Mon, 11 May 2026 12:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87CA438E5ED;
+	Mon, 11 May 2026 12:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pj9Kr8nS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPVJ5TmI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7D129BD87
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 12:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC4D222565;
+	Mon, 11 May 2026 12:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778502942; cv=none; b=OtSvPqLnLDe7mCMIubnUoYOERBje2GYtEV50DppbBKOgguce1xi7Yt9tyU6juyQifF7RdXzET7dCJQlw9UhRKxKsptun+kSHAq37k6krEgJsWeRuNyoVCn93HZzPTDzQ5dk2laMtTKgLhkZAz2fXYCVqY06xmDx0oCH36GixeNU=
+	t=1778503148; cv=none; b=lE0I9dXdpIuI6QRTbl0/1czTPpNZlmwP0I75hfLCdg6lRAqvlwvrEaY42OR1v8tDC5vX0jUD9Z+OGG/96safKv7Xm9ttlGopcPad61+8tdnwc5aqMI/otgVwC42uuBg4IYTZeeEkjJ0X2OJjknukeUvSrZakBmmbvOYiZx1Qdec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778502942; c=relaxed/simple;
-	bh=YiuC223d0U5Qg6+CWRCJHkROXXXKPD5OsF2ncUq9LEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q9aaHUXwjZ8Dkn0zKV/1uoPd/lUDj4NA4l1a3wIlqLsdy11BC/VjdBFTuZypaK+kDZCZHwTHfcfa3bEzAO3z8wJjdaxqPPuZc6h29W/q4562SDGaIxqDbRaxtK8ei/BS1KfVUm19ngqHKX0UoZWraBrNEGz92f7CVANJtIIX+W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pj9Kr8nS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62DCDC2BCF7
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 12:35:42 +0000 (UTC)
+	s=arc-20240116; t=1778503148; c=relaxed/simple;
+	bh=NSmA4ulYXV0V5iL19uS6TpQM1B+oaa+q4LvvczJyrj0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=tXUPTRO5lc5EbB4DogyCusZ3NrEe0CAHOjtGs54CXAJN3961UYq7yFU2fBHjr7DI9k6/G7NB8DOOT05cLtFHnNpFG8Y99iHkPzbeGKBZK0bkcTNUCBh6Gu1ckrnpodxjyxnTGVCSl044qgBOKQtrqakJ1/me/tspUjMdpdrKfFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPVJ5TmI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88938C2BCB0;
+	Mon, 11 May 2026 12:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778502942;
-	bh=YiuC223d0U5Qg6+CWRCJHkROXXXKPD5OsF2ncUq9LEw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Pj9Kr8nStLsVetiOSco2GGCMSl2FIe8q2NUromROd9I4JzycDKico+gTJmU5dWgbQ
-	 nJSl5CbsS1h/lwWigkSdjAzds3TlF/f6u2NaS5ZfxVVM56TSF7sVbksVHgWW45Ooxp
-	 35WnfwL12F9kBL/wRLIMpvhmyZEDf+r5ID78/1xg7DQReYBgiti9gNC6yg/iSKoVWl
-	 ay6pjvtHOifQgiZXelyuziSzYUUkXjk3RvQyxmYnGYRpP3QrKqg0thEM6YcHr+FNap
-	 NbXuxFKxqN+jXll7br8tHcLAD/APQmYz1a4YwUMWe73ydQDeJBpT75As7d2D9J+VrB
-	 fM3cUx0q97FTg==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-676a89de629so6895352a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 05:35:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9WECpfrD1+6ETsSKifyQSQXjjnee4ylF230DOT2DE8V11xN0VANmZDdGgQkQ6uPVykiNI0GGCLkMvq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVLhu9fq1Ff0H6bF3IBiRN5Ivmw50hc1v4NRxzip4stAKFh7dL
-	ohCNrqOiibYFPQ9MY1heK5Xj1sOENes8dg5Uyf2sixD9/gyPzX4GSvfE0hRjRq6YXogwCfyLoR0
-	ykD1EAdYOYUsR37NfgqfLvpt0Blw8VA==
-X-Received: by 2002:a05:6402:518c:b0:66f:93cb:a277 with SMTP id
- 4fb4d7f45d1cf-67d642b9559mr12393090a12.14.1778502940912; Mon, 11 May 2026
- 05:35:40 -0700 (PDT)
+	s=k20201202; t=1778503147;
+	bh=NSmA4ulYXV0V5iL19uS6TpQM1B+oaa+q4LvvczJyrj0=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=HPVJ5TmI434E9bZdWwofDop41VEmE0P5oZNC3r0PMg8BCk4gqD4LVOQMBYLgfxwrR
+	 zeF4MdxSyXiSuvLUDKvmmm7AaFMI9fz9/UmBNcYDojME4VdCpSMz+xl4pj4RO3P/VV
+	 kMhtMZYpuhnoikhqToiT9UGA1ZKtziAhK9bqY56wv3O1zew34iVeq5UXtykdFAcR03
+	 Ou/k5YvwByKkxSiLb4HJMeuANJ3cKsKVatKBsbfypG9ZhUooX1V3KKSCGMEZqv3t/C
+	 2yJXBoRa8GbDd10p/Q37QR8HkI3sVslbSxAc5rFQnl0pubyYQz3UOASrL96ij5jR/w
+	 Vj69lHaOTf4oA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260511-bm92t-v2-0-2145e4f4386b@gmail.com> <20260511-bm92t-v2-2-2145e4f4386b@gmail.com>
- <177844236182.3519904.11223844313176518441.robh@kernel.org>
-In-Reply-To: <177844236182.3519904.11223844313176518441.robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 11 May 2026 07:35:28 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ-av8qQ2-bUyZj2HBCiyypqTx0iHNSDuTkzDYUkmAcCg@mail.gmail.com>
-X-Gm-Features: AVHnY4K9CD446sGH0M7JjTNmftVBOl39iUIATcxR0y0VQjQonGoPN-OagOQ_Vp4
-Message-ID: <CAL_JsqJ-av8qQ2-bUyZj2HBCiyypqTx0iHNSDuTkzDYUkmAcCg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: usb: add Rohm BM92TXX Type-C controller
-To: Alexandre Hamamdjian <azkali.limited@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, linux-usb@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@kernel.org>, Conor Dooley <conor+dt@kernel.org>, CTCaer <ctcaer@gmail.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 2C0CE50DF50
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=3f511c7d94a2b29203e5493aa4d3fe7b61340740c98acf3bb7307e426cca;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Mon, 11 May 2026 14:39:03 +0200
+Message-Id: <DIFUQX289BWC.1BA30N8GASOKD@kernel.org>
+Subject: Re: [PATCH v2 0/2] Improvement spotted during patch review.
+Cc: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Alex
+ Elder" <elder@riscstar.com>, "Sashiko" <sashiko-bot@kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>, "Bartosz
+ Golaszewski" <brgl@kernel.org>, "Linus Walleij" <linusw@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20260508-regmap-gpio-sparse-fixed-dir-v2-0-deee84df3027@kernel.org> <177850274681.64672.5290926520944173270.b4-ty@oss.qualcomm.com>
+In-Reply-To: <177850274681.64672.5290926520944173270.b4-ty@oss.qualcomm.com>
+X-Rspamd-Queue-Id: 20DCD50E1D0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36571-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-36572-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com,linux.intel.com,linuxfoundation.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.996];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mwalle@kernel.org,linux-gpio@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Sun, May 10, 2026 at 2:46=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
->
->
-> On Mon, 11 May 2026 01:32:10 +0700, Alexandre Hamamdjian wrote:
-> > Add the device-tree binding documentation for the Rohm BM92TXX family
-> > of USB Type-C and Power Delivery controllers. The device is controlled
-> > over I2C and signals state changes through a dedicated interrupt line.
-> >
-> > Document the rohm,* properties consumed by the driver: the optional
-> > VCONN-enable GPIO, the DisplayPort alternate-mode toggles
-> > (rohm,dp-disable, rohm,dp-alerts-enable, rohm,dp-signal-toggle-on-resum=
-e,
-> > rohm,dp-lanes), the suspend/dock tunables (rohm,led-static-on-suspend,
-> > rohm,dock-power-limit-disable) and the four
-> > rohm,pd-{5,9,12,15}v-current-limit-ma per-PDO charging current limits.
-> > A graph port is required to link the controller to a USB role switch
-> > consumer.
-> >
-> > Signed-off-by: Alexandre Hamamdjian <azkali.limited@gmail.com>
-> > ---
-> >  .../devicetree/bindings/usb/rohm,bm92t.yaml        | 128 +++++++++++++=
-++++++++
-> >  MAINTAINERS                                        |   1 +
-> >  2 files changed, 129 insertions(+)
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/u=
-sb/rohm,bm92t.yaml: rohm,pd-5v-current-limit-ma: missing type definition
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/u=
-sb/rohm,bm92t.yaml: rohm,pd-9v-current-limit-ma: missing type definition
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/u=
-sb/rohm,bm92t.yaml: rohm,pd-12v-current-limit-ma: missing type definition
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/u=
-sb/rohm,bm92t.yaml: rohm,pd-15v-current-limit-ma: missing type definition
+--3f511c7d94a2b29203e5493aa4d3fe7b61340740c98acf3bb7307e426cca
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Use a standard unit suffix.
+Hi,
 
-Rob
+On Mon May 11, 2026 at 2:32 PM CEST, Bartosz Golaszewski wrote:
+>
+> On Fri, 08 May 2026 14:51:25 +0200, Linus Walleij wrote:
+>> Support sparse unidirectional GPIO lines.
+>>=20
+>> To be used in a forthcoming submission.
+>>=20
+>>=20
+>
+> Applied, thanks!
+>
+> [1/2] gpio: regmap: Support sparsed fixed direction
+>       https://git.kernel.org/brgl/c/ae99219270a3d85ec38eee9458829bd45c11a=
+eec
+> [2/2] gpio: regmap: Don't set a fixed direction line
+>       https://git.kernel.org/brgl/c/c3566b4a08707587fd52342f53cda1d7ee260=
+7ca
+>
+
+Mh, my review comment [1] made it through, didn't it?
+
+-michael
+
+[1] https://lore.kernel.org/linux-gpio/DIFNX8HLL7X3.JGSENU7W32X4@kernel.org=
+/
+
+--3f511c7d94a2b29203e5493aa4d3fe7b61340740c98acf3bb7307e426cca
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCagHN6BIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/hY9wF+Nkumxd6O86GEzHJ7W+X/8gx0KSC+n/zL
+Kd9DPCCjHbvhPC6KLf6UOWcbUKi2LrVzAYCaBB9Z3qf1oLqF05XTbycKd+iEfigX
+R7q2m501nm+fj8RILx5ziU0TuYOSAQFuww8=
+=TlrY
+-----END PGP SIGNATURE-----
+
+--3f511c7d94a2b29203e5493aa4d3fe7b61340740c98acf3bb7307e426cca--
 
