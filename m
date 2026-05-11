@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-36610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36611-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mPlTGtE1AmocpAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36610-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:02:25 +0200
+	id wHJpIhM2AmocpAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36611-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:03:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1F41515652
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4441515680
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:03:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8688B30247EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:01:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B4FCE305BFB6
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:01:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36BE328B5E;
-	Mon, 11 May 2026 20:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF4C329C54;
+	Mon, 11 May 2026 20:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjSMW4AV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFfnP2XZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66683BB40
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:01:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0242E8DEC
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778529660; cv=none; b=b/GgfrCQEM3/HYoJidn9J3aYjx/p8SEjQZmpSHRH01yU5/mdlg6iizyeh8o0tj0ZhlT7jk2+IfujOoVdP1/KSkVr0yISr+BoQK6OPBDdjKGpcwoZV338zi8/CA+MGIUF4w+EyXmisgLRQXUVHTRxkGj8PVqCSJmcoXbE0WfC/ac=
+	t=1778529681; cv=none; b=bxUe1jOp80iRXeZJHhovr/hOIzoEjLnCZqWkik0Byyukt8WxueFQeG4+mjJY9FSFdemc7c/ew5QRtnzy0/dbRCLVYDGhONTwPUKylzW5KCKPEjb7SwUMlqv5CryFdxWKLKvJ7vXdQC5NWAeuXURoZMVQnB26Tw+yK6n5qSdkeds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778529660; c=relaxed/simple;
-	bh=afMhjAzIKP5bcnZSy3KWIznLuKc6kIGzKnWy48IwObo=;
+	s=arc-20240116; t=1778529681; c=relaxed/simple;
+	bh=SidA+dUAZZZvheU90fCA8wbYd1elVlbPIUNjX+RGP3w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aO7tUW2i8fIHSjxw6KI3nt9N3VwAQ0SW7KbwuX4ot3iV8+gppKoUiTWn5Td1U6rrdvrwlWY9mPSiFYbCwcGFdgP+R8WsXaO88Ua/67F32J5Ic/q+OJILsCE4thGwLjO1EB9cvOFcBkoQWsa/L//2JPozpjsFFnZRquQSxNX7rc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjSMW4AV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70EC5C2BCFC
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:01:00 +0000 (UTC)
+	 To:Cc:Content-Type; b=q8Z5SRLjK4jSNGBw5i86UNiswGt2NbMYMfyMEvK//fdmJ/iIV/Nw+Eyh4v6e35jz4sPIiHx7NnTkmoXolHoDF+gxFANbx2LoabpEVjgGLIoWlndAmCHHjpUdnSdgc5ly670veCnEbbJLtrDrYI6ohHaLstBX2B2L3oBZSfgYoJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFfnP2XZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08BA8C2BCF5
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778529660;
-	bh=afMhjAzIKP5bcnZSy3KWIznLuKc6kIGzKnWy48IwObo=;
+	s=k20201202; t=1778529681;
+	bh=SidA+dUAZZZvheU90fCA8wbYd1elVlbPIUNjX+RGP3w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZjSMW4AVnQL/NQhwz+ZpLjM8Hk9JMOKws3Spz8ouELIc+Bu9KqBJDlfrPHMktFTim
-	 Vb4ZH+2KCTkTF/lb22lBG9p+eKe6tHw1UTPhNHH62QHGjDClYKvn1OwUMmNRFG+SST
-	 jQPwXzj2U79XuxIVNtekGd9FnWj9Hc4Cl7WgZ5/uzY8JTgW/z3Rh3S6nKpwg6862V3
-	 dUeuMr9pQe76NrilzH41A/u5OKYW/W/Cax5E1OAqHVUj1+9M/SOkwPmPhT7NupiyV4
-	 HfuGfmHXERRdoxl1UoTJY+PwrKgnU/uBhivXGHpwYdtY5IE7kKYpaWBef0HoPAURMo
-	 p9Lotrc22yfZQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso1447231e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 13:01:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/b3GnhAQOcZwde5YbJg/i6dI7BWj3H5ASgUorLTPj6WNW0a9P1FwNTd3DUAHpsjc5oDZ3+9U3kinEv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtZYcOCJAsDKZmO9p0mYbqF/YbTRWmCsWIa1bqmOhmQsT5fzWu
-	OMxN2uspm2ASC81T7d33cxIne2gMQAczqkiiJVUtPKuSA9rktiTq9I9a0hGsNkM1uxvnCwhPvrq
-	ra+mptLisdmR7OpQLe0eq8YhIUN6jaHA=
-X-Received: by 2002:a05:6512:3b86:b0:5a4:d9:88a5 with SMTP id
- 2adb3069b0e04-5a887cde895mr8789758e87.24.1778529658964; Mon, 11 May 2026
- 13:00:58 -0700 (PDT)
+	b=lFfnP2XZwjdBo4BTtgU8O72MJ2clLfMZEmrgu4EPtnG9wmNecb3uP3lL1p0qjlg/s
+	 CRKMRlAcaVuJTRGosEXCfpKdoxLL2hInuLQRKbudZUW59x0Q+h0lv/O+/Ch1TowO5Q
+	 C7Z1o6/ws/Bz/2C+AR/s2fDux1u+3Fn1p/l4dPz2Cfqu0nLbA2UqVSpr0AxwAowRHd
+	 ozhfrqhlatOaTkxDHUvBUtmDFLMxF6o7h6UW40LropWMLQZszYnJc3ktkI2AXo3P2e
+	 xt0XwPPYunL9X5OAZQQ1xPY3lqgAPOLfOQbSfAKJb4V5QFTT5p+q6GLy/EakVTxuTM
+	 Qpt2sm3uqMlEw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a525aedb24so4730577e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 13:01:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8IMn0m2uUk7j8vA8m8+FGLPfCienqkcdIif/1AgWMcqdoWhGZmPxnZCbhwF17Z8XXYdIsdYwBnTSMK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLj2vovTmLIjxjxM4rAMkH5rWGzKbu73FeKehi+oub31J3/K0m
+	YX7S1j4tHCcQbK6Cjhi3fbOg5VzFazu4kcwnM4Q4fx7lCeqCprXA3nHptZH7ozcFdY0UnFRlls0
+	Fn9TGK4mURIhmTxC+DxVBzXAf9aa8/4I=
+X-Received: by 2002:a05:6512:3186:b0:5a8:691e:abe with SMTP id
+ 2adb3069b0e04-5a8e31ec72bmr5414e87.30.1778529679763; Mon, 11 May 2026
+ 13:01:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260505104003.1811841-1-wenst@chromium.org>
-In-Reply-To: <20260505104003.1811841-1-wenst@chromium.org>
+References: <20260505104056.1812343-1-wenst@chromium.org>
+In-Reply-To: <20260505104056.1812343-1-wenst@chromium.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 11 May 2026 22:00:46 +0200
-X-Gmail-Original-Message-ID: <CAD++jLnpsmV=yqjrFZiqqRxHVM-7pG3SZ15DKakj_3ODnP4wkg@mail.gmail.com>
-X-Gm-Features: AVHnY4KLb5dofKxjtoMouq5Gr8Qpwowhm7jBE9YnqDOByoiTwxk2QEGRigVxcuI
-Message-ID: <CAD++jLnpsmV=yqjrFZiqqRxHVM-7pG3SZ15DKakj_3ODnP4wkg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mediatek: paris: bypass pinctrl GPIO layer in
- set GPIO direction
+Date: Mon, 11 May 2026 22:01:06 +0200
+X-Gmail-Original-Message-ID: <CAD++jLkoiJN_gxv0y4ARBMG7bTc07OjvDR1d8DykkNp7g1LOUQ@mail.gmail.com>
+X-Gm-Features: AVHnY4K7pYfonqtNSNtLkl02aFuSTA7FYZ67VUeH1tI-OzuQASo_yecrO3Z2b_c
+Message-ID: <CAD++jLkoiJN_gxv0y4ARBMG7bTc07OjvDR1d8DykkNp7g1LOUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: common-v1: bypass pinctrl GPIO
+ layer in set GPIO direction
 To: Chen-Yu Tsai <wenst@chromium.org>
 Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
@@ -75,7 +75,7 @@ Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: C1F41515652
+X-Rspamd-Queue-Id: E4441515680
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -90,7 +90,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-36610-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36611-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -104,10 +104,10 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,chromium.org:email,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[chromium.org:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Tue, May 5, 2026 at 12:40=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
+On Tue, May 5, 2026 at 12:41=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
 rote:
 
 > pinctrl_gpio_direction_input() / pinctrl_gpio_direction_output() take
@@ -118,21 +118,22 @@ rote:
 > up taking a spinlock, then calls pinctrl_gpio_direction_output(), which
 > takes a mutex. This causes a huge warning.
 >
-> While this class of Mediatek hardware does not have separate clear/set
-> registers, the pinctrl context has a spinlock that is taken whenever
-> a register read-modify-write is done. Also, once the GPIO function is
-> selected / muxed in, further GPIO operations do not involve pinctrl
-> operations or state. The GPIO direction and level values do not require
-> toggling the pinmux or any other pin config options.
+> Since the Mediatek hardware has separate clear/set registers, there is
+> no risk of clobbering other bits like with a read-modify-write pattern.
+> Also, once the GPIO function is selected / muxed in, further GPIO
+> operations do not involve pinctrl operations or state. The GPIO direction
+> and level values do not require toggling the pinmux or any other pin conf=
+ig
+> options.
 >
-> Switch to directly calling mtk_pinmux_gpio_set_direction() in the GPIO
-> set direction callbacks to avoid taking the pinctrl mutex. Drop the
-> .gpio_set_direction field in mtk_pmxops to signal we are no longer using
+> Switch to directly calling mtk_pmx_gpio_set_direction() in the GPIO set
+> direction callbacks to avoid taking the pinctrl mutex. Drop the
+> .gpio_set_direction field in mtk_pmx_ops to signal we are no longer using
 > the pinctrl GPIO layer for setting the direction.
 >
 > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
-Patch applied, thanks for your perseverance Chen-Yu!
+Patch applied.
 
 Yours,
 Linus Walleij
