@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-36555-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36556-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iFuMOkLLAWqgjwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36555-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:27:46 +0200
+	id UMEdFwLNAWrajwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36556-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:35:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A74E50DB3D
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:27:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDD4350DF04
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:35:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2AB2330144CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:27:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F368A30AFA0C
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:27:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E337A3DD53C;
-	Mon, 11 May 2026 12:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F173E1205;
+	Mon, 11 May 2026 12:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCeT1Vs0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYcY1wGj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B4F3A4523;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165993A4527;
 	Mon, 11 May 2026 12:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778502405; cv=none; b=mL9r2fn2GjwDt/zOrDEutiw4rNM7N+DEJCpJoOohPeQaE1p89G9HwIr3TMLEEok72+dCqwYV5dwbkklaZcZWHCKxaykrCxQXia7XJobt3z3UHQP5w6EKcZnrfY1Gyn50ch6msbAXgKul0yXnc1z43SJZhTVJiDiixo3exp3Nhd8=
+	t=1778502405; cv=none; b=uJP52XvUw4kGyM3dsLqb47QC7drqxagaYXDRD4sDH2So6M8xYIIS7bSjzvEJzPZJ3KBy68EqfO18B88EYnrpcjbflK31WY9LWTfrfmKyuUSsQIK3CaZo36G6f/ZUMZKg+kDpSIV0Acve0sWNECWRZXsXPHC+byVxZ8ZrqYazcWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778502405; c=relaxed/simple;
-	bh=9bUvO9jmr4n76eZcAAb+VBJtZRbGcpHo0LOtElQF2Ag=;
+	bh=VDql+Hfavigfh9ovTYOy1u+FLCxCrHF81DbvX/UyK60=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J/o1qXjj5EWXm8+YQLfUj2HfqflxbxUOZf58AJ7Pko/szu2Zhc/q3eYXfzCMGHYvCGcwfEAnzUR6E6VPdYymwkMLoHvPnLgvkLQsmHJ/LrdPlCkRLfeNFtJ8wE9YD+retHve1exsG6Iq5qqs1RymaKsF9JP3ohiI+mOS74C28zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCeT1Vs0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C9CD8C4AF0B;
+	 In-Reply-To:To:Cc; b=U4TTvTIxLfBCyYYPgjq8Si78lcFRaj77qt38hdVC8gZ7KJMF+avUJSRpZfMT556yAj5LYzMYuZTpUVpEmhyTSPn1wZey4zLUe1mYdoHXGnWb7KPSnw6ms2E8eEv9I9N+d/FxkszftfLZwr1Bu0FcYT09XXY5ScHuvJvOX38NjV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYcY1wGj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DFE91C4AF1B;
 	Mon, 11 May 2026 12:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778502404;
-	bh=9bUvO9jmr4n76eZcAAb+VBJtZRbGcpHo0LOtElQF2Ag=;
+	bh=VDql+Hfavigfh9ovTYOy1u+FLCxCrHF81DbvX/UyK60=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NCeT1Vs0mHc2fd/udHNtrTwF/NvEoy1NHs6eMMQIT9HZ70TSq9+hLHJiZCknE2ztK
-	 fcgb9/jwouuAf+spsBgqcFlY6APdc8GfRTYJcTGNLMuAn7NeAaXKmhIR8fk4B6UmLi
-	 d53VSdyZSg9iI01x36RcnEUr0Cjb/qhRsJk8DO1vXHgYTTCK16eDRu9lOLUEAK3Wvk
-	 SflxGLRACxfeASlPyfRuE7ZhDT502QN5iHG+ORShtXeVkT6x1QTE9qMYlU2WCF+Dms
-	 7s6ezPHpV/3U1jZxcFPHdMnpxl/ady1zVXG90dp/J2dIWjqpGf2jNWh9VjQ05odV9T
-	 tP7T6W6XF2AWg==
+	b=UYcY1wGjPQ7HCwMlLepBIJ/ulUX3JO0X1S/bn3/O2u0MuQmIR/M1uyi+Qoqj9XOBP
+	 Ztz/ZqfHvQoIe8UtPcEaGumBDneOLLBy8e1Ax2ChGiRiNIy8LmgpaSEvVS6vWL+eAK
+	 QwoQBY44SaushcfhnX5Bcd33V23R/+QK4EYz2otKbfjGmPYXCDZdOtTzvRm9rjzZtl
+	 cVpa1Zn0jjHWz5IDxGi0Z6uKq4esiZvqSHWh7tCrHxXFhXQosJmm5lhM4TUThsFc03
+	 SjWu3EeYOCzOFHrMDuli/JGdPg2sNrl5XET56lKb0Zq2UiwbN5WSROFXbWGVRcUbK4
+	 J+z9n5UHPyQ/g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF821CD4848;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B69CD4842;
 	Mon, 11 May 2026 12:26:44 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 11 May 2026 15:26:35 +0300
-Subject: [PATCH v11 12/22] dt-bindings: media: i2c: add MAX9296A,
- MAX96716A, MAX96792A
+Date: Mon, 11 May 2026 15:26:36 +0300
+Subject: [PATCH v11 13/22] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer framework
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-gmsl2-3_serdes-v11-12-fc163073c16b@analog.com>
+Message-Id: <20260511-gmsl2-3_serdes-v11-13-fc163073c16b@analog.com>
 References: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 In-Reply-To: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -77,337 +77,759 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  Martin Hecht <Martin.Hecht@avnet.eu>, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=9145;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=19564;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=GFhV03TLaPhYeU6NX16v5DxydRNe7OhIGfvX3Ww4CWM=;
- b=3W+1CoFZvkRMuZhxZWD1BtMiOogQga6zpZYq2s4jUrS2xN1b/22e+lvZtQTV/G6rChFt74dBs
- U+uRouhi8X6DCBmASUuV0oeRjB6yDBWl2sE4FxS1a+Q9N5lj6NB/myZ
+ bh=22zVA0S1E2kxUS8lsopB3O7rVP2X5lwDlJqeQf9rdVA=;
+ b=RGDVz0hb8xk+EdIMeDn0Ui/2tjwve1n0MbTbwbpAWEt9LCmRKhdiL4Xr3j+0aWSKs08lE7gfJ
+ gQRPoxXhQe+D/4JPv5J8LYh1EFkS0lt4I9LppbwT/c+stbYN2qzWBdn
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
  with auth_id=140
 X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Reply-To: dumitru.ceclan@analog.com
-X-Rspamd-Queue-Id: 9A74E50DB3D
+X-Rspamd-Queue-Id: EDD4350DF04
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36555-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36556-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	DBL_PROHIBIT(0.00)[0.0.0.1:email];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,0.0.0.0:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:email,analog.com:mid,analog.com:replyto]
 X-Rspamd-Action: no action
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-The MAX9296A deserializer converts single or dual serial inputs to MIPI
-CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps or 6Gbps
-in the forward direction and 187.5Mbps in the reverse direction.
-In GMSL1 mode, each serial link can be paired with 3.12Gbps or 1.5Gbps
-GMSL1 serializers or operate up to 4.5Gbps with GMSL2 serializers with
-GMSL1 backward compatibility. The MAX9296A supports mixed GMSL2 and
-GMSL1 links. The serial inputs operate independently, allowing videos
-with different timings and resolutions to be received on each input.
+These drivers are meant to be used as a common framework for Maxim
+GMSL2/3 serializers and deserializers.
 
-MAX96716A supports both tunnel and pixel mode.
-MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
+This framework enables support for the following new features across
+all the chips:
+ * Full Streams API support
+ * .get_frame_desc()
+ * .get_mbus_config()
+ * I2C ATR
+ * automatic GMSL link version negotiation
+ * automatic stream id selection
+ * automatic VC remapping
+ * automatic pixel mode / tunnel mode selection
+ * automatic double mode selection / data padding
+ * logging of internal state and chip status registers via .log_status()
+ * PHY modes
+ * serializer pinctrl
+ * TPG
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/media/i2c/maxim,max9296a.yaml         | 242 +++++++++++++++++++++
- MAINTAINERS                                        |   6 +
- 2 files changed, 248 insertions(+)
+ MAINTAINERS                                 |   1 +
+ drivers/media/i2c/Kconfig                   |   2 +
+ drivers/media/i2c/Makefile                  |   1 +
+ drivers/media/i2c/maxim-serdes/Kconfig      |  17 ++
+ drivers/media/i2c/maxim-serdes/Makefile     |   3 +
+ drivers/media/i2c/maxim-serdes/max_serdes.c | 413 ++++++++++++++++++++++++++++
+ drivers/media/i2c/maxim-serdes/max_serdes.h | 183 ++++++++++++
+ 7 files changed, 620 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
-new file mode 100644
-index 000000000000..de6bfcec5dc6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
-@@ -0,0 +1,242 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2024 Collabora Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/maxim,max9296a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim MAX9296A GMSL2 to CSI-2 Deserializer
-+
-+maintainers:
-+  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-+
-+description: >
-+  The MAX9296A deserializer converts single or dual serial inputs to
-+  MIPI CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps
-+  or 6Gbps in the forward direction and 187.5Mbps in the reverse
-+  direction. In GMSL1 mode, each serial link can be paired with 3.12Gbps
-+  or 1.5Gbps GMSL1 serializers or operate up to 4.5Gbps with GMSL2
-+  serializers with GMSL1 backward compatibility. The MAX9296A supports
-+  mixed GMSL2 and GMSL1 links. The serial inputs operate independently,
-+  allowing videos with different timings and resolutions to be received
-+  on each input.
-+
-+  MAX96716A supports both tunnel and pixel mode.
-+
-+  MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxim,max9296a
-+      - maxim,max96716a
-+      - maxim,max96792a
-+
-+  reg:
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description: Specifier for the GPIO connected to the PWDNB pin.
-+
-+  port0-poc-supply:
-+    description: Regulator providing Power over Coax for GMSL port 0
-+
-+  port1-poc-supply:
-+    description: Regulator providing Power over Coax for GMSL port 1
-+
-+  i2c-alias-pool:
-+    maxItems: 2
-+
-+  i2c-atr:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      '^i2c@[0-1]$':
-+        $ref: /schemas/i2c/i2c-controller.yaml#
-+        unevaluatedProperties: false
-+        properties:
-+          reg:
-+            items:
-+              minimum: 0
-+              maximum: 1
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    patternProperties:
-+      '^port@[0-1]$':
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: GMSL Input ports 0-1
-+
-+      '^port@[2-3]$':
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description: CSI-2 Output ports 0-1
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+            properties:
-+              data-lanes:
-+                minItems: 1
-+                maxItems: 4
-+
-+              lane-polarities:
-+                minItems: 2
-+                maxItems: 5
-+
-+              link-frequencies:
-+                maxItems: 1
-+
-+            required:
-+              - data-lanes
-+
-+    anyOf:
-+      - required:
-+          - port@2
-+      - required:
-+          - port@3
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-atr.yaml#
-+
-+dependentRequired:
-+  i2c-atr: [i2c-alias-pool]
-+  i2c-alias-pool: [i2c-atr]
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/media/video-interfaces.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        deserializer@28 {
-+            compatible = "maxim,max9296a";
-+            reg = <0x28>;
-+            powerdown-gpios = <&main_gpio0 37 GPIO_ACTIVE_LOW>;
-+
-+            i2c-alias-pool = <0x40 0x41>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    des_gmsl_in_0: endpoint {
-+                        remote-endpoint = <&ser_0_gmsl_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    des_gmsl_in_1: endpoint {
-+                        remote-endpoint = <&ser_1_gmsl_out>;
-+                    };
-+                };
-+
-+                port@2 {
-+                    reg = <2>;
-+                    des_csi_out: endpoint {
-+                        data-lanes = <1 2 3 4>;
-+                        link-frequencies = /bits/ 64 <400000000>;
-+                        remote-endpoint = <&csi_in>;
-+                    };
-+                };
-+            };
-+
-+            i2c-atr {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                i2c@0 {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+                    reg = <0>;
-+
-+                    serializer@40 {
-+                        compatible = "maxim,max96717", "maxim,max96717f";
-+                        reg = <0x40>;
-+                        gpio-controller;
-+                        #gpio-cells = <2>;
-+                        #clock-cells = <0>;
-+
-+                        ports {
-+                            #address-cells = <1>;
-+                            #size-cells = <0>;
-+
-+                            port@0 {
-+                                reg = <0>;
-+                                ser_0_csi_in: endpoint {
-+                                    data-lanes = <1 2>;
-+                                    remote-endpoint = <&sensor_0_out>;
-+                                };
-+                            };
-+
-+                            port@1 {
-+                                reg = <1>;
-+                                ser_0_gmsl_out: endpoint {
-+                                    remote-endpoint = <&des_gmsl_in_0>;
-+                                };
-+                            };
-+                        };
-+                    };
-+                };
-+
-+                i2c@1 {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+                    reg = <1>;
-+
-+                    serializer@40 {
-+                        compatible = "maxim,max96717", "maxim,max96717f";
-+                        reg = <0x40>;
-+                        gpio-controller;
-+                        #gpio-cells = <2>;
-+                        #clock-cells = <0>;
-+
-+                        ports {
-+                            #address-cells = <1>;
-+                            #size-cells = <0>;
-+
-+                            port@0 {
-+                                reg = <0>;
-+                                ser_1_csi_in: endpoint {
-+                                    data-lanes = <1 2>;
-+                                    remote-endpoint = <&sensor_1_out>;
-+                                };
-+                            };
-+
-+                            port@1 {
-+                                reg = <1>;
-+                                ser_1_gmsl_out: endpoint {
-+                                    remote-endpoint = <&des_gmsl_in_1>;
-+                                };
-+                            };
-+                        };
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ddecf1ef3bed..5ae68688008d 100644
+index 5ae68688008d..70d3eeef8bfe 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15252,6 +15252,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
- F:	drivers/iio/proximity/mb1232.c
+@@ -15257,6 +15257,7 @@ M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
++F:	drivers/media/i2c/maxim-serdes/
  
-+MAXIM GMSL2/3 SERIALIZERS AND DESERIALIZERS
-+M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
-+
  MAXIM MAX11205 DRIVER
  M:	Ramona Bolboaca <ramona.bolboaca@analog.com>
- L:	linux-iio@vger.kernel.org
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index cdd7ba5da0d5..37f86e6de969 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -1718,6 +1718,8 @@ config VIDEO_MAX96717
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called max96717.
+ 
++source "drivers/media/i2c/maxim-serdes/Kconfig"
++
+ endmenu
+ 
+ endif # VIDEO_DEV
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 57cdd8dc96f6..be3200b23819 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -71,6 +71,7 @@ obj-$(CONFIG_VIDEO_MAX9271_LIB) += max9271.o
+ obj-$(CONFIG_VIDEO_MAX9286) += max9286.o
+ obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
+ obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
++obj-$(CONFIG_VIDEO_MAXIM_SERDES) += maxim-serdes/
+ obj-$(CONFIG_VIDEO_ML86V7667) += ml86v7667.o
+ obj-$(CONFIG_VIDEO_MSP3400) += msp3400.o
+ obj-$(CONFIG_VIDEO_MT9M001) += mt9m001.o
+diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
+new file mode 100644
+index 000000000000..f5a4ca80a263
+--- /dev/null
++++ b/drivers/media/i2c/maxim-serdes/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0
++
++config VIDEO_MAXIM_SERDES
++	tristate "Maxim GMSL2/3 Serializer and Deserializer support"
++	depends on VIDEO_DEV
++	depends on I2C
++	select I2C_ATR
++	select I2C_MUX
++	select MEDIA_CONTROLLER
++	select V4L2_FWNODE
++	select VIDEO_V4L2_SUBDEV_API
++	help
++	  This driver supports the Maxim GMSL2/3 common Serializer and
++	  Deserializer framework.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called max_serdes.
+diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
+new file mode 100644
+index 000000000000..630fbb486bab
+--- /dev/null
++++ b/drivers/media/i2c/maxim-serdes/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++max-serdes-objs := max_serdes.o
++obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
+diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.c b/drivers/media/i2c/maxim-serdes/max_serdes.c
+new file mode 100644
+index 000000000000..bed70b8ce99a
+--- /dev/null
++++ b/drivers/media/i2c/maxim-serdes/max_serdes.c
+@@ -0,0 +1,413 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 Analog Devices Inc.
++ */
++
++#include <linux/export.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/stringify.h>
++
++#include <media/mipi-csi2.h>
++
++#include <video/videomode.h>
++
++#include <uapi/linux/media-bus-format.h>
++
++#include "max_serdes.h"
++
++const char * const max_serdes_tpg_patterns[] = {
++	[MAX_SERDES_TPG_PATTERN_GRADIENT] = "Gradient",
++	[MAX_SERDES_TPG_PATTERN_CHECKERBOARD] = "Checkerboard",
++};
++
++static const char * const max_gmsl_versions[] = {
++	[MAX_SERDES_GMSL_2_3GBPS] = "GMSL2 3Gbps",
++	[MAX_SERDES_GMSL_2_6GBPS] = "GMSL2 6Gbps",
++	[MAX_SERDES_GMSL_3_12GBPS] = "GMSL3 12Gbps",
++};
++
++const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version)
++{
++	if (version > MAX_SERDES_GMSL_3_12GBPS)
++		return NULL;
++
++	return max_gmsl_versions[version];
++}
++
++static const char * const max_gmsl_mode[] = {
++	[MAX_SERDES_GMSL_PIXEL_MODE] = "pixel",
++	[MAX_SERDES_GMSL_TUNNEL_MODE] = "tunnel",
++};
++
++const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode)
++{
++	if (mode > MAX_SERDES_GMSL_TUNNEL_MODE)
++		return NULL;
++
++	return max_gmsl_mode[mode];
++}
++
++static const struct max_serdes_mipi_format max_serdes_mipi_formats[] = {
++	{ MIPI_CSI2_DT_EMBEDDED_8B, 8 },
++	{ MIPI_CSI2_DT_YUV422_8B, 16 },
++	{ MIPI_CSI2_DT_YUV422_10B, 20 },
++	{ MIPI_CSI2_DT_RGB565, 16 },
++	{ MIPI_CSI2_DT_RGB666, 18 },
++	{ MIPI_CSI2_DT_RGB888, 24 },
++	{ MIPI_CSI2_DT_RAW8, 8 },
++	{ MIPI_CSI2_DT_RAW10, 10 },
++	{ MIPI_CSI2_DT_RAW12, 12 },
++	{ MIPI_CSI2_DT_RAW14, 14 },
++	{ MIPI_CSI2_DT_RAW16, 16 },
++};
++
++const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(max_serdes_mipi_formats); i++)
++		if (max_serdes_mipi_formats[i].dt == dt)
++			return &max_serdes_mipi_formats[i];
++
++	return NULL;
++}
++
++int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
++				   struct v4l2_mbus_frame_desc_entry *entry)
++{
++	struct v4l2_mbus_frame_desc fd;
++	unsigned int i;
++	int ret;
++
++	ret = v4l2_subdev_call(sd, pad, get_frame_desc, pad, &fd);
++	if (ret)
++		return ret;
++
++	if (fd.type != V4L2_MBUS_FRAME_DESC_TYPE_CSI2)
++		return -EOPNOTSUPP;
++
++	for (i = 0; i < fd.num_entries; i++) {
++		if (fd.entry[i].stream == stream) {
++			*entry = fd.entry[i];
++			return 0;
++		}
++	}
++
++	return -ENOENT;
++}
++
++int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
++			  unsigned int *bpp)
++{
++	const struct max_serdes_mipi_format *format;
++
++	format = max_serdes_mipi_format_by_dt(entry->bus.csi2.dt);
++	if (!format)
++		return -ENOENT;
++
++	*bpp = format->bpp;
++
++	return 0;
++}
++
++int max_serdes_process_bpps(struct device *dev, u32 bpps,
++			    u32 allowed_double_bpps, unsigned int *doubled_bpp)
++{
++	unsigned int min_bpp;
++	unsigned int max_bpp;
++	bool doubled = false;
++
++	if (!bpps)
++		return 0;
++
++	*doubled_bpp = 0;
++
++	/*
++	 * Hardware can double bpps 8, 10, 12, and it can pad bpps < 16
++	 * to another bpp <= 16:
++	 * Hardware can only stream a single constant bpp up to 24.
++	 *
++	 * From these features and limitations, the following rules
++	 * can be deduced:
++	 *
++	 * A bpp of 8 can always be doubled if present.
++	 * A bpp of 10 can be doubled only if there are no other bpps or the
++	 * only other bpp is 20.
++	 * A bpp of 12 can be doubled only if there are no other bpps or the
++	 * only other bpp is 24.
++	 * Bpps <= 16 cannot coexist with bpps > 16.
++	 * Bpps <= 16 need to be padded to the biggest bpp.
++	 */
++
++	min_bpp = __ffs(bpps);
++	max_bpp = __fls(bpps);
++
++	if (min_bpp == 8) {
++		doubled = true;
++	} else if (min_bpp == 10 || min_bpp == 12) {
++		u32 bpp_or_double = BIT(min_bpp) | BIT(min_bpp * 2);
++		u32 other_bpps = bpps & ~bpp_or_double;
++
++		if (!other_bpps)
++			doubled = true;
++	}
++
++	if (doubled && (allowed_double_bpps & BIT(min_bpp))) {
++		*doubled_bpp = min_bpp;
++		bpps &= ~BIT(min_bpp);
++		bpps |= BIT(min_bpp * 2);
++	}
++
++	min_bpp = __ffs(bpps);
++	max_bpp = __fls(bpps);
++
++	if (max_bpp > 24) {
++		dev_err(dev, "Cannot stream bpps > 24\n");
++		return -EINVAL;
++	}
++
++	if (min_bpp <= 16 && max_bpp > 16) {
++		dev_err(dev, "Cannot stream bpps <= 16 with bpps > 16\n");
++		return -EINVAL;
++	}
++
++	if (max_bpp > 16 && min_bpp != max_bpp) {
++		dev_err(dev, "Cannot stream multiple bpps when one is > 16\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
++					    u32 source_sink_pad_offset,
++					    const struct v4l2_subdev_state *state,
++					    u32 pad, u64 updated_streams_mask,
++					    u32 sink_pad_start, u32 num_sink_pads,
++					    bool enable)
++{
++	u32 failed_sink_pad;
++	int ret;
++	u32 i;
++
++	for (i = sink_pad_start; i < sink_pad_start + num_sink_pads; i++) {
++		u64 matched_streams_mask = updated_streams_mask;
++		u64 updated_sink_streams_mask;
++		struct max_serdes_source *source;
++
++		updated_sink_streams_mask =
++			v4l2_subdev_state_xlate_streams(state, pad, i,
++							&matched_streams_mask);
++		if (!updated_sink_streams_mask)
++			continue;
++
++		source = &sources[i + source_sink_pad_offset];
++		if (!source)
++			continue;
++
++		if (enable)
++			ret = v4l2_subdev_enable_streams(source->sd, source->pad,
++							 updated_sink_streams_mask);
++		else
++			ret = v4l2_subdev_disable_streams(source->sd, source->pad,
++							  updated_sink_streams_mask);
++		if (ret) {
++			failed_sink_pad = i;
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	for (i = sink_pad_start; i < failed_sink_pad; i++) {
++		u64 matched_streams_mask = updated_streams_mask;
++		u64 updated_sink_streams_mask;
++		struct max_serdes_source *source;
++
++		updated_sink_streams_mask =
++			v4l2_subdev_state_xlate_streams(state, pad, i,
++							&matched_streams_mask);
++		if (!updated_sink_streams_mask)
++			continue;
++
++		source = &sources[i + source_sink_pad_offset];
++		if (!source)
++			continue;
++
++		if (!enable)
++			v4l2_subdev_enable_streams(source->sd, source->pad,
++						   updated_sink_streams_mask);
++		else
++			v4l2_subdev_disable_streams(source->sd, source->pad,
++						    updated_sink_streams_mask);
++	}
++
++	return ret;
++}
++
++int max_serdes_get_streams_masks(struct device *dev,
++				 const struct v4l2_subdev_state *state,
++				 u32 pad, u64 updated_streams_mask,
++				 u32 num_pads, u64 *old_streams_masks,
++				 u64 **new_streams_masks, bool enable)
++{
++	u64 *streams_masks;
++	unsigned int i;
++
++	streams_masks = devm_kcalloc(dev, num_pads, sizeof(*streams_masks), GFP_KERNEL);
++	if (!streams_masks)
++		return -ENOMEM;
++
++	for (i = 0; i < num_pads; i++) {
++		u64 matched_streams_mask = updated_streams_mask;
++		u64 updated_sink_streams_mask;
++
++		updated_sink_streams_mask =
++			v4l2_subdev_state_xlate_streams(state, pad, i,
++							&matched_streams_mask);
++		if (!updated_sink_streams_mask)
++			continue;
++
++		streams_masks[i] = old_streams_masks[i];
++		if (enable)
++			streams_masks[i] |= updated_sink_streams_mask;
++		else
++			streams_masks[i] &= ~updated_sink_streams_mask;
++	}
++
++	if (enable)
++		streams_masks[pad] |= updated_streams_mask;
++	else
++		streams_masks[pad] &= ~updated_streams_mask;
++
++	*new_streams_masks = streams_masks;
++
++	return 0;
++}
++
++static const struct videomode max_serdes_tpg_pixel_videomodes[] = {
++	{
++		.pixelclock = 25000000,
++		.hactive = 640,
++		.hfront_porch = 10,
++		.hsync_len = 96,
++		.hback_porch = 40,
++		.vactive = 480,
++		.vfront_porch = 2,
++		.vsync_len = 24,
++		.vback_porch = 24,
++	},
++	{
++		.pixelclock = 75000000,
++		.hactive = 1920,
++		.hfront_porch = 88,
++		.hsync_len = 44,
++		.hback_porch = 148,
++		.vactive = 1080,
++		.vfront_porch = 4,
++		.vsync_len = 16,
++		.vback_porch = 36,
++	},
++	{
++		.pixelclock = 150000000,
++		.hactive = 1920,
++		.hfront_porch = 88,
++		.hsync_len = 44,
++		.hback_porch = 148,
++		.vactive = 1080,
++		.vfront_porch = 4,
++		.vsync_len = 16,
++		.vback_porch = 36,
++	},
++};
++
++static void max_serdes_get_vm_timings(const struct videomode *vm,
++				      struct max_serdes_tpg_timings *timings)
++{
++	u32 hact = vm->hactive;
++	u32 hfp = vm->hfront_porch;
++	u32 hsync = vm->hsync_len;
++	u32 hbp = vm->hback_porch;
++	u32 htot = hact + hfp + hbp + hsync;
++
++	u32 vact = vm->vactive;
++	u32 vfp = vm->vfront_porch;
++	u32 vsync = vm->vsync_len;
++	u32 vbp = vm->vback_porch;
++	u32 vtot = vact + vfp + vbp + vsync;
++
++	*timings = (struct max_serdes_tpg_timings) {
++		.gen_vs = true,
++		.gen_hs = true,
++		.gen_de = true,
++		.vs_inv = true,
++		.vs_dly = 0,
++		.vs_high = vsync * htot,
++		.vs_low = (vact + vfp + vbp) * htot,
++		.v2h = 0,
++		.hs_high = hsync,
++		.hs_low = hact + hfp + hbp,
++		.hs_cnt = vact + vfp + vbp + vsync,
++		.v2d = htot * (vsync + vbp) + (hsync + hbp),
++		.de_high = hact,
++		.de_low = hfp + hsync + hbp,
++		.de_cnt = vact,
++		.clock = vm->pixelclock,
++		.fps = DIV_ROUND_CLOSEST(vm->pixelclock, vtot * htot),
++	};
++}
++
++int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
++			       struct max_serdes_tpg_timings *timings)
++{
++	u32 fps;
++
++	if (!entry)
++		return 0;
++
++	fps = DIV_ROUND_CLOSEST(1 * entry->interval.denominator,
++				entry->interval.numerator);
++
++	for (unsigned int i = 0; i < ARRAY_SIZE(max_serdes_tpg_pixel_videomodes); i++) {
++		struct max_serdes_tpg_timings vm_timings;
++		const struct videomode *vm;
++
++		vm = &max_serdes_tpg_pixel_videomodes[i];
++
++		max_serdes_get_vm_timings(vm, &vm_timings);
++
++		if (vm->hactive == entry->width &&
++		    vm->vactive == entry->height &&
++		    vm_timings.fps == fps) {
++			*timings = vm_timings;
++			return 0;
++		}
++	}
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_NS_GPL(max_serdes_get_tpg_timings, "MAX_SERDES");
++
++int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing)
++{
++	const struct v4l2_subdev_route *route;
++
++	if (routing->num_routes != 1)
++		return -EINVAL;
++
++	route = &routing->routes[0];
++
++	if (!(route->flags & V4L2_SUBDEV_ROUTE_FL_ACTIVE))
++		return -EINVAL;
++
++	if (route->sink_stream != MAX_SERDES_TPG_STREAM)
++		return -EINVAL;
++
++	return 0;
++}
++
++MODULE_DESCRIPTION("Maxim GMSL2 Serializer/Deserializer Driver");
++MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.h b/drivers/media/i2c/maxim-serdes/max_serdes.h
+new file mode 100644
+index 000000000000..d1d513e464d6
+--- /dev/null
++++ b/drivers/media/i2c/maxim-serdes/max_serdes.h
+@@ -0,0 +1,183 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2025 Analog Devices Inc.
++ */
++
++#ifndef MAX_SERDES_H
++#define MAX_SERDES_H
++
++#include <linux/types.h>
++
++#include <media/mipi-csi2.h>
++#include <media/v4l2-subdev.h>
++
++#define REG_SEQUENCE_2(reg, val) \
++	{ (reg),     ((val) >> 8) & 0xff }, \
++	{ (reg) + 1, ((val) >> 0) & 0xff }
++
++#define REG_SEQUENCE_3(reg, val) \
++	{ (reg),     ((val) >> 16) & 0xff }, \
++	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
++	{ (reg) + 2, ((val) >> 0)  & 0xff }
++
++#define REG_SEQUENCE_3_LE(reg, val) \
++	{ (reg),     ((val) >> 0) & 0xff }, \
++	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
++	{ (reg) + 2, ((val) >> 16)  & 0xff }
++
++#define field_get(mask, val) (((val) & (mask)) >> __ffs(mask))
++#define field_prep(mask, val) (((val) << __ffs(mask)) & (mask))
++
++#define MAX_SERDES_PHYS_MAX		4
++#define MAX_SERDES_STREAMS_NUM		4
++#define MAX_SERDES_VC_ID_NUM		4
++#define MAX_SERDES_TPG_STREAM		0
++
++#define MAX_SERDES_GRAD_INCR		4
++#define MAX_SERDES_CHECKER_COLOR_A	0x00ccfe
++#define MAX_SERDES_CHECKER_COLOR_B	0xa76a00
++#define MAX_SERDES_CHECKER_SIZE		60
++
++extern const char * const max_serdes_tpg_patterns[];
++
++enum max_serdes_gmsl_version {
++	MAX_SERDES_GMSL_MIN,
++	MAX_SERDES_GMSL_2_3GBPS = MAX_SERDES_GMSL_MIN,
++	MAX_SERDES_GMSL_2_6GBPS,
++	MAX_SERDES_GMSL_3_12GBPS,
++	MAX_SERDES_GMSL_MAX = MAX_SERDES_GMSL_3_12GBPS,
++};
++
++enum max_serdes_gmsl_mode {
++	MAX_SERDES_GMSL_PIXEL_MODE,
++	MAX_SERDES_GMSL_TUNNEL_MODE,
++};
++
++enum max_serdes_tpg_pattern {
++	MAX_SERDES_TPG_PATTERN_MIN,
++	MAX_SERDES_TPG_PATTERN_CHECKERBOARD = MAX_SERDES_TPG_PATTERN_MIN,
++	MAX_SERDES_TPG_PATTERN_GRADIENT,
++	MAX_SERDES_TPG_PATTERN_MAX = MAX_SERDES_TPG_PATTERN_GRADIENT,
++};
++
++struct max_serdes_phys_config {
++	unsigned int lanes[MAX_SERDES_PHYS_MAX];
++	unsigned int clock_lane[MAX_SERDES_PHYS_MAX];
++};
++
++struct max_serdes_phys_configs {
++	const struct max_serdes_phys_config *configs;
++	unsigned int num_configs;
++};
++
++struct max_serdes_i2c_xlate {
++	u8 src;
++	u8 dst;
++	bool en;
++};
++
++struct max_serdes_mipi_format {
++	u8 dt;
++	u8 bpp;
++};
++
++struct max_serdes_vc_remap {
++	u8 src;
++	u8 dst;
++};
++
++struct max_serdes_source {
++	struct v4l2_subdev *sd;
++	u16 pad;
++	struct fwnode_handle *ep_fwnode;
++
++	unsigned int index;
++};
++
++struct max_serdes_asc {
++	struct v4l2_async_connection base;
++	struct max_serdes_source *source;
++};
++
++struct max_serdes_tpg_entry {
++	u32 width;
++	u32 height;
++	struct v4l2_fract interval;
++	u32 code;
++	u8 dt;
++	u8 bpp;
++};
++
++#define MAX_TPG_ENTRY_640X480P60_RGB888 \
++	{ 640, 480, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
++
++#define MAX_TPG_ENTRY_1920X1080P30_RGB888 \
++	{ 1920, 1080, { 1, 30 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
++
++#define MAX_TPG_ENTRY_1920X1080P60_RGB888 \
++	{ 1920, 1080, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
++
++struct max_serdes_tpg_entries {
++	const struct max_serdes_tpg_entry *entries;
++	unsigned int num_entries;
++};
++
++struct max_serdes_tpg_timings {
++	bool gen_vs;
++	bool gen_hs;
++	bool gen_de;
++	bool vs_inv;
++	bool hs_inv;
++	bool de_inv;
++	u32 vs_dly;
++	u32 vs_high;
++	u32 vs_low;
++	u32 v2h;
++	u32 hs_high;
++	u32 hs_low;
++	u32 hs_cnt;
++	u32 v2d;
++	u32 de_high;
++	u32 de_low;
++	u32 de_cnt;
++	u32 clock;
++	u32 fps;
++};
++
++static inline struct max_serdes_asc *asc_to_max(struct v4l2_async_connection *asc)
++{
++	return container_of(asc, struct max_serdes_asc, base);
++}
++
++const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version);
++const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode);
++
++const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt);
++
++int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
++				   struct v4l2_mbus_frame_desc_entry *entry);
++
++int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
++			  unsigned int *bpp);
++int max_serdes_process_bpps(struct device *dev, u32 bpps,
++			    u32 allowed_double_bpps, unsigned int *doubled_bpp);
++
++int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
++					    u32 source_sink_pad_offset,
++					    const struct v4l2_subdev_state *state,
++					    u32 pad, u64 updated_streams_mask,
++					    u32 sink_pad_start, u32 num_sink_pads,
++					    bool enable);
++
++int max_serdes_get_streams_masks(struct device *dev,
++				 const struct v4l2_subdev_state *state,
++				 u32 pad, u64 updated_streams_mask,
++				 u32 num_pads, u64 *old_streams_masks,
++				 u64 **new_streams_masks, bool enable);
++
++int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
++			       struct max_serdes_tpg_timings *timings);
++
++int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing);
++
++#endif // MAX_SERDES_H
 
 -- 
 2.51.0
