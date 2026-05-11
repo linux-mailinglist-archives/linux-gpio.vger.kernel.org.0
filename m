@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-36531-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36532-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kBrvOHrAAWrKjQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36531-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 13:41:46 +0200
+	id 2K7uEbzAAWrKjQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36532-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 13:42:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE7750CF6B
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 13:41:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B081050CFB5
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 13:42:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D425D3008698
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 11:37:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 010EE3064121
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 11:37:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 190B3374E66;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E33C3750AF;
 	Mon, 11 May 2026 11:37:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1cUmrgP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWk8x7KV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B4736C0C3
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 11:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF894372EFF
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 11:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778499455; cv=none; b=i9VN34X6VCt9q3z3tcydZ0X6hzvOl3J5CXxQzpw+R2hWMpOd8lZ8M1Rnf+E0bayMg72iUP+AbDR5b3nxSAYxQtBEpcMrb2IK8PFxun3zbbWn8EJITNY1HX35EPG0b22Av3oksPXN44ehX0p05luI1h0K8eIyCs4yWJMs8/ldw3I=
+	t=1778499456; cv=none; b=syZh7SqfRjaW8c8p1a8Lk7Pe2hzLWIQTzFunjsZqucOweHt5SyvMnYyMkXyCdBVqh49ZLaJt+LbeYus+Pi0BGuwUVndBUd8eInjjIfgMdr0nFF88SKY5ByQ29gsIUnaWIV3wMXh4wnQ66cX3eTkfgwaH3N4KFEmDdM9YX61STtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778499455; c=relaxed/simple;
-	bh=Tym/BVOy9NE1Qeg8K8Acp0oOf3Og5IzMWvx+9ry5rNA=;
+	s=arc-20240116; t=1778499456; c=relaxed/simple;
+	bh=kT9wOZIR2Wfh0ZigYUA9rtm7wCF4sP8fJbMh8roHmiE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSFnRZIbluqaibL6F6l34OOPofXvPAk9gYCs09kOxXPCb75WNb/Nfh0gdozsBMmgDINeDujviH3/WzsigHoRSjOerBmXjnZEGHSJRBduYh6lfbTztfIwr5NMvRICNUOqCwp3LCdzjHghx9iazzJyhdkDNJT382UjZbfNqrPB84Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1cUmrgP; arc=none smtp.client-ip=209.85.167.46
+	 MIME-Version; b=HpUZRgIExEEqLcx7z+FzM+qSuqYvYOxd9Kk+y/ZAUor6RkqT1eZvGuTcTTyY9IyyQkmrBeQ+T0GseqBVXvt7/ZDH76ZnnuEnyMU31iw45SiK2z6efpbnzkb+JdT7w5eauHfNOIHAuc8hKEBZ6ZmU7bY++gYWWRNofjMW0SSUTOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWk8x7KV; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5a40502e63bso3722391e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 04:37:33 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a74ac8b40aso3798858e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 04:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778499451; x=1779104251; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778499453; x=1779104253; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VhUH2tKMkut60kZmw5C1AVWBW1sMGkeiu0EpNEsXCho=;
-        b=E1cUmrgPv8JTetP+QYDI4HvOH5SuGPwmaSvakbw4dxvGTN88Ei5B2ab+OKYl1FNbJ7
-         KGRQiNzAniMQ3dvgrXSMobtXOajoWIude4ViiY92nie5bKzrlKENfSOmlXVbth7W91OT
-         S9BBq+5wvTO2N9I27YEZsmOIF4arj7lN91g68EG8LF4fKacDspeF1p5OVGbmS9TBT8vP
-         5U6RaBwX2nyOwkLpvu/Gx2MzI4qdz0WZ9vbyTyJv1jXcpfR7cZtkvbeDtdiOxXGmVLfR
-         VA0qMaExmaIE3Kq130MOGhLmkBjtL18pLZqFPr0iNFDQcqFkdaHcDWyYO6Hw01wBSsyY
-         4ixQ==
+        bh=4imfVsi2VomO9FzKGpPU5riMSUcvWN6BNCMHeP3TKZM=;
+        b=XWk8x7KVwgyTZH4FvnHCRysoOgZQKhh3WuGRBclKTwHdSrTqnjT0Tx/GuZ8RvclYqz
+         oAaxNDqiUdSumB+CFa3fTf6DGeV79uF78Vvs+wTaCs3XAhS6GeUIHTuUcgoYtGzxCe0A
+         fxsHXOm5zkRoShoCCb5S+tdawfnKUKsIiS65QHi/gojrx687bQtsNsapvp3E3++94ELo
+         7i3RiGYAJVzvCVOjXrORsgf/mP9qQ6lZWtwq2O5iF8mAagi8dad8xyD9BT9zJvia1t/7
+         VlVFtdsFlP3poHCVES7rW0Fy+CRAJsHWvQThlY8BYFE8PdS99URQvbRf8biklbTaL3vT
+         asNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778499451; x=1779104251;
+        d=1e100.net; s=20251104; t=1778499453; x=1779104253;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=VhUH2tKMkut60kZmw5C1AVWBW1sMGkeiu0EpNEsXCho=;
-        b=TXT0HEhkyxJdeyXUqGKmLLJhjo4ckzbtI3TrdzZCqNwU4FfkxtKLsxhA2W2ZUZBT8P
-         KK2U0FGLFnHwOmLysYzGcQMJe/HBPohzdS9Gkqdfw9d+6lH2E90BOWru7GB6QxOi3TyT
-         48B494gzjmQ4jhQoyddj5Iu0JJr/Up4NmFsTZIgzABRuibpm6EafNVITtb3wmdeiPDZF
-         KtetBDCn1Jgmas8fHlVBA+RnQiMPMpVQUPxG1gVIJM/WDeY0gzlLVsAt9LJqd5hsx4bB
-         krO8zoBXsF/Z2UGLpvuBjaRjmdwKWLNk0HmAnx59P2mdNEF/oe1Uq3HzCkIhZvDBU7sa
-         GnAw==
-X-Forwarded-Encrypted: i=1; AFNElJ/9KYU57+tiYO9Gp+FKJAOBM+tIUnm7+7b2fBleKaXo9S0hxmL3rv/bCfCwwD6Q6apKV4KQzWgJxbKG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtKt6hWgEBrGHjr3cwAqiC51osqWnHg9O9ASKEwFMcbbMadcWv
-	HkF1+dzslBdAoz3eul/raep+LZFU/eJkFMNxrc5Q3KMAh8LDiaPD15o/
-X-Gm-Gg: Acq92OElm7D8Rfq+Nbu0E20zBlhGpOd+mnIBa3FOVv5UR7bbRexe9TZEVfdwZgczs9Z
-	i4wylR28LdK9qV4pBSFHufLRiQPhOa7qssN4jL8vwCZFY2vJ/ddL6BgED3GflxdYWjvIhdRpmsm
-	PzVx8QsVR7D1MB5EpKUuxRTtCq+yFmjKV8CFvGMZ3r8oI0sR2N+EvHOS8LPeFYqCK8SAMxzZQ+U
-	F3+PE73boIauR4aDh6juH6TpoUwU5/xuDoIOtRVEb0r/gzootunvIY5eYqEeCZ7qC7KB6WIrvIP
-	u3KEm6G/+8nsy/oT4ATZtoqCm4HibFF6PXv3SFJ712VQsgBPohSneiE2cfWIiWiuAODAgaEUAOO
-	0xq+J5fa5wQRQ/51TVMOLrXYqu3/M06qJ9pZVxsiTitq2MncbaUloFGYJTrR0jFq7p+qY6i4eFX
-	beG9teoa+TRCpenOqMHH1rXG2us8pX7yq6DkWaMUllzjFeSQ==
-X-Received: by 2002:a05:6512:1543:10b0:5a8:886a:1164 with SMTP id 2adb3069b0e04-5a8886a11ccmr6107757e87.28.1778499451179;
-        Mon, 11 May 2026 04:37:31 -0700 (PDT)
+        bh=4imfVsi2VomO9FzKGpPU5riMSUcvWN6BNCMHeP3TKZM=;
+        b=Mez9V8cFfN86NG3R1BjfX/67yvqc8P3nN/E7v4QeRLImElBwlteQYFHTsYL7VI86h9
+         WtT1kaXdK1XxWj28baNd+bDcwq4TLWUv4DK0DvV8+KnHF2f1L+zw/qgO1lveQsVzH5/b
+         FsvoXdSlHdZ8n3pwxdtvjrMrxDURZw74aVIF6Ww1LBmfIzcTIsqeS/IwZxnLldm8nfSI
+         DOTdKKmJougvcTKaP3ZvYsuzW3HmzD0D1QSb7Zz9hT24uvKOMWYJZhnqr3TILP5CYkeC
+         DeVoA/8SvgAX4oJFs/N15dON6YDHURIl3t4G376I9wS3UC+5ljKsId2/4nS06Av/GpEt
+         nILA==
+X-Forwarded-Encrypted: i=1; AFNElJ9TeyOHeDxQ0jcESAP4YaYzdglihFo8NoBobxu+17mtc1zjOplygifzUlZ7gAoIRr9peNTvA9gqmDWa@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTZmvRoBKE7ipqvhnQdjblezeL2XLGsmxS2CmSMTtNpYsxyciK
+	IbQICE77fgKaeCOvjMfBO/xPKzavsd5CcdW4MvpebPPzJMTDkvPKgMTa
+X-Gm-Gg: Acq92OFM2s1hTnyTpc0hq4lEuzU5mQhCJvn0rtts03x1NH9JQiS2GFn/MLbw2UFo3ZP
+	7eRSz3pqY4SQItOKJMJJNscl3UA49Yk1U0uGkwJ/WRUlNCAOBJPWL+F+BcijWR40fnqmVO+CdXq
+	CsdtU81ZCuGucdmcCzdnZ9Cinks3pVZpI3lf1PaXpoMCRQpCDOy5JS3C6eaIJUHWNw3Nz1WOpXr
+	AaRmma9RIRIgazt9bxlALdUFjX+qEEC0z6gn4zzW4OPcJxTK0xjf9jOJ15UlTMI13j02pboRt9O
+	XtvPN0R6F0FDZ3bDD9J4iw9F3eNa+5Fl7Lyk64xVnlg0gWMl62i7t048068GOackZvx4SFBpyAi
+	T8nrp8JrMWisVbVhDdfV3mGbds+8QYCzFjUvG+GFxIZQkVetAPxV1uIDMIJ/BdM3eNXZuXzVGvI
+	Ehg+CVBvNH/U5Wgxk5tqM/yiMgkxCt0svdTd9QldRjPxw2fQ==
+X-Received: by 2002:a05:6512:15a7:b0:5a8:8b42:4ea0 with SMTP id 2adb3069b0e04-5a8b6e8f5b6mr2253554e87.18.1778499452463;
+        Mon, 11 May 2026 04:37:32 -0700 (PDT)
 Received: from C-PF5D4647.localdomain ([147.161.186.80])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a8a956b1cfsm2593967e87.73.2026.05.11.04.37.30
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a8a956b1cfsm2593967e87.73.2026.05.11.04.37.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 04:37:30 -0700 (PDT)
+        Mon, 11 May 2026 04:37:31 -0700 (PDT)
 From: Jie Li <lj29312931@gmail.com>
 X-Google-Original-From: Jie Li <jie.i.li@nokia.com>
 To: Bartosz Golaszewski <brgl@kernel.org>,
@@ -86,12 +86,13 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jie Li <jie.i.li@nokia.com>
-Subject: [PATCH v5 0/2] i2c: improve bus recovery for single-ended GPIOs
-Date: Mon, 11 May 2026 13:37:24 +0200
-Message-ID: <20260511113726.49041-1-jie.i.li@nokia.com>
+Subject: [PATCH v5 1/2] gpiolib: add gpiod_is_single_ended() helper
+Date: Mon, 11 May 2026 13:37:25 +0200
+Message-ID: <20260511113726.49041-2-jie.i.li@nokia.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAMRc=MfMcEbQ3kkW3fMn-jzDoT2xdJWjp2xVBVsu7n683_5g9A@mail.gmail.com>
+In-Reply-To: <20260511113726.49041-1-jie.i.li@nokia.com>
 References: <CAMRc=MfMcEbQ3kkW3fMn-jzDoT2xdJWjp2xVBVsu7n683_5g9A@mail.gmail.com>
+ <20260511113726.49041-1-jie.i.li@nokia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,13 +100,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EBE7750CF6B
+X-Rspamd-Queue-Id: B081050CFB5
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -114,7 +115,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36531-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36532-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
@@ -122,81 +123,91 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[lj29312931@gmail.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nokia.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nokia.com:email,nokia.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Hi Bartosz, Wolfram,
+The direction of a single-ended (open-drain or open-source) GPIO line
+cannot always be reliably determined by reading hardware registers.
+In true open-drain implementations, the "high" state is achieved by
+entering a high-impedance mode, which many hardware controllers report
+as "input" even if the software intends to use it as an output.
 
-This is a respin of the series rebased on v7.1-rc1, as requested by
-Linus Walleij. No code changes versus v4; only the base has moved.
+This creates issues for consumer drivers (like I2C) that rely on
+gpiod_get_direction() to decide if a line can be driven.
 
-The series addresses a limitation in the I2C bus recovery mechanism
-where certain open-drain GPIOs are incorrectly identified as
-input-only, preventing the recovery logic from functioning.
+Introduce gpiod_is_single_ended() to allow consumers to check the
+software configuration (GPIO_FLAG_OPEN_DRAIN/GPIO_FLAG_OPEN_SOURCE) of
+a descriptor. This provides a robust way to identify lines that are
+capable of being driven, regardless of their instantaneous hardware state.
 
-Following the earlier suggestion from Linus Walleij, the previously
-proposed "force-set-sda" DT property has been dropped in favor of a
-generic helper in the GPIO subsystem to identify single-ended
-configurations. This allows the I2C core to reliably enable recovery
-for open-drain lines regardless of the instantaneous hardware
-direction reporting.
-
-Merging strategy (suggested by Linus Walleij)
-=============================================
-
-Patch 2/2 depends on the new gpiolib helper gpiod_is_single_ended()
-introduced in patch 1/2. To keep this bisectable and avoid build
-breakage, the recommended flow is:
-
-  1. Bartosz applies patch 1/2 to the GPIO tree and exposes it as an
-     immutable branch.
-  2. Wolfram pulls that immutable branch into the I2C tree and queues
-     patch 2/2 on top.
-
-Bartosz: per Linus's note, please could you pick up patch 1/2 and
-offer an immutable branch to Wolfram? Patch 2/2 does not touch any
-GPIO file, but it is the sole user of the new helper, so it cannot
-land via the I2C tree until 1/2 is available there.
-
-Changes in v5:
-- Rebased onto v7.1-rc1 (no code changes vs v4).
-
-Changes in v4:
-- Patch 2:
-  - Use GPIO_LINE_DIRECTION_OUT instead of the literal '0' when
-    checking the return value of gpiod_get_direction(), and drop
-    the now-obsolete FIXME comment (suggested by Wolfram Sang).
-  - Added Acked-by: Wolfram Sang.
-
-Changes in v3:
-- Patch 1:
-  - Changed return type of gpiod_is_single_ended() from int to bool.
-  - Updated return values from 0/1 to false/true.
-  - Added Reviewed-by: Linus Walleij.
-- Patch 2:
-  - Added Reviewed-by: Linus Walleij.
-
-Changes in v2:
-- Replaced DT-based "force-set-sda" with a gpiolib helper.
-- Added gpiod_is_single_ended() to drivers/gpio/gpiolib.c.
-- Updated i2c-core-base.c to use the new helper.
-
-Jie Li (2):
-  gpiolib: add gpiod_is_single_ended() helper
-  i2c: core: support recovery for single-ended GPIOs
-
+Signed-off-by: Jie Li <jie.i.li@nokia.com>
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+---
  drivers/gpio/gpiolib.c        | 22 ++++++++++++++++++++++
- drivers/i2c/i2c-core-base.c   |  4 ++--
  include/linux/gpio/consumer.h |  5 +++++
- 3 files changed, 29 insertions(+), 2 deletions(-)
+ 2 files changed, 27 insertions(+)
 
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1e6dce430dca..69743d6deeaf 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -491,6 +491,28 @@ int gpiod_get_direction(struct gpio_desc *desc)
+ }
+ EXPORT_SYMBOL_GPL(gpiod_get_direction);
+ 
++/**
++ * gpiod_is_single_ended - check if the GPIO is configured as single-ended
++ * @desc: the GPIO descriptor to check
++ *
++ * Returns true if the GPIO is configured as either Open Drain or Open Source.
++ * In these modes, the direction of the line cannot always be reliably
++ * determined by reading hardware registers, as the "off" state (High-Z)
++ * is physically indistinguishable from an input state.
++ */
++bool gpiod_is_single_ended(struct gpio_desc *desc)
++{
++	if (!desc)
++		return false;
++
++	if (test_bit(GPIOD_FLAG_OPEN_DRAIN, &desc->flags) ||
++		test_bit(GPIOD_FLAG_OPEN_SOURCE, &desc->flags))
++		return true;
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(gpiod_is_single_ended);
++
+ /*
+  * Add a new chip to the global chips list, keeping the list of chips sorted
+  * by range(means [base, base + ngpio - 1]) order.
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 3efb5cb1e1d1..8fb27f9aa67f 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -111,6 +111,7 @@ void devm_gpiod_unhinge(struct device *dev, struct gpio_desc *desc);
+ void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs);
+ 
+ int gpiod_get_direction(struct gpio_desc *desc);
++bool gpiod_is_single_ended(struct gpio_desc *desc);
+ int gpiod_direction_input(struct gpio_desc *desc);
+ int gpiod_direction_output(struct gpio_desc *desc, int value);
+ int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
+@@ -337,6 +338,10 @@ static inline int gpiod_get_direction(const struct gpio_desc *desc)
+ 	WARN_ON(desc);
+ 	return -ENOSYS;
+ }
++static inline bool gpiod_is_single_ended(struct gpio_desc *desc)
++{
++	return false;
++}
+ static inline int gpiod_direction_input(struct gpio_desc *desc)
+ {
+ 	/* GPIO can never have been requested */
 -- 
 2.43.0
 
