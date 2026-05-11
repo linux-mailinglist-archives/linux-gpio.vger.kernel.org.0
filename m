@@ -1,183 +1,161 @@
-Return-Path: <linux-gpio+bounces-36515-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36516-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iORFByWWAWqXfAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36515-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 10:41:09 +0200
+	id pvO9GRCYAWomfgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36516-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 10:49:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEAD950A3AA
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 10:41:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A23A50A515
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 10:49:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 979C1300D4E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 08:40:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 00B003002E5B
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 08:48:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217303C0633;
-	Mon, 11 May 2026 08:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094383BAD80;
+	Mon, 11 May 2026 08:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E06F+O+4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkFL70sk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122D73B776F
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 08:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEB03B3886
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 08:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778488599; cv=none; b=TTAVK5cyuFIf6jtnujDkUE9E2oWJMjYykMGP+3HQ8ZEDfuFB0/Agme9LDatE9T82haCaJ4cmf8U4jfFvS1Ag0eEbW96XkEO1XdPQG7fkxvLog7GueVr5AsEuKjzXcQVEi4oa6ITEOiO5+GlMYfZlNWJMw+AIAoOSPXvBmwGJcI4=
+	t=1778489313; cv=none; b=aqdCUVKzlg7r4yTFR9Dp4tygBy3OyxPeItPEa05YibmQ0DOUG1dxtHZJsZ4kB/C8vQ5Spf+DGpPbaxAuPw+xx/JzW+K2mznEjBSnpCF25u2KgwsB0GY6pQUSKE0vf/3e7BBzh6mihLGfWUI2Li9P5y4aAbE4UueMI7EowLyHB/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778488599; c=relaxed/simple;
-	bh=4PF51G6c0G6Gi1ayiZRPE7NCSn5Hkpz/tk0EfS0p0yM=;
+	s=arc-20240116; t=1778489313; c=relaxed/simple;
+	bh=FS9Vcj76U9RM5XIubOjoexo/Q66e6Qb8ezAJTR8qo6Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ECLxMyRYNU8UcT1nrogQTHTH2pMexGvB+J4C1asRSfxpGGIhZH4+6GXfc5XbF4aC1/UH8LorsokCZHbq2DcaXK6wteozB3+0t8nh1zAIZ+SsSVcDbN4AdqjgA1XhX7QbjJgKUGHtj0Kj0VDB9ymJnG0bJ74EAIDL16KcScK/tDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E06F+O+4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C79CC2BCFA
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 08:36:37 +0000 (UTC)
+	 To:Cc:Content-Type; b=X/9bg+4mTCOcjQxQDkiW54Bjge9JMl+9uv9vr9zDM+a0UbU6i7oKgVuJhFia0wo+cDRJibDM2lEOokGV/MoDGS4L+Y7jrRnM230WvLmssls7V0Ugi65L8hfFagHBT+g7P+EPrLpDvld1yG8WDMuJ832Xlm4iGF4hCa4HARNYSeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkFL70sk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AC8C2BD00
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 08:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778488597;
-	bh=4PF51G6c0G6Gi1ayiZRPE7NCSn5Hkpz/tk0EfS0p0yM=;
+	s=k20201202; t=1778489313;
+	bh=FS9Vcj76U9RM5XIubOjoexo/Q66e6Qb8ezAJTR8qo6Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E06F+O+4HxqCDU69Q2RZ4XRqFkC+C3AktblKIhN+NySNVGkBAeqwV75jFY8Y8iEP/
-	 8DGhvJ88CHZoGUAw8uxY3TqmVi3pO+VzE2hb/wn6oUF3Cu/GcXRHSod4878//2wPU9
-	 hlbP093r+faF6cGw+0jJSIakT42eS1D4UsVtfedLqXFyv97xgQb+rfhUhmvtweng+0
-	 eNbPQPVV6gTY0KrGn0rhfdHuq9vDxZ2g/mVPgBcSQM0YyC80dNQHf76DDGxCI6teSY
-	 vHcYNzSmZfDTSHIT6VYF7t+k25EH63+Z/NTEgt9h1gbQ3D1O+cK5egmiUznouI3ZyE
-	 kFavRoZLWeCRw==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a858881ad2so4197797e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 01:36:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8XoYcomlkJGVX/WB4K79Yo/M/IbDZeLM0wxg+2X25PNn9QtinCCzfk1iiq8kiwKmWqZgAN6f6ShPAt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnNc7bAukOT22zd/uE4zxHasp4BtkD9Bjc+XNmNwm7eqoUT6v+
-	C5s32KBN1qxssVBuGg8P2hO3W6JDYH4DaxnHJe3HqAX1Ttvy5AG36SUGTjOHNqJ1Sly6mzRq577
-	hnR+u8FaGjtLsaPW9TUOWZsqfOb7vMZY=
-X-Received: by 2002:a05:6512:3d03:b0:5a8:99bd:12dd with SMTP id
- 2adb3069b0e04-5a899bd13aamr5773584e87.31.1778488595742; Mon, 11 May 2026
- 01:36:35 -0700 (PDT)
+	b=BkFL70skeyMsxsAPovmmjWva/uA7ul3y+pIyc0IbC5Z6jp+X3h/7vsK1rfwOWZwPg
+	 yyof2+cc+0ChQ2ZmGzBckVM4Lho265t0+jpyzOhL0Z85yUbVdXmfJmgY+XWgfVuLx2
+	 XSMQHZ1SPx0FS7PtT6I/Kxdzu1DH/0TiUQvlV1AXSKc5p5bPkLemRqecW64jPWpgUX
+	 zorFbUkVKMMpZZClvBqYJNyNSAFy401fOr/YeNklUYQUHH0RP2e73Asc+fHm7CsYUZ
+	 lMVq0GCD6y86ofaHEztAM0IGwcsCFYuAtc+pTYuzFC128zk8vnCp1QfpB695rL+9Jg
+	 uZ3GOxabECP7A==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5a86bfa2a4eso4663865e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 01:48:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8ae85M33dVf6B01ey4prGA+P7Q/Y0r8kwVynL0nDFgg8JkDq9isrynLmSPdIWjCdK3n2hkhxtv1qsv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcRfLCM9XsR/muuRmKu5Xlxp/j9LjUR2XS2k/sPIJRG2F+ejj/
+	3zUhxZ5vq1hAQjJ/+Ef9N8yuxbk7zu6umEhbXfpLRhadobIdqpaCmA4JDqk05wj0Zqemio4KwyM
+	hKpQxGwXtZG5AsT0oupyT3+LHlaq4dTw=
+X-Received: by 2002:a05:6512:304b:b0:5a8:6e64:a932 with SMTP id
+ 2adb3069b0e04-5a887cea7efmr9393309e87.32.1778489312120; Mon, 11 May 2026
+ 01:48:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
- <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com>
- <106b7b64-ed6e-499f-b5ac-60c1277f2f03@axiado.com> <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
- <fd2ee102-db52-4a37-b96e-c16211e3d8e3@axiado.com>
-In-Reply-To: <fd2ee102-db52-4a37-b96e-c16211e3d8e3@axiado.com>
+References: <20260504131148.3622697-1-khristineandreea.barbulescu@oss.nxp.com>
+ <20260504131148.3622697-7-khristineandreea.barbulescu@oss.nxp.com>
+ <CAD++jLnk4q7L_cFzz+1gKkAqwhv=TW1_XSepuii7b_PHF7EPqQ@mail.gmail.com> <704e9e7b-0f45-4ed3-a686-9e20056eab2a@oss.nxp.com>
+In-Reply-To: <704e9e7b-0f45-4ed3-a686-9e20056eab2a@oss.nxp.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 11 May 2026 10:36:23 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=51iWK2SyxoWOTxSQHAq-Frd0mm6cPxqYu81qifFfHGg@mail.gmail.com>
-X-Gm-Features: AVHnY4IfT9q6KDLm-dZHjUsaH-0X6qvevfw7aCysYd229WzlzaOSgUqxkeXu0ro
-Message-ID: <CAD++jL=51iWK2SyxoWOTxSQHAq-Frd0mm6cPxqYu81qifFfHGg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
-To: Petar Stepanovic <pstepanovic@axiado.com>
-Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>, 
-	Prasad Bolisetty <pbolisetty@axiado.com>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Harshit Shah <hshah@axiado.com>, SriNavmani A <srinavmani@axiado.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 11 May 2026 10:48:18 +0200
+X-Gmail-Original-Message-ID: <CAD++jLk-7UqjCsM4jCdRmBMMaNNXe8Gi_E00fJ_MRMsEGQcMZQ@mail.gmail.com>
+X-Gm-Features: AVHnY4Jgw80MuyK4ZGcKlHCdHrHAFZ3YKz8oTwazlDM_Kdt2Svy6qUsv6clMxog
+Message-ID: <CAD++jLk-7UqjCsM4jCdRmBMMaNNXe8Gi_E00fJ_MRMsEGQcMZQ@mail.gmail.com>
+Subject: Re: [PATCH v9 6/7] pinctrl: s32cc: implement GPIO functionality
+To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
+	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Alberto Ruiz <aruizrui@redhat.com>, 
+	Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org, 
+	Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Vincent Guittot <vincent.guittot@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: AEAD950A3AA
+X-Rspamd-Queue-Id: 1A23A50A515
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36515-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36516-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,axiado.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Fri, May 8, 2026 at 9:57=E2=80=AFAM Petar Stepanovic <pstepanovic@axiado=
-.com> wrote:
+On Fri, May 8, 2026 at 11:07=E2=80=AFAM Khristine Andreea Barbulescu
+<khristineandreea.barbulescu@oss.nxp.com> wrote:
 
-> For example, when SGPIO is configured for 128 lines, the hardware provide=
-s
-> 128 input bits (DIN) and 128 output bits (DOUT). If modeled directly, thi=
-s
-> corresponds to 256 GPIOs in Linux, since the input and output signals are
-> independent and are not bidirectional.
+>I don't think the current driver is a good fit for
+> a full gpio-regmap conversion. Direction and GPIO mux are
+> handled through MSCR/pinctrl state (IBE/OBE/SSS), and the GPIO
+> logic spans multiple register regions across two SIUL2 instances.
 
-I don't get it.
+I don't see the problem with that?
 
-Linux internals are modeled after physical GPIO lines, actual rails
-you can control. ngpios for example means the number of controllable
-physical lines.
+> A conversion would require stronger separation between
+> GPIO and pinctrl, leaving mux restoration entirely
+> to the pinctrl subsystem.
 
-What kind of bits exist in some registers does not concern this
-concept.
+Why is that so? Sorry I don't get the problem here.
 
-Please check this presentation page 24 for example:
-https://www.df.lth.se/~triad/papers/pincontrol.pdf
+The pinmux operations have these callbacks:
 
-The fact that there exist many weird things inside the SoC
-doesn't alter the fact that "a GPIO" is an abstraction for a single
-physical I/O entity such as a line/pad/pin.
+static const struct pinmux_ops s32_pmx_ops =3D {
+(...)
+        .gpio_request_enable =3D s32_pmx_gpio_request_enable,
+        .gpio_disable_free =3D s32_pmx_gpio_disable_free,
+        .gpio_set_direction =3D s32_pmx_gpio_set_direction,
+};
 
-> Similar to the gpio-aspeed-sgpio.c driver, the input and output paths are
-> fixed by hardware and cannot be configured dynamically per line. These ar=
-e
-> not interchangeable directions of the same GPIO line;
+So to me it looks like the pinctrl subsystem is *already*
+handling all the muxing of GPIO lines in these
+callbacks?
 
-Are they connected to the same physical output line/pin or
-not? That is the only thing that matters. If they in the end control
-the same physical entitiy, it *is* the same GPIO line from Linux'
-point of view.
+> Would it be reasonable to keep the current approach for now
+> and revisit gpio-regmap later if needed?
 
-> Because the direction is fixed by hardware, the standard
-> lines-initial-states property, which encodes both direction and initial s=
-tate,
-> does not map cleanly to this design.
+I'd prefer that you look into it now while you already
+have all the information at hand and fresh in your mind.
 
-GPIOs with fixed direction is nothing new for Linux, we've had
-that for ages.
-
-I would just have the driver reject configurations that does
-not apply and bail out.
-
-If you absolutely want to enforce the lines-initial-states to match what th=
-e
-hardware can do, then use YAML schema restriuctions on what
-values can be encoded into that array.
-
-> For the output lines (DOUT), should their initial values be described in =
-the
-> device tree, or should they be configured by userspace, with the driver o=
-nly
-> providing default initialization?
-
-I don't see why userspace should deal with that. The Linux userspace
-ABI is for hacking and odd usecases (like industrial). The nominal
-use is kernel-internal consumers and those must be able to
-request their GPIOs as well without any userspace shenanigans.
-
-But avoiding to deal with initial line states at all is a solution
-of course.
-
-What I don't understand is what purpose this dout-init actually
-does and why it cannot be set dynamically by the driver at runtime.
+You can forward my comments to your project lead
+/ JIRA instance and say it's Linus' fault you have to spend
+more time on this right now.
 
 Yours,
 Linus Walleij
