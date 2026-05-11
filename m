@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-36550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cKw8H3LMAWrSjwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36550-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:32:50 +0200
+	id KASKF+LMAWrajwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36551-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:34:42 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA95C50DE24
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED27D50DEC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:34:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 01CA930778D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:27:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A3475309A1E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A4E3CFF6A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6248E3CB2E9;
 	Mon, 11 May 2026 12:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWRfF7L0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qM7WRuQR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820433A16AB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2833A3813;
 	Mon, 11 May 2026 12:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778502404; cv=none; b=WpEBl2jum1QOYCN7TDj/z7FwPcvQ2VJGB3j0BGa41aXLjTo6dvnMW25EwuR/i+TyooCHRCu6O0Fb/2AxP/20yPX3BM2zoIpFKVnvHCHhVjf1m36Vz+Y56yKLjzWl1jkU2QDM6bBh3BS0rIN9IHjoMzpBmS69ESwaJzSZYlg8Uag=
+	t=1778502404; cv=none; b=GPHfTutDNktjrm1iwykynA+H+z8UOAkvY0mA6AZNK5zxbfEuT33I1eKRrUlC3Tum8J3y0UgYvauHturc6ggTDcCQ6n71V6qFF64IOq00ZXIlKKLn6g0wCdyR0eZHPvEDatY+Zi7Znh6zSERjCkK1NbU+zIVOUSVZJJo4o7rc43Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778502404; c=relaxed/simple;
-	bh=IQBwMweUNw6Rt0TiIjy8p83MEuUtBZbfZ7258tl1oDQ=;
+	bh=GGsSB1d2PoY/kuEuTnxLtG47ZzK+g95451GAUdj53K0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Hs82kzQqfsrUz65oUF28P8InEFULJui0dSipSv26DZMMPNc7JTTLCPjWbV1lSgrSxrGulTFBUaei3wZxVyz22sWjnSxAVgmh9PDNhdp0l2e2rBEt1/Tp+/NON+cIRe4BD/P4wk2vxJrR8yiJRlwxMAGQnzWpm4qLMBT3DJn4bW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWRfF7L0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FFAFC2BCC9;
+	 In-Reply-To:To:Cc; b=XmgUYETVdB2f2KOPv43ZBPaBciBEurNzRiqkAre7Ao3GGNiAVDtSBJNEhiz0Zu5sQd2LuIgObgUbubqtwlhuHFmwPtY5cj2P4+sfDWC+bdHmbslB2nQ6WaGDWtw0S1ulgpwcjhUKIN26zae/3Y/IHsW56Dgr5HjRy7x+pFgPcTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qM7WRuQR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C8FAC2BCFB;
 	Mon, 11 May 2026 12:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778502404;
-	bh=IQBwMweUNw6Rt0TiIjy8p83MEuUtBZbfZ7258tl1oDQ=;
+	bh=GGsSB1d2PoY/kuEuTnxLtG47ZzK+g95451GAUdj53K0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HWRfF7L08vSajomH6JKPY4Z3xN1JcrZu4Zh9TOqLE1rYg551sFlhv6N3zRynX3+uQ
-	 Y9VEyaRvGSxBfhFZRUit3Q5bN0fuVWlKsrr7Ya8J8sdzOxgTe0J3ig7gDhmVRrGdHe
-	 JzQtWbVT5g6SHLajwwMF75dERH6i+KZWdOKf6O44qBFhBrV7tb/EOy+cFhMHbMcJCr
-	 VZwE/eK7VGfBoOZbaYfJtfj5faFNU9KQoUatdJu4UZZ/q8M4BEFAcllAfl060/VJSL
-	 P0eiEy/SN+Oxj2K5G/N1TcIb5YtHsQioyE9ewn8uM7i57bUHgvDTgkRSH9YLAL6LW9
-	 kf8mI7xDVdWxw==
+	b=qM7WRuQR6gLiPvGtGLKenCEoPR+XGC8zRIoIxZWmSlOR3ODE4umsPKpV5PGKQ4MU8
+	 tNZs69WQ4O1VtCd/5cVlw4sh8/9RJYYGAH3kl2oSwqIT59z2e/5duvX/DTVSYsbjBM
+	 PoEl2r/nmRGJKrn2tvJjIMCf0i6o8nA7x6nGT4X+I4w6vRL2oG4D+WHNi2XW1zscyq
+	 yzVCeRpf1ucyGAmPiV8RU+sszjpICmHGDENnWPRnMHKjZ/TFlhdrvl5VKm5G/R9Ry+
+	 gFPW2B2w5mVuFVQrAPmj3GVz1520I1sT7XJX+3daQCjLlzLRAnVEBTtN4FE6T1YPMB
+	 JZwb5PAWzNf4A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4972BCD37B9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA0ECD37AC;
 	Mon, 11 May 2026 12:26:44 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 11 May 2026 15:26:29 +0300
-Subject: [PATCH v11 06/22] dt-bindings: media: i2c: max96712: use pattern
- properties for ports
+Date: Mon, 11 May 2026 15:26:30 +0300
+Subject: [PATCH v11 07/22] dt-bindings: media: i2c: max96712: add support
+ for I2C ATR
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,8 +58,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260511-gmsl2-3_serdes-v11-6-fc163073c16b@analog.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260511-gmsl2-3_serdes-v11-7-fc163073c16b@analog.com>
 References: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 In-Reply-To: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -77,18 +77,18 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  Martin Hecht <Martin.Hecht@avnet.eu>, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=2057;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=1871;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=jS3B9xKEhVOSCEaka8S3gGwbqQ79uBc4o5geNrA6dpY=;
- b=gyekJKFenho4G5SJHfq4TqJdvKMzvgIRKI+QX1lvFglUyIQTFwYWrlM06E/Ih5senasu7ETkD
- 3AAzD0Nd1CaDi12bY797FRoDI3230j7JqauRNEb50D52jDQTQGJjdvP
+ bh=RSvh87m8UTUuPKmdiJPBrCURSGQkmSAhRt3cRzeUwAs=;
+ b=LId3ReWR1dg+k7eEh2bvx790OgZntiJBVt2Q4HR2xvaQdyEg5NCryXd60yiBTrD5FfHShNVQU
+ 4wixTlyo6OXAaz89TO2NflC5yjk3mqSfJBtCdZOZUm9kMhSGrpTnEFF
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
  with auth_id=140
 X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Reply-To: dumitru.ceclan@analog.com
-X-Rspamd-Queue-Id: EA95C50DE24
+X-Rspamd-Queue-Id: ED27D50DEC8
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -99,94 +99,96 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36550-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36551-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	DBL_PROHIBIT(0.00)[0.0.0.7:email];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.1:email,0.0.0.4:email,0.0.0.6:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,0.0.0.5:email,ragnatech.se:email,0.0.0.0:email]
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:replyto]
 X-Rspamd-Action: no action
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-The MAX96712 and MAX96724 support up to 4 separate PHYs, depending on
-the selected PHY configuration. Use patternProperties to document this.
+MAX96712 and MAX96724 have more than one GMSL2 link, and each link is
+capable of connecting to a separate serializer. If these serializers
+have the same CFG pins configuration, they will also have the same I2C
+address, causing conflicts unless the deserializer changes the address
+of the connected serializers.
 
-The input ports are all the same, use patternProperties for them.
+The MAX96712 and MAX96724 support changing the I2C address of the
+connected serializers.
+
+Document this capability.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- .../bindings/media/i2c/maxim,max96712.yaml         | 29 ++++++++--------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ .../bindings/media/i2c/maxim,max96712.yaml         | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index 26f85151afbd..583bbd60157c 100644
+index 583bbd60157c..abacc3c874a9 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -39,27 +39,15 @@ properties:
+@@ -36,6 +36,30 @@ properties:
+ 
+   enable-gpios: true
+ 
++  i2c-alias-pool:
++    maxItems: 4
++
++  i2c-atr:
++    type: object
++    additionalProperties: false
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      '^i2c@[0-3]$':
++        $ref: /schemas/i2c/i2c-controller.yaml#
++        unevaluatedProperties: false
++        properties:
++          reg:
++            items:
++              minimum: 0
++              maximum: 3
++
    ports:
      $ref: /schemas/graph.yaml#/properties/ports
  
--    properties:
--      port@0:
-+    patternProperties:
-+      '^port@[0-3]$':
-         $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 0
-+        description: GMSL Input ports 0-3
+@@ -78,6 +102,13 @@ required:
  
--      port@1:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 1
--
--      port@2:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 2
--
--      port@3:
--        $ref: /schemas/graph.yaml#/properties/port
--        description: GMSL Input 3
--
--      port@4:
-+      '^port@[4-7]$':
-         $ref: /schemas/graph.yaml#/$defs/port-base
-         unevaluatedProperties: false
--        description: CSI-2 Output
-+        description: CSI-2 Output port 0-3
+ additionalProperties: false
  
-         properties:
-           endpoint:
-@@ -77,8 +65,11 @@ properties:
-               - data-lanes
-               - bus-type
- 
--    required:
--      - port@4
-+    anyOf:
-+      - required: [port@4]
-+      - required: [port@5]
-+      - required: [port@6]
-+      - required: [port@7]
- 
- required:
-   - compatible
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
++
++dependentRequired:
++  i2c-atr: [i2c-alias-pool]
++  i2c-alias-pool: [i2c-atr]
++
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
 
 -- 
 2.51.0
