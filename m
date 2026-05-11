@@ -1,132 +1,127 @@
-Return-Path: <linux-gpio+bounces-36622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OHDDFtw7AmrmpAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36622-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:28:12 +0200
+	id SLhKCm49AmrmpAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36623-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:34:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B810D515D9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:28:11 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9F8B515EAD
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 22:34:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BAD253025160
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:28:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A248B30182CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:34:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6E2F382379;
-	Mon, 11 May 2026 20:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A88853A452E;
+	Mon, 11 May 2026 20:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kY0n0me5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5IWnmns"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C9D381B1E
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C8390998
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778531289; cv=none; b=VAbcLrQtpFJFCalcM34lqr4edtt9QyUBvl5w62EUbwcR7cyc/yghAz4n0dzMsegNbTeWPPR6BQJIqWlvDxUrSKZ9V1I4DC9Kg599jEHMB6NfXcOFerZOVgA/Wmvz4+HbeK3CeXERd5MeSJ5B8wAypVEB27Q0FhV3zNONVDmj1m4=
+	t=1778531688; cv=none; b=t9gGc4NlTge5XqyJvzd364eFESZ/yc0FA7f5samD8A/pHJw17vGiN7F0UdZejnN4woxs4Q2NNdnbVJFnT8le6D9gfsvhrv8KEWWp2TTGjUg6J2PWLJRd89QrAVAozTJiXZX+d3psoDJgo9Zubdp244lT9PNtQtZ5rG50TZM1hdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778531289; c=relaxed/simple;
-	bh=Zufrx/VI2aTaZkc5aI8hQ7bIa937j/pEvPsW/ybHiHE=;
+	s=arc-20240116; t=1778531688; c=relaxed/simple;
+	bh=pfDxlUWWZJepOCZjfdEmEkPzN7o0zQAK0IZPSz7H81M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t4AULGlhxyZYvdefHtG0rrIS6ErMpGG+3h08vvN2dAptiKMWVVK7QwSOhIu2j/emJfrQoUCjQnvdKqOEI9r4EEoCuKOLnr4OyQLPPesmlaH4UUsFq/kStLk+viGnbct1Z7r5iy7e6lZPJEtXStEqDq8wSXSF13Rv4I7/58pIh14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kY0n0me5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499F5C4AF0C
-	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:28:09 +0000 (UTC)
+	 To:Cc:Content-Type; b=Rb862nij6u3CTJskXlrznM5oE1FClD+HxOa3BTAYhpZAX0KtFrg98bFM2dsaf02CXkgWLrojldZ+nu+aC/HrRTA40724qxVPJIKM7h/SWVT1dVMP5Sad3UgnF/SxBMDrJuGKKV437RaKLsFqV4jdhwneZkm7LkYZ+Cn2NLpp3LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5IWnmns; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A78EC2BCF6
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 20:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778531289;
-	bh=Zufrx/VI2aTaZkc5aI8hQ7bIa937j/pEvPsW/ybHiHE=;
+	s=k20201202; t=1778531688;
+	bh=pfDxlUWWZJepOCZjfdEmEkPzN7o0zQAK0IZPSz7H81M=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kY0n0me5gHXh9SQBpm0nawZ5itoni+8MAOqu0APPqli6Q1gWVeenTtLbc7QYrM2XI
-	 gu/zJ6CgYj4Rj+bKfRhnqbs4kim2CfHCSmsE/wddLxU9oIcuvWsMrMxJTepLKh1oX1
-	 0uTRg6SA1yp98tnfeG8It03g16nMgBE9MA/aWNGr9Ht4qPMDrzCTIue7kOVjzgTFf1
-	 +rvC2qwFE61wiOdIoDCOE+fxqmNixJQQ+gFJiUkmHE4fYBrWittGipin0FxwGQUeJF
-	 xVcbdWi7Pxxwc7wmvjGrQHI7arOSyRrr9OtKPbXYCl1kJemmRf4RqnC1T9qHTUNWu8
-	 ZfrvpdlNdMPSQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a40cfab24dso5271848e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 13:28:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+6/8SSpKWkJKLZo5hQrWFbtxz/LDUWF2cSYB3it1k1LWE9t4YmH4ZDOSWqA4gtSjyQfmipeLSzM526@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMjn6W1Mhf9yKLY8hQ6s0CuUcjLJWLwmFLC+zDTDbAo8r3hmLV
-	6ZG2c+NjVB4GnvOBJmgdLbxXb1j4lCSLy2XTOkOihEwvTXE3yt6EJDO5+z2zVq7szQLFEvBNCsX
-	nJNsmrCQKmEGfqGsakSGoGM0b1WrKqUQ=
-X-Received: by 2002:a05:6512:32c5:b0:5a3:fd83:13f7 with SMTP id
- 2adb3069b0e04-5a8a949f147mr5220966e87.6.1778531288026; Mon, 11 May 2026
- 13:28:08 -0700 (PDT)
+	b=l5IWnmnszX4yIlsBRwcZauDRDjLsshju3WeQ8Mfnk7HKw8C4aOvGcekN56lNTA761
+	 zHnwpsT5guPRrb372CdGuH1XRzjJsWAjX+CFc0yqjuRfFNnH0QsHrXN6FDD062YsLz
+	 MDOlqoL+JtTt20cTc/YgGBnUqZQGJSEJjgkN919VgdSU90p2W9QEBoMBs5j9JMfzHO
+	 tzPRoORvk2B2zcajxNqtRcoYPM6xGw2LT7MN1RNJWH93+D2S6o0LB1A1gU0L9Sd93A
+	 hgnASXHjDNKPcCvIsZ7a/5+xHRa81a5udY/K9yiH+Z7IYLTraMnVDyfEtZFfQhJmcb
+	 rbdVbcfSHZBCg==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso1475538e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 13:34:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9ET1AAcsJn9d+jsYl/Q9uXqSlTs9pWJ2ovkPN1q3cYdaFqO5T9wVbcazFmxaeXEGFBWznkDUXy6JwX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwi05v9otKocEMN+f8KzvUdulb2W35ZYI20Bv2YIb12OrZ5qWl
+	CZWKGDwmFreuHNHU+Tp2vzxX0F1NbMSPAFz4VVficM3gq92W81j/Xqe8iMWPTDU1AcmRo8Urep3
+	bxcxEOc94AkTqDhm+aM40v23LQt7/Oak=
+X-Received: by 2002:a05:6512:3ca1:b0:5a8:7be1:24c8 with SMTP id
+ 2adb3069b0e04-5a887ceaa65mr9872399e87.37.1778531686850; Mon, 11 May 2026
+ 13:34:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260424111330.702272-1-changhuang.liang@starfivetech.com>
- <20260424111330.702272-12-changhuang.liang@starfivetech.com>
- <20260424-mumps-foothill-ef122c1029c0@spud> <ZQ4PR01MB120229BE0DAC2658164C066AF2372@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <20260428-hardhat-both-1c9aa594a45a@spud> <CAD++jL=96gzBL-VzNi3WtZQvhVgqATV1GwsnyZkTzNC1OiMa5g@mail.gmail.com>
- <NT0PR01MB1216A40D68A84F944F4CEABCF23C2@NT0PR01MB1216.CHNPR01.prod.partner.outlook.cn>
-In-Reply-To: <NT0PR01MB1216A40D68A84F944F4CEABCF23C2@NT0PR01MB1216.CHNPR01.prod.partner.outlook.cn>
+References: <20260504-pinctrl-mux-v6-0-8ea858ba3a5b@nxp.com>
+ <CAD++jLmXvnf6sSWsGe+++u37ONJpFFvxFMUkLdvvxiiaWuf9gQ@mail.gmail.com> <agIwOYrKXlnKbpII@lizhi-Precision-Tower-5810>
+In-Reply-To: <agIwOYrKXlnKbpII@lizhi-Precision-Tower-5810>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 11 May 2026 22:27:56 +0200
-X-Gmail-Original-Message-ID: <CAD++jLk_7wqHYDL3K7s6AGTfLcH+Hs_sr3o53yJOBQ+F+Q4xGQ@mail.gmail.com>
-X-Gm-Features: AVHnY4LemyhdlVVL4fcj1rkaW0eUQWg0zRd1czeP7h1K7aGobHiBihe2v4zvxNE
-Message-ID: <CAD++jLk_7wqHYDL3K7s6AGTfLcH+Hs_sr3o53yJOBQ+F+Q4xGQ@mail.gmail.com>
-Subject: Re: [PATCH v1 11/20] dt-bindings: pinctrl: Add starfive,jhb100-per1-pinctrl
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+Date: Mon, 11 May 2026 22:34:35 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=eqEaTcG7P=++Md7fqosmrGbRRPDb90+=Q4q8oQ=xqRA@mail.gmail.com>
+X-Gm-Features: AVHnY4ISeOUwTMvzSWT7CmqN0mVa50nOH_KekHRgu0RCcEYz-W900TVY-Ai2s7k
+Message-ID: <CAD++jL=eqEaTcG7P=++Md7fqosmrGbRRPDb90+=Q4q8oQ=xqRA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] pinctrl: Add generic pinctrl for board-level mux chips
+To: Frank Li <Frank.li@nxp.com>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Paul Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Bartosz Golaszewski <brgl@kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Ahmad Fatoum <a.fatoum@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: B810D515D9A
+X-Rspamd-Queue-Id: B9F8B515EAD
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36622-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36623-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com,microchip.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,starfivetech.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Thu, May 7, 2026 at 11:55=E2=80=AFAM Changhuang Liang
-<changhuang.liang@starfivetech.com> wrote:
+On Mon, May 11, 2026 at 9:38=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
 
-> Thanks for the criticism. I'm now reworking the binding to use the simple=
-r
-> string-based functions+groups as Conor suggested, instead of overcomplica=
-ting
-> pinmux. Will send a new version soon.
+> I fixed a build warning by missing doc 'np',
+> https://lore.kernel.org/imx/20260507152117.240612-1-Frank.Li@nxp.com/
+>
+> Anything need me to do futher?
 
-This sounds great, thanks Changhuang!
-Looking forward to the new version.
+Sorry was busy!
+
+Applied this fixup on top of the branch and merged it into my
+devel branch for v7.2!
 
 Yours,
 Linus Walleij
