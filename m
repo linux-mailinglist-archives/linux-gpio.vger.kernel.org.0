@@ -1,142 +1,150 @@
-Return-Path: <linux-gpio+bounces-36598-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36599-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eAXaFqsfAmrBoAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36598-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:27:55 +0200
+	id 6N0XBLQhAmocoAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36599-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:36:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2D9C5146E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:27:54 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03010514863
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 20:36:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 60CE3305D874
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 18:18:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5E880301D10C
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 18:29:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCC1247B423;
-	Mon, 11 May 2026 18:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF7147CC7E;
+	Mon, 11 May 2026 18:29:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Svt1i7E7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9PZ6eci"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A31747B437;
-	Mon, 11 May 2026 18:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B836441C2FD
+	for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 18:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778523525; cv=none; b=PGkfn0C6wVr6ihmZcMcTJJKhXkWywrRYkfq2AXYqZfBdLrYeaAlMoiUSJSwOWD1L6XT++3HfY4xp/0Kv5eDAFqu3S1qFL3h5+DYTSWvuUMRV8HCMH5ofEzik3R2BlMSpRvnDRa21ZMJxfHsY3KEwqezdLkCY1CIAvhksPUptNXw=
+	t=1778524196; cv=none; b=cPA/XcjE1WlguHvvKsOVW434bXiuguPolhANPZUIh2Wu7U+MG0B6vxOr5UfvcV5rfI+zRy04MNn7gJlCIYxyriW7BwtSgNFJFSShiRRPF70Uu/YimlFL4B2TnctcNUGa67yimyM/vHVeh6NhzpoWeaiFdZYR7BuOuYDP+0uPVO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778523525; c=relaxed/simple;
-	bh=LZoS+OqiDeEnrp9ZwW8sxybQzfDi32QlNvb6QTQaf/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pYajYcZngd0bpLbAcIh6d8Uk0Gq5bGyX2mpjKLKfIb1s3r81f/xcfnH/pUHDS6VbNS6pM10u/9L63VizkJMFANfmYyyw3EoeIq/0Z0C2rhtRq3HMVk3GRCkOmaGhkAmx9g2l8XjIoDLndp8RQFvqjfGkGDH3HtHpoQoic+tH9C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Svt1i7E7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=UzghNUT8txexFJCdbHTb6EbJJDc5OYiK3uW8TFQuhMM=; b=Svt1i7E7y0/08/Z+DzdyOhPsu3
-	cjCGgikyfsBuQ78H8BQsgU6RWNsRiDoyUHNMSa7aqhb2LyfNOcsinu+3i/qoj43i6bx8XBo64xfEf
-	MCj3PsNwnWHh5s1uZcp+s04ZWd82kZSLNO5s/bs9SsI8xPE5tHHQdySpiQU1zJx4IT2Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1wMVD2-002QBE-6n; Mon, 11 May 2026 20:18:28 +0200
-Date: Mon, 11 May 2026 20:18:28 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: tanmay.shah@amd.com, Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
-	Beleswar Prasad Padhi <b-padhi@ti.com>,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <4ae35920-2539-4b12-8dea-efd407b8aaeb@lunn.ch>
-References: <472f85bd-42c2-40c6-abfd-b76924797069@ti.com>
- <CANLsYkzt9xUczxSU28u-TfZAAjr0ufZKXAj8Eqfq=45gufXW3w@mail.gmail.com>
- <f7ef3417-eb84-4467-ac72-a9bc8b0c81e8@foss.st.com>
- <21de8440-adf7-454b-acfc-06e50882e075@ti.com>
- <4c526816-b127-43e7-86e9-eee4dc1152bc@foss.st.com>
- <c6f68ab5-271a-41ed-b285-75b739f1edd6@amd.com>
- <87850f70-5275-4393-941f-d01146a9cffc@foss.st.com>
- <da3b79b7-9dad-48cb-b552-cf6df445899f@amd.com>
- <08c815f5-ccbe-404a-95a1-a549aac8a55d@amd.com>
- <CANLsYkz8HpM_8eS7DjN_jmYs4T7P9xY0jYmdiAx5WO=_1zvFpQ@mail.gmail.com>
+	s=arc-20240116; t=1778524196; c=relaxed/simple;
+	bh=RG9Z76+47yLVeXFvC9hsIzhM1O0fTKF+lwJmQreos74=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cCja7TaMEC2pwppDh21hH6CO/FgGZrvlXG8Bh9cZYSTshmbreegDoEXXBU2TFKO4r9gIDg7iAM1Cq9XyrwdjgRNvyiHmE9uKQvRP4E+qKpc1Pl37pfkvJtMfi3YTlE9Nc7miBPjvsg9S9K8G2Df4hqcI2FrKyVlKGUvda4y6LUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U9PZ6eci; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ba928852a5so30887615ad.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2026 11:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778524194; x=1779128994; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dUnpjgB2glFg8Z4jjdQyqS7WANd7FZwf3KfWMkfsYQ=;
+        b=U9PZ6ecimCOJFR1npVK3a8Fe4ATfKqYiTRDaALIFyWp3kbwOdx3fYahkuesOX+8bC6
+         0+gVOuEDBQpDll69/mF7v8eKVgwA4QuKv8gV3mhsCqot/MEUHYXXBQ37s+riEh+wOt0y
+         J70dj6RAgAEo+dfz3+Bo1Cp5fK92U4MwyNszu3waHF8dVKOHgeHFaYpfYr759zFVuP6G
+         32ta6+xcTdYerHh3mW6rvkocLaysAI1VlJ5S/iZGO9gtQp9MwF163/dwjb90pHhMncPV
+         ssGMfKYlT8/zyOmrXqITVzt6cjZDNt0RksjODAi5GTdXO/aI1NO3SdVjmiHMgn8GX/zg
+         TrUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778524194; x=1779128994;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/dUnpjgB2glFg8Z4jjdQyqS7WANd7FZwf3KfWMkfsYQ=;
+        b=pZk68TzIjZyhydv6xmcqHk3XTHGWWq1cMhEgeafyWV+v0dI/SkbV4RG6s3TQT2CRKn
+         qF57ehcr4P0BV+Sz6eHh0NvGblqMPOfPGU8kiA3qZoIs7tkTwDKYoJ6P/dzFsP2Va24s
+         mwdgrUn0Ou1ymO0q2mHgBGMBlEE7EkoZIXM4NcDbPtjGq/r35zDWKejMMOz823NP/fio
+         nRhrPzLIcQF0IfZI6CVpZntrqCUxsoNkERsEtQQQoaKR7LFX5iB6QVKaSTSo5m/u8XQD
+         Kxxdr0fxTPZm/og02ODlTYRaVLzqU2kNrUkPEPA88J/A7jPBu2FtWwbBF9gb6QUMbZtT
+         +HjA==
+X-Forwarded-Encrypted: i=1; AFNElJ85pqJ6L5gcRwUubWDGnN/LW4zGzoK/urXBE+2psWM4JsICSmnx2tU4+KEWy8WMK/PNzlSUhQnhIOXC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuYZ33H1TTkEb+MkgCBO1RbUiP9HPDMAPFToj7S+IE/EAE93gd
+	nYCtlp9YP3+DX4icsY9neMAOXy7YP59GnKxbIZRXuaR5XirkQXiNaYuy
+X-Gm-Gg: Acq92OEMZmsEQyq6UjOkynJusmrjEoq7F3l/cATbxdP3dt1cs4xC3NMbKMEXWgTwyWY
+	ne7bFwLXLrnFOD2rkiMRCZVIU2CV6x4cvG4wkVMAD2DNocC8sq0KMNlHGQVUNhDq7S0/WzJoRdT
+	NR3gR2HKQamWx5OpqoqFvf8kFvG0WPf+QaIbtn/0QDo8uGmqbiMaDlTnQdLjg6p6TpZWTK6y5OP
+	1qryHw+CQkqaudoBludl+nrDRTB06XtbbVDvm2CQJz5VDSTUYDJjZC0gW4Bq/1UGT7lBlkB3AhR
+	e5Jd7csnFBkRI8QZ+L0kKplzGrcqR0+mcuSUJuxWiCKJRPHI36UsllBwLNZ3Xg+H2b26ssYleUa
+	2BwZWIfga5gvruirmPl6tkXdvB5t6sDxk4C6e/sOFore/WPk4P51PtAeugwbPuwFyuPdce1jTWi
+	YKfx10RtKLjbZXK47AyNf3PURs3TWlZoXiP5q1
+X-Received: by 2002:a17:902:f70b:b0:2b9:ea53:4cfc with SMTP id d9443c01a7336-2bc7aa204a9mr109094785ad.19.1778524194172;
+        Mon, 11 May 2026 11:29:54 -0700 (PDT)
+Received: from Strong10mede.domain.name ([122.161.50.8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1d2700dsm114260525ad.2.2026.05.11.11.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2026 11:29:53 -0700 (PDT)
+From: Mayur Kumar <kmayur809@gmail.com>
+To: linusw@kernel.org
+Cc: kuba@kernel.org,
+	alexander.deucher@amd.com,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mayur Kumar <kmayur809@gmail.com>
+Subject: [PATCH 1/3] pinctrl: bcm: fix SPDX comment style in header
+Date: Mon, 11 May 2026 23:59:43 +0530
+Message-Id: <20260511182943.228154-1-kmayur809@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkz8HpM_8eS7DjN_jmYs4T7P9xY0jYmdiAx5WO=_1zvFpQ@mail.gmail.com>
-X-Rspamd-Queue-Id: F2D9C5146E3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 03010514863
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36598-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36599-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,amd.com,vger.kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,foss.st.com,ti.com,nxp.com,kernel.org,lwn.net,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[lunn.ch:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sched.com:url,lunn.ch:mid,lunn.ch:dkim]
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kmayur809@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-> Arnaud, Beleswar, Andrew and I are all advocating for one endpoint per
-> GPIO controller.  The remaining issue it about the best way to work
-> out source and destination addresses between Linux and the remote
-> processor.  I'm running out of time for today but I'll return to this
-> thread with a final analysis by the end of the week.
+Header files should use the C-style '/*' block comment for SPDX
+license identifiers. Correct the style in pinctrl-bcm63xx.h
+to satisfy checkpatch requirements.
 
-How many of the participants here will be in Minneapolis next week for
-the Embedded Linux Conference? There is even a talk about this:
+Signed-off-by: Mayur Kumar <kmayur809@gmail.com>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm63xx.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://osselcna2026.sched.com/event/2JQpx/building-virtual-drivers-with-rpmsg-key-design-principles-challenges-trade-offs-beleswar-prasad-padhi-texas-instruments?iframe=yes&w=100%&sidebar=yes&bg=no
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm63xx.h b/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
+index 95243027ecd..3dcfabb94ec 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
++++ b/drivers/pinctrl/bcm/pinctrl-bcm63xx.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2021 Álvaro Fernández Rojas <noltari@gmail.com>
+  * Copyright (C) 2016 Jonas Gorski <jonas.gorski@gmail.com>
+-- 
+2.34.1
 
-Maybe we can get together and decide on the final design after the
-session.
-
-	Andrew
 
