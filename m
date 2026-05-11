@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-36605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36606-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AKrvC+gxAmrSowEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36605-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 21:45:44 +0200
+	id SBSNNBcyAmrSowEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36606-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 21:46:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DC1515398
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 21:45:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37E735153BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 21:46:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E32EF3018D79
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 19:43:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A7A03037467
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 19:43:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5503F4D2EF4;
-	Mon, 11 May 2026 19:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6DCA4D2EF5;
+	Mon, 11 May 2026 19:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2UD4GLG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oh+rIPpR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D054D2EEE;
-	Mon, 11 May 2026 19:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686094D2EE1;
+	Mon, 11 May 2026 19:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778528629; cv=none; b=LPWZ2ZGmbXJUjTHVN+ufnUm64MltBI0Gxa/+/h6SM7kM7Fz0RqohtftZQnyCs/FlLyhkrZkIfaLTlarbC/QdavUy+xe0GX6pZSefkh/LoUQDhnDqv1dBGblS/wBUJxdFcGq5y3gezTGFZMMNSbqsHcBN1+UAs68JmSSfuUu/wew=
+	t=1778528631; cv=none; b=Q8dbdg5fVuNHqUlhEPnGJ/seZnzbzmOCRjQBsGVqxKxDXnPvFJ+rvwfPIdB+UJDTdvjRIFXG8kKb0WVzGmjsEFUA+o/SIZ/FmkUwCnqkKsZ+S0zFbHPECSwM12/PRtnCLbwdGOU53cXFMkmUBRd8RKv4xHHlRYrXMYk8qgj89zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778528629; c=relaxed/simple;
-	bh=nakEEFSh8eedU8POAflsYB7hCrkaiuXuVtw0PSIIZDM=;
+	s=arc-20240116; t=1778528631; c=relaxed/simple;
+	bh=izMZZxPZYY8BcL//pdG4YdjFUE8wgataJGyQ4m0bQAE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oY3f1woeen3gs3yi/0BMJwWZ2TOulUOKyMYN9zHzyj4WsPC7VJJakYJ3xtSEs9sp9JF09uAVbKn9Osw9GOStaEFRstTJZ61i7c9Y8s6ap4Ody96K5cTXv4C4/Q14WY33YNHbHrIWbVm53SkSShCQb+NTi71Oz3qbak4Aiva5LW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2UD4GLG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E491C2BCF5;
-	Mon, 11 May 2026 19:43:47 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=mHgGEaHiGO99LnwvuNGiGBDvvmQWtJFdQLpRVLOdVPNnpFREe0QjnFwwgPhS5yAjMwDKrVYp0+MYKwVlvMfaZffzYXgwtZHH28rJHnCyy/8c87cMQjtsHO2Z/CiO3+2+i5om9t/Lda4h9EW9dtaLWO2XES7ZS2X5y+Em48fBtl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oh+rIPpR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81C27C2BCF5;
+	Mon, 11 May 2026 19:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778528629;
-	bh=nakEEFSh8eedU8POAflsYB7hCrkaiuXuVtw0PSIIZDM=;
+	s=k20201202; t=1778528631;
+	bh=izMZZxPZYY8BcL//pdG4YdjFUE8wgataJGyQ4m0bQAE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=P2UD4GLGGUG1fXxa3H4LVT/09qYUrYzsPFhqVjOkDLcnPhRBtqrlXLgtdq/ZYigiI
-	 aT6pZd4FaHrJ3bq62bWWQvXpcN/N1t20jgLdf4AqKY+Xvbpw8sXX7w1dA2X0kqDfsP
-	 HH8fL95xmGMt+YPS0v8k8fnEUkjPeRnR7fHxftIDMoicyH7rzuMHXQwfxgoRptHM8J
-	 4YCzN6umhUZsqTnThw0JL/i3BX6dnJrK/cBvn+qqyhTkGla0HmEyzdk33KQq1MDX+e
-	 /tiEyiBF93szNOK1E8qz3r+st6FQk/d1qRZ3xZ/tx3sucjKeaX9H/CioZPlWCdJ4EX
-	 EWS/suqK0Xijg==
+	b=Oh+rIPpRGQtds0jC8lzPKkvriKxKIPItknATLvCnozoLBp8H5ZGHiZUfrFlkY9Tvm
+	 zZPppcvNm81cOQq1LpIqKVbXOyJFR1HvzmEbaTAZJ4EXS1wgJ/Smng5eAwVFVEABwG
+	 uS8T4DgHe1C3yBQzcqn1lVXXFlYQlMBdBVZeLHpxCepw5LDnlyiX2PFdzBExYRXiFw
+	 ZfBCYOTeHp9it/mKk90ECXQyBinDR70U2gXJDhSiZit3Kw8x/tgaZeXi4WFdq85rXJ
+	 UMEDKwIdimZA65QlD2n50S4TUGMpdmlYDq2FQeE6Ex8+GDodUDoqMjVBNHsZaFD2xf
+	 H+BqCppY0U1jw==
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 11 May 2026 21:43:43 +0200
-Subject: [PATCH v3 1/2] gpio: regmap: Support sparsed fixed direction
+Date: Mon, 11 May 2026 21:43:44 +0200
+Subject: [PATCH v3 2/2] gpio: regmap: Don't set a fixed direction line
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,15 +55,15 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-regmap-gpio-sparse-fixed-dir-v3-1-1429ec453be7@kernel.org>
+Message-Id: <20260511-regmap-gpio-sparse-fixed-dir-v3-2-1429ec453be7@kernel.org>
 References: <20260511-regmap-gpio-sparse-fixed-dir-v3-0-1429ec453be7@kernel.org>
 In-Reply-To: <20260511-regmap-gpio-sparse-fixed-dir-v3-0-1429ec453be7@kernel.org>
 To: Alex Elder <elder@riscstar.com>, Michael Walle <mwalle@kernel.org>, 
  Bartosz Golaszewski <brgl@kernel.org>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>
+ Linus Walleij <linusw@kernel.org>, Sashiko <sashiko-bot@kernel.org>
 X-Mailer: b4 0.15.2
-X-Rspamd-Queue-Id: 96DC1515398
+X-Rspamd-Queue-Id: 37E735153BC
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -73,162 +73,111 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-36606-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36605-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url]
 X-Rspamd-Action: no action
 
-On some regmapped GPIOs apparently only a sparser selection
-of the lines (not all) are actually fixed direction.
+If a GPIO line has a fixed direction, report an error
+is a consumer anyway tries to set the direction to
+something other than what it is hardcoded to.
 
-Support this situation by adding an optional bitmap indicating
-which GPIOs are actually fixed direction and which are not.
+This didn't happen much before because what we supported was
+all lines input or output and then the implementer would
+probably not specify the direction registers, but with
+sparse fixed direction we can have a mixture so let's take
+this into account.
 
-Cc: Alex Elder <elder@riscstar.com>
-Link: https://lore.kernel.org/linux-gpio/20260501155421.3329862-10-elder@riscstar.com/
-Tested-by: Alex Elder <elder@riscstar.com>
+As a consequence, since gpio_regmap_set_direction() can
+now fail, alter the semantics in
+gpio_regmap_direction_output() such that we first check
+if we can set the direction to output before we set the
+value and the direction.
+
+Suggested-by: Sashiko <sashiko-bot@kernel.org>
+Link: https://sashiko.dev/#/patchset/20260507-regmap-gpio-sparse-fixed-dir-v1-1-a2e5855e2701%40kernel.org
 Signed-off-by: Linus Walleij <linusw@kernel.org>
 ---
- drivers/gpio/gpio-regmap.c  | 37 +++++++++++++++++++++++++++++++++----
- include/linux/gpio/regmap.h |  7 +++++++
- 2 files changed, 40 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-regmap.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
 diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 9ae4a41a2427..b3b4e77ec147 100644
+index b3b4e77ec147..51b4d69b8740 100644
 --- a/drivers/gpio/gpio-regmap.c
 +++ b/drivers/gpio/gpio-regmap.c
-@@ -31,6 +31,7 @@ struct gpio_regmap {
- 	unsigned int reg_clr_base;
- 	unsigned int reg_dir_in_base;
- 	unsigned int reg_dir_out_base;
-+	unsigned long *fixed_direction_mask;
- 	unsigned long *fixed_direction_output;
- 
- #ifdef CONFIG_REGMAP_IRQ
-@@ -138,6 +139,20 @@ static int gpio_regmap_set_with_clear(struct gpio_chip *chip,
- 	return regmap_write(gpio->regmap, reg, mask);
+@@ -196,6 +196,22 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
+ 		return GPIO_LINE_DIRECTION_IN;
  }
  
-+static bool gpio_regmap_fixed_direction(struct gpio_regmap *gpio,
-+					unsigned int offset)
++static int gpio_regmap_try_direction_fixed(struct gpio_regmap *gpio,
++					   unsigned int offset, bool output)
 +{
-+	if (!gpio->fixed_direction_output)
-+		return false;
-+
-+	/* In this case only some GPIOs are fixed as input/output */
-+	if (gpio->fixed_direction_mask &&
-+	    !test_bit(offset, gpio->fixed_direction_mask))
-+		return false;
-+
-+	return true;
++	if (test_bit(offset, gpio->fixed_direction_output)) {
++		if (output)
++			return 0;
++		else
++			return -EINVAL;
++	} else {
++		if (output)
++			return -EINVAL;
++		else
++			return 0;
++	}
 +}
 +
- static int gpio_regmap_get_direction(struct gpio_chip *chip,
- 				     unsigned int offset)
+ static int gpio_regmap_set_direction(struct gpio_chip *chip,
+ 				     unsigned int offset, bool output)
  {
-@@ -145,7 +160,7 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
+@@ -203,6 +219,13 @@ static int gpio_regmap_set_direction(struct gpio_chip *chip,
  	unsigned int base, val, reg, mask;
  	int invert, ret;
  
--	if (gpio->fixed_direction_output) {
++	/*
++	 * If the direction is fixed, only accept the fixed
++	 * direction in this call.
++	 */
++	if (gpio_regmap_fixed_direction(gpio, offset))
++		return gpio_regmap_try_direction_fixed(gpio, offset, output);
++
+ 	if (gpio->reg_dir_out_base) {
+ 		base = gpio_regmap_addr(gpio->reg_dir_out_base);
+ 		invert = 0;
+@@ -234,6 +257,20 @@ static int gpio_regmap_direction_input(struct gpio_chip *chip,
+ static int gpio_regmap_direction_output(struct gpio_chip *chip,
+ 					unsigned int offset, int value)
+ {
++	struct gpio_regmap *gpio = gpiochip_get_data(chip);
++	int ret;
++
++	/*
++	 * First check if this is gonna work on a fixed direction line,
++	 * if it doesn't (i.e. this is a fixed input line), then do not
++	 * attempt to set the output value either and just bail out.
++	 */
 +	if (gpio_regmap_fixed_direction(gpio, offset)) {
- 		if (test_bit(offset, gpio->fixed_direction_output))
- 			return GPIO_LINE_DIRECTION_OUT;
- 		else
-@@ -302,12 +317,23 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 			goto err_free_gpio;
- 	}
- 
-+	if (config->fixed_direction_mask) {
-+		gpio->fixed_direction_mask = bitmap_alloc(chip->ngpio,
-+							    GFP_KERNEL);
-+		if (!gpio->fixed_direction_mask) {
-+			ret = -ENOMEM;
-+			goto err_free_gpio;
-+		}
-+		bitmap_copy(gpio->fixed_direction_mask,
-+			    config->fixed_direction_mask, chip->ngpio);
++		ret = gpio_regmap_try_direction_fixed(gpio, offset, true);
++		if (ret)
++			return ret;
 +	}
 +
- 	if (config->fixed_direction_output) {
- 		gpio->fixed_direction_output = bitmap_alloc(chip->ngpio,
- 							    GFP_KERNEL);
- 		if (!gpio->fixed_direction_output) {
- 			ret = -ENOMEM;
--			goto err_free_gpio;
-+			goto err_free_bitmap_dirmask;
- 		}
- 		bitmap_copy(gpio->fixed_direction_output,
- 			    config->fixed_direction_output, chip->ngpio);
-@@ -329,7 +355,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	gpio_regmap_set(chip, offset, value);
  
- 	ret = gpiochip_add_data(chip, gpio);
- 	if (ret < 0)
--		goto err_free_bitmap;
-+		goto err_free_bitmap_output;
- 
- #ifdef CONFIG_REGMAP_IRQ
- 	if (config->regmap_irq_chip) {
-@@ -355,8 +381,10 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 
- err_remove_gpiochip:
- 	gpiochip_remove(chip);
--err_free_bitmap:
-+err_free_bitmap_output:
- 	bitmap_free(gpio->fixed_direction_output);
-+err_free_bitmap_dirmask:
-+	bitmap_free(gpio->fixed_direction_mask);
- err_free_gpio:
- 	kfree(gpio);
- 	return ERR_PTR(ret);
-@@ -376,6 +404,7 @@ void gpio_regmap_unregister(struct gpio_regmap *gpio)
- 
- 	gpiochip_remove(&gpio->gpio_chip);
- 	bitmap_free(gpio->fixed_direction_output);
-+	bitmap_free(gpio->fixed_direction_mask);
- 	kfree(gpio);
- }
- EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 12d154732ca9..06255756710d 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -38,6 +38,12 @@ struct regmap;
-  *			offset to a register/bitmask pair. If not
-  *			given the default gpio_regmap_simple_xlate()
-  *			is used.
-+ * @fixed_direction_mask:
-+ *			(Optional) Bitmap representing the GPIO lines that
-+ *			make use of the @fixed_direction_output list to
-+ *			enforce direction of the GPIO. If this is NULL
-+ *			and @fixed_direction_output is defined, ALL GPIOs
-+ *			are assumed to be fixed direction (out or in).
-  * @fixed_direction_output:
-  *			(Optional) Bitmap representing the fixed direction of
-  *			the GPIO lines. Useful when there are GPIO lines with a
-@@ -89,6 +95,7 @@ struct gpio_regmap_config {
- 	int reg_stride;
- 	int ngpio_per_reg;
- 	struct irq_domain *irq_domain;
-+	unsigned long *fixed_direction_mask;
- 	unsigned long *fixed_direction_output;
- 
- #ifdef CONFIG_REGMAP_IRQ
+ 	return gpio_regmap_set_direction(chip, offset, true);
 
 -- 
 2.54.0
