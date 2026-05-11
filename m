@@ -1,56 +1,55 @@
-Return-Path: <linux-gpio+bounces-36565-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36560-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GD6rNcfMAWrSjwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36565-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:34:15 +0200
+	id oAdmC23LAWqgjwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36560-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:28:29 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7411B50DEA9
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:34:15 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBFE650DBAF
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 14:28:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 454C530DB26B
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:28:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6FCBA301AF48
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2026 12:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2513ECBD5;
-	Mon, 11 May 2026 12:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B99073E5ED5;
+	Mon, 11 May 2026 12:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDH+SOZz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mf9Pxgq2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF7A3D88F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07963D9DD1;
 	Mon, 11 May 2026 12:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778502405; cv=none; b=DYP+VHRzgyCVQ0uY+kKrBwG/XE2yut3qA3OtbYptpZ9J9+zCzGvYgk12gJB+SgAEHwX4XwX6odwA/fkkBwYl5Fx73JJCR4Gao9ovXrSws3QMW0B0mRpo24wmvrQ3lyZkaM51GA9CyjyA926tJ7aoWUYPZmdvlWoYQDkpNPevw20=
+	t=1778502405; cv=none; b=nb0kgVhaFMtKo7O38HoufadsrmZmuS+lfhlMiduyVbbWXokcx7Fulwf+YGjYw4TqSKxBDdzkXlPDLGB/W2fwnm/lniQD2iai4CxP8cQW3W9TuEcFm2BCuPHaZUVssTv/qeQUktkAp06I/KnHAwpEqcBhsMzap+Yxpzk2wLLcI2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778502405; c=relaxed/simple;
-	bh=oDOoD2PFJhsWK1U4+tLNzTMSsOIi6lAvsLbY677e5ck=;
+	bh=q8JdSlz/sGOHHt/Ac+w9APfy6Cj45+wRXOnIUl4w6a4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aZHXUv5NgrdMKbmC7bq8qrCcgiavjICsqNeCgIYIE86UdFt9iz+RLNdDJjUTbxC51jZ2BvYCB64eikf2qhPrdhHONoqtLg61HvzYMnRq5m7U0bzNZ/q4uWyaAPYq8kXaebI0Hb5+n/aNkDgpgh2tgN6cUR3Y+bENRliGz4ZPKRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDH+SOZz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 70C9FC2BCC9;
+	 In-Reply-To:To:Cc; b=imLevl20Ljbjg0SYrc8tZ8JcB9cuY7cbkNHD5KaSyw2sIjBF8Ie0tHZK0r1q5EUbgInXapYhKV1RuE/s1v/+fWwgQl9ivbzg/Mb+sjxrYleatWku5TTqlDOryObFrVi0yhaXVXsegqmxWw204toqOwB8QLiRXGDld/qtLk53B9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mf9Pxgq2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81B50C2BCB0;
 	Mon, 11 May 2026 12:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778502405;
-	bh=oDOoD2PFJhsWK1U4+tLNzTMSsOIi6lAvsLbY677e5ck=;
+	bh=q8JdSlz/sGOHHt/Ac+w9APfy6Cj45+wRXOnIUl4w6a4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gDH+SOZzKJmAWWTzxpr3syszho+aUbQEg3V/3s5PeK+I6vrSAWYNZ9JoEjCcnPEB2
-	 J5Td42p98BYcqtP6cZ21EBPJMd93ZLe4DsXWeBFj4bbhrUENuFNoXGMeo1FuGK/CtP
-	 D3vNNWN7yih622ag3nTCu97E/McRduY+/tQh68aZeWHjAgXYTRIEN4uVfzFO3BbAUn
-	 D8CACl7ZLQtNygwyVhJ8A1shdp6ZTT/EOKL09fWjwrKHN+rBotygzOgiAvNnaozvKE
-	 mAAuJF057AxwJjfLPFoJYuURjYJs1D20o/145zmSYuByHfkOrRud4cyi+Y7iZ69AwA
-	 Mes/0BkHkqSnA==
+	b=mf9Pxgq2JLEY1j5nL4UEy8fipy5WMTVwr2UsoML0HZvcsPeRzlXfUnCEbxA62xNXJ
+	 RtwKbB5zZ3hezVT26vHI/hjvcC4ZV3BW+cNy34ebXc5qJ167IWUR5og324WbkNofdw
+	 bC9dwIVHovaCcp93A81+pTaqXrSofQqjsWvOXkSTRjRX1BYObmshf73978TL9JBxBB
+	 nbvpXjyMrKrfGhujOM7+3pSw+lIPhgBuGThMeA8Bx1lxLUUCnEfK9W8nO8jH88SsoM
+	 TnZZfzUSYrH5pVp5XluHObl0Xi8DnihYcAV2USkX17jFNngVxMRj3+XdCiO4Me/kWN
+	 0gvPRBjJBX0OQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FACD4842;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DAFCD4848;
 	Mon, 11 May 2026 12:26:45 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 11 May 2026 15:26:42 +0300
-Subject: [PATCH v11 19/22] arm64: defconfig: disable deprecated MAX96712
- driver
+Date: Mon, 11 May 2026 15:26:43 +0300
+Subject: [PATCH v11 20/22] staging: media: remove MAX96712 driver
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,8 +57,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-gmsl2-3_serdes-v11-19-fc163073c16b@analog.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260511-gmsl2-3_serdes-v11-20-fc163073c16b@analog.com>
 References: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 In-Reply-To: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -77,30 +76,30 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  Martin Hecht <Martin.Hecht@avnet.eu>, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=722;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778502401; l=16827;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=uFFBSdBZnvpPu6qZGSqZLWXhF45z99ke82/PAfeR72Q=;
- b=TNtsfW2n6hwQIHa4QQePN9QO8vQAFtMrVeolEiKxzt5RDKVWjNYpwcFPwulSHdjF9++XqWuPH
- WCroM/h0PYlC2VNKxcHwge0k74upAHVz2L7/lRa4JQbnjWedSUZfIFF
+ bh=hGO+PFOPKRq4ydzuhZArk6kb/8QBEn07ZGO1bLJT/R0=;
+ b=qe5OycBUpZzq37RzliSxWVG4ez6qvznku6/Ji2rH/W4dVz++gOtEvfPTXvvmzYKCsrDQEWZBB
+ oHCdpWSeha3BjIu4X95w5rhricqqyHu+w1ycMmLo69PjWNdORuWfQht
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
  with auth_id=140
 X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Reply-To: dumitru.ceclan@analog.com
-X-Rspamd-Queue-Id: 7411B50DEA9
+X-Rspamd-Queue-Id: BBFE650DBAF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36565-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-36560-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
@@ -114,36 +113,588 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:replyto]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,analog.com:mid,analog.com:replyto,ragnatech.se:email]
 X-Rspamd-Action: no action
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-The staging MAX96712 driver will be removed as its functionality has
-been moved to the MAX96724 driver which makes use of the Maxim
-GMSL2/3 deserializer framework.
+Remove the staging MAX96712 driver.
+Its functionality has been moved to the MAX96724 driver which makes use
+of the Maxim GMSL2/3 deserializer framework.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- arch/arm64/configs/defconfig | 1 -
- 1 file changed, 1 deletion(-)
+ MAINTAINERS                               |   1 -
+ drivers/staging/media/Kconfig             |   2 -
+ drivers/staging/media/Makefile            |   1 -
+ drivers/staging/media/max96712/Kconfig    |  14 -
+ drivers/staging/media/max96712/Makefile   |   2 -
+ drivers/staging/media/max96712/max96712.c | 487 ------------------------------
+ 6 files changed, 507 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index da34bdc1a7f0..893d78b138ea 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1321,7 +1321,6 @@ CONFIG_GREYBUS=m
- CONFIG_GREYBUS_BEAGLEPLAY=m
- CONFIG_STAGING=y
- CONFIG_STAGING_MEDIA=y
--CONFIG_VIDEO_MAX96712=m
- CONFIG_VIDEO_MESON_VDEC=m
- CONFIG_SND_BCM2835=m
- CONFIG_CHROME_PLATFORMS=y
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 70d3eeef8bfe..6a6a04ce2787 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15222,7 +15222,6 @@ M:	Niklas Söderlund <niklas.soderlund@ragnatech.se>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+-F:	drivers/staging/media/max96712/max96712.c
+ 
+ MAX96714 GMSL2 DESERIALIZER DRIVER
+ M:	Julien Massot <julien.massot@collabora.com>
+diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
+index ab250c89cd4d..edcec810433d 100644
+--- a/drivers/staging/media/Kconfig
++++ b/drivers/staging/media/Kconfig
+@@ -30,8 +30,6 @@ source "drivers/staging/media/ipu3/Kconfig"
+ 
+ source "drivers/staging/media/ipu7/Kconfig"
+ 
+-source "drivers/staging/media/max96712/Kconfig"
+-
+ source "drivers/staging/media/meson/vdec/Kconfig"
+ 
+ source "drivers/staging/media/starfive/Kconfig"
+diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
+index 4a073938b2b2..e38421c81d0e 100644
+--- a/drivers/staging/media/Makefile
++++ b/drivers/staging/media/Makefile
+@@ -2,7 +2,6 @@
+ obj-$(CONFIG_VIDEO_ATMEL_ISC_BASE)	+= deprecated/atmel/
+ obj-$(CONFIG_INTEL_ATOMISP)     += atomisp/
+ obj-$(CONFIG_VIDEO_IMX_MEDIA)	+= imx/
+-obj-$(CONFIG_VIDEO_MAX96712)	+= max96712/
+ obj-$(CONFIG_VIDEO_MESON_VDEC)	+= meson/vdec/
+ obj-$(CONFIG_VIDEO_STARFIVE_CAMSS)	+= starfive/
+ obj-$(CONFIG_VIDEO_SUNXI)	+= sunxi/
+diff --git a/drivers/staging/media/max96712/Kconfig b/drivers/staging/media/max96712/Kconfig
+deleted file mode 100644
+index 117fadf81bd0..000000000000
+--- a/drivers/staging/media/max96712/Kconfig
++++ /dev/null
+@@ -1,14 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-config VIDEO_MAX96712
+-	tristate "Maxim MAX96712 Quad GMSL2 Deserializer support"
+-	depends on I2C
+-	depends on OF_GPIO
+-	depends on VIDEO_DEV
+-	select V4L2_FWNODE
+-	select VIDEO_V4L2_SUBDEV_API
+-	select MEDIA_CONTROLLER
+-	help
+-	  This driver supports the Maxim MAX96712 Quad GMSL2 Deserializer.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called max96712.
+diff --git a/drivers/staging/media/max96712/Makefile b/drivers/staging/media/max96712/Makefile
+deleted file mode 100644
+index 70c1974ce3f0..000000000000
+--- a/drivers/staging/media/max96712/Makefile
++++ /dev/null
+@@ -1,2 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_VIDEO_MAX96712) += max96712.o
+diff --git a/drivers/staging/media/max96712/max96712.c b/drivers/staging/media/max96712/max96712.c
+deleted file mode 100644
+index 0751b2e04895..000000000000
+--- a/drivers/staging/media/max96712/max96712.c
++++ /dev/null
+@@ -1,487 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Maxim MAX96712 Quad GMSL2 Deserializer Driver
+- *
+- * Copyright (C) 2021 Renesas Electronics Corporation
+- * Copyright (C) 2021 Niklas Söderlund
+- */
+-
+-#include <linux/delay.h>
+-#include <linux/i2c.h>
+-#include <linux/module.h>
+-#include <linux/of_graph.h>
+-#include <linux/regmap.h>
+-
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-fwnode.h>
+-#include <media/v4l2-subdev.h>
+-
+-#define DEBUG_EXTRA_REG			0x09
+-#define DEBUG_EXTRA_PCLK_25MHZ		0x00
+-#define DEBUG_EXTRA_PCLK_75MHZ		0x01
+-
+-enum max96712_pattern {
+-	MAX96712_PATTERN_CHECKERBOARD = 0,
+-	MAX96712_PATTERN_GRADIENT,
+-};
+-
+-struct max96712_info {
+-	unsigned int dpllfreq;
+-	bool have_debug_extra;
+-};
+-
+-struct max96712_priv {
+-	struct i2c_client *client;
+-	struct regmap *regmap;
+-	struct gpio_desc *gpiod_pwdn;
+-
+-	const struct max96712_info *info;
+-
+-	bool cphy;
+-	struct v4l2_mbus_config_mipi_csi2 mipi;
+-
+-	struct v4l2_subdev sd;
+-	struct v4l2_ctrl_handler ctrl_handler;
+-	struct media_pad pads[1];
+-
+-	enum max96712_pattern pattern;
+-};
+-
+-static int max96712_write(struct max96712_priv *priv, unsigned int reg, u8 val)
+-{
+-	int ret;
+-
+-	ret = regmap_write(priv->regmap, reg, val);
+-	if (ret)
+-		dev_err(&priv->client->dev, "write 0x%04x failed\n", reg);
+-
+-	return ret;
+-}
+-
+-static int max96712_update_bits(struct max96712_priv *priv, unsigned int reg,
+-				u8 mask, u8 val)
+-{
+-	int ret;
+-
+-	ret = regmap_update_bits(priv->regmap, reg, mask, val);
+-	if (ret)
+-		dev_err(&priv->client->dev, "update 0x%04x failed\n", reg);
+-
+-	return ret;
+-}
+-
+-static int max96712_write_bulk(struct max96712_priv *priv, unsigned int reg,
+-			       const void *val, size_t val_count)
+-{
+-	int ret;
+-
+-	ret = regmap_bulk_write(priv->regmap, reg, val, val_count);
+-	if (ret)
+-		dev_err(&priv->client->dev, "bulk write 0x%04x failed\n", reg);
+-
+-	return ret;
+-}
+-
+-static int max96712_write_bulk_value(struct max96712_priv *priv,
+-				     unsigned int reg, unsigned int val,
+-				     size_t val_count)
+-{
+-	unsigned int i;
+-	u8 values[4];
+-
+-	for (i = 1; i <= val_count; i++)
+-		values[i - 1] = (val >> ((val_count - i) * 8)) & 0xff;
+-
+-	return max96712_write_bulk(priv, reg, &values, val_count);
+-}
+-
+-static void max96712_reset(struct max96712_priv *priv)
+-{
+-	max96712_update_bits(priv, 0x13, 0x40, 0x40);
+-	msleep(20);
+-}
+-
+-static void max96712_mipi_enable(struct max96712_priv *priv, bool enable)
+-{
+-	if (enable) {
+-		max96712_update_bits(priv, 0x40b, 0x02, 0x02);
+-		max96712_update_bits(priv, 0x8a0, 0x80, 0x80);
+-	} else {
+-		max96712_update_bits(priv, 0x8a0, 0x80, 0x00);
+-		max96712_update_bits(priv, 0x40b, 0x02, 0x00);
+-	}
+-}
+-
+-static void max96712_mipi_configure(struct max96712_priv *priv)
+-{
+-	unsigned int i;
+-	u8 phy5 = 0;
+-
+-	max96712_mipi_enable(priv, false);
+-
+-	/* Select 2x4 mode. */
+-	max96712_write(priv, 0x8a0, 0x04);
+-
+-	/* TODO: Add support for 2-lane and 1-lane configurations. */
+-	if (priv->cphy) {
+-		/* Configure a 3-lane C-PHY using PHY0 and PHY1. */
+-		max96712_write(priv, 0x94a, 0xa0);
+-
+-		/* Configure C-PHY timings. */
+-		max96712_write(priv, 0x8ad, 0x3f);
+-		max96712_write(priv, 0x8ae, 0x7d);
+-	} else {
+-		/* Configure a 4-lane D-PHY using PHY0 and PHY1. */
+-		max96712_write(priv, 0x94a, 0xc0);
+-	}
+-
+-	/* Configure lane mapping for PHY0 and PHY1. */
+-	/* TODO: Add support for lane swapping. */
+-	max96712_write(priv, 0x8a3, 0xe4);
+-
+-	/* Configure lane polarity for PHY0 and PHY1. */
+-	for (i = 0; i < priv->mipi.num_data_lanes + 1; i++)
+-		if (priv->mipi.lane_polarities[i])
+-			phy5 |= BIT(i == 0 ? 5 : i < 3 ? i - 1 : i);
+-	max96712_write(priv, 0x8a5, phy5);
+-
+-	/* Set link frequency for PHY0 and PHY1. */
+-	max96712_update_bits(priv, 0x415, 0x3f,
+-			     ((priv->info->dpllfreq / 100) & 0x1f) | BIT(5));
+-	max96712_update_bits(priv, 0x418, 0x3f,
+-			     ((priv->info->dpllfreq / 100) & 0x1f) | BIT(5));
+-
+-	/* Enable PHY0 and PHY1 */
+-	max96712_update_bits(priv, 0x8a2, 0xf0, 0x30);
+-}
+-
+-static void max96712_pattern_enable(struct max96712_priv *priv, bool enable)
+-{
+-	const u32 h_active = 1920;
+-	const u32 h_fp = 88;
+-	const u32 h_sw = 44;
+-	const u32 h_bp = 148;
+-	const u32 h_tot = h_active + h_fp + h_sw + h_bp;
+-
+-	const u32 v_active = 1080;
+-	const u32 v_fp = 4;
+-	const u32 v_sw = 5;
+-	const u32 v_bp = 36;
+-	const u32 v_tot = v_active + v_fp + v_sw + v_bp;
+-
+-	if (!enable) {
+-		max96712_write(priv, 0x1051, 0x00);
+-		return;
+-	}
+-
+-	/* Set PCLK to 75MHz if device have DEBUG_EXTRA register. */
+-	if (priv->info->have_debug_extra)
+-		max96712_write(priv, DEBUG_EXTRA_REG, DEBUG_EXTRA_PCLK_75MHZ);
+-
+-	/* Configure Video Timing Generator for 1920x1080 @ 30 fps. */
+-	max96712_write_bulk_value(priv, 0x1052, 0, 3);
+-	max96712_write_bulk_value(priv, 0x1055, v_sw * h_tot, 3);
+-	max96712_write_bulk_value(priv, 0x1058,
+-				  (v_active + v_fp + + v_bp) * h_tot, 3);
+-	max96712_write_bulk_value(priv, 0x105b, 0, 3);
+-	max96712_write_bulk_value(priv, 0x105e, h_sw, 2);
+-	max96712_write_bulk_value(priv, 0x1060, h_active + h_fp + h_bp, 2);
+-	max96712_write_bulk_value(priv, 0x1062, v_tot, 2);
+-	max96712_write_bulk_value(priv, 0x1064,
+-				  h_tot * (v_sw + v_bp) + (h_sw + h_bp), 3);
+-	max96712_write_bulk_value(priv, 0x1067, h_active, 2);
+-	max96712_write_bulk_value(priv, 0x1069, h_fp + h_sw + h_bp, 2);
+-	max96712_write_bulk_value(priv, 0x106b, v_active, 2);
+-
+-	/* Generate VS, HS and DE in free-running mode. */
+-	max96712_write(priv, 0x1050, 0xfb);
+-
+-	/* Configure Video Pattern Generator. */
+-	if (priv->pattern == MAX96712_PATTERN_CHECKERBOARD) {
+-		/* Set checkerboard pattern size. */
+-		max96712_write(priv, 0x1074, 0x3c);
+-		max96712_write(priv, 0x1075, 0x3c);
+-		max96712_write(priv, 0x1076, 0x3c);
+-
+-		/* Set checkerboard pattern colors. */
+-		max96712_write_bulk_value(priv, 0x106e, 0xfecc00, 3);
+-		max96712_write_bulk_value(priv, 0x1071, 0x006aa7, 3);
+-
+-		/* Generate checkerboard pattern. */
+-		max96712_write(priv, 0x1051, 0x10);
+-	} else {
+-		/* Set gradient increment. */
+-		max96712_write(priv, 0x106d, 0x10);
+-
+-		/* Generate gradient pattern. */
+-		max96712_write(priv, 0x1051, 0x20);
+-	}
+-}
+-
+-static int max96712_s_stream(struct v4l2_subdev *sd, int enable)
+-{
+-	struct max96712_priv *priv = v4l2_get_subdevdata(sd);
+-
+-	if (enable) {
+-		max96712_pattern_enable(priv, true);
+-		max96712_mipi_enable(priv, true);
+-	} else {
+-		max96712_mipi_enable(priv, false);
+-		max96712_pattern_enable(priv, false);
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct v4l2_subdev_video_ops max96712_video_ops = {
+-	.s_stream = max96712_s_stream,
+-};
+-
+-static int max96712_init_state(struct v4l2_subdev *sd,
+-			       struct v4l2_subdev_state *state)
+-{
+-	static const struct v4l2_mbus_framefmt default_fmt = {
+-		.width          = 1920,
+-		.height         = 1080,
+-		.code           = MEDIA_BUS_FMT_RGB888_1X24,
+-		.colorspace     = V4L2_COLORSPACE_SRGB,
+-		.field          = V4L2_FIELD_NONE,
+-		.ycbcr_enc      = V4L2_YCBCR_ENC_DEFAULT,
+-		.quantization   = V4L2_QUANTIZATION_DEFAULT,
+-		.xfer_func      = V4L2_XFER_FUNC_DEFAULT,
+-	};
+-	struct v4l2_mbus_framefmt *fmt;
+-
+-	fmt = v4l2_subdev_state_get_format(state, 0);
+-	*fmt = default_fmt;
+-
+-	return 0;
+-}
+-
+-static const struct v4l2_subdev_internal_ops max96712_internal_ops = {
+-	.init_state = max96712_init_state,
+-};
+-
+-static const struct v4l2_subdev_pad_ops max96712_pad_ops = {
+-	.get_fmt = v4l2_subdev_get_fmt,
+-	.set_fmt = v4l2_subdev_get_fmt,
+-};
+-
+-static const struct v4l2_subdev_ops max96712_subdev_ops = {
+-	.video = &max96712_video_ops,
+-	.pad = &max96712_pad_ops,
+-};
+-
+-static const char * const max96712_test_pattern[] = {
+-	"Checkerboard",
+-	"Gradient",
+-};
+-
+-static int max96712_s_ctrl(struct v4l2_ctrl *ctrl)
+-{
+-	struct max96712_priv *priv =
+-		container_of(ctrl->handler, struct max96712_priv, ctrl_handler);
+-
+-	switch (ctrl->id) {
+-	case V4L2_CID_TEST_PATTERN:
+-		priv->pattern = ctrl->val ?
+-			MAX96712_PATTERN_GRADIENT :
+-			MAX96712_PATTERN_CHECKERBOARD;
+-		break;
+-	}
+-	return 0;
+-}
+-
+-static const struct v4l2_ctrl_ops max96712_ctrl_ops = {
+-	.s_ctrl = max96712_s_ctrl,
+-};
+-
+-static int max96712_v4l2_register(struct max96712_priv *priv)
+-{
+-	long pixel_rate;
+-	int ret;
+-
+-	priv->sd.internal_ops = &max96712_internal_ops;
+-	v4l2_i2c_subdev_init(&priv->sd, priv->client, &max96712_subdev_ops);
+-	priv->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-	priv->sd.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+-
+-	v4l2_ctrl_handler_init(&priv->ctrl_handler, 2);
+-
+-	/*
+-	 * TODO: Once V4L2_CID_LINK_FREQ is changed from a menu control to an
+-	 * INT64 control it should be used here instead of V4L2_CID_PIXEL_RATE.
+-	 */
+-	pixel_rate = priv->info->dpllfreq / priv->mipi.num_data_lanes * 1000000;
+-	v4l2_ctrl_new_std(&priv->ctrl_handler, NULL, V4L2_CID_PIXEL_RATE,
+-			  pixel_rate, pixel_rate, 1, pixel_rate);
+-
+-	v4l2_ctrl_new_std_menu_items(&priv->ctrl_handler, &max96712_ctrl_ops,
+-				     V4L2_CID_TEST_PATTERN,
+-				     ARRAY_SIZE(max96712_test_pattern) - 1,
+-				     0, 0, max96712_test_pattern);
+-
+-	priv->sd.ctrl_handler = &priv->ctrl_handler;
+-	ret = priv->ctrl_handler.error;
+-	if (ret)
+-		goto error;
+-
+-	priv->pads[0].flags = MEDIA_PAD_FL_SOURCE;
+-	ret = media_entity_pads_init(&priv->sd.entity, 1, priv->pads);
+-	if (ret)
+-		goto error;
+-
+-	v4l2_set_subdevdata(&priv->sd, priv);
+-
+-	priv->sd.state_lock = priv->ctrl_handler.lock;
+-	ret = v4l2_subdev_init_finalize(&priv->sd);
+-	if (ret)
+-		goto error;
+-
+-	ret = v4l2_async_register_subdev(&priv->sd);
+-	if (ret < 0) {
+-		dev_err(&priv->client->dev, "Unable to register subdevice\n");
+-		goto error;
+-	}
+-
+-	return 0;
+-error:
+-	v4l2_ctrl_handler_free(&priv->ctrl_handler);
+-
+-	return ret;
+-}
+-
+-static int max96712_parse_dt(struct max96712_priv *priv)
+-{
+-	struct fwnode_handle *ep;
+-	struct v4l2_fwnode_endpoint v4l2_ep = {
+-		.bus_type = V4L2_MBUS_UNKNOWN,
+-	};
+-	unsigned int supported_lanes;
+-	int ret;
+-
+-	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(&priv->client->dev), 4,
+-					     0, 0);
+-	if (!ep) {
+-		dev_err(&priv->client->dev, "Not connected to subdevice\n");
+-		return -EINVAL;
+-	}
+-
+-	ret = v4l2_fwnode_endpoint_parse(ep, &v4l2_ep);
+-	fwnode_handle_put(ep);
+-	if (ret) {
+-		dev_err(&priv->client->dev, "Could not parse v4l2 endpoint\n");
+-		return -EINVAL;
+-	}
+-
+-	switch (v4l2_ep.bus_type) {
+-	case V4L2_MBUS_CSI2_DPHY:
+-		supported_lanes = 4;
+-		priv->cphy = false;
+-		break;
+-	case V4L2_MBUS_CSI2_CPHY:
+-		supported_lanes = 3;
+-		priv->cphy = true;
+-		break;
+-	default:
+-		dev_err(&priv->client->dev, "Unsupported bus-type %u\n",
+-			v4l2_ep.bus_type);
+-		return -EINVAL;
+-	}
+-
+-	if (v4l2_ep.bus.mipi_csi2.num_data_lanes != supported_lanes) {
+-		dev_err(&priv->client->dev, "Only %u data lanes supported\n",
+-			supported_lanes);
+-		return -EINVAL;
+-	}
+-
+-	priv->mipi = v4l2_ep.bus.mipi_csi2;
+-
+-	return 0;
+-}
+-
+-static const struct regmap_config max96712_i2c_regmap = {
+-	.reg_bits = 16,
+-	.val_bits = 8,
+-	.max_register = 0x1f00,
+-};
+-
+-static int max96712_probe(struct i2c_client *client)
+-{
+-	struct max96712_priv *priv;
+-	int ret;
+-
+-	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+-	priv->info = of_device_get_match_data(&client->dev);
+-
+-	priv->client = client;
+-
+-	priv->regmap = devm_regmap_init_i2c(client, &max96712_i2c_regmap);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
+-
+-	priv->gpiod_pwdn = devm_gpiod_get_optional(&client->dev, "enable",
+-						   GPIOD_OUT_HIGH);
+-	if (IS_ERR(priv->gpiod_pwdn))
+-		return PTR_ERR(priv->gpiod_pwdn);
+-
+-	gpiod_set_consumer_name(priv->gpiod_pwdn, "max96712-pwdn");
+-	gpiod_set_value_cansleep(priv->gpiod_pwdn, 1);
+-
+-	if (priv->gpiod_pwdn)
+-		usleep_range(4000, 5000);
+-
+-	max96712_reset(priv);
+-
+-	ret = max96712_parse_dt(priv);
+-	if (ret)
+-		return ret;
+-
+-	max96712_mipi_configure(priv);
+-
+-	return max96712_v4l2_register(priv);
+-}
+-
+-static void max96712_remove(struct i2c_client *client)
+-{
+-	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+-	struct max96712_priv *priv = container_of(sd, struct max96712_priv, sd);
+-
+-	v4l2_async_unregister_subdev(&priv->sd);
+-
+-	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
+-}
+-
+-static const struct max96712_info max96712_info_max96712 = {
+-	.dpllfreq = 1000,
+-	.have_debug_extra = true,
+-};
+-
+-static const struct max96712_info max96712_info_max96724 = {
+-	.dpllfreq = 1200,
+-};
+-
+-static const struct of_device_id max96712_of_table[] = {
+-	{ .compatible = "maxim,max96712", .data = &max96712_info_max96712 },
+-	{ .compatible = "maxim,max96724", .data = &max96712_info_max96724 },
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, max96712_of_table);
+-
+-static struct i2c_driver max96712_i2c_driver = {
+-	.driver	= {
+-		.name = "max96712",
+-		.of_match_table	= of_match_ptr(max96712_of_table),
+-	},
+-	.probe = max96712_probe,
+-	.remove = max96712_remove,
+-};
+-
+-module_i2c_driver(max96712_i2c_driver);
+-
+-MODULE_DESCRIPTION("Maxim MAX96712 Quad GMSL2 Deserializer Driver");
+-MODULE_AUTHOR("Niklas Söderlund <niklas.soderlund@ragnatech.se>");
+-MODULE_LICENSE("GPL");
 
 -- 
 2.51.0
