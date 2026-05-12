@@ -1,220 +1,132 @@
-Return-Path: <linux-gpio+bounces-36642-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UPuVMpXEAmp7wQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-36642-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 08:11:33 +0200
+	id MMrPK2HQAmoNxgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-36645-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 09:01:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B2D51ABD4
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 08:11:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E80F51B6DE
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 09:01:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8471C303331D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 06:10:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E10C30D3470
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2026 06:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0226E43DA4E;
-	Tue, 12 May 2026 06:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D30368D78;
+	Tue, 12 May 2026 06:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uxCzkBjD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCv6qzjQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011040.outbound.protection.outlook.com [40.107.208.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F0343DA4F;
-	Tue, 12 May 2026 06:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778566198; cv=fail; b=W/Aw59UBK32+ou35OJ43fYUD5bJnG4sISCe8M6Pfm1x1DE0N9sRkgdR1L9yDfVoxuaWstSQuCvyRBJoxv1ks5fc48CJRTZ6q0zscLfuujbs7dka3qRCmQmUrHYRtQ5x7tI0ig/hx6labQLe8dXznF7z7EiZ5Ultw0tB3icbJdGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778566198; c=relaxed/simple;
-	bh=OV1EOfgrPR8jRQo531I9wj3Cr5ceU698kZh1srP5/tE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YOt4TVnq9gB8jsd1PGsn5Vk+IDCK6mLayv+VZhHcZSjE8U8obsEDnaGkKO9SWwoItgi4fDO/kPlZ6LAEHazdaR0PZ6GMFbgsQE1YifgL3REPFyQlvmJNpCObj7iurU7O9m9PJS2me7ID430SFn7e8Pkwcz/e//XfifovfJcIUj8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uxCzkBjD; arc=fail smtp.client-ip=40.107.208.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LRO44lZbcroXZXtUONIqFEGhR20rMPVFX5JcA9DUPnY/dHCinSnwRdhErwp56cuQvT3hGqzxH9s0x4IoS9Em4HZ6otTSgWvx9ybl+idE5yAKraM19s2aKKod4YoisJIzPIGhZUdZatrrhpQF2YG6MbpYShA4KSC9NKqPrzwim5599etbjbYIwXwA0vPr6S+JPtc6WmuA5kOG1703hnEckbK5x6WstfATSzavpCl015+aYY+V6fr2cUCm06k9416Y7wLFNKCMz6B2diSTAeJpgWyDJ8yFpK7zVD0dZMqxUoxw4pagSdcFTdCj4aMzC1+mOTimGWpow+rAzdDDl09ZHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ah0PhSeyxPJ+iyZTlPevBN3vuUak12Ucav+orIO6GFc=;
- b=OS8iBeZwgJfbONH8Bad88VLwRgjybXTQpKJIewwutM9GA0ms/FoUq5wBLYnWBzFzLbNXqi2eV1c7zYHxWMat7t6VxF4L5G4WegGr1JD+FS1xbupL+EYtM/5I5eip1k+RpbeBOg7N0bdJeY1XH/RCwnoDhhL6HHqOrCccsoyqifWs33EVg1TYWDFqklWW01IlBT0wdmAdj2kFIeBuhWItNwasQBYAd86REU3oiB2zfmuzu0skPSiAlNpIxj2bXZXGvgFyKMSlkt0fOIG8xaJMCOLqhBryMTfXZibQRiu1IkgnH1/6YIgKayKqENIvzt0IuN8hxe3RtSUapxyNYhdMKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ah0PhSeyxPJ+iyZTlPevBN3vuUak12Ucav+orIO6GFc=;
- b=uxCzkBjDUCJbC4yZEaPwbg8N1cP3KuihpaKH/qdKXoXeEsdg4+vZi0ouylmM4twg7f6BQf7azvQpHMy+soi16iLdmqy5vLIMkMUK9SmZRm13OtLp/GvC4gONbda7HK2m/dHdR1fW/0xOYOV7b8okblV3oWPUQu2Udn0L2hqEn38=
-Received: from PH8P220CA0024.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:345::20)
- by SN7PR12MB8790.namprd12.prod.outlook.com (2603:10b6:806:34b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.11; Tue, 12 May
- 2026 06:09:35 +0000
-Received: from MW1PEPF00016160.namprd21.prod.outlook.com
- (2603:10b6:510:345:cafe::b2) by PH8P220CA0024.outlook.office365.com
- (2603:10b6:510:345::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9913.11 via Frontend Transport; Tue,
- 12 May 2026 06:09:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MW1PEPF00016160.mail.protection.outlook.com (10.167.249.91) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.3 via Frontend Transport; Tue, 12 May 2026 06:09:34 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 12 May
- 2026 01:09:34 -0500
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 12 May
- 2026 01:09:33 -0500
-Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
- Transport; Tue, 12 May 2026 01:09:29 -0500
-From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <git@amd.com>, <shubhrajyoti.datta@gmail.com>, Shubhrajyoti Datta
-	<shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, Michal
- Simek <michal.simek@amd.com>, Linus Walleij <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v4 3/3] gpio: zynq: Add eio gpio support
-Date: Tue, 12 May 2026 11:38:49 +0530
-Message-ID: <20260512060917.2096456-4-shubhrajyoti.datta@amd.com>
-X-Mailer: git-send-email 2.49.1
-In-Reply-To: <20260512060917.2096456-1-shubhrajyoti.datta@amd.com>
-References: <20260512060917.2096456-1-shubhrajyoti.datta@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3279035E947;
+	Tue, 12 May 2026 06:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778568944; cv=none; b=SVMU6iFyKvZB+hHVIajvH4Wd3t4zYNoqE2/AM2cS6hN5AqpgXCKkEVSAjIPcLSwHCUU0l6+tUsJAUXqszkZ6H384ilcw3CmsPbJUB2jjnytgxqmlWbrfeK/dC0o6kJ0q1uNFibS7ti96hU0SAiPwXks88nO+Z/xUOurRt+J55Yc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778568944; c=relaxed/simple;
+	bh=WWqWzH8W+EZPDhhmjWlpTWgpHS/RKcVIPl1sQRe7tVM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
+	 References:In-Reply-To; b=QiVSltquBxuzXmS0FA1aIZiiyBUT6tIOUTYvDG0lDJsp4cMYWcjXjAS8DBnfxYEL8sc5w+VdFWfJkfUszGfWG73705ObyScC9pG/L6uxbwqt8/UpbnddZg0GVvayxg5XjH56W1O8SIFdApiq94gJcqpdmwglWyvfpxoFap1SSDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCv6qzjQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B5AC2BCB0;
+	Tue, 12 May 2026 06:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778568943;
+	bh=WWqWzH8W+EZPDhhmjWlpTWgpHS/RKcVIPl1sQRe7tVM=;
+	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
+	b=nCv6qzjQeGTsi2a7V20IZbklziQvKCkMqG/AAUdbUXI2gApRG030JgQbwbMiUIXxn
+	 EQpPfnehMQofDdVjFEUfED6avt6iO1sVkbyyVX4140aHNvoAHwZBR2jW0OBAzFvZvn
+	 gQ7RFhjQXJ/H+sOwlh8ymSKv08J1jlILLK3QC/gMCJO1JyVQOAfiO6t+28PfpYIld6
+	 zaZ6zNopzek7c6jenSPi6xKi7NCWWsWkTA1lnjNsxM/hFBRn0v5UED+hvSE97V3/JT
+	 537P2WaKNjANZg7JfvTELWFcVVvJT71HJOoAbDH2Fly/qEjfvc0DIbFqx8j9UM+vZf
+	 SB8B6QAVfPnaA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW1PEPF00016160:EE_|SN7PR12MB8790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 911061b9-7a70-4ffe-27bb-08deafed0a5f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700016|7416014|11063799003|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	1TtQwqfEFOHMTuOIFQH3VX4yahCtgVtTZUx92WU476R3wgOhA44hQkl2eNkn+nI2qHPlS06OzVs447ytco0ZHeOxFqO8P4keXuM8rh76DFFxwMSIAml6c2aMfVg5E/YFaKufxcg78ctOF1cw2b9gDjRwaaUw6MMMuG2cAbFEc/deEThGU8fXOoRmUgvqBQnSGGb+M1eetu7h9PV0Ob/BmFkdPfQJ3R5fD7/VDKMvQfmXajsF0GVy34iuSgtljomJlvE5RPvBk6YQWfBCC4yokp9sDTCBmNujJ2yui+wWA8nZVv+TGJ4bTfvRTj0YOf/9tjj2K4HXdFQd2lNXocMJUHZLNAeDLSWdRtyKeh4vuBRLOL0uWXwvK5SdZBYlQnwRwpeKxRUzXC6LYc0R1sS4IBHjos2NNvTfqsbvSLSZDanOtvUz4vamgkGPQn6KmOZnSjjvd2d82L6Vb7F+OhJ6B1PXj5fsgJZTB1WNRriRsWfxRencMRVf4nyXbRl6zT8ksiAM8S/8FyJsV9+BKzQc9Gt8U53nMopOuyPj5Kzc+CnkkrHwBxDu/fq12kHyogmlzVYWLs3yrNfy2Z1uHFu8E0B5q9VTDfG4TiTM3ad8PihO4TOwv26TA+9sDX5V6ZgFX1FhUqlpnPsvxniy/IFC/Ea7qjAaTpfLRNCB/5tVRnsuwRceagBw/2gysYu/EyGetYXyl7lw1BQPAj+uQPvwc7vfwH3gke4SMm9kQTGCe0A=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700016)(7416014)(11063799003)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	cCNfmT3IPLQS2o8ERjkOIvnrfkXFSQ7+CimLSL/pVErSfqVaZEKJPLpXJtpxQb+eeSa/ZqIekWzh+r6lU55nZMvJImB8KX6C9saC8R6ztM0kRWejbDhmwMIkx7oA0scqQIwcuazb9hWnZBwApLA4c+rFwya+pOn98ncX/OhHl2hAlJ+HK3k6tI3YF0d0PtUhWGxaIJ/s+l7RBLkXVpdWVdSgK9sBa/uxfREYNjNPn11WFQr915qJPaEkOPa7boIOGcEFb8z1u6qaZfhFJTZYvSVqEpLZ1rIqZP3sulw7mpfreAWisotkIEDGNzyldUXiOVGJacGif3dV//D6/6LzEBBbXaBJ5zKL0UKrm6RHcu6Ci4hNEy1o6TL/njhW8kJu6FQhipbn2WMAfjkEbbeLT0zVTHOVuPIphToldwm946oSuRz5azxbW3HHMUEHLoF9
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2026 06:09:34.8605
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 911061b9-7a70-4ffe-27bb-08deafed0a5f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MW1PEPF00016160.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8790
-X-Rspamd-Queue-Id: 83B2D51ABD4
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=6cb1f7462f79f7e50b7f29960a1884348909ef7f6a9b54772879ac95824b;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Tue, 12 May 2026 08:55:38 +0200
+Message-Id: <DIGI2IM11W50.9CBEEX3EWJUQ@kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Linus Walleij" <linusw@kernel.org>, "Alex Elder" <elder@riscstar.com>,
+ "Bartosz Golaszewski" <brgl@kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: regmap: Support sparsed fixed direction
+Cc: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20260511-regmap-gpio-sparse-fixed-dir-v3-0-1429ec453be7@kernel.org> <20260511-regmap-gpio-sparse-fixed-dir-v3-1-1429ec453be7@kernel.org>
+In-Reply-To: <20260511-regmap-gpio-sparse-fixed-dir-v3-1-1429ec453be7@kernel.org>
+X-Rspamd-Queue-Id: 1E80F51B6DE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-36645-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36642-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shubhrajyoti.datta@amd.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,amd.com:email,amd.com:mid,amd.com:dkim];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[9]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mwalle@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Add support for the EIO GPIO controller found on
-xa2ve3288 silicon.
+--6cb1f7462f79f7e50b7f29960a1884348909ef7f6a9b54772879ac95824b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-The EIO GPIO block provides access to multiplexed I/O pins exposed
-through the EIO interface. Only bank 0 and bank 1 are connected to
-external MIO pins, with 26 GPIOs per bank (52 GPIOs total). This
-change extends the Zynq GPIO driver to support the EIO GPIO
-variant.
+On Mon May 11, 2026 at 9:43 PM CEST, Linus Walleij wrote:
+> On some regmapped GPIOs apparently only a sparser selection
+> of the lines (not all) are actually fixed direction.
+>
+> Support this situation by adding an optional bitmap indicating
+> which GPIOs are actually fixed direction and which are not.
+>
+> Cc: Alex Elder <elder@riscstar.com>
+> Link: https://lore.kernel.org/linux-gpio/20260501155421.3329862-10-elder@=
+riscstar.com/
+> Tested-by: Alex Elder <elder@riscstar.com>
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
----
+Reviewed-by: Michael Walle <mwalle@kernel.org>
 
-(no changes since v1)
+-michael
 
- drivers/gpio/gpio-zynq.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+--6cb1f7462f79f7e50b7f29960a1884348909ef7f6a9b54772879ac95824b
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 571e366624d2..8118ae3412c2 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -25,6 +25,7 @@
- #define VERSAL_GPIO_MAX_BANK	4
- #define PMC_GPIO_MAX_BANK	5
- #define VERSAL_UNUSED_BANKS	2
-+#define EIO_GPIO_MAX_BANK	2
- 
- #define ZYNQ_GPIO_BANK0_NGPIO	32
- #define ZYNQ_GPIO_BANK1_NGPIO	22
-@@ -818,6 +819,16 @@ static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
- 	RUNTIME_PM_OPS(zynq_gpio_runtime_suspend, zynq_gpio_runtime_resume, NULL)
- };
- 
-+static const struct zynq_platform_data eio_gpio_def = {
-+	.label = "eio_gpio",
-+	.ngpio = 52,
-+	.max_bank = EIO_GPIO_MAX_BANK,
-+	.bank_min[0] = 0,
-+	.bank_max[0] = 25, /* 0 to 25 are connected to MIOs (26 pins) */
-+	.bank_min[1] = 26,
-+	.bank_max[1] = 51, /* Bank 1 are connected to MIOs (26 pins) */
-+};
-+
- static const struct zynq_platform_data versal_gpio_def = {
- 	.label = "versal_gpio",
- 	.quirks = GPIO_QUIRK_VERSAL,
-@@ -882,6 +893,7 @@ static const struct of_device_id zynq_gpio_of_match[] = {
- 	{ .compatible = "xlnx,zynqmp-gpio-1.0", .data = &zynqmp_gpio_def },
- 	{ .compatible = "xlnx,versal-gpio-1.0", .data = &versal_gpio_def },
- 	{ .compatible = "xlnx,pmc-gpio-1.0", .data = &pmc_gpio_def },
-+	{ .compatible = "xlnx,eio-gpio-1.0", .data = &eio_gpio_def },
- 	{ /* end of table */ }
- };
- MODULE_DEVICE_TABLE(of, zynq_gpio_of_match);
--- 
-2.34.1
+-----BEGIN PGP SIGNATURE-----
 
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCagLO6hIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/ikkgGA1YZZKYyWgzs1lVHgQQjpq4c0ZR76zqGp
+Jsc+S3OXOIi3Q91FnNt0+XyIcB6xK1uTAYC1hzNWcF4lapU7Ptnl7aGzH64svnDE
+u9HfbHJ6bqShnKAXp3CIpZv25WCcfthyJAo=
+=fL+Q
+-----END PGP SIGNATURE-----
+
+--6cb1f7462f79f7e50b7f29960a1884348909ef7f6a9b54772879ac95824b--
 
