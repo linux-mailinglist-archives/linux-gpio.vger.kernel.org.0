@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-36704-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36705-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELz0KsUWBGpLDgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36704-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 08:14:29 +0200
+	id cDS2DskWBGpLDgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36705-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 08:14:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDC9352DFC6
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 08:14:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F6A752DFDC
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 08:14:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2BEF2302A1A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 06:14:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F10AF304D27B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 06:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 932CC3D349C;
-	Wed, 13 May 2026 06:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C06B3D34AD;
+	Wed, 13 May 2026 06:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gddHux3x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CrmFiv3G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2DC3D333D
-	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 06:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1103D333D
+	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 06:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778652862; cv=none; b=Z/+/IzUz4ObBfSYgvavMejs1VoNEm+Nq7CeehUhWTDsFbz6Aq+FrGUIHUBJcnmBo4ADms94wpeUIx708MBR1Ao0kxm76IHKbIUvqgLYqPGsP8DTQznhj5T6KU1BeJK89ErhGTx6cg45NNJuWETbmtZGSUJvEhZij/kPLTtmQvN4=
+	t=1778652868; cv=none; b=T7iTycl/nlBtCs0f7Ec+9RRLovbusJaOP/Jpi3/S/xVDm1rcuXyfgwStTVkvWccDYJ+Cyw3HVK6MwGeKmLqNz9XFtYc4m+mDxMYAViYOd6he5vKKCGrt50P1jNQBj46QRHrcQevIusqHpMCID5PHAy2lfllq6AEQekL0Jq1+iio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778652862; c=relaxed/simple;
-	bh=1Nb5K6b9vdJ82GOO2YqSTVU36l4hCMuI8qeYvM2NjdY=;
+	s=arc-20240116; t=1778652868; c=relaxed/simple;
+	bh=WXpOlephWbdONJJApjAJQhKnhGSv2ntb8lLbb12ioZ0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o3OC2gnRdjwkeMvHKpjVHsaMQzjgZnHHzmuJ2lzvYzgGYbxdf0dbLYYc8qMnmcT+o83/VoagCmBet88u8af/a8AqPN2C94JgD73Ziz5IZAC1z90RMGjOmVnbQlBs5+vh97s5+gCbn1wE8lEggjhajgL1gUfzhApi0CH/HuLDxI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gddHux3x; arc=none smtp.client-ip=209.85.215.170
+	 MIME-Version; b=OiI6HA4pqzAm5gXy09necWDHD3PCTuAxKmEgWJWd3Hdu77GkuEo2fs2XJ09tpJtIEERVXn8fhLLGG6/hjaEv1vqAWTrfBrKYmIPZ8A4VhIz57CoUqsc43SeVwVBdUVNQmar/Ybqg78iR41yNed23aVt/aY26dLznEcSan1tONQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CrmFiv3G; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c8025aecc40so3075538a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2026 23:14:21 -0700 (PDT)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-c822652f82aso4552569a12.3
+        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2026 23:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778652860; x=1779257660; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778652866; x=1779257666; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MbWUPZ03mDdxdSYYlsvSPmpVezNp0pNuUyGvANfB4Mo=;
-        b=gddHux3xhkJZHky3kZ95IAc41t2ejdJ2w+M/H3MzhYcRO3bm1yEb+qzHz0qAZvIZKw
-         HOYsauRX4TrJaFUtzo84q3HxCf302LxNhQt61rOMqXPGLX57D5+tCT0asBzzsBgBNDgY
-         kBEFtRFDitL2hV51+yeIrNWZuB7bk+MjFY3Q4VIExqYzXaSCDhiRIAhCDEJYkUyua8Q+
-         d+VXGfJNLVw5VW1kpf98/eksvccF2HYB/4ah8qfJzHdoW5pDztBs3/I3lNvm7PSX/VzB
-         lSSJKLvGdmDOIo0ZT3NB039qoXYecSPLvPN2Ldj1DFwEmYUQhhFhDK7TfCXy6fVcSEmX
-         FpXA==
+        bh=MyjHk1Sfn2/DlBLKAWJUgj9QQZN9N3eP8M75DdhK7S0=;
+        b=CrmFiv3GEaBGWa20h61zur0kq907TbF7Xh6h8W7WjXF3uWI3rxyb9UzoTAXdjMPuQd
+         N1P/1VRAUvqgyTqCAG9e7jpikFeOaBJFlctwzVVd7q7MK6JpDVKvAtOCnkmGbqg0BcO0
+         BT133nLoKRF+zVCCauhpMsYa2zcBLEukEd2B5Lwttr6QD2Unvq8k8b4eHMnhI5gTOYj5
+         LCjDBdaGsM1JoNMWJMlEPhrJGZYlvpM35UCM9edeLy+2pGgZ7IuC2FRM7AtlYkwDci16
+         ISxWNR9Yk4aTwTuDdxGRqOqoz2GUPdZ6w3w05s9JtAr7I+5xAXkVosMCSOazEDE/VOnb
+         30pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778652860; x=1779257660;
+        d=1e100.net; s=20251104; t=1778652866; x=1779257666;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MbWUPZ03mDdxdSYYlsvSPmpVezNp0pNuUyGvANfB4Mo=;
-        b=SCRXGpHcL6t54Z9bcTKMxFY8W8lMKfaKKQVDTVwfMsdAxsIlQAqW9IpgGGssVpRNiW
-         8Zljqo6tMC/w58+8wY1mrWUCST4fBjoIg739QB5xHwcYjlcHtk3ol66FbXdQioSsgFd2
-         la1AqPMwP6fnlnfawdGquoSvl6IYdUTpYGRBFR+q8XMEtvChykDBu0NtFW1kGtCguzNd
-         3Edm+dQve8l57tByCljW08Jic/zmkYUWuZeJzQv0tzWtVgC5d6eaJIDsaoicqVkIkjhQ
-         FDj7zecfgYv7kJIydDKEPXDjNajIJbl+ULlWX4VWHeNU6J5++7sjQATBK4uoiWvPCbcL
-         lkNw==
-X-Gm-Message-State: AOJu0Yz8ULeO1LsaRGV77sVwagFNzrfNHCl6tBcV8NAYQMY8VZQccocf
-	0leI3QcL2elwL8HdTPaLlknjeq3EhgmDH4OcEfKJ9OmPfe8Ir5SNhZuU6eJ7XbMe
-X-Gm-Gg: Acq92OEWVgP9htoc90ZZC660/923xcQ6bn794gieSQlpDtyHFWbGd8LQKb9SMUynCGF
-	0/+9kf/XHVe/rzxluS1r35HyKy5+Y9x25opBO6YT3P3K6fonba+G8u1N6uRYCeDDoYtkPRgBhlQ
-	hAK5sBj6EmEcGpj1yOQ8FSrIH4htzzfilM9GmrX8SDLq8bKUL/O5lCazt0kgGifpE2qlB+9I/jG
-	YKeUM1pIVF46vD2yHzyc/9cX1d5aDiosVyIrXM/yFoWotwTsawaAOzhkEXDDNP5lCvauN0ufl8T
-	0TvXVyeazO46m2LsBqYlMmVBgdtnHBBFg9ePYqj3na3UmGMPLK6JU/ep3qpPjJjnE2VgmMoPlQ/
-	k+Pac2+LeC39VWx53ObuUOSujBnthYDVbd+1o5YNvL8++0n855A/aa2YfzmVCrVWZEUTG9WjmRx
-	utBVRQ73HUxg2Il22XDJ89Rb9tZLXZksXz6vuqboxJy349voruAMofcnAm33gD6+9jv5wKIgf9r
-	3GjEZ6X3Em8gx3pe6E/Q9K4YgZjsJKCnQYzJ1sC8h9DEkDuyoSnDZlsDWs3l5E6
-X-Received: by 2002:a05:6a21:338f:b0:3a2:f05a:795e with SMTP id adf61e73a8af0-3acd4207c22mr6738499637.3.1778652860126;
-        Tue, 12 May 2026 23:14:20 -0700 (PDT)
+        bh=MyjHk1Sfn2/DlBLKAWJUgj9QQZN9N3eP8M75DdhK7S0=;
+        b=H85xxng5kPB50LiBThhsqT0NCJm1UpZ4yTuCOG3Z1jBe1Wlj33NxhnzjjcsXtVc+sD
+         041tea69IWNtdME9SzXDDIeBd/4btqQC16pk1dqm/BXJF7MnsPPe1yElfg7aowP7cgR6
+         NQ9Pp96xzB90CuztlQMus2N2OzPk0PhF6k53PafxoYJLZjnCYa9LoQJin48C0ubgcGxX
+         06wFHHpaPiWwM0M/yipE9vSNP0mBWntlMZpSXzfn4MDuVBGXt2C5rQ6BiRu2fCZSJPO7
+         e3nNZm1T+fgYlQMRYzkcBAC3NuqHHByW/XaHuoeNOb/sWSFD3gV7x1aXIXxJaUOugSiY
+         p/yA==
+X-Gm-Message-State: AOJu0Yxz2npMAvtSKeI7KIiJNUw/lBnvjavr5ePqZZyXL0L6SfvxOZ3T
+	fyMKGoxbznOzxhTQttr6k30BDueczQEo6GiUuEBc74oT1qz4hZ+GwjV/Cs73I3ib
+X-Gm-Gg: Acq92OE5e4RaR9oZ+XWle45HDHP7lp/n/35LFfttNIyx8l2omGwIVfZBRwrvz+9eeKW
+	4Ndyq0ck9rvn4hnL4Ly5YOA9BGagmIVqNQQHHZ5+J/EU4ljLjwB3Xb+R868nLdmJbTXZXTUskzH
+	vYf0i5Pegkn/t6pnIyFmA1eX7bEZf/a1qJn32jPHGCoeqH4v+KFuHvRj01KU/f7hMsCgOrNOEsW
+	gGDbP4KCbYrMEnazcYX3R73575Zh1pcpRS6sbcIoTYMMlohwRBsMZljCLNeAsn/yHr5v/JwMm0z
+	ltuKgJz15OvYwm6U0TphuXe/qLvy6YoL436A5l2n9yd453SJbrDBU+VzPoR9kNJDqapRKWI6zwt
+	zn8UIFlvBuy9erSE9nIrR1aCOyV1G565igd0RRNHGRE7+LL+XOOnQgcmyE0hdSUy0xpEsZx6BJv
+	PDG5/+8xGlwPRNFOeOLyjjTuvjtL3ex4Te7Nkj4IgmXwwdz1F19xNDzdC07S1seJUQ9tKkSTLLx
+	1SnarLUAXQQW11QqL6Muf4g3hnUX7lfLfMJFlR9T7hlOKNQF55TuMvLA/klmIlO
+X-Received: by 2002:a05:6a20:3d90:b0:398:919a:ddf5 with SMTP id adf61e73a8af0-3af8137c3f6mr2143737637.24.1778652866100;
+        Tue, 12 May 2026 23:14:26 -0700 (PDT)
 Received: from hardik-yoga ([2401:4900:1c64:ff18:3fa8:7855:804e:9f49])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c826771a8a1sm13470874a12.24.2026.05.12.23.14.17
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c826771a8a1sm13470874a12.24.2026.05.12.23.14.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2026 23:14:19 -0700 (PDT)
+        Tue, 12 May 2026 23:14:25 -0700 (PDT)
 From: Hardik Prakash <hardikprakash.official@gmail.com>
 To: linux-gpio@vger.kernel.org,
 	linux-i2c@vger.kernel.org
@@ -83,9 +83,9 @@ Cc: linus.walleij@linaro.org,
 	wsa@kernel.org,
 	andriy.shevchenko@intel.com,
 	Hardik Prakash <hardikprakash.official@gmail.com>
-Subject: [PATCH 1/2] pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7 14AGP11
-Date: Wed, 13 May 2026 11:43:37 +0530
-Message-ID: <20260513061338.9348-2-hardikprakash.official@gmail.com>
+Subject: [PATCH 2/2] i2c: designware: fix probe ordering for AMD GPIO on Lenovo Yoga 7 14AGP11
+Date: Wed, 13 May 2026 11:43:38 +0530
+Message-ID: <20260513061338.9348-3-hardikprakash.official@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260513061338.9348-1-hardikprakash.official@gmail.com>
 References: <20260513061338.9348-1-hardikprakash.official@gmail.com>
@@ -96,14 +96,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EDC9352DFC6
+X-Rspamd-Queue-Id: 8F6A752DFDC
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -113,10 +113,10 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FREEMAIL_CC(0.00)[linaro.org,kernel.org,intel.com,gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36704-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36705-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
@@ -124,89 +124,131 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Lenovo Yoga 7 14AGP11 (83TD), the WACF2200 touchscreen controller
-is wired via I2C2 (AMDI0010:02) with its interrupt on GPIO pin 157
-(confirmed via ACPI _CRS GpioInt decode). After amd_gpio_irq_init()
-clears all GPIO interrupts at boot, pin 157 is never re-enabled,
-preventing the touchscreen from signalling the driver.
+On Lenovo Yoga 7 14AGP11 (83TD), the WACF2200 touchscreen fails with
+lost arbitration errors on AMDI0010:02 at boot. The root cause is a
+probe ordering issue: i2c_designware probes AMDI0010:02 before
+pinctrl-amd has finished initialising, so the GPIO 157 interrupt
+needed by the touchscreen is not yet enabled.
 
-Windows keeps GPIO 157 INTERRUPT_ENABLE (bit 11) and INTERRUPT_MASK
-(bit 12) set after initialisation. Add a DMI quirk to restore these
-bits after amd_gpio_irq_init() on this hardware.
+Add a DMI-matched deferral in dw_i2c_plat_probe() that uses
+device_is_bound() under device_lock() to correctly wait until
+pinctrl-amd's probe has fully completed. Use acpi_dev_get_first_match_dev()
+for robust HID/UID-based GPIO controller lookup instead of string
+name matching.
 
 Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
 Assisted-by: Claude:claude-sonnet-4-6
 Assisted-by: GPT-Codex:gpt-5.2-codex
 ---
- drivers/pinctrl/pinctrl-amd.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/i2c/busses/i2c-designware-platdrv.c | 75 +++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index e3128b0045d22..64315b0edf2a6 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -26,6 +26,7 @@
- #include <linux/interrupt.h>
- #include <linux/bitops.h>
- #include <linux/pinctrl/pinconf.h>
-+#include <linux/dmi.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/string_choices.h>
-@@ -39,6 +40,39 @@
- static struct amd_gpio *pinctrl_dev;
- #endif
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 3351c4a9ef118..35fa4bcafc7ad 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -8,6 +8,7 @@
+  * Copyright (C) 2007 MontaVista Software Inc.
+  * Copyright (C) 2009 Provigent Ltd.
+  */
++#include <linux/acpi.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+@@ -86,6 +87,76 @@ static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
+ 	{ } /* terminate list */
+ };
  
-+static const struct dmi_system_id amd_gpio_quirk_yoga7_14agp11[] = {
++static const struct dmi_system_id dw_i2c_amd_gpio_defer_dmi[] = {
 +	{
++		.ident = "Lenovo Yoga 7 14AGP11",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 +			DMI_MATCH(DMI_PRODUCT_NAME, "83TD"),
 +			DMI_MATCH(DMI_BOARD_NAME, "LNVNB161216"),
 +		},
 +	},
-+	{ }
++	{ } /* terminate list */
 +};
 +
-+static void amd_gpio_apply_quirks(struct amd_gpio *gpio_dev)
++static bool dw_i2c_needs_amd_gpio_dep(struct device *device)
 +{
-+	const unsigned int pin = 157; /* WACF2200 GpioInt per ACPI _CRS */
-+	unsigned long flags;
-+	u32 reg;
++	struct acpi_device *adev = ACPI_COMPANION(device);
 +
-+	if (!dmi_check_system(amd_gpio_quirk_yoga7_14agp11))
-+		return;
-+	if (pin >= gpio_dev->gc.ngpio)
-+		return;
++	if (!dmi_check_system(dw_i2c_amd_gpio_defer_dmi))
++		return false;
++	if (!adev)
++		return false;
 +
-+	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-+	reg = readl(gpio_dev->base + pin * 4);
-+	reg |= BIT(INTERRUPT_ENABLE_OFF) | BIT(INTERRUPT_MASK_OFF);
-+	writel(reg, gpio_dev->base + pin * 4);
-+	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-+
-+	dev_info(&gpio_dev->pdev->dev,
-+		 "Enabled IRQ for GPIO %u (Yoga 7 14AGP11 touchscreen)\n",
-+		 pin);
++	return acpi_dev_hid_uid_match(adev, "AMDI0010", "2");
 +}
 +
- static int amd_gpio_get_direction(struct gpio_chip *gc, unsigned offset)
- {
- 	unsigned long flags;
-@@ -1219,6 +1253,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
++static int dw_i2c_defer_for_amd_gpio(struct device *device)
++{
++	struct acpi_device *gpio_adev;
++	struct device *gpio_dev;
++
++	if (!dw_i2c_needs_amd_gpio_dep(device))
++		return 0;
++
++	/*
++	 * Find the AMD GPIO controller by HID/UID and get its physical
++	 * platform device. We need the platform device (not the ACPI device)
++	 * because that is what gets bound by the amd_gpio driver.
++	 */
++	gpio_adev = acpi_dev_get_first_match_dev("AMDI0030", "0", -1);
++	if (!gpio_adev)
++		return -EPROBE_DEFER;
++
++	gpio_dev = acpi_get_first_physical_node(gpio_adev);
++	acpi_dev_put(gpio_adev);
++	if (!gpio_dev)
++		return -EPROBE_DEFER;
++
++	/*
++	 * Check that amd_gpio probe has fully completed, not just that the
++	 * driver pointer is set. The driver pointer is assigned before probe
++	 * finishes, so checking it would allow i2c_designware to probe before
++	 * the GPIO IRQ quirk in amd_gpio_probe() has run.
++	 */
++	device_lock(gpio_dev);
++	if (!device_is_bound(gpio_dev)) {
++		device_unlock(gpio_dev);
++		return -EPROBE_DEFER;
++	}
++	device_unlock(gpio_dev);
++
++	/*
++	 * Create a device link so the driver core enforces probe/remove
++	 * ordering between this I2C controller and the GPIO controller.
++	 */
++	if (!device_link_add(device, gpio_dev, DL_FLAG_AUTOREMOVE_CONSUMER))
++		dev_warn(device, "failed to add device link to %s\n",
++			 dev_name(gpio_dev));
++
++	return 0;
++}
++
+ static const struct i2c_dw_semaphore_callbacks i2c_dw_semaphore_cb_table[] = {
+ #ifdef CONFIG_I2C_DESIGNWARE_BAYTRAIL
+ 	{
+@@ -138,6 +209,10 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	struct dw_i2c_dev *dev;
+ 	int irq, ret;
  
- 	/* Disable and mask interrupts */
- 	amd_gpio_irq_init(gpio_dev);
-+	amd_gpio_apply_quirks(gpio_dev);
- 
- 	girq = &gpio_dev->gc.irq;
- 	gpio_irq_chip_set_chip(girq, &amd_gpio_irqchip);
++	ret = dw_i2c_defer_for_amd_gpio(device);
++	if (ret)
++		return ret;
++
+ 	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq == -ENXIO)
+ 		flags |= ACCESS_POLLING;
 -- 
 2.54.0
 
