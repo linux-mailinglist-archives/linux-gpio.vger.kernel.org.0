@@ -1,374 +1,183 @@
-Return-Path: <linux-gpio+bounces-36764-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36765-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gGTJFf2TBGqrLgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36764-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 17:08:45 +0200
+	id UEFJLwWjBGpAMQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36765-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 18:12:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C77535C81
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 17:08:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D577536D3C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 18:12:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 003CB303D569
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 15:01:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5422631562D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 15:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B578472786;
-	Wed, 13 May 2026 15:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C305429800;
+	Wed, 13 May 2026 15:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GPWzEL5A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBvyn4Ba"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A90E402426;
-	Wed, 13 May 2026 15:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D71342501
+	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 15:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778684462; cv=none; b=Tw7WF2xewDQQq/t7UctJ6/RrI4YlKOglN2JZuODvrie2BV1fJiO3VMJ1ZB/JoBRDcwIt1tKJiCnxHEudx23yLlV9Y6MW+ZNnAF4/SdWoK4YboJabm2dSLO/Y2rQBTrWQCDaGtNBwLIjARCPqofOggeOrHtHU64KcNBgvvfYBU1Q=
+	t=1778685526; cv=none; b=nwUaDT00adylHG70DCvYYZmNZAJL1Kitk+b5P5lDaLJPb6THusOjzc/kfti6wtoJoQBwi/AlimNLmk505pXf+0niZ8S0Ltf7ycvKBrIBxYs3aeRt3iYAEvwQqjsaEz+9pu7RSmzw82UNfIQ7va19mNjSvCVCeJxxSmdx9oO1J7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778684462; c=relaxed/simple;
-	bh=Gimz1VkuDyZIY+v+JrO7DO39TujDkTm+HWFtuH+bhFk=;
+	s=arc-20240116; t=1778685526; c=relaxed/simple;
+	bh=BQ8epdUabLkMJbp8b0yVQndIPSjNnzt8k9uMxeF89xI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IVL72kG98LGA71rotgzRN2oW8CoohbkOYVy8IqJtP2IMK69z4eIn59QOeUn5h9SR8z67mdQftZMa6pBUJxzubmqlWSawDISPNHQc7efxWYYjVBlXJYXR3pRXLALjgYA21y0lWx8mmW01eIbzCMoMzgnSoO9RubTMcZz6n39LJzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GPWzEL5A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D9A0C19425;
-	Wed, 13 May 2026 15:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778684461;
-	bh=Gimz1VkuDyZIY+v+JrO7DO39TujDkTm+HWFtuH+bhFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GPWzEL5AkhDAvaSQhPdS1/uTRqrYY5a0f9+oAQd5ntiJyxBlwAu44HkUdXqCBZ1cG
-	 WYY3AT8m2tAc1l0Zbd2TrS1oiLeEZKxQjtUpugG4H1TEQ9ke/T8u4yhe/RI14m7fxU
-	 MenwH6fSVw/GaZ+E2S4h6IJWB16fo7GV1G+nK0yh7Y2OlNoi/AEPFXqXsGRKHsfB7C
-	 b/KkrqQckT1DYVkGBBpJ4dhOcDf7e1cwJUPVwdzxIXLEWWOCIJiVw0icjRP6HlYLsA
-	 eHVYxPGM12lGIdRQUlrtIaePsdkFydsGRwC/kbsuobyXIZqgmzmSdXlCcBPlqu3SHg
-	 kR3ea2Y6+tS/A==
-Date: Wed, 13 May 2026 20:30:51 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com, 
-	sherry.sun@nxp.com, driver-core@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 2/2] PCI: Add support for PCIe WAKE# interrupt
-Message-ID: <p7la2n65vkfd4bnvygm533rgglx2og5grltolgizbahptbaf3o@42zkaymebhzz>
-References: <20260511-wakeirq_support-v10-0-c10af9c9eb8c@oss.qualcomm.com>
- <20260511-wakeirq_support-v10-2-c10af9c9eb8c@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UlVblTPjQECUegz1nHeHA8ZLD/PBdZYr5auyrvTLJBzF/NoAap3BgyhUzbfUaiK8nDq8P2sb7WzSjo7/uNHY7Av7yyCYZvL3jawu6Yf8yHP6ZqksBNg16jJfsHgvfxVrZLhcoR7D3QU11HzOUkE1t8kfAUAUDbhTuc5FxGHrd3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iBvyn4Ba; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2bc7b311e77so18488075ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 08:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778685525; x=1779290325; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0OBfWy7Zm9LeL1Wlq8fvZKKPHn89DsUhdya+NxxenfM=;
+        b=iBvyn4BaVt9tdrt64wtqRqP+hS3b3zI/gP/ZPGy9gCcKnCuMlNi3Mk0ApoQ7mqbdHl
+         B7jMt9QeECkMMUlp3yCfET3wJ7qEwinbpJTVgUJU+nsOjgLECWLIIf1QEyp8YTgNypVf
+         KmgeKx0GXSmeUchPpZRG2AVenryXF+gg8PCfY8Ec3a6hwncHHJ6kLonJO0Ybt50lRBHC
+         ovINKZAx7IrunNUPhUQm2FoLMQifIqn89FRtlQV6KfdKNL3qNJMXZnsRduvSjyJHAtP4
+         z1E0ECrSVE30iZKiVuq4REyVl+TneFw184NTYWPZrCsFpQGXa5vUM9SzlEe494eVp5dd
+         NFCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778685525; x=1779290325;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0OBfWy7Zm9LeL1Wlq8fvZKKPHn89DsUhdya+NxxenfM=;
+        b=awp0L+M/U4hSFnhhPnt9GmAJxR0uqkQ6+58P9PDQDVYdYafMZeVGUpGmJgVpzhkQ/e
+         u0WAx9KNeTxWeF8WUwJF9mHXm1FZZ6/3lvi/u4Ogm+CyBgq1oWAhm2GgjN5pQghMWOWo
+         pGdOjWSo/EDdjaqbOANsBaj4FcPZGqJ09Gip8IFQO0vZmiGzxzcFg6MhJTL9MNYh60BQ
+         EL0h+jwPvFXjLFv55UfHInNkZlXzzQxZLZBc5uULE7yP1YbZYCjECvJLB6+VwayaemG8
+         AjmGNYoBQjxMyEU/rw9aPBiOwZpx+Ejdo6DfYLQyEMoBdrXRkeQdOZkXkonsQ5U0Zmy/
+         wLHw==
+X-Forwarded-Encrypted: i=1; AFNElJ8fiiIJzG1btlwlpImb7NmYKvWam6J60VI3RBMolbCHkC09kz3rckI8FtyGKObxuhC3l3yTeexQTWIr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm2RquWf/RpbmU5xFq9XPk9K/sv1joOq610+5YDtizBeSJHLjZ
+	Zd6i+CVILu7Fnp/kL3NZwxJ1TRguW+MtM7lMPUVCesRsdss0SD0g116O
+X-Gm-Gg: Acq92OFX+1wGkB0TQouR9Idd9ejcf1gTjZzQQIB3P1jBnIQ4AdmvgGUdMxcIlUveUSu
+	QIt6ST+yxWulW40iHnk+h5scX3unrhAIj9fK+NnWk5n5TayDD1TJzNcb5rpemOWU5J9uH4QLArt
+	VKfM0hzk9vC6MioQFudS95pAW6fV01g2Fel8Ar/WanDZTpkM1D64fKn13sYvtAFk8eWsVFhvhJ0
+	zbDWaAElj87cWGHt4sN5cTfw41dChPyy7xnbGru7pOHA3U5vZCYrq6JL862VlO39ZFEhewKA/2V
+	EYIH/6nNWT/RhvZkuXFa9gDHch5tR5AorCn/vdcozbpA9/OaAWUA7jMcztpVO841eMHW0FuSZ8g
+	aB5XvRBqeBFIPBESKS6IHZIvqPvS/qS2zjtwOvgLm5AXSXzPFsPm9J2HR1mQpGyHVYwSZzNK9GK
+	DUh1AxqD0hAJy0IKIExDoj8HMTrm/lGFMfXqlltzR1wJI=
+X-Received: by 2002:a17:903:38c3:b0:2bc:977b:846d with SMTP id d9443c01a7336-2bd27118326mr39008335ad.5.1778685524609;
+        Wed, 13 May 2026 08:18:44 -0700 (PDT)
+Received: from rigel (106-68-217-148.tpgi.com.au. [106.68.217.148])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd3414b8b6sm25008595ad.30.2026.05.13.08.18.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 08:18:44 -0700 (PDT)
+Date: Wed, 13 May 2026 23:18:37 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Vincent Fazio <vfazio@xes-inc.com>,
+	Alexander Dahl <post@lespocky.de>, brgl@kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/2] tools: provide a shared library with high-level
+ functions used by gpio-tools
+Message-ID: <20260513151837.GA171694@rigel>
+References: <20260513-tools-common-shared-lib-v1-0-58ac28a9f1d5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260511-wakeirq_support-v10-2-c10af9c9eb8c@oss.qualcomm.com>
-X-Rspamd-Queue-Id: F3C77535C81
+In-Reply-To: <20260513-tools-common-shared-lib-v1-0-58ac28a9f1d5@oss.qualcomm.com>
+X-Rspamd-Queue-Id: 1D577536D3C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36764-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-36765-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[warthog618@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 12:55:38PM +0530, Krishna Chaitanya Chundru wrote:
-> According to the PCI Express specification (PCIe r7.0, Section 5.3.3.2),
-> two link wakeup mechanisms are defined: Beacon and WAKE#. Beacon is a
-> hardware-only mechanism and is invisible to software (PCIe r7.0,
-> Section 4.2.7.8.1). This change adds support for the WAKE# mechanism
-> in the PCI core.
+On Wed, May 13, 2026 at 01:47:11PM +0200, Bartosz Golaszewski wrote:
+> The API of libgpiod v2 is a bit more limited than that of v1. Notably:
+> the whole category of high-level helpers as well as functions allowing
+> to look up lines and chips by names/labels have been removed and replaced
+> by low-level interfaces which require users to implement the look-up
+> logic locally.
 > 
-> According to the PCIe specification, multiple WAKE# signals can exist in
-> a system or each component in the hierarchy could share a single WAKE#
-> signal. In configurations involving a PCIe switch, each downstream port
-> (DSP) of the switch may be connected to a separate WAKE# line, allowing
-> each endpoint to signal WAKE# independently. From figure 5.4 in sec
-> 5.3.3.2, WAKE# can also be terminated at the switch itself. Such topologies
-> are typically not described in Device Tree, therefore it is out of scope
-> for this series.
+> It's been requested several times that equivalents of these functions
+> should be provided in some form. I don't want to expose more
+> functionality in libgpiod core API than what the linux kernel uAPI
+> provides. However, the gpio-tools already contain a shared library -
+> tools-common - which implements the bulk of the desired functions in a
+> new form.
 > 
-> To support this, the WAKE# should be described in the device tree node of
-> the endpoint/bridge. If all endpoints share a single WAKE# line, then each
-> endpoint node shall describe the same WAKE# signal or a single WAKE# in
-> the Root Port node.
+> This series splits out parts of tools-common into a new shared library:
+> libgpiotools, and reuses it in tools-common while keeping the existing
+> interface facing the gpio-tools in order to not have to adapt them to
+> the new API.
 > 
-> In pci_device_add(), PCI framework will search for the WAKE# in device
-> node. Once found, register for the wake IRQ through
-> dev_pm_set_dedicated_wake_irq() associates a wakeup IRQ with a device
-> and requests it, but the PM core keeps the IRQ disabled by default. The
-> IRQ is enabled by the PM core, only when the device is permitted to wake
-> the system, i.e. during system suspend and after runtime suspend, and
-> only when device wakeup is enabled.
+> Kent: I allowed myself to change the license of the factored out code to
+> LGPL-v2.1-or-later to enable linking against libgpiotools in line with
+> libgpiod and other shared libraries from this project. Your Ack would be
+> appreciated.
 > 
-> If the same WAKE# GPIO is described in multiple device tree nodes, only the
-> first device that successfully registers the wake IRQ will succeed, while
-> subsequent registrations may fail. This limitation does not affect
-> functional correctness, since WAKE# is only used to bring the link to D0,
-> and endpoint-specific wakeup handling is resolved later through
-> PME detection (PME_EN is set in suspend path by PCI core by default).
-> 
-> When the wake IRQ fires, the wakeirq handler invokes pm_runtime_resume() to
-> bring the device back to an active power state, such as transitioning from
-> D3cold to D0. Once the device is active and the link is usable, the
-> endpoint may generate a PME, which is then handled by the PCI core through
-> PME polling or the PCIe PME service driver to complete the wakeup of the
-> endpoint.
-> 
-> WAKE# is added in dts schema and merged based on below links.
-> 
-> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
-> Link: https://github.com/devicetree-org/dt-schema/pull/170
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Makes sense and works for me.
 
-- Mani
+Acked-by: Kent Gibson <warthog618@gmail.com>
 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > ---
->  drivers/pci/of.c       | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.c      | 11 ++++++++
->  drivers/pci/pci.h      |  2 ++
->  drivers/pci/probe.c    |  2 ++
->  drivers/pci/remove.c   |  1 +
->  include/linux/of_pci.h |  6 +++++
->  include/linux/pci.h    |  2 ++
->  7 files changed, 96 insertions(+)
+> Bartosz Golaszewski (2):
+>       tools: provide the libgpiotools shared library
+>       tools: reuse libgpiotools
 > 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 6da569fd3b8f..ed3ad5b9a253 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -7,6 +7,7 @@
->  #define pr_fmt(fmt)	"PCI: OF: " fmt
->  
->  #include <linux/cleanup.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
->  #include <linux/pci.h>
-> @@ -15,6 +16,7 @@
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
->  #include "pci.h"
->  
->  #ifdef CONFIG_PCI
-> @@ -586,6 +588,76 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->  	return irq_create_of_mapping(&oirq);
->  }
->  EXPORT_SYMBOL_GPL(of_irq_parse_and_map_pci);
-> +
-> +static void pci_configure_wake_irq(struct pci_dev *pdev, struct gpio_desc *wake)
-> +{
-> +	int ret, wake_irq;
-> +
-> +	wake_irq = gpiod_to_irq(wake);
-> +	if (wake_irq < 0) {
-> +		pci_err(pdev, "Failed to get wake irq: %d\n", wake_irq);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * dev_pm_set_dedicated_wake_irq() associates a wakeup IRQ with the
-> +	 * device and requests it, but the PM core keeps it disabled by default.
-> +	 * The IRQ is enabled only when the device is allowed to wake the system
-> +	 * (during system suspend and after runtime suspend), and only if device
-> +	 * wakeup is enabled.
-> +	 *
-> +	 * When the wake IRQ fires, the wakeirq handler invokes pm_runtime_resume()
-> +	 * to bring the device back to an active power state (e.g. from D3cold to D0).
-> +	 * Once the device is active and the link is usable, the endpoint may signal
-> +	 * a PME, which is then handled by the PCI core (either via PME polling or the
-> +	 * PCIe PME service driver) to wakeup particular endpoint.
-> +	 */
-> +	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
-> +	if (ret < 0) {
-> +		pci_err(pdev, "Failed to set WAKE# IRQ: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	ret = irq_set_irq_type(wake_irq, IRQ_TYPE_LEVEL_LOW);
-> +	if (ret < 0) {
-> +		dev_pm_clear_wake_irq(&pdev->dev);
-> +		pci_err(pdev, "Failed to set irq_type: %d\n", ret);
-> +	}
-> +}
-> +
-> +void pci_configure_of_wake_gpio(struct pci_dev *dev)
-> +{
-> +	struct device_node *dn = pci_device_to_OF_node(dev);
-> +	struct gpio_desc *gpio;
-> +
-> +	if (!dn)
-> +		return;
-> +	/*
-> +	 * fwnode_gpiod_get() may fail with -EBUSY (e.g. shared WAKE#), but the
-> +	 * actual WAKE# trigger from the device would still work and the host
-> +	 * controller driver will enable power to the topology.
-> +	 *
-> +	 * -EPROBE_DEFER cannot be propagated here since pci_device_add() has no
-> +	 *  retry mechanism.
-> +	 */
-> +	gpio = fwnode_gpiod_get(of_fwnode_handle(dn), "wake", GPIOD_IN, NULL);
-> +	if (!IS_ERR(gpio)) {
-> +		dev->wake = gpio;
-> +		pci_configure_wake_irq(dev, gpio);
-> +	}
-> +}
-> +
-> +void pci_remove_of_wake_gpio(struct pci_dev *dev)
-> +{
-> +	struct device_node *dn = pci_device_to_OF_node(dev);
-> +
-> +	if (!dn)
-> +		return;
-> +
-> +	dev_pm_clear_wake_irq(&dev->dev);
-> +	gpiod_put(dev->wake);
-> +	dev->wake = NULL;
-> +}
->  #endif	/* CONFIG_OF_IRQ */
->  
->  static int pci_parse_request_of_pci_ranges(struct device *dev,
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 8f7cfcc00090..5bffed535dc2 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -17,6 +17,7 @@
->  #include <linux/lockdep.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
-> +#include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/pm.h>
->  #include <linux/slab.h>
-> @@ -1123,6 +1124,16 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
->  	return acpi_pci_bridge_d3(dev);
->  }
->  
-> +void platform_pci_configure_wake(struct pci_dev *dev)
-> +{
-> +	pci_configure_of_wake_gpio(dev);
-> +}
-> +
-> +void platform_pci_remove_wake(struct pci_dev *dev)
-> +{
-> +	pci_remove_of_wake_gpio(dev);
-> +}
-> +
->  /**
->   * pci_update_current_state - Read power state of given device and cache it
->   * @dev: PCI device to handle.
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 4a14f88e543a..85539c238743 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -284,6 +284,8 @@ void pci_msix_init(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
->  int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
-> +void platform_pci_configure_wake(struct pci_dev *dev);
-> +void platform_pci_remove_wake(struct pci_dev *dev);
->  
->  static inline bool pci_bus_rrs_vendor_id(u32 l)
->  {
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index b63cd0c310bc..143b0bd35b3c 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2775,6 +2775,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  	/* Establish pdev->tsm for newly added (e.g. new SR-IOV VFs) */
->  	pci_tsm_init(dev);
->  
-> +	platform_pci_configure_wake(dev);
-> +
->  	pci_npem_create(dev);
->  
->  	pci_doe_sysfs_init(dev);
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index e9d519993853..d781b41e57c4 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -35,6 +35,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
->  	if (pci_dev_test_and_set_removed(dev))
->  		return;
->  
-> +	platform_pci_remove_wake(dev);
->  	pci_doe_sysfs_teardown(dev);
->  	pci_npem_remove(dev);
->  
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 29658c0ee71f..649fe8eafcfa 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -30,12 +30,18 @@ static inline void of_pci_check_probe_only(void) { }
->  
->  #if IS_ENABLED(CONFIG_OF_IRQ)
->  int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
-> +void pci_configure_of_wake_gpio(struct pci_dev *dev);
-> +void pci_remove_of_wake_gpio(struct pci_dev *dev);
->  #else
->  static inline int
->  of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->  {
->  	return 0;
->  }
-> +
-> +static inline void pci_configure_of_wake_gpio(struct pci_dev *dev) { }
-> +
-> +static inline void pci_remove_of_wake_gpio(struct pci_dev *dev) { }
->  #endif
->  
->  #endif
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 2c4454583c11..4289b60dcc83 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -588,6 +588,8 @@ struct pci_dev {
->  	/* These methods index pci_reset_fn_methods[] */
->  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
->  
-> +	struct gpio_desc *wake; /* Holds WAKE# gpio */
-> +
->  #ifdef CONFIG_PCIE_TPH
->  	u16		tph_cap;	/* TPH capability offset */
->  	u8		tph_mode;	/* TPH mode */
+>  docs/Doxyfile           |   1 +
+>  docs/gpio_tools.rst     |  16 ++
+>  docs/gpio_tools_lib.rst |  12 ++
+>  meson.build             |   3 +
+>  tools/gpiotools.c       | 437 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/gpiotools.h       | 236 ++++++++++++++++++++++++++
+>  tools/meson.build       |  28 +++-
+>  tools/tools-common.c    | 316 ++++------------------------------
+>  tools/tools-common.h    |  63 +------
+>  9 files changed, 772 insertions(+), 340 deletions(-)
+> ---
+> base-commit: 5eed939e0d544afa311a4dd6dac90833d38d7d29
+> change-id: 20260311-tools-common-shared-lib-97b58de050e2
 > 
+> Best regards,
 > -- 
-> 2.34.1
+> Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
 
