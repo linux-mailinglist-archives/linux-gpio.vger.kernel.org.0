@@ -1,219 +1,227 @@
-Return-Path: <linux-gpio+bounces-36775-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36776-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0M9rNRq3BGplNQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36775-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 19:38:34 +0200
+	id 0M9JEVS0BGowNQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36776-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 19:26:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4679E538260
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 19:38:33 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F45F538035
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 19:26:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98BBC310DBB2
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 17:12:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 90EA5301A4C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2026 17:17:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1314C9575;
-	Wed, 13 May 2026 17:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5FC4C956B;
+	Wed, 13 May 2026 17:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jzf0SyiO"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="doj8WYW9";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VwTg53Ax"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8864A13A1;
-	Wed, 13 May 2026 17:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC4D3A425D
+	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 17:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778692353; cv=none; b=k5uG7w6drsqeglYhUIVlXYVXJzJIRS4SbIQxEF6w8pLLsM7V2Sbf55a7gQZAhKZ4zXkToNxZuqprbwihCCSJNocJH22NPPOH74frJ4Hux5IB9i82biXNPX8owy7QUuovUs/VOfIBWZhzRpr0FOmdfDd/72Oit9JjszaSYwSHUIs=
+	t=1778692629; cv=none; b=SVKCvuq9sjYm6SmyCLZbYY39zwyTujQX+3Ye5YLIN47CuvJSDArFJUULupH9papVSST2K4I4IaRIpR+hHBLZRQSywJfKcgAmpciwJuMvJqUq6iKZEMSWE4Iq9by8/4mRFuBrki9iQUx3FM4HwH22WRtEWk5YXFGh9PQkRerjVf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778692353; c=relaxed/simple;
-	bh=BPmxAJY3nmPnm6AOjPjute7ZvmM/IzzUrm+6f0TF72E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKHQDf6W09U34zLQgw0X7Kixr3rfeTnI9Zjw9Ov7uclOoLxm93K+OWDZ+x3RqB4bwvUddh4DNmWB9nL6WPx4RCLLCRkQmb6ChqTLJ7qWesm1i58oRW36IURMmGJmIjQo7oY4vh0XTpdKvtPGdya5rR8wEboJ3g7uByb8knWMuZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jzf0SyiO; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778692350; x=1810228350;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BPmxAJY3nmPnm6AOjPjute7ZvmM/IzzUrm+6f0TF72E=;
-  b=Jzf0SyiO1dsTzMeq196GkJbMVARVzg+6yq4sZNrIRA0XBT/mqJ2LQsVg
-   5G/o3d7ITQliVIXSv0LqBg2cc0aiVVoMwgjVS6tt6DZame1w4LsxioEL9
-   /mH/N5lA/cV9LIFB0eIAbCZM5pGyl7GyhIiCvTP4s6bDkwVBrpKHu+9zu
-   LNyPdPpK5c3U+dq9AbT9Acn0uR9gP/UdUzHkwDdEGBu6ZgURbtKRi1zyC
-   uvQWsix85bjmClFvVbZ7RTvdavCKWfE+X0GQDejOYePiLU0M3cyHQCoY0
-   szQct0HzqhDk1VcwRiczsCfaJmeGepU4Fbj22/u7wIO+OeEaNRRz69qMY
-   w==;
-X-CSE-ConnectionGUID: 1aQ2ZHRjSxW5//r77IX2xg==
-X-CSE-MsgGUID: OXVn5DfdQrGrTPKqnnN11A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11785"; a="67158326"
-X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="67158326"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 10:12:29 -0700
-X-CSE-ConnectionGUID: PcEa5HjPS/a4eDqts8bHkQ==
-X-CSE-MsgGUID: +5F6s7z9SE+5TbaVj0QX5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="261646587"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.106])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 10:12:27 -0700
-Date: Wed, 13 May 2026 20:12:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Hardik Prakash <hardikprakash.official@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linus.walleij@linaro.org, wsa@kernel.org
-Subject: Re: [PATCH 2/2] i2c: designware: fix probe ordering for AMD GPIO on
- Lenovo Yoga 7 14AGP11
-Message-ID: <agSw-Y_jjliO1gaE@ashevche-desk.local>
-References: <20260513061338.9348-1-hardikprakash.official@gmail.com>
- <20260513061338.9348-3-hardikprakash.official@gmail.com>
+	s=arc-20240116; t=1778692629; c=relaxed/simple;
+	bh=fzd/vjb1u/hgb97IIYa6s1ipXIoqKNbwIvaC6OZFVtQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VG0yJICpk83DtXJd5c9DTYRYslL7gVCHLy3wpAcuGxNU6RomBc4AGzqKiypmBiwoI7eweLF5QJ3HAyexYrly09yq82GSG9qR7qBqNpg9CHj/tvRWUnHAqXVW3AAmP8vwg5giL1Yb9Ydt98vUZbnugVeOE99aA95bx3vzDWxidOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=doj8WYW9; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VwTg53Ax; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64DFdt7E1242989
+	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 17:17:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Jx1/70KZBMxN87YCAFelMj
+	Lwd8H5nC5QRAC82Z/a19E=; b=doj8WYW9nQl1bm4XpaUDKLOxmiewaY7ayXEBEm
+	Jmq4WomSg8Bxiawk7NqxRfS3kn3RE4sRIZ70aXSwif/98faBGT313er3vFJu8hVJ
+	w875fu7uf6xEKWx/2gqMl0m/CGHaMXM315yVicnMAUUyEmSWrz+nBcscg78yxZ9O
+	6DU16hlzV1gDW7KLvRuGNlfX7/caykeble/2hvlgfYWOH2IiwQtaxeSo48ZJbc7K
+	2VRpbY6XYjXssA1K7vpNTZw9vM/M5L/BCTx6LNcpqg7ANVRzxp7obSbB2cyGlXfU
+	zi6Hf7ky5E43F2EhOWkmkPdi21hQFHDq7ORNEfvuvJmQcxTA==
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e4v4trd9s-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 17:17:01 +0000 (GMT)
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-2fe1cf409a1so6107865eec.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2026 10:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1778692621; x=1779297421; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jx1/70KZBMxN87YCAFelMjLwd8H5nC5QRAC82Z/a19E=;
+        b=VwTg53AxrwR+Vs4qdgj0ANcI0PDFnwI60Te+TWNSR3YCPjFACnKET0T7fHXca9Q3Zv
+         pT276dGKRje86tDNGlVF3YuQxY+t9B54iUrWr3lFWplhh9h610rhv5SO3g3X9E3a870S
+         4Pj1URXj5VVTzH+/dFzPqOMxzUzIAGSqtkQmhTMWuEj4C2KV4aEkTTG0vK5ayhq/cTKQ
+         3s00F7i6Ynm9bAAvbbZ8zrycfhE13UoYuy0+Zc6aBOVxgS6moql2ejXH0fjmAiCFirN8
+         lNHS1hBxtHl8d5E/0KqkkAl7ATbbdUMUubl6oXKvkGk+AryOp305jIJyJG7Jd6mXNLGR
+         hMEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778692621; x=1779297421;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jx1/70KZBMxN87YCAFelMjLwd8H5nC5QRAC82Z/a19E=;
+        b=P0Q+E7lv1pAx67sM+HFTzK3sXgVoNFOSDhIdXuBsJ/r3OMdqmW6LnOrDjFtKzXxcAx
+         sMst99RGFty1h4OUiapSufzacGmWyU+0ETX+wFsXPYbsnDEK5NQXRyQjZIkHsA+bDxv5
+         dizxUqdQBi0LcyrUCVxhFPjkHHsW2VsPmga0vNtsgxADY810RZHEDlPO42AWMGYuWlpN
+         EX1JLLGsTXKbPpUBXUt3eRCKzXoEDJRE/ra73VOKNiW3sPm7sxoPRjNGYXSQS5EeIhZb
+         WrMBSCqoFmCUAmUZJ2zsCEgtS1six5er6XVDOLZq1jGa0Jy3AuFeZ4YpBwBdeAP/CERp
+         FaGA==
+X-Forwarded-Encrypted: i=1; AFNElJ8elOEH4HSLeJEoRkZiqaiNcEb4S/6eVVJz8erJgD6gXYNMpsPHSNyeJJI2CdO6Xe37GtsSPhQ6VHVB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWnBoTNuyLv3vfJDvW0Q2Om0czBNPlOCTRD35T7oHbA3/1SkJK
+	zayRHMJIgjLLvBb7XNunx/9cfygTAwyoVFoHYn1CuI+xn2hLw7wpCgTZLywrJsuGb0erDhhY85P
+	Xewzgt9AsehWdes42+RxkCxp/jBsF6UI/lWYf81fz24AaKundjBv0eypuFi8UzfPG
+X-Gm-Gg: Acq92OEgmiSbtkztZiDK2W8xyeB+BQwBTKHxMO06kvxxOdZ6HioqKLOCaTx1xMIWhda
+	B/8pjZ03yiWEEbISEEO/ft9z+ef+h2vp4f18c9Fxumea2PI48aLnqwFY7Gs/1m60yNBEBllMj2j
+	xhNZQlWz158d9NVZNDMgoNUWjHHnaJ8oJ5cmdEh65MpRVqFrEg5YShmBp5pG9ztVehcH0GZFE1+
+	S20OkHy5C+UL2CoiCcpQ4pmLwhLbznODT+ROb9GS3wdWxby+zOwuZAq+ikKFfLgCSGflI1Sz4pc
+	sRRLadEculxHZYvhxeyasZl7GetOWjyPbz7bgOLWrHBktrSZh4yQ/6+Bg05Qc6JAEejT9pp53kD
+	tYp93uc9HwQEUDUIkmENOeCykXw3xFcVH/vou6ormF6iv6nqV2sU2CW36SRrnerYJsWuwkB4=
+X-Received: by 2002:a05:7300:ec08:b0:2e2:4979:eb5 with SMTP id 5a478bee46e88-301181a676emr2698551eec.10.1778692620779;
+        Wed, 13 May 2026 10:17:00 -0700 (PDT)
+X-Received: by 2002:a05:7300:ec08:b0:2e2:4979:eb5 with SMTP id 5a478bee46e88-301181a676emr2698523eec.10.1778692620213;
+        Wed, 13 May 2026 10:17:00 -0700 (PDT)
+Received: from hu-aletran-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f888d3af4esm23075939eec.25.2026.05.13.10.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 10:16:59 -0700 (PDT)
+From: Alex Tran <alex.tran@oss.qualcomm.com>
+Subject: [PATCH v2 0/5] scmi: Log client subsystem entity counts
+Date: Wed, 13 May 2026 10:16:53 -0700
+Message-Id: <20260513-scmi-client-probe-log-v2-0-36607e9dd540@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260513061338.9348-3-hardikprakash.official@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 4679E538260
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAayBGoC/3WNwQ6CMBBEf4X07JJtsSCe/A/DgZYFNgGKLRIN4
+ d+txKuXSd4k82YTgTxTENdkE55WDuymCOqUCNvXU0fATWShUOWosYRgRwY7ME0LzN4ZgsF1IIv
+ MthfdaJ1nIm5nTy2/Du+9itxzWJx/Hzer/LY/o8z+GFcJCIjmXBhpCLG8uRDSx7MerBvHNIao9
+ n3/AH0Dg9vBAAAA
+To: Jyoti Bhayana <jbhayana@google.com>, Jonathan Cameron <jic23@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sudeep Holla <sudeep.holla@kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linusw@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, Alex Tran <alex.tran@oss.qualcomm.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778692618; l=1518;
+ i=alex.tran@oss.qualcomm.com; h=from:subject:message-id;
+ bh=fzd/vjb1u/hgb97IIYa6s1ipXIoqKNbwIvaC6OZFVtQ=;
+ b=8l/21SLzmvsSoWLwwEfvmbO5Eh+2Zd3kiPyE2vcX82D5ElADwxGzPYS6H11r/GbzbkoITVhZZ
+ vXKXed0fUU2Dshw//daOmL2IuIk3EdWjopaoUP7UBGfpOzKvblX1sea
+X-Developer-Key: i=alex.tran@oss.qualcomm.com; a=ed25519;
+ pk=vKab/gw1fXij5UviWoglv+ho+H/oOiTHyETCLfayPE0=
+X-Authority-Analysis: v=2.4 cv=XIIAjwhE c=1 sm=1 tr=0 ts=6a04b20d cx=c_pps
+ a=cFYjgdjTJScbgFmBucgdfQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=0wi9YMwNQcJCIsSnl6QA:9 a=QEXdDO2ut3YA:10
+ a=scEy_gLbYbu1JhEsrz4S:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEzMDE3NCBTYWx0ZWRfXxNvoh8E3dWNX
+ sLXc0kgCnVjA9pGvHXHS3be5IsARA0BlPB7wjTKa2L1BOSHGREMJqxsUnIFGl2V+JSuRI2TTVEi
+ klmnCJFbs7HUmYuf5/c28lWdjVg4ZKuepKBF5GZhecaTEAjiLGA2hIa9nEC15Z2Ok6bAWond/WV
+ tqkKVIVw2U5jIx/MXM9i4te07DvGS14w7td4E3o6ftsbl3vdzXZ0dreRtbrk5dEMy+T8BbrXTXv
+ RjS8+2fjDd94tJI1pNV1hQZqYjzfuSkfACQbVtZT4Nka2ILi3IfjVaz9AXWToxHtyEy0QUKlVBN
+ db+VtwDB5Tyi3fDYZsKwvoP0pnkOUto4hqTaZR0E+6lOf2CdOoGaUTgb89+U1sxR/rMSOvmZ1/i
+ rH7slMdEsun/JpQ9c/yDEIjYIp0dU5qR7j9oTxVzGgnsecxodwiB1ySs9KGZ43tQr+Alg6tn56P
+ WECN3rDp7Ywg8l0uDmA==
+X-Proofpoint-ORIG-GUID: w3F4KcQ2v5N7UQXOqhxXEtnR7Jvhakhc
+X-Proofpoint-GUID: w3F4KcQ2v5N7UQXOqhxXEtnR7Jvhakhc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-13_01,2026-05-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605050000 definitions=main-2605130174
+X-Rspamd-Queue-Id: 7F45F538035
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36775-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,amd.com,kernel.org];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-36776-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alex.tran@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ashevche-desk.local:mid,intel.com:dkim]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-Please, Cc AMD people on the AMD related stuff.
-+Cc: Mario
+SCMI client drivers do not consistently log the number of supported
+entities discovered from firmware. This information is useful during
+debugging because it shows which domains or resources were exposed by
+firmware during probe.
 
-+Cc: Bart
-(the GPIO enumeration and checks, smells like it might be done differently).
+Add logging of the number of supported entities to the SCMI cpufreq,
+pinctrl, reset, hwmon, and powercap client drivers after a successful
+probe. This aligns these drivers with the existing logging in the SCMI
+power and performance domain drivers.
 
-On Wed, May 13, 2026 at 11:43:38AM +0530, Hardik Prakash wrote:
-> On Lenovo Yoga 7 14AGP11 (83TD), the WACF2200 touchscreen fails with
-> lost arbitration errors on AMDI0010:02 at boot. The root cause is a
-> probe ordering issue: i2c_designware probes AMDI0010:02 before
-> pinctrl-amd has finished initialising, so the GPIO 157 interrupt
-> needed by the touchscreen is not yet enabled.
-> 
-> Add a DMI-matched deferral in dw_i2c_plat_probe() that uses
-> device_is_bound() under device_lock() to correctly wait until
-> pinctrl-amd's probe has fully completed. Use acpi_dev_get_first_match_dev()
-> for robust HID/UID-based GPIO controller lookup instead of string
-> name matching.
+Signed-off-by: Alex Tran <alex.tran@oss.qualcomm.com>
+---
+Changes in v2:
+- Use dev_dbg instead of dev_info log level
+- Link to v1: https://lore.kernel.org/r/20260513-scmi-client-probe-log-v1-0-00b47b1be009@oss.qualcomm.com
 
-...
+---
+Alex Tran (5):
+      powercap: arm_scmi_powercap: Log number of powercap domains
+      cpufreq: scmi-cpufreq: Log number of perf domains
+      hwmon: scmi-hwmon: Log number of sensors
+      reset: reset-scmi: Log number of reset domains
+      pinctrl: pinctrl-scmi: Log number of pins, groups, functions
 
-> +static bool dw_i2c_needs_amd_gpio_dep(struct device *device)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(device);
+ drivers/cpufreq/scmi-cpufreq.c       |  5 ++++-
+ drivers/hwmon/scmi-hwmon.c           |  1 +
+ drivers/pinctrl/pinctrl-scmi.c       | 11 ++++++++++-
+ drivers/powercap/arm_scmi_powercap.c |  1 +
+ drivers/reset/reset-scmi.c           |  8 +++++++-
+ 5 files changed, 23 insertions(+), 3 deletions(-)
+---
+base-commit: 1bfaee9d3351b9b32a99766bbfb1f5baed60ddef
+change-id: 20260509-scmi-client-probe-log-173cf85d5563
 
-Split hard-to-maintain definition and assignment that's going to be validated.
-
-> +	if (!dmi_check_system(dw_i2c_amd_gpio_defer_dmi))
-> +		return false;
-> +	if (!adev)
-> +		return false;
-
-	struct acpi_device *adev;
-
-	if (!dmi_check_system(dw_i2c_amd_gpio_defer_dmi))
-		return false;
-
-	adev = ACPI_COMPANION(device);
-	if (!adev)
-		return false;
-
-> +	return acpi_dev_hid_uid_match(adev, "AMDI0010", "2");
-> +}
-
-...
-
-> +static int dw_i2c_defer_for_amd_gpio(struct device *device)
-> +{
-> +	struct acpi_device *gpio_adev;
-> +	struct device *gpio_dev;
-> +
-> +	if (!dw_i2c_needs_amd_gpio_dep(device))
-> +		return 0;
-> +
-> +	/*
-> +	 * Find the AMD GPIO controller by HID/UID and get its physical
-> +	 * platform device. We need the platform device (not the ACPI device)
-> +	 * because that is what gets bound by the amd_gpio driver.
-> +	 */
-> +	gpio_adev = acpi_dev_get_first_match_dev("AMDI0030", "0", -1);
-> +	if (!gpio_adev)
-> +		return -EPROBE_DEFER;
-
-Hmm... This is interesting case, smells like something similar to what we had
-with x86 Android quirk driver. Cc'ed to Bart to briefly look at this.
-
-> +	gpio_dev = acpi_get_first_physical_node(gpio_adev);
-> +	acpi_dev_put(gpio_adev);
-> +	if (!gpio_dev)
-> +		return -EPROBE_DEFER;
-> +
-> +	/*
-> +	 * Check that amd_gpio probe has fully completed, not just that the
-> +	 * driver pointer is set. The driver pointer is assigned before probe
-> +	 * finishes, so checking it would allow i2c_designware to probe before
-> +	 * the GPIO IRQ quirk in amd_gpio_probe() has run.
-> +	 */
-> +	device_lock(gpio_dev);
-> +	if (!device_is_bound(gpio_dev)) {
-> +		device_unlock(gpio_dev);
-> +		return -EPROBE_DEFER;
-> +	}
-> +	device_unlock(gpio_dev);
-> +
-> +	/*
-> +	 * Create a device link so the driver core enforces probe/remove
-> +	 * ordering between this I2C controller and the GPIO controller.
-> +	 */
-> +	if (!device_link_add(device, gpio_dev, DL_FLAG_AUTOREMOVE_CONSUMER))
-> +		dev_warn(device, "failed to add device link to %s\n",
-> +			 dev_name(gpio_dev));
-> +
-> +	return 0;
-> +}
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Alex Tran <alex.tran@oss.qualcomm.com>
 
 
