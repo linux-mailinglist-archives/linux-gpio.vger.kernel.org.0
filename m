@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-36847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OGtiDoTLBWocbgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36847-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 15:17:56 +0200
+	id yBceG4fLBWrvbQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36848-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 15:17:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C890542309
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 15:17:55 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47151542317
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 15:17:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5E18D300E496
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 13:17:47 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7A5D43021F51
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 13:17:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F0E3E075D;
-	Thu, 14 May 2026 13:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97AB926E6F2;
+	Thu, 14 May 2026 13:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bun2uiHX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZqgPjyd"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B253E0745;
-	Thu, 14 May 2026 13:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AE83E0732;
+	Thu, 14 May 2026 13:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778764651; cv=none; b=W+J1NIxXgbUMpCs4JjjXq+j0Zsdv633ieIrCXY3TAAIb8NwaCep7dCcKSRT0LHamSF2w8oJxJ/ETWZyZSqIbiEhEKlKGCBSjOzG3EJs0kbaiJ1h7bePMj0iWO6ELd2abXCLqvX2GIC7s7ya6XvTZng70VUvF2b/VAg4c5h9c1Ec=
+	t=1778764654; cv=none; b=tiGpTM6ffUudF0VkUZr2fUSEIDPzibDrlQkfRHG1J4YdPtCrDCqN3tN+vAYVnXR/nD040pzRe8syqVdA6R2J4a/mtTMj2lDAgMxkv2g43RHmudK+pPqPgxKZuH33hBlCgapHUw7zrTjAl8+w9+ZzJBx9At11TRnWaPq3CRvbDCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778764651; c=relaxed/simple;
-	bh=GK+pcqSgFJkVn54Slq5nyvwaQWsp/qlPoexNRpOCAOg=;
+	s=arc-20240116; t=1778764654; c=relaxed/simple;
+	bh=LXjR9KI/K4yRWbtOHy6vX/mBQ02JhQVFQtCevl9ZyN4=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=daPPjfLXL1KEEklUAbA/TyVatQi4Y0SP6E/u2UYmGDVSVZj5MUDzGfORsB3S7mljHNXpt3GUhYvu44xI8jghj1qQznB9qn+k4zYgi3f/RTXwUnAQ4A8B1FAI3bN6QebzEBnCC4AMbqT5VGdYpy7AsJwz8PFfUX+fKzgjfseQNVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bun2uiHX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BEEC2BCB8;
-	Thu, 14 May 2026 13:17:30 +0000 (UTC)
+	 Message-Id:Subject; b=qquoE/TxMWhpkqpbBvOBQk0qBuC4n6b6vA110Wvo7z4UObV7dpj/GxHEH1qfg1ToNcnEqt17KEm3hdnZ8n561ldQcqZHX0yhsdPQ3efTWIFDNCSSPb5TzuMz4g1wzSUePO25d2hPsiDZXyDWXDSwmR9hg/J61zDxhmDALvoQoaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZqgPjyd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC04C2BCB3;
+	Thu, 14 May 2026 13:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778764651;
-	bh=GK+pcqSgFJkVn54Slq5nyvwaQWsp/qlPoexNRpOCAOg=;
+	s=k20201202; t=1778764653;
+	bh=LXjR9KI/K4yRWbtOHy6vX/mBQ02JhQVFQtCevl9ZyN4=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Bun2uiHXReT3cQ7hmE4On5Pj6AgD0axSugnB/1bEulhqpU5DEnwxUymmAQhqfOUg0
-	 HDxAQoAESbU47r3YR4F8pw2rXCslvM5mRFN08hqvseanirCI2kGd+AA8Io2gK2xFBb
-	 CXNLYIvS4uz7O7djvZTWnIGWoDdhjdboQcXZ/1Q4zSgbc7WLlqKL8nMHkQxQviw+M1
-	 1qoDxpTl0iEaYnFKa03UR1tOUvBQ+Ft0RB5pZ4x9wKZ/KeZ4h+g3h3MLuG/9WOkwip
-	 vdHvfZfBplaL035BR64XA3tRkkmhiihxo22Nh+pMaLRS9O7hUfIMsxythdg09VZo+z
-	 mHQR4hblNjFOg==
-Date: Thu, 14 May 2026 08:17:29 -0500
+	b=rZqgPjydVuobHeUYkV1cuOag+GmpEeNIEQR/HfW94JNIsgt/CABxNOsb6cPpkxgAW
+	 GB7XsEUzIjp7c/qAFZKhatGp8u4BGIf8m3ifeuJH/vAsDkmfF1rIR/KRcAXxE84zmt
+	 eYffQKHeaTxWIbYoWYUqQA9OJT60BRCjNG2bGZWM9Y2erzBnTTGOinHyKcGW8iSE2R
+	 koDyK/MqmVGmmBX+v0+x8mVtzgSxXzgUgJxKxAgG/W6Y2rd7fW6eK1tM8C3TQr86ld
+	 DPgzyCqlVD4MNGMLE2e8/uoFdW8tYOc7f7Zqd8zClC4mavyyR3jjAMP1uov1v5fA+O
+	 vRjjs0NZ6llXg==
+Date: Thu, 14 May 2026 08:17:31 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -54,86 +54,79 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
+Cc: Emil Renner Berthing <kernel@esmil.dk>, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Alexandre Ghiti <alex@ghiti.fr>, 
  Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Bartosz Golaszewski <brgl@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
+ Paul Walmsley <pjw@kernel.org>, linux-gpio@vger.kernel.org, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Linus Walleij <linusw@kernel.org>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Bartosz Golaszewski <brgl@kernel.org>, linux-riscv@lists.infradead.org
 To: Changhuang Liang <changhuang.liang@starfivetech.com>
-In-Reply-To: <20260514111218.94519-13-changhuang.liang@starfivetech.com>
+In-Reply-To: <20260514111218.94519-15-changhuang.liang@starfivetech.com>
 References: <20260514111218.94519-1-changhuang.liang@starfivetech.com>
- <20260514111218.94519-13-changhuang.liang@starfivetech.com>
-Message-Id: <177876463989.125858.724905267935459432.robh@kernel.org>
-Subject: Re: [PATCH v2 12/22] dt-bindings: pinctrl: Add
- starfive,jhb100-per0-pinctrl
-X-Rspamd-Queue-Id: 4C890542309
+ <20260514111218.94519-15-changhuang.liang@starfivetech.com>
+Message-Id: <177876464157.125909.5389364363930328136.robh@kernel.org>
+Subject: Re: [PATCH v2 14/22] dt-bindings: pinctrl: Add
+ starfive,jhb100-per1-pinctrl
+X-Rspamd-Queue-Id: 47151542317
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36847-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36848-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_PROHIBIT(0.00)[0.199.157.144:email];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[11a0a000:email,devicetree.org:url,0.199.153.168:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,11b42000:email,devicetree.org:url]
 X-Rspamd-Action: no action
 
 
-On Thu, 14 May 2026 04:12:08 -0700, Changhuang Liang wrote:
-> Add pinctrl bindings for StarFive JHB100 SoC Peripheral-0(per0) pinctrl
+On Thu, 14 May 2026 04:12:10 -0700, Changhuang Liang wrote:
+> Add pinctrl bindings for StarFive JHB100 SoC Peripheral-1(per1) pinctrl
 > controller.
 > 
 > Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
 > ---
->  .../pinctrl/starfive,jhb100-per0-pinctrl.yaml | 176 ++++++++++++++++++
->  .../pinctrl/starfive,jhb100-pinctrl.h         |  62 ++++++
->  2 files changed, 238 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per0-pinctrl.yaml
+>  .../pinctrl/starfive,jhb100-per1-pinctrl.yaml | 175 ++++++++++++++++++
+>  .../pinctrl/starfive,jhb100-pinctrl.h         |  38 ++++
+>  2 files changed, 213 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per1-pinctrl.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys2-pinctrl.yaml:135:14: [warning] wrong indentation: expected 12 but found 13 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys1-pinctrl.yaml:136:14: [warning] wrong indentation: expected 12 but found 13 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per0-pinctrl.yaml:136:14: [warning] wrong indentation: expected 12 but found 13 (indentation)
+./Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per1-pinctrl.yaml:135:14: [warning] wrong indentation: expected 12 but found 13 (indentation)
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per0-pinctrl.example.dtb: pinctrl@11a0a000 (starfive,jhb100-per0-pinctrl): gpio-ranges:2: [32, 28] is too short
-	from schema $id: http://devicetree.org/schemas/gpio/gpio.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys1-pinctrl.example.dtb: pinctrl@13081000 (starfive,jhb100-sys1-pinctrl): gpio-ranges:1: [8] is too short
-	from schema $id: http://devicetree.org/schemas/gpio/gpio.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys2-pinctrl.example.dtb: pinctrl@13082000 (starfive,jhb100-sys2-pinctrl): gpio-ranges:2: [32, 5] is too short
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per1-pinctrl.example.dtb: pinctrl@11b42000 (starfive,jhb100-per1-pinctrl): gpio-ranges:2: [32, 4] is too short
 	from schema $id: http://devicetree.org/schemas/gpio/gpio.yaml
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.kernel.org/project/devicetree/patch/20260514111218.94519-13-changhuang.liang@starfivetech.com
+See https://patchwork.kernel.org/project/devicetree/patch/20260514111218.94519-15-changhuang.liang@starfivetech.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
