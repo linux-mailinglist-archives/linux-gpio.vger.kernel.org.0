@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-36807-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36804-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DyaErJIBWp0UAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36807-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 05:59:46 +0200
+	id 8AdOCkxFBWrmTwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36804-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 05:45:16 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE85053D7B1
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 05:59:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C772C53D621
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 05:45:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 761A53025700
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 03:58:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 109A83041A4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2026 03:44:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47CD13A9624;
-	Thu, 14 May 2026 03:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B4393A63EC;
+	Thu, 14 May 2026 03:44:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2118.outbound.protection.partner.outlook.cn [139.219.17.118])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2131.outbound.protection.partner.outlook.cn [139.219.17.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F823A6F1C;
-	Thu, 14 May 2026 03:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819B32D739C;
+	Thu, 14 May 2026 03:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.131
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778731111; cv=fail; b=eQBAAbwddpR9/4dJOTSNBiHoLsj6S/wS/HavxZpaTexH6V+XNBxVeQEEP7681Hl3TUWMlLSjsPnbOJDQAOlMaGgz3hJs6nZUjbppQvtf3ov5oVzfXvgQBgLDv/pWMF+ehjRJsZQXzikXWKg7EwbnDgazeDZYPr/Jj88SWJ1CBe0=
+	t=1778730290; cv=fail; b=D+PQYqtfoTVJEzg7LI5mi6Ebqlh2j3MtfimyMI3ZrK1abNDLxaXLceoaqJNUJMiMLCiylJ1X3rcO+qqK5QDYBYl75AV19MS2mL35WTyh97/Pz3tNi1HIjlB8eKnY8TFA/SAaqsHIHJ6XOnEUSqF64yg2P6M3IqGxSBoJQlBzZaQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778731111; c=relaxed/simple;
-	bh=DMFSGvmzjB22HGsQklKUpqo0BMrqae3id+XHJzI5/Yo=;
+	s=arc-20240116; t=1778730290; c=relaxed/simple;
+	bh=1/eJ8J3mM8dv3JIHBdNDuXIGXe9pzhBY59unkLGLq0o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UJNtVEE3KV/mTpGKo3mFCy+wYDlf4/GAfmyYC5nP6a5TB4K+s+Z4f76LtGe8/NZS5vd00vY50F+78f+58AUg7Nk3WoyXcflZ28mQN30JGJzMSVwGEN25hfk0m5SLYKbvtM5BHAIBMyvIL2YAamHuUhCAy3uCx1yaVVXDxeeIAOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lecomputing.com; spf=pass smtp.mailfrom=lecomputing.com; arc=fail smtp.client-ip=139.219.17.118
+	 Content-Type:MIME-Version; b=uOZ0X0wusdAmGsTxQIYvGVraMPCVsbkHAns1nHR5a5GjFR1aCmrL+zVhI4bzR/H1iGqYsRWec2+ucSfZC2+QttXs4XcMX+zm+VKROoYMS0U/CSUmkTq58yzFZD/ZtW3mD+4ED1CFKGTtjPjAeQkZa8ay4mY9MowFHcBCDpxIFt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lecomputing.com; spf=pass smtp.mailfrom=lecomputing.com; arc=fail smtp.client-ip=139.219.17.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lecomputing.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fc9qapATVSNDBMc1tqepb+Frp+yEbM0WyrBl/zqGtuZlfR6ztfDra4OQ8PcNEHXICjy0fDPLhb0xRLcHkZXi3eaByVfjg4RugjA/F5KeMH66A9qPGWc9gd9Q5fBwRhpF6xsQ0WIN5nSJt6cje0MseYIP3/nXHZTMmOm0gJYPQJj4eRAzPOEM/+rrtERA7Dp0XjxGmda6j8e+FFI5WnVTYnisJHhCvFauZxmMK4BsWQeT7mYGyyDVTFPnxzFfKz73bZZ981oKGZeF3mz5mqmO7X2zFYA4mx25VeHlqev0C/pjdreuvDdesio9iaOlmyDrjvjdAHqRRs/6CIc0BvWQqQ==
+ b=PVXiqIYBiiUZZWE0cOloN3TSqIqTYNIZHx3Id3EOFzvOAUVYvepYHB8VyMhNY2gHXWuRuSFbhYzpF5qbKtQU3kkK/YClLhJjUxBoqjCyZOFrffURDdkfIQs7+TvMS1A9Vvm26vC3BbMQRXbfJjPOyz+Fl60J/W2gxvYBjFiZQVuP9QwMYxc6b+c7Hz4WzHvL+gZvO7/X3Yy6bqh1NArIQHFGpndY/a+nzPjvboOYVN62/0NqFxjguowH9gGTrPPXPE50o3Ob12BBfQXJgI3hmcH5NqYm4Y/n7PnkxPle7H276aUb/eEvg0GBlrIquw/3plLWivGsSu6ihxCOosthyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fjFmoGtxp1015bXAb5lhGlLRx5FGNB5vqi4MAYCLRIU=;
- b=OSjkvsb0ztRFHEKp3La38AZ6/Q9uUrdv6lwygfohUXnJu8/e20mn7U0DuC0pNr7jtRgRkdyOzKz8iRFvETHNk79rCsHGIuzlRSI73wNb7V5PLD55QrHZ8btvuXx9r3uJizYmnkA0FxGHqymscRz1panYmuWxvl4pU3DxmGze3lhsk3vgTC1o63Sce4H9NqW0Sms/7qas18hC0TJoX8idNADaJGrCPWedsXpSm/Hu6ghLfd0r5xHp+Qp4C03N9Loq+RYqS2/qULkFer9jX5rt8CgOSfiMFLOqAdCqkC8gICevbzi6eqN+CfBPClhuexgvs1JRw4CjOOFH5q5AXXnycw==
+ bh=//a1aFG82GY4k9F6LaiZ3hbHrvAAVlpzESOyA/x0jSQ=;
+ b=OnohHsB/fCyfXp9IcAn4vbF4qSfp2Ufo07Y0aHffduBUGeqm9FcOVI25/4k1C4Gc7OUtfbimtv9SAg/+yMPn29oc26GFIxov1WMrW9N14K2rnaYmgoGVMO2leyf9Rlu078sFq8fVIg6raVnu10mWbeN6t87tjT1shWqM93g45v2A2fwdVYKhRaiWmmOqKjkAWhytKNIsmtJ5BsuqAJwkEigZ36w779FiXbcQ3jhTb5I5o/5K0L9K90c8tK17JN7tVNodZTiFxiRPJ04ibdCkvGMPYSwBPiwaGlvWgiaYofLoF8uzRwBoOAh0qVSTF+odDfFI96lLa8F+8+hKYsfCmA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=lecomputing.com; dmarc=pass action=none
  header.from=lecomputing.com; dkim=pass header.d=lecomputing.com; arc=none
@@ -48,11 +48,11 @@ Received: from BJSPR01MB0707.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:1f::17) by BJSPR01MB0515.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:d::15) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.18; Thu, 14 May
- 2026 03:43:31 +0000
+ 2026 03:43:34 +0000
 Received: from BJSPR01MB0707.CHNPR01.prod.partner.outlook.cn
  ([fe80::1c61:86e3:3a75:155d]) by
  BJSPR01MB0707.CHNPR01.prod.partner.outlook.cn ([fe80::1c61:86e3:3a75:155d%4])
- with mapi id 15.20.9818.023; Thu, 14 May 2026 03:43:31 +0000
+ with mapi id 15.20.9818.023; Thu, 14 May 2026 03:43:34 +0000
 From: thomas <thomas_lin@lecomputing.com>
 To: rafael@kernel.org,
 	lenb@kernel.org,
@@ -82,9 +82,9 @@ Cc: linux-acpi@vger.kernel.org,
 	ryen_lin@lecomputing.com,
 	andy_jiang@lecomputing.com,
 	thomas <thomas_lin@lecomputing.com>
-Subject: [PATCH 1/3] Add ACPI ID "LECA0001" for LECARC SoCs that use the DesignWare GPIO controller with V1 register offsets.
-Date: Thu, 14 May 2026 11:43:15 +0800
-Message-ID: <20260514034319.3507315-2-thomas_lin@lecomputing.com>
+Subject: [PATCH 2/3] Add ACPI ID "LECA0002" for LECARC SoCs. This ID requires a custom initialization function dw_spi_lecarc_init() that sets dws->dws.ip to DW_HSSI_ID.
+Date: Thu, 14 May 2026 11:43:16 +0800
+Message-ID: <20260514034319.3507315-3-thomas_lin@lecomputing.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260514034319.3507315-1-thomas_lin@lecomputing.com>
 References: <20260514034319.3507315-1-thomas_lin@lecomputing.com>
@@ -101,58 +101,58 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BJSPR01MB0707:EE_|BJSPR01MB0515:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c181c39-b1ca-44df-d4d3-08deb16af79d
+X-MS-Office365-Filtering-Correlation-Id: e3553ddc-9193-40f5-709f-08deb16af93a
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|7416014|52116014|376014|366016|921020|38350700014|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	BzUH7+S24b00rRuHKWqiF8hn9SHm6+LfZFDpQxpWKma5DJ0DQtugj/JMc1fcOu5NeDR5ilGrUNvzVr2anWUPOqFctBz62u96PtPXBOigZGM0vUeBSnQWsh2+8ct3eFV80Hx8R11TJDJ7lKhlgww5kkr2yk8m8n2Ohi0QzAq9JZUj1INwab1oGyQzz5cq9oup/4r+DUYEEDg+9+R1WJlSb9H+GzA36XFfSJyz+hBczlVlMMZNodtptGi1RHOtYhKdxtpX8W1txHfnNaWwc5wSl+aEvpg9G2SBul9mROVhhlSiZWxpaKAJPI9Kq3RZJ9advgXP0Hx/d7JvPZWaVJic882CXPZU7scT5DWAsU33j+9nqqgY9ErBoa5r7MUP+oQODu89/FkALV++2qlV4OcG+2qXltg7Mv75kbOu5mPrlPX4B6UaLI+8eG1IOLpkqXCivWXF1AXUD7xoKgphHzhyU7+SZ5R5Kbm/80yRVarw6DwTTMF+8G8hnslSN0JimYPtgtTFD1qqihDhW0+2WNgFA+yjDXJhx9jNQpDOfOCq0WerYM57ox/yRCVCDlPA1Cwv4wEdgw1XKxnclCpBwQJzAA==
+	9Ve4yRChoxGeBZUq9yFhl6lXJEr7XpYv9KGCKSjVsw6WZ4E9+0qXSFNr4uaNgF1t/4Vsg5LHJcjMKFu5xeF5DC+T6UN9GnpxjRmGSjuFE33Rc5i3uwPLU+XCc5sPsLQP2Tn6PJ/qtesVsknUEhf/TGTGIaUszSF9cOHoYIETeuOpZEM8MXKnShGDJoSxlXbnA8jovKHU1WQvAtx61h3urrLGUooY1sdc6tn87BHjnBXfWIunlMwnvsSOio8Tq9vJwKgyWte23QWRkj/hnvAKfgel/NoWk+fe3xj82K/a4T2PtPSCHjGTix7dpsWHBjmMdtQnHkFxOVTtwhcXrnt00Ionx/pYw/cJSY+F7zXz5xiJ8ag3ciXsNXcpG7aeYKkDlN5UM5zz/+8WZUnKSUVzOfVcbcaV7NfPkzrDlco2micxr8rPdQ4Uvcm9YJn3Lk8pSQiVmmvgwMQOKTEhuYU/+AJ356cKo5/MzJpFKrOJDzIFtk3esHMIyny1ugvg9zrmjbXD8W2IAXzoKFxGTkRFOK+IJz5okSVb90DSsIAg1GcyvxdRDs4MvCkXLEVcPRUKVEvl7bRRXX3tq6rzlg9i4Q==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0707.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(376014)(366016)(921020)(38350700014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ol1+C2oB/CvDTiAxua6kOV+XccAT3n8jinkd3RTPpp1DAL1UKjLepY79Gh3u?=
- =?us-ascii?Q?KbQ4nYRZdSgHlv+WTCcXthlCynzgkP/TIbh4q5ZCXcM1jZSw4+sDOANBv79+?=
- =?us-ascii?Q?cVwwAF/f45ZNGCW1NaL/Ghcnmc6c4SbK0sA3lmE4iQZ6+2j4BXG5ZyBVgYDd?=
- =?us-ascii?Q?4kOaAgs6emZYFpGhO8btWxux4REjGy5KhZpxUdGm0mtIuOdZWszsEOSKRk6h?=
- =?us-ascii?Q?3FQwJiAKP1p8yRiuNhwa+vdPy+P9NnnnVdnj8+qRf3j1izaGRQkMdDpVYZJ3?=
- =?us-ascii?Q?sbUCm0hRw0xHz6UYgMYiXmW7P4T4XXMyD8cTRTVrZm8GvG95Xxhgx44h1m6P?=
- =?us-ascii?Q?p+Ymv40+hUYtNY8yjW0kSgjAX/1pwwoL2VrpnVxAY1mHmoLXR4odqZTe1dP4?=
- =?us-ascii?Q?OUKET4B3On1/m/E6L4rZuY1jLVfK8ErlxyLX8SrGFc9Kud38G/YcW8q9VZxS?=
- =?us-ascii?Q?P9snjUq0CeiyVpGEl8jAveseyFQRS6J8lMLqNnAA5D5tY/MCCEcDgZVqSqqr?=
- =?us-ascii?Q?AUg/HHBoYvn9J2pq24DIrgPWUnk5M9N6wJGXY8voe/brruy8K6pZ5xU/DgA8?=
- =?us-ascii?Q?nqg94gmYaQ9eVRKx++1Gy5g75kyzhdS9uX2CUDqZCca/MLRWZxPyTbJJ0wjj?=
- =?us-ascii?Q?Qc5Yh7yguTB226lUaZ0xzV+gelklsib6srw301RaqsvOBtvBIFKx5K+FKBLc?=
- =?us-ascii?Q?boJTaL6pK05+uXrROFGCBZgjSf/mSNmLfhwBT/R1Iea1pvHMYYnoFG3cMSYz?=
- =?us-ascii?Q?TcOJU/7RVl7h626MALTt0qYQBKltwE5vknSUT1hgR2fCQLFLt1kAL+8lzYND?=
- =?us-ascii?Q?eP0qSmMsTV41aqeurD5kou6G5enAnHw3kGJj9o4XZVHcKsD1XMBOBj3zkOaj?=
- =?us-ascii?Q?cWDSvF1QJ67g1MZH/4BDWBpKN1sJNLH6ovqTlaYq0jqw7cCXZItvvWifIcfc?=
- =?us-ascii?Q?RGMyexcEY6G2No98psfHfRK0GPhMTIwlTX98IYR5h43BwOlWbzTGFE2aQDTf?=
- =?us-ascii?Q?9okg76e/41ojB0l5MbHUVVrMeuBylX7JgCKMvcO/QmtGIeRdKA/TVFA1aocd?=
- =?us-ascii?Q?gWyaD6IyqP4+OU6ATNVRVgN79j4MudNZfNHWmGU9y5G5Pz/CByarM5YaXoBx?=
- =?us-ascii?Q?6ouhisaVTmDywEhFdq0HqaESzJJT2o8O3yPCeuPRcSkSdtvaMFu3K0NnU7vy?=
- =?us-ascii?Q?qQKlOJLp/5fUIIxUlpRGgsEVCFaeD7duBDoFF3spVjzVyqNUJ3i83h5qs5iy?=
- =?us-ascii?Q?f2ZzRsOiM3Wrr2g36vuQHq4VT9IatZrAal9PqQ4gS5dhHi/G/72VYx2Fx83V?=
- =?us-ascii?Q?otgjotCzzbKp6OUBhmryqatgO/ZuCx0fIbOpgSmt+Rmq2lZpYgPKSO17jnLC?=
- =?us-ascii?Q?VTbZ1lq3K3W6g8PHnu1Dx+3uy5TgKZKeldpHrt7x3vVPLa/Vttg/Fz8KX1PW?=
- =?us-ascii?Q?KoYGIAoOgJubH7xf2JWWPz8oVMrlhzzgv5QYoFRyI53QpJzhnLeuBhTakont?=
- =?us-ascii?Q?MQpwbwFtFvqa98MB1UTdLfp9LLJDPqGNYrHYKGOLsx8fMwlfbQuGkWnLz2n2?=
- =?us-ascii?Q?Yvbu/mzd7MiFsGPLgpCNaS9KW2fb+qrMHDfbfSLp7pRXgpPcoGkGoktYCPwy?=
- =?us-ascii?Q?biEJBsn/eZRMo8rQBF+iO/pqzclTcP69ImhjBOFuBggEXJfG2r7tYTO7tjZu?=
- =?us-ascii?Q?ei/UxTC5TFbQa1IW9KdNEG9M25auWCh/ELCJToegxSE5+ctAhJrrqVdfJcZy?=
- =?us-ascii?Q?n8+y8hIMLKemTOsuLuHNGLJQl6U+2fs=3D?=
+	=?us-ascii?Q?5Ncvz7YBek4rwaD8k8biwj+5a5IgjQHezqIKq0+qbbRvHxK7fklASPlw26D7?=
+ =?us-ascii?Q?gHYJclZpQvaJqlgqf2cgeIpNSI4hPztHEQZPMpuTOy1n2ksyYNtD5yG/op3V?=
+ =?us-ascii?Q?dOfyy4nUQ+RqIMweHjWDl+pO7965cSuEhcWzqh1p/EqfBkeWPejJY3cQ+ezs?=
+ =?us-ascii?Q?SuzGzFz5tKIIIM0DxBPPslGWjRyvB27KvY9QABq2N+uOM+xmZZaediw1PjM+?=
+ =?us-ascii?Q?Beq/dnsounIlq9cV+hUzCIc40cTfIPL5qNhlsV6xiTxpjMwNaYhISFmoP8QB?=
+ =?us-ascii?Q?PuuebqLPccTqGW0A223h2FJS2tRS/mhjYUnuyLR4yOunUpmY8Twvx2t1oUSH?=
+ =?us-ascii?Q?1mpEQJhfXr/B4Hs7t4RM9rwvqf42V7SPBWk0/J6huKeodj+ps9Rhaoioha+3?=
+ =?us-ascii?Q?eo8Hmn8YU6CXJgdCLaEWaS7fQ12nybU/4NNoxnBK5ctbym2JkmbbALD4+30D?=
+ =?us-ascii?Q?Dw3WEbe8t1UFRimuj56Cv73CRLElXuYL1Uo/NJy4hJjtpLJqHbkli04VBN8H?=
+ =?us-ascii?Q?OXOkxWgyeKxETCC1l0dDjs01RS9E97G717sLtjORVE0OipEDE+wVND8rf2tO?=
+ =?us-ascii?Q?ijcN0ZC1lZe/5HEacWNi+s/2jSijvOmCQUsL360TwTllyi6JGx8s2rZZlHuU?=
+ =?us-ascii?Q?hKD5k1ZIfWgYh8RufZFEHcWBTyWjHE4ZJTzwLceZaq2AcQjyBv1hO6gUQ68w?=
+ =?us-ascii?Q?UF+DpBQuIeJ0dvfnv2lsXejSTZnZS52in4LpgTISBn9ysbBdtafnB6YhH4in?=
+ =?us-ascii?Q?QrqAWrtaGE9qmsBaAyNaw5WI5TpFrcbPAYm+xFF1g6FmyoohWvL1ryXhbtrx?=
+ =?us-ascii?Q?/9HCDF/yGa/esyDvL42SfU3hX5OzOUQ/My1dyNsVyh4KEV9UFU9iFTZopuOj?=
+ =?us-ascii?Q?LmluOPoecaOku2Ih5PFF7Kb/5jt8AUwFVDQ8q6mqmdXWdDAZShuqnba1bXfZ?=
+ =?us-ascii?Q?i0/W6GDgnkgV8yDOMpG9kQDRSZWzSN/vcbxYLMhnfGFhC5zLtwQ/oimU4TWa?=
+ =?us-ascii?Q?qtTyw6OlQspr7VCR4ivUH5pX9BhCrmr9OITZnWbH5a1tohmUcw34h/nitc4q?=
+ =?us-ascii?Q?t3LUJx0dnEaKhqufuXP3hMsfQ8lbnASdj5gsnv933C+AIIYsKhI2LMa0Vcqq?=
+ =?us-ascii?Q?GxxVKFt0x6LDSNgQLbA3RFMvI/DxHrmb1FIEFCJGNtjPw0NNyEm9uvYLvK8x?=
+ =?us-ascii?Q?w8DQB+7uQqlIQvAID+X/Hs/dHAcWM/R7XyTEq7GLLjW3Yf4/d7PI2iJg+6uU?=
+ =?us-ascii?Q?/SzRk7QqjgLleO6wKGmtf28VmfjXyDf0L7KnMF/JbgsFrFcrk4mXqhPx/S4Z?=
+ =?us-ascii?Q?49XU1nA2PcwA8J8jpBJwDICmPKh4ZjMWAw4f9lgmXfJfKQjDD/h6AhuhhZ7N?=
+ =?us-ascii?Q?Lesd+afID+mhqGlfJKrEUVPAl6V5pI2fNy8eAhtcHUkCEbSXZ8epzw8fsBMe?=
+ =?us-ascii?Q?cWPtrZY6Z2h5oT2HsRjydkbn448hqBSHyFMzXbM6tXTjFrV+WelDGwrguILI?=
+ =?us-ascii?Q?T4X6BSXr5ywKcIUAZp7bh4+zFHnHwCrV69rPDrmpyevO+dc3LPQhIpzEtgnk?=
+ =?us-ascii?Q?yrKCaYqa0qyIHVn5bFrMdHyNqzKkbcL/6Obz6FyhFSucWGI8i/Z7s27KqK2v?=
+ =?us-ascii?Q?OWMgNjZnrozhRY4hLECzryBsfyV0bAGSxCyhW69GjMdxFFelPMfw97UDIyP0?=
+ =?us-ascii?Q?kH0PQRi9CF0SsaGo9gZa1JwYOk8gP+gdU3rGyrABP+AadEksWrbC0diVSBH4?=
+ =?us-ascii?Q?Vuqxo3bV57HvBZLJqQJry7JIApeIhss=3D?=
 X-OriginatorOrg: lecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c181c39-b1ca-44df-d4d3-08deb16af79d
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3553ddc-9193-40f5-709f-08deb16af93a
 X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0707.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2026 03:43:31.4387
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2026 03:43:34.0938
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3591a018-3909-4ea2-aee8-843d5abaed8d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AwDq9q7FqWQUv2k1F7LkyDimCdVyHKsZsDFFot3U61K04Pvl8U7YrzVqc4P5D2zMS6YuhP7KIXK5TcBcG+hiow82Qw3LjHLrEgLkGrpIUY8=
+X-MS-Exchange-CrossTenant-UserPrincipalName: mTeNrb7DYObHOlW4NKFmJC4rFRpjfltQkcc1nkxNtTuMfk9J8Hkdlt8GMKJk00eNJnWCFmltou2uKPzONzOzZXr8HozodX3WAVWyn03I+7A=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0515
-X-Rspamd-Queue-Id: DE85053D7B1
+X-Rspamd-Queue-Id: C772C53D621
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [2.04 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -168,36 +168,79 @@ X-Spamd-Result: default: False [2.04 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[28];
-	TAGGED_FROM(0.00)[bounces-36807-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36804-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.985];
+	NEURAL_HAM(-0.00)[-0.974];
 	FROM_NEQ_ENVFROM(0.00)[thomas_lin@lecomputing.com,linux-gpio@vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lecomputing.com:email,lecomputing.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lecomputing.com:email,lecomputing.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
+
+Also add corresponding ACPI description in acpi_apd.c.
 
 Signed-off-by: thomas <thomas_lin@lecomputing.com>
 ---
- drivers/gpio/gpio-dwapb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/acpi_apd.c   | 7 +++++++
+ drivers/spi/spi-dw-mmio.c | 9 +++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 15cebc8b5d66..c1f3d83a67c1 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -694,6 +694,7 @@ static const struct acpi_device_id dwapb_acpi_match[] = {
- 	{"APMC0D07", GPIO_REG_OFFSET_V1},
- 	{"APMC0D81", GPIO_REG_OFFSET_V2},
- 	{"FUJI200A", GPIO_REG_OFFSET_V1},
-+	{"LECA0001", GPIO_REG_OFFSET_V1},
+diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+index bed0791c17fc..3a80e833215e 100644
+--- a/drivers/acpi/acpi_apd.c
++++ b/drivers/acpi/acpi_apd.c
+@@ -181,6 +181,12 @@ static const struct apd_device_desc hip08_spi_desc = {
+ 	.setup = acpi_apd_setup,
+ 	.fixed_clk_rate = 250000000,
+ };
++
++static const struct apd_device_desc leca_spi_desc = {
++	.setup = acpi_apd_setup,
++	.fixed_clk_rate = 400000000,
++};
++
+ #endif /* CONFIG_ARM64 */
+ 
+ #endif
+@@ -252,6 +258,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+ 	{ "HISI02A3", APD_ADDR(hip08_lite_i2c_desc) },
+ 	{ "HISI0173", APD_ADDR(hip08_spi_desc) },
+ 	{ "NXP0001", APD_ADDR(nxp_i2c_desc) },
++	{ "LECA0002", APD_ADDR(leca_spi_desc) },
+ #endif
  	{ }
  };
- MODULE_DEVICE_TABLE(acpi, dwapb_acpi_match);
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 1bfdf24c3227..50b50553b360 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -234,6 +234,14 @@ static int dw_spi_intel_init(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static int dw_spi_lecarc_init(struct platform_device *pdev,
++			     struct dw_spi_mmio *dwsmmio)
++{
++	dwsmmio->dws.ip = DW_HSSI_ID;
++
++	return 0;
++}
++
+ /*
+  * DMA-based mem ops are not configured for this device and are not tested.
+  */
+@@ -453,6 +461,7 @@ MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id dw_spi_mmio_acpi_match[] = {
+ 	{"HISI0173", (kernel_ulong_t)dw_spi_pssi_init},
++	{"LECA0002", (kernel_ulong_t)dw_spi_lecarc_init},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(acpi, dw_spi_mmio_acpi_match);
 -- 
 2.43.0
 
