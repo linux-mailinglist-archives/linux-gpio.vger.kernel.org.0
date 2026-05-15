@@ -1,361 +1,888 @@
-Return-Path: <linux-gpio+bounces-36954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QB4PAalmB2oF1wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36954-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:32:09 +0200
+	id qOtAMEBnB2ps1wIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36955-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:34:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 731F2556436
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:32:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45C215564DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:34:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5CBDE3071842
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 17:59:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F37163066350
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 18:09:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77BB3F9A09;
-	Fri, 15 May 2026 17:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CEAC3FDC10;
+	Fri, 15 May 2026 18:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="qVh7ugvm"
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="GCc20xxU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ULYKcGuu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9D3F888D
-	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 17:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9ED3FDC12;
+	Fri, 15 May 2026 18:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778867976; cv=none; b=UOhjG8Ew7RWESDSeVZ1hHUdYnuaFN8eNMWC40bJqg+6bEtvnJw4i8Ybivm8LWdMKwh7Nrc7y/5xePlnEhfy6OXtqZ2u2PjagrZR2MytrPPqoR+oiFLIlGPnLJxvFwxtCNR6DcUdB53lB8y1RB5gRC+eRd2VTNsTvzUsLZJ2n/nA=
+	t=1778868588; cv=none; b=aYMp9b/xho9azeAGGYX8Hhk+0LRoQWCWr/6wETyGOcf9qwxlbAfsisDfU9fJZyQWQ5McuKBkW/MHm1KZpSiaRrhTBDYdWXCHX3QQV/ZuGLqy/f5BnKGlA4NblG8XIwmDehBlQkXYiLPLsir8dOUv8CIX+d4LFvDZ6ZC2Vp4iCOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778867976; c=relaxed/simple;
-	bh=4ZM/T/Iol4GdBJ3vAdj/xlPSEBECPVnDvDzu8h7m9FQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mABKZqJTAkCo6BkvHfa3elDzKIGomM57PjZ6Ej4iHieJz+Lgj44SnafxjefqK2s7Eo2v+yUvN3VTdurRJ1qA9D/RUUh9iRRbyGnQy7nvLOkhxje41J/R+imLA+dCBYK6G9qucrLHi1zyJtIacWC5JgR6piSNdLxSqXVTi/taujo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=qVh7ugvm; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8ca12973e15so590136d6.1
-        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 10:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778867972; x=1779472772; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d8SB7g/SQE94W836Nonq8Wq3k7Nj7c32M69MG7wU2+o=;
-        b=qVh7ugvmRPA8oUMn5B7aXPu//lBgoxkU+3CwDEXgSDMYUalqHGG/1XK3IbP5KUPikc
-         d/1H867qtVCJ60jgRjrgnXJNtf/PIk0OlnHz6Cs4+NYvh5SA/hU7Wr1qR0XbJl1TnNG8
-         tFVsSwteK9QKyqljdA6Go6NBSe+i5WHMVUImzeR4rnOIpgEEmdA33eLOrgyIfkcjKQsl
-         wIyW69xAs/j3mlBoDiOxd7c9AbI0xsj/eRsw4/eQJl/JOG0c8xon1u66cNYaYOBv3Pby
-         CVeh6W0l4CqSbHYDvBZl9DWxa2rARflP4HbiJhTLYIWVKg/l3RhDcHAABTgueqYYVLLZ
-         Vskg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778867972; x=1779472772;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d8SB7g/SQE94W836Nonq8Wq3k7Nj7c32M69MG7wU2+o=;
-        b=mUqfjm1Oa9pVncQe+AkR99OragNR1uGwsmyY69FA8xTf9KD5kwf78Z/7AXiwXqmocV
-         U9J2+capDw2SbQX1xOUE07FTyuCeFx9rXQwc238amLX7qvnODMIpWGgWC+TeKckoDkLJ
-         hEJhk/IGFc18fHzH70el+Nv+EBBf6osnXk4W97um+A6niLHsQ7gaKPSBwZlKa2/MyLiT
-         6VGeIUUdnmRKEuQFPeFsuS9a/cnop+Rkq+D2gD6oLHXQD1+aRWysIeKKTZ0yzCBk1OtW
-         2XLLAbWT5nBnuWa4CFQi3kXLOrvvV14APYEL7gTI9srz3f5dgDNgot9GAtEAaS/odKLI
-         iKeg==
-X-Forwarded-Encrypted: i=1; AFNElJ/4Qim4X5nqiFtKiBbZJub591kB2ayO2Xeg3FWV/EqGxd01KKRwDceFpreXbLqBhStuAIvX/lAKkOjm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIz9yshzYxUeEfyAle0XW2D5i9rtYP/d8ecxdLyXKNd1Nsmoq8
-	p95BhCEjiRX7Ipx8i2R1RobLrXPHfSHk4jx6Ya3Mqd5SFm/sUxvKhleIeu6Ao8bkUrA=
-X-Gm-Gg: Acq92OFjyGm/0opO4wU165s1NnXPVwl1OVMM/VR/YW38n3BChDfnrL7Q40NJqYrIBCH
-	65mx9PRFus8MvOEYaPOjwt5O0S14lhlMQvRwK/gmADamegcX88J9mc4Hx1w3+hS6CeguDQfr2Pc
-	qN4eZyZK/Hb0ENcnhcmRmfIwWEATajFcm1JDC1UeCAWeTdo390tndmGnspKAJa5HpHifRe+hvX2
-	iZ2cgqkULlhj0hbWmIUn0ca8kkE/g2zn4O54PtfMRSyDRywyEpgy8WIC9dBeIF8oqxdC3de7Rsk
-	27sDbRj3jrR+n3bOH0f+pill5sfyqL8OS3UwqRHU5Thze2mcbHOhG9c2uZPXUZ6ywVCc6g7/dgN
-	Fr9zkLAmA8HZVlyLYwWEf9NcHdYAMf37hNawOhP9Jjc5IkpSG89xe4zxe5ae87b8jWgrorE/Kua
-	6szVsXD/DJJEVHqAVjiHdBCFGJpGAdUYXTSYK4Grmx9c8iN6VL84uyDvuawi1hfXs=
-X-Received: by 2002:a05:6214:5541:b0:8be:143c:955f with SMTP id 6a1803df08f44-8ca0f710315mr86073156d6.49.1778867972151;
-        Fri, 15 May 2026 10:59:32 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8c90bf6720asm62107926d6.39.2026.05.15.10.59.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2026 10:59:31 -0700 (PDT)
-Message-ID: <2414c9e9-0672-417a-a3d1-993bd06d62db@riscstar.com>
-Date: Fri, 15 May 2026 12:59:27 -0500
+	s=arc-20240116; t=1778868588; c=relaxed/simple;
+	bh=c5DCL/C8iLidN9G2V70jVuTNE5P4vyIxTcmDyiA40n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WRSQeE9k8LyOZA+uxKQAsTexZa7txVN3T45oDvcczxZhQgKtG48PJmbVpvpdyUwIt/BflUK6BLRYc8eMfEBuf4RTxiLzFOjazZSIW0J1yOsts6DOBJWz8kI/dceT703zauUCEJAmC8g0771MAYLbY3g3ZI2aiiCuKM3MxhYXd4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=GCc20xxU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ULYKcGuu; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailfout.phl.internal (Postfix) with ESMTP id B3B14EC00A7;
+	Fri, 15 May 2026 14:09:44 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Fri, 15 May 2026 14:09:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1778868584;
+	 x=1778954984; bh=krqp44enzSndnHvhribdC4KBpkMynKCpdBEAhbqrWjQ=; b=
+	GCc20xxURXl4Y4wSXrzdQf6VkUfUymkd0WeZcHEYqrorfsSVrlwbqGPUZFcYf1L7
+	TvdAi23quSNhN2XNkp81ZkfxhMxBOeRiFvCUyZP7yG4Nh2uRzm+MPKLXLDCtYL0i
+	YOZw7yhZ1EPByhR+ZFtd0XpQi3dOjv1ab8ZQW73pZz50E+C6j90VVTO/+ZO71Win
+	tx5gxqbYVYjJDDfRsxHvT45jKwwlWR2gnB5O0o5meHsCNTvnX4kDYOL042sMjEBk
+	ziLAu8qkimEzzADScXtZ0QT5p/oC1HDUo3EHH2yCxYor6goBzXEtdTz+2sNxLMob
+	htbhd2wIvUPezAZX2IRDcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1778868584; x=
+	1778954984; bh=krqp44enzSndnHvhribdC4KBpkMynKCpdBEAhbqrWjQ=; b=U
+	LYKcGuuvFUalPeugcHSaiQhwwXpuieKYi3TFkhWKv4dPvVyDNP9Euv9Nr9u5vl6K
+	VmYXbSQWZw5Ipz64wgM/wHT0EhizLLcqlbcod9eZkFYW1SAs462hV0HttFAGT4dL
+	g3NDGn4VI9N6UYKXtoxmTKrOV6oVzRFMMUs/FxYXxHoKW4jSyMtjSDFcECG/opx3
+	ZlHHWWRc6i37H30ijXMYk9l0Eb3hbrab5aLbcwaavAzhiikEin6l1b+mRsBoi9lv
+	EO6DqAhXAPxjTDRoeeFc+LR18fxmAYvqpa2MH6O621Y2nakFbGYRbYRqovRR2p1w
+	DyydSHDlZ9Umg03PYiMyA==
+X-ME-Sender: <xms:Z2EHakNiTSKEM2KYdWdTreFipLwV9wvjt9096g0mpUsefarX_Vp49w>
+    <xme:Z2EHalrhpPOvRJUZo43IDpNC0bExFqFh3v4SzEIL43xGTBwRjAdlFIonqWkitI4pu
+    10Z_QS7_9AQBtI7s-8oVgOFXuB0TcIhB74vmIy_UHTuNmdYP-pTjsLv>
+X-ME-Received: <xmr:Z2EHah6CYrfuL8wWLP_jvhuASNmCJdzgktzIWegfTpBHucxOKJCmJV7_o3Slfqcmpl8h92bWr9V9tB0UQqpCcxn4rT0FSAhrDTef>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufedutdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhklhgr
+    shcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrg
+    htvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteegtddvvdfhtdekgefhfeefheet
+    heekkeegfeejudeiudeuleegtdehkeekteenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhn
+    rghtvggthhdrshgvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtohepughumhhithhruhdrtggvtghlrghnsegrnhgrlhhoghdrtghomhdprhgt
+    phhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrshesihguvggrshhonh
+    gsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsgho
+    rghrugdrtghomhdprhgtphhtthhopehjuhhlihgvnhdrmhgrshhsohhtsegtohhllhgrsg
+    horhgrrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
+    hopegtohhsmhhinhdrthgrnhhishhlrghvsegrnhgrlhhoghdrtghomh
+X-ME-Proxy: <xmx:Z2EHanr2qCqOcJLn8PuENwtQP83UgwDiWthg1L3pWZrsHHl0MmJf-w>
+    <xmx:Z2EHanKteUbsxAUwMPcB4yXaDhTWt47hs-xJuvdgdtCeC1QufnqrCw>
+    <xmx:Z2EHasjc1XaJenKhKuayC2eAecQyjkfijQz7PJ3KZfb0P5sBi_in9A>
+    <xmx:Z2EHao9wgVGwsfjLlTquuG32-17bDP-zPUDraaUcBSH6pIm08i5EwQ>
+    <xmx:aGEHalcsPt-f3Riy4i9Pf39kaQ3rmK6hdom6uXh6p8ejIT9MkrMertal>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 15 May 2026 14:09:43 -0400 (EDT)
+Date: Fri, 15 May 2026 20:09:41 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: dumitru.ceclan@analog.com
+Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Martin Hecht <Martin.Hecht@avnet.eu>,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH v11 13/22] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer framework
+Message-ID: <20260515180941.GO332351@ragnatech.se>
+References: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
+ <20260511-gmsl2-3_serdes-v11-13-fc163073c16b@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 00/12] net: enable TC956x support
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
- rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
- brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: daniel@riscstar.com, mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
- alexandre.torgue@foss.st.com, ast@kernel.org, boon.khai.ng@altera.com,
- chenchuangyu@xiaomi.com, chenhuacai@kernel.org, daniel@iogearbox.net,
- hawk@kernel.org, hkallweit1@gmail.com, inochiama@gmail.com,
- john.fastabend@gmail.com, julianbraha@gmail.com, livelycarpet87@gmail.com,
- matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
- prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
- rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
- weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260501155421.3329862-1-elder@riscstar.com>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20260501155421.3329862-1-elder@riscstar.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 731F2556436
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260511-gmsl2-3_serdes-v11-13-fc163073c16b@analog.com>
+X-Rspamd-Queue-Id: 45C215564DE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[ragnatech.se,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[ragnatech.se:s=fm2,messagingengine.com:s=fm3];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36954-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[ideasonboard.com,kernel.org,linux.intel.com,collabora.com,linuxfoundation.org,analog.com,gmail.com,vger.kernel.org,lists.linux.dev,avnet.eu];
+	TAGGED_FROM(0.00)[bounces-36955-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[49];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[ragnatech.se:+,messagingengine.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[niklas.soderlund@ragnatech.se,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,riscstar-com.20251104.gappssmtp.com:dkim,riscstar.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ragnatech.se:mid,ragnatech.se:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,messagingengine.com:dkim]
 X-Rspamd-Action: no action
 
-On 5/1/26 10:54 AM, Alex Elder wrote:
-> This series introduces stmmac driver support for the Toshiba TC9564
-> (also known as Qualcomm QPS615).  This is an Ethernet-AVB/TSN bridge IC
-> that provides a high-speed connection between a host SoC and Ethernet
-> devices on a network.  It incorporates a PCIe switch, and implements
-> two 10 Gbps capable Ethernet MACs (along with other IP blocks), and
-> is essentially a small and highly-specialized SoC.  The TC9564 is a
-> member of a family of similar chips, and the driver code uses "tc956x"
-> to reflect this.
+Hi Dumitru,
 
-I'm writing now to just state what the plan is for version 2
-of this series.  I had hoped to get something out this week,
-but it won't be available today, so I wanted to at least let
-people know what to expect.
+Thanks for your work.
 
-First, we received a great deal of really good feedback on
-this series.  I/we sincerely appreciate it, and have already
-addressed almost all of the suggestions people have made.
+On 2026-05-11 15:26:36 +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Cosmin Tanislav <demonsingur@gmail.com>
+> 
+> These drivers are meant to be used as a common framework for Maxim
+> GMSL2/3 serializers and deserializers.
+> 
+> This framework enables support for the following new features across
+> all the chips:
+>  * Full Streams API support
+>  * .get_frame_desc()
+>  * .get_mbus_config()
+>  * I2C ATR
+>  * automatic GMSL link version negotiation
+>  * automatic stream id selection
+>  * automatic VC remapping
+>  * automatic pixel mode / tunnel mode selection
+>  * automatic double mode selection / data padding
+>  * logging of internal state and chip status registers via .log_status()
+>  * PHY modes
+>  * serializer pinctrl
+>  * TPG
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  MAINTAINERS                                 |   1 +
+>  drivers/media/i2c/Kconfig                   |   2 +
+>  drivers/media/i2c/Makefile                  |   1 +
+>  drivers/media/i2c/maxim-serdes/Kconfig      |  17 ++
+>  drivers/media/i2c/maxim-serdes/Makefile     |   3 +
+>  drivers/media/i2c/maxim-serdes/max_serdes.c | 413 ++++++++++++++++++++++++++++
+>  drivers/media/i2c/maxim-serdes/max_serdes.h | 183 ++++++++++++
+>  7 files changed, 620 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5ae68688008d..70d3eeef8bfe 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15257,6 +15257,7 @@ M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+> +F:	drivers/media/i2c/maxim-serdes/
+>  
+>  MAXIM MAX11205 DRIVER
+>  M:	Ramona Bolboaca <ramona.bolboaca@analog.com>
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index cdd7ba5da0d5..37f86e6de969 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -1718,6 +1718,8 @@ config VIDEO_MAX96717
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called max96717.
+>  
+> +source "drivers/media/i2c/maxim-serdes/Kconfig"
+> +
+>  endmenu
+>  
+>  endif # VIDEO_DEV
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index 57cdd8dc96f6..be3200b23819 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -71,6 +71,7 @@ obj-$(CONFIG_VIDEO_MAX9271_LIB) += max9271.o
+>  obj-$(CONFIG_VIDEO_MAX9286) += max9286.o
+>  obj-$(CONFIG_VIDEO_MAX96714) += max96714.o
+>  obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+> +obj-$(CONFIG_VIDEO_MAXIM_SERDES) += maxim-serdes/
+>  obj-$(CONFIG_VIDEO_ML86V7667) += ml86v7667.o
+>  obj-$(CONFIG_VIDEO_MSP3400) += msp3400.o
+>  obj-$(CONFIG_VIDEO_MT9M001) += mt9m001.o
+> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
+> new file mode 100644
+> index 000000000000..f5a4ca80a263
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+> @@ -0,0 +1,17 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +config VIDEO_MAXIM_SERDES
+> +	tristate "Maxim GMSL2/3 Serializer and Deserializer support"
+> +	depends on VIDEO_DEV
+> +	depends on I2C
+> +	select I2C_ATR
+> +	select I2C_MUX
+> +	select MEDIA_CONTROLLER
+> +	select V4L2_FWNODE
+> +	select VIDEO_V4L2_SUBDEV_API
+> +	help
+> +	  This driver supports the Maxim GMSL2/3 common Serializer and
+> +	  Deserializer framework.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called max_serdes.
+> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
+> new file mode 100644
+> index 000000000000..630fbb486bab
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +max-serdes-objs := max_serdes.o
+> +obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
+> diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.c b/drivers/media/i2c/maxim-serdes/max_serdes.c
+> new file mode 100644
+> index 000000000000..bed70b8ce99a
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/max_serdes.c
+> @@ -0,0 +1,413 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/stringify.h>
+> +
+> +#include <media/mipi-csi2.h>
+> +
+> +#include <video/videomode.h>
+> +
+> +#include <uapi/linux/media-bus-format.h>
+> +
+> +#include "max_serdes.h"
+> +
+> +const char * const max_serdes_tpg_patterns[] = {
+> +	[MAX_SERDES_TPG_PATTERN_GRADIENT] = "Gradient",
+> +	[MAX_SERDES_TPG_PATTERN_CHECKERBOARD] = "Checkerboard",
+> +};
+> +
+> +static const char * const max_gmsl_versions[] = {
+> +	[MAX_SERDES_GMSL_2_3GBPS] = "GMSL2 3Gbps",
+> +	[MAX_SERDES_GMSL_2_6GBPS] = "GMSL2 6Gbps",
+> +	[MAX_SERDES_GMSL_3_12GBPS] = "GMSL3 12Gbps",
+> +};
+> +
+> +const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version)
+> +{
+> +	if (version > MAX_SERDES_GMSL_3_12GBPS)
+> +		return NULL;
+> +
+> +	return max_gmsl_versions[version];
+> +}
+> +
+> +static const char * const max_gmsl_mode[] = {
+> +	[MAX_SERDES_GMSL_PIXEL_MODE] = "pixel",
+> +	[MAX_SERDES_GMSL_TUNNEL_MODE] = "tunnel",
+> +};
+> +
+> +const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode)
+> +{
+> +	if (mode > MAX_SERDES_GMSL_TUNNEL_MODE)
+> +		return NULL;
+> +
+> +	return max_gmsl_mode[mode];
+> +}
+> +
+> +static const struct max_serdes_mipi_format max_serdes_mipi_formats[] = {
+> +	{ MIPI_CSI2_DT_EMBEDDED_8B, 8 },
+> +	{ MIPI_CSI2_DT_YUV422_8B, 16 },
+> +	{ MIPI_CSI2_DT_YUV422_10B, 20 },
+> +	{ MIPI_CSI2_DT_RGB565, 16 },
+> +	{ MIPI_CSI2_DT_RGB666, 18 },
+> +	{ MIPI_CSI2_DT_RGB888, 24 },
+> +	{ MIPI_CSI2_DT_RAW8, 8 },
+> +	{ MIPI_CSI2_DT_RAW10, 10 },
+> +	{ MIPI_CSI2_DT_RAW12, 12 },
+> +	{ MIPI_CSI2_DT_RAW14, 14 },
+> +	{ MIPI_CSI2_DT_RAW16, 16 },
+> +};
+> +
+> +const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(max_serdes_mipi_formats); i++)
+> +		if (max_serdes_mipi_formats[i].dt == dt)
+> +			return &max_serdes_mipi_formats[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
+> +				   struct v4l2_mbus_frame_desc_entry *entry)
+> +{
+> +	struct v4l2_mbus_frame_desc fd;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = v4l2_subdev_call(sd, pad, get_frame_desc, pad, &fd);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (fd.type != V4L2_MBUS_FRAME_DESC_TYPE_CSI2)
+> +		return -EOPNOTSUPP;
+> +
+> +	for (i = 0; i < fd.num_entries; i++) {
+> +		if (fd.entry[i].stream == stream) {
+> +			*entry = fd.entry[i];
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -ENOENT;
+> +}
+> +
+> +int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
+> +			  unsigned int *bpp)
+> +{
+> +	const struct max_serdes_mipi_format *format;
+> +
+> +	format = max_serdes_mipi_format_by_dt(entry->bus.csi2.dt);
+> +	if (!format)
+> +		return -ENOENT;
+> +
+> +	*bpp = format->bpp;
+> +
+> +	return 0;
+> +}
+> +
+> +int max_serdes_process_bpps(struct device *dev, u32 bpps,
+> +			    u32 allowed_double_bpps, unsigned int *doubled_bpp)
+> +{
+> +	unsigned int min_bpp;
+> +	unsigned int max_bpp;
+> +	bool doubled = false;
+> +
+> +	if (!bpps)
+> +		return 0;
+> +
+> +	*doubled_bpp = 0;
+> +
+> +	/*
+> +	 * Hardware can double bpps 8, 10, 12, and it can pad bpps < 16
+> +	 * to another bpp <= 16:
+> +	 * Hardware can only stream a single constant bpp up to 24.
+> +	 *
+> +	 * From these features and limitations, the following rules
+> +	 * can be deduced:
+> +	 *
+> +	 * A bpp of 8 can always be doubled if present.
+> +	 * A bpp of 10 can be doubled only if there are no other bpps or the
+> +	 * only other bpp is 20.
+> +	 * A bpp of 12 can be doubled only if there are no other bpps or the
+> +	 * only other bpp is 24.
+> +	 * Bpps <= 16 cannot coexist with bpps > 16.
+> +	 * Bpps <= 16 need to be padded to the biggest bpp.
+> +	 */
+> +
+> +	min_bpp = __ffs(bpps);
+> +	max_bpp = __fls(bpps);
+> +
+> +	if (min_bpp == 8) {
+> +		doubled = true;
+> +	} else if (min_bpp == 10 || min_bpp == 12) {
+> +		u32 bpp_or_double = BIT(min_bpp) | BIT(min_bpp * 2);
+> +		u32 other_bpps = bpps & ~bpp_or_double;
+> +
+> +		if (!other_bpps)
+> +			doubled = true;
+> +	}
+> +
+> +	if (doubled && (allowed_double_bpps & BIT(min_bpp))) {
+> +		*doubled_bpp = min_bpp;
+> +		bpps &= ~BIT(min_bpp);
+> +		bpps |= BIT(min_bpp * 2);
+> +	}
+> +
+> +	min_bpp = __ffs(bpps);
+> +	max_bpp = __fls(bpps);
+> +
+> +	if (max_bpp > 24) {
+> +		dev_err(dev, "Cannot stream bpps > 24\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (min_bpp <= 16 && max_bpp > 16) {
+> +		dev_err(dev, "Cannot stream bpps <= 16 with bpps > 16\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (max_bpp > 16 && min_bpp != max_bpp) {
+> +		dev_err(dev, "Cannot stream multiple bpps when one is > 16\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
+> +					    u32 source_sink_pad_offset,
+> +					    const struct v4l2_subdev_state *state,
+> +					    u32 pad, u64 updated_streams_mask,
+> +					    u32 sink_pad_start, u32 num_sink_pads,
+> +					    bool enable)
+> +{
+> +	u32 failed_sink_pad;
+> +	int ret;
+> +	u32 i;
+> +
+> +	for (i = sink_pad_start; i < sink_pad_start + num_sink_pads; i++) {
+> +		u64 matched_streams_mask = updated_streams_mask;
+> +		u64 updated_sink_streams_mask;
+> +		struct max_serdes_source *source;
+> +
+> +		updated_sink_streams_mask =
+> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+> +							&matched_streams_mask);
+> +		if (!updated_sink_streams_mask)
+> +			continue;
+> +
+> +		source = &sources[i + source_sink_pad_offset];
+> +		if (!source)
+> +			continue;
+> +
+> +		if (enable)
+> +			ret = v4l2_subdev_enable_streams(source->sd, source->pad,
+> +							 updated_sink_streams_mask);
+> +		else
+> +			ret = v4l2_subdev_disable_streams(source->sd, source->pad,
+> +							  updated_sink_streams_mask);
+> +		if (ret) {
+> +			failed_sink_pad = i;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	for (i = sink_pad_start; i < failed_sink_pad; i++) {
+> +		u64 matched_streams_mask = updated_streams_mask;
+> +		u64 updated_sink_streams_mask;
+> +		struct max_serdes_source *source;
+> +
+> +		updated_sink_streams_mask =
+> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+> +							&matched_streams_mask);
+> +		if (!updated_sink_streams_mask)
+> +			continue;
+> +
+> +		source = &sources[i + source_sink_pad_offset];
+> +		if (!source)
+> +			continue;
+> +
+> +		if (!enable)
+> +			v4l2_subdev_enable_streams(source->sd, source->pad,
+> +						   updated_sink_streams_mask);
+> +		else
+> +			v4l2_subdev_disable_streams(source->sd, source->pad,
+> +						    updated_sink_streams_mask);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +int max_serdes_get_streams_masks(struct device *dev,
+> +				 const struct v4l2_subdev_state *state,
+> +				 u32 pad, u64 updated_streams_mask,
+> +				 u32 num_pads, u64 *old_streams_masks,
+> +				 u64 **new_streams_masks, bool enable)
+> +{
+> +	u64 *streams_masks;
+> +	unsigned int i;
+> +
+> +	streams_masks = devm_kcalloc(dev, num_pads, sizeof(*streams_masks), GFP_KERNEL);
+> +	if (!streams_masks)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_pads; i++) {
+> +		u64 matched_streams_mask = updated_streams_mask;
+> +		u64 updated_sink_streams_mask;
+> +
+> +		updated_sink_streams_mask =
+> +			v4l2_subdev_state_xlate_streams(state, pad, i,
+> +							&matched_streams_mask);
+> +		if (!updated_sink_streams_mask)
+> +			continue;
+> +
+> +		streams_masks[i] = old_streams_masks[i];
+> +		if (enable)
+> +			streams_masks[i] |= updated_sink_streams_mask;
+> +		else
+> +			streams_masks[i] &= ~updated_sink_streams_mask;
+> +	}
+> +
+> +	if (enable)
+> +		streams_masks[pad] |= updated_streams_mask;
+> +	else
+> +		streams_masks[pad] &= ~updated_streams_mask;
+> +
+> +	*new_streams_masks = streams_masks;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct videomode max_serdes_tpg_pixel_videomodes[] = {
+> +	{
+> +		.pixelclock = 25000000,
+> +		.hactive = 640,
+> +		.hfront_porch = 10,
+> +		.hsync_len = 96,
+> +		.hback_porch = 40,
+> +		.vactive = 480,
+> +		.vfront_porch = 2,
+> +		.vsync_len = 24,
+> +		.vback_porch = 24,
+> +	},
+> +	{
+> +		.pixelclock = 75000000,
+> +		.hactive = 1920,
+> +		.hfront_porch = 88,
+> +		.hsync_len = 44,
+> +		.hback_porch = 148,
+> +		.vactive = 1080,
+> +		.vfront_porch = 4,
+> +		.vsync_len = 16,
+> +		.vback_porch = 36,
+> +	},
+> +	{
+> +		.pixelclock = 150000000,
+> +		.hactive = 1920,
+> +		.hfront_porch = 88,
+> +		.hsync_len = 44,
+> +		.hback_porch = 148,
+> +		.vactive = 1080,
+> +		.vfront_porch = 4,
+> +		.vsync_len = 16,
+> +		.vback_porch = 36,
+> +	},
+> +};
+> +
+> +static void max_serdes_get_vm_timings(const struct videomode *vm,
+> +				      struct max_serdes_tpg_timings *timings)
+> +{
+> +	u32 hact = vm->hactive;
+> +	u32 hfp = vm->hfront_porch;
+> +	u32 hsync = vm->hsync_len;
+> +	u32 hbp = vm->hback_porch;
+> +	u32 htot = hact + hfp + hbp + hsync;
+> +
+> +	u32 vact = vm->vactive;
+> +	u32 vfp = vm->vfront_porch;
+> +	u32 vsync = vm->vsync_len;
+> +	u32 vbp = vm->vback_porch;
+> +	u32 vtot = vact + vfp + vbp + vsync;
+> +
+> +	*timings = (struct max_serdes_tpg_timings) {
+> +		.gen_vs = true,
+> +		.gen_hs = true,
+> +		.gen_de = true,
+> +		.vs_inv = true,
+> +		.vs_dly = 0,
+> +		.vs_high = vsync * htot,
+> +		.vs_low = (vact + vfp + vbp) * htot,
+> +		.v2h = 0,
+> +		.hs_high = hsync,
+> +		.hs_low = hact + hfp + hbp,
+> +		.hs_cnt = vact + vfp + vbp + vsync,
+> +		.v2d = htot * (vsync + vbp) + (hsync + hbp),
+> +		.de_high = hact,
+> +		.de_low = hfp + hsync + hbp,
+> +		.de_cnt = vact,
+> +		.clock = vm->pixelclock,
+> +		.fps = DIV_ROUND_CLOSEST(vm->pixelclock, vtot * htot),
+> +	};
+> +}
+> +
+> +int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
+> +			       struct max_serdes_tpg_timings *timings)
+> +{
+> +	u32 fps;
+> +
+> +	if (!entry)
+> +		return 0;
+> +
+> +	fps = DIV_ROUND_CLOSEST(1 * entry->interval.denominator,
+> +				entry->interval.numerator);
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(max_serdes_tpg_pixel_videomodes); i++) {
+> +		struct max_serdes_tpg_timings vm_timings;
+> +		const struct videomode *vm;
+> +
+> +		vm = &max_serdes_tpg_pixel_videomodes[i];
+> +
+> +		max_serdes_get_vm_timings(vm, &vm_timings);
+> +
+> +		if (vm->hactive == entry->width &&
+> +		    vm->vactive == entry->height &&
+> +		    vm_timings.fps == fps) {
+> +			*timings = vm_timings;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(max_serdes_get_tpg_timings, "MAX_SERDES");
+> +
+> +int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing)
+> +{
+> +	const struct v4l2_subdev_route *route;
+> +
+> +	if (routing->num_routes != 1)
+> +		return -EINVAL;
+> +
+> +	route = &routing->routes[0];
+> +
+> +	if (!(route->flags & V4L2_SUBDEV_ROUTE_FL_ACTIVE))
+> +		return -EINVAL;
+> +
+> +	if (route->sink_stream != MAX_SERDES_TPG_STREAM)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +MODULE_DESCRIPTION("Maxim GMSL2 Serializer/Deserializer Driver");
+> +MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/media/i2c/maxim-serdes/max_serdes.h b/drivers/media/i2c/maxim-serdes/max_serdes.h
+> new file mode 100644
+> index 000000000000..d1d513e464d6
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/max_serdes.h
+> @@ -0,0 +1,183 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2025 Analog Devices Inc.
+> + */
+> +
+> +#ifndef MAX_SERDES_H
+> +#define MAX_SERDES_H
+> +
+> +#include <linux/types.h>
+> +
+> +#include <media/mipi-csi2.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define REG_SEQUENCE_2(reg, val) \
+> +	{ (reg),     ((val) >> 8) & 0xff }, \
+> +	{ (reg) + 1, ((val) >> 0) & 0xff }
+> +
+> +#define REG_SEQUENCE_3(reg, val) \
+> +	{ (reg),     ((val) >> 16) & 0xff }, \
+> +	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
+> +	{ (reg) + 2, ((val) >> 0)  & 0xff }
+> +
+> +#define REG_SEQUENCE_3_LE(reg, val) \
+> +	{ (reg),     ((val) >> 0) & 0xff }, \
+> +	{ (reg) + 1, ((val) >> 8)  & 0xff }, \
+> +	{ (reg) + 2, ((val) >> 16)  & 0xff }
+> +
+> +#define field_get(mask, val) (((val) & (mask)) >> __ffs(mask))
+> +#define field_prep(mask, val) (((val) << __ffs(mask)) & (mask))
 
-Andrew Lunn asked a number of questions about the way that
-the TC956x device is represented, and in particular questioned
-whether having the GPIO controller as a device subordinate to
-a PCIe function even made sense.  This led to some additional
-discussion, including some offline work exploring what other
-options might be reasonable.
+These two macros seems to conflict with similar ones from 
+include/linux/bitfield.h.
 
-The plan for version 2 is to submit it fairly soon, to include
-updates that address *most* of the feedback received so far.
-(I have sent e-mail with clear confirmation of what we intend
-to do--and these changes would be incorporated in version 2).
+> +
+> +#define MAX_SERDES_PHYS_MAX		4
+> +#define MAX_SERDES_STREAMS_NUM		4
+> +#define MAX_SERDES_VC_ID_NUM		4
+> +#define MAX_SERDES_TPG_STREAM		0
+> +
+> +#define MAX_SERDES_GRAD_INCR		4
+> +#define MAX_SERDES_CHECKER_COLOR_A	0x00ccfe
+> +#define MAX_SERDES_CHECKER_COLOR_B	0xa76a00
+> +#define MAX_SERDES_CHECKER_SIZE		60
+> +
+> +extern const char * const max_serdes_tpg_patterns[];
+> +
+> +enum max_serdes_gmsl_version {
+> +	MAX_SERDES_GMSL_MIN,
+> +	MAX_SERDES_GMSL_2_3GBPS = MAX_SERDES_GMSL_MIN,
+> +	MAX_SERDES_GMSL_2_6GBPS,
+> +	MAX_SERDES_GMSL_3_12GBPS,
+> +	MAX_SERDES_GMSL_MAX = MAX_SERDES_GMSL_3_12GBPS,
+> +};
+> +
+> +enum max_serdes_gmsl_mode {
+> +	MAX_SERDES_GMSL_PIXEL_MODE,
+> +	MAX_SERDES_GMSL_TUNNEL_MODE,
+> +};
+> +
+> +enum max_serdes_tpg_pattern {
+> +	MAX_SERDES_TPG_PATTERN_MIN,
+> +	MAX_SERDES_TPG_PATTERN_CHECKERBOARD = MAX_SERDES_TPG_PATTERN_MIN,
+> +	MAX_SERDES_TPG_PATTERN_GRADIENT,
+> +	MAX_SERDES_TPG_PATTERN_MAX = MAX_SERDES_TPG_PATTERN_GRADIENT,
+> +};
+> +
+> +struct max_serdes_phys_config {
+> +	unsigned int lanes[MAX_SERDES_PHYS_MAX];
+> +	unsigned int clock_lane[MAX_SERDES_PHYS_MAX];
+> +};
+> +
+> +struct max_serdes_phys_configs {
+> +	const struct max_serdes_phys_config *configs;
+> +	unsigned int num_configs;
+> +};
+> +
+> +struct max_serdes_i2c_xlate {
+> +	u8 src;
+> +	u8 dst;
+> +	bool en;
+> +};
+> +
+> +struct max_serdes_mipi_format {
+> +	u8 dt;
+> +	u8 bpp;
+> +};
+> +
+> +struct max_serdes_vc_remap {
+> +	u8 src;
+> +	u8 dst;
+> +};
+> +
+> +struct max_serdes_source {
+> +	struct v4l2_subdev *sd;
+> +	u16 pad;
+> +	struct fwnode_handle *ep_fwnode;
+> +
+> +	unsigned int index;
+> +};
+> +
+> +struct max_serdes_asc {
+> +	struct v4l2_async_connection base;
+> +	struct max_serdes_source *source;
+> +};
+> +
+> +struct max_serdes_tpg_entry {
+> +	u32 width;
+> +	u32 height;
+> +	struct v4l2_fract interval;
+> +	u32 code;
+> +	u8 dt;
+> +	u8 bpp;
+> +};
+> +
+> +#define MAX_TPG_ENTRY_640X480P60_RGB888 \
+> +	{ 640, 480, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+> +
+> +#define MAX_TPG_ENTRY_1920X1080P30_RGB888 \
+> +	{ 1920, 1080, { 1, 30 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+> +
+> +#define MAX_TPG_ENTRY_1920X1080P60_RGB888 \
+> +	{ 1920, 1080, { 1, 60 }, MEDIA_BUS_FMT_RGB888_1X24, MIPI_CSI2_DT_RGB888, 24 }
+> +
+> +struct max_serdes_tpg_entries {
+> +	const struct max_serdes_tpg_entry *entries;
+> +	unsigned int num_entries;
+> +};
+> +
+> +struct max_serdes_tpg_timings {
+> +	bool gen_vs;
+> +	bool gen_hs;
+> +	bool gen_de;
+> +	bool vs_inv;
+> +	bool hs_inv;
+> +	bool de_inv;
+> +	u32 vs_dly;
+> +	u32 vs_high;
+> +	u32 vs_low;
+> +	u32 v2h;
+> +	u32 hs_high;
+> +	u32 hs_low;
+> +	u32 hs_cnt;
+> +	u32 v2d;
+> +	u32 de_high;
+> +	u32 de_low;
+> +	u32 de_cnt;
+> +	u32 clock;
+> +	u32 fps;
+> +};
+> +
+> +static inline struct max_serdes_asc *asc_to_max(struct v4l2_async_connection *asc)
+> +{
+> +	return container_of(asc, struct max_serdes_asc, base);
+> +}
+> +
+> +const char *max_serdes_gmsl_version_str(enum max_serdes_gmsl_version version);
+> +const char *max_serdes_gmsl_mode_str(enum max_serdes_gmsl_mode mode);
+> +
+> +const struct max_serdes_mipi_format *max_serdes_mipi_format_by_dt(u8 dt);
+> +
+> +int max_serdes_get_fd_stream_entry(struct v4l2_subdev *sd, u32 pad, u32 stream,
+> +				   struct v4l2_mbus_frame_desc_entry *entry);
+> +
+> +int max_serdes_get_fd_bpp(struct v4l2_mbus_frame_desc_entry *entry,
+> +			  unsigned int *bpp);
+> +int max_serdes_process_bpps(struct device *dev, u32 bpps,
+> +			    u32 allowed_double_bpps, unsigned int *doubled_bpp);
+> +
+> +int max_serdes_xlate_enable_disable_streams(struct max_serdes_source *sources,
+> +					    u32 source_sink_pad_offset,
+> +					    const struct v4l2_subdev_state *state,
+> +					    u32 pad, u64 updated_streams_mask,
+> +					    u32 sink_pad_start, u32 num_sink_pads,
+> +					    bool enable);
+> +
+> +int max_serdes_get_streams_masks(struct device *dev,
+> +				 const struct v4l2_subdev_state *state,
+> +				 u32 pad, u64 updated_streams_mask,
+> +				 u32 num_pads, u64 *old_streams_masks,
+> +				 u64 **new_streams_masks, bool enable);
+> +
+> +int max_serdes_get_tpg_timings(const struct max_serdes_tpg_entry *entry,
+> +			       struct max_serdes_tpg_timings *timings);
+> +
+> +int max_serdes_validate_tpg_routing(struct v4l2_subdev_krouting *routing);
+> +
+> +#endif // MAX_SERDES_H
+> 
+> -- 
+> 2.51.0
+> 
+> 
 
-However, because there remain other outstanding issues,
-including "big picture" questions about how to represent the
-hardware, the series will be sent as RFC.
-
-This will allow others to see the changes we made based on
-feedback, but also makes it clear there is more work that
-needs to be done before we're confident in our final proposal.
-
-					-Alex
-
-> TC956x chips incorporate a PCIe gen 3 switch, with one upstream and
-> three downstream ports.  Its PCIe functionality is already supported
-> upstream, including a power control driver that performs some early
-> configuration of the PCI ports ("pci-pwrctrl-tc9563.c").
-> 
-> One of the PCIe switch's downstream ports has an internal PCIe endpoint,
-> which implements two PCIe functions, each of which has an Ethernet MAC
-> (eMAC) subsystem. The eMAC is composed of a Synopsis Designware XGMAC
-> combined with an XPCS and PMA.  Each MAC is capable of operating at
-> 10M/100M/1G/2.5G/5Gps and 10Gps.  The initial target platform is the
-> Qualcomm RB3gen2, which supports a 10Gbps Marvell PHY on port A, and
-> a 2.5Gbps Qualcomm PHY on port B.  (The Marvell PHY is not populated on
-> all RB3gen2 boards, and only 2.5 Gbps support is included initially.)
-> 
-> TC956x chips also implement several other blocks of functionality,
-> including a GPIO controller, interrupt controllers (MSIGEN), I2C
-> and SPI, a UART, and an Arm Cortex M3 CPU with 128KB SRAM.  The GPIO
-> interface exposes several lines to manage external resets.  The
-> interrupt controllers are used internally by the MAC functions.  The
-> UART, SPI, microcontroller, and SRAM are currently unused.
-> 
->                ----------------------------------
->                |              Host              |
->                ------+...+----------+........+---
->                      |i2c|          |  PCIe  |
->      ----------------+...+----------+........+------
->      | TC956x        |I2C|          |upstream|     |
->      |               -----        --+--------+---  |
->      |  -----  ------  -------    | PCIe switch |  |
->      |  |SPI|  |GPIO|  |reset|    |             |  |
->      |  -----  ------  |clock|    | DS3 DS2 DS1 |  |
->      |                 -------    ---++--++--++--  |
->      |  -----  ------     downstream//    \\  \\   |  downstream
->      |  |MCU|  |SRAM|    /==========/      \\  \===== PCIe port 1
->      |  -----  ------   //PCIe port 3       \\     |
->      |                  ||                   \======= downstream
->      |  ----+-----------++-----------+----         |  PCIe port 2
->      |  | M | internal PCIe endpoint | M |         |
->      |  | S |------------------------| S |  ------ |
->      |  | I |   PCIe   |  |   PCIe   | I |  |UART| |
->      |  | G |function 0|  |function 1| G |  ------ |
->      |  | E |----++----|  |----++----| E |         |
->      |  | N |  eMAC 0  |  |  eMAC 1  | N |         |
->      --------+.......+------+.....+-----------------
->              |USXGMII|      |SGMII|
->            --+.......+--  --+.....+--
->            |  ARQ113C  |  | QEP8121 |
->            |    PHY    |  |   PHY   |
->            -------------  -----------
-> 
-> The primary objective for this series is to support the Ethernet
-> functionality provided by the TC956x.  The code providing this
-> support has been structured into three distinct modules.
->    - A driver for the GPIO controller
->    - Code enabling the TC956x-specific eMAC/MSIGEN hardware
->    - A "chip" driver, associated with the PCIe functions
-> 
-> The GPIO driver is implemented separately because in some hardware
-> configurations, these GPIO lines are used to manage resets for
-> external Ethernet PHYs.  We describe these PHYs via devicetree,
-> where the GPIO-based reset signals are defined using phandles.
-> 
-> The code for the eMAC/MSIGEN consists of a new source file that
-> populates hardware-specific details about the two MACs, and integrates
-> with the existing stmmac driver.  This also required implementing some
-> enhancements to the core stmmac driver, described further below.
-> 
-> To manage the common functionality (including configuring address
-> translation and controlling internal reset and clock signals), a
-> "chip" driver is implemented.  This chip driver is associated with
-> the PCIe function *itself*, not the eMAC associated with the function.
-> 
-> The driver binds to the internal PCI functions 0 and 1, and creates
-> a shared data structure describing the common chip elements the two
-> driver instances share.  Three auxiliary bus devices are created to
-> represent the GPIO controller and the two Synopsys MAC controllers.
-> 
-> The driver instance for PCIe function 0 has responsibility for
-> controlling the common chip functionality--creating the GPIO
-> controller auxiliary device, configuring address translation
-> between PCIe address space and internal addresses, and controlling
-> clocks and resets.  It creates a data structure--shared via its
-> platform data pointer with PCIe function 1--to represent shared
-> "chip" information.  In addition, PCIe function 0 creates an
-> auxiliary device to represent its attached eMAC.  It allocates
-> IRQs and maps BAR address ranges for use by the stmmac driver,
-> passing them in a structure via the auxiliary device's platform
-> data.
-> 
-> PCIe function 1 defers probing until after PCIe function 0 has
-> created the shared data structure.  After that its only job is
-> to set up IRQs and mapped memory and create the eMAC1 auxiliary
-> device.
-> 
-> The version of the Synopsys MAC IP is 3.01, which is largely compatible
-> with version 2.20.  The core stmmac driver required several changes to
-> enable support for the TC956x.
->    - A change to dwxgmac2 support changes the interrupt mode when
->      multi_msi_en is enabled.
->    - While most support for version 3.01 simply uses the 2.20 code,
->      an erratum related to the RX ring length is implemented for
->      3.01 DMA operations.
->    - Having the PCIe device be separate from an auxiliarly device
->      implementing the eMAC required allowing a distinct DMA device
->      to be maintained for an stmmac interface.
-> 
-> In addition:
->    - A new source file provides memory-mapped access to XPCS using
->      regmap.  The alignment of the TC956x MDIO registers aren't
->      suitable for using simple MMIO.
->    - Two additional XPCS changes are implemented that provides
->      support for the XPCS as implemented in the TC956x.
-> 
-> This series is available here:
->    https://github.com/riscstar/linux/tree/tc956x/stmmac-v1
-> 
-> 					-Alex (and Daniel)
-> 
-> Alex Elder (3):
->    net: stmmac: dma: create a separate dma_device pointer
->    gpio: tc956x: add TC956x/QPS615 support
->    misc: tc956x_pci: add TC956x/QPS615 support
-> 
-> Daniel Thompson (9):
->    net: pcs: pcs-xpcs-regmap: support XPCS memory-mapped MDIO bus via
->      regmap
->    net: pcs: pcs-xpcs: select operating mode for 10G-baseR capable PCS
->    net: pcs: pcs-xpcs: Preserve BMCR_ANENBLE during link up
->    net: stmmac: dwxgmac2: Add multi MSI interrupt mode
->    net: stmmac: dwxgmac2: Add XGMAC 3.01a support
->    net: stmmac: dwxgmac2: export symbols for XGMAC 3.01a DMA
->    dt-bindings: net: toshiba,tc965x-dwmac: add TC956x Ethernet bridge
->    net: stmmac: tc956x: add TC956x/QPS615 support
->    arm64: dts: qcom: qcs6490-rb3gen2: enable TC9564 with a single QCS8081
->      phy
-> 
->   .../bindings/net/toshiba,tc956x-dwmac.yaml    | 111 +++
->   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  |  45 +-
->   drivers/gpio/Kconfig                          |  11 +
->   drivers/gpio/Makefile                         |   1 +
->   drivers/gpio/gpio-tc956x.c                    | 209 +++++
->   drivers/misc/Kconfig                          |  10 +
->   drivers/misc/Makefile                         |   1 +
->   drivers/misc/tc956x_pci.c                     | 667 +++++++++++++++
->   drivers/net/ethernet/stmicro/stmmac/Kconfig   |  13 +
->   drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +
->   .../net/ethernet/stmicro/stmmac/chain_mode.c  |  12 +-
->   .../ethernet/stmicro/stmmac/dwmac-tc956x.c    | 791 ++++++++++++++++++
->   .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  12 +
->   .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |   1 +
->   .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |   1 +
->   .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  78 +-
->   .../net/ethernet/stmicro/stmmac/ring_mode.c   |  12 +-
->   drivers/net/ethernet/stmicro/stmmac/stmmac.h  |   1 +
->   .../net/ethernet/stmicro/stmmac/stmmac_main.c |  59 +-
->   .../net/ethernet/stmicro/stmmac/stmmac_xdp.c  |   2 +-
->   drivers/net/pcs/Makefile                      |   4 +-
->   drivers/net/pcs/pcs-xpcs-regmap.c             | 203 +++++
->   drivers/net/pcs/pcs-xpcs.c                    |  43 +-
->   include/linux/pcs/pcs-xpcs-regmap.h           |  20 +
->   include/linux/stmmac.h                        |   1 +
->   include/soc/toshiba/tc956x-dwmac.h            |  84 ++
->   26 files changed, 2341 insertions(+), 53 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml
->   create mode 100644 drivers/gpio/gpio-tc956x.c
->   create mode 100644 drivers/misc/tc956x_pci.c
->   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
->   create mode 100644 drivers/net/pcs/pcs-xpcs-regmap.c
->   create mode 100644 include/linux/pcs/pcs-xpcs-regmap.h
->   create mode 100644 include/soc/toshiba/tc956x-dwmac.h
-> 
-> 
-> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-
+-- 
+Kind Regards,
+Niklas Söderlund
 
