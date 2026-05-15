@@ -1,434 +1,191 @@
-Return-Path: <linux-gpio+bounces-36916-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36915-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oDPJHFQAB2qVqgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36916-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 13:15:32 +0200
+	id GEYzLeH2BmpUpwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36915-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:35:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E22DC54E38D
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 13:15:31 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A4C554D6FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:35:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E551B30FFDF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 10:45:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2854A301F7F9
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 10:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22339466B52;
-	Fri, 15 May 2026 10:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D8E13D1AB1;
+	Fri, 15 May 2026 10:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JJyvMM1M";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="EpjeT5Pq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2114.outbound.protection.partner.outlook.cn [139.219.17.114])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D4A4611C9;
-	Fri, 15 May 2026 10:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778841930; cv=fail; b=ZKUWFxz4K+PmHOsoJ1wIQMnE2Svs3FxKSjLKwkKwrc8uifRrKc+a7Vp3ZF4jBLTCbnEXi+Z7Sz/WPd5slTqFMk3DZcY6WeVAxTA5/Boc2F46E6p8iKozOPxZq2OjWrM1j3OZAIOFiDekQe6pW4qg4pj4zTTuqh3LMBd0CErIrgQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778841930; c=relaxed/simple;
-	bh=64su+T8CMm6OsxYvnQLst/B1YarmNkBMxRXQWUGc7cs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jJoOWkCUGaa/h8OzvW7VXSbX22BuS2ucBbJKP7ApVp0llo50UCwq3xGNEsgq1zElLJWyjSe+d+PzAOcELb/M2pGPH5H1VXGdVMwZo9MMcdsGeWXdT17aL/elEkR5yzZ9oLn8dfVVxYH24rqY7KITyIYKgnmFWrbPOlt6q3CJX+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MFMjLHdkJPniFWmsMIcNyfMOdRSidR731DLqLlBBedeatkkFjbW0CkJSqkLH0yc6dIDAqiKMsm3UtZWf3LNYg7flWwHoLObBg6MiHWA5taspksDhzxWmFRz+T7yBiBtogURR5nrR9jO/0NutQ7Kj4AvEC9NIJsWnP23IIIRk4kuA5IgO9Kq9dPA7MhwFXJ7PwUPw50Ys2bjBuJGVlyochqwM9xqn5f460HsggmdnUE2RYSZwrbY1XAB6uV6DK8+RCTMOwLWu4UEcTt+7v+VvWaQv02LIXThs7Cw8o3x0bo4kGeOByVv5DYHWxUgKJ0vs7xJ0UWffbjg/m7wpHhZvhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XoWscz4PesxAvAD+70LVXjdL7/ubcL+71qVNsWvsbQ0=;
- b=JyIKCYfE3/MV53Gg2HaxUtMyORF6d+LRMk86dppNj/DYWGkAN1R7BvIcEJpCPu9sHgAN5WJ2QMJCWL5RDJS/HMaJkZZtjs7A6ltaCgY6un9dnVNDcUXkvLcSAcJFVq64kI+LO8H0xi1OZgiqy7v+nsQtf2ZTRWqjaW9z2h0DgfuPol3Y4Y5R1VFCkdUsV8VrwmIc/IgbL8emXrkkoc6lGZjmn0srdNlkfyjIUDXgq0tTzC9ohS5v9LQfIKw4oVPh/87S1ji8xDa3wLK/xGRaZSW/sbKnFHIcb7iNHJH0gjtPaCx1KO1uHc/kbGpOjxamO99AglwDcLI30iBbDq/OKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:17::6) by ZQ4PR01MB1267.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:16::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.13; Fri, 15 May
- 2026 10:30:38 +0000
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- ([fe80::e7d4:256c:b066:850d]) by
- ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
- with mapi id 15.20.9913.009; Fri, 15 May 2026 10:30:38 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-CC: Conor Dooley <conor@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, Paul
- Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Bartosz Golaszewski <brgl@kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Lianfeng
- Ouyang <lianfeng.ouyang@starfivetech.com>
-Subject: Re: [PATCH v2 03/22] pinctrl: pinctrl-generic: Make the "function"
- property optional
-Thread-Topic: [PATCH v2 03/22] pinctrl: pinctrl-generic: Make the "function"
- property optional
-Thread-Index:
- AQHc45KRzWGkgNqwEUK1h3GqM3NQzLYN3PGAgAC63ECAAByYgIAADMtAgAAXToCAAAwZ4A==
-Date: Fri, 15 May 2026 10:30:38 +0000
-Message-ID:
- <ZQ4PR01MB12021791B5A255F9EB91D9F6F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
-References: <20260514111218.94519-1-changhuang.liang@starfivetech.com>
- <20260514111218.94519-4-changhuang.liang@starfivetech.com>
- <20260514-operation-remix-9f9fcf9a6102@spud>
- <ZQ4PR01MB120245CDE718812D1C65638AF2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <20260515-dandruff-shorts-d7417c6e977a@wendy>
- <ZQ4PR01MB1202D30B108C4562242C1ED8F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <20260515-bounce-lather-23de8e36754c@wendy>
-In-Reply-To: <20260515-bounce-lather-23de8e36754c@wendy>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1267:EE_
-x-ms-office365-filtering-correlation-id: b5d3cca0-895f-4016-e979-08deb26d01df
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|4143699003|22082099003|56012099003|18002099003|38070700021;
-x-microsoft-antispam-message-info:
- XH5vQRDPQfJ5PzMkis2Y+MpRr/cxM+q0EyvEOSKPQsDvzzzIeaYi00lJPT21EM61wnP8KToxd92WNq/V41bPFZWht943tCLisOaAt/VxLoPTDvgEjTQNP6kZkvZWJkjY9npys00WhmBS8sUvwFvJQqCzKFkxC1i6Au9Z+oZI9PYtkOVTzhhskZh4Hf2T26+AEG5s4t9ZDN29eZ78+Cap/a0cWWkvISJC/MNLcaBZnIvj/eTXFM4bMN4UUG3Aszd2QAbwOvvBkE7Lo0FeG6YmkR5BkVqxB5ImVQOGe38KN6Ox67v0661RD+kefotRnn4u85jf6PL5OwRHx9GzY9rk9mopJPPW7DlROhUPSX7SKSDFEEvTNbBruXATFEQeaHWT6qcIg/gvBHApaDA0F8lNCHay2mDFFN/v6rRbnTRo+KOkgsGaFY68uE2ac/tFgCRNgC/YVtRFKq433dhTzKC+QMRrpEVlNjsHuIayWAUWDgVxqJ0HcI9Go3oBKG5eW0w6Uf3CArKQk5OSzIcVQ7kq0bf6oQuWJj9e/HOiaHi9dg33NvWb1a3KbEpiovczrg3s
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(4143699003)(22082099003)(56012099003)(18002099003)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ImNn2cufgY7lHZbVCePm63UdWFetAxJABqF7QrcmoEYS6YXnsY54A8xaDVPw?=
- =?us-ascii?Q?2yFqOUzwmUCGKNqfFKoxPyaSnUoAmYO4y6iYneLhQFavWoESqoldv687qEFo?=
- =?us-ascii?Q?tpBP8JX8pggaYH+SywTJuKXqs5TYHSDwHMGQQJ9Ut5M+pJXykpr5wGD5dXs9?=
- =?us-ascii?Q?Nsz7Htu177rzt7ICpEs2fjtprJKehCSzthHVXQ/sEDnnlefJ5O9kfpWZluHd?=
- =?us-ascii?Q?sOVjwNo60y9ZSebB9QXFuVIgdjPXK4vlJkdLTKxpymcTzH9vq4Tj5jA1BByW?=
- =?us-ascii?Q?jEs2vJ3q8qxR32zI6hcpXLvioN7tb8u8+LgiBn77o180Wyvo1rofaA1uCYao?=
- =?us-ascii?Q?2CTG3Nm27wh/Vf7Bl9vihnZBke9f9uwUqvMqD74dKiTYukWjTSA6vOe2LFgt?=
- =?us-ascii?Q?C9U8JMNFNvNSDrtC/dk2oeLFUAzKwfI3KTOMG7bvk59FTU8AhVhtSIiIJw9I?=
- =?us-ascii?Q?iv40W2C2U2ja2Ez1gnffbVwKlZIc/jYzCfJ7sp4CJ6V4jj4O9tl1Bz6dXx+v?=
- =?us-ascii?Q?2CDoeasGI4Ax/Q4YB3yB/BnDdC1qoGKCCwEy6sCezxt4fWcPugz1sp0dZldK?=
- =?us-ascii?Q?Ejuq+LGYBkVcIiyUUwJkh2mxrt4cgwgj8HkaEyHZW1/smJF/YZJ+gk8IPtoZ?=
- =?us-ascii?Q?5jier0Xz6Ou8Nk7Y/k97k63y71I/PKu4JvZ0Azb5fkljrqSZxGD2rXcNoSBr?=
- =?us-ascii?Q?kCp2Z6RF9/L9qNQbkPqGdFY3LB9HUGJQ9ny4E37ZA1XGDHDZFNBiM4kn7mAI?=
- =?us-ascii?Q?x4CDVTfaX/a1Bhn89K+nhQ9fy3SBPCoIbrkTp7mNLjrdzELnorn1lAq9hGSU?=
- =?us-ascii?Q?F7BUKx+ttjB3XvLibbHTvicRZOcphdItyrowmu7MOqcKCAySByFugOW2oI3H?=
- =?us-ascii?Q?a2CGcN9mf8L6CnldbLGA5/BMKefFUIpDJudpM7ebUQvGQt7MIqtJPT4W6FQc?=
- =?us-ascii?Q?gL17fjZUOgBNkU0nMomK5bgff5qoa9m0VOx4jR4T/1uRFIhTZY8YkltZCPd5?=
- =?us-ascii?Q?WalSkz3TronPuJzy5PyOcvMXXnajQ+1856oVJ4rTicJJ7GI8OHx8KqqbMASn?=
- =?us-ascii?Q?Skl/eJbjySssYNMLb24koEXvdE6C8qnsv4IAe4gUhm8j2GLz9OafNp1Q/ZGW?=
- =?us-ascii?Q?phmajMUpbTHT8nGRrQLsFACxqDvVsGnh9mweEiJpQepuhmkdk33E2LYQBFhu?=
- =?us-ascii?Q?vihd+aGVUYe2HvW/yAaGa76B0oFYw15Jj/mLljTfb4G8SXf7lAHD6jPWeOb5?=
- =?us-ascii?Q?YYjc6bv5bTIeGi5jEFhirZ+uKDyaVcgIHANlS42eVTdkyIw74Zb2ZVSUhaPJ?=
- =?us-ascii?Q?dAeWbkOOwhiDfMc4QlQhcnvBucuia9yu4xTz3K/5n83o0hwo1HlDC9hIdvUk?=
- =?us-ascii?Q?9WIPXYi3/GJtRUPfyf2iLKsKJJKR5x19swEG3gb7w3q/KBGjnyt8navZ2T9s?=
- =?us-ascii?Q?gSSgqU0tvmDWR4wTMGtIGglPGZnK5tyclfICoO081c6wswFLU4IkdRM3CbU2?=
- =?us-ascii?Q?8SrSyZFHYKLAoRjtPqWQ+8R5YAeOhocxo9DV+gSAP78NCPGlN6bpdSdIh3sy?=
- =?us-ascii?Q?A6FjYlNwo3gYgZfxcmtHMJAXr2HF/Yt1c/LHhKxFpsTLO8f1JwN7vAkprNJF?=
- =?us-ascii?Q?BCDKrwS6KU6UqyhSobVXoc8muZhYm/V/iF1R8kB8xkHREoo0+6yzybCPd8zg?=
- =?us-ascii?Q?ZjIOwgenJ8LNkp9FufUKPFaS7KJg8DoL9dre+LmsX+0MGmd97COeLjTTGB9K?=
- =?us-ascii?Q?VfXzkTrXWLVXcBeLTgDv6Gm7sum3Uq4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F10038D3FD
+	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 10:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778841131; cv=none; b=gRBYC3wZvIKk6SLTGiqXylmgcq0flg0R7qSylaO+qkoRRxwp9K8mgxC4/jIbCMEyp2wuz4zv7taiUer2XAd2ek8q1ClPDxRXjPneCUs32oswDb+KXWN1xS0T8NKr/6Uy2lD16LW6tVsYkjp7XvCfQ5AIwi6hWWQWiPScIJj/uoo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778841131; c=relaxed/simple;
+	bh=LaqNkBsC1aPqGZMmd9r+EzaETwzayMdcQqzUGkAYZx8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hzHYbkTneQ8lTYsdWWw1aJCAZ1/VhlY2VzKXva4u03mDLq9C+6fk0wkr2B2yKVv5De15xk+iZkq+mkhUZYGDvYm4rqAWh0t1rAz2+CIHtCGTHuJ8THrQKdQ5k1e1v5gZJjeZb/tzQfRNI6+NZvuh9WkgIirIsBaxl/PZ1DYOtAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JJyvMM1M; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=EpjeT5Pq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64F4m69p4020724
+	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 10:32:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7P5tIwdg/rLa4pPJy9f6dOdgWa9waugHsGuQ8JjtvLw=; b=JJyvMM1MhhPgRHma
+	u6YC1THsAyKMKFu4juyXz8tWxEMCBJgCsohNlcAUWrvAUkG02qKj88x8jgrnAbuQ
+	iAWc3YX9CD5AGjizW8WiR28hRDznmBZ1zxJb2UX1aa+2a9TkCvV9m4/dCvAhzXR8
+	/85EG4NEuHqGZEbyKykf/wwGiDbMJfnQlD54A66ngowY+5apLcLnKWnqIe132gRs
+	IYd0MQljCmNQbi1SpihvNQss9W565IMEwOsFr1kEMzZT8qQhPMjbgFh0YYqL6kWV
+	WTxS/62TuERj34FMWWyyiPpWPIYuqO13qaklvmh96JiZoRmNGNKRSi8x+EVzAgjQ
+	SgNmBQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e5m1rtv1k-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 10:32:09 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-90fef17f6f5so66089085a.1
+        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 03:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1778841128; x=1779445928; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7P5tIwdg/rLa4pPJy9f6dOdgWa9waugHsGuQ8JjtvLw=;
+        b=EpjeT5PqIGG6WpjFj1QJ1nv3oNk52EtUiMWpYXMeERodPxbnVan5m3FPMC3vaVHfOh
+         kr5+yVBIQB0y1C9ygSxf5NupRxRyIJzNeWRRbFGtjCkZ3dCyVLWZvoTiMaSCRA1OKftn
+         WfT0l3AoxddpTusC10wqqGZcpes7ezomEunB7KsJ0ICQwESRq07VPIBtk5zBueKlVFw6
+         OQioOenOcXmpYH95lRssixxUkn0nRSneXKH43xKzY1kJZ92UyklwnwXgbhI3iHGXd7/n
+         QlVJ2Wk6BRPNREOHPXiJYY4NM/RMQXMh0iusjMgK2dL0DES84BCNYmxoVvXyDSruAhzl
+         eS2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778841128; x=1779445928;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7P5tIwdg/rLa4pPJy9f6dOdgWa9waugHsGuQ8JjtvLw=;
+        b=UvH6zCtv2XuWDV7Wu5nrZIMMauVJM2bHhK3bYUFjoZxDyubqxjEmvgvu+3YKBZsya9
+         5lp2HqfujDH35gMIjPJI9wqeKUUEh9Q2NK/owyWmV3lJ7xSV5b7x19VowpkUETm8JBU5
+         9+j86ubi0trWImwifF2kId3mpdVC5Ga2unp3N3l/yNyqdOsYSKEXHW4Z8rTZolK2lurf
+         C5zZx2Li3poRcCVuMxdV6zPSQveaZjL+K53OMLfnjOYsOskw1M881u6C2s+ZpD7Jf9Er
+         VfiHwXejLLZIXFDVJlLduZo/CSOxOwgTbwfurfPm1EMRpsIs/4lOxMmnPBim0sX34ZOx
+         hbcg==
+X-Forwarded-Encrypted: i=1; AFNElJ+V31Il2Mf8iJ4ljQEc209Geug1V+QqotoUskKQILkK5J1oap7C7ZyPx8MAWAHXStrQl+r+4QXJUiN/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQGsEkgJZYsIZpPQZSbeIzsJ2rhig1IlApSOU3it1K1vs/5bkh
+	lNxhMSZR8LqRxWIMxmHQbt42nJ4V9kwxWVXZiNxTRktOiIBPwjGA1g3RQIpmIsRXkU93rx1cxDk
+	F4gmMcRDp1l3sKi07X0VHKcyikO07GKSb0zo19wfpHu4gsQDyM6cFZRswb5H0KZzn
+X-Gm-Gg: Acq92OEpflVkIbtCxHIrdZKW5RyD1s7EfUmZmed1jLQVzk8id23TZiT+XQv2Hqmq/ma
+	VeJHWdjzR3aV732FdQNh0LtYRltz+3QVZf1uBwPPgiLW/eYV4PKTASzm6aoXR62SVgQg7fkDh+q
+	MFibozGhgxGwZTIMx1/8fqPmorIqZFqtdgR+Pk37bc8W0R7pQaiPrxb/Zfu6kL6DSk+7+sF7VH/
+	d2SSTU0i+qP+9pdPZ3HqfkVmZTWLvTsmf1ldLGdjXm8PRZxU6TVYIdm0JFT4QILnZNvW6Zp74G7
+	BwuPWfFrwM5OcO4neq5SXf+8/SZpCcalrYOaVacB/QMIOmKzGHvCiJ85vaHkojWx8NcWxuz0u/m
+	PMOlTAT6UcEEpJ8Yp2K/yHbAckyd4HsvZY0L9NQiOhoCep0f07s1MpkwUnMvsyD5MpXwHFUIp7T
+	pahQe6tLGc1V0xVQ==
+X-Received: by 2002:a05:620a:701b:b0:8d7:3f45:b95c with SMTP id af79cd13be357-911cd9560b9mr374352985a.2.1778841128320;
+        Fri, 15 May 2026 03:32:08 -0700 (PDT)
+X-Received: by 2002:a05:620a:701b:b0:8d7:3f45:b95c with SMTP id af79cd13be357-911cd9560b9mr374348485a.2.1778841127788;
+        Fri, 15 May 2026 03:32:07 -0700 (PDT)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68310b4069dsm1798256a12.1.2026.05.15.03.32.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 03:32:06 -0700 (PDT)
+Message-ID: <7d84ca2a-9bbd-450e-a531-a9b2bc227cf2@oss.qualcomm.com>
+Date: Fri, 15 May 2026 12:32:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5d3cca0-895f-4016-e979-08deb26d01df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2026 10:30:38.5566
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bgfqw6SgenOoT+tM8I9dYdmI3aWxveqJa/ulOcKb/8h13OTETam7dBxYBzIH+9L+gMmNto1dZW7+8gEcWDxgeF37VExSkg34gUn4Ey3NdmHFwl2IrtzE31OEPE4Y08v+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1267
-X-Rspamd-Queue-Id: E22DC54E38D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] pinctrl: qcom: Add Shikra pinctrl driver
+To: Komal Bajaj <komal.bajaj@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20260512-shikra-pinctrl-v4-0-b93c3a2e4c08@oss.qualcomm.com>
+ <20260512-shikra-pinctrl-v4-2-b93c3a2e4c08@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260512-shikra-pinctrl-v4-2-b93c3a2e4c08@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 9FtF5-NCOxsaoKGutPTNQbZNCg86zCzm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE1MDEwNiBTYWx0ZWRfXxlRdtdtWGtWG
+ 9nVy8It9ZJr4yhAkH18NOhM41TmL0gRkBE4CZro/jKQL5vtuN2UxuFgSS5V7Xk/50pmGINqcmRy
+ gIhf79cJG8tn4YpVGpki5Rdbqs7x86r+1xB9GmMNTylT047wuV68eWY10ZWepgzUAeQrzhHS9Iz
+ UYJ0lhNn6oys9xjw+97ZHIBhgCosAl48FlaV5T9HBrRbTUQTYl49WNjGYVvRuwkKD6c9ZW2DRQT
+ +AY9JODIbV6/Xh7wjkTCT7+puCMB6cllBjjuSn4dosyec4LrirIwGtLkdi8jd7qrJ/qYjsnYGgY
+ nvDBL9/3e/t97of7uGMXWBDpoOxtMn36U4y1gaLAluDITXm0P6ozy7w7L9P4StekWz9z+zI0KVw
+ gAejsplCsvuGGjIAiQMT4iY/NUHqTbxuoaW1Hht0uYoHQjpJkITkdoe3prSPga3ZzjR9/0f/2lC
+ C5Hc/FdZpj2OTasHwBA==
+X-Proofpoint-ORIG-GUID: 9FtF5-NCOxsaoKGutPTNQbZNCg86zCzm
+X-Authority-Analysis: v=2.4 cv=JPELdcKb c=1 sm=1 tr=0 ts=6a06f629 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=EUspDBNiAAAA:8 a=NVK-j4C6oOT1ijtQxEUA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-15_02,2026-05-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 clxscore=1015 phishscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605150106
+X-Rspamd-Queue-Id: 5A4C554D6FB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.54 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36916-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36915-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[oss.qualcomm.com,kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.983];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-Hi, Conor
+On 5/12/26 3:25 PM, Komal Bajaj wrote:
+> Add pinctrl driver for TLMM block found in Shikra SoC.
+> 
+> Signed-off-by: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
+> ---
 
-Thanks for the comments.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> On Fri, May 15, 2026 at 08:23:55AM +0000, Changhuang Liang wrote:
-> > > On Fri, May 15, 2026 at 05:55:48AM +0000, Changhuang Liang wrote:
-> > > > > On Thu, May 14, 2026 at 04:11:59AM -0700, Changhuang Liang wrote:
-> > > > > > Some pinctrl subnodes only need to configure pin properties
-> > > > > > (e.g., power-source, bias, drive strength) without assigning an=
-y mux
-> function.
-> > > > > >
-> > > > > > Currently, the driver requires a valid "function" property for
-> > > > > > all pinctrl subnodes. This forces the addition of dummy or
-> > > > > > redundant "function" entries when only pin configuration is nee=
-ded.
-> > > > > >
-> > > > > > Example use case:
-> > > > > > gpios-configs {
-> > > > > >     config {
-> > > > > >         pins =3D <0 1 2 3>;
-> > > > > >         power-source =3D <0>;
-> > > > > >     };
-> > > > > > };
-> > > > > >
-> > > > > > Make the "function" property optional. If it is missing, skip
-> > > > > > adding the mux map and only process the pin configuration.
-> > > > >
-> > > > > I looked through the series though and all controllers appear to
-> > > > > have pins and functions, is it the case that gpio is the default
-> > > > > for these pins, so you are omitting the functions property when
-> > > > > you are using
-> > > the pin in gpio mode?
-> > > > > Saying that the functions property is "redudant" makes it seem
-> > > > > like this might be the case?
-> > > > >
-> > > > > I've got some feedback here, but I can't really provide it
-> > > > > without knowing the answer to that question.
-> > > >
-> > > >
-> > > > "From v1, copying Linus's suggestion:
-> > > >
-> > > > > +  This domain contains 4 IO groups which support voltage levels
-> > > > > + 1.8V and 3.3V  gpioe-spi - comprises PAD_GPIO_C0 through
-> > > PAD_GPIO_C4.
-> > > > > +  gpioe-qspi0 - comprises PAD_GPIO_C5 through PAD_GPIO_C11.
-> > > > > +  gpioe-qspi1 - comprises PAD_GPIO_C12 through PAD_GPIO_C19.
-> > > > > +  gpioe-qspi2 - comprises PAD_GPIO_C20 through PAD_GPIO_C27.
-> > > > > +
-> > > > > +  Each of the above IO groups must be configured with a voltage
-> > > > > + setting that matches the external  voltage level provided to
-> > > > > + the IO
-> > > group.
-> > > >
-> > > > So your hardware has groups and support some properties on the
-> > > > group
-> > > level.
-> > > >
-> > > > So expose these groups and make these properties configurable per
-> > > > group instead of inventing per-group properties.
-> > > >
-> > > > > +  gpioe-spi-vref:
-> > > > > +  gpioe-qspi0-vref:
-> > > > > +  gpioe-qspi1-vref:
-> > > > > +  gpioe-qspi2-vref:
-> > > >
-> > > > Create proper groups in the pin controller then use the standard
-> > > > pincfg property power-source =3D <...>; for this.
-> > > >
-> > > > Example for a simple default hog:
-> > > >
-> > > > pinctrl {
-> > > >     /* Hog the QSPI pins */
-> > > >     pinctrl-names =3D "default";
-> > > >     pinctrl-0 =3D <&qspi_default>;
-> > > >
-> > > >     qspi_default: pinctrl-qspi {
-> > > >         config {
-> > > >             groups =3D "gpioe-qspi-pins";
-> > > >             power-source =3D <2>;
-> > > >         };
-> > > >     };
-> > > > };
-> > > >
-> > > > The groups can be orthogonal to other pin handling, that's fine.
-> > > > Implement .pin_config_group_set in struct pinconf_ops.
-> > > >
-> > > > However, I found that
-> > > > pinctrl_generic_pins_function_dt_node_to_map()
-> > > > does not handle the groups property,
-> > >
-> > > That's kind of the whole point of the function, see the comment
-> > > about
-> > > it:
-> > > /*
-> > >  * For platforms that do not define groups or functions in the
-> > > driver, but
-> > >  * instead use the devicetree to describe them. This function will,
-> > > unlike
-> > >  * pinconf_generic_dt_node_to_map() etc which rely on driver defined
-> > > groups
-> > >  * and functions, create them in addition to parsing pinconf
-> > > properties and
-> > >  * adding mappings.
-> > >  */
-> > >
-> > > If you have the groups property in your devicetree, it contains
-> > > strings that the driver uses to match against the groups it has defin=
-ed in it.
-> > > See my recently added microchip,pic64gx-pinctrl-gpio2 for an example
-> > > of that if you like.
-> > >
-> > > However, if you are using the pins or pinmux properties, the groups
-> > > are not defined in the driver, and need to be created at runtime.
-> > > That's what
-> > > pinctrl_generic_pins_function_dt_node_to_map() is for - it creates
-> > > the groups at runtime when using the *pins* and *function* properties=
-.
-> > > It's in the name!
-> > >
-> > > Judging by your drivers, and how many structures you have that look
-> > > very like groups from a quick glance, probably you can still make
-> > > use of the groups property. The equivalent function to
-> > > pinctrl_generic_pins_function_dt_node_to_map() when you're using
-> > > driver defined groups is pinconf_generic_dt_node_to_map().
-> >
-> > I feel that for the current platform, initializing pin voltage is
-> > suitable for using `pinconf_generic_dt_node_to_map()`,
-> > and configuring pin mux is suitable for using
-> > `pinctrl_generic_pins_function_dt_node_to_map()`. Should I use both of
-> them at the same time?
->=20
-> No, pick either groups or pins across the board and then use the appropri=
-ate
-> function after that. Mixing and matching just adds complication for no re=
-al
-> reason.
->=20
-> > > Also, I notice that you never actually answered the question that I
-> > > asked:
-> > > > > I looked through the series though and all controllers appear to
-> > > > > have pins and functions, is it the case that gpio is the default
-> > > > > for these pins, so you are omitting the functions property when
-> > > > > you are using
-> > > the pin in gpio mode?
-> > > > > Saying that the functions property is "redudant" makes it seem
-> > > > > like this might be the case?
-> > >
-> > > Are you omitting the functions property from your nodes when they're
-> > > using gpio because it is a default, or is there some other reason
-> > > why you're omitting the functions property sometimes?
-> >
-> > Sorry, I missed that question. What I meant by making 'functions'
-> > optional is that I don't care whether the current pin's default value i=
-s GPIO
-> or some other function.
-> > Here, I just want to initialize the default voltage of these pins, not
-> > configure their pin function.
->=20
-> You're making them gpios in all the cases that I saw, so I think you're b=
-est
-> served by using the "gpio" function and thereby being able to have functi=
-on as
-> a required property. Unless the pins are unused, you need to set the func=
-tion
-> anyway, and if they're unused and survived on the values set by reset or =
-prior
-> boot stages, why do you need to set the voltage anyway?
->=20
-> Looking at this node, it looks completely wrong to me:
-> +&pinctrl_sys2 {
-> +	gpiow0_configs: gpiow0-hog-grp {
-> +		gpiow0-hog-pins {
-> +			pins =3D <PADNUM_SYS2_GPIO_A36
-> +				PADNUM_SYS2_GPIO_A37
-> +				PADNUM_SYS2_GPIO_A38
-> +				PADNUM_SYS2_GPIO_A39>;
-> +			power-source =3D <JHB100_PINVREF_3_3V>;
-> +		};
-> +	};
-> +
-> +	gpiow_inner_configs: gpiow-inner-hog-grp {
-> +		gpiow-inner-hog-pins {
-> +			pins =3D <PADNUM_SYS2_GPIO_A40
-> +				PADNUM_SYS2_GPIO_A41
-> +				PADNUM_SYS2_GPIO_A42
-> +				PADNUM_SYS2_GPIO_A43>;
-> +			power-source =3D <JHB100_PINVREF_3_3V>;
-> +		};
-> +	};
-> +
-> +	uart6_pins: uart6-grp {
-> +		uart6-tx-pins {
-> +			pins =3D <PADNUM_SYS2_GPIO_A38>;
-> +			function =3D "uart";
-> +		};
-> +
-> +		uart6-rx-pins {
-> +			pins =3D <PADNUM_SYS2_GPIO_A39>;
-> +			function =3D "uart";
-> +			input-enable;
-> +		};
-> +	};
-> +};
->=20
-> The pins used by uart appear also in your hog node and...
->=20
-> > This part of the voltage configuration only has one register, but it
-> > applies to many pins, so currently it seems I can only use pinctrl hog =
-to
-> initialize it.
->=20
-> ...I think that relates to the point you make here. If a setting for the
-> power-source applies across an entire set of pins, there's no need to
-> preemptively apply this across the whole set. It's usually sufficient to =
-just set
-> the power-source in the nodes that describe pins that are actually in use=
-, for
-> example:
->=20
-> | &pinctrl_sys2 {
-> | 	uart6_pins: uart6-grp {
-> | 		uart6-tx-pins {
-> | 			pins =3D <PADNUM_SYS2_GPIO_A38>;
-> | 			function =3D "uart";
-> | 			power-source =3D <JHB100_PINVREF_3_3V>;
-> | 		};
-> |
-> | 		uart6-rx-pins {
-> | 			pins =3D <PADNUM_SYS2_GPIO_A39>;
-> | 			function =3D "uart";
-> | 			input-enable;
-> | 			power-source =3D <JHB100_PINVREF_3_3V>;
-> | 		};
-> | 	};
-> | };
-
-I think this approach is suitable for cases where each pin has its own inde=
-pendent register filed.=20
-I'm not sure if it's suitable for this kind of voltage configuration where =
-multiple pins share a=20
-single register field.
-
-With this approach, the driver would end up writing the same value to the s=
-ame register twice,=20
-once for A38 and once for A39. Is that acceptable?
-
-If that's acceptable, the code would indeed become much simpler.
-
-Best Regards,
-Changhuang
-
-
+Konrad
 
