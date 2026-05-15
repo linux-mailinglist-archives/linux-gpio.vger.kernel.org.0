@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-36913-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36914-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mCIrONP5BmpUpwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36913-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:47:47 +0200
+	id uGbPFn72BmpUpwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36914-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:33:34 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80B1E54DA47
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:47:47 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F9354D677
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 35ED430BF4ED
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 10:27:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B5E183038657
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 10:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59C383CF97A;
-	Fri, 15 May 2026 10:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B630A44103E;
+	Fri, 15 May 2026 10:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tRSmKduP"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vrfDlSvS"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FEA3C3422;
-	Fri, 15 May 2026 10:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B44B429802;
+	Fri, 15 May 2026 10:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778840836; cv=none; b=QFg7nkmsZn/ONtEu1RQzEy80PTmJVzWL8l1y5IVyixALMQ77M5oNJDSCDCbPNz8VPwgFJgomthr6+lCob59q8Z5fOELw8Obp94TMEKDAsDDhlcYkY7hQDux5TsrBXtkFYHZ+ZGgvNySiVKniwFWLCU2GbYgnx8md0+ai1FDrUCE=
+	t=1778840976; cv=none; b=co/OLztpoMJQNfTS1h789CUQGoDdl9N6yrlzqE7MHGp6rBmuEDii+VZxMbsgNgIx2+7inmCv3LGrf1yWHV1FJ8w3itgptc3NSnka1bx4z9qeI0YK3hcm2b4H05pWCKE5JsPfMYZZChYwITACVHe3WFG+yWVbqek6LbC1LMB7jr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778840836; c=relaxed/simple;
-	bh=Qk9NZ7WqcT4v7DKQJ7GeuukI5VSD3ZxkWEeReTD+ruU=;
+	s=arc-20240116; t=1778840976; c=relaxed/simple;
+	bh=nkuM2Sf1wZOAgpLMQwczjxbbHxEBXV42mJs4czexDiM=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMvVhVtRTaaGnAnLTOJuUcwgWvThZRAtJXxIDXrTMYDpF7P+XRM/gbWMuRsLQO0iQeQIbF54YV5bYBOXfgqTfMJNFED/DBjcFNFl/Qc+Q+heLPbDVdGLcqVTmT2lO3Y47tyyZJYDekozNBDxThwSIEy0dctQt/blJLRk/K3JF9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tRSmKduP; arc=none smtp.client-ip=68.232.154.123
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZjBkQqb80pyRmNIdyIE2Y5B4t2R+UE/jFxxJo58i3zwLPnDNJeiTeBUxFcawyCINZzR2gXEIP4wG/3Gv8qCTONREwEweSBTyxu2u1mZyzgwqagQoKno6XhKZiPxMnzXUPX4CN55ucxYdy0LfAb9BtseBO6bAk/75RyJixkp+P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vrfDlSvS; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1778840834; x=1810376834;
+  t=1778840975; x=1810376975;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Qk9NZ7WqcT4v7DKQJ7GeuukI5VSD3ZxkWEeReTD+ruU=;
-  b=tRSmKduPDmGdX85e0lCpXd3qjTCVpuqUpb8KBvm6KTIKbFd77vWehf45
-   GGXu7cU2xeBKg4cwRYQaQfQriSGbEumZ8Aww/VaS962c3yYoGGwlgCXPV
-   8POOjz+34BqRDeLkV1+pP+PF23kaLyqDr49S87I56imQSPBA+YWcRGTi3
-   BHPcIcG9Jm8+EAWWAJfL0dKXytDi0hWoLfCs7r+syfINT6qytvHWf4fGC
-   MqKmhy5yayDmFP2D0os7VVV4fnqhBzMpEeM959a3OYJhUiSDfgtatAHVJ
-   rFlrTfEfcGo470e0biEBB0+mZDQG05FUPN5ReieNk/5DVFCB4jPX6Bruw
-   w==;
-X-CSE-ConnectionGUID: Xy4zyqk9RhyxiOqI97z15Q==
-X-CSE-MsgGUID: e72aybRuTAKsM/JwMIIimQ==
+  bh=nkuM2Sf1wZOAgpLMQwczjxbbHxEBXV42mJs4czexDiM=;
+  b=vrfDlSvSxlKOPpG47zOBD8rat4NOi9z0Xb47udcvg9i3tBZu3+tWwWg9
+   dwwOijuOgf5nvfYYDm2OGyUjpsQWhnbT+UiY4/+x49ZSkTxJTqrXiE6gT
+   I4rlSfmHjNoNl54xX4q9RuNvjL86JlKhh8dqoiPgqwxNNP9HcnfyWLWgP
+   igkaRmFk5hRovfIh8e/ZTIcvIMJ3g1td7WE724tplPXZHs9Cif+BIzhST
+   kVCzlZDLZpD7t2EuJkoCGuYhWjCDaXZrZmUZZ8GxrENSw0XAMAgQ7d2nM
+   QMKzKddpPqX4MAcDU+6aUU7pvaOwS+senARh5VJWhqXQrPZ+bC2uYJAaB
+   g==;
+X-CSE-ConnectionGUID: 5N7ot1SSRMOKRGHqqa0i7w==
+X-CSE-MsgGUID: A19Up0eVRFG9aIc9Wm+zBQ==
 X-IronPort-AV: E=Sophos;i="6.23,236,1770620400"; 
-   d="asc'?scan'208";a="57968182"
+   d="asc'?scan'208";a="56789946"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2026 03:27:13 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2026 03:29:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Fri, 15 May 2026 03:27:12 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ 15.1.2507.58; Fri, 15 May 2026 03:29:33 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
- Transport; Fri, 15 May 2026 03:27:09 -0700
-Date: Fri, 15 May 2026 11:26:31 +0100
+ Transport; Fri, 15 May 2026 03:29:30 -0700
+Date: Fri, 15 May 2026 11:28:52 +0100
 From: Conor Dooley <conor.dooley@microchip.com>
 To: Jia Wang <wangjia@ultrarisc.com>
 CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -75,11 +75,11 @@ CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	<conor@kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 5/9] riscv: dts: ultrarisc: Add initial device tree for
- UltraRISC DP1000
-Message-ID: <20260515-morbidity-rule-d8504467b252@wendy>
+Subject: Re: [PATCH 7/9] riscv: dts: ultrarisc: add Rongda M0 board device
+ tree
+Message-ID: <20260515-frisbee-clench-4029b6dd8169@wendy>
 References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-ultrarisc-pinctrl-v1-5-bf559589ea8a@ultrarisc.com>
+ <20260515-ultrarisc-pinctrl-v1-7-bf559589ea8a@ultrarisc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,10 +87,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YkSoZU4ahkAk+Ef4"
+	protocol="application/pgp-signature"; boundary="zs1VOpITnaK5peJo"
 Content-Disposition: inline
-In-Reply-To: <20260515-ultrarisc-pinctrl-v1-5-bf559589ea8a@ultrarisc.com>
-X-Rspamd-Queue-Id: 80B1E54DA47
+In-Reply-To: <20260515-ultrarisc-pinctrl-v1-7-bf559589ea8a@ultrarisc.com>
+X-Rspamd-Queue-Id: 34F9354D677
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
@@ -99,17 +99,17 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[microchip.com,reject];
 	MID_RHS_NOT_FQDN(0.50)[];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[microchip.com:s=mchp];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36913-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36914-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	DKIM_TRACE(0.00)[microchip.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[conor.dooley@microchip.com,linux-gpio@vger.kernel.org];
@@ -121,307 +121,183 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
---YkSoZU4ahkAk+Ef4
-Content-Type: text/plain; charset=iso-8859-1
+--zs1VOpITnaK5peJo
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 15, 2026 at 09:18:01AM +0800, Jia Wang wrote:
-> Add the base device tree for the UltraRISC DP1000 SoC. It describes the
-> 8=D7CP100 CPU cores and essential SoC peripherals including the interrupt
-> controller, pinctrl, GPIO, UART, SPI, I2C, PCIe, GMAC and the DMA
-> controller.
+On Fri, May 15, 2026 at 09:18:03AM +0800, Jia Wang wrote:
+> Rongda M0 is an mATX motherboard based on the UltraRISC DP1000 SoC.
 >=20
-> Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-2-98935f6cd=
-fb5@ultrarisc.com/
-> Link: https://lore.kernel.org/lkml/20260429-ultrarisc-serial-v7-3-e475cce=
-9e274@ultrarisc.com/
->=20
-
-No blank line here FYI.
-
 > Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
 > ---
->  MAINTAINERS                               |   1 +
->  arch/riscv/boot/dts/ultrarisc/dp1000.dtsi | 851 ++++++++++++++++++++++++=
+>  arch/riscv/boot/dts/Makefile                       |   1 +
+>  arch/riscv/boot/dts/ultrarisc/Makefile             |   2 +
+>  .../dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi    |  85 ++++++++++++++++
+>  arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts | 111 +++++++++++++++=
 ++++++
->  2 files changed, 852 insertions(+)
+>  4 files changed, 199 insertions(+)
 >=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index baaaa46b1a56..832e01898ae5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23087,6 +23087,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
->  L:	linux-riscv@lists.infradead.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/riscv/ultrarisc.yaml
-> +F:	arch/riscv/boot/dts/ultrarisc/
-> =20
->  RNBD BLOCK DRIVERS
->  M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
-> diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi b/arch/riscv/boot/=
-dts/ultrarisc/dp1000.dtsi
+> diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+> index 69d8751fb17c..702882974251 100644
+> --- a/arch/riscv/boot/dts/Makefile
+> +++ b/arch/riscv/boot/dts/Makefile
+> @@ -12,3 +12,4 @@ subdir-y +=3D spacemit
+>  subdir-y +=3D starfive
+>  subdir-y +=3D tenstorrent
+>  subdir-y +=3D thead
+> +subdir-y +=3D ultrarisc
+> diff --git a/arch/riscv/boot/dts/ultrarisc/Makefile b/arch/riscv/boot/dts=
+/ultrarisc/Makefile
 > new file mode 100644
-> index 000000000000..1aae53fc1a2b
+> index 000000000000..d01a770d3cba
 > --- /dev/null
-> +++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
-> @@ -0,0 +1,851 @@
+> +++ b/arch/riscv/boot/dts/ultrarisc/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_ULTRARISC) +=3D dp1000-rongda-m0.dtb
+> diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi =
+b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
+> new file mode 100644
+> index 000000000000..101b416b1079
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
+> @@ -0,0 +1,85 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
 > + * Copyright(C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
 > + */
 > +
-> +/dts-v1/;
+> +#include "dp1000.dtsi"
+> +
+> +&pmx0 {
+> +	i2c0_pins: i2c0-pins {
+> +		pins =3D "PA12", "PA13";
+> +		function =3D "func0";
+
+This is what I meant about func0 btw, and having this be "i2c" etc instead.
+> diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts b/arch/ri=
+scv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
+> new file mode 100644
+> index 000000000000..6f72d60ad55e
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright(C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
+> + */
+> +
+> +#include "dp1000-rongda-m0-pinctrl.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
 > +
 > +/ {
-> +	compatible =3D "ultrarisc,dp1000";
-> +	#address-cells =3D <2>;
-> +	#size-cells =3D <2>;
+> +	model =3D "Rongda M0 Board";
+> +	compatible =3D "rongda,m0", "ultrarisc,dp1000";
 > +
-> +	cpus {
+> +	aliases {
+> +		serial0 =3D &uart0;
+> +		serial1 =3D &uart1;
+> +		serial2 =3D &uart2;
+> +		serial3 =3D &uart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	gpio-poweroff {
+> +		compatible =3D "gpio-poweroff";
+> +		gpios =3D <&gpio_b 0 GPIO_ACTIVE_HIGH>;
+> +		active-delay-ms =3D <100>;
+> +
+> +		status =3D "disabled";
+
+Why bother adding the nodes if they are disabled? What enables them?
+
+> +	};
+> +
+> +	gpio-restart {
+> +		compatible =3D "gpio-restart";
+> +		gpios =3D <&gpio_b 1 GPIO_ACTIVE_HIGH>;
+> +		active-delay =3D <100>;
+> +
+> +		status =3D "disabled";
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins>;
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c1_pins>;
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c2_pins>;
+> +
+> +	rtc@32 {
+> +		compatible =3D "whwave,sd3078";
+> +		reg =3D <0x32>;
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c3_pins>;
+> +};
+> +
+> +&spi0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&spi0_pins>;
+> +};
+> +
+> +&spi1 {
+> +	num-cs =3D <1>;
+
+Why is num-cs set at the board level here?
+
+> +
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&spi1_pins>;
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart0_pins>;
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart1_pins>;
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart2_pins>;
+> +};
+> +
+> +&ethernet {
+> +	phy-handle =3D <&phy0>;
+> +	/*
+> +	 * YT8531 RGMII timing on this board requires no PHY internal delays.
+> +	 * Using "rgmii-id" together with rx/tx-internal-delay-ps results in RX=
+ CRC
+> +	 * errors and no usable traffic, so keep plain "rgmii" here.
+> +	 */
+> +	phy-mode =3D "rgmii";
+> +
+> +	mdio {
+> +		compatible =3D "snps,dwmac-mdio";
 > +		#address-cells =3D <1>;
 > +		#size-cells =3D <0>;
-> +		timebase-frequency =3D <10000000>;
 > +
-> +		cpu0: cpu@0 {
-> +			compatible =3D "ultrarisc,cp100", "riscv";
-> +			reg =3D <0x0>;
-> +			device_type =3D "cpu";
-> +			riscv,isa =3D "rv64imafdcbh";
-
-Drop this property, its replacements (below) should be supported by all
-users.
-
-> +			riscv,isa-base =3D "rv64i";
-> +			riscv,isa-extensions =3D "i", "m", "a", "f", "d", "c", "b", "h",
-> +					       "zba", "zbb", "zbc", "zbs", "zicntr",
-> +					       "zicsr", "zifencei", "zihpm", "ziccif",
-> +					       "ziccrse", "ziccamoa", "za64rs", "zicbom",
-> +					       "zicbop", "zicboz", "zkt", "svade",
-> +					       "ssccptr", "sstvecd", "sscounterenw",
-> +					       "shcounterenw", "shtvala", "shvstvecd",
-> +					       "shvsatpa", "svvptc";
-> +			mmu-type =3D "riscv,sv48";
-> +			clock-frequency =3D <2000000000>;
-> +			/* L1 I-cache and D-cache:
-
-FYI, the comment format outside of drivers/net/ has a newline after /*.
-
-> +			 * block-size 64B
-> +			 * 4-way set associative, size 64KB
-> +			 * per-core.
-> +			 */
-> +			d-cache-block-size =3D <64>;
-> +			d-cache-sets =3D <256>;
-> +			d-cache-size =3D <0x10000>;
-> +			i-cache-block-size =3D <64>;
-> +			i-cache-sets =3D <256>;
-> +			i-cache-size =3D <0x10000>;
-> +			next-level-cache =3D <&l2_cache0>;
-> +			riscv,cbom-block-size =3D <64>;
-> +			riscv,cboz-block-size =3D <64>;
-> +
-> +			cpu0_intc: interrupt-controller {
-> +				compatible =3D "riscv,cpu-intc";
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <0x01>;
-> +			};
-> +
-> +			l2_cache0: l2-cache {
-> +				/* L2 cache:
-> +				 * cache-unified, block-size 64B
-> +				 * 8-way set associative, size 512KB
-> +				 * per-core.
-> +				 */
-> +				compatible =3D "cache";
-> +				cache-block-size =3D <64>;
-> +				cache-level =3D <2>;
-> +				cache-size =3D <0x80000>;
-> +				cache-sets =3D <1024>;
-> +				cache-unified;
-> +				next-level-cache =3D <&cluster0_l3>;
-> +			};
-> +		};
-
-> +		cpu4: cpu@4 {
-> +			compatible =3D "ultrarisc,cp100", "riscv";
-> +			reg =3D <0x10>;
-
-Sashiko correctly pointed out that this is wrong.
-
-> +		cpu5: cpu@5 {
-> +			compatible =3D "ultrarisc,cp100", "riscv";
-> +			reg =3D <0x11>;
-
-And so is this.
-
-> +		cpu6: cpu@6 {
-> +			compatible =3D "ultrarisc,cp100", "riscv";
-> +			reg =3D <0x12>;
-
-And this.
-
-> +		cpu7: cpu@7 {
-> +			compatible =3D "ultrarisc,cp100", "riscv";
-> +			reg =3D <0x13>;
-
-And this.
-
-> +	clocks {
-
-I've commented on this in the cover letter.
-
-> +		device_clk: device_clk {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <62500000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		timer_clk: timer_clk {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <50000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +
-> +		csr_clk: csr_clk {
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <250000000>;
-> +			#clock-cells =3D <0>;
-> +		};
-> +	};
-
-> +	memory@80000000 {
-> +		device_type =3D "memory";
-> +		reg =3D <0x00 0x80000000 0x4 0x00000000>;
-> +	};
-
-This looks incorrectly placed, memory should be in the board dts unless
-it is actually a part of the chip.
-
-> +
-> +	soc {
-> +		compatible =3D "simple-bus";
-> +		ranges;
-> +		#address-cells =3D <0x02>;
-> +		#size-cells =3D <0x02>;
-> +
-> +		clint: clint@8000000 {
-> +			compatible =3D "sifive,clint0", "riscv,clint0";
-
-Missing a device-specific clint compatible.
-
-> +			reg =3D <0x00 0x8000000 0x00 0x100000>;
-> +			interrupts-extended =3D <&cpu0_intc 0x03>, <&cpu0_intc 0x07>,
-> +					      <&cpu1_intc 0x03>, <&cpu1_intc 0x07>,
-> +					      <&cpu2_intc 0x03>, <&cpu2_intc 0x07>,
-> +					      <&cpu3_intc 0x03>, <&cpu3_intc 0x07>,
-> +					      <&cpu4_intc 0x03>, <&cpu4_intc 0x07>,
-> +					      <&cpu5_intc 0x03>, <&cpu5_intc 0x07>,
-> +					      <&cpu6_intc 0x03>, <&cpu6_intc 0x07>,
-> +					      <&cpu7_intc 0x03>, <&cpu7_intc 0x07>;
-> +		};
-> +
-> +		plic: plic@9000000 {
-> +			compatible =3D "ultrarisc,dp1000-plic", "ultrarisc,cp100-plic";
-> +			reg =3D <0x00 0x9000000 0x00 0x4000000>;
-> +			#interrupt-cells =3D <1>;
-> +			#address-cells =3D <0>;
-> +			interrupt-controller;
-> +			interrupts-extended =3D <&cpu0_intc 0xb>, <&cpu0_intc 0x9>, <&cpu0_in=
-tc 0xa>,
-> +					      <&cpu1_intc 0xb>, <&cpu1_intc 0x9>, <&cpu1_intc 0xa>,
-> +					      <&cpu2_intc 0xb>, <&cpu2_intc 0x9>, <&cpu2_intc 0xa>,
-> +					      <&cpu3_intc 0xb>, <&cpu3_intc 0x9>, <&cpu3_intc 0xa>,
-> +					      <&cpu4_intc 0xb>, <&cpu4_intc 0x9>, <&cpu4_intc 0xa>,
-> +					      <&cpu5_intc 0xb>, <&cpu5_intc 0x9>, <&cpu5_intc 0xa>,
-> +					      <&cpu6_intc 0xb>, <&cpu6_intc 0x9>, <&cpu6_intc 0xa>,
-> +					      <&cpu7_intc 0xb>, <&cpu7_intc 0x9>, <&cpu7_intc 0xa>;
-> +			riscv,ndev =3D <160>;
-> +		};
-> +
-> +		pmx0: pinmux@11081000 {
-> +			compatible =3D "ultrarisc,dp1000-pinctrl";
-> +			reg =3D <0x0 0x11081000  0x0 0x1000>;
-                                             ^^ extra space here btw
-
-> +			#pinctrl-cells =3D <2>;
-> +		};
-> +
-> +		spi0: spi@20320000 {
-> +			compatible =3D "snps,dw-apb-ssi";
-
-Missing a device-specific compatible here, can just fall abck to the
-dw-apb-ssi one, so no need to make driver changes.
-
-> +			reg =3D <0x0 0x20320000 0x0 0x1000>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			clocks =3D <&device_clk>;
-> +			interrupt-parent =3D <&plic>;
-> +			interrupts =3D <19>;
-> +			num-cs =3D <3>;
-> +		};
-
-> +
-> +		i2c0: i2c@20330000 {
-> +			compatible =3D "snps,designware-i2c";
-
-Same applies here.
-
-> +			reg =3D <0x0 0x20330000 0x0 0x100>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			clock-frequency =3D <400000>;
-> +			clocks =3D <&device_clk>;
-> +			interrupt-parent =3D <&plic>;
-> +			interrupts =3D <20>;
-> +		};
-
-> +
-> +		ethernet: ethernet@38000000 {
-> +			compatible =3D "snps,dwmac", "snps,dwmac-5.10a";
-
-Surprised this passes dtbs_check. Same here, you need a specific
-compatible.
-
-> +			reg =3D <0x00 0x38000000 0x00 0x1000000>;
-> +			clocks =3D <&csr_clk>;
-> +			clock-names =3D "stmmaceth";
-> +			interrupt-parent =3D <&plic>;
-> +			interrupts =3D <84>;
-> +			interrupt-names =3D "macirq";
-> +			local-mac-address =3D [ff ff ff ff ff ff];
-> +			max-speed =3D <1000>;
-> +			phy-mode =3D "rgmii-id";
-> +			snps,txpbl =3D <8>;
-> +			snps,rxpbl =3D <8>;
-> +		};
-> +
-> +		dmac: dma-controller@39000000 {
-> +			compatible =3D "snps,axi-dma-1.01a";
-
-Same thing here, I'd like to see a device specific compatible too.
-
-> +			reg =3D <0x0 0x39000000 0x0 0x400>;
-> +			clocks =3D <&device_clk>, <&device_clk>;
-
-This kind of thing is what makes me think that you're over simplifying
-your clock tree. Sure, maybe you do use the same clock here for both
-ports, but it's suspect.
-
-Cheers,
-Conor.
-
-> +			clock-names =3D "core-clk", "cfgr-clk";
-> +			#dma-cells =3D <1>;
-> +			dma-channels =3D <8>;
-> +			interrupt-parent =3D <&plic>;
-> +			interrupts =3D <152>;
-> +			snps,dma-masters =3D <1>;
-> +			snps,data-width =3D <4>;
-> +			snps,block-size =3D <512 512 512 512 512 512 512 512>;
-> +			snps,priority =3D <0 1 2 3 4 5 6 7>;
-> +			snps,axi-max-burst-len =3D <256>;
+> +		phy0: phy@0 {
+> +			reg =3D <0x00>;
 > +		};
 > +	};
 > +};
@@ -430,16 +306,16 @@ Conor.
 > 2.34.1
 >=20
 
---YkSoZU4ahkAk+Ef4
+--zs1VOpITnaK5peJo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagb01wAKCRB4tDGHoIJi
-0vgLAP9uHie8ekeBr5yzJlkDGTFyTizgLiDpL9cTNsn7ocsDygD9HhxPN8tXjgAS
-sxt6qsr2Jb5SGx9eXn3M2MeK4NnzUw4=
-=p8DX
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagb1ZAAKCRB4tDGHoIJi
+0o+fAQD9XS5KDJh/3QJQuSBXX+9SrfBNGTmsJNyM+6lvPdXtBAEA6pTrGaiA09d4
+/FltcTWdd8tEr2ljtRwB4Uu0fWGGgQE=
+=JFBV
 -----END PGP SIGNATURE-----
 
---YkSoZU4ahkAk+Ef4--
+--zs1VOpITnaK5peJo--
 
