@@ -1,91 +1,84 @@
-Return-Path: <linux-gpio+bounces-36908-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36909-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WCnkJqjwBmp+pAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36908-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:08:40 +0200
+	id eN9XCgr4BmpUpwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36909-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:40:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A76F54D0CB
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:08:40 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6BC54D82F
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 12:40:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 542FA30FBCED
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 09:48:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8913830CE8C8
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 10:06:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745E043DA24;
-	Fri, 15 May 2026 09:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44AD043C073;
+	Fri, 15 May 2026 10:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uVNfNvtP"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0Ih20V3a"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CF9394798;
-	Fri, 15 May 2026 09:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE0B3D170D;
+	Fri, 15 May 2026 10:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778838483; cv=none; b=igv1Si8CP+A/rokA/fY9feKLWoXRg5oX1rjVRgvglxM4zlXRTogtzjkQSOhgZTVXfINdl4ljQOCADEs7qyth2EdQpSVwhG0uhXlXMpX6Lg3tU4Pco3XSi1SrlYWWX89WEaszYm+Q5As15hv5/Roiq/JcgyuS5liP+YRju9f5oEI=
+	t=1778839585; cv=none; b=jazz/gILWkVvKUFpPvfwFiXqyJ9pl8eUJNNCTJ6obEtBVk5prE0TIe0cIvKiYQ2a8mkbtK3NEiJ62Fp8hdLfIliG2rt1U/c20AIKohTNOVbXsMqjCeEY3SgC4vZM4Ti3UBeItJpPxOCJptXExOBYFQq5UGz6ilkszj9NSMMH5oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778838483; c=relaxed/simple;
-	bh=zA48xHY2LIiXSFU+rM5KjH6BYnO1EpvPkynbTP0ZLxg=;
+	s=arc-20240116; t=1778839585; c=relaxed/simple;
+	bh=Tt8o4wmWv7FBD8c1FR41Koq5aNB7M2BPgy0ZMMxct8g=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8Qol+lXY5zQqNiQZvsRGpW0eRijKXgWvycpAGNmggRVzcKgQbmYRfHFClgC5gCElIvP1U1dW4PThZsPCFoTJJRLDtaN5ijML/Onp3wtwiHi7C5qmZRHP4PWAB5hynhjtUwN2uBwmA838xQG47m+s8LipScnUG0KFkQqj/VeUOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=uVNfNvtP; arc=none smtp.client-ip=68.232.154.123
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHul1zeThf5NLjb5Ro6fDmgw4E0Ir9WMWOeag7j7NEzxZSIDJTS3xgdETTNoFPhSjGRpjUp1kXZPyARjBpHfCZ1ybf8Ls5UYTSBuVPNN0tyVV5pZOzTFvre39IwGf0GIX/cAqdur3kRm4Q5SwJvIm8X9zQtoyVdRvDHVO8K/wzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=0Ih20V3a; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1778838481; x=1810374481;
+  t=1778839584; x=1810375584;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=zA48xHY2LIiXSFU+rM5KjH6BYnO1EpvPkynbTP0ZLxg=;
-  b=uVNfNvtPY4RKfiPKfQxGfcoEM0HEbmPMa+BqKhwSMV8KFPygD8B8il9F
-   QwQdRke0kCw0b9uapLx4bd/Cd52AhL7FX2uv7zVXC602ZJ06juhmsp9So
-   6jCU+q7WyezPbFP6ziOJAthMnEvAWT3y9Nx2vF0jjLPnT0VhXDNyLbpFA
-   2n4pWEuDJwGZPMTvx5Y30Gi0c9UHnwmkd+NpB5VI0/mi0XA4BoaLhZaFx
-   S2Uc2DrTpbrO39TuZoNJ/8K4zMsHUgGTLgrEA5c8XttuH0n3GBVyDmRlY
-   Lq1nyGqZa4vGC7Xn4thlWktBgK/IDbiy66HU0IBq1ihtplZg9g3WmnDGP
-   Q==;
-X-CSE-ConnectionGUID: I88ez8XZTuqhvcOOZtB7Tw==
-X-CSE-MsgGUID: A+nfqdNNQgGTm7kqGfzYwA==
+  bh=Tt8o4wmWv7FBD8c1FR41Koq5aNB7M2BPgy0ZMMxct8g=;
+  b=0Ih20V3aLTBrBl/UZ+1/PjcadnbxKih9tftWFW/0HPV196oe+6hqiszr
+   ewpZRfqSrEoolqk6jrGqvc02nio4QOB8hAFbW2VZNNkBa68UmURaD7U9c
+   Fx9au9aR3UgR+GFNiLQLAEfpdWXMGL7LnGaBwivL45CdKotYI38lj1peD
+   wNkYkVtqFpi2GM+HPq4RcUdlMYToEQrguVzj1S3gcY4YvvWpher/6xpmw
+   c6wDnuKstmpHQIL/8Pzx1Uv0JtdY7tjBVKw3kfXfU1DWJ5i5hKqkpVFQG
+   BqxEZojjbWokzbiiae38lrBpB9cWTF2Vkj5UiCVQhonYTzLNn68wP/DPv
+   g==;
+X-CSE-ConnectionGUID: o9rrxM+iSRKeBuLs0oESHA==
+X-CSE-MsgGUID: fQzx7hEJQgO9SWwp0ra30g==
 X-IronPort-AV: E=Sophos;i="6.23,236,1770620400"; 
-   d="asc'?scan'208";a="56788417"
+   d="asc'?scan'208";a="56789153"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2026 02:48:00 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 03:06:23 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex1.mchp-main.com (10.10.87.30) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Fri, 15 May 2026 02:48:00 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ 15.2.2562.37; Fri, 15 May 2026 03:06:21 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
- Transport; Fri, 15 May 2026 02:47:57 -0700
-Date: Fri, 15 May 2026 10:47:19 +0100
+ Transport; Fri, 15 May 2026 03:06:18 -0700
+Date: Fri, 15 May 2026 11:05:40 +0100
 From: Conor Dooley <conor.dooley@microchip.com>
-To: Changhuang Liang <changhuang.liang@starfivetech.com>
-CC: Conor Dooley <conor@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>, Paul
- Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Bartosz Golaszewski <brgl@kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Lianfeng
- Ouyang <lianfeng.ouyang@starfivetech.com>
-Subject: Re: [PATCH v2 03/22] pinctrl: pinctrl-generic: Make the "function"
- property optional
-Message-ID: <20260515-bounce-lather-23de8e36754c@wendy>
-References: <20260514111218.94519-1-changhuang.liang@starfivetech.com>
- <20260514111218.94519-4-changhuang.liang@starfivetech.com>
- <20260514-operation-remix-9f9fcf9a6102@spud>
- <ZQ4PR01MB120245CDE718812D1C65638AF2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <20260515-dandruff-shorts-d7417c6e977a@wendy>
- <ZQ4PR01MB1202D30B108C4562242C1ED8F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+To: Jia Wang <wangjia@ultrarisc.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski
+	<brgl@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Conor Dooley
+	<conor@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 0/9] riscv: ultrarisc: add DP1000 SoC DT and pinctrl
+ support
+Message-ID: <20260515-brink-dealer-d0610c0dbc7b@wendy>
+References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,33 +86,32 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o+r/Y2FnyRfiN/5w"
+	protocol="application/pgp-signature"; boundary="Zg1zeyfmQCNl+VVp"
 Content-Disposition: inline
-In-Reply-To: <ZQ4PR01MB1202D30B108C4562242C1ED8F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
-X-Rspamd-Queue-Id: 5A76F54D0CB
+In-Reply-To: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
+X-Rspamd-Queue-Id: 2D6BC54D82F
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[microchip.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_RHS_NOT_FQDN(0.50)[];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[microchip.com:s=mchp];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36908-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36909-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	DKIM_TRACE(0.00)[microchip.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[conor.dooley@microchip.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
@@ -128,297 +120,135 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
---o+r/Y2FnyRfiN/5w
+--Zg1zeyfmQCNl+VVp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 15, 2026 at 08:23:55AM +0000, Changhuang Liang wrote:
-> > On Fri, May 15, 2026 at 05:55:48AM +0000, Changhuang Liang wrote:
-> > > > On Thu, May 14, 2026 at 04:11:59AM -0700, Changhuang Liang wrote:
-> > > > > Some pinctrl subnodes only need to configure pin properties (e.g.,
-> > > > > power-source, bias, drive strength) without assigning any mux fun=
-ction.
-> > > > >
-> > > > > Currently, the driver requires a valid "function" property for all
-> > > > > pinctrl subnodes. This forces the addition of dummy or redundant
-> > > > > "function" entries when only pin configuration is needed.
-> > > > >
-> > > > > Example use case:
-> > > > > gpios-configs {
-> > > > >     config {
-> > > > >         pins =3D <0 1 2 3>;
-> > > > >         power-source =3D <0>;
-> > > > >     };
-> > > > > };
-> > > > >
-> > > > > Make the "function" property optional. If it is missing, skip
-> > > > > adding the mux map and only process the pin configuration.
-> > > >
-> > > > I looked through the series though and all controllers appear to
-> > > > have pins and functions, is it the case that gpio is the default for
-> > > > these pins, so you are omitting the functions property when you are=
- using
-> > the pin in gpio mode?
-> > > > Saying that the functions property is "redudant" makes it seem like
-> > > > this might be the case?
-> > > >
-> > > > I've got some feedback here, but I can't really provide it without
-> > > > knowing the answer to that question.
-> > >
-> > >
-> > > "From v1, copying Linus's suggestion:
-> > >
-> > > > +  This domain contains 4 IO groups which support voltage levels
-> > > > + 1.8V and 3.3V  gpioe-spi - comprises PAD_GPIO_C0 through
-> > PAD_GPIO_C4.
-> > > > +  gpioe-qspi0 - comprises PAD_GPIO_C5 through PAD_GPIO_C11.
-> > > > +  gpioe-qspi1 - comprises PAD_GPIO_C12 through PAD_GPIO_C19.
-> > > > +  gpioe-qspi2 - comprises PAD_GPIO_C20 through PAD_GPIO_C27.
-> > > > +
-> > > > +  Each of the above IO groups must be configured with a voltage
-> > > > + setting that matches the external  voltage level provided to the =
-IO
-> > group.
-> > >
-> > > So your hardware has groups and support some properties on the group
-> > level.
-> > >
-> > > So expose these groups and make these properties configurable per
-> > > group instead of inventing per-group properties.
-> > >
-> > > > +  gpioe-spi-vref:
-> > > > +  gpioe-qspi0-vref:
-> > > > +  gpioe-qspi1-vref:
-> > > > +  gpioe-qspi2-vref:
-> > >
-> > > Create proper groups in the pin controller then use the standard
-> > > pincfg property power-source =3D <...>; for this.
-> > >
-> > > Example for a simple default hog:
-> > >
-> > > pinctrl {
-> > >     /* Hog the QSPI pins */
-> > >     pinctrl-names =3D "default";
-> > >     pinctrl-0 =3D <&qspi_default>;
-> > >
-> > >     qspi_default: pinctrl-qspi {
-> > >         config {
-> > >             groups =3D "gpioe-qspi-pins";
-> > >             power-source =3D <2>;
-> > >         };
-> > >     };
-> > > };
-> > >
-> > > The groups can be orthogonal to other pin handling, that's fine.
-> > > Implement .pin_config_group_set in struct pinconf_ops.
-> > >
-> > > However, I found that pinctrl_generic_pins_function_dt_node_to_map()
-> > > does not handle the groups property,
-> >=20
-> > That's kind of the whole point of the function, see the comment about
-> > it:
-> > /*
-> >  * For platforms that do not define groups or functions in the driver, =
-but
-> >  * instead use the devicetree to describe them. This function will, unl=
-ike
-> >  * pinconf_generic_dt_node_to_map() etc which rely on driver defined
-> > groups
-> >  * and functions, create them in addition to parsing pinconf properties=
- and
-> >  * adding mappings.
-> >  */
-> >=20
-> > If you have the groups property in your devicetree, it contains strings=
- that the
-> > driver uses to match against the groups it has defined in it.
-> > See my recently added microchip,pic64gx-pinctrl-gpio2 for an example of=
- that
-> > if you like.
-> >=20
-> > However, if you are using the pins or pinmux properties, the groups are=
- not
-> > defined in the driver, and need to be created at runtime. That's what
-> > pinctrl_generic_pins_function_dt_node_to_map() is for - it creates the =
-groups
-> > at runtime when using the *pins* and *function* properties.
-> > It's in the name!
-> >=20
-> > Judging by your drivers, and how many structures you have that look ver=
-y like
-> > groups from a quick glance, probably you can still make use of the grou=
-ps
-> > property. The equivalent function to
-> > pinctrl_generic_pins_function_dt_node_to_map() when you're using driver
-> > defined groups is pinconf_generic_dt_node_to_map().
+Hey,
+
+On Fri, May 15, 2026 at 09:17:56AM +0800, Jia Wang wrote:
+> This series adds initial Devicetree support for the UltraRISC DP1000 RISC=
+-V
+> SoC and two DP1000-based boards (Milk-V Titan and Rongda M0).
 >=20
-> I feel that for the current platform, initializing pin voltage is suitabl=
-e for using `pinconf_generic_dt_node_to_map()`,=20
-> and configuring pin mux is suitable for using `pinctrl_generic_pins_funct=
-ion_dt_node_to_map()`. Should I use both=20
-> of them at the same time?
-
-No, pick either groups or pins across the board and then use the
-appropriate function after that. Mixing and matching just adds
-complication for no real reason.
-
-> > Also, I notice that you never actually answered the question that I
-> > asked:
-> > > > I looked through the series though and all controllers appear to
-> > > > have pins and functions, is it the case that gpio is the default for
-> > > > these pins, so you are omitting the functions property when you are=
- using
-> > the pin in gpio mode?
-> > > > Saying that the functions property is "redudant" makes it seem like
-> > > > this might be the case?
-> >=20
-> > Are you omitting the functions property from your nodes when they're us=
-ing
-> > gpio because it is a default, or is there some other reason why you're =
-omitting
-> > the functions property sometimes?
+> The series introduces the required DT bindings, adds the DP1000 pinctrl
+> driver, and provides the initial SoC/board DTS files.
 >=20
-> Sorry, I missed that question. What I meant by making 'functions' optiona=
-l is that I=20
-> don't care whether the current pin's default value is GPIO or some other =
-function.=20
-> Here, I just want to initialize the default voltage of these pins, not co=
-nfigure their=20
-> pin function.
+> Notes:
+>   - Clocks are configured and enabled by firmware before Linux boots. Lin=
+ux
+>     does not manage clock rates or gating at runtime on this platform.
+>     Therefore the initial DT only models the fixed clocks required by
+>     standard drivers, and no clock controller/driver is provided.
 
-You're making them gpios in all the cases that I saw, so I think you're
-best served by using the "gpio" function and thereby being able to have
-function as a required property. Unless the pins are unused, you need to
-set the function anyway, and if they're unused and survived on the
-values set by reset or prior boot stages, why do you need to set the
-voltage anyway?
+I really disagree with this approach. In my experience it never ends up
+working out and ends up being disruptive, because it is either an over
+simplification of the clock tree and condenses multiple different clocks
+into one where rates are similar or because firmware changes mean clock
+rate changes down the line. I would much rather you modelled the clocks
+accurately, even if that just means that a read-only clock controller is
+implemented. Alternatively, if firmware does all of your clock control,
+you can implement this using rpmi/mpoxy using clk-rpmi.c
 
-Looking at this node, it looks completely wrong to me:
-+&pinctrl_sys2 {
-+	gpiow0_configs: gpiow0-hog-grp {
-+		gpiow0-hog-pins {
-+			pins =3D <PADNUM_SYS2_GPIO_A36
-+				PADNUM_SYS2_GPIO_A37
-+				PADNUM_SYS2_GPIO_A38
-+				PADNUM_SYS2_GPIO_A39>;
-+			power-source =3D <JHB100_PINVREF_3_3V>;
-+		};
-+	};
-+
-+	gpiow_inner_configs: gpiow-inner-hog-grp {
-+		gpiow-inner-hog-pins {
-+			pins =3D <PADNUM_SYS2_GPIO_A40
-+				PADNUM_SYS2_GPIO_A41
-+				PADNUM_SYS2_GPIO_A42
-+				PADNUM_SYS2_GPIO_A43>;
-+			power-source =3D <JHB100_PINVREF_3_3V>;
-+		};
-+	};
-+
-+	uart6_pins: uart6-grp {
-+		uart6-tx-pins {
-+			pins =3D <PADNUM_SYS2_GPIO_A38>;
-+			function =3D "uart";
-+		};
-+
-+		uart6-rx-pins {
-+			pins =3D <PADNUM_SYS2_GPIO_A39>;
-+			function =3D "uart";
-+			input-enable;
-+		};
-+	};
-+};
+>   - The DP1000 pinctrl binding supports two child node styles under the s=
+ame
+>     controller compatible:
+>       * legacy DP1000-specific nodes using phandle-array properties
+>         "pinctrl-pins" and "pinconf-pins"
+>       * generic pinctrl nodes using "pins", "function" and generic pin
+>         configuration properties
+>     The legacy form is kept for compatibility with existing vendor DTs.
 
-The pins used by uart appear also in your hog node and...
+Why would we want "legacy" stuff in mainline when this is a brand new
+platform? "legacy" vendor devicetrees are not something that mainline
+cares about, sorry.
 
-> This part of the voltage configuration only has one register, but it appl=
-ies to many=20
-> pins, so currently it seems I can only use pinctrl hog to initialize it.
+Additionally, these pinctrl patches should be sent standalone to the
+pinctrl maintainers, they're likely to go through lots of revisions and
+a different maintainer applies them.
 
-=2E..I think that relates to the point you make here. If a setting for the
-power-source applies across an entire set of pins, there's no need to
-preemptively apply this across the whole set. It's usually sufficient to
-just set the power-source in the nodes that describe pins that are actually
-in use, for example:
+>   - The bindings for "ultrarisc,dp1000-uart" and "ultrarisc,dp1000-pcie" =
+are
+>     being reviewed in separate series, since the DP1000 SoC DTS introduced
+>     here uses those compatibles:
+>     * Link: https://lore.kernel.org/lkml/20260429-ultrarisc-serial-v7-3-e=
+475cce9e274@ultrarisc.com/
+>     * Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-2-989=
+35f6cdfb5@ultrarisc.com/
+>   - ARCH_ULTRARISC support is being reviewed separately:
+>     * Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-989=
+35f6cdfb5@ultrarisc.com/
 
-| &pinctrl_sys2 {
-| 	uart6_pins: uart6-grp {
-| 		uart6-tx-pins {
-| 			pins =3D <PADNUM_SYS2_GPIO_A38>;
-| 			function =3D "uart";
-| 			power-source =3D <JHB100_PINVREF_3_3V>;
-| 		};
-|=20
-| 		uart6-rx-pins {
-| 			pins =3D <PADNUM_SYS2_GPIO_A39>;
-| 			function =3D "uart";
-| 			input-enable;
-| 			power-source =3D <JHB100_PINVREF_3_3V>;
-| 		};
-| 	};
-| };
+IMO, this patch needs to be in this series so that it compiles.
 
-The fact that you also are having to do
-+&pinctrl_sys2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&gpiow0_configs
-+		     &gpiow_inner_configs>;
-+};
-and have this sys2 pin controller use its own pinctrl state to apply
-your hogs is another reason this looks wrong to me. I wouldn't be happy
-to accept this dts.
-It's also hardly a "hog" since it isn't actually hogging anything at all,
-given uart6 also uses some of the pins.
-
-Hope that helps?
-
+Cheers,
 Conor.
 
-
 >=20
-> Best Regards,
-> Changhuang
+> Testing:
+>   - dt_binding_check and yamllint (all new/modified binding YAMLs)
+>   - dtbs_check and dtbs (RISC-V, including dp1000-milkv-titan.dtb and
+>     dp1000-rongda-m0.dtb)
+>   - Kernel build for RISC-V and boot-tested on DP1000 (Milk-V Titan and
+>     Rongda M0)
 >=20
-> >=20
-> > > currently, my node uses pins instead, so it looks like this:
-> > >
-> > > +&pinctrl_per3 {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&gpios_configs>;
-> > > +
-> > > +	gpios_configs: gpios-hog-grp {
-> > > +		gpios-hog-pins {
-> > > +			pins =3D <PADNUM_PER3_GPIO_E0
-> > > +				PADNUM_PER3_GPIO_E1
-> > > +				PADNUM_PER3_GPIO_E2
-> > > +				PADNUM_PER3_GPIO_E3
-> > > +				PADNUM_PER3_GPIO_E4
-> > > +				PADNUM_PER3_GPIO_E5
-> > > +				PADNUM_PER3_GPIO_E6
-> > > +				PADNUM_PER3_GPIO_E7
-> > > +				PADNUM_PER3_GPIO_E8
-> > > +				PADNUM_PER3_GPIO_E9
-> > > +				PADNUM_PER3_GPIO_E10>;
-> > > +			power-source =3D <JHB100_PINVREF_1_8V>;
-> > > +		};
-> > > +	};
-> > > +};
-> > >
-> > > Best regards,
-> > > Changhuang
-> > >
+> Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+> ---
+> Jia Wang (9):
+>       dt-bindings: vendor-prefixes: add Rongda
+>       dt-bindings: riscv: cpus: Add UltraRISC CP100 compatible
+>       dt-bindings: riscv: Add UltraRISC DP1000 bindings
+>       dt-bindings: pinctrl: Add UltraRISC DP1000 pinctrl bindings
+>       riscv: dts: ultrarisc: Add initial device tree for UltraRISC DP1000
+>       pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl driver
+>       riscv: dts: ultrarisc: add Rongda M0 board device tree
+>       riscv: dts: ultrarisc: add Milk-V Titan board device tree
+>       riscv: defconfig: enable ARCH_ULTRARISC
+>=20
+>  .../bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml | 168 ++++
+>  Documentation/devicetree/bindings/riscv/cpus.yaml  |   1 +
+>  .../devicetree/bindings/riscv/ultrarisc.yaml       |  27 +
+>  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+>  MAINTAINERS                                        |  15 +
+>  arch/riscv/boot/dts/Makefile                       |   1 +
+>  arch/riscv/boot/dts/ultrarisc/Makefile             |   3 +
+>  .../dts/ultrarisc/dp1000-milkv-titan-pinctrl.dtsi  | 107 +++
+>  .../boot/dts/ultrarisc/dp1000-milkv-titan.dts      | 182 +++++
+>  .../dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi    |  85 ++
+>  arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts | 111 +++
+>  arch/riscv/boot/dts/ultrarisc/dp1000.dtsi          | 851 +++++++++++++++=
+++++++
+>  arch/riscv/configs/defconfig                       |   1 +
+>  drivers/pinctrl/Kconfig                            |   1 +
+>  drivers/pinctrl/Makefile                           |   1 +
+>  drivers/pinctrl/ultrarisc/Kconfig                  |  23 +
+>  drivers/pinctrl/ultrarisc/Makefile                 |   4 +
+>  drivers/pinctrl/ultrarisc/pinctrl-dp1000.c         | 112 +++
+>  drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c      | 746 +++++++++++++++=
++++
+>  drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h      |  71 ++
+>  .../dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h |  65 ++
+>  21 files changed, 2577 insertions(+)
+> ---
+> base-commit: 50897c955902c93ae71c38698abb910525ebdc89
+> change-id: 20260316-ultrarisc-pinctrl-efa6e24c4803
+>=20
+> Best regards,
+> -- =20
+> Jia Wang <wangjia@ultrarisc.com>
+>=20
 
---o+r/Y2FnyRfiN/5w
+--Zg1zeyfmQCNl+VVp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagbrpwAKCRB4tDGHoIJi
-0u2+AQCw1TfWiVjA/dGMiQm0IWmh+bJDIyc6ZfdhXoZNhvduVgD+IhUrCABPXa1o
-bGvgUjdIPvw3IUzKS4T5io57JpS/YwU=
-=HHZG
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagbv9AAKCRB4tDGHoIJi
+0owyAP98o2Gi+WPgvPXDb2eegMxaGOqaR/US3qNCty4tHANZqgEA1vZfx3qOE2A4
+JvyDT2lpoJ17eKlYt9elN5N+5alSIQI=
+=6JcX
 -----END PGP SIGNATURE-----
 
---o+r/Y2FnyRfiN/5w--
+--Zg1zeyfmQCNl+VVp--
 
