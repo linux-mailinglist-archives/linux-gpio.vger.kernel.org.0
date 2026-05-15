@@ -1,258 +1,361 @@
-Return-Path: <linux-gpio+bounces-36953-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36954-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLdUAF5aB2orzwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36953-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:39:42 +0200
+	id QB4PAalmB2oF1wIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36954-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:32:09 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96A3F555632
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:39:41 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731F2556436
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:32:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C5B0E30028AC
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 17:34:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5CBDE3071842
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 17:59:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E5D740312C;
-	Fri, 15 May 2026 17:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77BB3F9A09;
+	Fri, 15 May 2026 17:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="i2zk2CFO"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="qVh7ugvm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010040.outbound.protection.outlook.com [40.93.198.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7E3403122;
-	Fri, 15 May 2026 17:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778866468; cv=fail; b=DU6Lqcx60cAyFUCJCm6HFF8Wc7Nvjphakk2gC6QkYnZGBvTDrrD3Jb09QLvvQojdyg9WpfzLZWEvAc/xLfZGjl2tYTIo40TiWatmY9AId+K+2gZwLzgeMyg4CIXlYZ9tCnlJK74VezgtPz3FDg/gSudOul+lKsh2oVD6YlIzyO8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778866468; c=relaxed/simple;
-	bh=g/t7ZGyL8DpTXdenkj6kV11t1xDw1T0WFV3C4kDpOMU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=benDkREapOnO0xcbj8KvXllCCcWE0rfHoiajbGVofX6hbgdGYaoD9vnrQ2UUfcR6QgrBRlz9gUHzaOV6UaSkovRwqYzpLSCYWVpSHiKkVZaPeMl89jXRXh+cO1bqYsbrbLyEBRdwBO+Qw84oDpPqNDnmf5a0Zv4Nbo6dKfI/P5Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i2zk2CFO; arc=fail smtp.client-ip=40.93.198.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kmGH8pOiFP7C4A51Q4dC0+ILG5hIRAz6ar4AjwuDR9wfXf1kI+aV6Suw33CDI57j4D4AxLBvYi6ZVjRIGKTPIjeYnGDZOGUGneipFVswYNcdFuMc0MJyuuYnRa0d8HV3garuXzIKe+ISo2+5LfuaWb9PVf9Q13gkywb7Jt8oHb5eLFlsgCiOpNI7jvxNGGTRUFrNQnxZS6UhGidcABTuMZtvJN/g9VM4MA2PL2QaFY1NQ8FaXfZl9XFmGdFg/Q+1lQF2R+vz63tzlSVzdiA5IvOrSKQtC2OvLFSHxAHjiC+ypkWu+PwJ1KVl+LWeBy2vy4Y8z3sK1jxI4DVYg48YvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1sRMKqEMzY2afn0CdbkgyclzfPHan1qDJvlDYI66+jA=;
- b=nOk+w77HnRaMjMB0RsW7gG6Yl2rihc394HKUSDGaKV+JOt5S8GZNLIEqTQGvTg9XVXLO7FOMapEX1oil75lArGtZh89nOCOcFgRduzsGn9zvS4iPSqC4dnN+GETb7LXIzLxOgUzX8YRn/bBPF+zfP4w2LK4aNR47LZP/O5uNBZ6lISiiWNoRVFEBq4PWiyCK85mAGpXwR79GqAeBIJAxL/sKlMtNars51uu6BjIjyhXNrEZjXHtqYOJ83qFw16jPcHlTEJWy4ufDNM1+zf/WFfh3uxG27vU122vndb2C62+iAkNuAY2Xeb5cngaDDRJrwXW76vypSEYmtvGkn7GPuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1sRMKqEMzY2afn0CdbkgyclzfPHan1qDJvlDYI66+jA=;
- b=i2zk2CFOBCMsTj297SvObfeqh1t/qmjHYvdecQZXqAdLLk1sRA/iaYJB/P236HXt4r7ceCN7NwTM0tZL9GLFr2M87CvgggD752qXpSP4gN8fjINVA1+7sfqwQ2Ui0kaObEhe1++4CBKMGNq1rD/KZlK4U6y+vBeE8GB7uoOaytw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DSVPR12MB999147.namprd12.prod.outlook.com (2603:10b6:8:38b::11)
- by CY5PR12MB6273.namprd12.prod.outlook.com (2603:10b6:930:22::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.19; Fri, 15 May
- 2026 17:34:24 +0000
-Received: from DSVPR12MB999147.namprd12.prod.outlook.com
- ([fe80::98c5:8206:6a4:c445]) by DSVPR12MB999147.namprd12.prod.outlook.com
- ([fe80::98c5:8206:6a4:c445%3]) with mapi id 15.20.9870.023; Fri, 15 May 2026
- 17:34:23 +0000
-Message-ID: <32e96be9-a987-4847-b02d-d288f3fbeeb2@amd.com>
-Date: Fri, 15 May 2026 12:34:20 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/1] i2c: designware: fix probe ordering for AMD GPIO
- on Lenovo Yoga 7 14AGP11
-To: Hardik Prakash <hardikprakash.official@gmail.com>,
- linux-i2c@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, wsa@kernel.org, andriy.shevchenko@intel.com,
- brgl@bgdev.pl, basavaraj.natikar@amd.com, linus.walleij@linaro.org
-References: <20260515161516.10474-1-hardikprakash.official@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260515161516.10474-1-hardikprakash.official@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN9P220CA0003.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:408:13e::8) To DSVPR12MB999147.namprd12.prod.outlook.com
- (2603:10b6:8:38b::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9D3F888D
+	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 17:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778867976; cv=none; b=UOhjG8Ew7RWESDSeVZ1hHUdYnuaFN8eNMWC40bJqg+6bEtvnJw4i8Ybivm8LWdMKwh7Nrc7y/5xePlnEhfy6OXtqZ2u2PjagrZR2MytrPPqoR+oiFLIlGPnLJxvFwxtCNR6DcUdB53lB8y1RB5gRC+eRd2VTNsTvzUsLZJ2n/nA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778867976; c=relaxed/simple;
+	bh=4ZM/T/Iol4GdBJ3vAdj/xlPSEBECPVnDvDzu8h7m9FQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mABKZqJTAkCo6BkvHfa3elDzKIGomM57PjZ6Ej4iHieJz+Lgj44SnafxjefqK2s7Eo2v+yUvN3VTdurRJ1qA9D/RUUh9iRRbyGnQy7nvLOkhxje41J/R+imLA+dCBYK6G9qucrLHi1zyJtIacWC5JgR6piSNdLxSqXVTi/taujo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=qVh7ugvm; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8ca12973e15so590136d6.1
+        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 10:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778867972; x=1779472772; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d8SB7g/SQE94W836Nonq8Wq3k7Nj7c32M69MG7wU2+o=;
+        b=qVh7ugvmRPA8oUMn5B7aXPu//lBgoxkU+3CwDEXgSDMYUalqHGG/1XK3IbP5KUPikc
+         d/1H867qtVCJ60jgRjrgnXJNtf/PIk0OlnHz6Cs4+NYvh5SA/hU7Wr1qR0XbJl1TnNG8
+         tFVsSwteK9QKyqljdA6Go6NBSe+i5WHMVUImzeR4rnOIpgEEmdA33eLOrgyIfkcjKQsl
+         wIyW69xAs/j3mlBoDiOxd7c9AbI0xsj/eRsw4/eQJl/JOG0c8xon1u66cNYaYOBv3Pby
+         CVeh6W0l4CqSbHYDvBZl9DWxa2rARflP4HbiJhTLYIWVKg/l3RhDcHAABTgueqYYVLLZ
+         Vskg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778867972; x=1779472772;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d8SB7g/SQE94W836Nonq8Wq3k7Nj7c32M69MG7wU2+o=;
+        b=mUqfjm1Oa9pVncQe+AkR99OragNR1uGwsmyY69FA8xTf9KD5kwf78Z/7AXiwXqmocV
+         U9J2+capDw2SbQX1xOUE07FTyuCeFx9rXQwc238amLX7qvnODMIpWGgWC+TeKckoDkLJ
+         hEJhk/IGFc18fHzH70el+Nv+EBBf6osnXk4W97um+A6niLHsQ7gaKPSBwZlKa2/MyLiT
+         6VGeIUUdnmRKEuQFPeFsuS9a/cnop+Rkq+D2gD6oLHXQD1+aRWysIeKKTZ0yzCBk1OtW
+         2XLLAbWT5nBnuWa4CFQi3kXLOrvvV14APYEL7gTI9srz3f5dgDNgot9GAtEAaS/odKLI
+         iKeg==
+X-Forwarded-Encrypted: i=1; AFNElJ/4Qim4X5nqiFtKiBbZJub591kB2ayO2Xeg3FWV/EqGxd01KKRwDceFpreXbLqBhStuAIvX/lAKkOjm@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIz9yshzYxUeEfyAle0XW2D5i9rtYP/d8ecxdLyXKNd1Nsmoq8
+	p95BhCEjiRX7Ipx8i2R1RobLrXPHfSHk4jx6Ya3Mqd5SFm/sUxvKhleIeu6Ao8bkUrA=
+X-Gm-Gg: Acq92OFjyGm/0opO4wU165s1NnXPVwl1OVMM/VR/YW38n3BChDfnrL7Q40NJqYrIBCH
+	65mx9PRFus8MvOEYaPOjwt5O0S14lhlMQvRwK/gmADamegcX88J9mc4Hx1w3+hS6CeguDQfr2Pc
+	qN4eZyZK/Hb0ENcnhcmRmfIwWEATajFcm1JDC1UeCAWeTdo390tndmGnspKAJa5HpHifRe+hvX2
+	iZ2cgqkULlhj0hbWmIUn0ca8kkE/g2zn4O54PtfMRSyDRywyEpgy8WIC9dBeIF8oqxdC3de7Rsk
+	27sDbRj3jrR+n3bOH0f+pill5sfyqL8OS3UwqRHU5Thze2mcbHOhG9c2uZPXUZ6ywVCc6g7/dgN
+	Fr9zkLAmA8HZVlyLYwWEf9NcHdYAMf37hNawOhP9Jjc5IkpSG89xe4zxe5ae87b8jWgrorE/Kua
+	6szVsXD/DJJEVHqAVjiHdBCFGJpGAdUYXTSYK4Grmx9c8iN6VL84uyDvuawi1hfXs=
+X-Received: by 2002:a05:6214:5541:b0:8be:143c:955f with SMTP id 6a1803df08f44-8ca0f710315mr86073156d6.49.1778867972151;
+        Fri, 15 May 2026 10:59:32 -0700 (PDT)
+Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8c90bf6720asm62107926d6.39.2026.05.15.10.59.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 10:59:31 -0700 (PDT)
+Message-ID: <2414c9e9-0672-417a-a3d1-993bd06d62db@riscstar.com>
+Date: Fri, 15 May 2026 12:59:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DSVPR12MB999147:EE_|CY5PR12MB6273:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d8361c2-e1f0-40fa-3fed-08deb2a83449
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|18002099003|56012099003|22082099003|11063799003;
-X-Microsoft-Antispam-Message-Info:
-	LeiGtOuOFPx6fpra2R3ksOTtfJWjwkmhfvmgD70tdCq4dBdEfH1/gfmpbePtrlVUDRgHnh7Pn15Hc1N0y4CpWIM70KPuZu7DVCa3ku955R6lt3CwApcss5zKNzJVmoAKIE7Xm+YCCuDkA98Rk/et2zrdeyA9PlxV/1TP4l3AiKN10bG1FDJ8TACKZ7dsG5SVyCA/HKMEXQc/F+uo0WNoWojIxmlVrepKDkj+pyDLA5ViLpFoTyzK4S8qb1xayy0dR0OuLaMtcIZvXwOuNizhaHVtU86KCE+5RWF9UNkdbBjdgaERzCEWDWS6TkL0AicnqdM3DKDGjbSTIbrONrvyeyBtqkf5QO0Vv+pEukF01w+jSSvI2j4TKmV6ahDFC9qa898IXNJFGBTFekJuY8JsDEZo/gNH+enoQDA4e5+hPyp71Q2r5YtJlpJ7G5JH+nTfDPrE3jskCoYmG1Zcvm2l2QyydPIcgnxSrPo2Fh3lx21i7ZIsFF60eMtOumBxpSmLDTteIAxzoJXa64wEJOChsWk71LlEOmtqyFFMk/Cg2j7ayH+mlg6wTqiBOv9uO1Lytd99c+Dfh+w4uPPTEBBO7r+gnDdGrDLdutiyfcBcWPenIqsLWMYyIihoZwmhiHB/j1A/mh/ehtv66p1hKxsH4uKpDhisOm0+ARGAGu+J5rkQ5Jd7z7D3/JzBtM/OSLFfXxqWg1ukxJjP+uZ5URY2iQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR12MB999147.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(18002099003)(56012099003)(22082099003)(11063799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T3FscnF6cTFFVDhCQ0tqa3VPc2M3Umx0Sk1CVVVuRFFqcW8zcXlRQ1FSdE9Y?=
- =?utf-8?B?TmRXc3h0NVo2SGxENWdubFkvWENKdWFDNmpuWjZqSm1xYmZ2U0N6ZDEvY1h3?=
- =?utf-8?B?R1RYM3lmUDcvY3M3dHdYa05rdUE5bFZiNGlEUTFHMmVyUGR4MFRqdXpqcVVG?=
- =?utf-8?B?WFdCb3JoWnorNUVvVXhEb1V4RklodnpsRC9qNXI3S20xR2NFS3lWb085Nldt?=
- =?utf-8?B?UUk0Ymp5ZXhKOXNjYldqOVpxbHhabHY0bm9id2QrQXZsMHBtc0FXaEszVk5a?=
- =?utf-8?B?TmxTWHJqaW9BM2R3Y2t5MEJWOTloZ255SmgrWElKYnJIZHppTkdaeWpHdUY2?=
- =?utf-8?B?NWlsU1FFTzFMalc5VGh2WmZDSjJ5cU1vMlZWRDdkcnM5U1REakt6NWRTYkl4?=
- =?utf-8?B?RFQ0RG0vQ2VWaGFSMzYvL3pNYkZDelBJVmFNaVNUOG5NdFRMSFpzeG40V0Rq?=
- =?utf-8?B?ek8rRGZkaXlVSGFnYkl3aEhDRUJMaVIvTmNwdEtTcEhFMkNacWgycGtqUGs2?=
- =?utf-8?B?L2lSTnRBbXBOSytseDh5YkNqSSs0YTgraG5KRHNFYW0vb09RSXVPek9VWmJq?=
- =?utf-8?B?emNhdmhyeUtlejliNDlMK1BTWmU5MWgrY3NHUXdCYkROcmhxalVQL2dLY2Ro?=
- =?utf-8?B?U3gwZFRqZXdKRXIvZzhKMHVGdm1Ma3lDdGZiSDltL0xJcnRyS1lSOVpFK0k5?=
- =?utf-8?B?Tkc4ekF4RG9vZVgxUjIvMlFjRGVCbVhxK3ZyWTk3aUg0WUJyMlZpSjZHbXpX?=
- =?utf-8?B?Vko0dHJ0bUZqaFIvWWhTUnY0M1pJSmRjS3pvaFkrZEpuaHhyMEorditKSjd6?=
- =?utf-8?B?R1N5RGRMQnJHUWllNmwzcGp2Z1lpclRiempvcmg5UFJwR1JURjJQelFJWU5l?=
- =?utf-8?B?Qnd1RTgwckVqbURabHh0VlhXVzJSWVg3OER4aVpEZlpuTnNmVkxpcHF4UitM?=
- =?utf-8?B?cENjUjhKWUkvVmRhSTY2dUVVQ01yeVpyWEZuTk1SSElSbHVnbzR5eVFBSEdK?=
- =?utf-8?B?bWRtM3FNQXlZcmhWQVlHZ042VzdVRHVLaGFtejR6KzBpbHR2UlhqRW9DWkhw?=
- =?utf-8?B?cFpEb1V5KzNZZFI4Y2IvMy9lbW5UamhNMS95Znp4T1dxZUpHOVVBdnBDajNF?=
- =?utf-8?B?TE9EbHc1c01pWDNjem9xTDJpNVdDeW1yYW1EbitNWFoxVDB2Kzd2Sm9adHhE?=
- =?utf-8?B?MmdxY1VEQmxvN0dIU2RLczQvYlJsY3ZGNVgwNW14SkF0dkh1WThVRk52ZmRP?=
- =?utf-8?B?TlZuOUtOb0dyb2FuMTdaZnExYkZvdnhpRHZxdWlxMDZITER1d3c3VFlBUk43?=
- =?utf-8?B?TDNwOGhYeGJONVFRRitmblprQmxTVzkzcDZ3eGUvUTN4WWRoR3VVYXdCMXRY?=
- =?utf-8?B?OVpPOHZjU05oRTNBKzVLZ1I0NklvL2liTElNUE9XZFJleTJXVSs0S25JMEg5?=
- =?utf-8?B?Wlg5L3c2ak5tUHducElCRWRuMFNWazV6d2tYeDJNRi9TeDRIQWU4UFZETEk0?=
- =?utf-8?B?NFNoOFltRWFVY0lCTC9sWUV6WFpIVjA0NDFwMVBMSnFaaHVkeUw0b3B1ODdZ?=
- =?utf-8?B?NTJtSlR1dHJlZlZuTFlMVG9zUFFDNkZKT2tORm5NdmhFaWk5eWVuYitER0Jq?=
- =?utf-8?B?b2YycVJNRlB2ejllVXRWRW5tSmJrRVF3dXRVblBVL1JFK1dMYkJGTklseFRX?=
- =?utf-8?B?N2JSR3lJQVJTV1ZQaVMwb2dRNmNkTUdidDc3NE5FbS9heTRNUTgwaC9IYjBC?=
- =?utf-8?B?M1VXekxTaHp6YTJ4cmMydWFoTE1SSG9BbWpRTFdvNE5MRDZNaFBlcWMvNE9K?=
- =?utf-8?B?eVJWajJyVDkzcm9adlNTMVEzTnozRm9yK2tGWUtHb05aS1JmU0M1OGNqOC9t?=
- =?utf-8?B?V3RMMUNhdThzTlRsUWk4MVhJVXFnUnMrRlNxN2NXOHZ6b3F3emw1Tm9QN2FW?=
- =?utf-8?B?a2lLb0VqSWtQV0lPbmdXbXFmQ2N4MjY3VjhSaTVrTmRLU3I1Qk1WNmxvblhp?=
- =?utf-8?B?Y0dzTVBoNFdtTElYd0dOUnVSOVR3Tm9yOGROYXFyc3ZOZU9CRGx3SUFlUmNB?=
- =?utf-8?B?bmhIeTF3RkZDb3RPcW5WZ2xQd0tzZ3JJZklObkl2V2wvVmhLTHZtRkMrYTE5?=
- =?utf-8?B?N1lVNmduQUpRTy8yZkZjVElzOGZlM2YyZkg3WG43SEl2c2kzdWxKQTV5KzA1?=
- =?utf-8?B?MzZKcmhpT1B1S1hqUlVtUHVmZ1ZiekNnN0IvdWtNL25xdzZ1ZCtqeHhrUTdW?=
- =?utf-8?B?Q3RNVlladTdPYTVLVVBNQTZHbER2WDlLNS9MRGNWNnBtSHpHR0s2d3U5NGNs?=
- =?utf-8?Q?RB4xwCPdM7ZY4rAU5M?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d8361c2-e1f0-40fa-3fed-08deb2a83449
-X-MS-Exchange-CrossTenant-AuthSource: DSVPR12MB999147.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2026 17:34:23.6813
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sSYO4Kj4RiW1Qn6/s/XWdeITSlXchYsgeBGt0CHbJmKOl7s77rEH0G0XHcWrYxmkl/vkB3AGaTbFobjg+qAk2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6273
-X-Rspamd-Queue-Id: 96A3F555632
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 00/12] net: enable TC956x support
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: daniel@riscstar.com, mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+ alexandre.torgue@foss.st.com, ast@kernel.org, boon.khai.ng@altera.com,
+ chenchuangyu@xiaomi.com, chenhuacai@kernel.org, daniel@iogearbox.net,
+ hawk@kernel.org, hkallweit1@gmail.com, inochiama@gmail.com,
+ john.fastabend@gmail.com, julianbraha@gmail.com, livelycarpet87@gmail.com,
+ matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20260501155421.3329862-1-elder@riscstar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 731F2556436
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36953-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36954-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[49];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mario.limonciello@amd.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_NONE(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,amd.com:mid,amd.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,riscstar-com.20251104.gappssmtp.com:dkim,riscstar.com:mid]
 X-Rspamd-Action: no action
 
+On 5/1/26 10:54 AM, Alex Elder wrote:
+> This series introduces stmmac driver support for the Toshiba TC9564
+> (also known as Qualcomm QPS615).  This is an Ethernet-AVB/TSN bridge IC
+> that provides a high-speed connection between a host SoC and Ethernet
+> devices on a network.  It incorporates a PCIe switch, and implements
+> two 10 Gbps capable Ethernet MACs (along with other IP blocks), and
+> is essentially a small and highly-specialized SoC.  The TC9564 is a
+> member of a family of similar chips, and the driver code uses "tc956x"
+> to reflect this.
 
+I'm writing now to just state what the plan is for version 2
+of this series.  I had hoped to get something out this week,
+but it won't be available today, so I wanted to at least let
+people know what to expect.
 
-On 5/15/26 11:15, Hardik Prakash wrote:
-> The Wacom WACF2200 touchscreen on the Lenovo Yoga 7 14AGP11 (83TD) is
-> non-functional on Linux due to two bugs. Patch 1 (pinctrl-amd GPIO IRQ
-> fix) has already been taken into Linus Walleij's tree. This v3 resend
-> covers patch 2 only, addressing Andy Shevchenko's formatting feedback.
-> 
-> Root cause: i2c_designware probes AMDI0010:02 before pinctrl-amd's
-> probe completes, so GPIO 157 (WACF2200 GpioInt per ACPI _CRS) has its
-> interrupt bits cleared when the first I2C transaction is attempted,
-> causing lost arbitration errors. The udev rebind workaround (which
-> works because pinctrl-amd has finished by userspace time) confirms
-> probe ordering as the root cause.
-> 
-> Note: the dual-master hypothesis raised by Mario Limonciello was
-> investigated. TPNL's _DSM (UUID 3cdff6f7-4267-4555-ad05-b30a3d8938de)
-> is a pure query method returning a constant HID descriptor address with
-> no side effects, making firmware acting as secondary I2C master unlikely
-> on this hardware. Awaiting Mario and Bart's technical verdict before
-> any further approach changes.
-> 
-> v3:
->   - Patch 2 only (patch 1 already in Linus Walleij's tree)
->   - Fix variable declaration style in dw_i2c_needs_amd_gpio_dep (Andy Shevchenko)
->   - Add BugLink tag (Andy Shevchenko)
->   - Add -v3 subject versioning (Andy Shevchenko)
->   - CC AMD engineers (Andy Shevchenko)
-> 
-> v2:
->   - Replace custom HID/UID lookup with acpi_dev_get_first_match_dev() (Andy Shevchenko)
->   - Use acpi_get_first_physical_node() for platform device lookup
->   - Use device_is_bound() under device_lock() with explanatory comments
->   - Fix dev_warn to use dev_name() instead of hardcoded suffix
->   - Fix commit message (removed incorrect "existing" reference)
->   - Add Assisted-by tags per coding-assistants.rst
-> 
-> Kernel bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=221494
-> Related: https://bugzilla.kernel.org/show_bug.cgi?id=221454
-> 
-> Hardik Prakash (1):
->    i2c: designware: fix probe ordering for AMD GPIO on Lenovo Yoga 7
->      14AGP11
-> 
->   drivers/i2c/busses/i2c-designware-platdrv.c | 77 +++++++++++++++++++++
->   1 file changed, 77 insertions(+)
+First, we received a great deal of really good feedback on
+this series.  I/we sincerely appreciate it, and have already
+addressed almost all of the suggestions people have made.
 
-I have another idea.  Why don't we just move pinctrl-amd to initialize 
-earlier?  That should avoid the problem without more quirks I think.
+Andrew Lunn asked a number of questions about the way that
+the TC956x device is represented, and in particular questioned
+whether having the GPIO controller as a device subordinate to
+a PCIe function even made sense.  This led to some additional
+discussion, including some offline work exploring what other
+options might be reasonable.
 
-Something like this:
+The plan for version 2 is to submit it fairly soon, to include
+updates that address *most* of the feedback received so far.
+(I have sent e-mail with clear confirmation of what we intend
+to do--and these changes would be incorporated in version 2).
 
-╰─❯ git diff
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index e3128b0045d22..56a189082351b 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -1292,7 +1292,18 @@ static struct platform_driver amd_gpio_driver = {
-         .remove         = amd_gpio_remove,
-  };
+However, because there remain other outstanding issues,
+including "big picture" questions about how to represent the
+hardware, the series will be sent as RFC.
 
--module_platform_driver(amd_gpio_driver);
-+static int __init amd_gpio_init(void)
-+{
-+       return platform_driver_register(&amd_gpio_driver);
-+}
-+subsys_initcall(amd_gpio_init);
-+
-+static void __exit amd_gpio_exit(void)
-+{
-+       platform_driver_unregister(&amd_gpio_driver);
-+}
-+module_exit(amd_gpio_exit);
+This will allow others to see the changes we made based on
+feedback, but also makes it clear there is more work that
+needs to be done before we're confident in our final proposal.
 
-  MODULE_AUTHOR("Ken Xue <Ken.Xue@amd.com>, Jeff Wu <Jeff.Wu@amd.com>");
-  MODULE_DESCRIPTION("AMD GPIO pinctrl driver");
-+MODULE_LICENSE("GPL");
+					-Alex
+
+> TC956x chips incorporate a PCIe gen 3 switch, with one upstream and
+> three downstream ports.  Its PCIe functionality is already supported
+> upstream, including a power control driver that performs some early
+> configuration of the PCI ports ("pci-pwrctrl-tc9563.c").
+> 
+> One of the PCIe switch's downstream ports has an internal PCIe endpoint,
+> which implements two PCIe functions, each of which has an Ethernet MAC
+> (eMAC) subsystem. The eMAC is composed of a Synopsis Designware XGMAC
+> combined with an XPCS and PMA.  Each MAC is capable of operating at
+> 10M/100M/1G/2.5G/5Gps and 10Gps.  The initial target platform is the
+> Qualcomm RB3gen2, which supports a 10Gbps Marvell PHY on port A, and
+> a 2.5Gbps Qualcomm PHY on port B.  (The Marvell PHY is not populated on
+> all RB3gen2 boards, and only 2.5 Gbps support is included initially.)
+> 
+> TC956x chips also implement several other blocks of functionality,
+> including a GPIO controller, interrupt controllers (MSIGEN), I2C
+> and SPI, a UART, and an Arm Cortex M3 CPU with 128KB SRAM.  The GPIO
+> interface exposes several lines to manage external resets.  The
+> interrupt controllers are used internally by the MAC functions.  The
+> UART, SPI, microcontroller, and SRAM are currently unused.
+> 
+>                ----------------------------------
+>                |              Host              |
+>                ------+...+----------+........+---
+>                      |i2c|          |  PCIe  |
+>      ----------------+...+----------+........+------
+>      | TC956x        |I2C|          |upstream|     |
+>      |               -----        --+--------+---  |
+>      |  -----  ------  -------    | PCIe switch |  |
+>      |  |SPI|  |GPIO|  |reset|    |             |  |
+>      |  -----  ------  |clock|    | DS3 DS2 DS1 |  |
+>      |                 -------    ---++--++--++--  |
+>      |  -----  ------     downstream//    \\  \\   |  downstream
+>      |  |MCU|  |SRAM|    /==========/      \\  \===== PCIe port 1
+>      |  -----  ------   //PCIe port 3       \\     |
+>      |                  ||                   \======= downstream
+>      |  ----+-----------++-----------+----         |  PCIe port 2
+>      |  | M | internal PCIe endpoint | M |         |
+>      |  | S |------------------------| S |  ------ |
+>      |  | I |   PCIe   |  |   PCIe   | I |  |UART| |
+>      |  | G |function 0|  |function 1| G |  ------ |
+>      |  | E |----++----|  |----++----| E |         |
+>      |  | N |  eMAC 0  |  |  eMAC 1  | N |         |
+>      --------+.......+------+.....+-----------------
+>              |USXGMII|      |SGMII|
+>            --+.......+--  --+.....+--
+>            |  ARQ113C  |  | QEP8121 |
+>            |    PHY    |  |   PHY   |
+>            -------------  -----------
+> 
+> The primary objective for this series is to support the Ethernet
+> functionality provided by the TC956x.  The code providing this
+> support has been structured into three distinct modules.
+>    - A driver for the GPIO controller
+>    - Code enabling the TC956x-specific eMAC/MSIGEN hardware
+>    - A "chip" driver, associated with the PCIe functions
+> 
+> The GPIO driver is implemented separately because in some hardware
+> configurations, these GPIO lines are used to manage resets for
+> external Ethernet PHYs.  We describe these PHYs via devicetree,
+> where the GPIO-based reset signals are defined using phandles.
+> 
+> The code for the eMAC/MSIGEN consists of a new source file that
+> populates hardware-specific details about the two MACs, and integrates
+> with the existing stmmac driver.  This also required implementing some
+> enhancements to the core stmmac driver, described further below.
+> 
+> To manage the common functionality (including configuring address
+> translation and controlling internal reset and clock signals), a
+> "chip" driver is implemented.  This chip driver is associated with
+> the PCIe function *itself*, not the eMAC associated with the function.
+> 
+> The driver binds to the internal PCI functions 0 and 1, and creates
+> a shared data structure describing the common chip elements the two
+> driver instances share.  Three auxiliary bus devices are created to
+> represent the GPIO controller and the two Synopsys MAC controllers.
+> 
+> The driver instance for PCIe function 0 has responsibility for
+> controlling the common chip functionality--creating the GPIO
+> controller auxiliary device, configuring address translation
+> between PCIe address space and internal addresses, and controlling
+> clocks and resets.  It creates a data structure--shared via its
+> platform data pointer with PCIe function 1--to represent shared
+> "chip" information.  In addition, PCIe function 0 creates an
+> auxiliary device to represent its attached eMAC.  It allocates
+> IRQs and maps BAR address ranges for use by the stmmac driver,
+> passing them in a structure via the auxiliary device's platform
+> data.
+> 
+> PCIe function 1 defers probing until after PCIe function 0 has
+> created the shared data structure.  After that its only job is
+> to set up IRQs and mapped memory and create the eMAC1 auxiliary
+> device.
+> 
+> The version of the Synopsys MAC IP is 3.01, which is largely compatible
+> with version 2.20.  The core stmmac driver required several changes to
+> enable support for the TC956x.
+>    - A change to dwxgmac2 support changes the interrupt mode when
+>      multi_msi_en is enabled.
+>    - While most support for version 3.01 simply uses the 2.20 code,
+>      an erratum related to the RX ring length is implemented for
+>      3.01 DMA operations.
+>    - Having the PCIe device be separate from an auxiliarly device
+>      implementing the eMAC required allowing a distinct DMA device
+>      to be maintained for an stmmac interface.
+> 
+> In addition:
+>    - A new source file provides memory-mapped access to XPCS using
+>      regmap.  The alignment of the TC956x MDIO registers aren't
+>      suitable for using simple MMIO.
+>    - Two additional XPCS changes are implemented that provides
+>      support for the XPCS as implemented in the TC956x.
+> 
+> This series is available here:
+>    https://github.com/riscstar/linux/tree/tc956x/stmmac-v1
+> 
+> 					-Alex (and Daniel)
+> 
+> Alex Elder (3):
+>    net: stmmac: dma: create a separate dma_device pointer
+>    gpio: tc956x: add TC956x/QPS615 support
+>    misc: tc956x_pci: add TC956x/QPS615 support
+> 
+> Daniel Thompson (9):
+>    net: pcs: pcs-xpcs-regmap: support XPCS memory-mapped MDIO bus via
+>      regmap
+>    net: pcs: pcs-xpcs: select operating mode for 10G-baseR capable PCS
+>    net: pcs: pcs-xpcs: Preserve BMCR_ANENBLE during link up
+>    net: stmmac: dwxgmac2: Add multi MSI interrupt mode
+>    net: stmmac: dwxgmac2: Add XGMAC 3.01a support
+>    net: stmmac: dwxgmac2: export symbols for XGMAC 3.01a DMA
+>    dt-bindings: net: toshiba,tc965x-dwmac: add TC956x Ethernet bridge
+>    net: stmmac: tc956x: add TC956x/QPS615 support
+>    arm64: dts: qcom: qcs6490-rb3gen2: enable TC9564 with a single QCS8081
+>      phy
+> 
+>   .../bindings/net/toshiba,tc956x-dwmac.yaml    | 111 +++
+>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  |  45 +-
+>   drivers/gpio/Kconfig                          |  11 +
+>   drivers/gpio/Makefile                         |   1 +
+>   drivers/gpio/gpio-tc956x.c                    | 209 +++++
+>   drivers/misc/Kconfig                          |  10 +
+>   drivers/misc/Makefile                         |   1 +
+>   drivers/misc/tc956x_pci.c                     | 667 +++++++++++++++
+>   drivers/net/ethernet/stmicro/stmmac/Kconfig   |  13 +
+>   drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +
+>   .../net/ethernet/stmicro/stmmac/chain_mode.c  |  12 +-
+>   .../ethernet/stmicro/stmmac/dwmac-tc956x.c    | 791 ++++++++++++++++++
+>   .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  12 +
+>   .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |   1 +
+>   .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |   1 +
+>   .../ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  78 +-
+>   .../net/ethernet/stmicro/stmmac/ring_mode.c   |  12 +-
+>   drivers/net/ethernet/stmicro/stmmac/stmmac.h  |   1 +
+>   .../net/ethernet/stmicro/stmmac/stmmac_main.c |  59 +-
+>   .../net/ethernet/stmicro/stmmac/stmmac_xdp.c  |   2 +-
+>   drivers/net/pcs/Makefile                      |   4 +-
+>   drivers/net/pcs/pcs-xpcs-regmap.c             | 203 +++++
+>   drivers/net/pcs/pcs-xpcs.c                    |  43 +-
+>   include/linux/pcs/pcs-xpcs-regmap.h           |  20 +
+>   include/linux/stmmac.h                        |   1 +
+>   include/soc/toshiba/tc956x-dwmac.h            |  84 ++
+>   26 files changed, 2341 insertions(+), 53 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml
+>   create mode 100644 drivers/gpio/gpio-tc956x.c
+>   create mode 100644 drivers/misc/tc956x_pci.c
+>   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
+>   create mode 100644 drivers/net/pcs/pcs-xpcs-regmap.c
+>   create mode 100644 include/linux/pcs/pcs-xpcs-regmap.h
+>   create mode 100644 include/soc/toshiba/tc956x-dwmac.h
+> 
+> 
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 
 
