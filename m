@@ -1,261 +1,400 @@
-Return-Path: <linux-gpio+bounces-36949-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36950-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cExlBrVNB2pZwwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36949-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 18:45:41 +0200
+	id YIiqF9FTB2pIygIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36950-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:11:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A84CF553D9F
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 18:45:40 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D5DC554927
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:11:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5A53732EAF8F
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 16:19:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5E43D301C8A7
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 16:58:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE9A4C956C;
-	Fri, 15 May 2026 16:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B39784DBD7E;
+	Fri, 15 May 2026 16:58:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPGtH9oI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nv+CMK0d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF233FBB4D
-	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 16:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D4F4CA26E;
+	Fri, 15 May 2026 16:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778861766; cv=none; b=X1laG8Lqylz9CpfAGyIQldxat4PFdH2rbIeLkaiEGfKJAyAu2NwyHJMU/hwxkNZZ6RHJDw8osIFqdvB67WSS226+Jedm75FKzLTG4LYcfkpNUv1VPyqK21p8nbiPJQbPt7+faE34rnNwOW+Kr53+11dDiOIrgnSR5lHMD5uURII=
+	t=1778864287; cv=none; b=eev7pfZHd5DbFn5pywLyBVX2/ysxEBpJKY09zriwa9WMHAUP0vY2NxaT2OMFe6S6CQ5X6gB3zftyFFcqrR3BQCAs4t9iom0kgXHgNGcRt5iL/ZxsOZHmEC6JVxdlJ6B1R2NFOI76cv7d4cYnZUmCa/uGogI4NSpZ5rMLPB+qVFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778861766; c=relaxed/simple;
-	bh=egpSBSiiVF81IZfyLqS6u/B6Mtzw5dC3K/sD5zzWGsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mFV4eNRzKWoX3NBpAIagULv4mBKVv5Rc64FXI/wLV3lO1eq6Myl7+vsWHU67jNehHf1uzFIJwX9J/W8vGlaUvhmI1r/4IGVMsCXP2zwG3g1DEdHT3gD/Ce4+VPHoYq+RvS6pLYKZ7sgRwo2quvz7NmeS8ZUj+D7pD/lozX/wNDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPGtH9oI; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c8173b2af32so6933130a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 09:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778861764; x=1779466564; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K9Ygl8nWXtwJ478R08EPxLQYgb2RjIx4YLds39Mkiug=;
-        b=gPGtH9oIfAbLgkTaMwBrrbpeZh/EQ0zN7U1PwungUYTPwUTLkEI20sWVepTA4Crvox
-         RRnEpEA1M2xuCKMMjtdIgNtG6d9/ChgaNVq348G5IPL6rl/j4/wY8VFdWyMOnAdu9QqJ
-         d4nOSWzyP47LKuRVXTZ16jss/BzbPNBJpR4sBlQMPJsGbIHGOKb1RzU4UL29SKBb0mnM
-         xe4E7MicIaKT77eW+6C+HYqR5icA8ux/in3HzrAe7JFV5+rCLklmMa+q7Re+dCBM1k/d
-         sEH1HXkU8fjuMSPYh2QjihufUVWzST3gqskoeBcfM7h2U5zk9j5TVZzkUu6aHRMCzelm
-         j6iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778861764; x=1779466564;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K9Ygl8nWXtwJ478R08EPxLQYgb2RjIx4YLds39Mkiug=;
-        b=Vqj+0pUFf601iwEfp0LKUOD8in8Lp+44dunXJQCqPRN64rc/TlLckRxO5jL/lTmCPH
-         qfhJ5yCELyqZmkYOeksd/UmxxlYPZyhka9dR93LYL36U1uxIlTgUg4mid68jOqOQ4Pp0
-         5TuV2lHgYsVZrfpLXw2bwfLPLUIsNmh2ateZJufF+5kQkY+DFTBcAwZYwHpn18APOfHv
-         d9vh8gXfUO+vw+hJAFJZ5YHmhB475/wIXxVTqfkCkiFwdEkjOom4WmyBaZN1rXO7kOs3
-         WeMojQcT2nbYfoL0SdI1DfWFGVQIZyqLdsxJFf2IsfnMhwFiPcDwiKFrQ1VIs/0/oqYp
-         041g==
-X-Gm-Message-State: AOJu0YwC7BJtCX6wHiDyguSutXAdcDj6ILSWyDPcDfN555CX80UxVVEG
-	gWizhzUDoSHiAyDzUz62Dij7fGO/G19JnJs2m0zvAK/6k18oKHMrwhVr
-X-Gm-Gg: Acq92OFS6DIocf0h20qJQ6Aio0FD90LbwLj4BW4Si1wWk2TTKI/23MEbzNT9ilMcvvV
-	gTUOgVIVeA2B8u0r8MVxSQJ/I6Kk+jWK6622JF9UiSpQ/uCdLL1pmHqdTudmPeGx+i9nosZmopT
-	VEb/7nfyCmItQx0htp5GfDlw9SIgGJ49HvronG5qfB25m7CiUB42NDBhSGlqgPMgHiM5EOa0aeS
-	IMVImzRrl9Kubmw3/quDprct8w5qcJxcynotBbhbyOfKixiOocAO7L0nbmMIS93f/jvj8GWBA81
-	f68Iv0MZHb7wpZ/pMm0zPkzitP2sm2IGPuSU0OwSrInHNpobQeBPG1AC81eRqB2Qx/vCjSa2AFB
-	pseDVI1kqb3nu5PsPvhke1DeLNY88naaHdI8Xo2/8/CNWIrjG7CWVXo4Nph8j/KAvtBaCbQfAII
-	ld+CSYmDKqgM6sm/q3Z9DIdbkMEhRcXrpm+qDsVMmuMs5w6gu5xSS6D0018NO6VhiFdrThYhUJI
-	GDZZk6xdaRMLDlmU9KKPYgJIoCRpqOL5HB7X62Qrum79KKji6BmlsvucVu4N1GY
-X-Received: by 2002:a05:6a20:7d9f:b0:398:7792:3882 with SMTP id adf61e73a8af0-3b22e823125mr5509269637.16.1778861763631;
-        Fri, 15 May 2026 09:16:03 -0700 (PDT)
-Received: from hardik-yoga ([2401:4900:1c64:ff18:3fa8:7855:804e:9f49])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c82bb062a2bsm7699036a12.7.2026.05.15.09.15.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 09:16:03 -0700 (PDT)
-From: Hardik Prakash <hardikprakash.official@gmail.com>
-To: linux-i2c@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	wsa@kernel.org,
-	andriy.shevchenko@intel.com,
-	mario.limonciello@amd.com,
-	brgl@bgdev.pl,
-	basavaraj.natikar@amd.com,
-	linus.walleij@linaro.org,
-	Hardik Prakash <hardikprakash.official@gmail.com>
-Subject: [PATCH v3 2/2] i2c: designware: fix probe ordering for AMD GPIO on Lenovo Yoga 7 14AGP11
-Date: Fri, 15 May 2026 21:45:16 +0530
-Message-ID: <20260515161516.10474-2-hardikprakash.official@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260515161516.10474-1-hardikprakash.official@gmail.com>
-References: <20260515161516.10474-1-hardikprakash.official@gmail.com>
+	s=arc-20240116; t=1778864287; c=relaxed/simple;
+	bh=+uvwRRXb0+ag+SzLI9XwgxVtGQw0racVNBs8qolbmd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZ5cMl5Aldyy+aX/rBaVsYUHJit+WAr44vFS5OT190Oa6yASFV/7HePLtPbiXVEvfBLaXzwZLAA4vNvzQ/wx2YiNuplChBjtOPmC+zgrgfRVx8d/A6MXNeM7rtVS74KtPhHvHj7As2FSA6rlJKNtHHSI7+dEDdzEsguJYnsnvPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv+CMK0d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB3FC2BCB0;
+	Fri, 15 May 2026 16:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778864287;
+	bh=+uvwRRXb0+ag+SzLI9XwgxVtGQw0racVNBs8qolbmd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nv+CMK0dIIDJ16d8jDglGtsTecbrA3gz6no2bADm+YJFI43q6uvZAjo8+1dryXXhz
+	 hn3f6ALLPmrtT2d5zIviNvwOPOXEILIkqvUj3B1feh3myA4YnGccVIK9sRFBsw1rg5
+	 6h7hGS9+o4CAjKGa9lgk+bZbKUxHb8vGuWRZcPIk26YsbcQZtI31iVUKMwMIKIeQ/s
+	 shO1d8E5i5esuR/n7OGH3LDuRZAEaQ8VqXyGGg7EpDX5bJRxd3wtCu/nHn4wGYIOmT
+	 vB7PyebUZsUN7gyBqAn86N0q1/WyGd7G6N0ZzsUy7YvBrfplNnOr+gjDJqLV9P4KpK
+	 h32H2/e0EdWoQ==
+Date: Fri, 15 May 2026 17:58:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>
+Subject: Re: [PATCH v2 03/22] pinctrl: pinctrl-generic: Make the "function"
+ property optional
+Message-ID: <20260515-outplayed-java-635f7231d394@spud>
+References: <20260514111218.94519-1-changhuang.liang@starfivetech.com>
+ <20260514111218.94519-4-changhuang.liang@starfivetech.com>
+ <20260514-operation-remix-9f9fcf9a6102@spud>
+ <ZQ4PR01MB120245CDE718812D1C65638AF2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+ <20260515-dandruff-shorts-d7417c6e977a@wendy>
+ <ZQ4PR01MB1202D30B108C4562242C1ED8F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+ <20260515-bounce-lather-23de8e36754c@wendy>
+ <ZQ4PR01MB12021791B5A255F9EB91D9F6F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A84CF553D9F
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZZhM5VJBeP8Nh3yc"
+Content-Disposition: inline
+In-Reply-To: <ZQ4PR01MB12021791B5A255F9EB91D9F6F2042@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+X-Rspamd-Queue-Id: 9D5DC554927
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-36950-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36949-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl,linaro.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Lenovo Yoga 7 14AGP11 (83TD), the WACF2200 touchscreen fails with
-lost arbitration errors on AMDI0010:02 at boot. The root cause is a
-probe ordering issue: i2c_designware probes AMDI0010:02 before
-pinctrl-amd has finished initialising, so the GPIO 157 interrupt
-needed by the touchscreen is not yet enabled.
 
-Add a DMI-matched deferral in dw_i2c_plat_probe() that uses
-device_is_bound() under device_lock() to correctly wait until
-pinctrl-amd's probe has fully completed. Use acpi_dev_get_first_match_dev()
-for robust HID/UID-based GPIO controller lookup instead of string
-name matching.
+--ZZhM5VJBeP8Nh3yc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
-Assisted-by: Claude:claude-sonnet-4-6
-Assisted-by: GPT-Codex:gpt-5.2-codex
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=221494
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 77 +++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+On Fri, May 15, 2026 at 10:30:38AM +0000, Changhuang Liang wrote:
+> Hi, Conor
+>=20
+> Thanks for the comments.
+>=20
+> > On Fri, May 15, 2026 at 08:23:55AM +0000, Changhuang Liang wrote:
+> > > > On Fri, May 15, 2026 at 05:55:48AM +0000, Changhuang Liang wrote:
+> > > > > > On Thu, May 14, 2026 at 04:11:59AM -0700, Changhuang Liang wrot=
+e:
+> > > > > > > Some pinctrl subnodes only need to configure pin properties
+> > > > > > > (e.g., power-source, bias, drive strength) without assigning =
+any mux
+> > function.
+> > > > > > >
+> > > > > > > Currently, the driver requires a valid "function" property for
+> > > > > > > all pinctrl subnodes. This forces the addition of dummy or
+> > > > > > > redundant "function" entries when only pin configuration is n=
+eeded.
+> > > > > > >
+> > > > > > > Example use case:
+> > > > > > > gpios-configs {
+> > > > > > >     config {
+> > > > > > >         pins =3D <0 1 2 3>;
+> > > > > > >         power-source =3D <0>;
+> > > > > > >     };
+> > > > > > > };
+> > > > > > >
+> > > > > > > Make the "function" property optional. If it is missing, skip
+> > > > > > > adding the mux map and only process the pin configuration.
+> > > > > >
+> > > > > > I looked through the series though and all controllers appear to
+> > > > > > have pins and functions, is it the case that gpio is the default
+> > > > > > for these pins, so you are omitting the functions property when
+> > > > > > you are using
+> > > > the pin in gpio mode?
+> > > > > > Saying that the functions property is "redudant" makes it seem
+> > > > > > like this might be the case?
+> > > > > >
+> > > > > > I've got some feedback here, but I can't really provide it
+> > > > > > without knowing the answer to that question.
+> > > > >
+> > > > >
+> > > > > "From v1, copying Linus's suggestion:
+> > > > >
+> > > > > > +  This domain contains 4 IO groups which support voltage levels
+> > > > > > + 1.8V and 3.3V  gpioe-spi - comprises PAD_GPIO_C0 through
+> > > > PAD_GPIO_C4.
+> > > > > > +  gpioe-qspi0 - comprises PAD_GPIO_C5 through PAD_GPIO_C11.
+> > > > > > +  gpioe-qspi1 - comprises PAD_GPIO_C12 through PAD_GPIO_C19.
+> > > > > > +  gpioe-qspi2 - comprises PAD_GPIO_C20 through PAD_GPIO_C27.
+> > > > > > +
+> > > > > > +  Each of the above IO groups must be configured with a voltage
+> > > > > > + setting that matches the external  voltage level provided to
+> > > > > > + the IO
+> > > > group.
+> > > > >
+> > > > > So your hardware has groups and support some properties on the
+> > > > > group
+> > > > level.
+> > > > >
+> > > > > So expose these groups and make these properties configurable per
+> > > > > group instead of inventing per-group properties.
+> > > > >
+> > > > > > +  gpioe-spi-vref:
+> > > > > > +  gpioe-qspi0-vref:
+> > > > > > +  gpioe-qspi1-vref:
+> > > > > > +  gpioe-qspi2-vref:
+> > > > >
+> > > > > Create proper groups in the pin controller then use the standard
+> > > > > pincfg property power-source =3D <...>; for this.
+> > > > >
+> > > > > Example for a simple default hog:
+> > > > >
+> > > > > pinctrl {
+> > > > >     /* Hog the QSPI pins */
+> > > > >     pinctrl-names =3D "default";
+> > > > >     pinctrl-0 =3D <&qspi_default>;
+> > > > >
+> > > > >     qspi_default: pinctrl-qspi {
+> > > > >         config {
+> > > > >             groups =3D "gpioe-qspi-pins";
+> > > > >             power-source =3D <2>;
+> > > > >         };
+> > > > >     };
+> > > > > };
+> > > > >
+> > > > > The groups can be orthogonal to other pin handling, that's fine.
+> > > > > Implement .pin_config_group_set in struct pinconf_ops.
+> > > > >
+> > > > > However, I found that
+> > > > > pinctrl_generic_pins_function_dt_node_to_map()
+> > > > > does not handle the groups property,
+> > > >
+> > > > That's kind of the whole point of the function, see the comment
+> > > > about
+> > > > it:
+> > > > /*
+> > > >  * For platforms that do not define groups or functions in the
+> > > > driver, but
+> > > >  * instead use the devicetree to describe them. This function will,
+> > > > unlike
+> > > >  * pinconf_generic_dt_node_to_map() etc which rely on driver defined
+> > > > groups
+> > > >  * and functions, create them in addition to parsing pinconf
+> > > > properties and
+> > > >  * adding mappings.
+> > > >  */
+> > > >
+> > > > If you have the groups property in your devicetree, it contains
+> > > > strings that the driver uses to match against the groups it has def=
+ined in it.
+> > > > See my recently added microchip,pic64gx-pinctrl-gpio2 for an example
+> > > > of that if you like.
+> > > >
+> > > > However, if you are using the pins or pinmux properties, the groups
+> > > > are not defined in the driver, and need to be created at runtime.
+> > > > That's what
+> > > > pinctrl_generic_pins_function_dt_node_to_map() is for - it creates
+> > > > the groups at runtime when using the *pins* and *function* properti=
+es.
+> > > > It's in the name!
+> > > >
+> > > > Judging by your drivers, and how many structures you have that look
+> > > > very like groups from a quick glance, probably you can still make
+> > > > use of the groups property. The equivalent function to
+> > > > pinctrl_generic_pins_function_dt_node_to_map() when you're using
+> > > > driver defined groups is pinconf_generic_dt_node_to_map().
+> > >
+> > > I feel that for the current platform, initializing pin voltage is
+> > > suitable for using `pinconf_generic_dt_node_to_map()`,
+> > > and configuring pin mux is suitable for using
+> > > `pinctrl_generic_pins_function_dt_node_to_map()`. Should I use both of
+> > them at the same time?
+> >=20
+> > No, pick either groups or pins across the board and then use the approp=
+riate
+> > function after that. Mixing and matching just adds complication for no =
+real
+> > reason.
+> >=20
+> > > > Also, I notice that you never actually answered the question that I
+> > > > asked:
+> > > > > > I looked through the series though and all controllers appear to
+> > > > > > have pins and functions, is it the case that gpio is the default
+> > > > > > for these pins, so you are omitting the functions property when
+> > > > > > you are using
+> > > > the pin in gpio mode?
+> > > > > > Saying that the functions property is "redudant" makes it seem
+> > > > > > like this might be the case?
+> > > >
+> > > > Are you omitting the functions property from your nodes when they're
+> > > > using gpio because it is a default, or is there some other reason
+> > > > why you're omitting the functions property sometimes?
+> > >
+> > > Sorry, I missed that question. What I meant by making 'functions'
+> > > optional is that I don't care whether the current pin's default value=
+ is GPIO
+> > or some other function.
+> > > Here, I just want to initialize the default voltage of these pins, not
+> > > configure their pin function.
+> >=20
+> > You're making them gpios in all the cases that I saw, so I think you're=
+ best
+> > served by using the "gpio" function and thereby being able to have func=
+tion as
+> > a required property. Unless the pins are unused, you need to set the fu=
+nction
+> > anyway, and if they're unused and survived on the values set by reset o=
+r prior
+> > boot stages, why do you need to set the voltage anyway?
+> >=20
+> > Looking at this node, it looks completely wrong to me:
+> > +&pinctrl_sys2 {
+> > +	gpiow0_configs: gpiow0-hog-grp {
+> > +		gpiow0-hog-pins {
+> > +			pins =3D <PADNUM_SYS2_GPIO_A36
+> > +				PADNUM_SYS2_GPIO_A37
+> > +				PADNUM_SYS2_GPIO_A38
+> > +				PADNUM_SYS2_GPIO_A39>;
+> > +			power-source =3D <JHB100_PINVREF_3_3V>;
+> > +		};
+> > +	};
+> > +
+> > +	gpiow_inner_configs: gpiow-inner-hog-grp {
+> > +		gpiow-inner-hog-pins {
+> > +			pins =3D <PADNUM_SYS2_GPIO_A40
+> > +				PADNUM_SYS2_GPIO_A41
+> > +				PADNUM_SYS2_GPIO_A42
+> > +				PADNUM_SYS2_GPIO_A43>;
+> > +			power-source =3D <JHB100_PINVREF_3_3V>;
+> > +		};
+> > +	};
+> > +
+> > +	uart6_pins: uart6-grp {
+> > +		uart6-tx-pins {
+> > +			pins =3D <PADNUM_SYS2_GPIO_A38>;
+> > +			function =3D "uart";
+> > +		};
+> > +
+> > +		uart6-rx-pins {
+> > +			pins =3D <PADNUM_SYS2_GPIO_A39>;
+> > +			function =3D "uart";
+> > +			input-enable;
+> > +		};
+> > +	};
+> > +};
+> >=20
+> > The pins used by uart appear also in your hog node and...
+> >=20
+> > > This part of the voltage configuration only has one register, but it
+> > > applies to many pins, so currently it seems I can only use pinctrl ho=
+g to
+> > initialize it.
+> >=20
+> > ...I think that relates to the point you make here. If a setting for the
+> > power-source applies across an entire set of pins, there's no need to
+> > preemptively apply this across the whole set. It's usually sufficient t=
+o just set
+> > the power-source in the nodes that describe pins that are actually in u=
+se, for
+> > example:
+> >=20
+> > | &pinctrl_sys2 {
+> > | 	uart6_pins: uart6-grp {
+> > | 		uart6-tx-pins {
+> > | 			pins =3D <PADNUM_SYS2_GPIO_A38>;
+> > | 			function =3D "uart";
+> > | 			power-source =3D <JHB100_PINVREF_3_3V>;
+> > | 		};
+> > |
+> > | 		uart6-rx-pins {
+> > | 			pins =3D <PADNUM_SYS2_GPIO_A39>;
+> > | 			function =3D "uart";
+> > | 			input-enable;
+> > | 			power-source =3D <JHB100_PINVREF_3_3V>;
+> > | 		};
+> > | 	};
+> > | };
+>=20
+> I think this approach is suitable for cases where each pin has its own in=
+dependent register filed.=20
+> I'm not sure if it's suitable for this kind of voltage configuration wher=
+e multiple pins share a=20
+> single register field.
+>=20
+> With this approach, the driver would end up writing the same value to the=
+ same register twice,=20
+> once for A38 and once for A39. Is that acceptable?
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 3351c4a9ef118..3ffc3d757fbd1 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2007 MontaVista Software Inc.
-  * Copyright (C) 2009 Provigent Ltd.
-  */
-+#include <linux/acpi.h>
- #include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
-@@ -86,6 +87,78 @@ static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
- 	{ } /* terminate list */
- };
- 
-+static const struct dmi_system_id dw_i2c_amd_gpio_defer_dmi[] = {
-+	{
-+		.ident = "Lenovo Yoga 7 14AGP11",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83TD"),
-+			DMI_MATCH(DMI_BOARD_NAME, "LNVNB161216"),
-+		},
-+	},
-+	{ } /* terminate list */
-+};
-+
-+static bool dw_i2c_needs_amd_gpio_dep(struct device *device)
-+{
-+	struct acpi_device *adev;
-+
-+	if (!dmi_check_system(dw_i2c_amd_gpio_defer_dmi))
-+		return false;
-+
-+	adev = ACPI_COMPANION(device);
-+	if (!adev)
-+		return false;
-+
-+	return acpi_dev_hid_uid_match(adev, "AMDI0010", "2");
-+}
-+
-+static int dw_i2c_defer_for_amd_gpio(struct device *device)
-+{
-+	struct acpi_device *gpio_adev;
-+	struct device *gpio_dev;
-+
-+	if (!dw_i2c_needs_amd_gpio_dep(device))
-+		return 0;
-+
-+	/*
-+	 * Find the AMD GPIO controller by HID/UID and get its physical
-+	 * platform device. We need the platform device (not the ACPI device)
-+	 * because that is what gets bound by the amd_gpio driver.
-+	 */
-+	gpio_adev = acpi_dev_get_first_match_dev("AMDI0030", "0", -1);
-+	if (!gpio_adev)
-+		return -EPROBE_DEFER;
-+
-+	gpio_dev = acpi_get_first_physical_node(gpio_adev);
-+	acpi_dev_put(gpio_adev);
-+	if (!gpio_dev)
-+		return -EPROBE_DEFER;
-+
-+	/*
-+	 * Check that amd_gpio probe has fully completed, not just that the
-+	 * driver pointer is set. The driver pointer is assigned before probe
-+	 * finishes, so checking it would allow i2c_designware to probe before
-+	 * the GPIO IRQ quirk in amd_gpio_probe() has run.
-+	 */
-+	device_lock(gpio_dev);
-+	if (!device_is_bound(gpio_dev)) {
-+		device_unlock(gpio_dev);
-+		return -EPROBE_DEFER;
-+	}
-+	device_unlock(gpio_dev);
-+
-+	/*
-+	 * Create a device link so the driver core enforces probe/remove
-+	 * ordering between this I2C controller and the GPIO controller.
-+	 */
-+	if (!device_link_add(device, gpio_dev, DL_FLAG_AUTOREMOVE_CONSUMER))
-+		dev_warn(device, "failed to add device link to %s\n",
-+			 dev_name(gpio_dev));
-+
-+	return 0;
-+}
-+
- static const struct i2c_dw_semaphore_callbacks i2c_dw_semaphore_cb_table[] = {
- #ifdef CONFIG_I2C_DESIGNWARE_BAYTRAIL
- 	{
-@@ -138,6 +211,10 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 	struct dw_i2c_dev *dev;
- 	int irq, ret;
- 
-+	ret = dw_i2c_defer_for_amd_gpio(device);
-+	if (ret)
-+		return ret;
-+
- 	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq == -ENXIO)
- 		flags |= ACCESS_POLLING;
--- 
-2.54.0
+IMO, yes. This wouldn't be the only driver that does this. Only problem
+is potentially using the wrong voltage in two nodes that affect pins in
+the same vref group - but that's a flaw with the current setup too,
+since nothing stops you putting power-source into multiple nodes at
+present either. It's not ideal, but it's definitely more acceptable than
+what you have here at the moment.
 
+>=20
+> If that's acceptable, the code would indeed become much simpler.
+
+And you can make pins and functions required properties then too I
+think, which is a win. Or groups and functions if you pivot there.
+
+--ZZhM5VJBeP8Nh3yc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagdQmQAKCRB4tDGHoIJi
+0nMjAQC21w7gXszUg0gQDJ/WIXbLjOt/jmJMTZulnr/4B8XojAEApJ9RI5ZwjiUU
+wevelOpAo4+3T0VNQGPxGgXfPyJK+gI=
+=jV/c
+-----END PGP SIGNATURE-----
+
+--ZZhM5VJBeP8Nh3yc--
 
