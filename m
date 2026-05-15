@@ -1,1923 +1,211 @@
-Return-Path: <linux-gpio+bounces-36956-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36957-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id icwbId5lB2oF1wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36956-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:28:46 +0200
+	id CBMMH2l7B2rG5AIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36957-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 22:00:41 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 005ED556374
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:28:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28947557343
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 22:00:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AEA0B3140A1E
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 18:12:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8F050301DEE0
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:00:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E57403153;
-	Fri, 15 May 2026 18:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE5238C401;
+	Fri, 15 May 2026 20:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="H6z4EnBn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P5PbVJd4"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d6FW8+k3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012056.outbound.protection.outlook.com [52.101.48.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA53D3FF1BA;
-	Fri, 15 May 2026 18:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778868760; cv=none; b=l44VZ8lP461MpUDBXwT1hTGshIERDN+Q9eALP6HwIdRQy0a5tY0nd9le0U+PGtPI2ElgJOHKZ6HybQRgpo2BR3YRpQghPa/4l9vawTFUeatIQC8IPwB2X7R9hqWi/pVrm957F498ohuGXiMi9zpZHENmo05v7OWMgYBVnbBD8D8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778868760; c=relaxed/simple;
-	bh=9cQE6ANfaeQsAdTdbzxpxTTZvBLSS8eh+oiBX42iAN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGrUxtgr2217qrtkgv8NT44+v5ya7MvdUf362x7PY+ifiiyXOa5L2aiY6pTfTstTJO5khOv7ihni1JxhPS0pXR1ytBpzlP/YDgWf4o+bq/BODzuoIISebCDl6CnWP91VjX+yU1oYRTQjmPW67dBlHGqWd93uW+rgVbinCfwvV1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=H6z4EnBn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P5PbVJd4; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1BCA9140003A;
-	Fri, 15 May 2026 14:12:35 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 15 May 2026 14:12:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1778868755;
-	 x=1778955155; bh=qtzYIw+kokjAAz9DHXOr256V2RftkyWHoKT+XupacEU=; b=
-	H6z4EnBnS3jR+z79Kx13Pf8oacmKHoLO6CKxx4F9+hDpUSHc69JGZmqbctu/Xr16
-	Yc8JIaQT+H/uu0HFWzpdpWCnJAS+UxxubCdP56Snq6wUjzXHHyTsgIk3ekTVh4EJ
-	/Hzu0cIqe49+fO/fJqfg4UO4YtzO+BrAAWRa1ybMAJ/wt7gtOMRCIlT1xLgKHZIL
-	87BbhNRqzT7GZCq/0eF/xzv3XsOPrxCVm4HL3wnZ7oDhIg19fZAsOK8XyA7lidM1
-	gRv6J8OWdKC0pwxxf5x/dcwx84j3RQ8ZfmqMIEqvJW4V9Vx9wQGUiIOLHv1+TLfT
-	9Sg7SvsaZYAMIXUkfFIADw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1778868755; x=
-	1778955155; bh=qtzYIw+kokjAAz9DHXOr256V2RftkyWHoKT+XupacEU=; b=P
-	5PbVJd4Qpr5fnjq8xcUikztCJiDYZqIhuSw6DoBqKL9l7GJ+sMn6IdVnwRJwjacL
-	FVZA72bnJvQZgI2/BKk7DH6bR3bn8THPMiPAsHnpNfyNydBVmXLLqhMBb3ygjpgF
-	Wt8QRqj+QbR1qjkaqga7ZkVMBa0R4KaNeGlYnWhVoGbcGoQ+ObwMqmSbUuVj3Kk3
-	E50aY68yYdktLr4IfgT48F20R/JVztwtsfxptCd7bEMVN74VxAiQeGCpaMCUwNhV
-	RgMCwenZ7edkq5q1PrUBtVI4YhAq1eHwQpnOvqubsIpj28YW0OVy2he8IJoCkPFv
-	dRYQKWkM5jxw/yN6eAizQ==
-X-ME-Sender: <xms:EmIHajkmnebuvZ9jbSwoDUrnKM5DuhNOc2YFHKnN_W2NhgQzuJW_jw>
-    <xme:EmIHahEvjBgj9dPTTG6qxJIMSF7tmQBVLfJZt9Hzr_Z3kPYBFcg8e28fzLZaFxH43
-    lgceSFOU3RQizICE4Ju-qCWxdbcJEnovIeR8zAohp3teUB3FMmz-Mg>
-X-ME-Received: <xmr:EmIHavHrzSRGqLIc9y6OadnZ2xenQ44aibxU-53Az0g6-nM0Lnpsb__ophG78HzoQKyrjvbA1ff3iUkHw0mXnTx4Q6K050i1i7-r>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufedutdelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhklhgr
-    shcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhnrg
-    htvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteegtddvvdfhtdekgefhfeefheet
-    heekkeegfeejudeiudeuleegtdehkeekteenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluhhnugesrhgrghhn
-    rghtvggthhdrshgvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepughumhhithhruhdrtggvtghlrghnsegrnhgrlhhoghdrtghomhdprhgt
-    phhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgvnhgvshgrshesihguvggrshhonh
-    gsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtoh
-    hmpdhrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsgho
-    rghrugdrtghomhdprhgtphhtthhopehjuhhlihgvnhdrmhgrshhsohhtsegtohhllhgrsg
-    horhgrrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
-    hopegtohhsmhhinhdrthgrnhhishhlrghvsegrnhgrlhhoghdrtghomh
-X-ME-Proxy: <xmx:EmIHah0bc3jiNYpUS44bUyZ_MrULVNkZ_BMD5B6p_E3SGm8AEROgmg>
-    <xmx:EmIHapcwNTqD8h-VbGdMyXlwriv6mullA31bH82myovNNEf8v0hn-Q>
-    <xmx:EmIHarIZOOtdp2DkLHKHpkD7kaRbXVj_QXLtEQvvJL9aNEUgJGg48w>
-    <xmx:EmIHanGTB54LDEQE7DBKEoDCjYO-T8g8_6i_QhJtufzDThenLDKyog>
-    <xmx:E2IHarC1DJ4V5fPpXHiwMLfuG43GHdypmMcD2SFLjQ2m48MFuBlizm6k>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 15 May 2026 14:12:33 -0400 (EDT)
-Date: Fri, 15 May 2026 20:12:32 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: dumitru.ceclan@analog.com
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Martin Hecht <Martin.Hecht@avnet.eu>,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: Re: [PATCH v11 16/22] media: i2c: maxim-serdes: add MAX96717 driver
-Message-ID: <20260515181232.GP332351@ragnatech.se>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC338D3E0;
+	Fri, 15 May 2026 20:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778875234; cv=fail; b=TxOK0r0ntqH0vGzkWtpLOVOKMAAvZlB40PBFEL3LLcePmf3BxhxFTZcF7FlHRnfvBJ74MqCTXRSHTCHEEhJNdTZV/ekrlFt0jHBnWRS3fC8Q7n1uGE/buPhQyH3Qz10H9paCSgSp7Tlm+AQQSty62g68FrgQSgORTJ8GSYMYIF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778875234; c=relaxed/simple;
+	bh=RdjIOPEDMdlMiJ3UHhgF4eoWfRtGYvD4BL2ZS4VUnFw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=knl0NL5y4wxPwXkTVDBONPRIy2X4dYljuKRwSKsR6XnLm6TVjzMCFVCrFIhm2S2BtIkfFVrSn2AjdYnI2cTrEp1etQlfqeS1UPpSR2ofUFWXgCtW/UZQ2CwAA00FDWttgxnVVLno9aKaz+JSIv2c/UTIQjc5dpwOV6a7OY+O/ZM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d6FW8+k3; arc=fail smtp.client-ip=52.101.48.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QQYusDOVWphchA7z6W3QNLHTfxHWu0WdOEai7KV7WLsLL9TrR0lpnorgKVb7r7F/tMiSopasd4Cskh5UfilnyxtXzXS94azWuvzBOyzbB3ewFo40WsHHqcW8lSkA+CKfeI1JtYuX/A0awM/VH94AScIV+QWBBrMDQTcJghac5Nfsub09f/nmbYEp/67D170ckbMpoHVeO/tiCz0bwQORpo/2fEVP8a3P4z5R3OvmMKrEXAsLlys12Z2auz5e0S+G3vS99eGKX77722/jqQDq5klY1S68gzuk9qh/0VXJ4FDydwbOAskNwMNeADcz+H4coxrsfsWyvOeMvRePUw883A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RdjIOPEDMdlMiJ3UHhgF4eoWfRtGYvD4BL2ZS4VUnFw=;
+ b=irOq1nZOXtRXbWx480j83HnHlFyVlrRbglU1guyaI8dxkCz3yl6/FC225miOlhWQ27nB3EPi5u3GpQYnFYSm18J2lzmdlT4xOVqNnynHz8DM3cM2wDclmgKyjqJBrOivcAXr5uqtQrjcA8Jxoa8/x/WyLqaj98L+PBRAB6tWWGEBYd/bxQ/TUf5WylrM6qdrhIa4x3VFJ/X2DJ+yi9wEPSnBWXFTPUS3glXm+Y+ZkmFEH7DsncBOE7IsC1p+FddLrpBhV+XXeiZPaJsWVlhAq2aJlnIstZrCOlbvdSdKwI3wqkT+eMzLK3hHHT8F8j2dMQb5Kui9m/KjTEwC/C7jqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdjIOPEDMdlMiJ3UHhgF4eoWfRtGYvD4BL2ZS4VUnFw=;
+ b=d6FW8+k3Ev2htLVbeb8tWyoFeF4eGHPRpzhI/+JlDWQEeUAWYQZYo7nf2P2wdPIznNUAQe9lwonyINkKo+p8ieN39HwzgESYFWMDczzbL1/v4YaeIXNK6UvgmOYaAXP1UEsJ5Ti2yDUS62Sm7cFDDGHduXxcy6g63j9ph6hdEDI=
+Received: from DSVPR12MB999123.namprd12.prod.outlook.com (2603:10b6:8:388::13)
+ by MN0PR12MB6080.namprd12.prod.outlook.com (2603:10b6:208:3c8::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.18; Fri, 15 May
+ 2026 20:00:25 +0000
+Received: from DSVPR12MB999123.namprd12.prod.outlook.com
+ ([fe80::17c8:33d6:3366:3fbf]) by DSVPR12MB999123.namprd12.prod.outlook.com
+ ([fe80::17c8:33d6:3366:3fbf%3]) with mapi id 15.20.9913.009; Fri, 15 May 2026
+ 20:00:25 +0000
+From: "Dayananda, Vivekananda" <vivekananda.dayananda@amd.com>
+To: "dumitru.ceclan@analog.com" <dumitru.ceclan@analog.com>, Tomi Valkeinen
+	<tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>, Julien Massot
+	<julien.massot@collabora.com>, Rob Herring <robh@kernel.org>,
+	=?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Cosmin Tanislav
+	<cosmin.tanislav@analog.com>
+CC: "mitrutzceclan@gmail.com" <mitrutzceclan@gmail.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	=?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund+renesas@ragnatech.se>,
+	"martin.hecht@avnet.eu" <martin.hecht@avnet.eu>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Cosmin Tanislav <demonsingur@gmail.com>,
+	"Dayananda, Vivekananda" <vivekananda.dayananda@amd.com>, Cory Keitz
+	<ckeitz@amazon.com>
+Subject: RE: [PATCH v11 00/22] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+Thread-Topic: [PATCH v11 00/22] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+Thread-Index: AQHc4UGLHAZ9OQXPpkeA8QZWtUoWPbYPiGPQ
+Date: Fri, 15 May 2026 20:00:20 +0000
+Message-ID:
+ <DSVPR12MB999123956F5F35F8F9DF9DF947E8042@DSVPR12MB999123.namprd12.prod.outlook.com>
 References: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
- <20260511-gmsl2-3_serdes-v11-16-fc163073c16b@analog.com>
+In-Reply-To: <20260511-gmsl2-3_serdes-v11-0-fc163073c16b@analog.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_ActionId=fe86f088-d5d6-4da3-82dc-df7c78dad93d;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_ContentBits=0;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_Enabled=true;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_Method=Privileged;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_Name=Non-Business
+ v26;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_SetDate=2026-05-15T19:56:40Z;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f39aa4b3-b62d-42bf-8097-75e2c573ddfa_Tag=10,
+ 0, 1, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DSVPR12MB999123:EE_|MN0PR12MB6080:EE_
+x-ms-office365-filtering-correlation-id: c4b91ba8-ab25-4213-c4da-08deb2bc9ac4
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|366016|1800799024|376014|56012099003|18002099003|22082099003|921020|38070700021|11063799003;
+x-microsoft-antispam-message-info:
+ BCQRAvVtSblmJfwmGXN6jzYteBG6Fx/o2qCqmozrHUuWqUppGnj7SMGwBIzYjq5z25N9mA/ryaB+xoVeKoZFliVV85fINQJne3VV/jjDiBEgDBptlEo9P1ICcRMYU8E5U5axOi/0CP9m3RWlwQVWiKMpMUKxGhs4IECpm1V6wAnlzJqXN7jbliiQQDdxxFGVT5BCqk8e3k4SJai/AbzXBgjPeT3/Jz93GAcFpI8W/ErEqtmrPyQiiGrNeXeY2cAa45jORDhm0TlLZtxBSutBVW+CVt5GHaJwdRFDzSwQpXW8KU89zX16qF44YI/Kc2oTRCCBZ9gEYXPYXEWdS+AUfUOOTt/gZ+JbiD+LO/DsgGjeFkuKWjOPEZZJITYHu8Del+bir/lgNANCcROxlKApQvh7ZNw2xFnTgke1rqiTfcctABOBzdNKi3iXLTIk6roER1rZnxm1kBsPe4jesOhTft8wy3vdcgzOExZJIK43m/dRDNlyaSRhJG6kFhukrDXuZECjA8S3N0BiQ0YI/DeGLGkR8/vPcFjMR4IWBjCbHmpFW9BXLHGvkyy/rwfRGfWTBtyWVFSyYTFTBTBsVdVjXIGt+EmlsPT6raHdhNAlndJpcmtFXbJlIetCsDvJdXTeSFfohJENdJ9kPxJpM2i/U/EEI4FBB1cEb3WiQlaQO/Gi77MLOoVzkuOdJLzrZxelAmArwHw8smvlmKnT9VGj8TtFBM1nJQyc71wO2KLLpYeS6BW7RtOYvpsGBsg0sWeTPPNjdElz1HT23zubtY1oWg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DSVPR12MB999123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(56012099003)(18002099003)(22082099003)(921020)(38070700021)(11063799003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Z3cvYWhOM2VsRHFjU2NiSkRrVWl1Q29uWGJqc3g0ZGpJWWt5NXJXTFp5NG1i?=
+ =?utf-8?B?ZVN4SjRiUGRqSHBLMWxJTE9LQVRiaStJUGRTaDRyVWllSGcyZzIvaUdyd0Vu?=
+ =?utf-8?B?RmxKM0hHRXg5dnVDMlhvcTNrak1KZVJ4TFJGZ29iS2NRazRZV09LYzJhWU9m?=
+ =?utf-8?B?c3lvMFI5UzY3SnNkL2lya2p3V3hWZjlvUkJ1USs1Vk12cG1kajFNakU1ZE92?=
+ =?utf-8?B?eS9XbDZLZis2ZHFSdWhUOWwvT244TkdXNFNjK1YwTkFHejhpNk93Z0ljaXV0?=
+ =?utf-8?B?d2tNVktNY3JqZmdrKzJ0T0swSFJ2QzRFbWV1SjMxOG5RVTRqM2JFcDRySG1l?=
+ =?utf-8?B?OTB1SHdxK2JHVnpBQmgwTmpiZWJXVjNYYTBSQzI5T0JwNzBZVnhGSmhuMlp0?=
+ =?utf-8?B?NDBzSzVBUWNRek9mL0hiRHlZVm9iYktQWEJBMzNhelB3MTh0K1NXVDhRMktl?=
+ =?utf-8?B?SWxlMFJNY3p3NVh2L2l4b2ROTklOeG11TVZDVEJ0N2Qrdzcwcmp1L3JKQ0JX?=
+ =?utf-8?B?M2E1VUJzWlNsNDRua0RXTW82OHRNQVBkei9od1EzTEg5WWk0cUVydmlXc05L?=
+ =?utf-8?B?YnhpKy9hSnRqOUZKYWlWYzlRUEt3NVgvNGFSL0J1RWZPbkgxTUpOaHpaU3FW?=
+ =?utf-8?B?WmM2MnFOeFZrOU5IMlRQSzlFVVV5YkxvcHdrNWZSaVFQMk9CdFhMME0vTTZw?=
+ =?utf-8?B?RzN1bGF0UC9tUFdxZEE3aHVPa05tTU04TFB1a0g3MmJyVTJmbGVIZUpOaVJI?=
+ =?utf-8?B?RktoVW8zRm80aVJ0bmIybUpKTkFSTjExak5OajFseW4xUWsrSUx6T0lVRXhz?=
+ =?utf-8?B?aUJPaU1xU1NkamYyMGhwcmg5UWkvZ3RBSlFiNmtyREhMdTZLV1I3aHZsaTFH?=
+ =?utf-8?B?QnZ4NFdJdGlNK3dUbi9ic1B6S2VNbzZjaVBySGVIbFNQYTJmNnFjMGZsV0s1?=
+ =?utf-8?B?SGp1UDdRQ1hHYTJITzhLTkpacmQzVEsyS0pvRzZTc1FtRHpJMVdGeXcxZnQ3?=
+ =?utf-8?B?SHZoYVlmc3NrZzlYNDhyR2IyK2FVSzU5RWwrcCtLQU4wR0g0NVVqMnpLWjU5?=
+ =?utf-8?B?bmxGQlRoWVlqUE0rSmVnU3laZGxaVGFtMXgxSTM0TnRvQ1V1ZmI3KzRqRXJ3?=
+ =?utf-8?B?ZTdhTGNUWGp6eEVlQUhFTzhKQ3ZMemlTamtwczZsTWgxWmpzVXdlbzRmMWVQ?=
+ =?utf-8?B?LzF5QThGaDNtcE5Ga0RFVlVHckgvSkFzWndkREJXM1ZnamE3S1YybU9QSnFU?=
+ =?utf-8?B?K1dBSDFjTXErcTJpa0JCOGI3enJhOXMzcXUvdHJMRFlMQ2Zqb1N5d3l6UVZD?=
+ =?utf-8?B?Q0tjcXplbWRQa25HMjRIYjRxTGRMcFZDdENQclFQSVplZlg3V2hIR2lqSmZC?=
+ =?utf-8?B?aWRzRnI2eGVxbjF1RE4vb1Rpc3NtMFVSMjNWZmg3YjhIbjI1U0kweHd5QzF0?=
+ =?utf-8?B?MFB3c1RTcWorR1ZWVTVDOEREeXZKTG9mQmRkNHpLdjlrMEdxcFdyWjRSQTZs?=
+ =?utf-8?B?cjRYTXFsSjM1VjlFcGpsd0F6U1ZYYS9qSnovQ01hVndDaC8wek9KSmEwdXA1?=
+ =?utf-8?B?OFMxZ0s3cSszcCtPWXMyZ3l2VXZHQ09IbHlIRUQxSzVQRlIyUnFLanZFS04x?=
+ =?utf-8?B?MGJKRWsvTnMva2dsRm9rRERyU1k4eGFhVWZkNU5haHh0ZGhqK0RMYTliZXhR?=
+ =?utf-8?B?TU00eUczKytUeEFKN1kzemRIT25SNjdrdGN3TElpeG8vRE5KdXFacENhS0Z3?=
+ =?utf-8?B?ZHRTcThBRWVzMzVjK3NBZ2JaR0JvS09IZHhwM0pnajgxSHhrdmdnMS85UzNI?=
+ =?utf-8?B?cmFMMWFZUnl6bmVCandSZWJQdWNLNmR2OWhOWStHMG5aVUk4akFwZm4xaTk3?=
+ =?utf-8?B?aHRQdmYwdXNUZWlYTW5VUklHN2FDenJLb3grcE1Da3BCNXJWTnQxcGdQUHVK?=
+ =?utf-8?B?ZG9Ybi91MFBCNUpHdDBNYnNGQXFWeXREcW8yS2RhNU1yUDExYWU3Tmk4dlpP?=
+ =?utf-8?B?OEZzd3Zxa25UcFBVdEZiclJlRzd1RStoWjdSVjgxeXY3YlNNVDhHeit6bFVo?=
+ =?utf-8?B?WU4yaEFIV2JFN2ZKekxUcUFYRmxiN0N5Z0l4NFdyVStMU3JqK054WDk2MkZZ?=
+ =?utf-8?B?R21TTUEzVnA0eG4xdmFaSExpQUF0bHNic2RRRzJ4R2hFd2hwdklYamxza080?=
+ =?utf-8?B?RDFLZGVSRnd3RlFOa2pOa082K3dBcmdwRXhVOVo2cHRCUEwwaHRlNzM2Wm1Z?=
+ =?utf-8?B?VWlURlk4Q1IxMDhLVGNubGdPbE1JYWZJRWdxNUt1TE1SVjVUbG5wQWp3L005?=
+ =?utf-8?Q?X5x7igd+POMEPBxNay?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260511-gmsl2-3_serdes-v11-16-fc163073c16b@analog.com>
-X-Rspamd-Queue-Id: 005ED556374
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DSVPR12MB999123.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4b91ba8-ab25-4213-c4da-08deb2bc9ac4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2026 20:00:25.2816
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nSoQXSA/CakH4+tnJIdjnyqzAijXEF9VwZqtzdQegTDeuZgieiyGQiHoO/D8GaEI7LbNM6wpCN9551LRWIpAkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6080
+X-Rspamd-Queue-Id: 28947557343
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [2.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ragnatech.se,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ragnatech.se:s=fm2,messagingengine.com:s=fm3];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[ideasonboard.com,kernel.org,linux.intel.com,collabora.com,linuxfoundation.org,analog.com,gmail.com,vger.kernel.org,lists.linux.dev,avnet.eu];
-	TAGGED_FROM(0.00)[bounces-36956-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36957-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[ragnatech.se:+,messagingengine.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[niklas.soderlund@ragnatech.se,linux-gpio@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu,ideasonboard.com,amd.com,amazon.com];
+	DKIM_TRACE(0.00)[amd.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vivekananda.dayananda@amd.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,init.name:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim,ragnatech.se:mid,ragnatech.se:dkim]
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	NEURAL_HAM(-0.00)[-0.985];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Hi Dumitru,
-
-Thanks for your work.
-
-On 2026-05-11 15:26:39 +0300, Dumitru Ceclan via B4 Relay wrote:
-> From: Cosmin Tanislav <demonsingur@gmail.com>
-> 
-> Add a new MAX96717 driver that also supports MAX9295A, MAX96717F and
-> MAX96793.
-> 
-> Integrate it with the common serializer framework, while keeping
-> compatibility with existing usecases, avoiding code duplication, and
-> also enabling more features across all chips.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  drivers/media/i2c/maxim-serdes/Kconfig    |   18 +
->  drivers/media/i2c/maxim-serdes/Makefile   |    1 +
->  drivers/media/i2c/maxim-serdes/max96717.c | 1686 +++++++++++++++++++++++++++++
->  3 files changed, 1705 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
-> index f5a4ca80a263..ddbb5791e934 100644
-> --- a/drivers/media/i2c/maxim-serdes/Kconfig
-> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
-> @@ -15,3 +15,21 @@ config VIDEO_MAXIM_SERDES
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called max_serdes.
-> +
-> +config VIDEO_MAX96717
-> +	tristate "Maxim MAX96717 Serializer support"
-> +	depends on COMMON_CLK
-> +	depends on I2C
-> +	depends on PINCTRL
-> +	select VIDEO_MAXIM_SERDES
-> +	select GENERIC_PINCONF
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select GENERIC_PINMUX_FUNCTIONS
-> +	select GPIOLIB
-> +	help
-> +	  This driver supports the Maxim MAX9295A, MAX96717, MAX96717F,
-> +	  MAX96793 Serializers, which receive video on a MIPI CSI-2
-> +	  interface and output it on a GMSL2/3 link.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called max96717.
-> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
-> index b54326a5c81b..04abda6a5437 100644
-> --- a/drivers/media/i2c/maxim-serdes/Makefile
-> +++ b/drivers/media/i2c/maxim-serdes/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  max-serdes-objs := max_serdes.o max_ser.o max_des.o
->  obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
-> +obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
-> diff --git a/drivers/media/i2c/maxim-serdes/max96717.c b/drivers/media/i2c/maxim-serdes/max96717.c
-> new file mode 100644
-> index 000000000000..a23aa2784713
-> --- /dev/null
-> +++ b/drivers/media/i2c/maxim-serdes/max96717.c
-> @@ -0,0 +1,1686 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Maxim MAX96717 GMSL2 Serializer Driver
-> + *
-> + * Copyright (C) 2025 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "max_ser.h"
-> +
-> +#define MAX96717_REG0				0x0
-> +
-> +#define MAX96717_REG2				0x2
-> +#define MAX96717_REG2_VID_TX_EN_P(p)		BIT(4 + (p))
-> +
-> +#define MAX96717_REG3				0x3
-> +#define MAX96717_REG3_RCLKSEL			GENMASK(1, 0)
-> +#define MAX96717_REG3_RCLK_ALT			BIT(2)
-> +
-> +#define MAX96717_REG6				0x6
-> +#define MAX96717_REG6_RCLKEN			BIT(5)
-> +
-> +#define MAX96717_I2C_2(x)			(0x42 + (x) * 0x2)
-> +#define MAX96717_I2C_2_SRC			GENMASK(7, 1)
-> +
-> +#define MAX96717_I2C_3(x)			(0x43 + (x) * 0x2)
-> +#define MAX96717_I2C_3_DST			GENMASK(7, 1)
-> +
-> +#define MAX96717_TX3(p)				(0x53 + (p) * 0x4)
-> +#define MAX96717_TX3_TX_STR_SEL			GENMASK(1, 0)
-> +
-> +#define MAX96717_VIDEO_TX0(p)			(0x100 + (p) * 0x8)
-> +#define MAX96717_VIDEO_TX0_AUTO_BPP		BIT(3)
-> +
-> +#define MAX96717_VIDEO_TX1(p)			(0x101 + (p) * 0x8)
-> +#define MAX96717_VIDEO_TX1_BPP			GENMASK(5, 0)
-> +
-> +#define MAX96717_VIDEO_TX2(p)			(0x102 + (p) * 0x8)
-> +#define MAX96717_VIDEO_TX2_PCLKDET		BIT(7)
-> +#define MAX96717_VIDEO_TX2_DRIFT_DET_EN		BIT(1)
-> +
-> +#define MAX96717_VTX0(p)			(0x1c8 + (p) * 0x43)
-> +#define MAX96717_VTX0_VTG_MODE			GENMASK(1, 0)
-> +#define MAX96717_VTX0_VTG_MODE_FREE_RUNNING	0b11
-> +#define MAX96717_VTX0_DE_INV			BIT(2)
-> +#define MAX96717_VTX0_HS_INV			BIT(3)
-> +#define MAX96717_VTX0_VS_INV			BIT(4)
-> +#define MAX96717_VTX0_GEN_DE			BIT(5)
-> +#define MAX96717_VTX0_GEN_HS			BIT(6)
-> +#define MAX96717_VTX0_GEN_VS			BIT(7)
-> +
-> +#define MAX96717_VTX1(p)			(0x1c9 + (p) * 0x43)
-> +#define MAX96717_VTX1_PATGEN_CLK_SRC		GENMASK(3, 1)
-> +#define MAX96717_VTX1_PATGEN_CLK_SRC_25MHZ	0b100
-> +#define MAX96717_VTX1_PATGEN_CLK_SRC_75MHZ	0b101
-> +#define MAX96717_VTX1_PATGEN_CLK_SRC_150MHZ	0b110
-> +#define MAX96717_VTX1_PATGEN_CLK_SRC_375MHZ	0b111
-> +
-> +#define MAX96717_VTX2_VS_DLY_2(p)		(0x1ca + (p) * 0x43)
-> +#define MAX96717_VTX5_VS_HIGH_2(p)		(0x1cd + (p) * 0x43)
-> +#define MAX96717_VTX8_VS_LOW_2(p)		(0x1d0 + (p) * 0x43)
-> +#define MAX96717_VTX11_V2H_2(p)			(0x1d3 + (p) * 0x43)
-> +#define MAX96717_VTX14_HS_HIGH_1(p)		(0x1d6 + (p) * 0x43)
-> +#define MAX96717_VTX16_HS_LOW_1(p)		(0x1d8 + (p) * 0x43)
-> +#define MAX96717_VTX18_HS_CNT_1(p)		(0x1da + (p) * 0x43)
-> +#define MAX96717_VTX20_V2D_2(p)			(0x1dc + (p) * 0x43)
-> +#define MAX96717_VTX23_DE_HIGH_1(p)		(0x1df + (p) * 0x43)
-> +#define MAX96717_VTX25_DE_LOW_1(p)		(0x1e1 + (p) * 0x43)
-> +#define MAX96717_VTX27_DE_CNT_1(p)		(0x1e3 + (p) * 0x43)
-> +#define MAX96717_VTX29(p)			(0x1e5 + (p) * 0x43)
-> +
-> +#define MAX96717_VTX29_PATGEN_MODE		GENMASK(1, 0)
-> +#define MAX96717_VTX29_PATGEN_MODE_DISABLED	0b00
-> +#define MAX96717_VTX29_PATGEN_MODE_CHECKER	0b01
-> +#define MAX96717_VTX29_PATGEN_MODE_GRADIENT	0b10
-> +
-> +#define MAX96717_VTX30_GRAD_INCR(p)		(0x1e6 + (p) * 0x43)
-> +#define MAX96717_VTX31_CHKR_A_L(p)		(0x1e7 + (p) * 0x43)
-> +#define MAX96717_VTX34_CHKR_B_L(p)		(0x1ea + (p) * 0x43)
-> +#define MAX96717_VTX37_CHKR_RPT_A(p)		(0x1ed + (p) * 0x43)
-> +#define MAX96717_VTX38_CHKR_RPT_B(p)		(0x1ee + (p) * 0x43)
-> +#define MAX96717_VTX39_CHKR_ALT(p)		(0x1ef + (p) * 0x43)
-> +
-> +#define MAX96717_GPIO_A(x)			(0x2be + (x) * 0x3)
-> +#define MAX96717_GPIO_A_GPIO_OUT_DIS		BIT(0)
-> +#define MAX96717_GPIO_A_GPIO_TX_EN		BIT(1)
-> +#define MAX96717_GPIO_A_GPIO_RX_EN		BIT(2)
-> +#define MAX96717_GPIO_A_GPIO_IN			BIT(3)
-> +#define MAX96717_GPIO_A_GPIO_OUT		BIT(4)
-> +#define MAX96717_GPIO_A_TX_COMP_EN		BIT(5)
-> +#define MAX96717_GPIO_A_RES_CFG			BIT(7)
-> +
-> +#define MAX96717_GPIO_B(x)			(0x2bf + (x) * 0x3)
-> +#define MAX96717_GPIO_B_GPIO_TX_ID		GENMASK(4, 0)
-> +#define MAX96717_GPIO_B_OUT_TYPE		BIT(5)
-> +#define MAX96717_GPIO_B_PULL_UPDN_SEL		GENMASK(7, 6)
-> +#define MAX96717_GPIO_B_PULL_UPDN_SEL_NONE	0b00
-> +#define MAX96717_GPIO_B_PULL_UPDN_SEL_PU	0b01
-> +#define MAX96717_GPIO_B_PULL_UPDN_SEL_PD	0b10
-> +
-> +#define MAX96717_GPIO_C(x)			(0x2c0 + (x) * 0x3)
-> +#define MAX96717_GPIO_C_GPIO_RX_ID		GENMASK(4, 0)
-> +
-> +#define MAX96717_CMU2				0x302
-> +#define MAX96717_CMU2_PFDDIV_RSHORT		GENMASK(6, 4)
-> +#define MAX96717_CMU2_PFDDIV_RSHORT_1_1V	0b001
-> +
-> +#define MAX96717_FRONTTOP_0			0x308
-> +#define MAX96717_FRONTTOP_0_CLK_SEL_P(x)	BIT(x)
-> +#define MAX96717_FRONTTOP_0_START_PORT(x)	BIT((x) + 4)
-> +
-> +#define MAX96717_FRONTTOP_1(p)			(0x309 + (p) * 0x2)
-> +#define MAX96717_FRONTTOP_2(p)			(0x30a + (p) * 0x2)
-> +
-> +#define MAX96717_FRONTTOP_9			0x311
-> +#define MAX96717_FRONTTOP_9_START_PORT(p, x)	BIT((p) + (x) * 4)
-> +
-> +#define MAX96717_FRONTTOP_10			0x312
-> +#define MAX96717_FRONTTOP_10_BPP8DBL(p)		BIT(p)
-> +
-> +#define MAX96717_FRONTTOP_11			0x313
-> +#define MAX96717_FRONTTOP_11_BPP10DBL(p)	BIT(p)
-> +#define MAX96717_FRONTTOP_11_BPP12DBL(p)	BIT((p) + 4)
-> +
-> +#define MAX96717_FRONTTOP_12(p, x)		(0x314 + (p) * 0x2 + (x))
-> +#define MAX96717_MEM_DT_SEL			GENMASK(5, 0)
-> +#define MAX96717_MEM_DT_EN			BIT(6)
-> +
-> +#define MAX96717_FRONTTOP_20(p)			(0x31c + (p) * 0x1)
-> +#define MAX96717_FRONTTOP_20_SOFT_BPP_EN	BIT(5)
-> +#define MAX96717_FRONTTOP_20_SOFT_BPP		GENMASK(4, 0)
-> +
-> +#define MAX96717_MIPI_RX0			0x330
-> +#define MAX96717_MIPI_RX0_NONCONTCLK_EN		BIT(6)
-> +
-> +#define MAX96717_MIPI_RX1			0x331
-> +#define MAX96717_MIPI_RX1_CTRL_NUM_LANES	GENMASK(5, 4)
-> +
-> +#define MAX96717_MIPI_RX2			0x332
-> +#define MAX96717_MIPI_RX2_PHY1_LANE_MAP		GENMASK(7, 4)
-> +
-> +#define MAX96717_MIPI_RX3			0x333
-> +#define MAX96717_MIPI_RX3_PHY2_LANE_MAP		GENMASK(3, 0)
-> +
-> +#define MAX96717_MIPI_RX4			0x334
-> +#define MAX96717_MIPI_RX4_PHY1_POL_MAP		GENMASK(5, 4)
-> +
-> +#define MAX96717_MIPI_RX5			0x335
-> +#define MAX96717_MIPI_RX5_PHY2_POL_MAP		GENMASK(1, 0)
-> +#define MAX96717_MIPI_RX5_PHY2_POL_MAP_CLK	BIT(2)
-> +
-> +#define MAX96717_EXTA(x)			(0x3dc + (x))
-> +
-> +#define MAX96717_EXT11				0x383
-> +#define MAX96717_EXT11_TUN_MODE			BIT(7)
-> +
-> +#define MAX96717_EXT21				0x38d
-> +#define MAX96717_EXT22				0x38e
-> +#define MAX96717_EXT23				0x38f
-> +#define MAX96717_EXT24				0x390
-> +
-> +#define MAX96717_REF_VTG0			0x3f0
-> +#define MAX96717_REF_VTG0_REFGEN_EN		BIT(0)
-> +#define MAX96717_REF_VTG0_REFGEN_RST		BIT(1)
-> +#define MAX96717_REF_VTG0_REFGEN_PREDEF_FREQ_ALT\
-> +						BIT(3)
-> +#define MAX96717_REF_VTG0_REFGEN_PREDEF_FREQ	GENMASK(5, 4)
-> +
-> +#define MAX96717_PIO_SLEW_0			0x56f
-> +#define MAX96717_PIO_SLEW_0_PIO00_SLEW		GENMASK(1, 0)
-> +#define MAX96717_PIO_SLEW_0_PIO01_SLEW		GENMASK(3, 2)
-> +#define MAX96717_PIO_SLEW_0_PIO02_SLEW		GENMASK(5, 4)
-> +
-> +#define MAX96717_PIO_SLEW_1			0x570
-> +#define MAX96717_PIO_SLEW_1_PIO05_SLEW		GENMASK(3, 2)
-> +#define MAX96717_PIO_SLEW_1_PIO06_SLEW		GENMASK(5, 4)
-> +
-> +#define MAX96717_PIO_SLEW_2			0x571
-> +#define MAX96717_PIO_SLEW_2_PIO010_SLEW		GENMASK(5, 4)
-> +#define MAX96717_PIO_SLEW_2_PIO011_SLEW		GENMASK(7, 6)
-> +
-> +#define MAX96717_PIO_SLEW_FASTEST		0b00
-> +
-> +#define MAX96717_BIAS_PULL_STRENGTH_1000000_OHM	1000000U
-> +#define MAX96717_BIAS_PULL_STRENGTH_40000_OHM	40000U
-> +
-> +#define MAX96717_DEFAULT_CLKOUT_RATE		24000000UL
-> +
-> +#define MAX96717_NAME				"max96717"
-> +#define MAX96717_PINCTRL_NAME			MAX96717_NAME "-pinctrl"
-> +#define MAX96717_GPIOCHIP_NAME			MAX96717_NAME "-gpiochip"
-> +#define MAX96717_GPIO_NUM			11
-> +#define MAX96717_RCLK_ALT_MFP			2
-> +#define MAX96717_RCLK_MFP			4
-> +#define MAX96717_PIPES_NUM			4
-> +#define MAX96717_PHYS_NUM			2
-> +
-> +struct max96717_priv {
-> +	struct max_ser ser;
-> +	struct pinctrl_desc pctldesc;
-> +	struct gpio_chip gc;
-> +	const struct max96717_chip_info *info;
-> +
-> +	struct device *dev;
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +	struct pinctrl_dev *pctldev;
-> +
-> +	struct clk_hw clk_hw;
-> +	u8 pll_predef_index;
-> +};
-> +
-> +struct max96717_chip_info {
-> +	bool supports_3_data_lanes;
-> +	bool supports_noncontinuous_clock;
-> +	bool supports_pkt_cnt;
-> +	unsigned int modes;
-> +	unsigned int num_pipes;
-> +	unsigned int num_dts_per_pipe;
-> +	unsigned int pipe_hw_ids[MAX96717_PIPES_NUM];
-> +	unsigned int num_phys;
-> +	unsigned int phy_hw_ids[MAX96717_PHYS_NUM];
-> +};
-> +
-> +#define ser_to_priv(_ser) \
-> +	container_of(_ser, struct max96717_priv, ser)
-> +
-> +static inline struct max96717_priv *clk_hw_to_priv(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct max96717_priv, clk_hw);
-> +}
-> +
-> +static const struct regmap_config max96717_i2c_regmap = {
-> +	.reg_bits = 16,
-> +	.val_bits = 8,
-> +	.max_register = 0x1f00,
-> +};
-> +
-> +static int max96717_wait_for_device(struct max96717_priv *priv)
-> +{
-> +	unsigned int val;
-> +	int ret, err;
-> +
-> +	err = read_poll_timeout(regmap_read, ret,
-> +				!ret && val,
-> +				100 * USEC_PER_MSEC,
-> +				1 * USEC_PER_SEC, false,
-> +				priv->regmap, MAX96717_REG0, &val);
-> +	if (err)
-> +		dev_err(priv->dev, "Timeout waiting for serializer: %d\n", ret);
-> +
-> +	return err;
-> +}
-> +
-> +#define MAX96717_PIN(n) \
-> +	PINCTRL_PIN(n, "mfp" __stringify(n))
-> +
-> +static const struct pinctrl_pin_desc max96717_pins[] = {
-> +	MAX96717_PIN(0),
-> +	MAX96717_PIN(1),
-> +	MAX96717_PIN(2),
-> +	MAX96717_PIN(3),
-> +	MAX96717_PIN(4),
-> +	MAX96717_PIN(5),
-> +	MAX96717_PIN(6),
-> +	MAX96717_PIN(7),
-> +	MAX96717_PIN(8),
-> +	MAX96717_PIN(9),
-> +	MAX96717_PIN(10),
-> +};
-> +
-> +#define MAX96717_GROUP_PINS(name, ...) \
-> +	static const unsigned int name ## _pins[] = { __VA_ARGS__ }
-> +
-> +MAX96717_GROUP_PINS(mfp0, 0);
-> +MAX96717_GROUP_PINS(mfp1, 1);
-> +MAX96717_GROUP_PINS(mfp2, 2);
-> +MAX96717_GROUP_PINS(mfp3, 3);
-> +MAX96717_GROUP_PINS(mfp4, 4);
-> +MAX96717_GROUP_PINS(mfp5, 5);
-> +MAX96717_GROUP_PINS(mfp6, 6);
-> +MAX96717_GROUP_PINS(mfp7, 7);
-> +MAX96717_GROUP_PINS(mfp8, 8);
-> +MAX96717_GROUP_PINS(mfp9, 9);
-> +MAX96717_GROUP_PINS(mfp10, 10);
-> +
-> +#define MAX96717_GROUP(name) \
-> +	PINCTRL_PINGROUP(__stringify(name), name ## _pins, ARRAY_SIZE(name ## _pins))
-> +
-> +static const struct pingroup max96717_ctrl_groups[] = {
-> +	MAX96717_GROUP(mfp0),
-> +	MAX96717_GROUP(mfp1),
-> +	MAX96717_GROUP(mfp2),
-> +	MAX96717_GROUP(mfp3),
-> +	MAX96717_GROUP(mfp4),
-> +	MAX96717_GROUP(mfp5),
-> +	MAX96717_GROUP(mfp6),
-> +	MAX96717_GROUP(mfp7),
-> +	MAX96717_GROUP(mfp8),
-> +	MAX96717_GROUP(mfp9),
-> +	MAX96717_GROUP(mfp10),
-> +};
-> +
-> +#define MAX96717_FUNC_GROUPS(name, ...) \
-> +	static const char * const name ## _groups[] = { __VA_ARGS__ }
-> +
-> +MAX96717_FUNC_GROUPS(gpio, "mfp0", "mfp1", "mfp2", "mfp3", "mfp4", "mfp5",
-> +		     "mfp6", "mfp7", "mfp8", "mfp9", "mfp10");
-> +MAX96717_FUNC_GROUPS(rclkout, "mfp2", "mfp4");
-> +
-> +enum max96717_func {
-> +	max96717_func_gpio,
-> +	max96717_func_rclkout,
-> +};
-> +
-> +#define MAX96717_FUNC(name)						\
-> +	[max96717_func_ ## name] =					\
-> +		PINCTRL_PINFUNCTION(__stringify(name), name ## _groups,	\
-> +				    ARRAY_SIZE(name ## _groups))
-> +
-> +static const struct pinfunction max96717_functions[] = {
-> +	MAX96717_FUNC(gpio),
-> +	MAX96717_FUNC(rclkout),
-> +};
-> +
-> +#define MAX96717_PINCTRL_X(x)			(PIN_CONFIG_END + (x))
-> +#define MAX96717_PINCTRL_JITTER_COMPENSATION_EN	MAX96717_PINCTRL_X(1)
-> +#define MAX96717_PINCTRL_TX_ID			MAX96717_PINCTRL_X(2)
-> +#define MAX96717_PINCTRL_RX_ID			MAX96717_PINCTRL_X(3)
-> +#define MAX96717_PINCTRL_PULL_STRENGTH_HIGH	MAX96717_PINCTRL_X(4)
-> +#define MAX96717_PINCTRL_INPUT_VALUE		MAX96717_PINCTRL_X(5)
-> +#define MAX96717_PINCTRL_TX_EN			MAX96717_PINCTRL_X(6)
-> +#define MAX96717_PINCTRL_RX_EN			MAX96717_PINCTRL_X(7)
-> +
-> +static const struct pinconf_generic_params max96717_cfg_params[] = {
-> +	{ "maxim,jitter-compensation", MAX96717_PINCTRL_JITTER_COMPENSATION_EN, 0 },
-> +	{ "maxim,tx-id", MAX96717_PINCTRL_TX_ID, 0 },
-> +	{ "maxim,rx-id", MAX96717_PINCTRL_RX_ID, 0 },
-> +};
-> +
-> +static int max96717_ctrl_get_groups_count(struct pinctrl_dev *pctldev)
-> +{
-> +	return ARRAY_SIZE(max96717_ctrl_groups);
-> +}
-> +
-> +static const char *max96717_ctrl_get_group_name(struct pinctrl_dev *pctldev,
-> +						unsigned int selector)
-> +{
-> +	return max96717_ctrl_groups[selector].name;
-> +}
-> +
-> +static int max96717_ctrl_get_group_pins(struct pinctrl_dev *pctldev,
-> +					unsigned int selector,
-> +					const unsigned int **pins,
-> +					unsigned int *num_pins)
-> +{
-> +	*pins = (unsigned int *)max96717_ctrl_groups[selector].pins;
-> +	*num_pins = max96717_ctrl_groups[selector].npins;
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_get_pin_config_reg(unsigned int offset, u32 param,
-> +				       unsigned int *reg, unsigned int *mask,
-> +				       unsigned int *val)
-> +{
-> +	*reg = MAX96717_GPIO_A(offset);
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_OUTPUT_ENABLE:
-> +		*mask = MAX96717_GPIO_A_GPIO_OUT_DIS;
-> +		*val = 0b0;
-> +		return 0;
-> +	case PIN_CONFIG_INPUT_ENABLE:
-> +		*mask = MAX96717_GPIO_A_GPIO_OUT_DIS;
-> +		*val = 0b1;
-> +		return 0;
-> +	case MAX96717_PINCTRL_TX_EN:
-> +		*mask = MAX96717_GPIO_A_GPIO_TX_EN;
-> +		*val = 0b1;
-> +		return 0;
-> +	case MAX96717_PINCTRL_RX_EN:
-> +		*mask = MAX96717_GPIO_A_GPIO_RX_EN;
-> +		*val = 0b1;
-> +		return 0;
-> +	case MAX96717_PINCTRL_INPUT_VALUE:
-> +		*mask = MAX96717_GPIO_A_GPIO_IN;
-> +		*val = 0b1;
-> +		return 0;
-> +	case PIN_CONFIG_LEVEL:
-> +		*mask = MAX96717_GPIO_A_GPIO_OUT;
-> +		*val = 0b1;
-> +		return 0;
-> +	case MAX96717_PINCTRL_JITTER_COMPENSATION_EN:
-> +		*mask = MAX96717_GPIO_A_TX_COMP_EN;
-> +		*val = 0b1;
-> +		return 0;
-> +	case MAX96717_PINCTRL_PULL_STRENGTH_HIGH:
-> +		*mask = MAX96717_GPIO_A_RES_CFG;
-> +		*val = 0b1;
-> +		return 0;
-> +	}
-> +
-> +	*reg = MAX96717_GPIO_B(offset);
-> +
-> +	switch (param) {
-> +	case MAX96717_PINCTRL_TX_ID:
-> +		*mask = MAX96717_GPIO_B_GPIO_TX_ID;
-> +		return 0;
-> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +		*mask = MAX96717_GPIO_B_OUT_TYPE;
-> +		*val = 0b0;
-> +		return 0;
-> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +		*mask = MAX96717_GPIO_B_OUT_TYPE;
-> +		*val = 0b1;
-> +		return 0;
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +		*mask = MAX96717_GPIO_B_PULL_UPDN_SEL;
-> +		*val = MAX96717_GPIO_B_PULL_UPDN_SEL_NONE;
-> +		return 0;
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		*mask = MAX96717_GPIO_B_PULL_UPDN_SEL;
-> +		*val = MAX96717_GPIO_B_PULL_UPDN_SEL_PD;
-> +		return 0;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*mask = MAX96717_GPIO_B_PULL_UPDN_SEL;
-> +		*val = MAX96717_GPIO_B_PULL_UPDN_SEL_PU;
-> +		return 0;
-> +	}
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_SLEW_RATE:
-> +		if (offset < 3) {
-> +			*reg = MAX96717_PIO_SLEW_0;
-> +			if (offset == 0)
-> +				*mask = MAX96717_PIO_SLEW_0_PIO00_SLEW;
-> +			else if (offset == 1)
-> +				*mask = MAX96717_PIO_SLEW_0_PIO01_SLEW;
-> +			else
-> +				*mask = MAX96717_PIO_SLEW_0_PIO02_SLEW;
-> +		} else if (offset < 5) {
-> +			*reg = MAX96717_PIO_SLEW_1;
-> +			if (offset == 3)
-> +				*mask = MAX96717_PIO_SLEW_1_PIO05_SLEW;
-> +			else
-> +				*mask = MAX96717_PIO_SLEW_1_PIO06_SLEW;
-> +		} else if (offset < 7) {
-> +			return -EINVAL;
-> +		} else if (offset < 9) {
-> +			*reg  = MAX96717_PIO_SLEW_2;
-> +			if (offset == 7)
-> +				*mask = MAX96717_PIO_SLEW_2_PIO010_SLEW;
-> +			else
-> +				*mask = MAX96717_PIO_SLEW_2_PIO011_SLEW;
-> +		} else {
-> +			return -EINVAL;
-> +		}
-> +		return 0;
-> +	case MAX96717_PINCTRL_RX_ID:
-> +		*reg = MAX96717_GPIO_C(offset);
-> +		*mask = MAX96717_GPIO_C_GPIO_RX_ID;
-> +		return 0;
-> +	default:
-> +		return -ENOTSUPP;
-> +	}
-> +}
-> +
-> +static int max96717_conf_pin_config_get(struct pinctrl_dev *pctldev,
-> +					unsigned int offset,
-> +					unsigned long *config)
-> +{
-> +	struct max96717_priv *priv = pinctrl_dev_get_drvdata(pctldev);
-> +	u32 param = pinconf_to_config_param(*config);
-> +	unsigned int reg, mask, val, en_val;
-> +	int ret;
-> +
-> +	ret = max96717_get_pin_config_reg(offset, param, &reg, &mask, &en_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +	case MAX96717_PINCTRL_JITTER_COMPENSATION_EN:
-> +	case MAX96717_PINCTRL_TX_EN:
-> +	case MAX96717_PINCTRL_RX_EN:
-> +	case PIN_CONFIG_OUTPUT_ENABLE:
-> +	case PIN_CONFIG_INPUT_ENABLE:
-> +		ret = regmap_read(priv->regmap, reg, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		val = field_get(mask, val) == en_val;
-> +		if (!val)
-> +			return -EINVAL;
-> +
-> +		break;
-> +	case MAX96717_PINCTRL_PULL_STRENGTH_HIGH:
-> +	case MAX96717_PINCTRL_INPUT_VALUE:
-> +	case PIN_CONFIG_LEVEL:
-> +		ret = regmap_read(priv->regmap, reg, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		val = field_get(mask, val) == en_val;
-> +		break;
-> +	case MAX96717_PINCTRL_TX_ID:
-> +	case MAX96717_PINCTRL_RX_ID:
-> +	case PIN_CONFIG_SLEW_RATE:
-> +		ret = regmap_read(priv->regmap, reg, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		val = field_get(mask, val);
-> +		break;
-> +	default:
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*config = pinconf_to_config_packed(MAX96717_PINCTRL_PULL_STRENGTH_HIGH, 0);
-> +
-> +		ret = max96717_conf_pin_config_get(pctldev, offset, config);
-> +		if (ret)
-> +			return ret;
-> +
-> +		val = pinconf_to_config_argument(*config);
-> +		if (val)
-> +			val = MAX96717_BIAS_PULL_STRENGTH_1000000_OHM;
-> +		else
-> +			val = MAX96717_BIAS_PULL_STRENGTH_40000_OHM;
-> +
-> +		break;
-> +	case MAX96717_PINCTRL_TX_ID:
-> +		*config = pinconf_to_config_packed(MAX96717_PINCTRL_TX_EN, 0);
-> +
-> +		ret = max96717_conf_pin_config_get(pctldev, offset, config);
-> +		if (ret)
-> +			return ret;
-> +
-> +		break;
-> +	case MAX96717_PINCTRL_RX_ID:
-> +		*config = pinconf_to_config_packed(MAX96717_PINCTRL_RX_EN, 0);
-> +
-> +		ret = max96717_conf_pin_config_get(pctldev, offset, config);
-> +		if (ret)
-> +			return ret;
-> +
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	*config = pinconf_to_config_packed(param, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_conf_pin_config_set_one(struct max96717_priv *priv,
-> +					    unsigned int offset,
-> +					    unsigned long config)
-> +{
-> +	u32 param = pinconf_to_config_param(config);
-> +	u32 arg = pinconf_to_config_argument(config);
-> +	unsigned int reg, mask, val, en_val;
-> +	int ret;
-> +
-> +	ret = max96717_get_pin_config_reg(offset, param, &reg, &mask, &en_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		val = field_prep(mask, en_val);
-> +
-> +		ret = regmap_update_bits(priv->regmap, reg, mask, val);
-> +		break;
-> +	case MAX96717_PINCTRL_JITTER_COMPENSATION_EN:
-> +	case MAX96717_PINCTRL_PULL_STRENGTH_HIGH:
-> +	case MAX96717_PINCTRL_TX_EN:
-> +	case MAX96717_PINCTRL_RX_EN:
-> +	case PIN_CONFIG_OUTPUT_ENABLE:
-> +	case PIN_CONFIG_INPUT_ENABLE:
-> +	case PIN_CONFIG_LEVEL:
-> +		val = field_prep(mask, arg ? en_val : ~en_val);
-> +
-> +		ret = regmap_update_bits(priv->regmap, reg, mask, val);
-> +		break;
-> +	case MAX96717_PINCTRL_TX_ID:
-> +	case MAX96717_PINCTRL_RX_ID:
-> +	case PIN_CONFIG_SLEW_RATE:
-> +		val = field_prep(mask, arg);
-> +
-> +		ret = regmap_update_bits(priv->regmap, reg, mask, val);
-> +		break;
-> +	default:
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		arg = arg >= MAX96717_BIAS_PULL_STRENGTH_1000000_OHM;
-> +		config = pinconf_to_config_packed(MAX96717_PINCTRL_PULL_STRENGTH_HIGH, arg);
-> +		return max96717_conf_pin_config_set_one(priv, offset, config);
-> +	case PIN_CONFIG_LEVEL:
-> +		config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT_ENABLE, 1);
-> +		return max96717_conf_pin_config_set_one(priv, offset, config);
-> +	case PIN_CONFIG_OUTPUT_ENABLE:
-> +		config = pinconf_to_config_packed(MAX96717_PINCTRL_RX_EN, 0);
-> +		return max96717_conf_pin_config_set_one(priv, offset, config);
-> +	case MAX96717_PINCTRL_TX_ID:
-> +		config = pinconf_to_config_packed(MAX96717_PINCTRL_TX_EN, 1);
-> +		return max96717_conf_pin_config_set_one(priv, offset, config);
-> +	case MAX96717_PINCTRL_RX_ID:
-> +		config = pinconf_to_config_packed(MAX96717_PINCTRL_RX_EN, 1);
-> +		return max96717_conf_pin_config_set_one(priv, offset, config);
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_conf_pin_config_set(struct pinctrl_dev *pctldev,
-> +					unsigned int offset,
-> +					unsigned long *configs,
-> +					unsigned int num_configs)
-> +{
-> +	struct max96717_priv *priv = pinctrl_dev_get_drvdata(pctldev);
-> +	int ret;
-> +
-> +	while (num_configs--) {
-> +		unsigned long config = *configs;
-> +
-> +		ret = max96717_conf_pin_config_set_one(priv, offset, config);
-> +		if (ret)
-> +			return ret;
-> +
-> +		configs++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_mux_get_functions_count(struct pinctrl_dev *pctldev)
-> +{
-> +	return ARRAY_SIZE(max96717_functions);
-> +}
-> +
-> +static const char *max96717_mux_get_function_name(struct pinctrl_dev *pctldev,
-> +						  unsigned int selector)
-> +{
-> +	return max96717_functions[selector].name;
-> +}
-> +
-> +static int max96717_mux_get_groups(struct pinctrl_dev *pctldev,
-> +				   unsigned int selector,
-> +				   const char * const **groups,
-> +				   unsigned int * const num_groups)
-> +{
-> +	*groups = max96717_functions[selector].groups;
-> +	*num_groups = max96717_functions[selector].ngroups;
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_mux_set_rclkout(struct max96717_priv *priv, unsigned int group)
-> +{
-> +	unsigned long config;
-> +	int ret;
-> +
-> +	config = pinconf_to_config_packed(PIN_CONFIG_SLEW_RATE,
-> +					  MAX96717_PIO_SLEW_FASTEST);
-> +	ret = max96717_conf_pin_config_set_one(priv, group, config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_assign_bits(priv->regmap, MAX96717_REG3,
-> +				  MAX96717_REG3_RCLK_ALT,
-> +				  group == MAX96717_RCLK_ALT_MFP);
-> +}
-> +
-> +static int max96717_mux_set(struct pinctrl_dev *pctldev, unsigned int selector,
-> +			    unsigned int group)
-> +{
-> +	struct max96717_priv *priv = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	switch (selector) {
-> +	case max96717_func_rclkout:
-> +		return max96717_mux_set_rclkout(priv, group);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	unsigned long config = pinconf_to_config_packed(PIN_CONFIG_OUTPUT_ENABLE, 0);
-> +	struct max96717_priv *priv = gpiochip_get_data(gc);
-> +	int ret;
-> +
-> +	ret = max96717_conf_pin_config_get(priv->pctldev, offset, &config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return pinconf_to_config_argument(config) ? GPIO_LINE_DIRECTION_OUT
-> +						  : GPIO_LINE_DIRECTION_IN;
-> +}
-> +
-> +static int max96717_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	unsigned long config = pinconf_to_config_packed(PIN_CONFIG_INPUT_ENABLE, 1);
-> +	struct max96717_priv *priv = gpiochip_get_data(gc);
-> +
-> +	return max96717_conf_pin_config_set_one(priv, offset, config);
-> +}
-> +
-> +static int max96717_gpio_direction_output(struct gpio_chip *gc, unsigned int offset,
-> +					  int value)
-> +{
-> +	unsigned long config = pinconf_to_config_packed(PIN_CONFIG_LEVEL, value);
-> +	struct max96717_priv *priv = gpiochip_get_data(gc);
-> +
-> +	return max96717_conf_pin_config_set_one(priv, offset, config);
-> +}
-> +
-> +static int max96717_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	unsigned long config = pinconf_to_config_packed(MAX96717_PINCTRL_INPUT_VALUE, 0);
-> +	struct max96717_priv *priv = gpiochip_get_data(gc);
-> +	int ret;
-> +
-> +	ret = max96717_conf_pin_config_get(priv->pctldev, offset, &config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return pinconf_to_config_argument(config);
-> +}
-> +
-> +static int max96717_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-> +{
-> +	unsigned long config = pinconf_to_config_packed(PIN_CONFIG_LEVEL, value);
-> +	struct max96717_priv *priv = gpiochip_get_data(gc);
-> +
-> +	return max96717_conf_pin_config_set_one(priv, offset, config);
-> +}
-> +
-> +static unsigned int max96717_pipe_id(struct max96717_priv *priv,
-> +				     struct max_ser_pipe *pipe)
-> +{
-> +	return priv->info->pipe_hw_ids[pipe->index];
-> +}
-> +
-> +static unsigned int max96717_phy_id(struct max96717_priv *priv,
-> +				    struct max_ser_phy *phy)
-> +{
-> +	return priv->info->phy_hw_ids[phy->index];
-> +}
-> +
-> +static int max96717_set_pipe_enable(struct max_ser *ser,
-> +				    struct max_ser_pipe *pipe, bool enable)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	unsigned int mask = MAX96717_REG2_VID_TX_EN_P(index);
-> +
-> +	return regmap_assign_bits(priv->regmap, MAX96717_REG2, mask, enable);
-> +}
-> +
-> +static int __maybe_unused max96717_reg_read(struct max_ser *ser, unsigned int reg,
-> +					    unsigned int *val)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +
-> +	return regmap_read(priv->regmap, reg, val);
-> +}
-> +
-> +static int __maybe_unused max96717_reg_write(struct max_ser *ser, unsigned int reg,
-> +					     unsigned int val)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +
-> +	return regmap_write(priv->regmap, reg, val);
-> +}
-> +
-> +static int max96717_set_pipe_dt_en(struct max_ser *ser, struct max_ser_pipe *pipe,
-> +				   unsigned int i, bool enable)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	unsigned int reg;
-> +
-> +	if (i < 2)
-> +		reg = MAX96717_FRONTTOP_12(index, i);
-> +	else
-> +		/*
-> +		 * DT 7 and 8 are only supported on MAX96717, no need for pipe
-> +		 * index to be taken into account.
-> +		 */
-> +		reg = MAX96717_EXTA(i - 2);
-> +
-> +	return regmap_assign_bits(priv->regmap, reg, MAX96717_MEM_DT_EN, enable);
-> +}
-> +
-> +static int max96717_set_pipe_dt(struct max_ser *ser, struct max_ser_pipe *pipe,
-> +				unsigned int i, unsigned int dt)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	unsigned int reg;
-> +
-> +	if (i < 2)
-> +		reg = MAX96717_FRONTTOP_12(index,  i);
-> +	else
-> +		reg = MAX96717_EXTA(i - 2);
-> +
-> +	return regmap_update_bits(priv->regmap, reg, MAX96717_MEM_DT_SEL,
-> +				  FIELD_PREP(MAX96717_MEM_DT_SEL, dt));
-> +}
-> +
-> +static int max96717_set_pipe_vcs(struct max_ser *ser,
-> +				 struct max_ser_pipe *pipe,
-> +				 unsigned int vcs)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	int ret;
-> +
-> +	ret = regmap_write(priv->regmap, MAX96717_FRONTTOP_1(index),
-> +			   (vcs >> 0) & 0xff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(priv->regmap, MAX96717_FRONTTOP_2(index),
-> +			      (vcs >> 8) & 0xff);
-> +}
-> +
-> +static int max96717_log_status(struct max_ser *ser)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (!(priv->info->modes & BIT(MAX_SERDES_GMSL_TUNNEL_MODE)))
-> +		return 0;
-> +
-> +	ret = regmap_read(priv->regmap, MAX96717_EXT23, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(priv->dev, "tun_pkt_cnt: %u\n", val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_log_pipe_status(struct max_ser *ser,
-> +				    struct max_ser_pipe *pipe)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	ret = regmap_read(priv->regmap, MAX96717_VIDEO_TX2(index), &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(priv->dev, "\tpclkdet: %u\n",
-> +		 !!(val & MAX96717_VIDEO_TX2_PCLKDET));
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_log_phy_status(struct max_ser *ser,
-> +				   struct max_ser_phy *phy)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (!priv->info->supports_pkt_cnt)
-> +		return 0;
-> +
-> +	ret = regmap_read(priv->regmap, MAX96717_EXT21, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(priv->dev, "\tphy_pkt_cnt: %u\n", val);
-> +
-> +	ret = regmap_read(priv->regmap, MAX96717_EXT22, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(priv->dev, "\tcsi_pkt_cnt: %u\n", val);
-> +
-> +	ret = regmap_read(priv->regmap, MAX96717_EXT24, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_info(priv->dev, "\tphy_clk_cnt: %u\n", val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_init_phy(struct max_ser *ser,
-> +			     struct max_ser_phy *phy)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int num_data_lanes = phy->mipi.num_data_lanes;
-> +	unsigned int used_data_lanes = 0;
-> +	unsigned int val;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	if (num_data_lanes == 3 && !priv->info->supports_3_data_lanes) {
-> +		dev_err(priv->dev, "Unsupported 3 data lane mode\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (phy->mipi.flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK &&
-> +	    !priv->info->supports_noncontinuous_clock) {
-> +		dev_err(priv->dev, "Unsupported non-continuous mode\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Configure a lane count. */
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_MIPI_RX1,
-> +				 MAX96717_MIPI_RX1_CTRL_NUM_LANES,
-> +				 FIELD_PREP(MAX96717_MIPI_RX1_CTRL_NUM_LANES,
-> +					    num_data_lanes - 1));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Configure lane mapping. */
-> +	val = 0;
-> +	for (i = 0; i < 4; i++) {
-> +		unsigned int map;
-> +
-> +		if (i < num_data_lanes)
-> +			map = phy->mipi.data_lanes[i] - 1;
-> +		else
-> +			map = ffz(used_data_lanes);
-> +
-> +		val |= map << (i * 2);
-> +		used_data_lanes |= BIT(map);
-> +	}
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_MIPI_RX3,
-> +				 MAX96717_MIPI_RX3_PHY2_LANE_MAP,
-> +				 FIELD_PREP(MAX96717_MIPI_RX3_PHY2_LANE_MAP, val));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_MIPI_RX2,
-> +				 MAX96717_MIPI_RX2_PHY1_LANE_MAP,
-> +				 FIELD_PREP(MAX96717_MIPI_RX2_PHY1_LANE_MAP, val >> 4));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Configure lane polarity. */
-> +	for (i = 0, val = 0; i < num_data_lanes; i++)
-> +		if (phy->mipi.lane_polarities[i + 1])
-> +			val |= BIT(i);
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_MIPI_RX5,
-> +				 MAX96717_MIPI_RX5_PHY2_POL_MAP,
-> +				 FIELD_PREP(MAX96717_MIPI_RX5_PHY2_POL_MAP, val));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_MIPI_RX4,
-> +				 MAX96717_MIPI_RX4_PHY1_POL_MAP,
-> +				 FIELD_PREP(MAX96717_MIPI_RX4_PHY1_POL_MAP, val >> 2));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_MIPI_RX5,
-> +				 MAX96717_MIPI_RX5_PHY2_POL_MAP_CLK,
-> +				 phy->mipi.lane_polarities[0]);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (priv->info->supports_noncontinuous_clock) {
-> +		ret = regmap_assign_bits(priv->regmap, MAX96717_MIPI_RX0,
-> +					 MAX96717_MIPI_RX0_NONCONTCLK_EN,
-> +					 phy->mipi.flags &
-> +					 V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_set_phy_active(struct max_ser *ser, struct max_ser_phy *phy,
-> +				   bool enable)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_phy_id(priv, phy);
-> +
-> +	return regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_0,
-> +				  MAX96717_FRONTTOP_0_START_PORT(index), enable);
-> +}
-> +
-> +static int max96717_set_pipe_stream_id(struct max_ser *ser,
-> +				       struct max_ser_pipe *pipe,
-> +				       unsigned int stream_id)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +
-> +	return regmap_update_bits(priv->regmap, MAX96717_TX3(index),
-> +				  MAX96717_TX3_TX_STR_SEL,
-> +				  FIELD_PREP(MAX96717_TX3_TX_STR_SEL, stream_id));
-> +}
-> +
-> +static int max96717_set_pipe_phy(struct max_ser *ser, struct max_ser_pipe *pipe,
-> +				 struct max_ser_phy *phy)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	unsigned int phy_id = max96717_phy_id(priv, phy);
-> +	int ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_0,
-> +				 MAX96717_FRONTTOP_0_CLK_SEL_P(index),
-> +				 phy_id == 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_9,
-> +				 MAX96717_FRONTTOP_9_START_PORT(index, 0),
-> +				 phy_id == 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_9,
-> +				  MAX96717_FRONTTOP_9_START_PORT(index, 1),
-> +				  phy_id == 1);
-> +}
-> +
-> +static int max96717_set_pipe_mode(struct max_ser *ser,
-> +				  struct max_ser_pipe *pipe,
-> +				  struct max_ser_pipe_mode *mode)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	unsigned int index = max96717_pipe_id(priv, pipe);
-> +	int ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_VIDEO_TX0(index),
-> +				 MAX96717_VIDEO_TX0_AUTO_BPP, !mode->bpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_VIDEO_TX1(index),
-> +				 MAX96717_VIDEO_TX1_BPP,
-> +				 FIELD_PREP(MAX96717_VIDEO_TX1_BPP, mode->bpp));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_VIDEO_TX2(index),
-> +				 MAX96717_VIDEO_TX2_DRIFT_DET_EN, !mode->bpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_10,
-> +				 MAX96717_FRONTTOP_10_BPP8DBL(index),
-> +				 mode->dbl8);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_11,
-> +				 MAX96717_FRONTTOP_11_BPP10DBL(index),
-> +				 mode->dbl10);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_assign_bits(priv->regmap, MAX96717_FRONTTOP_11,
-> +				 MAX96717_FRONTTOP_11_BPP12DBL(index),
-> +				 mode->dbl12);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(priv->regmap, MAX96717_FRONTTOP_20(index),
-> +				  MAX96717_FRONTTOP_20_SOFT_BPP |
-> +				  MAX96717_FRONTTOP_20_SOFT_BPP_EN,
-> +				  FIELD_PREP(MAX96717_FRONTTOP_20_SOFT_BPP,
-> +					     mode->soft_bpp) |
-> +				  FIELD_PREP(MAX96717_FRONTTOP_20_SOFT_BPP_EN,
-> +					     !!mode->soft_bpp));
-> +}
-> +
-> +static int max96717_set_i2c_xlate(struct max_ser *ser, unsigned int i,
-> +				  struct max_serdes_i2c_xlate *xlate)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_I2C_2(i),
-> +				 MAX96717_I2C_2_SRC,
-> +				 FIELD_PREP(MAX96717_I2C_2_SRC, xlate->src));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(priv->regmap, MAX96717_I2C_3(i),
-> +				  MAX96717_I2C_3_DST,
-> +				  FIELD_PREP(MAX96717_I2C_3_DST, xlate->dst));
-> +}
-> +
-> +static int max96717_set_tunnel_enable(struct max_ser *ser, bool enable)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +
-> +	return regmap_assign_bits(priv->regmap, MAX96717_EXT11,
-> +				  MAX96717_EXT11_TUN_MODE, enable);
-> +}
-> +
-> +static int max96717_set_tpg_timings(struct max96717_priv *priv,
-> +				    const struct max_serdes_tpg_timings *tm,
-> +				    unsigned int index)
-> +{
-> +	const struct reg_sequence regs[] = {
-> +		REG_SEQUENCE_3(MAX96717_VTX2_VS_DLY_2(index), tm->vs_dly),
-> +		REG_SEQUENCE_3(MAX96717_VTX5_VS_HIGH_2(index), tm->vs_high),
-> +		REG_SEQUENCE_3(MAX96717_VTX8_VS_LOW_2(index), tm->vs_low),
-> +		REG_SEQUENCE_3(MAX96717_VTX11_V2H_2(index), tm->v2h),
-> +		REG_SEQUENCE_2(MAX96717_VTX14_HS_HIGH_1(index), tm->hs_high),
-> +		REG_SEQUENCE_2(MAX96717_VTX16_HS_LOW_1(index), tm->hs_low),
-> +		REG_SEQUENCE_2(MAX96717_VTX18_HS_CNT_1(index), tm->hs_cnt),
-> +		REG_SEQUENCE_3(MAX96717_VTX20_V2D_2(index), tm->v2d),
-> +		REG_SEQUENCE_2(MAX96717_VTX23_DE_HIGH_1(index), tm->de_high),
-> +		REG_SEQUENCE_2(MAX96717_VTX25_DE_LOW_1(index), tm->de_low),
-> +		REG_SEQUENCE_2(MAX96717_VTX27_DE_CNT_1(index), tm->de_cnt),
-> +	};
-> +	int ret;
-> +
-> +	ret = regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(priv->regmap, MAX96717_VTX0(index),
-> +			    FIELD_PREP(MAX96717_VTX0_VTG_MODE,
-> +				       MAX96717_VTX0_VTG_MODE_FREE_RUNNING) |
-> +			    FIELD_PREP(MAX96717_VTX0_DE_INV, tm->de_inv) |
-> +			    FIELD_PREP(MAX96717_VTX0_HS_INV, tm->hs_inv) |
-> +			    FIELD_PREP(MAX96717_VTX0_VS_INV, tm->vs_inv) |
-> +			    FIELD_PREP(MAX96717_VTX0_GEN_DE, tm->gen_de) |
-> +			    FIELD_PREP(MAX96717_VTX0_GEN_HS, tm->gen_hs) |
-> +			    FIELD_PREP(MAX96717_VTX0_GEN_VS, tm->gen_vs));
-> +}
-> +
-> +static int max96717_set_tpg_clk(struct max96717_priv *priv, u32 clock,
-> +				unsigned int index)
-> +{
-> +	u8 pclk_src;
-> +
-> +	switch (clock) {
-> +	case 25000000:
-> +		pclk_src = MAX96717_VTX1_PATGEN_CLK_SRC_25MHZ;
-> +		break;
-> +	case 75000000:
-> +		pclk_src = MAX96717_VTX1_PATGEN_CLK_SRC_75MHZ;
-> +		break;
-> +	case 150000000:
-> +		pclk_src = MAX96717_VTX1_PATGEN_CLK_SRC_150MHZ;
-> +		break;
-> +	case 375000000:
-> +		pclk_src = MAX96717_VTX1_PATGEN_CLK_SRC_375MHZ;
-> +		break;
-> +	case 0:
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(priv->regmap, MAX96717_VTX1(index),
-> +				  MAX96717_VTX1_PATGEN_CLK_SRC,
-> +				  FIELD_PREP(MAX96717_VTX1_PATGEN_CLK_SRC,
-> +					     pclk_src));
-> +}
-> +
-> +static int max96717_set_tpg_mode(struct max96717_priv *priv, bool enable,
-> +				 unsigned int index)
-> +{
-> +	unsigned int patgen_mode;
-> +
-> +	switch (priv->ser.tpg_pattern) {
-> +	case MAX_SERDES_TPG_PATTERN_GRADIENT:
-> +		patgen_mode = MAX96717_VTX29_PATGEN_MODE_GRADIENT;
-> +		break;
-> +	case MAX_SERDES_TPG_PATTERN_CHECKERBOARD:
-> +		patgen_mode = MAX96717_VTX29_PATGEN_MODE_CHECKER;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(priv->regmap, MAX96717_VTX29(index),
-> +				  MAX96717_VTX29_PATGEN_MODE,
-> +				  FIELD_PREP(MAX96717_VTX29_PATGEN_MODE,
-> +					     enable ? patgen_mode
-> +						    : MAX96717_VTX29_PATGEN_MODE_DISABLED));
-> +}
-> +
-> +static int max96717_set_tpg(struct max_ser *ser,
-> +			    const struct max_serdes_tpg_entry *entry)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	/*
-> +	 * MAX9295A supports multiple pipes, each with a pattern generator,
-> +	 * use only the first pipe for simplicity.
-> +	 */
-> +	unsigned int index = max96717_pipe_id(priv, &ser->pipes[0]);
-> +	struct max_serdes_tpg_timings timings = { 0 };
-> +	int ret;
-> +
-> +	ret = max_serdes_get_tpg_timings(entry, &timings);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = max96717_set_tpg_timings(priv, &timings, index);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = max96717_set_tpg_clk(priv, timings.clock, index);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return max96717_set_tpg_mode(priv, entry, index);
-> +}
-> +
-> +static const struct max_serdes_phys_config max96717_phys_configs[] = {
-> +	{ { 4 } },
-> +};
-> +
-> +static int max96717_init_tpg(struct max_ser *ser)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	/*
-> +	 * MAX9295A supports multiple pipes, each with a pattern generator,
-> +	 * use only the first pipe for simplicity.
-> +	 */
-> +	unsigned int index = max96717_pipe_id(priv, &ser->pipes[0]);
-> +
-> +	const struct reg_sequence regs[] = {
-> +		{ MAX96717_VTX30_GRAD_INCR(index), MAX_SERDES_GRAD_INCR },
-> +		REG_SEQUENCE_3_LE(MAX96717_VTX31_CHKR_A_L(index),
-> +				  MAX_SERDES_CHECKER_COLOR_A),
-> +		REG_SEQUENCE_3_LE(MAX96717_VTX34_CHKR_B_L(index),
-> +				  MAX_SERDES_CHECKER_COLOR_B),
-> +		{ MAX96717_VTX37_CHKR_RPT_A(index), MAX_SERDES_CHECKER_SIZE },
-> +		{ MAX96717_VTX38_CHKR_RPT_B(index), MAX_SERDES_CHECKER_SIZE },
-> +		{ MAX96717_VTX39_CHKR_ALT(index), MAX_SERDES_CHECKER_SIZE },
-> +	};
-> +
-> +	return regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
-> +}
-> +
-> +static int max96717_init(struct max_ser *ser)
-> +{
-> +	struct max96717_priv *priv = ser_to_priv(ser);
-> +	int ret;
-> +
-> +	/*
-> +	 * Set CMU2 PFDDIV to 1.1V for correct functionality of the device,
-> +	 * as mentioned in the datasheet, under section MANDATORY REGISTER PROGRAMMING.
-> +	 */
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_CMU2,
-> +				 MAX96717_CMU2_PFDDIV_RSHORT,
-> +				 FIELD_PREP(MAX96717_CMU2_PFDDIV_RSHORT,
-> +					    MAX96717_CMU2_PFDDIV_RSHORT_1_1V));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (ser->ops->set_tunnel_enable) {
-> +		ret = ser->ops->set_tunnel_enable(ser, false);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return max96717_init_tpg(ser);
-> +}
-> +
-> +static const struct pinctrl_ops max96717_ctrl_ops = {
-> +	.get_groups_count = max96717_ctrl_get_groups_count,
-> +	.get_group_name = max96717_ctrl_get_group_name,
-> +	.get_group_pins = max96717_ctrl_get_group_pins,
-> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-> +	.dt_free_map = pinconf_generic_dt_free_map,
-> +};
-> +
-> +static const struct pinconf_ops max96717_conf_ops = {
-> +	.pin_config_get = max96717_conf_pin_config_get,
-> +	.pin_config_set = max96717_conf_pin_config_set,
-> +	.is_generic = true,
-> +};
-> +
-> +static const struct pinmux_ops max96717_mux_ops = {
-> +	.get_functions_count = max96717_mux_get_functions_count,
-> +	.get_function_name = max96717_mux_get_function_name,
-> +	.get_function_groups = max96717_mux_get_groups,
-> +	.set_mux = max96717_mux_set,
-> +};
-> +
-> +static const struct max_serdes_tpg_entry max96717_tpg_entries[] = {
-> +	MAX_TPG_ENTRY_640X480P60_RGB888,
-> +	MAX_TPG_ENTRY_1920X1080P30_RGB888,
-> +	MAX_TPG_ENTRY_1920X1080P60_RGB888,
-> +};
-> +
-> +static const struct max_ser_ops max96717_ops = {
-> +	.num_i2c_xlates = 2,
-> +	.phys_configs = {
-> +		.num_configs = ARRAY_SIZE(max96717_phys_configs),
-> +		.configs = max96717_phys_configs,
-> +	},
-> +	.tpg_entries = {
-> +		.num_entries = ARRAY_SIZE(max96717_tpg_entries),
-> +		.entries = max96717_tpg_entries,
-> +	},
-> +	.tpg_mode = MAX_SERDES_GMSL_PIXEL_MODE,
-> +	.tpg_patterns = BIT(MAX_SERDES_TPG_PATTERN_CHECKERBOARD) |
-> +			BIT(MAX_SERDES_TPG_PATTERN_GRADIENT),
-> +#ifdef CONFIG_VIDEO_ADV_DEBUG
-> +	.reg_read = max96717_reg_read,
-> +	.reg_write = max96717_reg_write,
-> +#endif
-> +	.log_status = max96717_log_status,
-> +	.log_pipe_status = max96717_log_pipe_status,
-> +	.log_phy_status = max96717_log_phy_status,
-> +	.init = max96717_init,
-> +	.set_i2c_xlate = max96717_set_i2c_xlate,
-> +	.set_tpg = max96717_set_tpg,
-> +	.init_phy = max96717_init_phy,
-> +	.set_phy_active = max96717_set_phy_active,
-> +	.set_pipe_enable = max96717_set_pipe_enable,
-> +	.set_pipe_dt = max96717_set_pipe_dt,
-> +	.set_pipe_dt_en = max96717_set_pipe_dt_en,
-> +	.set_pipe_vcs = max96717_set_pipe_vcs,
-> +	.set_pipe_mode = max96717_set_pipe_mode,
-> +	.set_pipe_stream_id = max96717_set_pipe_stream_id,
-> +	.set_pipe_phy = max96717_set_pipe_phy,
-> +};
-> +
-> +struct max96717_pll_predef_freq {
-> +	unsigned long freq;
-> +	bool is_rclk;
-> +	bool is_alt;
-> +	u8 val;
-> +	u8 rclksel;
-> +};
-> +
-> +static const struct max96717_pll_predef_freq max96717_predef_freqs[] = {
-> +	{  6250000, true,  false, 0, 2 },
-> +	{ 12500000, true,  false, 0, 1 },
-> +	{ 13500000, false, true,  0, 3 },
-> +	{ 19200000, false, false, 0, 3 },
-> +	{ 24000000, false, true,  1, 3 },
-> +	{ 25000000, true,  false, 0, 0 },
-> +	{ 27000000, false, false, 1, 3 },
-> +	{ 37125000, false, false, 2, 3 },
-> +	{ 74250000, false, false, 3, 3 },
-> +};
-> +
-> +static unsigned long
-> +max96717_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
-> +{
-> +	struct max96717_priv *priv = clk_hw_to_priv(hw);
-> +
-> +	return max96717_predef_freqs[priv->pll_predef_index].freq;
-> +}
-> +
-> +static unsigned int max96717_clk_find_best_index(struct max96717_priv *priv,
-> +						 unsigned long rate)
-> +{
-> +	unsigned int i, idx = 0;
-> +	unsigned long diff_new, diff_old = U32_MAX;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(max96717_predef_freqs); i++) {
-> +		diff_new = abs(rate - max96717_predef_freqs[i].freq);
-> +		if (diff_new < diff_old) {
-> +			diff_old = diff_new;
-> +			idx = i;
-> +		}
-> +	}
-> +
-> +	return idx;
-> +}
-> +
-> +static long max96717_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-> +				    unsigned long *parent_rate)
-> +{
-> +	struct max96717_priv *priv = clk_hw_to_priv(hw);
-> +	struct device *dev = &priv->client->dev;
-> +	unsigned int idx;
-> +
-> +	idx = max96717_clk_find_best_index(priv, rate);
-> +
-> +	if (rate != max96717_predef_freqs[idx].freq) {
-> +		dev_warn(dev, "Request CLK freq:%lu, found CLK freq:%lu\n",
-> +			 rate, max96717_predef_freqs[idx].freq);
-> +	}
-> +
-> +	return max96717_predef_freqs[idx].freq;
-> +}
-> +
-> +static int max96717_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				 unsigned long parent_rate)
-> +{
-> +	const struct max96717_pll_predef_freq *predef_freq;
-> +	struct max96717_priv *priv = clk_hw_to_priv(hw);
-> +	unsigned int val, idx;
-> +	int ret = 0;
-> +
-> +	idx = max96717_clk_find_best_index(priv, rate);
-> +	predef_freq = &max96717_predef_freqs[idx];
-> +
-> +	ret = regmap_update_bits(priv->regmap, MAX96717_REG3,
-> +				 MAX96717_REG3_RCLKSEL,
-> +				 FIELD_PREP(MAX96717_REG3_RCLKSEL,
-> +					    predef_freq->rclksel));
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = FIELD_PREP(MAX96717_REF_VTG0_REFGEN_PREDEF_FREQ,
-> +			 predef_freq->val);
-> +
-> +	if (predef_freq->is_alt)
-> +		val |= MAX96717_REF_VTG0_REFGEN_PREDEF_FREQ_ALT;
-> +	if (!predef_freq->is_rclk)
-> +		val |= MAX96717_REF_VTG0_REFGEN_EN;
-> +
-> +	val |= MAX96717_REF_VTG0_REFGEN_RST;
-> +
-> +	ret = regmap_write(priv->regmap, MAX96717_REF_VTG0, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_clear_bits(priv->regmap, MAX96717_REF_VTG0,
-> +				MAX96717_REF_VTG0_REFGEN_RST);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->pll_predef_index = idx;
-> +
-> +	return 0;
-> +}
-> +
-> +static int max96717_clk_prepare(struct clk_hw *hw)
-> +{
-> +	struct max96717_priv *priv = clk_hw_to_priv(hw);
-> +
-> +	return regmap_set_bits(priv->regmap, MAX96717_REG6, MAX96717_REG6_RCLKEN);
-> +}
-> +
-> +static void max96717_clk_unprepare(struct clk_hw *hw)
-> +{
-> +	struct max96717_priv *priv = clk_hw_to_priv(hw);
-> +
-> +	regmap_clear_bits(priv->regmap, MAX96717_REG6, MAX96717_REG6_RCLKEN);
-> +}
-> +
-> +static const struct clk_ops max96717_clk_ops = {
-> +	.prepare     = max96717_clk_prepare,
-> +	.unprepare   = max96717_clk_unprepare,
-> +	.set_rate    = max96717_clk_set_rate,
-> +	.recalc_rate = max96717_clk_recalc_rate,
-> +	.round_rate  = max96717_clk_round_rate,
-
-The round_rate() callback seems to have been dropped as of v7.1-rc1.
-
-Also the last there patches in this series does not apply cleanly to 
-media-next anymore.
-
-> +};
-> +
-> +static int max96717_register_clkout(struct max96717_priv *priv)
-> +{
-> +	struct device *dev = &priv->client->dev;
-> +	struct clk_init_data init = { .ops = &max96717_clk_ops };
-> +	int ret;
-> +
-> +	ret = max96717_mux_set_rclkout(priv, MAX96717_RCLK_MFP);
-> +	if (ret)
-> +		return ret;
-> +
-> +	init.name = kasprintf(GFP_KERNEL, "max96717.%s.clk_out", dev_name(dev));
-> +	if (!init.name)
-> +		return -ENOMEM;
-> +
-> +	priv->clk_hw.init = &init;
-> +
-> +	ret = max96717_clk_set_rate(&priv->clk_hw,
-> +				    MAX96717_DEFAULT_CLKOUT_RATE, 0);
-> +	if (ret)
-> +		goto free_init_name;
-> +
-> +	ret = devm_clk_hw_register(dev, &priv->clk_hw);
-> +	kfree(init.name);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Cannot register clock HW\n");
-> +
-> +	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
-> +					  &priv->clk_hw);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Cannot add OF clock provider\n");
-> +
-> +	return 0;
-> +
-> +free_init_name:
-> +	kfree(init.name);
-> +	return ret;
-> +}
-> +
-> +static int max96717_gpiochip_probe(struct max96717_priv *priv)
-> +{
-> +	struct device *dev = priv->dev;
-> +	int ret;
-> +
-> +	priv->pctldesc = (struct pinctrl_desc) {
-> +		.owner = THIS_MODULE,
-> +		.name = MAX96717_PINCTRL_NAME,
-> +		.pins = max96717_pins,
-> +		.npins = ARRAY_SIZE(max96717_pins),
-> +		.pctlops = &max96717_ctrl_ops,
-> +		.confops = &max96717_conf_ops,
-> +		.pmxops = &max96717_mux_ops,
-> +		.custom_params = max96717_cfg_params,
-> +		.num_custom_params = ARRAY_SIZE(max96717_cfg_params),
-> +	};
-> +
-> +	ret = devm_pinctrl_register_and_init(dev, &priv->pctldesc, priv, &priv->pctldev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pinctrl_enable(priv->pctldev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->gc = (struct gpio_chip) {
-> +		.owner = THIS_MODULE,
-> +		.label = MAX96717_GPIOCHIP_NAME,
-> +		.base = -1,
-> +		.ngpio = MAX96717_GPIO_NUM,
-> +		.parent = dev,
-> +		.can_sleep = true,
-> +		.request = gpiochip_generic_request,
-> +		.free = gpiochip_generic_free,
-> +		.set_config = gpiochip_generic_config,
-> +		.get_direction = max96717_gpio_get_direction,
-> +		.direction_input = max96717_gpio_direction_input,
-> +		.direction_output = max96717_gpio_direction_output,
-> +		.get = max96717_gpio_get,
-> +		.set = max96717_gpio_set,
-> +	};
-> +
-> +	return devm_gpiochip_add_data(dev, &priv->gc, priv);
-> +}
-> +
-> +static int max96717_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct max96717_priv *priv;
-> +	struct max_ser_ops *ops;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
-> +	if (!ops)
-> +		return -ENOMEM;
-> +
-> +	priv->info = device_get_match_data(dev);
-> +	if (!priv->info) {
-> +		dev_err(dev, "Failed to get match data\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	priv->dev = dev;
-> +	priv->client = client;
-> +	i2c_set_clientdata(client, priv);
-> +
-> +	priv->regmap = devm_regmap_init_i2c(client, &max96717_i2c_regmap);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	*ops = max96717_ops;
-> +
-> +	if (priv->info->modes & BIT(MAX_SERDES_GMSL_TUNNEL_MODE))
-> +		ops->set_tunnel_enable = max96717_set_tunnel_enable;
-> +
-> +	ops->modes = priv->info->modes;
-> +	ops->num_pipes = priv->info->num_pipes;
-> +	ops->num_dts_per_pipe = priv->info->num_dts_per_pipe;
-> +	ops->num_phys = priv->info->num_phys;
-> +	priv->ser.ops = ops;
-> +
-> +	ret = max96717_wait_for_device(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = max96717_gpiochip_probe(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = max96717_register_clkout(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return max_ser_probe(client, &priv->ser);
-> +}
-> +
-> +static void max96717_remove(struct i2c_client *client)
-> +{
-> +	struct max96717_priv *priv = i2c_get_clientdata(client);
-> +
-> +	max_ser_remove(&priv->ser);
-> +}
-> +
-> +static const struct max96717_chip_info max9295a_info = {
-> +	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE),
-> +	.num_pipes = 4,
-> +	.num_dts_per_pipe = 2,
-> +	.pipe_hw_ids = { 0, 1, 2, 3 },
-> +	.num_phys = 1,
-> +	.phy_hw_ids = { 1 },
-> +};
-> +
-> +static const struct max96717_chip_info max96717_info = {
-> +	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
-> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
-> +	.supports_3_data_lanes = true,
-> +	.supports_pkt_cnt = true,
-> +	.supports_noncontinuous_clock = true,
-> +	.num_pipes = 1,
-> +	.num_dts_per_pipe = 4,
-> +	.pipe_hw_ids = { 2 },
-> +	.num_phys = 1,
-> +	.phy_hw_ids = { 1 },
-> +};
-> +
-> +static const struct of_device_id max96717_of_ids[] = {
-> +	{ .compatible = "maxim,max9295a", .data = &max9295a_info },
-> +	{ .compatible = "maxim,max96717", .data = &max96717_info },
-> +	{ .compatible = "maxim,max96717f", .data = &max96717_info },
-> +	{ .compatible = "maxim,max96793", .data = &max96717_info },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max96717_of_ids);
-> +
-> +static struct i2c_driver max96717_i2c_driver = {
-> +	.driver	= {
-> +		.name = MAX96717_NAME,
-> +		.of_match_table = max96717_of_ids,
-> +	},
-> +	.probe = max96717_probe,
-> +	.remove = max96717_remove,
-> +};
-> +
-> +module_i2c_driver(max96717_i2c_driver);
-> +
-> +MODULE_IMPORT_NS("MAX_SERDES");
-> +MODULE_DESCRIPTION("MAX96717 GMSL2 Serializer Driver");
-> +MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.51.0
-> 
-> 
-
--- 
-Kind Regards,
-Niklas Söderlund
+SGkgRHVtaXRydSwNCg0KVGhhbmsgeW91IGZvciB0aGlzIHBhdGNoIHNlcmllcyBhbmQgZm9yIGZp
+eGluZyB0aGUgY29udHJvbC1jaGFubmVsIHBvcnQgYnVnLg0KSSBoYXZlIHN1Y2Nlc3NmdWxseSB2
+YWxpZGF0ZWQgdGhpcyBzZXJpZXMgb24gb3VyIHRlc3QgYmVuY2ggdXNpbmcgYW4gSU1YMjE5IHNl
+bnNvci4gVGhlIGRyaXZlcnMgbG9hZCBjb3JyZWN0bHkgYW5kIHZpZGVvIHN0cmVhbWluZyB3b3Jr
+cyBhcyBleHBlY3RlZC4NCg0KUmVnYXJkcywNClZpdmVrDQo=
 
