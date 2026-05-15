@@ -1,133 +1,149 @@
-Return-Path: <linux-gpio+bounces-36898-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36899-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sOmdDijlBmoHowIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36898-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 11:19:36 +0200
+	id mOPNKT7uBmrOowIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36899-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 11:58:22 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8ACB54C453
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 11:19:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 057BB54CE28
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 11:58:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ABD5A306D978
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 09:08:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C85C8310BE73
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 09:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6580A42B75C;
-	Fri, 15 May 2026 09:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JczgL5Hx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81E3642DFFC;
+	Fri, 15 May 2026 09:18:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E05372698;
-	Fri, 15 May 2026 09:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D212E42E01E
+	for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 09:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778836101; cv=none; b=Wj+YSCPs7IqWov+3X6rTaJvOghvuC8cOSAhzl/7/xxByWLHByqWUZbkrbQfQesCLwOrWxw7KIerJKpM0QRKcC2HVkNc3mcVLaCAFOJEH35FIiNFkt/1inJbQ2Bngl2xvIhdARzKoIG09+c3CG9JYcKFvA+liehYWO1phZvSei9c=
+	t=1778836716; cv=none; b=ofjDE9h0e1KsDLZyQbEaolP5FzABVlEzOmD3ZLyOoZjRxmsVs70b2RQyteCSdRVYVI5dbCQQG3TZQqHDeEnimc9DmkXYl0My3tpMiNBroG3cv3hdh7IthgiUQJnJkORTA+fwJiv3dIyxmKBA6XuAuUnOD0TTa8ECF0EhNztw4EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778836101; c=relaxed/simple;
-	bh=2bUCsiw2Cto0Ity0ozs93wolttoe2hHc4vItg7Mo7jw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EiZQ7wACXIGwwVbnAb73UF/utjW3ZU3TQqvDOy2EQyRD1wjM1vZfTOAGrYNJ1SMRmMYwPCD4B9pMaB6vuMGu+/cEU/7W74R4IIgmKT9CfgSAk0wW+NI/5nxLhqsvhSgaqjimR8+f1ZAtMgnXawGKjgjO1Vns2YD4552wnlUa/t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JczgL5Hx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A7AC2BCB0;
-	Fri, 15 May 2026 09:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778836100;
-	bh=2bUCsiw2Cto0Ity0ozs93wolttoe2hHc4vItg7Mo7jw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JczgL5HxqvPZZ+UQQ4L2UOldlwlZ0xJXVyvdQtMFcwc3KM2VZQ+X2TDb6PAA4fZti
-	 L1kYnn64zxgKzPK8QgQsJrhYBCNqwC8OuOBEa8C2Vun9SIrjR8keDx4TyOsyANhEZ+
-	 gIqjo3aUvFKb80IFNe9YfJ8iyQbwMuNQtnVTHHBZ3AUZREW9F2khAzmLwsa92FKe42
-	 ulQGj+eBC8f6kd3k3aC1Vj8TAipMakxeLu6cPwhxe7l+4KFsfGg6SFVDArZOwz3Hzb
-	 3ubuHYFOupWAG98E2H4hohNhvKNR+H9CEYhBIV8gkrcqXiAecZyQxUq23IZqRm2o6x
-	 cOC9zsAz97jeg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jorge Marques <jorge.marques@analog.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Jonathan Santos <Jonathan.Santos@analog.com>,
-	Radu Sabau <radu.sabau@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] iio: adc: ad4062: add GPIOLIB dependency
-Date: Fri, 15 May 2026 11:07:53 +0200
-Message-Id: <20260515090814.437092-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1778836716; c=relaxed/simple;
+	bh=iB1Viy49dwgZQTX+y7w3SFcgAMKGccuqAQu46bJf4/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u/bOp6PMYLW67Mj1H3ZCimj6djl4En9FkF/REzlJv35Jescpx8QftyQpCf4L4pBQ4QOTDwj6HO+a4r22XTl/EjN/yssqF6KL6WyENVi1iq9VWqJoA66DgK2HvMSyWJHo7f75YMPXk1Shw0ZDkEri/WjFNq+LlbSumekgSCzWkAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-575124e716fso3211399e0c.1
+        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 02:18:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778836714; x=1779441514;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/d2gVxHTTcyblRYszMKGX/9Z1RGNRy695iCm0kFujsw=;
+        b=FOWE/sG7lw8u+I0emBXvJQbQxsPuoX2TZKFH01WDId8voDHC4aXoAD3jd5t9Ecgpsn
+         Nimn4knHb5OCCfCBx7Tw9icjGUa+zGTj+l7uamViddufG0tp++vQIIv0IGjFrGbcZySE
+         rWnKxoZE1pYwLN31PsM8esHhlbdA0T7jtfTLhxATO7M+QbodoHFtxmnFWvxFF6OhKPSO
+         AkJkHyUY2cQYPcYVYBQUsqiTAUxRhL8lTkvbMgJW2arRHwclmfXUWriIKg3SfIaSlejb
+         AuWXOM07oBaQYQEecIAqgVVQnvuah4V9iwZiHhE2rmnJSiTgxUZo9BdfoxkDgWIm9Qah
+         pLiQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9+/1RPWZqpCeYaPx1h+7mzxJbTJf9gh0AzNT2W9Z2GB2ejgZtlv4DrwfKjuW/Yh2bB4U9hoITO6OsA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGk9e76nGqNR50FwoCjlbM3EfKRHTfJowi6ZVfkLcbAa/sVLyP
+	yUnk31laB6EpXaF+N9pwDLYC/jFoxV12q7JAQzbq4H+rOlV4mUfvNNTBWwQNVN8I
+X-Gm-Gg: Acq92OFqsix4V5D5f55HHPOwmrOQTEDM3JMdcsyNUKbsGKQw9h0nFAwf3BsUoAL3XHl
+	eqtJaohrr2A/E81GjNb8lQSlO1dKDaq/5OoFLsCJ8wqWjJCeWf5dsQFlNmKrCqu2eTum94BI3EP
+	wsZQyHesC4/NQHsl/73iDNsbb8LXhjWFBK6pqmayZ63Leml70h7aUnwL4tUpfYbUmnsi6oQbxhn
+	I+Fl5BjDazKlpo/dCCYjP8quJe+nfSnF1TYow16A7S0i2Tnrx6M6mEzvgWPqvxWSq0x2q9wFV2N
+	8uttj/5eRxIwJ51pca9AyHgFkdDjkXgBgYq5NUmyg0XbdFeEWZTi4XMcDfTYQf8d9C0/cV+UA6u
+	FIU3uhbyHDuCNQ4qkvrsrgWCbbpnFTmBQVujiSsZAva8XqNu2rwL8RM6f8CV1j9hkbQVWuFNpVn
+	7bMFFFniqJbIfO6SXWainglOvXkl1agAMuz8cFABoklpPbAk0MI5XVcjBEQPxY2JwK
+X-Received: by 2002:a67:e115:0:b0:632:e359:6c02 with SMTP id ada2fe7eead31-63a3ef847bcmr1182421137.22.1778836713692;
+        Fri, 15 May 2026 02:18:33 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95fc2f8aed0sm741042241.8.2026.05.15.02.18.33
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 02:18:33 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5753a289955so3008403e0c.2
+        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2026 02:18:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8PRr2hGTnT52D/Y2cGPHk0/KH76mg7D6XY86dZFhFEJtzpYuNh+y+wkCUyQybz+PPn3iQPB4HKF0df@vger.kernel.org
+X-Received: by 2002:a05:6122:3a0a:b0:56d:3b69:87d2 with SMTP id
+ 71dfb90a1353d-5760c044d95mr1713766e0c.11.1778836713075; Fri, 15 May 2026
+ 02:18:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: C8ACB54C453
+References: <130ce567f23fd6eef8f5fa7273480a0e3ff2d1d9.1777562482.git.geert+renesas@glider.be>
+In-Reply-To: <130ce567f23fd6eef8f5fa7273480a0e3ff2d1d9.1777562482.git.geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 15 May 2026 11:18:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdULm-CA_K=McNgpTuBQKN9LkKLUV2-omKqJDQrk-+P_0g@mail.gmail.com>
+X-Gm-Features: AVHnY4KNLVg39QXS53njqiDNGaLHc5UV5aAk_Ncug2T1CtkhZF2d1ae9MLWbsYA
+Message-ID: <CAMuHMdULm-CA_K=McNgpTuBQKN9LkKLUV2-omKqJDQrk-+P_0g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: sh-pfc: Implement .pin_config_group_get()
+ callback
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linusw@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 057BB54CE28
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36898-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	NEURAL_HAM(-0.00)[-0.995];
+	R_DKIM_NA(0.00)[];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36899-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[]
 X-Rspamd-Action: no action
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, 30 Apr 2026 at 17:24, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> When reading /sys/kernel/debug/pinctrl/*.pinctrl-sh-pfc/pinconf-groups
+> while CONFIG_DEBUG_PINCTRL is enabled, the user is confronted with a
+> seemlingly endless stream of identical messages on the console:
+>
+>     sh-pfc e6060000.pinctrl: cannot get configuration for pin group, missing group config get function in driver
+>
+> Fix this by implementing the sh_pfc_pinconf_ops.pin_config_group_get()
+> callback.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Tested on R-Car M2-W, R-Car H3 ES2.0, and R-Car V4M (more to follow).
+> To be queued in renesas-pinctrl for v7.2.
 
-The ad4062 driver gained support for the gpiochip and now fails
-to build when GPIOLIB is disabled:
+Looks good on SH-Mobile AG5, R-Mobile A1, R-Car H1, R-Car M3-W, R-Car
+M3-N, R-Car E3, and R-Car V4H, too, so will queue in renesas-pinctrl
+for v7.2.
 
-390-linux-ld: drivers/iio/adc/ad4062.o: in function `ad4062_gpio_get':
-drivers/iio/adc/ad4062.c:1383:(.text+0x3dc): undefined reference to `gpiochip_get_data`
+Gr{oetje,eeting}s,
 
-Add a Kconfig dependency for this.
+                        Geert
 
-Fixes: da1d3596b1e4 ("iio: adc: ad4062: Add GPIO Controller support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/iio/adc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 8550917226a1..2c96e500c684 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -78,6 +78,7 @@ config AD4030
- config AD4062
- 	tristate "Analog Devices AD4062 Driver"
- 	depends on I3C
-+	depends on GPIOLIB
- 	select REGMAP_I3C
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
 -- 
-2.39.5
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
