@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-36951-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YJkVHiNgB2oy0wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36951-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:04:19 +0200
+	id RE9yG4NWB2pVzQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36952-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:23:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9DA5555DFA
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 20:04:18 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B086554EBA
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 19:23:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4AD9B32C4AC5
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 17:19:09 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A571E3004F33
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2026 17:23:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0B63D88EC;
-	Fri, 15 May 2026 17:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E7E3DA7CF;
+	Fri, 15 May 2026 17:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liRR5gCg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FD3967S5"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23AD3D9DA9;
-	Fri, 15 May 2026 17:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0A73D9DB3;
+	Fri, 15 May 2026 17:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778865529; cv=none; b=bIQU/nVwwz1prcBW9guTD6yK/9QXcyKdSNEmORztnERUhb4X8XL7bZHTu1nTLE2rou9ZFTnHYmza5iNYkQ0eMIR/sMCqF3zJBE9ahe3w2Tdq7lib0lFcKo0aNvHfc40GfiLdrekjG52/weG6wA/NJqYzUyP76etxsXqf89HpZKM=
+	t=1778865790; cv=none; b=Ahw5wCJeYncSBzyNahQZizwIelVZJR8J/ikUDDJjzYXWjG2TC+TXWCooQEqD57EE7e071ie4xzLaI8N6JYAJR28f/0d6hlXPT20NkTXaUwTp8ZKjydeeH2kqN4LxwCVbltq0o/2YSyZTOr26ZAbKVjDBpMDDjFau2vZlIHOjG9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778865529; c=relaxed/simple;
-	bh=pvUZG8OFOWYSFaFznbd7VEZqz4mfURKI3BrueEuTWzw=;
+	s=arc-20240116; t=1778865790; c=relaxed/simple;
+	bh=NJbtkrvldJrUA2ASlYniPdQwFMjd8CvYOz7vTRRLKA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZwHRW+h5ZFH7lToFwE8mOfQzpmXtvc8Q6tdI0hgGpc2ZgD49+kKM8FKgZhyd3eb+9O7ZOQrNwvadsq9m5gbL2G9nYBWhmZntmwB+fw9JPkARJtKwdSFJ5JosQNIb/3tQamFDOZteRPTWnvrdcdTbZ7vc9wMJ5IrmB4OiA1Dl6OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liRR5gCg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F06C2BCB0;
-	Fri, 15 May 2026 17:18:44 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTQ9NvzgK5eZQ66/D+PPFZq+pTIKDoijcnltRxbn5+jFtdjdLCemv458NFZEUn8rkHiWWlAkdA0IlEdJUM/cyBTmcyxznURIA84uSbO9dP+WbQtqWzgClXpqk7esoccECPSgtwdrMMCNsDBvTlD/dk7cygHH6yYL+UXM81CePtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FD3967S5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C15C2BCB0;
+	Fri, 15 May 2026 17:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778865528;
-	bh=pvUZG8OFOWYSFaFznbd7VEZqz4mfURKI3BrueEuTWzw=;
+	s=k20201202; t=1778865790;
+	bh=NJbtkrvldJrUA2ASlYniPdQwFMjd8CvYOz7vTRRLKA0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=liRR5gCgrghUx/YxVJAfx1NL632CmfqaPCvMsKr+4HE1Ogqi+h6+Y7HHYWE5GBbeY
-	 R/aK6POAoUiksle7mNRiplPPutReaHupZGTLgyT8Bpg/Eb3zjeK9O4XwmtFjCFhJkN
-	 10w1pG7VaYMKaXJoPfwhBFqMN+KVGmlf6q80WnwW13WxV4YN7iEMPh+c0jLFlaS0cu
-	 xF3j6Kg0mq1NfqHOBWzJ9jm3R74wJlgnCI7ZCzLC8Ss1t3g3Z50A/Z4kxkt0+lkwOU
-	 aResWYb5xog1FSM0lguF5nxi9rIAMx00XvVruIBjy0xS6uixx3+NOtmZB7a9gulnR3
-	 5iFEMVXgKRyAA==
-Date: Fri, 15 May 2026 18:18:42 +0100
+	b=FD3967S5Y0Q8iN+/YzANF5+PypJyNWwU8fWoC3aWTNEhELobb+IVGiuiEUveI6pOS
+	 RJc0FmQ+iVdWOkJHb43aea2JazWZGkVwTn36CMTs/5nny8P3ZUipen3V0GWr+0E/Oz
+	 lzoM7MSKM13L5WG/7FDZ1Gl1HWpxRfJykZD+wEF7n4aefqG+R5hGBbZ/U47cpT08XB
+	 6mO8giTGKyBcL0irg8uMrKp2g3dwe/7HCxz/VguZBGTUnNEYPv0dW/F8CjIdzUImyT
+	 PA5pAAKaObsnYwad60X8komtqFn9m+/3F57Qnv9c4ByWiNAJILUQj+ysmGpngZ8E87
+	 rcnDu5MGNP2hg==
+Date: Fri, 15 May 2026 18:23:04 +0100
 From: Conor Dooley <conor@kernel.org>
 To: Billy Tsai <billy_tsai@aspeedtech.com>
 Cc: Linus Walleij <linusw@kernel.org>, Tony Lindgren <tony@atomide.com>,
@@ -59,11 +59,11 @@ Cc: Linus Walleij <linusw@kernel.org>, Tony Lindgren <tony@atomide.com>,
 	linux-aspeed@lists.ozlabs.org, BMC-SW@aspeedtech.com,
 	openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
 	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: mfd: aspeed,ast2x00-scu: Support
- AST2700 SoC1 pinctrl
-Message-ID: <20260515-schnapps-uncooked-177724828e23@spud>
+Subject: Re: [PATCH v3 2/3] dt-bindings: pinctrl: Add
+ aspeed,ast2700-soc1-pinctrl
+Message-ID: <20260515-verify-awhile-cb0c72d49e91@spud>
 References: <20260515-pinctrl-single-bit-v3-0-e97da4312104@aspeedtech.com>
- <20260515-pinctrl-single-bit-v3-1-e97da4312104@aspeedtech.com>
+ <20260515-pinctrl-single-bit-v3-2-e97da4312104@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,10 +71,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l55Ya1GMCDxdgVnh"
+	protocol="application/pgp-signature"; boundary="ovS5RWpK3acdRmpy"
 Content-Disposition: inline
-In-Reply-To: <20260515-pinctrl-single-bit-v3-1-e97da4312104@aspeedtech.com>
-X-Rspamd-Queue-Id: C9DA5555DFA
+In-Reply-To: <20260515-pinctrl-single-bit-v3-2-e97da4312104@aspeedtech.com>
+X-Rspamd-Queue-Id: 3B086554EBA
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
@@ -83,12 +83,12 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36951-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36952-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -101,44 +101,836 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,microchip.com:email,aspeedtech.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,microchip.com:email,devicetree.org:url,aspeedtech.com:email,0.0.1.144:email]
 X-Rspamd-Action: no action
 
 
---l55Ya1GMCDxdgVnh
+--ovS5RWpK3acdRmpy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 15, 2026 at 05:37:37PM +0800, Billy Tsai wrote:
-> The AST2700 SoC integrates two interconnected SoC instances, each
-> managed by its own System Control Unit (SCU).
+On Fri, May 15, 2026 at 05:37:38PM +0800, Billy Tsai wrote:
+> SoC1 in the AST2700 integrates its own pin controller responsible for
+> pin multiplexing and pin configuration.
 >=20
-> Allow the AST2700 SoC1 pin controller to be described as a child
-> node of the SCU by extending the compatible strings accepted by
-> the SCU binding.
+> The controller manages various peripheral functions such as eSPI, LPC,
+> VPI, SD, UART, I2C, I3C, PWM and others through SCU registers.
 >=20
-> There is no functional change to the SCU binding beyond permitting
-> the aspeed,ast2700-soc1-pinctrl compatible string.
+> The binding reuses the standard pinmux and generic pin configuration
+> schemas and does not introduce custom Devicetree properties.
 >=20
 > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../pinctrl/aspeed,ast2700-soc1-pinctrl.yaml       | 760 +++++++++++++++=
+++++++
+>  1 file changed, 760 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc=
+1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-s=
+oc1-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..76944fd14e2c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc1-pinct=
+rl.yaml
+> @@ -0,0 +1,760 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/aspeed,ast2700-soc1-pinctrl.y=
+aml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED AST2700 SoC1 Pin Controller
+> +
+> +maintainers:
+> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+> +
+> +description:
+> +  The AST2700 features a dual-SoC architecture with two interconnected S=
+oCs,
+> +  each having its own System Control Unit (SCU) for independent pin cont=
+rol.
+> +  This pin controller manages the pin multiplexing for SoC1.
+> +
+> +  The SoC1 pin controller manages pin functions including eSPI, LPC and =
+I2C,
+> +  among others.
+> +
+> +properties:
+> +  compatible:
+> +    const: aspeed,ast2700-soc1-pinctrl
+> +  reg:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '-state$':
+> +    description: |
+> +      Pin control state.
+> +
+> +      If `function` is present, the node describes a pinmux state and mu=
+st
+> +      specify `groups`.
+> +
+> +      For pin configuration, exactly one of `groups` or `pins` must be
+> +      specified in each state node. Group-level configuration applies to=
+ all
+> +      pins in the group. Pin-level configuration may be supplied in a
+> +      separate state node for individual pins; when both group-level and
+> +      pin-level configuration apply to the same pin, the pin-level
+> +      configuration takes precedence.
+> +
+> +    type: object
+> +    allOf:
+> +      - $ref: pinmux-node.yaml#
+> +      - $ref: pincfg-node.yaml#
+> +      - if:
+> +          required:
+> +            - function
+> +        then:
+> +          required:
+> +            - groups
+> +      - oneOf:
+> +          - required:
+> +              - groups
+> +          - required:
+> +              - pins
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      function:
+> +        enum:
+> +          - ADC0
+> +          - ADC1
 
+It'd be nice if you could use the other enum format I think so that
+there's not 700 lines taken up by functions/groups/pins.
+
+Otherwise, I really don't like this approach but it seems to be standard
+on aspeed so whatever.
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 pw-bot: not-applicable
 
---l55Ya1GMCDxdgVnh
+Conor.
+
+
+> +          - ADC10
+> +          - ADC11
+> +          - ADC12
+> +          - ADC13
+> +          - ADC14
+> +          - ADC15
+> +          - ADC2
+> +          - ADC3
+> +          - ADC4
+> +          - ADC5
+> +          - ADC6
+> +          - ADC7
+> +          - ADC8
+> +          - ADC9
+> +          - AUXPWRGOOD0
+> +          - AUXPWRGOOD1
+> +          - CANBUS
+> +          - ESPI0
+> +          - ESPI1
+> +          - FSI0
+> +          - FSI1
+> +          - FSI2
+> +          - FSI3
+> +          - FWQSPI
+> +          - FWSPIABR
+> +          - FWWPN
+> +          - HBLED
+> +          - I2C0
+> +          - I2C1
+> +          - I2C10
+> +          - I2C11
+> +          - I2C12
+> +          - I2C13
+> +          - I2C14
+> +          - I2C15
+> +          - I2C2
+> +          - I2C3
+> +          - I2C4
+> +          - I2C5
+> +          - I2C6
+> +          - I2C7
+> +          - I2C8
+> +          - I2C9
+> +          - I2CF0
+> +          - I2CF1
+> +          - I2CF2
+> +          - I3C0
+> +          - I3C1
+> +          - I3C10
+> +          - I3C11
+> +          - I3C12
+> +          - I3C13
+> +          - I3C14
+> +          - I3C15
+> +          - I3C2
+> +          - I3C3
+> +          - I3C4
+> +          - I3C5
+> +          - I3C6
+> +          - I3C7
+> +          - I3C8
+> +          - I3C9
+> +          - JTAGM1
+> +          - LPC0
+> +          - LPC1
+> +          - LTPI
+> +          - MACLINK0
+> +          - MACLINK1
+> +          - MACLINK2
+> +          - MDIO0
+> +          - MDIO1
+> +          - MDIO2
+> +          - NCTS0
+> +          - NCTS1
+> +          - NCTS5
+> +          - NCTS6
+> +          - NDCD0
+> +          - NDCD1
+> +          - NDCD5
+> +          - NDCD6
+> +          - NDSR0
+> +          - NDSR1
+> +          - NDSR5
+> +          - NDSR6
+> +          - NDTR0
+> +          - NDTR1
+> +          - NDTR5
+> +          - NDTR6
+> +          - NRI0
+> +          - NRI1
+> +          - NRI5
+> +          - NRI6
+> +          - NRTS0
+> +          - NRTS1
+> +          - NRTS5
+> +          - NRTS6
+> +          - OSCCLK
+> +          - PCIERC
+> +          - PWM0
+> +          - PWM1
+> +          - PWM10
+> +          - PWM11
+> +          - PWM12
+> +          - PWM13
+> +          - PWM14
+> +          - PWM15
+> +          - PWM2
+> +          - PWM3
+> +          - PWM4
+> +          - PWM5
+> +          - PWM6
+> +          - PWM7
+> +          - PWM8
+> +          - PWM9
+> +          - QSPI0
+> +          - QSPI1
+> +          - QSPI2
+> +          - RGMII0
+> +          - RGMII1
+> +          - RMII0
+> +          - RMII0RCLKO
+> +          - RMII1
+> +          - RMII1RCLKO
+> +          - SALT0
+> +          - SALT1
+> +          - SALT10
+> +          - SALT11
+> +          - SALT12
+> +          - SALT13
+> +          - SALT14
+> +          - SALT15
+> +          - SALT2
+> +          - SALT3
+> +          - SALT4
+> +          - SALT5
+> +          - SALT6
+> +          - SALT7
+> +          - SALT8
+> +          - SALT9
+> +          - SD
+> +          - SGMII
+> +          - SGPM0
+> +          - SGPM1
+> +          - SGPS
+> +          - SIOONCTRLN0
+> +          - SIOONCTRLN1
+> +          - SIOPBIN0
+> +          - SIOPBIN1
+> +          - SIOPBON0
+> +          - SIOPBON1
+> +          - SIOPWREQN0
+> +          - SIOPWREQN1
+> +          - SIOPWRGD1
+> +          - SIOS3N0
+> +          - SIOS3N1
+> +          - SIOS5N0
+> +          - SIOS5N1
+> +          - SIOSCIN0
+> +          - SIOSCIN1
+> +          - SMON0
+> +          - SMON1
+> +          - SPI0
+> +          - SPI0ABR
+> +          - SPI0CS1
+> +          - SPI0WPN
+> +          - SPI1
+> +          - SPI1ABR
+> +          - SPI1CS1
+> +          - SPI1WPN
+> +          - SPI2
+> +          - SPI2CS1
+> +          - TACH0
+> +          - TACH1
+> +          - TACH10
+> +          - TACH11
+> +          - TACH12
+> +          - TACH13
+> +          - TACH14
+> +          - TACH15
+> +          - TACH2
+> +          - TACH3
+> +          - TACH4
+> +          - TACH5
+> +          - TACH6
+> +          - TACH7
+> +          - TACH8
+> +          - TACH9
+> +          - THRU0
+> +          - THRU1
+> +          - THRU2
+> +          - THRU3
+> +          - UART0
+> +          - UART1
+> +          - UART10
+> +          - UART11
+> +          - UART2
+> +          - UART3
+> +          - UART5
+> +          - UART6
+> +          - UART7
+> +          - UART8
+> +          - UART9
+> +          - USB2C
+> +          - USB2D
+> +          - USBUART
+> +          - VGA
+> +          - VPI
+> +          - WDTRST0N
+> +          - WDTRST1N
+> +          - WDTRST2N
+> +          - WDTRST3N
+> +          - WDTRST4N
+> +          - WDTRST5N
+> +          - WDTRST6N
+> +          - WDTRST7N
+> +
+> +      groups:
+> +        enum:
+> +          - ADC0
+> +          - ADC1
+> +          - ADC10
+> +          - ADC11
+> +          - ADC12
+> +          - ADC13
+> +          - ADC14
+> +          - ADC15
+> +          - ADC2
+> +          - ADC3
+> +          - ADC4
+> +          - ADC5
+> +          - ADC6
+> +          - ADC7
+> +          - ADC8
+> +          - ADC9
+> +          - AUXPWRGOOD0
+> +          - AUXPWRGOOD1
+> +          - CANBUS
+> +          - DI2C0
+> +          - DI2C1
+> +          - DI2C10
+> +          - DI2C11
+> +          - DI2C12
+> +          - DI2C13
+> +          - DI2C14
+> +          - DI2C15
+> +          - DI2C2
+> +          - DI2C3
+> +          - DI2C8
+> +          - DI2C9
+> +          - DSGPM0
+> +          - ESPI0
+> +          - ESPI1
+> +          - FSI0
+> +          - FSI1
+> +          - FSI2
+> +          - FSI3
+> +          - FWQSPI
+> +          - FWSPIABR
+> +          - FWWPN
+> +          - HBLED
+> +          - HVI3C0
+> +          - HVI3C1
+> +          - HVI3C12
+> +          - HVI3C13
+> +          - HVI3C14
+> +          - HVI3C15
+> +          - HVI3C2
+> +          - HVI3C3
+> +          - I2C0
+> +          - I2C1
+> +          - I2C10
+> +          - I2C11
+> +          - I2C12
+> +          - I2C13
+> +          - I2C14
+> +          - I2C15
+> +          - I2C2
+> +          - I2C3
+> +          - I2C4
+> +          - I2C5
+> +          - I2C6
+> +          - I2C7
+> +          - I2C8
+> +          - I2C9
+> +          - I2CF0
+> +          - I2CF1
+> +          - I2CF2
+> +          - I3C10
+> +          - I3C11
+> +          - I3C4
+> +          - I3C5
+> +          - I3C6
+> +          - I3C7
+> +          - I3C8
+> +          - I3C9
+> +          - JTAGM1
+> +          - LPC0
+> +          - LPC1
+> +          - LTPI
+> +          - LTPI_PS_I2C0
+> +          - LTPI_PS_I2C1
+> +          - LTPI_PS_I2C2
+> +          - LTPI_PS_I2C3
+> +          - MACLINK0
+> +          - MACLINK1
+> +          - MACLINK2
+> +          - MDIO0
+> +          - MDIO1
+> +          - MDIO2
+> +          - NCTS0
+> +          - NCTS1
+> +          - NCTS5
+> +          - NCTS6
+> +          - NDCD0
+> +          - NDCD1
+> +          - NDCD5
+> +          - NDCD6
+> +          - NDSR0
+> +          - NDSR1
+> +          - NDSR5
+> +          - NDSR6
+> +          - NDTR0
+> +          - NDTR1
+> +          - NDTR5
+> +          - NDTR6
+> +          - NRI0
+> +          - NRI1
+> +          - NRI5
+> +          - NRI6
+> +          - NRTS0
+> +          - NRTS1
+> +          - NRTS5
+> +          - NRTS6
+> +          - OSCCLK
+> +          - PE2SGRSTN
+> +          - PWM0
+> +          - PWM1
+> +          - PWM10
+> +          - PWM11
+> +          - PWM12
+> +          - PWM13
+> +          - PWM14
+> +          - PWM15
+> +          - PWM2
+> +          - PWM3
+> +          - PWM4
+> +          - PWM5
+> +          - PWM6
+> +          - PWM7
+> +          - PWM8
+> +          - PWM9
+> +          - QSPI0
+> +          - QSPI1
+> +          - QSPI2
+> +          - RGMII0
+> +          - RGMII1
+> +          - RMII0
+> +          - RMII0RCLKO
+> +          - RMII1
+> +          - RMII1RCLKO
+> +          - SALT0
+> +          - SALT1
+> +          - SALT10
+> +          - SALT11
+> +          - SALT12
+> +          - SALT13
+> +          - SALT14
+> +          - SALT15
+> +          - SALT2
+> +          - SALT3
+> +          - SALT4
+> +          - SALT5
+> +          - SALT6
+> +          - SALT7
+> +          - SALT8
+> +          - SALT9
+> +          - SD
+> +          - SGMII
+> +          - SGPM0
+> +          - SGPM1
+> +          - SGPS
+> +          - SIOONCTRLN0
+> +          - SIOONCTRLN1
+> +          - SIOPBIN0
+> +          - SIOPBIN1
+> +          - SIOPBON0
+> +          - SIOPBON1
+> +          - SIOPWREQN0
+> +          - SIOPWREQN1
+> +          - SIOPWRGD1
+> +          - SIOS3N0
+> +          - SIOS3N1
+> +          - SIOS5N0
+> +          - SIOS5N1
+> +          - SIOSCIN0
+> +          - SIOSCIN1
+> +          - SMON0
+> +          - SMON1
+> +          - SPI0
+> +          - SPI0ABR
+> +          - SPI0CS1
+> +          - SPI0WPN
+> +          - SPI1
+> +          - SPI1ABR
+> +          - SPI1CS1
+> +          - SPI1WPN
+> +          - SPI2
+> +          - SPI2CS1
+> +          - TACH0
+> +          - TACH1
+> +          - TACH10
+> +          - TACH11
+> +          - TACH12
+> +          - TACH13
+> +          - TACH14
+> +          - TACH15
+> +          - TACH2
+> +          - TACH3
+> +          - TACH4
+> +          - TACH5
+> +          - TACH6
+> +          - TACH7
+> +          - TACH8
+> +          - TACH9
+> +          - THRU0
+> +          - THRU1
+> +          - THRU2
+> +          - THRU3
+> +          - UART0
+> +          - UART1
+> +          - UART10
+> +          - UART11
+> +          - UART2
+> +          - UART3
+> +          - UART5
+> +          - UART6
+> +          - UART7
+> +          - UART8
+> +          - UART9
+> +          - USB2CD
+> +          - USB2CH
+> +          - USB2CU
+> +          - USB2CUD
+> +          - USB2DD
+> +          - USB2DH
+> +          - USBUART
+> +          - VGA
+> +          - VPI
+> +          - WDTRST0N
+> +          - WDTRST1N
+> +          - WDTRST2N
+> +          - WDTRST3N
+> +          - WDTRST4N
+> +          - WDTRST5N
+> +          - WDTRST6N
+> +          - WDTRST7N
+> +
+> +      pins:
+> +        enum:
+> +          - A14
+> +          - A15
+> +          - A18
+> +          - A19
+> +          - A21
+> +          - A22
+> +          - A23
+> +          - A24
+> +          - A25
+> +          - A26
+> +          - A6
+> +          - A7
+> +          - A8
+> +          - AA12
+> +          - AA13
+> +          - AA14
+> +          - AA15
+> +          - AA16
+> +          - AA17
+> +          - AA18
+> +          - AA20
+> +          - AA21
+> +          - AA22
+> +          - AA23
+> +          - AA24
+> +          - AA25
+> +          - AA26
+> +          - AB15
+> +          - AB16
+> +          - AB17
+> +          - AB18
+> +          - AB19
+> +          - AB20
+> +          - AB21
+> +          - AB22
+> +          - AB23
+> +          - AB24
+> +          - AB25
+> +          - AB26
+> +          - AC15
+> +          - AC16
+> +          - AC17
+> +          - AC18
+> +          - AC19
+> +          - AC20
+> +          - AC22
+> +          - AC24
+> +          - AC25
+> +          - AC26
+> +          - AD15
+> +          - AD16
+> +          - AD17
+> +          - AD18
+> +          - AD19
+> +          - AD20
+> +          - AD22
+> +          - AD25
+> +          - AD26
+> +          - AE16
+> +          - AE17
+> +          - AE18
+> +          - AE19
+> +          - AE20
+> +          - AE21
+> +          - AE23
+> +          - AE25
+> +          - AE26
+> +          - AF16
+> +          - AF17
+> +          - AF18
+> +          - AF19
+> +          - AF20
+> +          - AF21
+> +          - AF23
+> +          - AF25
+> +          - AF26
+> +          - B10
+> +          - B11
+> +          - B12
+> +          - B13
+> +          - B14
+> +          - B15
+> +          - B16
+> +          - B18
+> +          - B19
+> +          - B21
+> +          - B22
+> +          - B23
+> +          - B24
+> +          - B25
+> +          - B26
+> +          - B6
+> +          - B7
+> +          - B8
+> +          - B9
+> +          - C10
+> +          - C11
+> +          - C12
+> +          - C13
+> +          - C14
+> +          - C15
+> +          - C16
+> +          - C17
+> +          - C18
+> +          - C19
+> +          - C20
+> +          - C23
+> +          - C26
+> +          - C6
+> +          - C7
+> +          - C8
+> +          - C9
+> +          - D10
+> +          - D12
+> +          - D14
+> +          - D15
+> +          - D19
+> +          - D20
+> +          - D24
+> +          - D26
+> +          - D7
+> +          - D8
+> +          - D9
+> +          - E10
+> +          - E11
+> +          - E12
+> +          - E13
+> +          - E14
+> +          - E26
+> +          - E7
+> +          - E8
+> +          - E9
+> +          - F10
+> +          - F11
+> +          - F12
+> +          - F13
+> +          - F14
+> +          - F26
+> +          - F7
+> +          - F8
+> +          - F9
+> +          - G10
+> +          - G11
+> +          - G7
+> +          - G8
+> +          - G9
+> +          - H10
+> +          - H11
+> +          - H7
+> +          - H8
+> +          - H9
+> +          - J10
+> +          - J11
+> +          - J12
+> +          - J13
+> +          - J9
+> +          - K12
+> +          - K13
+> +          - L12
+> +          - M13
+> +          - M14
+> +          - M15
+> +          - M16
+> +          - N13
+> +          - N14
+> +          - N15
+> +          - N25
+> +          - N26
+> +          - P13
+> +          - P14
+> +          - P25
+> +          - P26
+> +          - R14
+> +          - R25
+> +          - R26
+> +          - T23
+> +          - T24
+> +          - U21
+> +          - U22
+> +          - U25
+> +          - U26
+> +          - V14
+> +          - V16
+> +          - V17
+> +          - V18
+> +          - V19
+> +          - V20
+> +          - V21
+> +          - V22
+> +          - V23
+> +          - V24
+> +          - W14
+> +          - W16
+> +          - W17
+> +          - W18
+> +          - W20
+> +          - W21
+> +          - W22
+> +          - W25
+> +          - W26
+> +          - Y11
+> +          - Y15
+> +          - Y16
+> +          - Y17
+> +          - Y18
+> +          - Y20
+> +          - Y21
+> +          - Y22
+> +          - Y23
+> +          - Y24
+> +          - Y25
+> +          - Y26
+> +
+> +      drive-strength:
+> +        enum: [4, 8, 12, 16]
+> +
+> +      bias-disable: true
+> +      bias-pull-up: true
+> +      bias-pull-down: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pinctrl@400 {
+> +        compatible =3D "aspeed,ast2700-soc1-pinctrl";
+> +        reg =3D <0x400 0x2A0>;
+> +        sgpm0-state {
+> +            function =3D "SGPM0";
+> +            groups =3D "SGPM0";
+> +        };
+> +    };
+>=20
+> --=20
+> 2.34.1
+>=20
+
+--ovS5RWpK3acdRmpy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagdVcgAKCRB4tDGHoIJi
-0o0eAQCfCKP4u1gucOjpM6unsuNYH1ObZr6/u9PFfMNjTIUy3QD/cc0ejlq8efRu
-gg9kIhJOjzD5xQQu5JLiBVcerSsaPwU=
-=JJiP
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCagdWeAAKCRB4tDGHoIJi
+0k38APwKCap7FFz0S+ESoR6mGIuy6cupCZ+wkK/QVhbrPjzBpwEA8T3MG4W2wuhn
+D2ugJEkcjUVE9MTtzfohkfKtpTORfAM=
+=yfYj
 -----END PGP SIGNATURE-----
 
---l55Ya1GMCDxdgVnh--
+--ovS5RWpK3acdRmpy--
 
