@@ -1,232 +1,177 @@
-Return-Path: <linux-gpio+bounces-36970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SHwLK6+9CGql3QMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36970-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 20:55:43 +0200
+	id qKc7EHDXCGqZ7gMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36971-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 22:45:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59C6555D659
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 20:55:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 988AF55DBA4
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 22:45:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E7B78300F5C0
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 18:55:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1FC6D300D963
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2026 20:45:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B482B342C93;
-	Sat, 16 May 2026 18:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6065B37B3FE;
+	Sat, 16 May 2026 20:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhK1sizi"
+	dkim=pass (2048-bit key) header.d=nexthop.ai header.i=@nexthop.ai header.b="Bu6GlWwK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7563B28686;
-	Sat, 16 May 2026 18:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E7C379EF7
+	for <linux-gpio@vger.kernel.org>; Sat, 16 May 2026 20:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778957736; cv=none; b=VbUO0bxtX7u+CPfpoSS5Wk6he/e7nZnru3vdnavr2MO7DyfKtkW8NqyU1oF9WfUPdjU55T7BRaiF1/XAkqBshmpLP6RooIiZGto4dGhCSSjuwSwD4+bxTtyexwhU38bmYRGgBBLUCnpA8FJOu1jgeR8SbzG4R6jJ5MTrp54UUrQ=
+	t=1778964320; cv=none; b=SS9+kq6E/SxysDDwRMvSSFZJb3GVqybUqcnyWymOSeMXVibJkeUUcUuKJpDJDhfNefC1hdLs7lVtaAXrvOB6ZqOc0UDYVY8m9H5xUSrt4DWTrkd5QI+xp1XX/rWylRayRgqgkxS3vhQ9fNFAHgBbz01cAw61if6aJKSUyztOwdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778957736; c=relaxed/simple;
-	bh=q/IpILmr0azoC+t0Lf2g+yybKTzBbhfe+OMXbr5vnMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kbo1J/U1puZ/DF9hsIJjmjoGN4XEBBd4AiHXppHBZU3bfixcD/Wp3s4k4HaObYxVY2eoJvsQ/oAjyAO1zxxR/nDEsG/AKgUpWKwhDGg6uwwxmxnB89zUa99Ud9unZ35DhpGOi9NcsQFfKz/8x7TSJcvYzd1H2v/PL8jUfwnb6ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhK1sizi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDB1C19425;
-	Sat, 16 May 2026 18:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778957736;
-	bh=q/IpILmr0azoC+t0Lf2g+yybKTzBbhfe+OMXbr5vnMg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZhK1siziz+X7X/gaHEAf46XLp/wpndFW29ONEQhistZJ8LZL9NdVhquDzcCgPzRA7
-	 bYeyYR8bf5oaBqHnG4MFF7J/vDaW1WRDMr726TXGzMop61gPwHVD6HKwttfehaoLoA
-	 h7vseBAgDOF2R1upFMaCUfj+o0ws1/A5FYJEw9mg1eHlPYjnYCltvTi0BhptUvduT2
-	 9ZQ1zmnNifahl03+VVA7SFJfAiqMlxHu0iCqsxEmROOF0FY2eStn6JT/JHOpG/VQq5
-	 deKDcavTSAoCLRc5oCU4z03rHl+rmDgUp+Sn0RdZQMBSdjAowxOxCHcvXl1dC/Zb7q
-	 iT6k3kn+oWE+Q==
-Date: Sat, 16 May 2026 19:55:22 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v11 5/6] iio: adc: ad4691: add oversampling support
-Message-ID: <20260516195522.6792f89e@jic23-huawei>
-In-Reply-To: <20260515-ad4692-multichannel-sar-adc-driver-v11-5-eab27d852ac2@analog.com>
-References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
-	<20260515-ad4692-multichannel-sar-adc-driver-v11-5-eab27d852ac2@analog.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1778964320; c=relaxed/simple;
+	bh=ZA9YwSMOB2P20GluMrii2imNU6EYpgFSSMjGH9Xw3dg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GLAebB4Ywys4jhiW/xl0Druq+4ni22WzKdhUl7Cb+IHKHQZ3AqI0K12XjfNhSaBcWAMMm+PO9RBDbFUGT3vWOEKpYNVfi1pUPfTa+Fx0VSC08g+7cYov6H8xmruE7mMLUHp0eqa5ShNvjx/aM+WRrX4jTOMz/kEqKyh5j1fqwN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nexthop.ai; spf=pass smtp.mailfrom=nexthop.ai; dkim=pass (2048-bit key) header.d=nexthop.ai header.i=@nexthop.ai header.b=Bu6GlWwK; arc=none smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nexthop.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexthop.ai
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2f03d6cf77bso985813eec.0
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2026 13:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nexthop.ai; s=google; t=1778964315; x=1779569115; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uVEabIThyai3FEuPEZ337FSXUM+wr3XkJNz0zdLoyBg=;
+        b=Bu6GlWwKbUbz6QdjrElJsr6PeCUjKBBhOR9St3e8Nooq8aYDsWly4zsFyFPTVopRBq
+         5ThBFw5ofrpUGe4EASDGDMLcPZ+Y6IzkB8Jsv7yIXzmkkNjb5p8ZGbA6smDV1QvAYomn
+         7rHPZNErTFzc/AvRtXg+8Mlv8K1hMpPo7PE5K5QgGG7mAqZasZChoV9FkR63ZCLt9ZeY
+         sR/P1bxWsV9ELh/SRG8cwq6eaXE24QmlQuiZfH62YwmA2Cu8zAqfgBFQWO7LZaF9Yr4r
+         /Q/mibS+VnA1DccwBEGLJu/JQHUz21lDy4Riu8xr2f+LVA/uB806tnuUqn/EUSZFX7nH
+         HHqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778964315; x=1779569115;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uVEabIThyai3FEuPEZ337FSXUM+wr3XkJNz0zdLoyBg=;
+        b=aHcXz0vFVlNCJIHJqZ0SlUxwSAPqO6uOPs3tFdZrChJ4M9erSS/MBpwJLV7uryzcM7
+         BmNL5Ai8rjIuUcdueRH4euZpOhQj16lMRIpwZCv6NizsYi3VbHqCI8Eb/T8ookTxJVME
+         8s+sVR+HK7PBLSLyrChqPl/EPPuASsDJ33elA+H8zuoO0sGCnhYbmZ/zNHbE88I2Nqho
+         Z7rjDqMtE2iQSKQtbxHpecceV6hzx2ASCJhB4bWHjkUa4jtuZf672jHHyRzEfQAVy/B4
+         1qAOaTIYa58TmOm8iAWCQq/shmHNUJffrw/snISs0gKfcPwtNxWEsOWyDFGYLEnndaY+
+         vgwQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+v6U+HYVjtUacsr6uhn1XsTDABGs07+F0mzszFcxVyiZ7AZbRWNlh2PScI4B4KPbEQWORSxCQxhoeS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQfBVBveNstk6JrKqbY697QM/nCZ5x9PpYrq3oPZxke46AbcVz
+	tDuREuTyhz8pr9V6glC/6r9/aMNsYkPmWISVD6S8+ZIm/kstahaUW75a5Iz0ssUL2xmpvqxPHZY
+	IVLniMZM=
+X-Gm-Gg: Acq92OFeKg1E67VkoGs3JG8MkV5wsDlNGQ08FYKbwcEnN6mCEDoxwbzv4DhWMJMjXJM
+	OHdbYNMlOj3W1J37bymVaZGWzwUtfZUftVq09eTqhH0+sh4SRgoG2scaslVDaFljbmqaDbwOl8x
+	XHsFe9xPZqeNrr0c1is8aUgXZ3Eo7I8mNOdbKCSyXsCuwtWoV6Wjrl2FDABBI6JvyMAUUKZDmCC
+	Yfo83MCFri40IQ2+Rl+RlDQmlW5LepliMq5XhIJyV2kRJOTMzWcieL9uqgTOcImMHBDWJF+NYSu
+	pd+925fR8mEAf5150+UfdwcFUsLJ4HTqFWrl3bDRbaJQqWhF6TXC0yfQq59JZncjuHazolOLiDG
+	H6KKcHFwF8+KtW57H/My7sJFxIh8aweYQum88oH++iCWRGSes/KGZgO2G5FAdtFceRiHcslT4Ss
+	KaU1ER9ed3zUmIHTloiqMBVBZn8Q==
+X-Received: by 2002:a05:7300:7255:b0:2d0:239a:23c9 with SMTP id 5a478bee46e88-30398677161mr4329663eec.16.1778964315089;
+        Sat, 16 May 2026 13:45:15 -0700 (PDT)
+Received: from [127.0.0.2] ([50.145.100.174])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302947e917dsm10181189eec.12.2026.05.16.13.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2026 13:45:14 -0700 (PDT)
+From: Abdurrahman Hussain <abdurrahman@nexthop.ai>
+Subject: [PATCH 0/2] hwmon: (pmbus/adm1266) adm1266_gpio_get_multiple()
+ fixes
+Date: Sat, 16 May 2026 13:45:05 -0700
+Message-Id: <20260516-adm1266-gpio-fixes-v1-0-38d9dd39b905@nexthop.ai>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 59C6555D659
+X-B4-Tracking: v=1; b=H4sIAFHXCGoC/yXMSwqEMBBF0a1IjbsgCRqwt9I4yKfUEvyQakUQ9
+ 27U4eFx3wFCiUngWxyQaGPhecrQnwJC76aOkGM2GGWsqrRFF0dtrMVu4Rlb3kkw+ujroJUrg4E
+ cLomeIXe/5rWsfqDwv5/gPC9EsrNWdgAAAA==
+X-Change-ID: 20260516-adm1266-gpio-fixes-dbdb9c10a4c2
+To: Guenter Roeck <linux@roeck-us.net>, 
+ Alexandru Tachici <alexandru.tachici@analog.com>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Abdurrahman Hussain <abdurrahman@nexthop.ai>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778964314; l=1681;
+ i=abdurrahman@nexthop.ai; s=20260510; h=from:subject:message-id;
+ bh=ZA9YwSMOB2P20GluMrii2imNU6EYpgFSSMjGH9Xw3dg=;
+ b=z0KvGRAxXpGOxnVQJ8+lQLLDDEZfwJjhR9BPUurGOwkSyhYJbKkmLxtUr/8RYcMHV/DH4CI/f
+ x1zOnDpQDRfBMFvH2tY91AtqKMe5KnIulhxqJZVaU6Z15l4sYF2D8aG
+X-Developer-Key: i=abdurrahman@nexthop.ai; a=ed25519;
+ pk=omTm9cCAbO0ZhS32aKfJDKue0W3sQGpG9ub5eYHif8I=
+X-Rspamd-Queue-Id: 988AF55DBA4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[nexthop.ai,none];
+	R_DKIM_ALLOW(-0.20)[nexthop.ai:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36970-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DKIM_TRACE(0.00)[nexthop.ai:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36971-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[abdurrahman@nexthop.ai,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url]
 X-Rspamd-Action: no action
 
-On Fri, 15 May 2026 16:31:34 +0300
-Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
+Two pre-existing bugs in adm1266_gpio_get_multiple() that landed
+together when GPIO support was first added (commit d98dfad35c38).
+Both are reachable any time userspace queries multiple ADM1266 GPIO
+or PDIO lines at once via the gpiolib char-dev or sysfs interfaces.
 
-> From: Radu Sabau <radu.sabau@analog.com>
-> 
-> Add per-channel oversampling ratio (OSR) support for CNV burst mode.
-> The accumulator depth register (ACC_DEPTH_IN) is programmed with the
-> selected OSR at buffer enable time and before each single-shot read.
-> 
-> Supported OSR values: 1, 2, 4, 8, 16, 32.
-> 
-> Introduce AD4691_MANUAL_CHANNEL() for manual mode channels, which do
-> not expose the oversampling_ratio attribute since OSR is not applicable
-> in that mode. A separate manual_channels array is added to
-> struct ad4691_channel_info and selected at probe time.
-> 
-> in_voltageN_sampling_frequency represents the effective output rate for
-> channel N, defined as osc_freq / osr[N]. The chip has one internal
-> oscillator shared by all channels; each channel independently
-> accumulates osr[N] oscillator cycles before producing a result.
-> 
-> Writing sampling_frequency computes needed_osc = freq * osr[N] and
-> snaps down to the largest oscillator table entry that satisfies both
-> osc <= needed_osc and osc % osr[N] == 0, guaranteeing an exact integer
-> read-back. The result is stored in target_osc_freq_Hz and written to
-> OSC_FREQ_REG at buffer enable and single-shot time, so sampling_frequency
-> and oversampling_ratio can be set in any order.
-> 
-> in_voltageN_sampling_frequency_available is computed dynamically from
-> the channel's current OSR, listing only oscillator table entries that
-> divide evenly by osr[N], expressed as effective rates. The list becomes
-> sparser as OSR increases, capping at max_rate / osr[N].
-> 
-> Writing oversampling_ratio stores the new OSR for that channel and snaps
-> target_osc_freq_Hz to the largest oscillator table entry that is both
-> <= old_effective_rate * new_osr and evenly divisible by new_osr. This
-> preserves an integer read-back of in_voltageN_sampling_frequency after
-> the OSR change while keeping the oscillator as close as possible to the
-> previous effective rate.
-> 
-> OSR defaults to 1 (no accumulation) for all channels.
-> 
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+Patch 1 caps the PDIO scan loop at ADM1266_PDIO_NR (16) instead of
+ADM1266_PDIO_STATUS (0xE9 = 233, a PMBus command code that ended up
+in the bound by mistake).  As written, the scan walks
+find_next_bit() up to bit 242 across a 25-bit caller mask, reading
+out of bounds and -- if any of that incidental memory contains a
+set bit -- driving a corresponding out-of-bounds write to the
+caller's bits array.  Flagged by sashiko in review of an unrelated
+fix series [1].
 
-Mostly to avoid others looking into it. We do indeed have some issues
-in the IIO core with races around read_avail().
-They've been there a long time and attempts to fix them haven't yet
-made it upstream.  Where possible it is better to precompute all the options
-and pick a pointer rather than copying on the fly.
+Patch 2 drops a redundant "*bits = 0" reset that sits between the
+GPIO and PDIO halves of the function.  As written, the GPIO bits
+the first loop populates are immediately discarded before the PDIO
+loop runs, so any caller asking for a mix of GPIO and PDIO lines
+sees the GPIO half always reported as 0.
 
-I think we can do that here but maybe I'm missing something.
+[1] https://sashiko.dev/#/patchset/20260515-adm1266-fixes-v1-0-1c1ea1349cfe@nexthop.ai
 
-I'm running out of energy tonight and feel like some Eurovision silliness
-so I'm not going to do another full review today at least
+Signed-off-by: Abdurrahman Hussain <abdurrahman@nexthop.ai>
+---
+Abdurrahman Hussain (2):
+      hwmon: (pmbus/adm1266) cap PDIO scan in get_multiple at ADM1266_PDIO_NR
+      hwmon: (pmbus/adm1266) don't clobber GPIO bits before PDIO read in get_multiple
 
-> ---
->  drivers/iio/adc/ad4691.c | 381 ++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 343 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-> index 25f7a6939b0f..39244e0e4a2d 100644
-> --- a/drivers/iio/adc/ad4691.c
-> +++ b/drivers/iio/adc/ad4691.c
+ drivers/hwmon/pmbus/adm1266.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+---
+base-commit: 70eda68668d1476b459b64e69b8f36659fa9dfa8
+change-id: 20260516-adm1266-gpio-fixes-dbdb9c10a4c2
 
->  
->  static int ad4691_read_avail(struct iio_dev *indio_dev,
-> @@ -634,10 +802,46 @@ static int ad4691_read_avail(struct iio_dev *indio_dev,
->  	unsigned int start = ad4691_samp_freq_start(st->info);
->  
->  	switch (mask) {
-> -	case IIO_CHAN_INFO_SAMP_FREQ:
-> -		*vals = &ad4691_osc_freqs_Hz[start];
-> +	case IIO_CHAN_INFO_SAMP_FREQ: {
-> +		unsigned int osr;
-> +		int n = 0;
-> +
-> +		/*
-> +		 * Hold the lock while reading osr[chan] and populating the
-> +		 * scratch buffer: a concurrent oversampling_ratio write modifies
-> +		 * both target_osc_freq_Hz and osr[] under the lock, so we must
-> +		 * read osr atomically with respect to that write. The scratch
-> +		 * buffer is per-channel, so concurrent reads on different
-> +		 * channels do not race; concurrent reads on the same channel
-> +		 * would compute identical values, but holding the lock avoids
-> +		 * the formal data race.
+Best regards,
+--  
+Abdurrahman Hussain <abdurrahman@nexthop.ai>
 
-The further issue that sashiko points out is we might rip whilst the
-core is formatting this. It's actually worse than a small race as the
-consumer interface might hold the pointer indefinitely.  There are only
-a few osr values, can we precompute the lot and make this a pick?
-
-
-> +		 */
-> +		scoped_guard(mutex, &st->lock) {
-> +			osr = st->osr[chan->channel];
-> +
-> +			/*
-> +			 * Only oscillator frequencies evenly divisible by the
-> +			 * channel's OSR yield an integer effective rate; expose
-> +			 * those as effective rates (osc / osr) so the user works
-> +			 * entirely in output-sample space.
-> +			 */
-> +			for (unsigned int i = start;
-> +			     i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
-> +				if (ad4691_osc_freqs_Hz[i] % osr)
-> +					continue;
-> +				st->samp_freq_avail[chan->channel][n++] =
-> +					ad4691_osc_freqs_Hz[i] / osr;
-> +			}
-> +		}
-> +		*vals = st->samp_freq_avail[chan->channel];
->  		*type = IIO_VAL_INT;
-> -		*length = ARRAY_SIZE(ad4691_osc_freqs_Hz) - start;
-> +		*length = n;
-> +		return IIO_AVAIL_LIST;
-> +	}
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*vals = ad4691_oversampling_ratios;
-> +		*type = IIO_VAL_INT;
-> +		*length = ARRAY_SIZE(ad4691_oversampling_ratios);
->  		return IIO_AVAIL_LIST;
->  	default:
->  		return -EINVAL;
 
