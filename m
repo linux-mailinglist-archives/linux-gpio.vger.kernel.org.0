@@ -1,180 +1,198 @@
-Return-Path: <linux-gpio+bounces-36995-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36996-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MAM2D7bpCWpavAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-36995-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 18:15:50 +0200
+	id +GekHj32CWrIvgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-36996-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 19:09:17 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDBDF5623C4
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 18:15:49 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A028562679
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 19:09:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 49A5130088B4
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 16:15:48 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D9D81300291D
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2026 17:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC29A3B774F;
-	Sun, 17 May 2026 16:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9B9F3C0637;
+	Sun, 17 May 2026 17:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVwQNc4a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7ZYzflP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC333064A
-	for <linux-gpio@vger.kernel.org>; Sun, 17 May 2026 16:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779034547; cv=none; b=Cr6Gw4FE0JFhVDLm1OzwG5LT1SzjqR3TwexjdAlm5EdA7vALyNjy5Irj4MKo6ocrKOJOrEEbALg311Oj+WRo9ICgfGxTjJv+A5deQxI8DCc3rrNzkW5VEqH/NIGflKh943amcwaYWkGUq11RLj4Ck4Nz/eoqJs9Qx1yZ+frY3GU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779034547; c=relaxed/simple;
-	bh=1L3zPpdK+XTaPDAZy33QIx+6Spr0ZSthXEqQgReNVoI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FpNsdtpGJWuh25UWsSqUW2soZhEdJ3sAtO15VEqFIEoZUghWM4jMv+zlQQYM4Ahz1wFrSjxhR9o4SDuMy+BZsHV1a928qEjUuaZ5VeN0JbCOm8Wj+8EnoKuOqo65EQqzwjnMlJst6zNVzUeowmh6XJVpfXlPGAmY+YMYMcSZOAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pVwQNc4a; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2482DCC01
+	for <linux-gpio@vger.kernel.org>; Sun, 17 May 2026 17:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779037751; cv=pass; b=FAYS/Zog3DFofYu2Mt//zrApbtx2YSk+xTvMpCzQhc9gWxgL7zwUr+o1gKsEmxy6tVRpXmVK3WbvgFIbmEX7Jln/KcP7dzrW9ZtTcLefMzUTZ19SC1bBuAzO5wqZrq+wDzLw1pev/ryfkkhhXIXkZwmCu4DbuFjniFf3/Tb9YVk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779037751; c=relaxed/simple;
+	bh=gR7yXaMbFYnlgjumf6OzkaSf/fm5FQpc728TaerBcYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ENcGKhVWSaaXtGjO8WIhdT1YBhNH1Oq0R5Sbc13JBwoA1mJZK9qxQkHmYKJxMzf0HizaOfg87ikVgnnI1LzaxDv7qlwgf1fZ4g9hocpl1YWzhGxHBKx5IlnnYG+0pD/EfdYr4g9cTES9RIsWrLTWRDaPmTNMxPfPpW0qOnTbatI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F7ZYzflP; arc=pass smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4891c569cb1so1691145e9.2
-        for <linux-gpio@vger.kernel.org>; Sun, 17 May 2026 09:15:45 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7c58e6eb3edso7984327b3.2
+        for <linux-gpio@vger.kernel.org>; Sun, 17 May 2026 10:09:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779037749; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MCEHmPKIYAHXfCMHMh8f2GuEJTSIw+K69boLwEoYMMj7+3mnVDtO6sr1On5gq4fWAg
+         o3lvvcxytbnWu70jrgO35MF4gLs2zTdwwc/R0iUwauTJxv01cGBNc5z/ITIfmwBxLSA7
+         BG72WV/IFM/qgkkhakQphBld6vzUaRFjfMC9fliBzfLKF47vods8A8aPsqsDmyWtQmU1
+         bncKnixlW3avVk7IGhV9rILKnaKtQC6zB20RezmCP5iEQB5mUvLez+yv331dBKIImdAw
+         2Q1o16e9Fy8tXVjcqCA12SE6zxDAZ9rZNhL+koEvaAlqs7rLik6qp8hHnB18s1jrkUCd
+         n9HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=R2WC/h6pAzuRmbcYX3EI1ehtvQRlSkP72sx7+fUup/0=;
+        fh=vulsHiCQut1XFP8eapXRP8Qq99SB0OG8sPq4zg55oNE=;
+        b=JUOajpvR3VrC21SPfLB/TRUuF0/X9oa5DVOg+hPHkGBTbmnhx5zsEctRFBSnZeeAdG
+         /guFOUMKqfY8Aj4pYJFGnSpCZPFLE4zoJBaENqWp6PMtG4790uD1MhivtthyVQVkua8P
+         OBMWyqb37WnpL7aatjwTWE3hNsFl49X9x1dOo+PDrwrnXGBEpJm1jCyNnXdJSLB5ze53
+         zXQovaOT49m51clf/BLRDTS1+++cIeirJtFcLTP3g2r8oVbPj6mt9fAPSQ87rPAysflh
+         0OutkqcqZ7UjXOPj9DtHu/yHjtzH4AZS3vU2QMOM5kmjK1r8xhwxD4/HX56fovIB5kLX
+         N/tw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779034544; x=1779639344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAjpg+yPM1wXX0LTdZB7XKnnu66uLDhV1TDY4KTTlNE=;
-        b=pVwQNc4ap8z/44HoBU/3O3HUCv6937/Jnvrajy9kSDp3auX7OfQytA4BZAGYt2MYx2
-         5eikIagiLcE9uImI0rip7PhjC87IQJNBtDjJ61/I7+5xJc20XLD+U6yXcGGodDVVWjLm
-         8xShv1Nt1hCI5ulLJ2yl9iFvTzoKo9sWjExSS5wAVOhLSt9Ov+KIeCIlMEKxjJNpmia/
-         TmFiNFOn7cMggYup9+7Yu3T5MrSv0lcjV543+vQ9xPBZ+UOialQNCPFhVJmiThlBudMS
-         +HQcQfSqP667Z3thYEkpkBmTV24AfIaCqvjWylV0aOqjKJ5UcJrjsHAfmiMgJXf3czmw
-         pazQ==
+        d=gmail.com; s=20251104; t=1779037749; x=1779642549; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=R2WC/h6pAzuRmbcYX3EI1ehtvQRlSkP72sx7+fUup/0=;
+        b=F7ZYzflPmc5/sMLk5hNRCa6zuxOmGTYYhlVJ6TtAdFMNyDrZWIUYz57zRL/utm9M5P
+         d0HGhfa6GH1Smz0D6/QKq8rCxmL4JbfV68t5t4FZO0dhjr/ZxchyGqn9/XFcRZxyIyK0
+         O0Js8o99w1N5eR722lGjdDxDvRjUaY/+w2wEdGAZbKGsw0T3P4fLqaILbTuGBVFg7rJ9
+         ATDpGrn+Dstm8sD0xi1wRwuyaGuToTKM8sCrGzSQXv+Vz04dZ6lQI0ZY1fEmqb5rjG59
+         Xh9W2sPVQFsRJAOnRSEP82Hy7cA1kTlS+/rh8Ef9nhKcgl4AmaNKBoldxC+W7uvHK3yW
+         zJBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779034544; x=1779639344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1779037749; x=1779642549;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EAjpg+yPM1wXX0LTdZB7XKnnu66uLDhV1TDY4KTTlNE=;
-        b=HPS/FgB5fb8GD2f+4RSe9d4XM3K/0GRht4J7dthtJQ21G+aUVkebnf3ChUoGcrq06G
-         Tx0IjfqJ6aaUvpBFESvBgWtts/elQ0q5C5Qsk1DOjlK0Vrye3R+rTig991ChRI4n50G7
-         /tsINOKCFnGBz6sKPU3+RtIUKQWQECmWBF88+nlnKbTDnnQ6GSYmTmiLxYoRgSQ90bG+
-         gbRYlqc49mOla40GjlYpgBj/B3WxSQBUfqi/76fc53n4bjn6Ymzt5ed+RjRv+GQLG7rl
-         wOj9DP+0ER33Lrjdo7Gi0Eq1ySF6xNHmzZL5J18UhC1+i7aBP1eF/sNxSe/86CYKXgqI
-         yRAw==
-X-Forwarded-Encrypted: i=1; AFNElJ865alYBGJngUcbDPzkX1zJyzSS/0rxk86kW/sg5C26/OSEaZk6cZ85hWMiF6rsCjAwcEbfoQMao0z9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQAlK/o0+ZNElj/gcHNjxG8fD0wxZ5m/AuYDddTzG4R2AMPiZe
-	y5b+ibObx2NAK1GJiCpDdiZUzVJZxn/rGQXCNEr1KxuPXX4+0gNa7wwTefRZHXJW
-X-Gm-Gg: Acq92OFqu3CMmLcjrZXTlPrpfMHEaZdyDcRWGvKSosrw/CiZmD+ztuE/JshYPst+AN9
-	KbgOzawXCu9kqx6Bx1Daq7mISe1F/D/jdthXeC/j9WH0g9u+mVFDhHCsOjAKra72ZtR7bB/sogN
-	ojIKoRHTIaOwjtLI/CKCcG4sQAfsw1+yEDt74kTX22TbGzP7Rw8M+LtSKw6u+sKnI5f/2qQm+kt
-	ZLAesuQN93L9zs8l78QNXbqelLMwr4i/3lYtC8dxfzX8udxmTyX77hDDPypjtce3ABMG3dtKtop
-	J3pJbksUU2+71mTBEXIyXlZt/CJqbq8c8oSM/GT9zh3ijiV+5j2Mbbc2dBis62kRbruEG/hOkhF
-	d9xZhmEHHsUzzfS/H4IfOBNogCC7IKQK6zAJQ5dfZV1Tfn0nsU5XxZyctuUewVZS1+967dW9JXC
-	aJoHzvxiJrMtI3Jm5ffGFfVakZWMLX35Tznx1LmhmOnzYWdF/rW9nX9K8=
-X-Received: by 2002:a05:600c:450c:b0:490:6ab:4063 with SMTP id 5b1f17b1804b1-4900d55aed4mr1429375e9.6.1779034544134;
-        Sun, 17 May 2026 09:15:44 -0700 (PDT)
-Received: from localhost.localdomain ([82.215.118.79])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48febe6aff4sm62243015e9.25.2026.05.17.09.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 09:15:43 -0700 (PDT)
-From: Stepan Ionichev <sozdayvek@gmail.com>
-To: andy@kernel.org
-Cc: mika.westerberg@linux.intel.com,
-	linusw@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sozdayvek@gmail.com
-Subject: [PATCH v3] pinctrl: intel: move PWM base computation past feature check
-Date: Sun, 17 May 2026 21:15:30 +0500
-Message-Id: <20260517161530.1037-1-sozdayvek@gmail.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+        bh=R2WC/h6pAzuRmbcYX3EI1ehtvQRlSkP72sx7+fUup/0=;
+        b=knRB3y0Wx5/J7pHdIiQGPtmG8HAZsBFKQcXpmRJ7yVDZti6XyWy6QaDlTwaB3KjGiW
+         9LuDp/iooQWBHJSETq05GwqSQPG7ek7vZmXFLInazSXBQgcdxkUL9MCIxeQknQ1Rpe8s
+         DZjHHzK0kPcbyWFfP4znQPrK+utLEs7ngNC6SR6pnKxzA9SGQTXd6akrwZVIlQmAAQFH
+         9bk8vm0hu44X65hfpg1YIbQSJS1LkFfoV+j/14ELFiQXyCacxDu36OKH53YhZu9sVUnK
+         XbBoMqnyklDeD062ldcxZ/pmyBi60bpIt2I7QVxKmUNHYUL4IB1ml6KMq9DP99oy04pu
+         P1DQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/oZB0MwCRbtZiWERvoyEOzSMeNJxl1azKUYbymEQ10roBn503zblhNF2EOK6bgPaHs8GgswEQXrXep@vger.kernel.org
+X-Gm-Message-State: AOJu0YyILjRSSdmfcpbPdol78VnKqsda/NrumiTBVFkxXAfj2rPr1P1C
+	kkuvrZ/h+y/X/kuIVEECVENw7jXuU+h6xZzOJibfbsK37XpsgH6BvyiJ36fArzJedUeQVod6LOb
+	74y7hCBBNBSt5BsqsmhGETJKcrv1kc2g=
+X-Gm-Gg: Acq92OGnn7jl89tnwbHjg2S5WwLA42S3WKn2g1AUXGQ98KyAPDns4i3Ff/9AbIM+D6x
+	w+taQGIE9J3/dDNxJWDC0OWLow641ApB16hoXxxKQv6RMKRPipKY0bsK6JWAsm48JU9QS8keVKY
+	tqySouR8t30BUht4NWHqdaP9JN2L5J3hyjYlqmHCqS3ZNaDrTT1JiQNL3OsGaEo2LziTV5B+rn8
+	q+SnpeLECVikFwVUHv8+BJ8Gk7oSd5D4Stn7ZGXwCuEpNx/U0QYP8UyknHQWKW4cpnBwmYGYyUd
+	ThRaUihjIQHoWsjEXSo7XZDALdiqt88mT9fntzMZlfb6zWhyJ0n3OgElhwBWXCvPkfixG8X+IbO
+	PC8Vi1C8Ia9QSl+Uw5rXz40+OLR/JzS2IpLGghGP2Ud/B++0gk75xHY3YVY9VUm3Otu6IYQ==
+X-Received: by 2002:a05:690c:60c7:b0:7b8:5f91:65b8 with SMTP id
+ 00721157ae682-7c9594b35aemr118510287b3.9.1779037749285; Sun, 17 May 2026
+ 10:09:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: CDBDF5623C4
+References: <20260515161516.10474-1-hardikprakash.official@gmail.com> <agmPrF0IClOpDYlR@ashevche-desk.local>
+In-Reply-To: <agmPrF0IClOpDYlR@ashevche-desk.local>
+From: Hardik Prakash <hardikprakash.official@gmail.com>
+Date: Sun, 17 May 2026 22:38:57 +0530
+X-Gm-Features: AVHnY4KTSGZpReqSZufyItdUPFDwVE4MyKIswJsHjhtLSg9CO2F4KFhunkJduvo
+Message-ID: <CANTFpSWMjz-V_oOsP+7Ww57vhdDVwq0nJ0icQnp3qSq7-=yFRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/1] i2c: designware: fix probe ordering for AMD GPIO
+ on Lenovo Yoga 7 14AGP11
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org, 
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com, 
+	linus.walleij@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 7A028562679
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36995-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,vger.kernel.org,gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FROM_NEQ_ENVFROM(0.00)[sozdayvek@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36996-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Compute base inside intel_pinctrl_probe_pwm() only after the
-PINCTRL_FEATURE_PWM and CONFIG_PWM_LPSS checks have passed. Tidy
-up; no functional change.
+On Sat, May 17, 2026 at 15:21, Andy Shevchenko wrote:
+> On Fri, May 15, 2026 at 09:45:15PM +0530, Hardik Prakash wrote:
+> > v3:
+> >  - Patch 2 only (patch 1 already in Linus Walleij's tree)
+>
+> The patch numbering is broken. Where did 2/2 come from?
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Link: https://lore.kernel.org/linux-gpio/aglu5jy5SbW9Wjwj@ashevche-desk.local/
-Signed-off-by: Stepan Ionichev <sozdayvek@gmail.com>
----
-Changes since v2:
-- Trim commit message per Andy.
+Both patches are committed in my local tree. git format-patch counted
+both commits and numbered this 2/2. I excluded the 0001 file from the
+git send-email call since patch 1 is already in Linus Walleij's tree,
+but the numbering carried over from the two-commit series.
 
-Changes since v1:
-- Drop the array zero-initialisation approach.
-- Move base assignment past the feature checks, per Andy.
-- Drop the Fixes: tag.
+Apologies for the confusion. If preferred I can resend with 1/1
+numbering by dropping patch 1 from my local branch before running
+format-patch.
 
-v2: https://lore.kernel.org/linux-gpio/20260517154002.1994-1-sozdayvek@gmail.com/
-v1: https://lore.kernel.org/linux-gpio/20260515150049.33761-1-sozdayvek@gmail.com/
+Thanks,
+Hardik
 
- drivers/pinctrl/intel/pinctrl-intel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 97bf5ec78..2e2526e01 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1556,13 +1556,13 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
- 				   struct intel_community *community,
- 				   unsigned short capability_offset)
- {
--	void __iomem *base = community->regs + capability_offset + 4;
- 	static const struct pwm_lpss_boardinfo info = {
- 		.clk_rate = 19200000,
- 		.npwm = 1,
- 		.base_unit_bits = 22,
- 	};
- 	struct pwm_chip *chip;
-+	void __iomem *base;
- 
- 	if (!(community->features & PINCTRL_FEATURE_PWM))
- 		return 0;
-@@ -1570,6 +1570,7 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
- 	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
- 		return 0;
- 
-+	base = community->regs + capability_offset + 4;
- 	chip = devm_pwm_lpss_probe(pctrl->dev, base, &info);
- 	return PTR_ERR_OR_ZERO(chip);
- }
--- 
-2.43.0
-
+On Sun, 17 May 2026 at 15:21, Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Fri, May 15, 2026 at 09:45:15PM +0530, Hardik Prakash wrote:
+> > The Wacom WACF2200 touchscreen on the Lenovo Yoga 7 14AGP11 (83TD) is
+> > non-functional on Linux due to two bugs. Patch 1 (pinctrl-amd GPIO IRQ
+> > fix) has already been taken into Linus Walleij's tree. This v3 resend
+> > covers patch 2 only, addressing Andy Shevchenko's formatting feedback.
+> >
+> > Root cause: i2c_designware probes AMDI0010:02 before pinctrl-amd's
+> > probe completes, so GPIO 157 (WACF2200 GpioInt per ACPI _CRS) has its
+> > interrupt bits cleared when the first I2C transaction is attempted,
+> > causing lost arbitration errors. The udev rebind workaround (which
+> > works because pinctrl-amd has finished by userspace time) confirms
+> > probe ordering as the root cause.
+> >
+> > Note: the dual-master hypothesis raised by Mario Limonciello was
+> > investigated. TPNL's _DSM (UUID 3cdff6f7-4267-4555-ad05-b30a3d8938de)
+> > is a pure query method returning a constant HID descriptor address with
+> > no side effects, making firmware acting as secondary I2C master unlikely
+> > on this hardware. Awaiting Mario and Bart's technical verdict before
+> > any further approach changes.
+> >
+> > v3:
+> >  - Patch 2 only (patch 1 already in Linus Walleij's tree)
+>
+> The patch numbering is broken. Where did 2/2 come from?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
