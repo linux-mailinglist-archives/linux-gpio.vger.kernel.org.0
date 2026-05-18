@@ -1,318 +1,206 @@
-Return-Path: <linux-gpio+bounces-37070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37071-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gF48A20hC2oQDwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37070-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:25:49 +0200
+	id qJlEAcMiC2oxDwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37071-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:31:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 800C356EB33
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:25:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59FA156ED37
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:31:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6C5DC30755A9
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 14:22:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5678D3054F6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 14:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A6C248B38A;
-	Mon, 18 May 2026 14:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D5E140315B;
+	Mon, 18 May 2026 14:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gR6Agr3e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSgVCrvg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF50D3F6C3E;
-	Mon, 18 May 2026 14:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779114078; cv=none; b=Qzz5H3hkaKiVh/9jEZ3v4e0Rh9TarwVRQP5aw21PZGz+7b0Fz1Cu7MOGIoDZrRsRlgXtmSWsvUQKba+jdC+IFJrWYO2YW1PqiF0cGiiFShaRcw3hp04l4mde787mst6Gqb0M90TyCuOSQXUahnPGV0FhaopWg6/vKzW+6mg3xSM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779114078; c=relaxed/simple;
-	bh=4JTnJo51lYwkVot9a+w1x7GmHxbJZVsWI0vpr1W/ws8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u4vIdgz1weHKMwuB64MNv9LvySMs/hisN9FOyf/BNG13qe9sh+qgRgjKOm1kf2LeI89T+NY1WIJ5LtjtZsXA+78ftLoKqpydIrRgPDqVV5JhKHdJ/i3a82Ev7Olq+AgGuqS5ReMZKVvL70b2gfuBn+db/mf9W4PvZyJsxJ8fmAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gR6Agr3e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8253AC2BCFA;
-	Mon, 18 May 2026 14:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779114076;
-	bh=4JTnJo51lYwkVot9a+w1x7GmHxbJZVsWI0vpr1W/ws8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gR6Agr3eAos7fSGAABTi1vFd6i19cW7ktH2QMt59oqUuyoX9bOJXYy4qbVBu7XYYr
-	 Qo39rkjpee7dPAQcn4IjkMO5kdQOCCF9Bbu0wdViedOm0U0Uc6Kno0aN06PvQ3a/Zi
-	 xW/leZBRumXNNB/tyh4IqLxg1rdgygkGvuHHOAh24p0rnTOfrVam422/hP5hnA2P70
-	 cNz49HhIQ1gEU97Xa1vKHFiIS0X1lfDk824L2ieJNf+tPWjX0HIJRocYQzHOYQqz09
-	 1GecBrZmDvMzbrqbBWCg7LoNDWPFus0YfJmOFnBk1RSNkHHLUYUROgqJLjtBg8kD0Y
-	 +6jqsWLT2MIfg==
-Date: Mon, 18 May 2026 15:21:03 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v11 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260518152103.4d428c1e@jic23-huawei>
-In-Reply-To: <58a66855-9fb3-48ca-8cae-ff9277f745df@baylibre.com>
-References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
-	<20260515-ad4692-multichannel-sar-adc-driver-v11-3-eab27d852ac2@analog.com>
-	<9b7986e1-6550-415d-b301-33089ba10177@baylibre.com>
-	<20260517132526.27c71b70@jic23-huawei>
-	<58a66855-9fb3-48ca-8cae-ff9277f745df@baylibre.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6A2481FD7
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 14:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779114157; cv=pass; b=OyUJmiOM4dhO/OqcwEWgj6fqfry2f7ebH+rodO6SGuXbRRu4WKoAqpn1jQmVeXramBn467Iee8WTm8iR7ru+bsVbWI5hqUJx8/1RXPT+HW4X05P/gjbxoDBck4+FP0hL6TAL/lGHbO2I2HjdzYdNejuUQQWYj2d56Sr3yq5FJFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779114157; c=relaxed/simple;
+	bh=6ZDQEOUD14QAFjatdvICgJqIwJxBsV7gED7tBhKefgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BG1RlZK5Ian6IJQMhcyzrwxg7nKKFGSLylLPD11eEckYv7ftA5zvjvLe8HWN2GS38pIfKiOaCj1ESThGROnhUBHdFlpCScuX3nCTXhw2pcjUhNJA+vJPpReC0jL3RnYq3vIQjLCZPlS8YvNJ8NnIvFdqIhPhtwktWlrvXPX9ZE4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gSgVCrvg; arc=pass smtp.client-ip=74.125.224.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-65dd9b25829so1812378d50.3
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:22:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779114152; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VHzpl3VcQfGxPjQuyxBWF17FBYDLkY/A2Q1ykBkuil5/2kIHR2+jBK0Qyxmbcu6w4G
+         yeueRxzIeLvFB2TeiHXiDrF376X8Wy2xO0glpZ1sDTK7qaPeGr3oZ/Otn9lA7sBn720o
+         BYpbpzvlwPGn/XIueM8BfeGYxHTSKsOdDuRYoEWAYGzyVKbx4AncpgcnNPleWlCUj5p/
+         w/SpLUrqyrZSnM2aMJvt7+HJjtmtX1zebJtE9BFERPxdscM5x/OjWQlQU2/Nm3H9vnwV
+         aLUds8l3M2VGN4sQOpB/oEVvbr2MbW1s8/UFsVjbLkDbj0NnZk8plewJyyB4+IIjWSOK
+         /k/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=6ZDQEOUD14QAFjatdvICgJqIwJxBsV7gED7tBhKefgQ=;
+        fh=CBiSmFuALk/DSrtJiKfZaeU3sFzz9AicG6jRQ2Whf14=;
+        b=A/X1aQh40iPTMu5o5lGXQ1sekqzettWKU3P6bNXG314mEQ1S7KtfY8tknKbNxi7p8I
+         eJMKLUak4mliMmz73R+kvYNOu8eENNQ/hk266jzHfNIb26E/TTVyr2MqXAGNq9f4FSyz
+         HFKYriO8uqKosgAHw2opKrrfYXOBoMUkZcsWtVgYtIedKiy4THNfxeIGXAAvxYx7yahy
+         y2wPayFIkGKuPSWcoZ5bwRMdU2S90KbW+1pcSDauEccwo+xWmcBHt0Ir52TXgQJ5iivI
+         qafswmct5biCXQTIiadnOxqvXs9LzR2RaOmITxXjP+OznjPFY7cOrTY/U+EIm8QNww1R
+         BgXA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779114152; x=1779718952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ZDQEOUD14QAFjatdvICgJqIwJxBsV7gED7tBhKefgQ=;
+        b=gSgVCrvgutC40EhKc9Tc6XyY9CyO11CHN7W/iEzyXY6ihrLbeLa4RaFgqN56Sty5Xt
+         s0A08DBqfjVAoZGHuUqgGD2vfOIZdDSrz2wxrmrl3K6awKaDLo9+Pi0SGKjbzxOD1k37
+         Cs4+MGame0kXgoYPRdQGtvqKDBNR7OEiJIg13id6jsg/Qt6wAyZcSDqSf7AuuyDI726w
+         961lAAiTpf1r8Q7uAk2nDUXGkuTxl+3CuoKOuSR2cSDiLXSJZl/WhE10lWzWqFyhdRwj
+         v2x0YwKrMa0g770RqaSgZ4zTsM8nrHb3508FL0R96ku8auDId1fyxKjjuqhSXUwYCiF/
+         XwAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779114152; x=1779718952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6ZDQEOUD14QAFjatdvICgJqIwJxBsV7gED7tBhKefgQ=;
+        b=iYLP/yBLEefBNL6myyY/CygMcHw/wmKglq0eQMZPTKkKMK1Ozr7eeyMbpKVbPzoVJ4
+         yy5N2C9Dda5O1Oc5qfjli09FUDI3aQp40U36ap8MsW4LQsRlWcUYC5tPN3m2QBGPx/j+
+         O18vuI4O8pKKDpgI4cC6A85z272yuTAWIBznzll34E6lqbVku5mF2dDNdv28WPz64SAj
+         fNWv4B0U5Qf8vNqSKGYp/xBsyNMwV2LhlqDedl5d4vyHdR780GWs8TeycGEvJ8eIw7Gl
+         Go6F7R19ifQhPUrlh3ZCpvEhViraxBWGsqmy9I4ZLPINocD2AYRc/mJiHPxZ7yQvGm+q
+         PjLw==
+X-Forwarded-Encrypted: i=1; AFNElJ9RT92+TiUiPAjQ4lTleR1GITzd/MK4B2k53wZU+P61xhHlwrxAFO1OUxxc2ljL9XBgMnNYhjcz8s+g@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTUoL88jzovEmQdtvdj5nDiFKv3Jascb2xeHgN87f4O5lr7slz
+	eygou4QBP17TcVEocLZ34QIKNw4mzp2CLBkosUt2NmhS9RztA9uo3DTcR+wvANxJ1qprMlusXdE
+	jfCo0vRBXtNPg4sodekSYsTL/wTpkBFE=
+X-Gm-Gg: Acq92OGn5GrZvhOpYJoKoZ3NO3EbIWnJWYDLqWqfyGxX5IPNI8GEkWCp5vXZG1IFR3c
+	LubChivay67/ulOgkjc7/02wn1V7zAoc6dE3v/y/CkEEnI6pDL15+lBT0tX3ayVKw0Qo4zQEdEM
+	odc0PenGGEXmOZrLGjHY7A6hs2PgMUIwawelnoZLEdYnyajgKjVWJ2PfOc+QTu8NzMqv6td8+FB
+	+vXxsw/AJIDFIMnazgHCDtqRuCaqTUpmLAEjOrvd92unNKYHUSzy2NEl7NuSflFZrh7JfJJQxHP
+	39LXuRA07nqJhhz1zQi7lnffk/hO066ySoeJSYhMGfsIg3UbRoSNpW4yISLbNHvhkhwhkpKjdTH
+	5z+q7xu1uR+VMLIGvWBEJ6wi0rQpqNLxH0N6rm0kHeybGccJ8IoW0a0/0JjY=
+X-Received: by 2002:a05:690e:169e:b0:650:36e6:2ace with SMTP id
+ 956f58d0204a3-65e227cffebmr15679127d50.31.1779114152259; Mon, 18 May 2026
+ 07:22:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20260518071816.26629-1-hardikprakash.official@gmail.com>
+ <20260518071816.26629-2-hardikprakash.official@gmail.com> <CAMRc=Me8ieVzXojZ=eNhBPvjjmT5gc6hJXnpC8Bc6WofDbXP4A@mail.gmail.com>
+ <CANTFpSU_Ba1c_R9wbjSSqnc1+_vBMAOKDvD=EVtct8hWU+Dxqw@mail.gmail.com> <agsc0NoznnVtclk0@ashevche-desk.local>
+In-Reply-To: <agsc0NoznnVtclk0@ashevche-desk.local>
+From: Hardik Prakash <hardikprakash.official@gmail.com>
+Date: Mon, 18 May 2026 19:52:21 +0530
+X-Gm-Features: AVHnY4IGC6Vo6EpyWksUrgKqCXj97Ps2EclQ1nL4YrIUR0jWruOH719GOkgZe4c
+Message-ID: <CANTFpSVJ73_j6NqDYXPX8Db4+KN74qJvo8MgdsFAy5HhZ3xScw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] i2c: designware: fix probe ordering for AMD GPIO
+ on Lenovo Yoga 7 14AGP11
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	wsa@kernel.org, mario.limonciello@amd.com, basavaraj.natikar@amd.com, 
+	linus.walleij@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-37071-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37070-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,baylibre.com:email]
-X-Rspamd-Queue-Id: 800C356EB33
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 59FA156ED37
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sun, 17 May 2026 14:21:30 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Mon, May 18, 2026 at 19:36, Andy Shevchenko wrote:
+> Don't we have already force and ignore lists for _DEP somewhere in the
+> drivers/acpi/?
 
-> On 5/17/26 7:25 AM, Jonathan Cameron wrote:
-> > On Sat, 16 May 2026 12:32:51 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >  =20
-> >> On 5/15/26 8:31 AM, Radu Sabau via B4 Relay wrote: =20
-> >>> From: Radu Sabau <radu.sabau@analog.com>
-> >>>
-> >>> Add buffered capture support using the IIO triggered buffer framework.
-> >>>
-> >>> CNV Burst Mode: the GP pin identified by interrupt-names in the device
-> >>> tree is configured as DATA_READY output. The IRQ handler stops
-> >>> conversions and fires the IIO trigger; the trigger handler executes a
-> >>> pre-built SPI message that reads all active channels from the AVG_IN
-> >>> accumulator registers and then resets accumulator state and restarts
-> >>> conversions for the next cycle.
-> >>>
-> >>> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
-> >>> reads the previous result and starts the next conversion (pipelined
-> >>> N+1 scheme). At preenable time a pre-built, optimised SPI message of
-> >>> N+1 transfers is constructed (N channel reads plus one NOOP to drain
-> >>> the pipeline). The trigger handler executes the message in a single
-> >>> spi_sync() call and collects the results. An external trigger (e.g.
-> >>> iio-trig-hrtimer) is required to drive the trigger at the desired
-> >>> sample rate.
-> >>>
-> >>> Both modes share the same trigger handler and push a complete scan =
-=E2=80=94
-> >>> one big-endian 16-bit (__be16) slot per active channel, densely packed
-> >>> in scan_index order, followed by a timestamp.
-> >>>
-> >>> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
-> >>> buffer-level attribute via IIO_DEVICE_ATTR.
-> >>>
-> >>> Signed-off-by: Radu Sabau <radu.sabau@analog.com> =20
-> >  =20
-> >>> +
-> >>> +static int ad4691_manual_buffer_preenable(struct iio_dev *indio_dev)
-> >>> +{
-> >>> +	struct ad4691_state *st =3D iio_priv(indio_dev);
-> >>> +	unsigned int k, i;
-> >>> +	int ret;
-> >>> +
-> >>> +	memset(st->scan_xfers, 0, sizeof(st->scan_xfers));
-> >>> +	memset(st->scan_tx, 0, sizeof(st->scan_tx));
-> >>> +
-> >>> +	spi_message_init(&st->scan_msg);
-> >>> +
-> >>> +	k =3D 0;
-> >>> +	iio_for_each_active_channel(indio_dev, i) {
-> >>> +		if (i >=3D indio_dev->num_channels - 1)
-> >>> +			break; /* skip soft timestamp */   =20
-> >>
-> >> I don't think timestamp gets set in the scan mask. It is handled separ=
-ately. =20
-> >=20
-> > FWIW that is a sashiko false postive (I believe anyway!)
-> > If we do hit this please shout as we have a core bug.
-> >=20
-> > If anyone has time to look at how hard it would be to tweak
-> > iio_for_each_active_channel to skip a last element timestamp that
-> > would be great.
-> >=20
-> > I think that iterates one too far which is what sashiko is tripping ove=
-r.
-> >=20
-> > I'm only keen to fix that if we can make it low cost and hid it entirely
-> > from drivers.
-> >=20
-> > Jonathan
-> >  =20
-> This is what I came up with (totally untested).
->=20
-> Since timestamp can never be set in scan_mask/active_scan_mask, it should
-> be safe to exclude it from masklength without breaking existing code.
-Probably...=20
->=20
-> I didn't check all callers of masklength/iio_get_masklength() though.
+Yes =E2=80=94 I found acpi_honor_dep_ids and acpi_ignore_dep_ids in
+drivers/acpi/scan.c, and an arch_acpi_add_auto_dep() weak hook that
+RISC-V already uses to synthesize dependencies not present in the DSDT.
 
-That was the bit that made me nervous. Particularly if there is an off
-by one that is working by luck today - or someone who understood this
-oddity and did it deliberately.
+However, the DSDT has no _DEP object on AMDI0010:02 at all, so adding
+AMDI0030 to acpi_honor_dep_ids would not help =E2=80=94 there is nothing to
+honor. The arch_acpi_add_auto_dep() hook could synthesize the
+dependency for x86, similar to how RISC-V uses it for IRQ routing, but
+it would still require DMI-based hardware identification to avoid
+affecting other machines. That is a different location for the quirk,
+not the elimination of one.
 
-At one point we also had a few other timestamps - the ones come from hardwa=
-re.
-I can't remember how we handled those wrt to the scan mask.  I took a quick
-look and thing they are all fine.=20
-FWIW a nice precursor would be to make sure all timestamp channels are assi=
-gned
-using the macro. There are a few that are hand crafted.  I tested a few, bu=
-t obviously
-needs turning in to a proper set and cleaning up.
+Unless I am missing something, the driver-level deferral in patch 2
+remains the least-invasive approach given the missing _DEP.
 
-diff --git a/drivers/iio/adc/ad4170-4.c b/drivers/iio/adc/ad4170-4.c
-index 627cbf5a37b0..890e25294baa 100644
---- a/drivers/iio/adc/ad4170-4.c
-+++ b/drivers/iio/adc/ad4170-4.c
-@@ -2385,9 +2385,7 @@ static int ad4170_parse_channels(struct iio_dev *indi=
-o_dev)
- 	}
-=20
- 	/* Add timestamp channel */
--	struct iio_chan_spec ts_chan =3D IIO_CHAN_SOFT_TIMESTAMP(chan_num);
--
--	st->chans[chan_num] =3D ts_chan;
-+	st->chans[chan_num] =3D IIO_CHAN_SOFT_TIMESTAMP(chan_num);
- 	num_channels =3D num_channels + 1;
-=20
- 	indio_dev->num_channels =3D num_channels;
-diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-index 6e1930f7c65d..56baca1f5026 100644
---- a/drivers/iio/adc/at91_adc.c
-+++ b/drivers/iio/adc/at91_adc.c
-@@ -521,13 +521,7 @@ static int at91_adc_channel_init(struct iio_dev *idev)
- 	}
- 	timestamp =3D chan_array + idx;
-=20
--	timestamp->type =3D IIO_TIMESTAMP;
--	timestamp->channel =3D -1;
--	timestamp->scan_index =3D idx;
--	timestamp->scan_type.sign =3D 's';
--	timestamp->scan_type.realbits =3D 64;
--	timestamp->scan_type.storagebits =3D 64;
--
-+	*timestamp =3D IIO_CHAN_SOFT_TIMESTAMP(idx);
- 	idev->channels =3D chan_array;
- 	return idev->num_channels;
- }
-diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
-index 2c51b90b7101..d42b747325aa 100644
---- a/drivers/iio/adc/cc10001_adc.c
-+++ b/drivers/iio/adc/cc10001_adc.c
-@@ -262,7 +262,7 @@ static const struct iio_info cc10001_adc_info =3D {
- static int cc10001_adc_channel_init(struct iio_dev *indio_dev,
- 				    unsigned long channel_map)
- {
--	struct iio_chan_spec *chan_array, *timestamp;
-+	struct iio_chan_spec *chan_array;
- 	unsigned int bit, idx =3D 0;
-=20
- 	indio_dev->num_channels =3D bitmap_weight(&channel_map,
-@@ -289,13 +289,7 @@ static int cc10001_adc_channel_init(struct iio_dev *in=
-dio_dev,
- 		idx++;
- 	}
-=20
--	timestamp =3D &chan_array[idx];
--	timestamp->type =3D IIO_TIMESTAMP;
--	timestamp->channel =3D -1;
--	timestamp->scan_index =3D idx;
--	timestamp->scan_type.sign =3D 's';
--	timestamp->scan_type.realbits =3D 64;
--	timestamp->scan_type.storagebits =3D 64;
-+	chan_array[idx] =3D IIO_CHAN_SOFT_TIMESTAMP(idx);
-=20
- 	indio_dev->channels =3D chan_array;
-=20
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 96b05c86c325..702b2fc66326 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -353,7 +353,7 @@ static inline bool iio_channel_has_available(const stru=
-ct iio_chan_spec *chan,
- 		(chan->info_mask_shared_by_all_available & BIT(type));
- }
-=20
--#define IIO_CHAN_SOFT_TIMESTAMP(_si) {					\
-+#define IIO_CHAN_SOFT_TIMESTAMP(_si) (struct iio_chan_spec) {		\
- 	.type =3D IIO_TIMESTAMP,						\
- 	.channel =3D -1,							\
- 	.scan_index =3D _si,						\
+Thanks,
+Hardik
 
-Doing that will mean we can spot any unusual use of IIO_TIMESTAMP much more
-easily.
-
-Anyhow, basic approach looks good to me.
-
-Jonathan
-
-
-
->=20
-> ---
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio=
--buffer.c
-> index 9d66510a1d49..17f539fc23e2 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -2300,8 +2300,10 @@ int iio_buffers_alloc_sysfs_and_mask(struct iio_de=
-v *indio_dev)
->  	if (channels) {
->  		int ml =3D 0;
-> =20
-> -		for (i =3D 0; i < indio_dev->num_channels; i++)
-> -			ml =3D max(ml, channels[i].scan_index + 1);
-> +		for (i =3D 0; i < indio_dev->num_channels; i++) {
-> +			if (channels[i].type !=3D IIO_TIMESTAMP)
-> +				ml =3D max(ml, channels[i].scan_index + 1);
-> +		}
->  		ACCESS_PRIVATE(indio_dev, masklength) =3D ml;
->  	}
-> =20
->=20
->=20
->=20
-
+On Mon, 18 May 2026 at 19:36, Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Mon, May 18, 2026 at 05:55:02PM +0530, Hardik Prakash wrote:
+> > On Mon, May 18, 2026 at 16:24, Bartosz Golaszewski wrote:
+> > > The patch looks fine but I too would prefer this to be handled at a
+> > > higher-level. If we know which ACPI devices we're waiting for and wha=
+t
+> > > the ordering should be - is it possible to somehow setup the devlink
+> > > for the platform devices that will be the children of these ACPI
+> > > devices?
+> > >
+> > > If that can't be done, I'm fine with this as a workaround.
+> >
+> > I checked the DSDT and the kernel's ACPI dependency mechanisms. The
+> > DSDT has no _DEP object linking AMDI0010:02 to AMDI0030:00, so there
+> > is nothing for fw_devlink to act on. The GpioInt resource is on the
+> > touchscreen device (TPNL/WACF2200), not on the I2C controller itself.
+> >
+> > Setting this up at the ACPI layer would require either a firmware
+> > change to add _DEP, or a DMI quirk in the ACPI scan path to synthesize
+> > the dependency =E2=80=94 which would be equally quirk-based as the curr=
+ent
+> > approach, just in a different driver.
+>
+> Don't we have already force and ignore lists for _DEP somewhere in the
+> drivers/acpi/?
+>
+> > I'll send v5 with your two style fixes applied.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
