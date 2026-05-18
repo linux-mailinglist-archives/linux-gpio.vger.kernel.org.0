@@ -1,197 +1,236 @@
-Return-Path: <linux-gpio+bounces-37075-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37076-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aAoZLu8jC2p5DwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37075-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:36:31 +0200
+	id eHSzD5cmC2pAEAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37076-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:47:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E96056EF28
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9EC56F321
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 16:47:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3409430205CB
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 14:28:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7AAB73067FB9
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 14:33:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 379C73F5BE4;
-	Mon, 18 May 2026 14:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 237EB3F44C6;
+	Mon, 18 May 2026 14:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LNKXW1sp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dy5YEmjt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D3E332615;
-	Mon, 18 May 2026 14:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721BF3F6C57
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 14:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779114482; cv=none; b=Q2mgP3kNPRv3bdyjg7OMtSLrhigqaIkIeCcZrCusjvOKMTIJuMN7In53WId0vtnPUr/h5BCvNZ1nNjnwLFeaoh5Yklm1fWMoQoPcth4MiCITxJwIbC+rANgXbHkRqsOQJJgaVpbtsVvYEc70vT0otT44jvL9DF76GILBjt6pyYQ=
+	t=1779114729; cv=none; b=eMiWnmqzLdj9osA0s3AMCKlv40LCnuLw96G7z+PYqyG2V39gq/Hsp14NTBCNdLTn+oqxuo2bnjloKvT24q+0ViUdg6BNc1NWFJfICTP0ONv+tdUShxrvF7RpooOWVjxIOt4VJcAxdJyD3yBJ3x+k/PoTjMGMVqVAD9OIVJwzVKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779114482; c=relaxed/simple;
-	bh=0bx3o3+vpBpa60JgaKzfKh3XfYsWOTddwsaMmYG6x7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlynLNfOnOLpOzZjVp9lDxeblmla22dHx6kRI3bcK3IQ7Ld2EUCjZJ1IOk3ut+Ga800JhWNfbfckfrvLkpDqV0NwlCYr1ov6rvIx94Q+Yn7IkPggxaYHPpCDppnj0hvmlmZFQwiePEsb/0E9T8rWik2sfP61j2ZJeLcPgOoMMhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LNKXW1sp; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779114480; x=1810650480;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=0bx3o3+vpBpa60JgaKzfKh3XfYsWOTddwsaMmYG6x7w=;
-  b=LNKXW1sp7H0aTWPEMArmg6nxiSMu45hmEwwHKghBaYUK5h8sKEnL6Huh
-   eYcbNdK6sqOnLErvJETvHe7HYBu82ue+79nu9fXKMKmOWS8T4kEPRVtb3
-   JkP63/Wa+Zt+zt+76zf9M0q9/zqWDDS8gHdFDikm+qcl9qgOMGXktDkh+
-   c0MIodkUM2ttPvnO1ed2O9CfNpqTdLhdAiAe7+mR/8Eol9mS3y4NB6s6A
-   QEmXTAQRCnQEApankFiHWCQT6KAXevhAK/EzH+ROZMFUnUqAxSwOOPiNy
-   Xwp7I51UDzq034ctkUl4hoJOwo/uvEyEyO46B7Z44ZhgY9w5oW9RfZ7+t
-   Q==;
-X-CSE-ConnectionGUID: EC0n82cPTeuP8DyJPREJMQ==
-X-CSE-MsgGUID: /pnSe6oZT7eX5C3+xWoM3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="79106931"
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="79106931"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 07:28:00 -0700
-X-CSE-ConnectionGUID: a5A8CawHS9uyE0ScX1ZBtw==
-X-CSE-MsgGUID: Q20CDUz3QMC0C1mYZ64JdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="236812387"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.3])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 07:27:58 -0700
-Date: Mon, 18 May 2026 17:27:55 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Hardik Prakash <hardikprakash.official@gmail.com>
-Cc: Bartosz Golaszewski <brgl@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-	wsa@kernel.org, basavaraj.natikar@amd.com, linus.walleij@linaro.org
-Subject: Re: [PATCH v5 0/1] i2c: designware: fix probe ordering for AMD GPIO
- on Lenovo Yoga 7 14AGP11
-Message-ID: <agsh652HlC4rg1_1@ashevche-desk.local>
-References: <20260518122814.8975-1-hardikprakash.official@gmail.com>
- <d57dd297-6be1-43a9-a38d-e40c8949e23a@amd.com>
- <CANTFpSWGC7GsAY-3UvPtBZzqjNek-T5haiDb59QYRoRgwuQf1w@mail.gmail.com>
- <7d0f0cf9-1936-4cf6-a425-228a37f83137@amd.com>
- <CAMRc=MdS_BVKb=FQLhky=8dpghBSoHeBhUk0LM5hROFxmJeyGQ@mail.gmail.com>
- <9d5da93e-bbe0-4359-9f17-e3c6b3a5cb34@amd.com>
- <CAMRc=MfT_WVMxPnYZW=mg52PHew0O4VQMGFrfo6G9vxZDDoArw@mail.gmail.com>
- <CANTFpSUX5rYhuTQH3dTTvzW+_yhW8Gs0U=A1t_8LDzKz4dzzAw@mail.gmail.com>
+	s=arc-20240116; t=1779114729; c=relaxed/simple;
+	bh=+BjutuUFC8eAe+s0maNa3+hGXbz20Pc39j0Em/qUI3w=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tfMyy+ZnqO9MosqxTe0IH2JOaWTLL2Q2vqdGA5DbzhndOnO5JO+NCnlRU9XpcXqYXIFcFq3PBXO7BHJnUxlUddZpnOyENBzdLaXp7Khquuow9l0cFMsIH4mj8wfREEUoQhSM4c2RtQ6i75ESQNerCRU/+7phHYIrtnFVBCMAUHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dy5YEmjt; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-48a3e9862f0so13556015e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1779114722; x=1779719522; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L4rDUc5EqEKFX11/kqxVh1oXm8vbkQVcvmcoTJm6o8g=;
+        b=dy5YEmjt1PtPB0v1ZCX1KxYR8gebVypLzy2EZMBVdwKH0vebTgDw59TmlfQBQotJuQ
+         Dy+zJV6VyRUQ3IqVs41j1BJsh+OMb1QMLuJX7BFH4dI6LV6OMibt/fsxKmmosj8BY6t1
+         iK7hXBS13ppfPSqCMi1RHGLzpdufxEzO+uielZ3mglKWbvDQ+dxk8gGN/oP3jGsUmHCO
+         s104F3wqIr7XOpnnrlHPnQ1JKFlT8bD0gy0pe8jJURSgBI8QmINnkxAoWfgFNU22L2in
+         K4xNCwYOrK1MF1BqzlWnYqRWgiHYma0NM9f15b5vU/9VeZaKRXI+Gq85+8CjNQ6k/UbK
+         lkJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779114722; x=1779719522;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L4rDUc5EqEKFX11/kqxVh1oXm8vbkQVcvmcoTJm6o8g=;
+        b=ICtVTHZIJLA8doBcyPrGurGKdGmpzcyTkRnET3VRgNvsNAscYqB6Pj/6f0lEQRbquC
+         QnK1NxJaFweQVrayFgLWtsyUDck8q77WmbhjqOiWbn0SClAaeVwKC0ss5gRHCymEP6Fu
+         PJNufeOPt/aN2OA+i9llxjTi7FWT3VlEGkoaaoZuTGxbcGOOQC+G+QveDpkpNaMd4J2Z
+         knQbiGpVYTukT5m0t1ifPGAI4h6t4QZZQwODMGB98XN7G5MyiJvtjrKnS1Lqxs8+5DLR
+         q7Pe1BvKBUd5wxkiy+qPd/o9fFLcdKQbiMiSv0c5Zqg6bAu34gaOz/aGml2jzy4vZ/D2
+         nnaA==
+X-Forwarded-Encrypted: i=1; AFNElJ/YIEsOKWdFJzFk4J9TqL+DqsfIStpZ3U9d2NtjjePpqhqmSKBhvpknT4/CWnlb8ADPGWjTQUqrE5GF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuj9rfNa8W9mNhCcRoY/lJK2vtUpYyCum5O7URyrA+c+oI6w+w
+	w60tqc8eQJ5TIXdqDpirUM+0hyq8t74HA5OJ/E28nVwTa3s30gDXSPdQHfPidNoXHFU=
+X-Gm-Gg: Acq92OFgt9l19e+pHvCg5T1C4YnvWoPGVfwifoQR8Q71nFnFLKmt+z7q8VO8f/U3tf/
+	gXX9EDcpoGcdV6WVQ8MH5OdaAWiucM48maidr6sAwWOTRVd0HQtgMPSaPmWr4Bz/1+540h24ZBu
+	QlfKvBS19Y5vwSM7SwHC9yvwx4IJsFxzkayEVbN4Q6ewJH7c2PZpZgkQHBZWIq1gBBiyfhwlhdQ
+	gvOrahG97dZNqfs36askCWHA4TyML8J423acORq6nAj39ZOl+tlv9s+4Qw+Kfq576h7CoBrNnsu
+	E8FiKD2gdXFvcQJjZ2BUsLBHWGi6IwZXXELM+sEgasl2AbCn9OFHKl+ldPKLV+L63+2YzcSyzEN
+	Py67iH1Y1qhiLcrL/avN+JKhA3VgpF7Z2v4nOTWfQ9KgZYiMg9U7ARuaoagOQRNkoduJ1nBOaIO
+	qYAm30VkAcOF7TG4kYXEv09bfHlqG7YpVUi3e2yZ7PHsU4pPHrCT8nRRoT1JyKRhTYuVFh7YbPn
+	XAOSkY=
+X-Received: by 2002:a05:600c:4851:b0:48a:79d8:a8d6 with SMTP id 5b1f17b1804b1-48feea99dc7mr117236255e9.7.1779114721755;
+        Mon, 18 May 2026 07:32:01 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:1029:e3c5:362e:1250? ([2a01:e0a:106d:1080:1029:e3c5:362e:1250])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4dac000sm265809055e9.0.2026.05.18.07.32.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2026 07:32:01 -0700 (PDT)
+Message-ID: <72b341e6-5ada-48e9-a9c1-a442810b15da@linaro.org>
+Date: Mon, 18 May 2026 16:32:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANTFpSUX5rYhuTQH3dTTvzW+_yhW8Gs0U=A1t_8LDzKz4dzzAw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-2.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] pinctrl: meson: amlogic-a4: fix gpio output glitch
+To: xianwei.zhao@amlogic.com, Linus Walleij <linusw@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260518-fix-set-value-glitch-v1-1-d350732dc934@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20260518-fix-set-value-glitch-v1-1-d350732dc934@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37075-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,amlogic.com:email,linaro.org:replyto,linaro.org:email,linaro.org:mid,linaro.org:dkim];
+	TAGGED_FROM(0.00)[bounces-37076-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[amlogic.com,kernel.org,baylibre.com,googlemail.com];
 	MIME_TRACE(0.00)[0:+];
 	HAS_ORG_HEADER(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[linaro.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	HAS_REPLYTO(0.00)[neil.armstrong@linaro.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[neil.armstrong@linaro.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,ashevche-desk.local:mid,intel.com:dkim,amd.com:email]
-X-Rspamd-Queue-Id: 2E96056EF28
+	REPLYTO_EQ_FROM(0.00)[]
+X-Rspamd-Queue-Id: CC9EC56F321
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 18, 2026 at 07:53:28PM +0530, Hardik Prakash wrote:
-> On Mon, May 18, 2026 at 19:35, Bartosz Golaszewski wrote:
-> > What is blocking the pinctrl driver from probing? Does it return
-> > -EPROBE_DEFER for some reason? Pin control core is ready at
-> > core_initcall() so it should work in theory.
+On 5/18/26 10:26, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > 
-> On Mon, May 18, 2026 at 19:16, Mario Limonciello wrote:
-> > Please try arch_initcall instead.
+> When the system transitions from bootloader to kernel, the GPIO is
+> expected to keep driving high.
 > 
-> Tested arch_initcall + patch 1. GPIO 157 now fires at 0.255s (earlier
-> than any previous boot), but arbitration errors still occur at 2.309s:
+> However, the Linux kernel first configures the pin direction and then
+> sets the output value. This may cause a brief low-level glitch on the
+> GPIO line, which can be problematic for regulator control.
 > 
->   subsys_initcall + patch 1:   GPIO 157 at ~0.310s, arbitration errors
->   arch_initcall + patch 1:     GPIO 157 at ~0.255s, arbitration errors
->   patch 1 + patch 2 (v5):     no arbitration errors, touchscreen works
+> By configuring the output value before switching the pin direction to
+> output, the glitch can be avoided.
 > 
-> The driver is not returning -EPROBE_DEFER. The problem is that
-> amd_gpio_probe() hasn't completed by the time i2c_designware fires,
-> even with arch_initcall. Promoting the initcall level gets the driver
-> registered earlier, but probe itself takes time, and i2c_designware
-> catches it mid-probe regardless of registration timing.
+> This commit fixes the issue by swapping the configuration order.
 > 
-> This is why device_is_bound() works where initcall promotion does not
-> — it waits for probe completion, not just driver registration.
+> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+> fix one issue when set gpio line high.
+> ---
+>   drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> index 35d27626a336..1bd58fbbd26a 100644
+> --- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> +++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> @@ -548,11 +548,11 @@ static int aml_pinconf_set_output_drive(struct aml_pinctrl *info,
+>   {
+>   	int ret;
+>   
+> -	ret = aml_pinconf_set_output(info, pin, true);
+> +	ret = aml_pinconf_set_drive(info, pin, high);
+>   	if (ret)
+>   		return ret;
+>   
+> -	return aml_pinconf_set_drive(info, pin, high);
+> +	return aml_pinconf_set_output(info, pin, true);
+>   }
+>   
+>   static int aml_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+> @@ -921,15 +921,14 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+>   	unsigned int bit, reg;
+>   	int ret;
+>   
+> -	aml_gpio_calc_reg_and_bit(bank, AML_REG_DIR, gpio, &reg, &bit);
+> -	ret = regmap_update_bits(bank->reg_gpio, reg, BIT(bit), 0);
+> +	aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
+> +	ret = regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> +				 value ? BIT(bit) : 0);
+>   	if (ret < 0)
+>   		return ret;
+>   
+> -	aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
+> -
+> -	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> -				  value ? BIT(bit) : 0);
+> +	aml_gpio_calc_reg_and_bit(bank, AML_REG_DIR, gpio, &reg, &bit);
+> +	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit), 0);
+>   }
+>   
+>   static int aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> 
+> ---
+> base-commit: 73d4991a6949eedb51e442d4e81415017d85975b
+> change-id: 20260518-fix-set-value-glitch-f43cd366c295
+> 
+> Best regards,
 
-The alternative solution is to have a registered notifier for the device in
-question. But not sure if it will be less-invasive than given solution.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-> On Mon, 18 May 2026 at 19:41, Bartosz Golaszewski <brgl@kernel.org> wrote:
-> > On Mon, May 18, 2026 at 4:08 PM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> > > On 5/18/26 09:05, Bartosz Golaszewski wrote:
-> > > > On Mon, May 18, 2026 at 3:46 PM Mario Limonciello
-> > > > <mario.limonciello@amd.com> wrote:
-> > > >> On 5/18/26 08:40, Hardik Prakash wrote:
-> > > >>> On Mon, May 18, 2026 at 18:17, Mario Limonciello wrote:
-> > > >>>> I'd still like to avoid a quirk if we can.
-> > > >>>>
-> > > >>>> I know my proposed patch to try to probe at an earlier stage didn't
-> > > >>>> work, but could you perhaps try pulling pinctrl-amd even earlier?
-> > > >>>>
-> > > >>>> Maybe fs_initcall()?
-> > > >>>
-> > > >>> Tested. fs_initcall + patch 1 still produces the same arbitration
-> > > >>> errors:
-> > > >>>
-> > > >>>     subsys_initcall + patch 1:   arbitration errors persist
-> > > >>>     fs_initcall + patch 1:       arbitration errors persist
-> > > >>>     patch 1 + patch 2 (v5):     clean boot, touchscreen fully functional
-> > > >>>
-> > > >>> The initcall level does not appear to be the determining factor on
-> > > >>> this hardware. i2c_designware is still probing AMDI0010:02 before
-> > > >>> pinctrl-amd finishes regardless of how early pinctrl-amd registers.
-> > > >>> The explicit device_is_bound() deferral in patch 2 is the only
-> > > >>> approach that has worked.
-> > > >>
-> > > >> Please try arch_initcall instead.
-> > > >
-> > > > What is blocking the pinctrl driver from probing? Does it return
-> > > > -EPROBE_DEFER for some reason? Pin control core is ready at
-> > > > core_initcall() so it should work in theory.
-> > >
-> > > Currently it's module_platform_driver() IE device_initcall().
-> > >
-> > > That's why I think we "should" be able to move it a lot earlier.
-> >
-> > I mean with fs_initcall() change - what's blocking it now?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Neil
 
