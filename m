@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-37022-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sN0JJ0zICmqf8AQAu9opvQ
-	(envelope-from <linux-gpio+bounces-37022-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 10:05:32 +0200
+	id +D4aCTHGCmqa7wQAu9opvQ
+	(envelope-from <linux-gpio+bounces-37024-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:56:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 247275685DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 10:05:31 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0261656839D
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:56:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DD29530488D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:55:04 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B5D9A3018D69
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6D03E1204;
-	Mon, 18 May 2026 07:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BC83E1D08;
+	Mon, 18 May 2026 07:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0m7rbk9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTSk2XB/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6812A2E975E
-	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9A130568D
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779090857; cv=none; b=q3D9xlZcd90BkaitIwjsZTl8s5kOOKdncbt/zdVsg7n85CqF0DlfDxB21dhZOWS+EPwiXE5mOW04E1Qhh/NX2sUbnN+G2sEixlGTfx3RxZf/N3gn/GnqqxFdbOfgyoiqmDHUf5rygw8xf+XkI/3nFHDKn/7c2qjlInHKKwsUXLY=
+	t=1779090861; cv=none; b=cMjIUagXKbCL2tZa5V3SxYgCZVefjjzNjloSkaZeyXsM+J3xpbgxCGrU7AuCCmXWso/idZgQ1H4zStLp6Zgr2pn2bEqG15WYH0sp7sGNeRKkMA4Uu7VJ1HRuXt311r020OLTT0pBNFD9IxctX7DHbJ9iAbXLwDZKCjJY5rU+gSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779090857; c=relaxed/simple;
-	bh=MSoorrxg8uzper7S6y38HW3VXpbkdEo9+GwAwliU7VQ=;
+	s=arc-20240116; t=1779090861; c=relaxed/simple;
+	bh=6jCkAsjud1Zew6Eupayu3eGAx57fbcfqT17ig7jDJGY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mSS6Wxtyn7Xi3PVd4e987Eswve7MeFLeaebCbDhwx0K4uhuKpNNa3mMFTOOKEiK1uJIoScrjwT+nf5nTSQU9rsLBHkMWbrAgsImOq2qPsB0M/4AzAsy8eQVvfzvYsXaLzVAGnneoeSEtiJRKV+zaoYyjCGIbNKaFJEQKl//QIYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n0m7rbk9; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version; b=ngK8PtAHXrO9cMud1gd3w6QBFDalSG1rg5kWYpB1X3bvkujABHFN0OIiQFNUDiHMEyg0IrKozPs6ouqcqdMeDM/QaByqACIaIyi4gmhUBBaKJtZADxfGY4vFOhkws3jMFHswDQ/MH9a/wjetIwbDarOE8um/77RWYglVzLKYD3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RTSk2XB/; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488b3f8fa2bso22447975e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:54:12 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-48909558b3aso20932315e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779090849; x=1779695649; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779090850; x=1779695650; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QN7GTrvsqw+xYYoyO+iJ1HbUPl2cSRua7bHIZ6rl0Bw=;
-        b=n0m7rbk9USHwhdkt4AyqCT7X0V8CpLwysC7v6bqFg9lqnMKusqUpqdZOfi7RHoYUxU
-         sOmjb1/BGbANeFWSI7IhTltQ8n7NbYXPeIBzsfu+1YxCHXjI/y/g84BFCQeeuWx7EV/4
-         5lfJ3cB6HYh6t0s0gRJTZep7+FYNouf3P/SeZ3XzEwFhAXehAdT8QJdilt8M9PO5dC/n
-         s/8R5bIpbTua/w60Nj5ylw8Uz/pB4rn5LgvPJD2u8UI4MUHFXpPLL1ILeuPgbMfuPjxm
-         sD5XD3iWI0Euo6fdICQDOzeYOaQm7DWYfyeRtbTdT+px6mnNcSKy1+YMy/K+oalY3HXs
-         R52g==
+        bh=L5wcBSnBAu4P8z9YIJvNxTD5MJsyGPmP5qLZmGh8Sm4=;
+        b=RTSk2XB/vaONKiSbrM2zaYxrumw6CiWDS9e/1XasylTFHSfO+luANnkW+eKb9fJTMO
+         ROPqp1iHy/mzeV7tjE9P6sfxjAcXe98YBSPdDIl3srkL/VwCcnaJszdkMlJYsBdmOtBr
+         dCGu8q1lQG86VLgHxv1zCT6N/YhWfSk+oWkGNjWQPt2O3ajlu/BLO2sHin9rJ0TJxYI3
+         8obA28yblKjpIKNCBJuKplGTHhSaSHnmPADZA3eW+4/PO4tcURd8sITFHA9uj3zxWBfU
+         /Xl5M1MMjhznho8VdZX9PiY7mmRTPTSuGzynWP9J2LEQUA3CqPo0XFSNYtkXk4V/fTAq
+         2ljA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779090849; x=1779695649;
+        d=1e100.net; s=20251104; t=1779090850; x=1779695650;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=QN7GTrvsqw+xYYoyO+iJ1HbUPl2cSRua7bHIZ6rl0Bw=;
-        b=NdpmKswUdmX5MaGk1tLneT836aKnrkfuhvtE28gJ2E3rvzHC+sSiqzDYqUrq7uekiP
-         vh/0IxSIj4FI8QnzSXxdP937jjjhu8ZpttN+d7BBtvhy3JMZLGLtJ//+x6KLW9KE5kjR
-         zW4pDLV0g/Yy+4haT8fcU9BenjAlgAXYKLht06KaBhlJS6ECK3Ted90ZwPhJyAFla1Gt
-         /+GOy80CYMqBszAnQqu9ULzcpyiURplquPvYOKvLEm2rAAMdO7BFm9tFHlLVlZuVtoyA
-         aLsV9EPgqZJQRlfTPkpShBZpHPbZkpn7EAHnZjfXC6H9Y4VQACiGRODibjSLNpK0KocR
-         ejaw==
-X-Forwarded-Encrypted: i=1; AFNElJ/tdSgWu73tm6cFW2xoYo0PR/R4RPPV6h2i+xHA+vKwPg2wHTUmvqlgWepEKVtgOzIiNnuUXmnm95Pu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybid+mFjR2HKGiwY/soK7QsRhMJRPHEF5fxbmwHQSd+057kmb4
-	0mHTO6LUkjfWUDI9kvXIFvFpmO5bKUhN0XldZzm31RlhhmlHIY1Pck21
-X-Gm-Gg: Acq92OGA/BXcb5o+OeEexA5Uy56Sbwa8rBX36FTTMFEeOPSbqNuZ/UYspcx7OtS+BNg
-	1hEtOm87w4EzzwnrOysQbv+y5FZZL4fRV4NOpJMrR/2geH0FVRZsiDDRlJG715JSp8wY1hRQhBI
-	C7U1WoBuAV3XoK+D9GojkaLxMRjhzEEhzZQtYpSDBufgx7XZZsuJgL/TqtCggmz9wSrKhs5VUP6
-	5btZn+tbU6WrOjO/ZS6QRjUXNoD9E+86vQvK+FUev5B9DSP3FvEnQtI7Zm0qqw6YF5z+nBBaFA3
-	N5mhGIBqts719BWYdMpO+50EqbXzgV4n9E66KrSZt6/9Hw2BZjA6fxswqXZ8XJNq2cV6Z1yu2y9
-	mvUm9ojak8LSxsJkr/kuBMAX7MNZX5agO1JgTcKQ5UVRCYBzGaFVdQ0U58Yaf0ZMxYpbd8Zh70n
-	917IA0AFRdkCLH9A4=
-X-Received: by 2002:a05:600c:a09:b0:485:3cef:d6ea with SMTP id 5b1f17b1804b1-48fe539198fmr198503155e9.13.1779090848818;
-        Mon, 18 May 2026 00:54:08 -0700 (PDT)
+        bh=L5wcBSnBAu4P8z9YIJvNxTD5MJsyGPmP5qLZmGh8Sm4=;
+        b=JGguk/IjJSrUtOZAi3aCEYoSeje/xTaXFXlxUaP93TqJLGDpVapFgBuuwB6G0ofobC
+         VnyCxwquHEa+cr++XHrrC5ubrhyUcSR4AoIS7ZsCj7Whw968UPWSAfVZRHsoUQpafEXM
+         CC6W2fbhsLB9sV5Pd6wJlcBIUQ1+IzUwbeB7wIWAX7WmSMIiQWOAvM1iek7WCJP9Mtr4
+         x/uLq2OP7Xe8tcVLa5WVQLvKTAsYzKVLtndxxtrUnHM9F7PhwreP27azUu3/oXI7KPZ/
+         vhuHCSno+fvD6d26bKjKc+iM78w7kS2iofPsKABhlWWc1x2eWJ9OLJQjFCBzYGm58gpC
+         koaQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9Uod+lTUfezk8BgDUkRlRsS/2JiSz8XBmuh09mGxHQIDXBgLWgGyWRZHQky2kApaC1Q96Xv6rPLY+E@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY9yeua2Iv1CccNXKsQewzTBfgIZqwnOE/aIgDDVP4b6YNtRud
+	SyAWoOpvoEW4WhRxDsZVTAcjLjZefiSR2T5fhs/n7y6lDR6UKcrGMpi3
+X-Gm-Gg: Acq92OGwoEu3UaeBn8kz5uShOgktniAdJxQJz7WY8VHrk+VgT+IMJQXQurJCc/+eWx8
+	R52rRkVeRhUjtv8G9e0N3iAdjpRjmSbhxZ4UOY7+hnMlUs8miCkCnLOGksEiX7fbXdxQyzqXvyR
+	n+eVliMVcxBHVPo60uJ9SmzW8vWi/YNbJRqD6hGrcByop/lVrpfmSNdLgBx9UJ2Xv/dMV68K4UR
+	JczakYalrmGdK1/s53swhNn57NZt/RQ4IVYY0HZZ7f+w1QI8tEQ5UdUOtO+MRw2aNja2ozTorzm
+	oP8GMPsZKVul5xtyb2E9Hsf7iDpedUS4XVVNdXODJInhTy6h3n2EqjesW3bECaVlDgL+khALMLz
+	LtfHkXMlSaI1le6fKP8H5Q+ISYwrqnRh+NlUSHq/7JfCJAl+MTaSe7VjL662Vol4g/MGfHLtgYg
+	83qHrT952oD5TiRa0=
+X-Received: by 2002:a05:600c:528c:b0:48f:d612:3c6e with SMTP id 5b1f17b1804b1-48fe60de745mr205788715e9.2.1779090850135;
+        Mon, 18 May 2026 00:54:10 -0700 (PDT)
 Received: from ROG ([2a01:e11:202b:40:328e:213e:a3da:580f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feaf14d22sm102788835e9.3.2026.05.18.00.54.07
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feaf14d22sm102788835e9.3.2026.05.18.00.54.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 00:54:08 -0700 (PDT)
+        Mon, 18 May 2026 00:54:09 -0700 (PDT)
 From: "Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>
@@ -85,9 +85,9 @@ Cc: Mika Westerberg <westeri@kernel.org>,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
-Subject: [PATCH 06/12] gpiolib: acpi: Expose core GPIO resource and OpRegion helpers
-Date: Mon, 18 May 2026 09:53:51 +0200
-Message-ID: <20260518075357.112584-7-mscardovi95@gmail.com>
+Subject: [PATCH 07/12] gpiolib: acpi: Add dedicated Operation Region module
+Date: Mon, 18 May 2026 09:53:52 +0200
+Message-ID: <20260518075357.112584-8-mscardovi95@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260518075357.112584-1-mscardovi95@gmail.com>
 References: <20260518075357.112584-1-mscardovi95@gmail.com>
@@ -98,7 +98,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 247275685DD
+X-Rspamd-Queue-Id: 0261656839D
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -106,13 +106,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-37022-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37024-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -127,74 +127,212 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 Assisted-by: Antigravity:gemini-3-flash
-
 Signed-off-by: Marco Scardovi <mscardovi95@gmail.com>
 ---
- drivers/gpio/gpiolib-acpi-core.c | 12 ++++++------
- drivers/gpio/gpiolib-acpi.h      |  8 ++++++++
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/gpio/Makefile                |   2 +-
+ drivers/gpio/gpiolib-acpi-opregion.c | 175 +++++++++++++++++++++++++++
+ 2 files changed, 176 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpio/gpiolib-acpi-opregion.c
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index 7217ec5c7fae..afd76301c41f 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -272,10 +272,10 @@ static void acpi_gpio_set_debounce_timeout(struct gpio_desc *desc,
- 			   acpi_debounce, ret);
- }
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index b267598b517d..1a416305465b 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -10,7 +10,7 @@ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
+ obj-$(CONFIG_GPIO_CDEV)		+= gpiolib-cdev.o
+ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+-gpiolib-acpi-y			:= gpiolib-acpi-core.o gpiolib-acpi-quirks.o
++gpiolib-acpi-y			:= gpiolib-acpi-core.o gpiolib-acpi-quirks.o gpiolib-acpi-opregion.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-swnode.o
+ obj-$(CONFIG_GPIO_SHARED)	+= gpiolib-shared.o
  
--static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
--						struct acpi_resource_gpio *agpio,
--						unsigned int index,
--						const char *label)
-+struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
-+					 struct acpi_resource_gpio *agpio,
-+					 unsigned int index,
-+					 const char *label)
- {
- 	int polarity = GPIO_ACTIVE_HIGH;
- 	enum gpiod_flags flags = acpi_gpio_to_gpiod_flags(agpio, polarity);
-@@ -1169,7 +1169,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 	return status;
- }
- 
--static void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip)
+diff --git a/drivers/gpio/gpiolib-acpi-opregion.c b/drivers/gpio/gpiolib-acpi-opregion.c
+new file mode 100644
+index 000000000000..77b1ee32ddce
+--- /dev/null
++++ b/drivers/gpio/gpiolib-acpi-opregion.c
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACPI Operation Region helper for GPIO API
++ *
++ * Copyright (C) 2026, Intel Corporation
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gpio/driver.h>
++#include <linux/mutex.h>
++#include <linux/printk.h>
++#include <linux/slab.h>
++
++#include "gpiolib.h"
++#include "gpiolib-acpi.h"
++
++static acpi_status
++acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
++			    u32 bits, u64 *value, void *handler_context,
++			    void *region_context)
++{
++	struct acpi_gpio_chip *achip = region_context;
++	struct gpio_chip *chip = achip->chip;
++	struct acpi_resource_gpio *agpio;
++	struct acpi_resource *ares;
++	u16 pin_index = address;
++	acpi_status status;
++	int length;
++	int i;
++
++	status = acpi_buffer_to_resource(achip->conn_info.connection,
++					 achip->conn_info.length, &ares);
++	if (ACPI_FAILURE(status))
++		return status;
++
++	if (WARN_ON(ares->type != ACPI_RESOURCE_TYPE_GPIO)) {
++		ACPI_FREE(ares);
++		return AE_BAD_PARAMETER;
++	}
++
++	agpio = &ares->data.gpio;
++
++	if (WARN_ON(agpio->io_restriction == ACPI_IO_RESTRICT_INPUT &&
++	    function == ACPI_WRITE)) {
++		ACPI_FREE(ares);
++		return AE_BAD_PARAMETER;
++	}
++
++	if (pin_index >= agpio->pin_table_length) {
++		ACPI_FREE(ares);
++		return AE_BAD_PARAMETER;
++	}
++
++	length = min(agpio->pin_table_length, pin_index + bits);
++	for (i = pin_index; i < length; ++i) {
++		unsigned int pin = agpio->pin_table[i];
++		struct acpi_gpio_connection *conn;
++		struct gpio_desc *desc;
++		u16 word, shift;
++		bool found;
++
++		mutex_lock(&achip->conn_lock);
++
++		found = false;
++		list_for_each_entry(conn, &achip->conns, node) {
++			if (conn->pin == pin) {
++				found = true;
++				desc = conn->desc;
++				break;
++			}
++		}
++
++		/*
++		 * The same GPIO can be shared between operation region and
++		 * event but only if the access here is ACPI_READ. In that
++		 * case we "borrow" the event GPIO instead.
++		 */
++		if (!found && agpio->shareable == ACPI_SHARED &&
++		     function == ACPI_READ) {
++			struct acpi_gpio_event *event;
++
++			list_for_each_entry(event, &achip->events, node) {
++				if (event->pin == pin) {
++					desc = event->desc;
++					found = true;
++					break;
++				}
++			}
++		}
++
++		if (!found) {
++			desc = acpi_request_own_gpiod(chip, agpio, i, "ACPI:OpRegion");
++			if (IS_ERR(desc)) {
++				mutex_unlock(&achip->conn_lock);
++				status = AE_ERROR;
++				goto out;
++			}
++
++			conn = kzalloc_obj(*conn);
++			if (!conn) {
++				gpiochip_free_own_desc(desc);
++				mutex_unlock(&achip->conn_lock);
++				status = AE_NO_MEMORY;
++				goto out;
++			}
++
++			conn->pin = pin;
++			conn->desc = desc;
++			list_add_tail(&conn->node, &achip->conns);
++		}
++
++		mutex_unlock(&achip->conn_lock);
++
++		/*
++		 * For the cases when OperationRegion() consists of more than
++		 * 64 bits calculate the word and bit shift to use that one to
++		 * access the value.
++		 */
++		word = i / 64;
++		shift = i % 64;
++
++		if (function == ACPI_WRITE) {
++			gpiod_set_raw_value_cansleep(desc, value[word] & BIT_ULL(shift));
++		} else {
++			if (gpiod_get_raw_value_cansleep(desc))
++				value[word] |= BIT_ULL(shift);
++			else
++				value[word] &= ~BIT_ULL(shift);
++		}
++	}
++
++out:
++	ACPI_FREE(ares);
++	return status;
++}
++
 +void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip)
- {
- 	struct gpio_chip *chip = achip->chip;
- 	acpi_handle handle = ACPI_HANDLE(chip->parent);
-@@ -1185,7 +1185,7 @@ static void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip)
- 			"Failed to install GPIO OpRegion handler\n");
- }
- 
--static void acpi_gpiochip_free_regions(struct acpi_gpio_chip *achip)
++{
++	struct gpio_chip *chip = achip->chip;
++	acpi_handle handle = ACPI_HANDLE(chip->parent);
++	acpi_status status;
++
++	INIT_LIST_HEAD(&achip->conns);
++	mutex_init(&achip->conn_lock);
++
++	status = acpi_install_address_space_handler(handle, ACPI_ADR_SPACE_GPIO,
++						    acpi_gpio_adr_space_handler,
++						    NULL, achip);
++	if (ACPI_FAILURE(status))
++		dev_err(chip->parent,
++			"Failed to install GPIO OpRegion handler\n");
++}
++
 +void acpi_gpiochip_free_regions(struct acpi_gpio_chip *achip)
- {
- 	struct gpio_chip *chip = achip->chip;
- 	acpi_handle handle = ACPI_HANDLE(chip->parent);
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index bd857ead9dcc..6729da5a6fb7 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -55,6 +55,14 @@ struct acpi_gpio_chip {
- 	struct list_head deferred_req_irqs_list_entry;
- };
- 
-+struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
-+					 struct acpi_resource_gpio *agpio,
-+					 unsigned int index,
-+					 const char *label);
++{
++	struct gpio_chip *chip = achip->chip;
++	acpi_handle handle = ACPI_HANDLE(chip->parent);
++	struct acpi_gpio_connection *conn, *tmp;
++	acpi_status status;
 +
-+void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip);
-+void acpi_gpiochip_free_regions(struct acpi_gpio_chip *achip);
++	status = acpi_remove_address_space_handler(handle, ACPI_ADR_SPACE_GPIO,
++						   acpi_gpio_adr_space_handler);
++	if (ACPI_FAILURE(status)) {
++		dev_err(chip->parent,
++			"Failed to remove GPIO OpRegion handler\n");
++	}
 +
- #ifdef CONFIG_ACPI
- void acpi_gpiochip_add(struct gpio_chip *chip);
- void acpi_gpiochip_remove(struct gpio_chip *chip);
++	list_for_each_entry_safe_reverse(conn, tmp, &achip->conns, node) {
++		gpiochip_free_own_desc(conn->desc);
++		list_del(&conn->node);
++		kfree(conn);
++	}
++}
 -- 
 2.54.0
 
