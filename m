@@ -1,352 +1,127 @@
-Return-Path: <linux-gpio+bounces-37048-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37054-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sPmOFzHlCmqJ9AQAu9opvQ
-	(envelope-from <linux-gpio+bounces-37048-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 12:08:49 +0200
+	id IO4fJ6ntCmo89gQAu9opvQ
+	(envelope-from <linux-gpio+bounces-37054-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 12:44:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F122156A614
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 12:08:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0590F56AE52
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 12:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9D3D630B9C43
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 10:02:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AC03530B2C0F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 10:36:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F7AB3264EB;
-	Mon, 18 May 2026 10:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9B3D3F23D7;
+	Mon, 18 May 2026 10:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZm/9+ao"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B53264EF
-	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 10:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EA031F9A1;
+	Mon, 18 May 2026 10:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779098488; cv=none; b=PFX5md5LbhWsT71Ok44MfBpj0PwJ6bKICCgGBBm3DjMx+L8G7FiVH7To0Nqs9UrI963uD79xn3tfhIRBJ33o18nmnqs6IjnIg0QrokOOfInTun77HR3EY3kBwlh8/tipWA61gCQMCM48B1FCL2tzRZKKIYItv4qZsC0jzG+WlZU=
+	t=1779100407; cv=none; b=jGW2zKV3cu5/9ZNV4xpXmWdMEKPMbYgNrq8r+vmunpIlTwkw08E3BgXJbaJEpcifr6rTObnJauDT6M/UPvUrGbDZD+Lt3PCchCuXE8+jXRWAP0x3MaXCx4nnZ73VI/e857g8FwHcXi2npgPufUBjqKBKwHfOD2x+5GwVzvBJ8KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779098488; c=relaxed/simple;
-	bh=5DmB/ljpXTOBSIXAY6GJmXPG9RM6NM6oOocfZN6bDMw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BJPD5LaUKeKoINa6T3A1SiDPVYLddTSoPCvCGqlwJ7yCI4NjxaVW6KB7SBVD0BzNqS0g8mzfptP3j6/BJmN3GwK9PtM7rM96dyxB6I/dh6XsJqmXFyzoCpYVavzj3eBQch75+4KM/zzC8Rn/ecXYlwiom32Es9ES+yOTqz/RR7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1wOumO-0001ED-Tr; Mon, 18 May 2026 12:00:56 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac] helo=dude04)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1wOumN-000ZU5-28;
-	Mon, 18 May 2026 12:00:56 +0200
-Received: from ore by dude04 with local (Exim 4.98.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1wOumO-0000000Eu6p-0YiS;
-	Mon, 18 May 2026 12:00:56 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Peter Rosin <peda@axentia.se>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	David Jander <david@protonic.nl>
-Subject: [PATCH v13 6/6] mux: add NXP MC33978/MC34978 AMUX driver
-Date: Mon, 18 May 2026 12:00:53 +0200
-Message-ID: <20260518100054.3552143-7-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260518100054.3552143-1-o.rempel@pengutronix.de>
-References: <20260518100054.3552143-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1779100407; c=relaxed/simple;
+	bh=bSdp5Hmni6nlC/msTnQJkqgbtW5vfUlCw6F3huYpeL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e7vBEpMo977/28S6xuMYj826zGwb+Z2gtzDNwvGSDA0/rLrDeYqHmn02DIh4z1CNUuZTNPNKXwRM0TkxAESlqFZBhmr68Z0AfOpWopHV87Rw23K+9k9Z0pFZasT5oLL99iy8RJ82ofMcCy4eQAMjcF3PFfF9zPISeA9Jn8vsVwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZm/9+ao; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779100392; x=1810636392;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bSdp5Hmni6nlC/msTnQJkqgbtW5vfUlCw6F3huYpeL4=;
+  b=bZm/9+aohUMiXz4cJziEaJy0KTzLa2h3RANEi6HBv6QUBQBIQttHwJLy
+   bbQXv3s7cyUGLr+6AdQM0Q3ROQf8NLXJhlib+pj7F5UFb6KVF+rTpqbQm
+   UiVqD3H6wSLUjaY3qoZUplLJzU4QsvIxDFilG+dTjnXF3tIXo9ttZN801
+   5lPqxcYK8Uckath3L3qgHc6vCMUVWRVELJ6Ow74jVMer+0U7MgDEO7Z+/
+   v4CP4AfxpIjbT7TQnTr0dsC51XAX24HPU7dMXOydujLk4rW86wCjv/pIM
+   bGpbk19kFg8EM8ynp3nmXFqUnD8WcZNzqXuRtBqar+Zy5aIQXlhtsRptt
+   A==;
+X-CSE-ConnectionGUID: 4mm8AHyVQMWsCvmqzuMoww==
+X-CSE-MsgGUID: sYh34tQmRdOhY28i8P/XrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11789"; a="78973356"
+X-IronPort-AV: E=Sophos;i="6.23,241,1770624000"; 
+   d="scan'208";a="78973356"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 03:33:05 -0700
+X-CSE-ConnectionGUID: rylxNbDURjW5NgoHgujAKQ==
+X-CSE-MsgGUID: RdHlbWu3Qd6R53Kd7HlhcA==
+X-ExtLoop1: 1
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa003.fm.intel.com with ESMTP; 18 May 2026 03:33:04 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id DB65895; Mon, 18 May 2026 12:33:02 +0200 (CEST)
+Date: Mon, 18 May 2026 12:33:02 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: "Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] gpiolib: acpi: Add robust bounds-checking for GPIO
+ pin resources
+Message-ID: <20260518103302.GO84797@black.igk.intel.com>
+References: <20260518075357.112584-1-mscardovi95@gmail.com>
+ <20260518075357.112584-4-mscardovi95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Rspamd-Queue-Id: F122156A614
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260518075357.112584-4-mscardovi95@gmail.com>
+X-Rspamd-Queue-Id: 0590F56AE52
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	RCVD_COUNT_FIVE(0.00)[6];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-37048-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37054-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.993];
-	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pengutronix.de:email,pengutronix.de:mid]
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,black.igk.intel.com:mid]
 X-Rspamd-Action: no action
 
-Add a mux-control driver for the 24-to-1 analog multiplexer (AMUX)
-embedded in the NXP MC33978/MC34978 Multiple Switch Detection
-Interface (MSDI) devices.
+On Mon, May 18, 2026 at 09:53:48AM +0200, Marco Scardovi (scardracs) wrote:
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v13:
-- no changes
-changes v12:
-- Convert platform_device_id to named initializers (`.name =`)
-  https://lore.kernel.org/all/cover.1778582187.git.u.kleine-koenig@baylibre.com
-changes v11:
-- no changes
-changes v10:
-- no changes
-changes v9:
-- rename mc33978-mux to mux-mc33978 in the Kconfig help
-- fail if fwnode is NULL
-changes v8:
-- no changes
-changes v7:
-- Simplify the return path and local variable assignment in
-  mc33978_mux_set().
-- Change idle_state to a signed integer to properly handle negative MUX
-  subsystem constants.
-- Default to MUX_IDLE_AS_IS when the "idle-state" device tree property
-  is missing.
-- Explicitly reject MUX_IDLE_DISCONNECT since the hardware does not
-  support disconnecting the multiplexer.
-changes v6:
-- parse optional idle-state property
-- validate idle-state against available AMUX channels
-- lower-case probe error messages
-changes v5:
-- no changes
-changes v4:
-- no changes
-changes v3:
-- no changes
-changes v2:
-- Add missing <linux/err.h> include.
-- Add platform_device_id table
----
- drivers/mux/Kconfig       |  14 ++++
- drivers/mux/Makefile      |   2 +
- drivers/mux/mc33978-mux.c | 141 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 157 insertions(+)
- create mode 100644 drivers/mux/mc33978-mux.c
+You are missing here explanation why this patch is needed.
 
-diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
-index 6d17dfa25dad..51510a74e632 100644
---- a/drivers/mux/Kconfig
-+++ b/drivers/mux/Kconfig
-@@ -56,6 +56,20 @@ config MUX_GPIO
- 	  To compile the driver as a module, choose M here: the module will
- 	  be called mux-gpio.
- 
-+config MUX_MC33978
-+	tristate "NXP MC33978/MC34978 Analog Multiplexer"
-+	depends on MFD_MC33978
-+	help
-+	  MC33978/MC34978 24-to-1 analog multiplexer (AMUX) driver.
-+
-+	  This driver provides mux-control for the analog multiplexer,
-+	  which can route switch voltages, temperature, and battery voltage
-+	  to an external ADC. Typically used with IIO ADC drivers to measure
-+	  analog values from the 22 switch inputs plus temperature and VBATP.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called mux-mc33978.
-+
- config MUX_MMIO
- 	tristate "MMIO/Regmap register bitfield-controlled Multiplexer"
- 	depends on OF
-diff --git a/drivers/mux/Makefile b/drivers/mux/Makefile
-index 6e9fa47daf56..339c44b4d4f4 100644
---- a/drivers/mux/Makefile
-+++ b/drivers/mux/Makefile
-@@ -7,10 +7,12 @@ mux-core-objs			:= core.o
- mux-adg792a-objs		:= adg792a.o
- mux-adgs1408-objs		:= adgs1408.o
- mux-gpio-objs			:= gpio.o
-+mux-mc33978-objs		:= mc33978-mux.o
- mux-mmio-objs			:= mmio.o
- 
- obj-$(CONFIG_MULTIPLEXER)	+= mux-core.o
- obj-$(CONFIG_MUX_ADG792A)	+= mux-adg792a.o
- obj-$(CONFIG_MUX_ADGS1408)	+= mux-adgs1408.o
- obj-$(CONFIG_MUX_GPIO)		+= mux-gpio.o
-+obj-$(CONFIG_MUX_MC33978)	+= mux-mc33978.o
- obj-$(CONFIG_MUX_MMIO)		+= mux-mmio.o
-diff --git a/drivers/mux/mc33978-mux.c b/drivers/mux/mc33978-mux.c
-new file mode 100644
-index 000000000000..9034d7c3778d
---- /dev/null
-+++ b/drivers/mux/mc33978-mux.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (c) 2026 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+/*
-+ * MC33978/MC34978 Analog Multiplexer (AMUX) Driver
-+ *
-+ * This driver provides mux-control for the 24-to-1 analog multiplexer.
-+ * The AMUX routes one of the following signals to the external AMUX pin:
-+ * - Channels 0-13: SG0-SG13 switch voltages
-+ * - Channels 14-21: SP0-SP7 switch voltages
-+ * - Channel 22: Internal temperature diode
-+ * - Channel 23: Battery voltage (VBATP)
-+ *
-+ * Consumer drivers (typically IIO ADC drivers) use the mux-control
-+ * subsystem to select which signal to measure.
-+ *
-+ * Architecture:
-+ * The MC33978 does not have an internal ADC. Instead, it routes analog
-+ * signals to an external AMUX pin that must be connected to an external
-+ * ADC (such as the SoC's internal ADC). The IIO subsystem is responsible
-+ * for coordinating the mux selection and ADC sampling.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mux/driver.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/mfd/mc33978.h>
-+
-+/* AMUX_CTRL register field definitions */
-+#define MC33978_AMUX_CTRL_MASK	GENMASK(5, 0)	/* 6-bit channel select */
-+
-+struct mc33978_mux_priv {
-+	struct device *dev;
-+	struct regmap *map;
-+};
-+
-+static int mc33978_mux_set(struct mux_control *mux, int state)
-+{
-+	struct mux_chip *mux_chip = mux->chip;
-+	struct mc33978_mux_priv *priv = mux_chip_priv(mux_chip);
-+	int ret;
-+
-+	if (state < 0 || state >= MC33978_NUM_AMUX_CH)
-+		return -EINVAL;
-+
-+	ret = regmap_update_bits(priv->map, MC33978_REG_AMUX_CTRL,
-+				 MC33978_AMUX_CTRL_MASK, state);
-+	if (ret)
-+		dev_err(priv->dev, "failed to set AMUX channel %d: %d\n",
-+			state, ret);
-+
-+	return ret;
-+}
-+
-+static const struct mux_control_ops mc33978_mux_ops = {
-+	.set = mc33978_mux_set,
-+};
-+
-+static int mc33978_mux_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mc33978_mux_priv *priv;
-+	struct fwnode_handle *fwnode;
-+	struct mux_chip *mux_chip;
-+	struct mux_control *mux;
-+	s32 idle_state;
-+	int ret;
-+
-+	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*priv));
-+	if (IS_ERR(mux_chip))
-+		return dev_err_probe(dev, PTR_ERR(mux_chip), "failed to allocate mux chip\n");
-+
-+	fwnode = dev_fwnode(dev->parent);
-+	if (!fwnode)
-+		return dev_err_probe(dev, -ENODEV, "missing parent firmware node\n");
-+
-+	/* Borrow the parent's firmware node so consumers can find this mux chip */
-+	device_set_node(&mux_chip->dev, fwnode);
-+
-+	priv = mux_chip_priv(mux_chip);
-+	priv->dev = dev;
-+
-+	priv->map = dev_get_regmap(dev->parent, NULL);
-+	if (!priv->map)
-+		return dev_err_probe(dev, -ENODEV, "failed to get parent regmap\n");
-+
-+	mux_chip->ops = &mc33978_mux_ops;
-+
-+	mux = &mux_chip->mux[0];
-+	mux->states = MC33978_NUM_AMUX_CH;
-+
-+	ret = device_property_read_u32(&mux_chip->dev, "idle-state",
-+				       (u32 *)&idle_state);
-+	if (ret < 0 && ret != -EINVAL) {
-+		return dev_err_probe(dev, ret, "failed to parse idle-state\n");
-+	} else if (ret == -EINVAL) {
-+		mux->idle_state = MUX_IDLE_AS_IS;
-+	} else {
-+		if (idle_state == MUX_IDLE_DISCONNECT)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "idle-disconnect not supported by hardware\n");
-+		if (idle_state != MUX_IDLE_AS_IS &&
-+		    (idle_state < 0 || idle_state >= MC33978_NUM_AMUX_CH))
-+			return dev_err_probe(dev, -EINVAL, "invalid idle-state %d\n",
-+					     idle_state);
-+		mux->idle_state = idle_state;
-+	}
-+
-+	ret = devm_mux_chip_register(dev, mux_chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to register mux chip\n");
-+
-+	platform_set_drvdata(pdev, mux_chip);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id mc33978_mux_id[] = {
-+	{ .name = "mc33978-mux" },
-+	{ .name = "mc34978-mux" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, mc33978_mux_id);
-+
-+static struct platform_driver mc33978_mux_driver = {
-+	.driver = {
-+		.name = "mc33978-mux",
-+	},
-+	.probe = mc33978_mux_probe,
-+	.id_table = mc33978_mux_id,
-+};
-+module_platform_driver(mc33978_mux_driver);
-+
-+MODULE_AUTHOR("Oleksij Rempel <kernel@pengutronix.de>");
-+MODULE_DESCRIPTION("NXP MC33978/MC34978 Analog Multiplexer Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.47.3
-
+> Assisted-by: Antigravity:gemini-3-flash
+> Signed-off-by: Marco Scardovi <mscardovi95@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-acpi-core.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
 
