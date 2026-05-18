@@ -1,136 +1,449 @@
-Return-Path: <linux-gpio+bounces-37010-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37011-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IEDYDVObCmqs4AQAu9opvQ
-	(envelope-from <linux-gpio+bounces-37010-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 06:53:39 +0200
+	id 6LYlIs+rCmp35gQAu9opvQ
+	(envelope-from <linux-gpio+bounces-37011-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 08:03:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 975AB565C8C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 06:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3A5D566859
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 08:03:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B46D23010538
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 04:48:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73FE03038174
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 06:03:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0E8388380;
-	Mon, 18 May 2026 04:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CA93DDDAD;
+	Mon, 18 May 2026 06:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itQkydhg"
+	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="KBLckvtX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5692038655E;
-	Mon, 18 May 2026 04:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from ultrarisc.com (unknown [218.76.62.146])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0A53DCDB1;
+	Mon, 18 May 2026 06:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779079713; cv=none; b=sGT9jxQzNAuYnqBa2IO+MyYt5EvOQVf3JgdgK5xvmsenIdnKyA3miJeie9auhbcApkCuxyd2kGHIvC08BfHhb0uXidPe70wh6Gn7K+wOI6+aehhC1YBhBd0FNyOT62JZhJpTvb+EDkzzD568VVtyqjLeq4c3B5gzYBikJCpHWXo=
+	t=1779084233; cv=none; b=lqOiJNjm3nv++8YRLbdeUQl1sqpiCLNlr4FxUWD798EXCyWZMAMdo0D4/p4hIQnN5+0PThT1cQq/Vcf0ZFUdt5it0RAJoaaPvJpnDA5TWHMMq5dp3E4ereo0wzzEoqkgTBoan9pqEc4ZMD5Xy+cd8reD4MDm0GAwXXBA/4aMOFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779079713; c=relaxed/simple;
-	bh=rQIGvqhN0cRN44cMOmw13oWvVCFCMbrmr4Tvh2OChno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JaGiTGACrYHjBc2E3gJMVgxP3qnN+BKcE04pMOQt0W3G9Lgdqcub0dIge26bqqefEUdyU7AStM1YNrE1Qc8g63+Tz7mCx1509RhiJFyE1IU7/wTo0wURqh/JIh0i8XEYQ47OffAOI8WXlQP328+888j4KLhtURLMk3+IUg1GBUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itQkydhg; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779079712; x=1810615712;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rQIGvqhN0cRN44cMOmw13oWvVCFCMbrmr4Tvh2OChno=;
-  b=itQkydhgQBivvez8fHbfCwOxujr/YufVr9gNUP9xL6ZSjT6fkbPQR+NZ
-   E7+EuUYEKNK7br1s3PlB7kB0YOEgmthTJ9chSc0muOHn2KxTtK5AAPs1p
-   JazuhuIVHVSnBm6aFxKXLBTGoz6PNcE52Ov+NG6zZgJldFhXhM4rBBcGh
-   ANM90DkH8qlhouGJYXuO396NRsev/sQmrJxr2Vnh2ljVdEvfAoywAoCCE
-   IM4QxyNfE06nBRpVKBQiBZlg0tEJyE1nBx5H+Tpwi9BvadPECBu/PcjTR
-   Y+5EUA/RJ56G+cj4gMnBJkv3HBq0uGt8zgNIkWOhafK+XG7xT/s9aj+je
-   g==;
-X-CSE-ConnectionGUID: EoKnJ84XQmuIg0mc3N13GQ==
-X-CSE-MsgGUID: M493eJ3BTvGV72vj7oAqTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11789"; a="79896000"
-X-IronPort-AV: E=Sophos;i="6.23,241,1770624000"; 
-   d="scan'208";a="79896000"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2026 21:48:31 -0700
-X-CSE-ConnectionGUID: PBzfC4pdRYmutYXn6ZH9XA==
-X-CSE-MsgGUID: gJgtL4uASjeSFufY/mk9/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,241,1770624000"; 
-   d="scan'208";a="236282800"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa007.fm.intel.com with ESMTP; 17 May 2026 21:48:26 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 8E09995; Mon, 18 May 2026 06:48:25 +0200 (CEST)
-Date: Mon, 18 May 2026 06:48:25 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Thomas Lin <thomas_lin@lecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, hoan@os.amperecomputing.com,
-	linusw@kernel.org, brgl@kernel.org,
-	andriy.shevchenko@linux.intel.com, jsd@semihalf.com,
-	andi.shyti@kernel.org, broonie@kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org, lucas_hao@lecomputing.com,
-	puntar_liu@lecomputing.com, jihua_tao@lecomputing.com,
-	stan_xu@lecomputing.com, lumin_liu@lecomputing.com,
-	notics_zhang@lecomputing.com, braden_zhang@lecomputing.com,
-	harold_wu@lecomputing.com, will_zhang@lecomputing.com,
-	aurora_jiang@lecomputing.com, ryen_lin@lecomputing.com,
-	andy_jiang@lecomputing.com
-Subject: Re: [PATCH v3 3/3] i2c: designware: Add ACPI ID LECA0003 for LECARC
- SoCs
-Message-ID: <20260518044825.GM84797@black.igk.intel.com>
-References: <20260514034319.3507315-1-thomas_lin@lecomputing.com>
- <20260518024937.453714-1-thomas_lin@lecomputing.com>
- <20260518024937.453714-4-thomas_lin@lecomputing.com>
+	s=arc-20240116; t=1779084233; c=relaxed/simple;
+	bh=naDIk1LmehiyBilvJE7JO9LRVtvJgbRqizOvTJr793M=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=bjafYKzdq262u2l2gnSDkNpRjC5DY+wdyAeFWb5fSX6WmGBjhx37QLOoDB+h+9jYmJk5yHr+ilu4lriLkOyW1s3KGvgkvp2eOpqSboOqElsXBsXry3cWQyAsIafOPwlg7EeLKmbxswxhVzEMWyZFxwJNw+vseD+dtB0ySXUPNWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=pass smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=KBLckvtX; arc=none smtp.client-ip=218.76.62.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ultrarisc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
+	References:Date:Message-Id; bh=040PPyh4hyNL02s2nYCsjjVPnlanJFo/L
+	2eYNDmar4M=; b=KBLckvtXUarQe0WQf2Swb1IaZe+Rj2MX6XC7EfXbYF34q7XpT
+	ddIIWfnkx1xXhdJS4nYVYYTJQmR5q+fRILrYNYuR2XT/sblMZVkjZvo3HUaxj5sW
+	jxN9QKtYyi1M1BtsyGRnGG0laLIZCNxxVvUXYoFmZeubuA8YVbPPJbunxU=
+Received: from [127.0.0.1] (unknown [192.168.100.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAfwDXEELUqwpqpLYEAA--.6034S2;
+	Mon, 18 May 2026 14:04:04 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260518024937.453714-4-thomas_lin@lecomputing.com>
-X-Rspamd-Queue-Id: 975AB565C8C
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 4/9] dt-bindings: pinctrl: Add UltraRISC DP1000 pinctrl
+ bindings
+From: Jia Wang <wangjia@ultrarisc.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Jia Wang <wangjia@ultrarisc.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20260515-fragrant-anyplace-e69a7d3e205d@wendy>
+References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
+ <20260515-ultrarisc-pinctrl-v1-4-bf559589ea8a@ultrarisc.com>
+ <20260515-fragrant-anyplace-e69a7d3e205d@wendy>
+Date: Mon, 18 May 2026 14:03:23 +0800
+Message-Id: <177908420351.2045074.18268079367799334509.b4-reply@b4>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779084203; l=10842;
+ i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
+ bh=naDIk1LmehiyBilvJE7JO9LRVtvJgbRqizOvTJr793M=;
+ b=DrQ4DioFQMBAj1WEBHNQoAke5N6P0XKcEgIfBF1H/GgB3DND4Hf7kBMO50owTizi39YwWtoSW
+ 2XhiaisqCjuAMfTNnJIthn+tXvr6GWd17x6cjEdxT0M4dcwvhYsfd6h
+X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
+ pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
+X-CM-TRANSID:AQAAfwDXEELUqwpqpLYEAA--.6034S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3JrW3Gr1xuw15uryDKw1xZrb_yoWfZrW3pF
+	s3GFWrAFW3JF15JrW0qw1UA3ZxCa10kryxGw42qryUCa909F18XFy3Kw43uaykur47ZrW7
+	tF15ur1ayay29aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9l14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
+	AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
+	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
+X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAHEWoFRsMACwAass
+X-Rspamd-Queue-Id: C3A5D566859
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37010-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCPT_COUNT_TWELVE(0.00)[27];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-37011-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[ultrarisc.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	DBL_PROHIBIT(0.00)[0.169.21.40:email];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lecomputing.com:email,black.igk.intel.com:mid,intel.com:email,intel.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ultrarisc.com:email,ultrarisc.com:dkim]
 X-Rspamd-Action: no action
 
-On Mon, May 18, 2026 at 10:49:36AM +0800, Thomas Lin wrote:
-> Add ACPI ID "LECA0003" for LECARC SoCs that integrate
-> the DesignWare I2C controller.
-> Also add corresponding ACPI description in acpi_apd.c.
+On 2026-05-15 11:12 +0100, Conor Dooley wrote:
+> On Fri, May 15, 2026 at 09:18:00AM +0800, Jia Wang wrote:
+> > Add bindings for the pin controllers on the UltraRISC DP1000 RISC-V SoC.
+> > 
+> > Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+> > ---
+> >  .../bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml | 168 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   7 +
+> >  .../dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h |  65 ++++++++
+> >  3 files changed, 240 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..c7ed1f96382a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
+> > @@ -0,0 +1,168 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/ultrarisc,dp1000-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: UltraRISC DP1000 Pin Controller
+> > +maintainers:
+> > +  - Jia Wang <wangjia@ultrarisc.com>
+> > +
+> > +description: |
+> > +  UltraRISC RISC-V SoC DP1000 pin controller.
+> > +
+> > +  The binding supports two child node styles under the same controller
+> > +  compatible:
+> > +
+> > +  - legacy DP1000-specific nodes using phandle-array properties
+> > +    `pinctrl-pins` and `pinconf-pins`
+> > +  - generic pinctrl nodes using `pins`, `function` and generic pin
+> > +    configuration properties
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: ultrarisc,dp1000-pinctrl
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#pinctrl-cells":
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +patternProperties:
+> > +  '.*-pins$':
+> > +    type: object
+> > +    allOf:
+> > +      - $ref: /schemas/pinctrl/pincfg-node.yaml#
+> > +      - $ref: /schemas/pinctrl/pinmux-node.yaml#
+> > +    additionalProperties: false
+> > +    properties:
+> > +      pinctrl-pins:
+> > +        description: |
+> > +          The list of pins and their mux settings that properties in the node
+> > +          apply to. The format: `PORT  PIN  FUNCTION`.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +        minItems: 1
+> > +        maxItems: 32
+> > +      pinconf-pins:
+> > +        description: |
+> > +          The list of pins and their pad configuration that properties in the
+> > +          node apply to. The format: `PORT  PIN  CONF`.
+> > +          CONF is a DP1000-specific encoding of pull and drive strength as
+> > +          defined in dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +        minItems: 1
+> > +        maxItems: 32
 > 
-> Signed-off-by: Thomas Lin <thomas_lin@lecomputing.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> These two "legacy" properties are not acceptable, sorry.
+>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Understood. Will remove pinconf-pins and pinctrl-pins from the binding in v2.
+ 
+> > +      pins:
+> > +        description: List of pins affected by this state node.
+> > +        minItems: 1
+> > +        uniqueItems: true
+> > +        items:
+> > +          type: string
+> > +          pattern: '^(PA([0-9]|1[0-5])|P[BCD][0-7]|LPC([0-9]|1[0-2]))$'
+> 
+> The regex might be neat, but I don't think that it is very
+> user-friendly. It's hard to read this and understand what the pin
+> namings actually are. Could you break this down into multiple patterns,
+> one for each type of pin?
+> I think that would make reading it much simpler.
+> 
+
+Will split the pin regex into separate patterns per pin type in v2 for
+better readability. Thanks.
+
+> > +
+> > +      function:
+> > +        description: |
+> > +          Mux function to select for the listed pins.
+> > +          gpio maps to the hardware default mode. The default mode is
+> > +          GPIO for PA/PB/PC/PD pins and LPC for LPC pins.
+> > +          func1 is not supported on LPC pins.
+> > +        enum:
+> > +          - gpio
+> 
+> > +          - func0
+> > +          - func1
+> 
+> These two do no seem to be very useful to people writing devicetrees.
+> What do func0 and func1 represent? I assume that they represent
+> something different for different pins? For example, maybe qspi for LPC
+> or i2c for PC?
+> 
+
+You're right. I'll replace func0 and func1 with descriptive names based
+on the actual hardware functions (e.g., uart, i2c, spi) in v2. Thanks.
+
+> pw-bot: changes-requested
+> 
+> Cheers,
+> Conor.
+>
+
+Best Regards,
+Jia Wang
+ 
+> > +
+> > +      bias-disable: true
+> > +      bias-high-impedance: true
+> > +      bias-pull-up: true
+> > +      bias-pull-down: true
+> > +
+> > +      drive-strength:
+> > +        description: Output drive strength in mA.
+> > +        enum: [20, 27, 33, 40]
+> > +
+> > +    oneOf:
+> > +      - allOf:
+> > +          - anyOf:
+> > +              - required: [pinctrl-pins]
+> > +              - required: [pinconf-pins]
+> > +          - not:
+> > +              required: [pins]
+> > +      - allOf:
+> > +          - required: [pins]
+> > +          - not:
+> > +              anyOf:
+> > +                - required: [pinctrl-pins]
+> > +                - required: [pinconf-pins]
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    soc {
+> > +      #address-cells = <2>;
+> > +      #size-cells = <2>;
+> > +
+> > +      pinmux@11081000 {
+> > +        compatible = "ultrarisc,dp1000-pinctrl";
+> > +        reg = <0x0 0x11081000  0x0 0x1000>;
+> > +        #pinctrl-cells = <2>;
+> > +
+> > +        i2c0-pins {
+> > +          pins = "PA12", "PA13";
+> > +          function = "func0";
+> > +          bias-pull-up;
+> > +          drive-strength = <33>;
+> > +        };
+> > +
+> > +        uart0-pins {
+> > +          pins = "PA8", "PA9";
+> > +          function = "func1";
+> > +          bias-pull-up;
+> > +          drive-strength = <33>;
+> > +        };
+> > +      };
+> > +    };
+> > +
+> > +  - |
+> > +    /* Legacy example */
+> > +    #include <dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h>
+> > +
+> > +    soc {
+> > +      #address-cells = <2>;
+> > +      #size-cells = <2>;
+> > +
+> > +      pinmux@11081000 {
+> > +        compatible = "ultrarisc,dp1000-pinctrl";
+> > +        reg = <0x0 0x11081000  0x0 0x1000>;
+> > +        #pinctrl-cells = <2>;
+> > +
+> > +        i2c0-pins {
+> > +          pinctrl-pins = <
+> > +            UR_DP1000_IOMUX_A  12  UR_DP1000_FUNC0
+> > +            UR_DP1000_IOMUX_A  13  UR_DP1000_FUNC0
+> > +          >;
+> > +
+> > +          pinconf-pins = <
+> > +            UR_DP1000_IOMUX_A  12  UR_DP1000_BIAS(UR_DP1000_PULL_UP,
+> > +                                                  UR_DP1000_DRIVE_DEF)
+> > +            UR_DP1000_IOMUX_A  13  UR_DP1000_BIAS(UR_DP1000_PULL_UP,
+> > +                                                  UR_DP1000_DRIVE_DEF)
+> > +          >;
+> > +        };
+> > +
+> > +        uart0-pins {
+> > +          pinctrl-pins = <
+> > +            UR_DP1000_IOMUX_A  8  UR_DP1000_FUNC1
+> > +            UR_DP1000_IOMUX_A  9  UR_DP1000_FUNC1
+> > +          >;
+> > +
+> > +          pinconf-pins = <
+> > +            UR_DP1000_IOMUX_A  8   UR_DP1000_BIAS(UR_DP1000_PULL_UP,
+> > +                                                  UR_DP1000_DRIVE_DEF)
+> > +            UR_DP1000_IOMUX_A  9   UR_DP1000_BIAS(UR_DP1000_PULL_UP,
+> > +                                                  UR_DP1000_DRIVE_DEF)
+> > +          >;
+> > +        };
+> > +      };
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5bf971ff48b2..baaaa46b1a56 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -27358,6 +27358,13 @@ S:	Maintained
+> >  F:	drivers/usb/common/ulpi.c
+> >  F:	include/linux/ulpi/
+> >  
+> > +ULTRARISC DP1000 PINCTRL DRIVER
+> > +M:	Jia Wang <wangjia@ultrarisc.com>
+> > +L:	linux-gpio@vger.kernel.org
+> > +S:	Maintained
+> > +F:	Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
+> > +F:	include/dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h
+> > +
+> >  ULTRATRONIK BOARD SUPPORT
+> >  M:	Goran Rađenović <goran.radni@gmail.com>
+> >  M:	Börge Strümpfel <boerge.struempfel@gmail.com>
+> > diff --git a/include/dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h b/include/dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h
+> > new file mode 100644
+> > index 000000000000..bef28115898d
+> > --- /dev/null
+> > +++ b/include/dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h
+> > @@ -0,0 +1,65 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> > +/*
+> > + * UltraRISC DP1000 pinctrl header.
+> > + *
+> > + * Copyright (C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_PINCTRL_ULTRARISC_DP1000_PINCTRL_H
+> > +#define _DT_BINDINGS_PINCTRL_ULTRARISC_DP1000_PINCTRL_H
+> > +
+> > +/**
+> > + * UltraRISC DP1000 IO pad configuration
+> > + * port: A, B, C, D, LPC
+> > + *     Pin in the port
+> > + * pin:
+> > + *     PA: 0 - 15
+> > + *     PB-PD: 0 - 7
+> > + *     LPC: 0 - 12
+> > + * func:
+> > + *     UR_DP1000_FUNC_DEF: default
+> > + *     UR_DP1000_FUNC0: func0
+> > + *     UR_DP1000_FUNC1: func1
+> > + */
+> > +#define UR_DP1000_IOMUX_A		0x0
+> > +#define UR_DP1000_IOMUX_B		0x1
+> > +#define UR_DP1000_IOMUX_C		0x2
+> > +#define UR_DP1000_IOMUX_D		0x3
+> > +#define UR_DP1000_IOMUX_LPC		0x4
+> > +
+> > +#define UR_DP1000_FUNC_DEF		0
+> > +#define UR_DP1000_FUNC0			1
+> > +#define UR_DP1000_FUNC1			0x10000
+> > +
+> > +/**
+> > + * Configure pull up/down resistor of the IO pin
+> > + * UR_DP1000_PULL_DIS: disable pull-up and pull-down
+> > + * UR_DP1000_PULL_UP: enable pull-up
+> > + * UR_DP1000_PULL_DOWN: enable pull-down
+> > + */
+> > +#define UR_DP1000_PULL_DIS	0
+> > +#define UR_DP1000_PULL_UP	1
+> > +#define UR_DP1000_PULL_DOWN	2
+> > +/**
+> > + * Configure drive strength of the IO pin
+> > + * UR_DP1000_DRIVE_DEF: default value, reset value is 2
+> > + * UR_DP1000_DRIVE_0: 20mA
+> > + * UR_DP1000_DRIVE_1: 27mA
+> > + * UR_DP1000_DRIVE_2: 33mA
+> > + * UR_DP1000_DRIVE_3: 40mA
+> > + */
+> > +#define UR_DP1000_DRIVE_DEF	2
+> > +#define UR_DP1000_DRIVE_0	0
+> > +#define UR_DP1000_DRIVE_1	1
+> > +#define UR_DP1000_DRIVE_2	2
+> > +#define UR_DP1000_DRIVE_3	3
+> > +
+> > +/**
+> > + * Combine the pull-up/down resistor and drive strength
+> > + * pull: UR_DP1000_PULL_DIS, UR_DP1000_PULL_UP, UR_DP1000_PULL_DOWN
+> > + * drive: UR_DP1000_DRIVE_DEF, UR_DP1000_DRIVE_0, UR_DP1000_DRIVE_1,
+> > + *        UR_DP1000_DRIVE_2, UR_DP1000_DRIVE_3
+> > + */
+> > +#define UR_DP1000_BIAS(pull, drive)		(((pull) << 2) | (drive))
+> > +
+> > +#endif /* _DT_BINDINGS_PINCTRL_ULTRARISC_DP1000_PINCTRL_H */
+> > 
+> > -- 
+> > 2.34.1
+> > 
+
+
 
