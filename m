@@ -1,176 +1,136 @@
-Return-Path: <linux-gpio+bounces-37088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37111-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AGkHMO9ZC2oCGAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37088-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 20:26:55 +0200
+	id sGe5BjrgC2qzPwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37111-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:59:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABBC45723B4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 20:26:55 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 642935770DE
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:59:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 56F5B3021595
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 18:26:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 31B85302A6C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 03:59:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C058F38A716;
-	Mon, 18 May 2026 18:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 672A42EAB6F;
+	Tue, 19 May 2026 03:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A2T0DUHL"
+	dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b="ZBeiXxko"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx.nabladev.com (mx.nabladev.com [178.251.229.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DC238237D;
-	Mon, 18 May 2026 18:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB9A2C21D0;
+	Tue, 19 May 2026 03:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.229.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779128780; cv=none; b=K4qKyOo+CdkeUWENeTkd4r0lLziTuYsFg+M55ficJ9WjVLE0P6nUCQviCcPdpzoHfo5JCP046pn1YltIcpN4f1FgKtpiXxm3O2s8W9lx66St9syzvZt4LhmeUDrDa8tB2I44L5+MNe9U5Vm7Op4L7HHzp3JimzOcWjdkhYCE0Gg=
+	t=1779163187; cv=none; b=ClusmCL7KZ32eqZaoVaHvSntTam0bm0+BmLLJaInUGhOYMudkrrbwFulrAZTXO4WqKMoeiYvDCU/bEVtoDdGlKCZnjNcbVxWFwFaG+yDkHZrey5hCjyY4cM8ZXIyE065ou3d9lLh8H48Bx99aSZzgwwJNP1lHaewqK+wem1lmVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779128780; c=relaxed/simple;
-	bh=pbXYLQ1mwct3+ssZlrWJpr6OzTUkZbnMsQ/G5sb/T3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AD7/43eDuGOoEq+T35lC4QD/Y67eyRbJR31nR957MQEP33uzEiMhdd1Os9xCmMCY3IwNa6mJtH6kuzid6b1V1V0QMwYGzZ6Tal+6X1pqp/x9GUTkgvMDhlVWjPAxjcz1/VE5QjG9NyaeTs7t4nCrxNpTKBXlgY277v65NDN6foI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A2T0DUHL; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779128779; x=1810664779;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pbXYLQ1mwct3+ssZlrWJpr6OzTUkZbnMsQ/G5sb/T3M=;
-  b=A2T0DUHLXSAZYQw2jRiF+UoKrVoD0sUG+NgJtbnOEQb18t2vQsGxLopw
-   YUxKWtYH8sxVruSa43cAl3BbpnZ04oBxA4nDyeKXLSbRW1afM6G4WSkr4
-   ZJObrW+BGc0Icc6onS9dZJE4WOU0QPpHzD8wHPszfE+/amcnq74W8dnKi
-   ojxajFEfbqExWClaWwZqO4rARkYfU4V+fyjqBpaVjrQhtM0PqYc19qSsI
-   3nLaQA3OGxSSKCqC+ljONKYwvx39XAdeaOkXLxRLKrsuiGC3BZF3e3Dub
-   /9Ft5tR0johwFWGFLRiCCXov2JNgAOk0WOR15314fzbbobb8vfam97s1H
-   A==;
-X-CSE-ConnectionGUID: 9qriItO/ScWlODNBpfRg1Q==
-X-CSE-MsgGUID: +k3VPqE9SVOFJAvzB/QnXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="90575555"
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="90575555"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:26:18 -0700
-X-CSE-ConnectionGUID: O0zap/NiRba3AYD16GFVrA==
-X-CSE-MsgGUID: e9aNJkI4TGO68gsQIjE1Pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="239764455"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.3])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:26:12 -0700
-Date: Mon, 18 May 2026 21:26:09 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v11 4/6] iio: adc: ad4691: add SPI offload support
-Message-ID: <agtZwbeVeZdnlXTI@ashevche-desk.local>
-References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
- <20260515-ad4692-multichannel-sar-adc-driver-v11-4-eab27d852ac2@analog.com>
- <80f61c0b-1f36-4fee-9f76-b93f63b87abe@baylibre.com>
- <LV9PR03MB841418AEF0059E802F7A69B2F7032@LV9PR03MB8414.namprd03.prod.outlook.com>
- <60d66897-41cc-4f3f-afd2-64e49f0bb55e@baylibre.com>
+	s=arc-20240116; t=1779163187; c=relaxed/simple;
+	bh=+EKhPB0op5eF5whcf6k/JmiCiY0qlQfP4Onm0LgaO8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gVlChDCmiUasr+wnzy4wsngimFsyyxGFKxdzjx/cQISaZE8RlyLjoFYMggiXelNd8mkCqfUOJkFbZem2wGDFFLDdLi71b/6oPfIftwhqjqaXcE62v0zaGIx/WJZS6xx4eN6pA7f2NAB9LLtpTtXXdohsoW6TwthHXNrrgsIO4WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com; spf=pass smtp.mailfrom=nabladev.com; dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b=ZBeiXxko; arc=none smtp.client-ip=178.251.229.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabladev.com
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 23CA9114613;
+	Tue, 19 May 2026 05:59:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nabladev.com;
+	s=dkim; t=1779163177;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=qmJs5US+/rH1nCX4Uj+ki/3ilrQeeUX3cODn7cVnq6I=;
+	b=ZBeiXxkoe3MwzbN4QzNb8Eb9xugzS8GPyEK7WQWBkjDNZe2mfu0jkeUSZYAG+XKIVniVZV
+	2aej5YRxjO7O24qdPNDM0HXlb+pTPg8wDOkxfN91/YkemZ9uUqamDG6zS7HK1CKHEUC/Wu
+	LFv3pvOn6Ut/gZ6Uf6HUjOCK0hnZIgWv01XHXGsqYpTpnzBNaI8cbDhtsHErU1N5wICHjE
+	Hw58TSARxvJG8DaikNCXHgc2K22FrVMl2VLmBDkgXWuazAAgAymA7uzq99tCdiqfDVmrs1
+	eaYzvqZUujAHpGfNJkZ6uiUaBZUbXTKbmAvIMdhwkc+tdTbEZGiVdCUR9KrbJQ==
+Message-ID: <3612f5f6-eeca-49e5-9662-72729bb48c9f@nabladev.com>
+Date: Mon, 18 May 2026 21:20:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60d66897-41cc-4f3f-afd2-64e49f0bb55e@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: shared: make the voting mechanism adaptable
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Linus Walleij <linusw@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20260513-gpio-shared-dynamic-voting-v1-1-8e1c49961b7d@oss.qualcomm.com>
+Content-Language: en-US
+From: Marek Vasut <marex@nabladev.com>
+In-Reply-To: <20260513-gpio-shared-dynamic-voting-v1-1-8e1c49961b7d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[nabladev.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[nabladev.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	TAGGED_FROM(0.00)[bounces-37088-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37111-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nabladev.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,intel.com:dkim,baylibre.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: ABBC45723B4
+	FROM_NEQ_ENVFROM(0.00)[marex@nabladev.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nabladev.com:email,nabladev.com:mid,nabladev.com:dkim,qualcomm.com:email]
+X-Rspamd-Queue-Id: 642935770DE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 18, 2026 at 10:16:38AM -0500, David Lechner wrote:
-> On 5/18/26 10:14 AM, Sabau, Radu bogdan wrote:
-> >> -----Original Message-----
-> >> From: David Lechner <dlechner@baylibre.com>
-> >> Sent: Saturday, May 16, 2026 8:53 PM
-
-...
-
-> >>> +	if (st->manual_mode && st->offload)
-> >>> +		return sysfs_emit(buf, "%llu\n", READ_ONCE(st->offload-
-> >>> trigger_hz));
-> >>
-> >> Why do we need READ_ONCE?
-> > 
-> > trigger_hz is u64 and if the target is 32-bit, a 64-bit access compiles to two 32-bit
-> > instructions, so show() reading it without a lock and store() writing it concurrently
-> > can produce a torn value at the compiler level. READ_ONCE/WRITE_ONCE suppress
-> > the compiler transformations that would allow that splitting or caching. We could
-> > have st->lock in show() instead, but that felt heavier than necessary for a single
-> > scalar where a transiently stale-but-whole read is fine.
+On 5/13/26 11:13 AM, Bartosz Golaszewski wrote:
+> The current voting mechanism in GPIO shared proxy assumes that "low" is
+> always the default value and users can only vote for driving the GPIO
+> "high" in which case it will remain high as long as there's at least one
+> user voting.
 > 
-> I would go with the mutex. It will be easier for people to understand.
+> This makes it impossible to use the automatic sharing management for
+> certain use-cases such as the write-protect GPIOs of EEPROMs which are
+> requested "high" and driven "low" to enable writing. In this case, if
+> the WP GPIO is shared by multiple EEPROMs, and at least one of them
+> wants to enable writing, the pin must be set to "low".
+> 
+> Modify the voting heuristic to assume the value set by the first user on
+> request to be the "default" and subseqent calls to gpiod_set_value()
+> will constitute votes for a change of the value to the opposite. In the
+> wp-gpios case it will mean that the nvmem core requests the GPIO as
+> "out-high" for all EEPROMs sharing the pin, and when one of them wants
+> to write, the pin will be driven low, enabling it.
 
-But why? READ_ONCE() here is exactly enough. We do not care about
-serialisation, we care only about integrity. With mutex it will confuse
-(some) people more, e.g., me. Because in that case I would think about
-some specific access to it that may happen. Yes, I saw many times the show
-functions that do mutex and then print the result when mutex is not held
-anymore, but for simple cases like here, mutex is overkill. Interestingly
-that using guard()() inside show makes the mentioned functions to print
-(almost) latest value of the variable in question. It narrows window down
-as printing will go inside critical section.
+Shouldn't this polarity inversion be handled by DT GPIO_ACTIVE_* flag ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Fixes: e992d54c6f97 ("gpio: shared-proxy: implement the shared GPIO proxy driver")
+> Reported-by: Marek Vasut <marex@nabladev.com>
+> Closes: https://lore.kernel.org/all/20260511163518.51104-1-marex@nabladev.com/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+> Hi Marek!
+> 
+> Please see if you can make your setup work with shared GPIOs with this
+> patch. You need to enable CONFIG_HAVE_SHARED_GPIOS on your platform.
 
+Why can this shared GPIO not be enabled generically for any GPIO 
+controller ?
 
+[...]
 
