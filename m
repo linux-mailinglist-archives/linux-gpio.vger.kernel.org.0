@@ -1,79 +1,81 @@
-Return-Path: <linux-gpio+bounces-37017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WIUvEevFCmqa7wQAu9opvQ
-	(envelope-from <linux-gpio+bounces-37017-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:55:23 +0200
+	id yM0WOvXFCmqa7wQAu9opvQ
+	(envelope-from <linux-gpio+bounces-37018-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:55:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D440568307
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:55:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A879956830F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:55:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2734130117C8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:54:41 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8BBFF300909B
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7BA3E123F;
-	Mon, 18 May 2026 07:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682D73E0C42;
+	Mon, 18 May 2026 07:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JH20tHFE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="duBsM5ka"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46012F7F13
-	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672C53D1A82
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779090846; cv=none; b=QGiVKOPRcn9o20xf/7valbOzGzbvAKhkSU8NPGP7/rFJVFZsFdwHfZPUjFpLG4LRF1L+ZCTELP6dlr+dQfr8qO4Ob6AvMrkbH1xiNZ6ri/gB9xI7Ou8RvT8DhP1EDOpzKGZ4YnURdk7UHmTdzw0LciAnHb/WzOppR2uVIlijXaA=
+	t=1779090848; cv=none; b=cjgbMOCoXad4oh74T+u5owwce4xOI+wh8OfaurdQqagVuA4kcy9/9Ii4u5a7GUN/fXdcXdDp9rxLZw73PoMKrd810FroueyLGOdPrsXP0q5EiF/vO7FglzK2aszU2oHyqsd56OZ9unCGLUN5xqh0jHwNOQctDFC+0A2QvNnpc2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779090846; c=relaxed/simple;
-	bh=WCFTNgalPCyI+sy9RLNEoFvhiBqK+HERYFo0HvPnOpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bd8KSB3s/KthZgYm/0Pe9EwDdE8ucndsgfng/SGh/gayjMxxmfqTD3PFE5mCk6H35cKxYX/VZm0kp0y3F4uE7+XMQbdOQRMqZZHsrbsWDLCR/lcpdyP7skGbBX8HkYZvj4FdAAfA0rdlqO1DVNSdTU2SF2EBza743IlMQbR539E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JH20tHFE; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1779090848; c=relaxed/simple;
+	bh=iTm+CAQk66ngIKIctcP1U8DkyFnXKgU8LB2KAj4Nf48=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q7pQq8D9DqZMTUs9vM/bv6VmBaJl2Ukso/6aqE6scBzPso8yP8z8SXGf3Q7mQf2X+SG90RsVv7RsmWIgNAIj1HGmbwwRYzXNurXLteEGBA2vSUoq+gRF6urI2BXCjxHKvCy4e835ozV0BiYD8MttswhJGUoLlq0ZrJ9wlsYyR60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=duBsM5ka; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-48e56c1bf5dso8302265e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:54:02 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-48fe26a177cso12048995e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:54:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779090840; x=1779695640; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OpOy3ncayuyh97YCAToNo+s6kNuDC2GipWRHQoTk0xw=;
-        b=JH20tHFEV00Yx/cCfHiu0iQPTpn0aoSeGxMlp4Qc2H6jYOVh7TpV1UHjSlpSdYWo2j
-         VG30uqWmVlAVDXK6PR2hzvUlueeynEL+cH48qgHZiA0UJM43zvjiIUSWQhCh2yL3YolU
-         hMy/7KX7TYvazNHfLhREDoARVi6N2qHg+VtWfE/djbTtv69jkImzYMu+QcZPRTO20Lpb
-         cgCd/aYECIpv/wVh1fDschzSMq3m97+pMYgGpuovHFbC7kDvfxx/hbIqd3W+E7NdEExu
-         9s3vQxy2+fYh0G/APyvRm360fFCD60ibX7/sDHzSNXv4KnDPLuveE4p9H8QhIh+XymVr
-         8QDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779090840; x=1779695640;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779090842; x=1779695642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OpOy3ncayuyh97YCAToNo+s6kNuDC2GipWRHQoTk0xw=;
-        b=rJdetVRJgak1ok3o5II4VG0JULZiJbBFS5TPmxMAbH0WfaUowXoryEPGTc3gKJefj3
-         HT+sRt+3rzN43Qw7yjAhbz7ck/Vk7/yextCJnO1fwBiVjjIHr67MdSAKEHZV31D6v0h5
-         vrmQdQS+dDRb6OIq+iRpAnmsuVOPgvz0WvoJuv6O8NaFj7V66vQWqk0JuQWkLaeiKQFM
-         oC5No2p3+TgxkFFXW6T1L/4rakoVjqrAPYqjD7ngJyGdzHKj8pVl86HYZWQBS/t22U4N
-         3bVWxyBajVwUBeQwHXx5SeZ+jvZsvAXd21cm9+0I+iID1pUsbzm8WTLxLcjBHxFZEERk
-         VUmg==
-X-Forwarded-Encrypted: i=1; AFNElJ8NALkPE3cnX3Gw/jWllx9FRVVEi3CwabKfB6PGMJ2ucjnmruH2HArb2uBUnM9jDfEVL3xzHmdK7Z8V@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVo/jcEthvITSErebAArAZVER3Rf0WUEiDLJX/C8K5+B7GmdTk
-	6zaQfBcZSyjFBQ2bk7LkCRxUsAQ+2gaCUDlOtcqsTCAPrGA4/fSBnSS5
-X-Gm-Gg: Acq92OEamjAGHkKRCHsDsH7LvXKl7rOBihRz0Nqm5VGbGOVgMrUtCDRXpa1B01VoYOu
-	Cay0t3Qte+YwrT9rvFXkDMtUTRbQ0fNS6Hv13PasFspxQRbuwu44oFEFgqXzvxsith6CNWeEVTS
-	0WpHFN6xaGsPNXzz790arEr21Y8fKigQ14c4kmXDV2lmWe01zRn5h2/9cA5f8MewHwBA7oj5FXS
-	CPEY4iB7F2Mkr8gD39Z2CZ39Q8DpwO34bTaRiSH/F7S1aFbM7XZjUxs/zn/xAMCQtWCo7JPHmYs
-	M63Cob45gUuOgCEoEsAr+NQEnyOKWP+4EHH7qb9lpxAcmguFUAisvisbT7xOsBJD1ozqoa5Rt7e
-	osQ0ON59HvGec4tH6CzfqcAPliINIQhzk4QQg/FEXYTblHkZhMARD4mRMB19pMOCI/ctDz0p+ge
-	HqsTUWgZk/+doLP0g=
-X-Received: by 2002:a05:600c:4f8a:b0:489:ad:7b5b with SMTP id 5b1f17b1804b1-48fe62f8c6bmr210573225e9.24.1779090840303;
-        Mon, 18 May 2026 00:54:00 -0700 (PDT)
+        bh=XwWV/qMNurIkUDOKP/bbi2uYeI9zTRHL+F4n5fG2Tvg=;
+        b=duBsM5kaIA9mJw5OtKtwGoa2FhM/zdp8B22IgETjl8ieFIXlIXTVbuSqRuLLhau3Bc
+         ZfvJolWeIQ5DNyfG0BMOAN5hdIOZu3LdJHMLBJpxaiVTF9zO4sr/1W8w5ZuCK5YO9KHO
+         VCtLA+Y7ZPKSYdL1rRjTZ1UD5mJpPouBpX3Q5rEvyZn63IUkgaRY85PyO0FulhASRz8a
+         TPxQBX4mdL1Ije/XcCmGA3RvKz3nXCZyqcP+tf8aRvNNoSWwd7x9KANAGtpomT5qmDCJ
+         wEazdIZsW8xKL3tkQy6noYcQxzPhKcg4lLR9Ol99YCvD57v3nZnMcblVKa6EIyXCdnYR
+         49ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779090842; x=1779695642;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XwWV/qMNurIkUDOKP/bbi2uYeI9zTRHL+F4n5fG2Tvg=;
+        b=pRX4bCcKI44jCXT1C/oV5T9My+213VKwxZpqR1UtR9gyQsRHKj2JxA099m/zC+C26M
+         masnu7hlmVvKdi+EjqDWOnDz60Gk8PeQ0mQYFwqkvzoU6kXsX7RtlWNvHPjtYAn4Q7lb
+         ea0NEiv4+7IyIQtmI5ugmfMh1R8EMSeEMRzG2sPglMb1Ud91RCI+AEuzVxob90IJ53vb
+         uaWH3ThJCZG45UinPFZsl7gR1NBfJHnzmBy6AfEIsLzLlsnJwnR5/zBBnGeJ/abgscR4
+         kmdvEGKg0pncvmduNJdvqnjwPnb7hzSwYR+KuPR16/isg/Erp1CiZdznsvYGDxBLhPz5
+         kxoA==
+X-Forwarded-Encrypted: i=1; AFNElJ91DSQ+hlL9Mji7buB5aCLHhe5WNwWR9/Wvyk/2CeKav7AEm8MonqN1xsbjk/WrZy/V0SYdmaRE/rRP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBrUBoufC0J8E93o8JbQhsQviFN3TiqF+wejGnSFxB35uv+BV+
+	waoTqhciUsvY0LFDmyPKwrWHkHrJYgkFH/3FCEsJreuji9UvA3wYK+fQ
+X-Gm-Gg: Acq92OEuN0C9TEd7iFTBTjGrkoWVogRSPFtBbTrDEsFJVISRWS9Xp1lQ6XhfK6onxWr
+	LAr/H+9rYVaKmUnOvfbjoWTGqlOGtbJgnhTSXaE5Mtd+KDqtOMlJa2liINFTru+NObNEkpEmSAK
+	rkqyWvs9RhN4qUFv/da/cAuNux5qbdGGlm54kDTmPZTQf6fFBd1S5uYq/MS45TIZPfvwnK/i1os
+	WjmIub+8zVINCrs5isQjKe/thLjRSwME99RjGDO6CUa/aAqJEr/mf73kZwyJ9skAKUxCytWb7F+
+	tkDRzBOjAqpIpQz8npHBb05jWyaFNQp7SxTtAFYtey3M4q3bh1a2MB86iLTVZoIdkQawFayDuB5
+	7ui0GN6BdCmZq/U73yboTA1mhthEQt91dAuzA3cHUQYEIPqhkwkHGlinKwm44eTFY8MlfwYtCLQ
+	Q7L83qQ+bist569hI=
+X-Received: by 2002:a05:600c:49a2:b0:48f:e6de:1cbb with SMTP id 5b1f17b1804b1-48fe6de1de1mr132113575e9.28.1779090841718;
+        Mon, 18 May 2026 00:54:01 -0700 (PDT)
 Received: from ROG ([2a01:e11:202b:40:328e:213e:a3da:580f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feaf14d22sm102788835e9.3.2026.05.18.00.53.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48feaf14d22sm102788835e9.3.2026.05.18.00.54.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 00:53:59 -0700 (PDT)
+        Mon, 18 May 2026 00:54:00 -0700 (PDT)
 From: "Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>
@@ -83,10 +85,12 @@ Cc: Mika Westerberg <westeri@kernel.org>,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
-Subject: [PATCH 00/12] gpiolib: acpi: Refactor, harden, and modularize ACPI GPIO support
-Date: Mon, 18 May 2026 09:53:45 +0200
-Message-ID: <20260518075357.112584-1-mscardovi95@gmail.com>
+Subject: [PATCH 01/12] gpiolib: acpi: Use snprintf() for ACPI event name formatting
+Date: Mon, 18 May 2026 09:53:46 +0200
+Message-ID: <20260518075357.112584-2-mscardovi95@gmail.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260518075357.112584-1-mscardovi95@gmail.com>
+References: <20260518075357.112584-1-mscardovi95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -94,7 +98,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 2D440568307
+X-Rspamd-Queue-Id: A879956830F
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -102,13 +106,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-37017-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37018-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -127,65 +131,51 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Good morning everyone,
-
-This patch series took fairly a bit of time because, well, it ended up going a "bit"
-out of hand. It improves style, robustness, resource safety, and modularity
-of the ACPI GPIO subsystem. The massive gpiolib-acpi-core.c driver (previously
-well over 1400 lines) has been significantly refactored, reducing its footprint
-by separating concerns into distinct, dedicated modules for ACPI Operation Region
-handling and ACPI Event/Interrupt processing.
-
-Key changes and structure of the series:
-1. Hardening & Correctness (Patches 1-4):
-   - Style adjustments to match Linux Kernel coding standard.
-   - Modernized parsing in quirks using standard sysfs/kstrto helpers.
-   - Added robust bounds checking for ACPI GPIO resource pin ranges.
-   - Fixed a critical memory resource leak in the OpRegion cleanup path.
-
-2. ACPI Operation Region Modularization (Patches 5-9):
-   - Declared shared data structures in the local header.
-   - Exposed private-to-core registration helpers by making them non-static.
-   - Extracted Operation Region handling logic to gpiolib-acpi-opregion.c.
-   - Diverted callback registration to the new OpRegion module.
-   - Removed the unused static emulation handlers from the core driver.
-
-3. ACPI Event & Interrupt Handling Modularization (Patches 10-12):
-   - Declared shared helper prototypes in the local header.
-   - Extracted Event/Interrupt logic to gpiolib-acpi-events.c.
-   - Fully decoupled static event handlers and event structures from the core.
-
-Build correctness and functional behavior were validated on x86 virtual
-platforms using virtme-ng under KASAN and kmemleak with successful boot,
-execution, and zero resource leaks.
+Replace sprintf() with snprintf() when formatting ACPI GPIO
+event names and fix minor formatting inconsistencies.
 
 Assisted-by: Antigravity:gemini-3-flash
 Signed-off-by: Marco Scardovi <mscardovi95@gmail.com>
+---
+ drivers/gpio/gpiolib-acpi-core.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Marco Scardovi (scardracs) (12):
-  gpiolib: acpi: Fix style and formatting issues in core
-  gpiolib: acpi: Modernize string parsing in quirks layer
-  gpiolib: acpi: Add robust bounds-checking for GPIO pin resources
-  gpiolib: acpi: Fix resource leak in OpRegion cleanup path
-  gpiolib: acpi: Declare shared structures in gpiolib-acpi.h
-  gpiolib: acpi: Expose core GPIO resource and OpRegion helpers
-  gpiolib: acpi: Add dedicated Operation Region module
-  gpiolib: acpi: Divert OpRegion registration callbacks from core
-  gpiolib: acpi: Remove unused static address space emulation from core
-  gpiolib: acpi: Declare shared event helpers in gpiolib-acpi.h
-  gpiolib: acpi: Add dedicated ACPI GPIO events module
-  gpiolib: acpi: Decouple Event and Interrupt handling from core
-
- drivers/gpio/Makefile                |   2 +-
- drivers/gpio/gpiolib-acpi-core.c     | 488 +--------------------------
- drivers/gpio/gpiolib-acpi-events.c   | 309 +++++++++++++++++
- drivers/gpio/gpiolib-acpi-opregion.c | 175 ++++++++++
- drivers/gpio/gpiolib-acpi-quirks.c   |  23 +-
- drivers/gpio/gpiolib-acpi.h          |  50 ++-
- 6 files changed, 561 insertions(+), 486 deletions(-)
- create mode 100644 drivers/gpio/gpiolib-acpi-events.c
- create mode 100644 drivers/gpio/gpiolib-acpi-opregion.c
-
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index eb8a40cfb7a9..64040b098e91 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -372,9 +372,10 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 
+ 	if (pin <= 255) {
+ 		char ev_name[8];
+-		sprintf(ev_name, "_%c%02X",
+-			agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
+-			pin);
++
++		snprintf(ev_name, sizeof(ev_name), "_%c%02X",
++			 agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
++			 pin);
+ 		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+ 			handler = acpi_gpio_irq_handler;
+ 	}
+@@ -645,7 +646,7 @@ __acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags, enum gpiod_flags update)
+ }
+ 
+ static int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
+-				        struct acpi_gpio_info *info)
++					struct acpi_gpio_info *info)
+ {
+ 	struct device *dev = &info->adev->dev;
+ 	enum gpiod_flags old = *flags;
+@@ -1206,7 +1207,7 @@ static void acpi_gpiochip_request_regions(struct acpi_gpio_chip *achip)
+ 						    NULL, achip);
+ 	if (ACPI_FAILURE(status))
+ 		dev_err(chip->parent,
+-		        "Failed to install GPIO OpRegion handler\n");
++			"Failed to install GPIO OpRegion handler\n");
+ }
+ 
+ static void acpi_gpiochip_free_regions(struct acpi_gpio_chip *achip)
 -- 
 2.54.0
 
