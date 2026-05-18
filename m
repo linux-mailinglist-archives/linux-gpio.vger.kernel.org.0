@@ -1,261 +1,192 @@
-Return-Path: <linux-gpio+bounces-37015-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37016-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mD/FIda+CmpX7QQAu9opvQ
-	(envelope-from <linux-gpio+bounces-37015-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:25:10 +0200
+	id 0B4/IvjGCmqf8AQAu9opvQ
+	(envelope-from <linux-gpio+bounces-37016-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:59:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 010B456776C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:25:09 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8D4056847C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 09:59:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EB50C304DFEB
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:19:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 574D13018F43
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 07:47:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33CD43B9608;
-	Mon, 18 May 2026 07:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81BB53CE4AD;
+	Mon, 18 May 2026 07:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9fvI+Om"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WnplKjz+";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="aPQTvwKC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B233437EFE3
-	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF613CD8BD
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779088754; cv=none; b=qG8AnOF+EBfotbYa5z1QwMdqcBvEAJJd4tDwS7QzKa1hg0vQNU9lrF1zljdM3iWvsNsk4IzdITNKcJgbDFKvxH/H0YaM6OcKI6qp/jj2ocXBtD7dqs8XViDyaFb2XTFvm5qBPSzDfBJpumkl6XkqZxpoNzWAGH/+JR02okX7q8g=
+	t=1779090473; cv=none; b=NS4elz0w+a31cNs72apRTarB1GZMVD0p9T+kWxqPWWvQhx+xt8gk7WVQkdOqg8G+wMqUdKA9h58KpKGknt4jzbWhDpnm44fgIlFHEIk2FGcibRTWPa6F50Fkx4nwguUhqmxKN3ntPBr14Nb6K96MB5MHD4Xgc/KCl+5hFptvGm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779088754; c=relaxed/simple;
-	bh=egpSBSiiVF81IZfyLqS6u/B6Mtzw5dC3K/sD5zzWGsA=;
+	s=arc-20240116; t=1779090473; c=relaxed/simple;
+	bh=tQ5Rulns5TTwJdftnLFWdVkob5vr1S97Lahq6J75enk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iYNjfDNwtWktmrcN/WikFQ5k0MrVUQ9A1TAviQS/O6XgWD9AdBjnzyM3xfFxCdbMuh8MbC5q+56WqLDwuVwTrqOgluQl7iEYe+f1/IWiXFjAVPKk0zEfsMvS/CwgPi68ZH4LDUpw3yG6pbwAcOvswEQ8sIz+ToKCiC9xipQUi5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9fvI+Om; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2babfd18435so7402685ad.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:19:12 -0700 (PDT)
+	 MIME-Version:Content-Type; b=VHeuZjF+bZPR6oh2NGPQ+IHy3t70Ef11TfdtUj4gvxwcc3DTfkTE+b+/N+reiu2bwTqmtCS4tmhT9VpiDwuPh57ldT2onP89mEWecdjXl1ruqvJcl7TILQMubjmKc2nJupxpDD5KFxvdo3r5jzny0A5HZCrBtDkcWM1JVSEO3fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WnplKjz+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=aPQTvwKC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64I1tKmU1697510
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:47:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XK0JcD/1JDv3Wd3x8VjOs3nMalz5dBJNA3rR2LQB8w0=; b=WnplKjz+vbDSfXeQ
+	wxkKmyX0gyOwFwCFlaszIA9H2dAYE5dlzGTY2XseasraHtg5IRGUq3sv0p/GV+NT
+	JSHl4Btoknf45l5DdtdBltP9xkXgL/cPsBJBkj1XP6dLBBOqxW4D+eHPfD50jfmS
+	X5/9rC6tAvU26dcLHG9QKFtnl6XSv0JeGdW279QhLgaXiuGYBl3nmZmT67K469QX
+	Ch3zrkeSNk9cEjmDgfV7ooo8UyYkRn2SENbyO6G7FNBz1odfyVUJ+6SXPGNzd4MI
+	uSI6Fls1ngpb7TeqZhmndEKD+2O4XBsSqxS2xVd+NRwtFzpu1fQWjIxXdudWvtVV
+	sEQKDQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e6h0g59dq-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 07:47:49 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-8c9e99fcd15so67665976d6.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 00:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779088752; x=1779693552; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1779090468; x=1779695268; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K9Ygl8nWXtwJ478R08EPxLQYgb2RjIx4YLds39Mkiug=;
-        b=j9fvI+OmSRkQNLX+EGixpJ5QuXjyDuVdEMWQEnV+e8SllBTuqQNPFR691tbjWVjKfn
-         ysr9Z3gzqP/QaVCFK9rcWIwsrZpI0yrUQxf1X+RkdARN+lKAv8y1g3TuMjsbE9PyWDPq
-         4XmvxrHZPY/XuO5wFJzyMvh7JA4jdtZQBj/ydAiQ2NqhsNW8JeU3vmIioMkVFRqr15IE
-         a3sXSNpgxpp4k3gIhPrsfc2I2wday9C9OQrtFssBiJIArLzQ4B3IfdOs6TZpRF2EjeRj
-         C9NCx1S4dDuxNOMAeQayDcNu/ZfC2kLEiXV/CHS/LP9w3s4OxbW8uG9ued8IBCCb4V7M
-         nsbg==
+        bh=XK0JcD/1JDv3Wd3x8VjOs3nMalz5dBJNA3rR2LQB8w0=;
+        b=aPQTvwKCUH4Ol4qHmL92Knsxw8LcZ4PIUPdxlKrYfGMOZgFtmzE2x0V2itzKOsXuPE
+         CslJWWwvaEYjVedv1mWX9KgSbaAOoLLhb7nYnJDGnviNeBKtKIQUpxuK3JCPl62zXMpm
+         zHbyglKq/KZwWAp8/rkDSuGfuxjTGrY+N0AfdAXv/a48G5sh8/W+EGKQDJKqFlJnqlQl
+         8rPN2Hk6BQJjIqwivM88EKhGhCLOYAINE0E1pVx426oJkJmekXRZriXNc5E/EPI6Bz+0
+         VqgjGuAlrV2IknRLH/1VvNStUXNVVEYHZwC37jGNz22IuydYBggMJembUk/2e89w4L+j
+         TaZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779088752; x=1779693552;
+        d=1e100.net; s=20251104; t=1779090468; x=1779695268;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=K9Ygl8nWXtwJ478R08EPxLQYgb2RjIx4YLds39Mkiug=;
-        b=Lh1LMJV3T4if+IZGW3oDmG4dm0iqI3OhIdA/s8xL9KvHo5gUebzKSmryTdxVfIXYBK
-         /GUzuEnJ4qPNBAiLRGBZlpTO5n/22JUeAjCA7g6SkWheJ+Iv4mPPAu/9UjpykcGBYpx9
-         WijCMaAmbs0rGcKjEIwpKTm/oa3+HUlSUaOayw24/b0xgilBJRDvnaMeZIRX5PQypKSL
-         YG8Enxr0e7cC1B5PGwZpEg1hcszmEi8bKJQCVwIREH4UXfQRsoOy+rkRGBJAGf4gUsHl
-         4xCkODjshVva4HPntzZiZAfR/OPbd6f4jdk3L7Jh1j1R40Jg2XHjfKUa2laXNXyDrChf
-         k74Q==
-X-Gm-Message-State: AOJu0YzjukqL0MPgLcSfm3JLBZ/dXGjIxzEGJCnTqxo6SD+OQCLh2mJC
-	HhE0kzRk+gdLPwWMQAJMFU9FOH8Mz7GgxAYv3ermfkEGOgO6mPk3UY/vr+Q0FlnJ
-X-Gm-Gg: Acq92OEPnPFbXrlrWyZLiew2wC8xp+QRiB35M2jho8zl80Ymha+Ayf+Y9nIjfQ7OABS
-	VoOnkEi1w+YKpYzvoes8j2zW+Izxrieeu0QzEz3k54Hsunc+08pSd3lAd79Fo5/ueKT/M0bVZFT
-	NTqMPX+/A/sU+nSZ6kvi4WBYXRAStPaFVjAoqcG1WNu8Z7AS6z/6mAao4O9URsE4hCbzYIf6ADA
-	m/Ka6KM0xML58a2KDJLv8yi1+y9YEzmW6oSwjntn7TRMF2/JEZ2y+P4luernfCYRgY18ujRUOPM
-	AcO9b7CuyqjSGgPALXxN8uj4IvPKNyaArLiw282BcNiaaB/iyTL2graSjMxILoZ6pKBPw3z+BXc
-	k+c9eH7KYxV/wfOL3nejWRj5h9cmMgUdqTd0R29Sd18sDUUzsW44qVqShb4f4c+plE+eCArxQyd
-	/owtEP/0OoOBO3JSVB5BK3h112DXHbq+l56K3072+Q93nNgM34e82ngaaMkTYp8y/E3LzsSyBSo
-	n5ATizgRCc2lK6ArvSQmz3dL2lKkA/oFZO+Nr/LW4hXNYwU5f2zKpLNrS9kLL7g
-X-Received: by 2002:a17:903:11c4:b0:2bd:9766:bd2b with SMTP id d9443c01a7336-2bd9766be37mr109767385ad.19.1779088751915;
-        Mon, 18 May 2026 00:19:11 -0700 (PDT)
-Received: from hardik-yoga ([2401:4900:1c65:166e:af67:d4b8:e4e0:1695])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bdc4c2cd64sm62276215ad.78.2026.05.18.00.19.07
+        bh=XK0JcD/1JDv3Wd3x8VjOs3nMalz5dBJNA3rR2LQB8w0=;
+        b=l5Jp0bLFn4PIFTPU0WuoThRnEFm/U6Fd9lLm9XJAOoQVeKuZ///ID9nF3OSEJs1qsq
+         iqzgQJdTgxf4wI4fqscIkaTU1cpccEVR3z/9ZGHE5AGetjGYPApkU2Op1jAEcaGFkKfK
+         7HbWFkG0uHgo0Ng/HukzQP6PjlIHFFoJHE7P1NmhtwcH9PkAUHwSKgVVoUMGjNcc5fuJ
+         PKSP7UBdf4KfiDAlRx7rhhFHdeRDV3LvaQU9QqdxryXRillaj3svQkczapnTqi8Wj7C4
+         TDz+XduCx3K2vQvnCIiMxrmq6oLYaOM74NWPt96j49ZIjyXu9IHg2wBnq1p0XwzYoTLE
+         ki7w==
+X-Forwarded-Encrypted: i=1; AFNElJ8VEPFjfwzIgKCqYcHwKJUJkjUo22gR03XXfcUKxyfSv6I0nlLuNRVR4gp/nnsLjx7Zv36hxbriHiYr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGzHsSJb5cgUXLkGcReAGLRQo8jrQ+GMvoyq9hic0w8zVNSEom
+	x6VmdjscH7HxxbSNyzjasS9AElpJMYR8+8YtzTWzoQGaikgoIrT5jXhHS1J/IhcqxQLz+xP1F2p
+	S54TWZ8xOyhlRtOnW8vc9KtJ8N8daGbilAvVj4ksKrylki2zeo3aR/zD2/6uLZUHJ1KoJfZwv
+X-Gm-Gg: Acq92OFVFra5wTzzNss0iJ9wsunVfvkRRpJvjalKybqaGKqlLZq+j9xDKf78LXLBp7+
+	eMIYuaDyARgEqG/T5sMYA48XEn/ZfY/1ivKfkb0v8ShcOoRNYixNtApPLFZ3V49NnCmOrojxU5P
+	5x0zAGmeuYGEs5x86RxjLEboGyfwbnmTaQ9dRfJQ3JLIBXf2RhocByNmiM8wvdKlQWfaREpDlBb
+	0ZS2nX0Lfn+a5iD5UG6rEjgSMgHXG1HMURwIdjemG6PaIyImnNsr+5/3aXP/ajcBVDuZzaoMhqb
+	ynRmk463gM4t6CsUcAfIffSvewu4kUcZQIGdX9yVp40EVGrySIWIWxYMzMYHbRklHdfuxmV5ONF
+	bKrplb7suFkEfe6NwoEFBAlJH0o5mtzCV9Dl4qpupPQelAwoV2g==
+X-Received: by 2002:a05:622a:4e94:b0:50d:b164:5e40 with SMTP id d75a77b69052e-5165a1eb73fmr173081491cf.37.1779090468183;
+        Mon, 18 May 2026 00:47:48 -0700 (PDT)
+X-Received: by 2002:a05:622a:4e94:b0:50d:b164:5e40 with SMTP id d75a77b69052e-5165a1eb73fmr173081251cf.37.1779090467759;
+        Mon, 18 May 2026 00:47:47 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:b896:d8f9:d8fc:730a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48febe6b9efsm111061945e9.5.2026.05.18.00.47.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 00:19:11 -0700 (PDT)
-From: Hardik Prakash <hardikprakash.official@gmail.com>
-To: linux-i2c@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	wsa@kernel.org,
-	andriy.shevchenko@intel.com,
-	mario.limonciello@amd.com,
-	brgl@bgdev.pl,
-	basavaraj.natikar@amd.com,
-	linus.walleij@linaro.org,
-	Hardik Prakash <hardikprakash.official@gmail.com>
-Subject: [PATCH v4 1/1] i2c: designware: fix probe ordering for AMD GPIO on Lenovo Yoga 7 14AGP11
-Date: Mon, 18 May 2026 12:47:57 +0530
-Message-ID: <20260518071816.26629-2-hardikprakash.official@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260518071816.26629-1-hardikprakash.official@gmail.com>
-References: <20260518071816.26629-1-hardikprakash.official@gmail.com>
+        Mon, 18 May 2026 00:47:46 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: Initialize i2c_device_id arrays using member names
+Date: Mon, 18 May 2026 09:47:45 +0200
+Message-ID: <177909044656.4685.10308837875925010657.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260512152125.924433-2-u.kleine-koenig@baylibre.com>
+References: <20260512152125.924433-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 010B456776C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE4MDA3MyBTYWx0ZWRfX8310lH6e1Ivc
+ ZzDC1NmzVP2e+FzAUyTaell2AxGzO1Nt7HDi0515UL80/fPrQxUGeLOfebrSNRhXCD2lUSiqayR
+ gc98fbeH19J+J9azWpA6Mff2Z2BY3VWtZ9ytks6wwybWvjyDDLS6dhLlhY8gz7oVdFDhtJbqKFW
+ wmrvvvsI62Qy1J1yAMTYPS8dsMIN26UKNoMz3e65JmG4261FKirosv6Ar3NjyYSFcf9f9IGmjJO
+ M4BHYXk5djEbrxEx5qzR5WLLEOrxMuxrwz+uNzP2eDLTlPHCKU/j1fSQodV4fp44zUWLzHTBkWK
+ rwrfRI41UGq8O+0npvX2KX3dgW+TJDGwy/qs5XzC+siaHalQt/kg9zg+gjXVxXZyKszCzjoQKZr
+ 1l9V6AxBvco8hzlmyNcJB4hfxUEhRVG0sLI3VTMRaLTY5Mx+cKfABgrLTmjCvTcXepmHNfdVnbA
+ x3wJgeHmYXaALvOyW7g==
+X-Authority-Analysis: v=2.4 cv=W7gIkxWk c=1 sm=1 tr=0 ts=6a0ac425 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=s3NzsQVzbAGIezRmCTQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-GUID: bGmBizlRL0XU6VbTh9RPaHR2sQ3sJkby
+X-Proofpoint-ORIG-GUID: bGmBizlRL0XU6VbTh9RPaHR2sQ3sJkby
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-18_01,2026-05-15_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ phishscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605180073
+X-Rspamd-Queue-Id: B8D4056847C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37015-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl,linaro.org,gmail.com];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37016-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-On Lenovo Yoga 7 14AGP11 (83TD), the WACF2200 touchscreen fails with
-lost arbitration errors on AMDI0010:02 at boot. The root cause is a
-probe ordering issue: i2c_designware probes AMDI0010:02 before
-pinctrl-amd has finished initialising, so the GPIO 157 interrupt
-needed by the touchscreen is not yet enabled.
 
-Add a DMI-matched deferral in dw_i2c_plat_probe() that uses
-device_is_bound() under device_lock() to correctly wait until
-pinctrl-amd's probe has fully completed. Use acpi_dev_get_first_match_dev()
-for robust HID/UID-based GPIO controller lookup instead of string
-name matching.
+On Tue, 12 May 2026 17:21:25 +0200, Uwe Kleine-König (The Capable Hub) wrote:
+> While being less compact, using named initializers allows to more easily
+> see which members of the structs are assigned which value without having
+> to lookup the declaration of the struct. And it's also more robust
+> against changes to the struct definition.
+> 
+> The mentioned robustness is relevant for a planned change to struct
+> i2c_device_id that replaces .driver_data by an anonymous union.
+> 
+> [...]
 
-Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
-Assisted-by: Claude:claude-sonnet-4-6
-Assisted-by: GPT-Codex:gpt-5.2-codex
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=221494
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 77 +++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+Applied, thanks!
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 3351c4a9ef118..3ffc3d757fbd1 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2007 MontaVista Software Inc.
-  * Copyright (C) 2009 Provigent Ltd.
-  */
-+#include <linux/acpi.h>
- #include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
-@@ -86,6 +87,78 @@ static const struct dmi_system_id dw_i2c_hwmon_class_dmi[] = {
- 	{ } /* terminate list */
- };
- 
-+static const struct dmi_system_id dw_i2c_amd_gpio_defer_dmi[] = {
-+	{
-+		.ident = "Lenovo Yoga 7 14AGP11",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83TD"),
-+			DMI_MATCH(DMI_BOARD_NAME, "LNVNB161216"),
-+		},
-+	},
-+	{ } /* terminate list */
-+};
-+
-+static bool dw_i2c_needs_amd_gpio_dep(struct device *device)
-+{
-+	struct acpi_device *adev;
-+
-+	if (!dmi_check_system(dw_i2c_amd_gpio_defer_dmi))
-+		return false;
-+
-+	adev = ACPI_COMPANION(device);
-+	if (!adev)
-+		return false;
-+
-+	return acpi_dev_hid_uid_match(adev, "AMDI0010", "2");
-+}
-+
-+static int dw_i2c_defer_for_amd_gpio(struct device *device)
-+{
-+	struct acpi_device *gpio_adev;
-+	struct device *gpio_dev;
-+
-+	if (!dw_i2c_needs_amd_gpio_dep(device))
-+		return 0;
-+
-+	/*
-+	 * Find the AMD GPIO controller by HID/UID and get its physical
-+	 * platform device. We need the platform device (not the ACPI device)
-+	 * because that is what gets bound by the amd_gpio driver.
-+	 */
-+	gpio_adev = acpi_dev_get_first_match_dev("AMDI0030", "0", -1);
-+	if (!gpio_adev)
-+		return -EPROBE_DEFER;
-+
-+	gpio_dev = acpi_get_first_physical_node(gpio_adev);
-+	acpi_dev_put(gpio_adev);
-+	if (!gpio_dev)
-+		return -EPROBE_DEFER;
-+
-+	/*
-+	 * Check that amd_gpio probe has fully completed, not just that the
-+	 * driver pointer is set. The driver pointer is assigned before probe
-+	 * finishes, so checking it would allow i2c_designware to probe before
-+	 * the GPIO IRQ quirk in amd_gpio_probe() has run.
-+	 */
-+	device_lock(gpio_dev);
-+	if (!device_is_bound(gpio_dev)) {
-+		device_unlock(gpio_dev);
-+		return -EPROBE_DEFER;
-+	}
-+	device_unlock(gpio_dev);
-+
-+	/*
-+	 * Create a device link so the driver core enforces probe/remove
-+	 * ordering between this I2C controller and the GPIO controller.
-+	 */
-+	if (!device_link_add(device, gpio_dev, DL_FLAG_AUTOREMOVE_CONSUMER))
-+		dev_warn(device, "failed to add device link to %s\n",
-+			 dev_name(gpio_dev));
-+
-+	return 0;
-+}
-+
- static const struct i2c_dw_semaphore_callbacks i2c_dw_semaphore_cb_table[] = {
- #ifdef CONFIG_I2C_DESIGNWARE_BAYTRAIL
- 	{
-@@ -138,6 +211,10 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 	struct dw_i2c_dev *dev;
- 	int irq, ret;
- 
-+	ret = dw_i2c_defer_for_amd_gpio(device);
-+	if (ret)
-+		return ret;
-+
- 	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq == -ENXIO)
- 		flags |= ACCESS_POLLING;
+[1/1] gpio: Initialize i2c_device_id arrays using member names
+      https://git.kernel.org/brgl/c/553e26a45e0e66698c1e0043b705933102ac3edc
+
+Best regards,
 -- 
-2.54.0
-
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
