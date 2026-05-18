@@ -1,234 +1,214 @@
-Return-Path: <linux-gpio+bounces-37092-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yE0gLmqSC2ohJgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37092-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 00:27:54 +0200
+	id eBWzI1rHC2qWMQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37105-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 04:13:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 528385746FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 00:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECB21576566
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 04:13:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DE972304BE58
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2026 22:25:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8DE7C301BCF1
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 02:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE573ACF11;
-	Mon, 18 May 2026 22:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FE530C17C;
+	Tue, 19 May 2026 02:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEeiLXmE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUzdj70j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9623A3AA517
-	for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 22:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A52E2BD022;
+	Tue, 19 May 2026 02:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779143153; cv=none; b=JGsR7+4/fCQgM7BV1sMf9gmjB26YDzeLwqMgm3i+7Qn5bipY8FRZoUQ6aM/4EfkEdDqZsPNG5jJXu4w6o9BFes63O5kLstOASUUUB3XQy/9ZDo1lca+E2ZO1TZCO4Oa4kyfDZEleD9YO+0HjUWaF88aj1nF7gTcZoNN4Gst3lzY=
+	t=1779156796; cv=none; b=F3/+biJodMWUsHtLwXLOPVYQ7/Pb9umJCalXvl6RCksp5VjWlQmXsDZzv2UY+RaTZnsfp/FErenWoCKP6In6WRrTSkcUj7dereKmu2Y+TM0ynWGX42uio69acE31guNyVw2P9DrpRIhmwqUdmXe5H4yvlagFw97I8D8PesMN8Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779143153; c=relaxed/simple;
-	bh=zxRp3GpglRdru2dzTviXae9Rm0zTVlUvDkO9Kg86QvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OJnC4kqHc6lJ7lutznoSBaaiSZVGA0rwU51bSNAMw6OIxB9AopDaF7OJynQyAid1Rn0lGySDs2q915Yizxvhk44iS8+A6WLc4uKvkhiaCXllEyJEPwgaWviBD+6HBgRN7eqVuePCjb5Q99kxCKm9dMpXbWxzQOfoG4ZzbRYvWwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pEeiLXmE; arc=none smtp.client-ip=74.125.82.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2f33ae12f97so9992735eec.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 15:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779143151; x=1779747951; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIaEBuVIsiHcibkjeCjIYH7vswglxKBI9QeKiz+liVA=;
-        b=pEeiLXmEX1dH3AEUNPqXyf6i3YCHHzeUFsdtHafZgPGSgERaad9XB3AxjltZnBaWd9
-         tkIp0sMspu0BdbdAQxcab+qI9ACP2TO8ib9nEyzD0/rsepA6028hN6FgOkaiWUrTcVWl
-         A+qSOvtN/grWqO9yKYCcxyuP7x0QnPnyLkVs1efuTRBE9Dwwbhbz/C5r8n3iSuKxoQTT
-         0DzBJuu8rJ2XJbUeCsECscPExY1j5/cwIijXDf9VRO14cLgw8K8FikqbldHvNjZ/6ONc
-         gOPFB26X+K1LehWwtiWM9BsbK+7k/71kdgyuhDHuH+v21YwAKqP00aH7opXwr2Hlk03j
-         Ealw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779143151; x=1779747951;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yIaEBuVIsiHcibkjeCjIYH7vswglxKBI9QeKiz+liVA=;
-        b=sv0VVRG6CFULKXNOwG9zovaCW5zd+i+DVPI3/oLcnnu7+dP5UrFFMwyB2TJKf9Ko40
-         pRXg1gtcPG3loigb4eGWCFvbrah7vjWLdYoiwq20pbarAcmglmKWA/i4h0s4CiyvF25k
-         hAmKzI5Vh2nqRt2BNs+rcB96tdJySw2O1Lpqxjd1FB/7KbqdpcvnctD8tPcBJNt6CTAZ
-         G6CkAsHRUNQAj1mwPkhUi0ziWHg8YSAOZdg8r1XCwFTEALqC9WZcMaskmu986Jl+HhfM
-         A7NleVfz0/Lt51U2nV8zgIWe8jRhBJUjcZrjCF00ZydHWhp/6X9auvZoI2+GZmboDAwE
-         Hr8w==
-X-Forwarded-Encrypted: i=1; AFNElJ92yQSv/YfRAlkA/44gLg8+8a85GIuBO9NTKa5OkEn82jdDTAVvciLvw0wU0XMNMA+7gvGd1ZI+bC5u@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7LLEX/ObdRjNS3SSeW8OrsZV2CXvtzJBP21feM0tQa9+gC9ae
-	6XlSxZt9/9iJHJy/5+1fAdOoNriZ7Pms+FUOKxCOnNwCDgWwbBeU0cWj
-X-Gm-Gg: Acq92OGOPUM30BbAyMZpGzuTwUBqrsCaZZ4EmkhalQALYdHhP81/rQiL8oYzX9QZTrl
-	+mvf3XdgLk74ot3dTtyplsDDswrjiKHZCVchyjJWzcRkAquzWz89HGsJIFmgDRvSgECVZqjo32Q
-	LC2O8We+32daMKktGYtoY/BkEDdOUMnpyhEBUGZltxg7Hr995tDnKtS3o8D6/Y81XwDGOAivNKU
-	dO0C4PpDdd6em8WB12RcGLX575vIQfz5tHzfPuiII6TEtgctujwanqAUv5jRYQyD6Ouf6IXqDb7
-	3yXQivGK2h8MdZ2/xfFhJdyIVHW0a03kqWyRyUdE1AXfEgH4odR7+D8DZtDx9WvujTUzI2i8SbP
-	Tu+h5Vde+Dx1yYcOXqFMjMJgrVFOe3OE28AGMSkVBMychSS5RmDUwF7ZKr/1cx0GYQKjxP3OjxX
-	QzUscv7Ox3m21Z21ETGWWLB2QjnGvBoaPIM+MMaWfhSIFT8/BqXZhBGRGB0N6KXiGOPyUmrS6up
-	jm7R52WAEA=
-X-Received: by 2002:a05:7301:1004:b0:2c5:b972:b436 with SMTP id 5a478bee46e88-30398652460mr6944628eec.23.1779143150537;
-        Mon, 18 May 2026 15:25:50 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30296dcb6adsm16657384eec.15.2026.05.18.15.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 May 2026 15:25:50 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <8855d587-8351-42f4-8f79-9e763f56ccf0@roeck-us.net>
-Date: Mon, 18 May 2026 15:25:48 -0700
+	s=arc-20240116; t=1779156796; c=relaxed/simple;
+	bh=YUmCsavKOtlk398DgQKYiDZ0NI/JX7vUuEM2/VVHOK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjO63kevRTm5220s4aLi2u3hE6dQEdPqx7W7ehONiYpkqEa5VqLy7Vj4yqkqYByXDurHvJpTVgyiWpaWMIqJb0Pky4fUGg8aCbJuYi8KtPL7GH+cT1LkinTIikliCxYDGtJKFpXgeJ8BtvKN191+i+5Piw+ceXvQ/QMV5bSr134=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUzdj70j; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779156795; x=1810692795;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YUmCsavKOtlk398DgQKYiDZ0NI/JX7vUuEM2/VVHOK0=;
+  b=UUzdj70jvhBu5goDE0aE3gLhlHCNxKAN3p8uIR2qF4vLft/1npFYv1gx
+   OqDXUiYn+gEA31JNiXAmRdl9xPvC9rmvLyBqFfYKIsN4QeiOU2zVtMpJn
+   b0tDAoCQQCt0X84RnbejOGOxVB8LefAYxBpd04k/9Wz4KN3dgFtWE91RB
+   T1QWyD+eACpqu425jmNV7wQhNpO3Vnm48se9z3MuDW2w6Iz2XSXaAp0/1
+   g5HZBznbm4u7uHqTxZ9dPr1tCcJPpLyaTVnYBKrFS5IV9URSf0cpzV1Fn
+   Cs47H1mNSRaFp8icTPEd6iLFQJvkE2W3TxgvVvFbcG/BzfrAUJVo902Ph
+   A==;
+X-CSE-ConnectionGUID: 7qb+xokyQ5OxKPY9MqVlTw==
+X-CSE-MsgGUID: iPOf2RCTTzuYNQWTQYo90Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="67553783"
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="67553783"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 19:13:14 -0700
+X-CSE-ConnectionGUID: VH/HwBksT7mZa7qATCvodA==
+X-CSE-MsgGUID: nDQMIyvaRIWtd4uEyuRzqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="239684783"
+Received: from lkp-server02.sh.intel.com (HELO 30e86e9c1927) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 18 May 2026 19:13:13 -0700
+Received: from kbuild by 30e86e9c1927 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wP9xF-00000000015-46vW;
+	Tue, 19 May 2026 02:13:09 +0000
+Date: Tue, 19 May 2026 06:42:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Markus Stockhausen <markus.stockhausen@gmx.de>,
+	wsa+renesas@sang-engineering.com, andi.shyti@kernel.org,
+	linusw@kernel.org, brgl@kernel.org, linux-i2c@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Markus Stockhausen <markus.stockhausen@gmx.de>
+Subject: Re: [PATCH v2] i2c: i2c-gpio: Enhance driver for buses with shared
+ SCL
+Message-ID: <202605190501.z5y2mZnV-lkp@intel.com>
+References: <20260518161013.900504-1-markus.stockhausen@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] hwmon: (pmbus/adm1266) adm1266_gpio_get_multiple()
- fixes
-To: Linus Walleij <linusw@kernel.org>,
- Abdurrahman Hussain <abdurrahman@nexthop.ai>
-Cc: Alexandru Tachici <alexandru.tachici@analog.com>,
- Bartosz Golaszewski <brgl@kernel.org>, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20260516-adm1266-gpio-fixes-v1-0-38d9dd39b905@nexthop.ai>
- <CAD++jL=rasuYTot3M8u75PXRgrhbCzpue=pY2Yxx7ymVwhgGGQ@mail.gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <CAD++jL=rasuYTot3M8u75PXRgrhbCzpue=pY2Yxx7ymVwhgGGQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260518161013.900504-1-markus.stockhausen@gmx.de>
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_FROM(0.00)[bounces-37092-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lists.linux.dev,gmx.de];
+	TAGGED_FROM(0.00)[bounces-37105-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmx.de,sang-engineering.com,kernel.org,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,roeck-us.net:mid,nexthop.ai:email]
-X-Rspamd-Queue-Id: 528385746FC
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,intel.com:email,intel.com:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: ECB21576566
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/17/26 03:44, Linus Walleij wrote:
-> On Sat, May 16, 2026 at 10:45 PM Abdurrahman Hussain
-> <abdurrahman@nexthop.ai> wrote:
-> 
->> Two pre-existing bugs in adm1266_gpio_get_multiple() that landed
->> together when GPIO support was first added (commit d98dfad35c38).
->> Both are reachable any time userspace queries multiple ADM1266 GPIO
->> or PDIO lines at once via the gpiolib char-dev or sysfs interfaces.
->>
->> Patch 1 caps the PDIO scan loop at ADM1266_PDIO_NR (16) instead of
->> ADM1266_PDIO_STATUS (0xE9 = 233, a PMBus command code that ended up
->> in the bound by mistake).  As written, the scan walks
->> find_next_bit() up to bit 242 across a 25-bit caller mask, reading
->> out of bounds and -- if any of that incidental memory contains a
->> set bit -- driving a corresponding out-of-bounds write to the
->> caller's bits array.  Flagged by sashiko in review of an unrelated
->> fix series [1].
->>
->> Patch 2 drops a redundant "*bits = 0" reset that sits between the
->> GPIO and PDIO halves of the function.  As written, the GPIO bits
->> the first loop populates are immediately discarded before the PDIO
->> loop runs, so any caller asking for a mix of GPIO and PDIO lines
->> sees the GPIO half always reported as 0.
->>
->> [1] https://sashiko.dev/#/patchset/20260515-adm1266-fixes-v1-0-1c1ea1349cfe@nexthop.ai
->>
->> Signed-off-by: Abdurrahman Hussain <abdurrahman@nexthop.ai>
-> 
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> 
-> The better option would be to:
-> 
-> 1. Convert this driver to use regmap
+Hi Markus,
 
-That would mean to convert the pmbus core code to regmap,
-plus all the pmbus client drivers.
+kernel test robot noticed the following build errors:
 
-PMBus uses a mix of registers/command with different size, plus some
-block commands. That would be a difficult task. Byte registers can be
-mapped to word size, but for block registers that is difficult,
-and then there are commands with zero data length. Maybe someone
-managed to do this somewhere. I tried some time ago and could not get
-it to work.
+[auto build test ERROR on linux-review/Markus-Stockhausen/dt-bindings-i2c-Add-i2c-shared-gpio/20260515-102710]
 
-Guenter
+url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Stockhausen/i2c-i2c-gpio-Enhance-driver-for-buses-with-shared-SCL/20260519-005100
+base:   https://github.com/intel-lab-lkp/linux Markus-Stockhausen/dt-bindings-i2c-Add-i2c-shared-gpio/20260515-102710
+patch link:    https://lore.kernel.org/r/20260518161013.900504-1-markus.stockhausen%40gmx.de
+patch subject: [PATCH v2] i2c: i2c-gpio: Enhance driver for buses with shared SCL
+config: hexagon-randconfig-001-20260519 (https://download.01.org/0day-ci/archive/20260519/202605190501.z5y2mZnV-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260519/202605190501.z5y2mZnV-lkp@intel.com/reproduce)
 
-> 2. Extend gpio-regmap with get/set_multiple()
-> 3. Convert the driver to use gpio-regmap
-> 
-> So if you feel adventurous and have time on your hands,
-> consider it! :)
-> 
-> Yours,
-> Linus Walleij
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605190501.z5y2mZnV-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+>> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
+     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/lockdep.h:158:33: note: expanded from macro 'lockdep_set_class'
+     158 |         lockdep_init_map_type(&(lock)->dep_map, #key, key, 0,   \
+         |                                ~~~~~~  ^
+>> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
+     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/lockdep.h:159:18: note: expanded from macro 'lockdep_set_class'
+     159 |                               (lock)->dep_map.wait_type_inner,  \
+         |                               ~~~~~~  ^
+>> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
+     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/lockdep.h:160:18: note: expanded from macro 'lockdep_set_class'
+     160 |                               (lock)->dep_map.wait_type_outer,  \
+         |                               ~~~~~~  ^
+>> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
+     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/lockdep.h:161:18: note: expanded from macro 'lockdep_set_class'
+     161 |                               (lock)->dep_map.lock_type)
+         |                               ~~~~~~  ^
+   4 errors generated.
+
+
+vim +426 drivers/i2c/busses/i2c-gpio.c
+
+   393	
+   394	static struct i2c_gpio_scl_data *i2c_gpio_create_scl(struct fwnode_handle *fwnode)
+   395	{
+   396		struct fwnode_reference_args args;
+   397		struct i2c_gpio_scl_data *scl;
+   398		int ret;
+   399	
+   400		ret = fwnode_property_get_reference_args(fwnode, "scl-gpios",
+   401							 "#gpio-cells", 0, 0, &args);
+   402		if (ret)
+   403			/* try the ancient way */
+   404			ret = fwnode_property_get_reference_args(fwnode, "gpios",
+   405								 "#gpio-cells", 0, 1, &args);
+   406		if (ret)
+   407			return ERR_PTR(ret);
+   408	
+   409		if (args.nargs < 1) {
+   410			fwnode_handle_put(args.fwnode);
+   411			return ERR_PTR(-EINVAL);
+   412		}
+   413	
+   414		scl = kzalloc(sizeof(*scl), GFP_KERNEL);
+   415		if (!scl) {
+   416			fwnode_handle_put(args.fwnode);
+   417			return ERR_PTR(-ENOMEM);
+   418		}
+   419	
+   420		/* The unique identification from the SCL GPIO reference in the device tree */
+   421		scl->fw_node = args.fwnode;
+   422		scl->fw_pin = args.args[0];
+   423		scl->fw_flags = (args.nargs >= 2) ? args.args[1] : 0;
+   424	
+   425		rt_mutex_init(&scl->lock);
+ > 426		lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
+   427		refcount_set(&scl->ref, 1);
+   428	
+   429		return scl;
+   430	}
+   431	
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
