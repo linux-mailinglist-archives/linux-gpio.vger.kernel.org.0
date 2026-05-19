@@ -1,130 +1,131 @@
-Return-Path: <linux-gpio+bounces-37144-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37145-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IOtGK/dDDGrQcQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37144-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:05:27 +0200
+	id cOo5AlhHDGoMdAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37145-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:19:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6B8E57D296
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:05:26 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4C0F57D69D
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:19:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 871C33068473
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 10:52:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6C6CE3051EF0
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 11:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9D38405C4B;
-	Tue, 19 May 2026 10:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FCDD494A18;
+	Tue, 19 May 2026 11:12:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnEswBOe";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIBI4RV6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PWwMGAML";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="HWMkZjrI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158D03F4DEE
-	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 10:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F8E49218B
+	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 11:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.133.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779187838; cv=pass; b=AANzqK+MsoORXPltXJigbzoEi1AkVcFkHu33GZuY6svk9LL9ZQkYR39T1qNAQnpbFpeN5xR4SYU8BdqLW3k1BnnvcSBcIvhV2r20i1bvisHY5sr2+RWW8rv6I6NTi2Dw/dTgJZ5a227o2nQl3f+2jxjhVF88gGEeCDb5P4eLmM4=
+	t=1779189177; cv=pass; b=umhCZLjabwld/9DutjHaIMKfbTquHLIHT8IqPtHuJ0Oy+gkHLRX/EnZTEJPgbyT5i4OsQ2ps4/xGJX2MvGY+O9v7XAGKTLJJ6x3iE1mDXHDevepTAZlNXUiI3Y0r3ArPE5vXSt3BT8g/NDQ69eaBJMsZBy0h0hz7VqiFATCHg8c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779187838; c=relaxed/simple;
-	bh=cyC64b1IdudV6BmVyvS2FCZeravUj92HSF7yWMV8NGg=;
+	s=arc-20240116; t=1779189177; c=relaxed/simple;
+	bh=G0ThN/1d1oEYjKqmxKgM7/icL/xC1s/HQwJfFfdz33k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lOMAFtFMivMvqDNf9q1ktQEg8NQ90Qvp0ZIEP3RJrVH434HqJ9ojoLVg8slPBixY2fmXt8clrvw/u3reyB3CDE2T+ZuhtWxsXsJE1WDSJY4SjCuOABXnhhTE+03kV5P2BuLylPq5GVRQLH1W2utSO7RRHOIgLLCuy5IaIQsIrm8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fnEswBOe; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=gIBI4RV6; arc=pass smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=k0+XO2wI0ZeT8olYfUb9PuVHUpAQb4N8Ugr28BvZn2TqVjOoIef5Kg2GKto0Jcu1vweTCDT1uwgz4at5UE/eOlpxPu8Xy60x2+0P5zcMuqPsA9euWtH/Y0pwJeXSfxSjAVVxDnqnIXTppLbr0KyE4birOdlygROj6fYbNIKUwhU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PWwMGAML; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=HWMkZjrI; arc=pass smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779187835;
+	s=mimecast20190719; t=1779189171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FNYjy48Qe/rJr9n5fbbJJkzIk+utflxbYUG55L8i+pw=;
-	b=fnEswBOeNwTBUJsJQjwbZjXZi0BFIQsEhgjd3NBNfXPZMz3xpbBLK3JIw79jUT11G0zxdi
-	YxB5gOgU7WShXGdSFIFQYkO+TrVNzjymD0WUdVA1Ci4QybdJWVseAHbkcjjRetMN5dO5AW
-	7gM/sfbjEW94SH7YyHtTnhO895p3IIg=
+	bh=oXsqNQngsEDaEw4yQ657tilzkdXWVYHvbpp2A/ZUbBk=;
+	b=PWwMGAMLHUIlLTk6dYx/URA/ZmtB5UH5Pnv+7N6za9jAnAVfqR5+WVpoBrddddAZV+b9Tm
+	VZ6xld7Si9gJ6xZ+xq73tWMLuUz5760veqJMap0zcoTyIJ4vOsJNmKRkPYaS9VtgeEsHSo
+	A9T0gR6VFfK7rlK7eSH2bgYhpSYjFqs=
 Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
  [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-Fi38xxO_NeyS16hXMX9zKw-1; Tue, 19 May 2026 06:50:33 -0400
-X-MC-Unique: Fi38xxO_NeyS16hXMX9zKw-1
-X-Mimecast-MFC-AGG-ID: Fi38xxO_NeyS16hXMX9zKw_1779187832
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5a86f40bffaso82295e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 03:50:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779187832; cv=none;
+ us-mta-574-rp6Wki3CMKOaSuN9fFcoaw-1; Tue, 19 May 2026 07:12:50 -0400
+X-MC-Unique: rp6Wki3CMKOaSuN9fFcoaw-1
+X-Mimecast-MFC-AGG-ID: rp6Wki3CMKOaSuN9fFcoaw_1779189168
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5a86ef3c097so80797e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 04:12:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779189168; cv=none;
         d=google.com; s=arc-20240605;
-        b=BQxYOEVdB9Rj/YckTJ0hYdflYQXLVmC5xaMxkTpGUtfzMXCDa0QIUp/ObsW4c9+Yz+
-         uXYWmtHzsWOg4N51wTOMpm3bByevMUlHOmXB8HHmVQP1s0eDULOeIKoi1RUfG/GkG74z
-         I3Pnbs8S7KMeI7R755JSeDiG1j3zjRGNfL4RkxxVclhQ51e4/KbHxCmHOKPZpe2W203g
-         ZS6vb1+QK3STM6tCuzJgGW93aWZYRQXR6vKvedCENNvkwOxX2Vinuy1AawK1+CWzRCRG
-         YDbHNw8XVNtbj4i06IT3RUab14OahkKTiO6Lm/1bQ9WgwWPH4b0vCJsnXXKD13HR+REm
-         dcoQ==
+        b=Hy66QM3s6AfZReIg0jVBJ0WRSNzvUFW2qKHApvUtcwZ6PiS09Tnni5YpEk+sMM7kvW
+         BJnBGeiiuY+gMVrGws85iUMfN+xFS+d2mRM5mcsK7qr7ZgyUam2XLfP4HNXevFrhwupb
+         xKWdBzr9iINZlcUNSOb9Dn8ip1X3YbHCJG6GZiWbN8UdyvlFDyILJ+fnWg17cYVnklyW
+         kMPEbDoDG3wbnMP9V/8UCN9INZLXBsA0NVwHo3ow3bQre56U0E8L6UGI0Q2Y1L8A8/Gs
+         g8Z30XPu/hwKwrhTma3j26OQ9NuigyvbKPWY46wGpGvBt8WUCN94jMwcRgBjOP0t7gZM
+         u2zA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=FNYjy48Qe/rJr9n5fbbJJkzIk+utflxbYUG55L8i+pw=;
-        fh=fH4De4L9u/Hn8OjZkxs7R6ZOhlAsUubXRv7HdAzrJT8=;
-        b=cMVUQQOSHEol2zR5y7YtAGVagStvEwgOK+XzyRwyAv6h8dOBP4cDOF9yA7hilaIKmY
-         Ez9AEVrR7nhAegrzO2jMC304UJZCnJ5hTDIOGwzEI9haWXvjUKiBQZ/y1dNqflQs+15L
-         TvPO1iWvae8qh94c0uMO31dt3MGdIF5YgaaoX/09NkRa1s/ebUoU2/wpuCQnlZQWDC89
-         NPbAK30gNsd75NMzBeARp+RtnUFB/kW+sVaqjDQejy02x/TTMsScjQdsjl5e7+9Jn5OB
-         PIsLT8bVpB7VSmad0R7rA9KVJGUWkS9oO4Zv8UrsgGhRAc3B2cYnt5oWlwbeKDbJeP9F
-         YYGw==;
+        bh=oXsqNQngsEDaEw4yQ657tilzkdXWVYHvbpp2A/ZUbBk=;
+        fh=TImliSwfyOES4xDdMT9BIz/Km8e9sHyzy9E0pKnb8Bo=;
+        b=B9l59FMP41HLdT63M1sGzBHjpZ3Foy1uUCvFiG7rTx+6OYka7tzlIwRrnmnPQvVLna
+         e/MTUX2qrJU7wMtu4gUQgA4ehjOO1j73HjdWr/W7MSfjOpQ64JEroW38aE3rPoiBAdRM
+         ntqRLi8wKXmRK0jKplEh/GgFM4Y4IVaLsZ9qAyzTT3tZQmK8GYMJFt1bEuUgq3/v1Snf
+         h1JVI1SWDmYqtSD9Mw8dHaUTujBaetQMyFTgwKNwXJL/fl7YCEjY2yka8Uhv3wpRvGjJ
+         6XzN/G8Y+j4bWc5Let47NV6P8MDVExaIEEEAg3P0d8v0qMCzOg5aI/oD5XiP/AXXy53m
+         kMrA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1779187832; x=1779792632; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1779189168; x=1779793968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FNYjy48Qe/rJr9n5fbbJJkzIk+utflxbYUG55L8i+pw=;
-        b=gIBI4RV68fM/B0DhDpJuML3g8Pi0XEUrEzOU7S3ZF97L6kZMRBvS9P0QFCnBkIW7ZQ
-         Vas4ya1PYktiYtAHYpbC/k8Ubr7d0zDWWfbdBu5xsjgHsT8ZdKCEOptQU4C31UlBdVmH
-         ZQv7E28iHvgWEVGzE+1xeR3e099blQ6JMiis5Z7Flnl685pFxC5EUmk4R8mcwcBoqaaQ
-         4vpnrQ0fMewlCgvPZcnOh4afNn8yhQg+gKFtmJahZZRZwSTd/dqZYrdWWctYXTfpmvD6
-         R9oP2JMpBj5wzmdcMLIqOl7ChGPEciBr/FZI4PlUTkxanoW+Gvntl4wpNSqeekiw5RzB
-         QrMw==
+        bh=oXsqNQngsEDaEw4yQ657tilzkdXWVYHvbpp2A/ZUbBk=;
+        b=HWMkZjrIQ+RTQ5eKH1BX1z+t/5W31yN3NBzsYBH2hHVKR0AIXlsZWG8vU+/5xkMOQu
+         bAkUkZeesFcvMeojqjGg/f6P8INPyYaoqWOma3Z7prB/GxUJvD4jGQWZFL3SVCYPf9MI
+         zx94xAQlXyzyyUrZjRnkUvP6taxqZeM2UavrfF5MpFVrNmGCt+RuIKsrZPu5LMfSBtLf
+         esMVZ6P2+seaA+hPmT1NyJtA504SbLjhbSE8cQpO4KK/KbM9SBQaOxloTQnfYSDm9177
+         aW873QXzYPgeSMsjgdxrC7McrHw+xQwZ5fglCZKBej77+4HYmF4JuQBS0S2GdgY76DTP
+         2Gkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779187832; x=1779792632;
+        d=1e100.net; s=20251104; t=1779189168; x=1779793968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=FNYjy48Qe/rJr9n5fbbJJkzIk+utflxbYUG55L8i+pw=;
-        b=iSu6x14w9Jzm3SwuGwGRMVc7pKjg58ZSePdGCgOYYkghfe6VVbaY4byTaTgxVb6yqq
-         Tlj31ZVZH3jIZm9E1ec7u7R6fl2m+iFhT5/tkWqUmmLvaDAmpDSEtWw8czknKpF/SPPC
-         Hf2VZDovtldA4ds9aytiC1Agf3ILdxBvUpRBNXtkpFOyeWCttWc6h1H0tD7gYyXBCkUF
-         uNI10N6Kghb2I4az6mgSd1DCgUxDcpPiiTkM/ESSdAJ5p+aFUqRYWBnz7YKiroTKZh6z
-         LQWWtk2yLNdp7smDok4Q0jfzAmzhMtlXEBu/vY/SONaqmdaEpW+Phbs4LHsUpk6XFVyn
-         sYmg==
-X-Forwarded-Encrypted: i=1; AFNElJ+ioxZiVEksXkA6pldM4zFdOA97oo036G5aiJya/CjxWJ+VTtYC4TOQBIFHPeR62QM/in/gVhzonsqy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqZXRwSZ7ExNR0CJ8dZaaA+91pbMsx7oteAfn6HT+5yBK8mWtU
-	ZQ0TpdearKgY72+zAduAtjRD3/f9K6tgMzfZTdJLcQxVbvNNXc9qr5KQpoY9HBdssy7f92KVA9O
-	O+gXb23PiKo3ttAlunbQOG8GMMbQeZ8iYb3g0TTgTEnYxlrcvuBpdObS5OvsKSV0OZxeEXs/0Pt
-	WG+tGfxptLGne2OU2e19kvPdq5SVkVBkyT6pvQqw==
-X-Gm-Gg: Acq92OF+C7gdqg7ueutuJvEVVpZQIy9upZiTpa08zvxWcS5gwCest4C3D+ZQ1nYS4uX
-	A3FQhXODMRT/kCfkRUV6VvHeebOH4GljZzb0blbV30iwM1I5JVeWs5kcIjMD68FWuPrAOXdDs8S
-	sjzoMXfU6qm42EbCSy+f35rkoYAnp7HTEoRp2GDrgRIUtIRORubCt/J4vZeRlUz6HXPedK2zwbs
-	XPNyNCoXKH4XHRc
-X-Received: by 2002:a05:651c:e19:b0:38e:2183:2287 with SMTP id 38308e7fff4ca-39561da3d23mr11613931fa.6.1779187831967;
-        Tue, 19 May 2026 03:50:31 -0700 (PDT)
-X-Received: by 2002:a05:651c:e19:b0:38e:2183:2287 with SMTP id
- 38308e7fff4ca-39561da3d23mr11613641fa.6.1779187831311; Tue, 19 May 2026
- 03:50:31 -0700 (PDT)
+        bh=oXsqNQngsEDaEw4yQ657tilzkdXWVYHvbpp2A/ZUbBk=;
+        b=ArNKdVorQ/LpKLs2yhUxZAoZ06ZFxhqmRnfF4qSP/RFG3SKHsmNRuD+6Xn/juE2qMj
+         NvZGzyEUUplYQKfXQvt45hND1mP8wXIxtGSDCLxMhauaE+P8Q8fFt1RXeTSvO8wctWWz
+         +cuOLX4AWEjahgly00QfRqk1nM2xkTFMu0V3AqAGDEJtqOLWu/9kRAf1YX3Aghc5YaYY
+         cXlCtIv0Z9nlW1NieeTR+Wlc9sebUabZhYx3VYS4len8xj/hS6imiyHppt4reyjCa2hr
+         cz9qVWdvlIQ/BwfJcMR8Ufw59j1FQPw3Ege+sNQ8T5znSavOsQLGzfIHbrEevtuR6Meh
+         mJJw==
+X-Forwarded-Encrypted: i=1; AFNElJ8GhjFTQOohkFxVjycvQQM/2lDpwvzVBnHFFTLYp1LxCMVl8TYprs5jtQuxURyJH/4SEkF27xpgFXEN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHCvEPm4M5YIpl1lwZX1wJvevd4TKRAl70NDI5j3U/mYxXlStA
+	8dU7Qrb2muC+qFmBcAr9CAv1DH0FzMThUTBsKK9sO+Fq/13HxGgZNwLAFK4zzSk76pQfcoqTk+0
+	+d8r2AstkOlUJ64Gby1xkaEUUGjB+FagKsxKVp+8Ygg9FxEQKqS57UId9jgfBqqJEAJV3sf+YBR
+	0OWTXRQHpiGL4DicqeC/lSAaABVmYzpu21MWJtYg==
+X-Gm-Gg: Acq92OH1N8JsbyrpPn60mDlV66aPlnBwKe/4Jx0NLKigBXwK+XFXy09Rw1ALiVA9g/c
+	Et7a3R7iBtRbr+vgrEmza1cuR7SegNZUoh3YSE1PVNGeMgkCNhfgoN/w2ReQb4u9VvM8J1mEaiT
+	5eBvu5N5MlSFvBORpHGofQYWKHzJ3BZ22XSl3YmPnje+4vEITi/DFDDwXFmnuoIXj7fUsRV5RVY
+	16y4Q==
+X-Received: by 2002:a05:651c:4119:b0:390:f0e8:a0a6 with SMTP id 38308e7fff4ca-39561eca6a3mr18209491fa.7.1779189168281;
+        Tue, 19 May 2026 04:12:48 -0700 (PDT)
+X-Received: by 2002:a05:651c:4119:b0:390:f0e8:a0a6 with SMTP id
+ 38308e7fff4ca-39561eca6a3mr18209371fa.7.1779189167744; Tue, 19 May 2026
+ 04:12:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260504131148.3622697-1-khristineandreea.barbulescu@oss.nxp.com>
-In-Reply-To: <20260504131148.3622697-1-khristineandreea.barbulescu@oss.nxp.com>
+References: <20260504131148.3622697-1-khristineandreea.barbulescu@oss.nxp.com> <20260504131148.3622697-2-khristineandreea.barbulescu@oss.nxp.com>
+In-Reply-To: <20260504131148.3622697-2-khristineandreea.barbulescu@oss.nxp.com>
 From: Enric Balletbo i Serra <eballetb@redhat.com>
-Date: Tue, 19 May 2026 12:50:19 +0200
-X-Gm-Features: AVHnY4LAnrM7CYLVC2t872uBzKbq5fK7Xe0LmiuWNlKH-VqYUuotXoVDaWFXXlg
-Message-ID: <CALE0LRv3WrwdKhQ=drkco-7AFsgPC-cMc8rvE7TxkgUQvYCfOw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/7] gpio: siul2-s32g2: add initial GPIO driver
+Date: Tue, 19 May 2026 13:12:35 +0200
+X-Gm-Features: AVHnY4IysE9Si0e6LCWrqXrdQ4CUJp9E0s70DE65f5jtBnVk_MehFj_WtyF0KyM
+Message-ID: <CALE0LRs5XwjwVXkc+WGtkucs5WGjoHu-Dcd8fLBmqQjz16XdDw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/7] pinctrl: s32cc: use dev_err_probe() and improve
+ error messages
 To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -146,12 +147,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37144-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37145-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -164,247 +165,173 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[eballetb@redhat.com,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[redhat.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,mail.gmail.com:mid,nxp.com:email]
-X-Rspamd-Queue-Id: B6B8E57D296
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,nxp.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: E4C0F57D69D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Hi,
 
-Thank you to send these patches upstream
-
 On Mon, May 4, 2026 at 3:12=E2=80=AFPM Khristine Andreea Barbulescu
 <khristineandreea.barbulescu@oss.nxp.com> wrote:
 >
-> This patch series adds support for basic GPIO
-> operations(set, get, direction_output/input, set_config).
+> Change dev_err&return statements into dev_err_probe throughout the driver
+> on the probing path.
 >
-> There are two SIUL2 hardware modules: SIUL2_0 and SIUL2_1.
-> However, this driver exports both as a single GPIO driver.
-> This is because the interrupt registers are located only
-> in SIUL2_1, even for GPIOs that are part of SIUL2_0.
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+> Signed-off-by: Khristine Andreea Barbulescu <khristineandreea.barbulescu@=
+oss.nxp.com>
+> ---
+>  drivers/pinctrl/nxp/pinctrl-s32cc.c | 64 ++++++++++++++---------------
+>  1 file changed, 30 insertions(+), 34 deletions(-)
 >
-
-With gpioinfo I see
-
-> There are two gaps in the GPIO ranges:
-> - 102-111(inclusive) are invalid
-
-line 102: unnamed          input consumer=3Dkernel
-line 103: unnamed          input consumer=3Dkernel
-line 104: unnamed          input consumer=3Dkernel
-line 105: unnamed          input consumer=3Dkernel
-line 106: unnamed          input consumer=3Dkernel
-line 107: unnamed          input consumer=3Dkernel
-line 108: unnamed          input consumer=3Dkernel
-line 109: unnamed          input consumer=3Dkernel
-line 110: unnamed          input consumer=3Dkernel
-line 111: unnamed          input consumer=3Dkernel
-
-> - 123-143(inclusive) are invalid
+> diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pi=
+nctrl-s32cc.c
+> index fe7cd641fddd..56be6e8d624e 100644
+> --- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
+> +++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Core driver for the S32 CC (Common Chassis) pin controller
+>   *
+> - * Copyright 2017-2022,2024 NXP
+> + * Copyright 2017-2022,2024-2025 NXP
+>   * Copyright (C) 2022 SUSE LLC
+>   * Copyright 2015-2016 Freescale Semiconductor, Inc.
+>   */
+> @@ -236,10 +236,10 @@ static int s32_dt_group_node_to_map(struct pinctrl_=
+dev *pctldev,
+>         }
 >
-
-line 123: "PH_11"          input consumer=3D"kernel"
-line 124: "PH_12"          input consumer=3D"kernel"
-line 125: "PH_13"          input consumer=3D"kernel"
-line 126: "PH_14"          input consumer=3D"kernel"
-line 127: "PH_15"          input consumer=3D"kernel"
-line 128: "PI_00"          input consumer=3D"kernel"
-line 129: "PI_01"          input consumer=3D"kernel"
-line 130: "PI_02"          input consumer=3D"kernel"
-line 131: "PI_03"          input consumer=3D"kernel"
-line 132: "PI_04"          input consumer=3D"kernel"
-line 133: "PI_05"          input consumer=3D"kernel"
-line 134: "PI_06"          input consumer=3D"kernel"
-line 135: "PI_07"          input consumer=3D"kernel"
-line 136: "PI_08"          input consumer=3D"kernel"
-line 137: "PI_09"          input consumer=3D"kernel"
-line 138: "PI_10"          input consumer=3D"kernel"
-line 139: "PI_11"          input consumer=3D"kernel"
-line 140: "PI_12"          input consumer=3D"kernel"
-line 141: "PI_13"          input consumer=3D"kernel"
-line 142: "PI_14"          input consumer=3D"kernel"
-line 143: "PI_15"          input consumer=3D"kernel"
-
-> Writing and reading GPIO values is done via the PGPDO/PGPDI
-> registers(Parallel GPIO Pad Data Output/Input) which are
-> 16 bit registers, each bit corresponding to a GPIO.
->
-> Note that the PGPDO order is similar to a big-endian grouping
-> of two registers:
-> PGPDO1, PGPDO0, PGPDO3, PGPDO2, PGPDO5, PGPDO4, gap, PGPDO6.
+>         ret =3D pinconf_generic_parse_dt_config(np, pctldev, &cfgs, &n_cf=
+gs);
+> -       if (ret) {
+> -               dev_err(dev, "%pOF: could not parse node property\n", np)=
+;
+> -               return ret;
+> -       }
+> +       if (ret)
+> +               return dev_err_probe(dev, ret,
+> +                                    "%pOF: could not parse node property=
+\n",
+> +                                    np);
 >
 
-I can also read the correct values from an input pin connected to a
-external switch.
+Nitpick: I think this is not part of the probe path but is called when
+a consumer requests a pin group, so using dev_err_probe is slightly
+misleading here, although I think it's harmless.
 
-]# gpioget "PB_05"
-"PB_05"=3Dinactive
-]# gpioget "PB_05"
-"PB_05"=3Dactive
-# gpiodetect
-gpiochip0 [4009c240.pinctrl] (191 lines)
-gpiochip1 [0-0022] (24 lines)
+In any case, with or without that change it looks good to me, so
 
-So,
+Reviewed-by: Enric Balletbo i Serra <eballetb@redhat.com>
 
-Tested-by: Enric Balletbo i Serra <eballetb@redhat.com>
-
-> v9 -> v8
-> - remove the SIUL2 syscon child nodes from the
-> device tree and DT bindings
-> - remove syscon child handling from the MFD
-> and pinctrl drivers
-> - remove the MFD driver and use a single monolithic
-> pinctrl/gpio/irqchip driver
-> - add a new compatible for the pinctrl+gpio binding
-> while keeping the previous compatible for the legacy
-> pinctrl-only binding
-> - update bindings to include the PGPDO/PGPDI and
-> IRQ register regions in the DT node for the
-> pinctrl/gpio/irq binding
-> - add IRQ-related entries in the bindings to
-> document the intended hierarchy; IRQ support
-> itself will be added in a future patch series
-> - update DT nodes to match the new hierarchy and
-> compatible scheme
-> - fix dtb warnings
-> - reorder commits: bug fixes, API changes, DT bindings,
-> driver implementation, DTS changes
-> - split commits further to separate minor
-> style-only adjustments
+>         if (n_cfgs)
+>                 reserve++;
+> @@ -763,15 +763,15 @@ static int s32_pinctrl_parse_groups(struct device_n=
+ode *np,
+>         grp->data.name =3D np->name;
 >
-> v8 -> v7
-> - remove all ': true' lines from properties in dt bindings
-> - remove NVMEM MFD cell from SIUL2 in dtsi
-> - remove NVMEM driver and configs
-> - expose SoC information via syscon cells SIUL2_0
-> and SIUL2_1 in MFD driver
-> - add SIUL2_0 and SIUL2_1 syscon nodes in dtsi
-> - add patternProperties for "^siul2_[0-1]$" for syscon nodes
-> - update example to include syscon cells with proper format
-> - remove `reg` property from pinctrl node in dt binding
-> - update Kconfig help text to reflect new syscon structure
-> instead of NVMEM for SoC information
-> - squash deprecated SIUL2 pinctrl binding with new MFD binding
-> - dropped "nxp,s32g3-siul2" from MFD driver match table
-> - fixed commit messages
-> - fixed dtb warnings
+>         npins =3D of_property_count_elems_of_size(np, "pinmux", sizeof(u3=
+2));
+> -       if (npins < 0) {
+> -               dev_err(dev, "Failed to read 'pinmux' property in node %s=
+.\n",
+> -                       grp->data.name);
+> -               return -EINVAL;
+> -       }
+> -       if (!npins) {
+> -               dev_err(dev, "The group %s has no pins.\n", grp->data.nam=
+e);
+> -               return -EINVAL;
+> -       }
+> +       if (npins < 0)
+> +               return dev_err_probe(dev, -EINVAL,
+> +                                    "Failed to read 'pinmux' in node %s\=
+n",
+> +                                    grp->data.name);
+> +
+> +       if (!npins)
+> +               return dev_err_probe(dev, -EINVAL,
+> +                                    "The group %s has no pins\n",
+> +                                    grp->data.name);
 >
-> v7 -> v6
-> - fixed MAINTAINERS wrong file path
-> - add unevaluatedProperties, change siul2 node name, remove
->   jtag_pins label in the device tree schema
-> - change compatible definition in schema
-> - change node name in dtsi
-> - mentioned binding deprecation in commit messages
-> - split mfd cell conversion commit in two: one for the
->   previous refactoring, one for the mfd cell conversion
-> - removed Acked-by: Linus Walleij from commit:
->   "pinctrl: s32: convert the driver into an mfd cell"
->   because of changes to that commit
-> - deprecate the nxp,s32g2-siul2-pinctrl binding
-> - add NVMEM MFD cell for SIUL2
-> - made the GPIO driver not export invalid pins
->   (there are some gaps 102-111, 123-143)
-> - removed the need for gpio-reserved-ranges
-> - force initialized pinctrl_desc->num_custom_params to 0
+>         grp->data.npins =3D npins;
 >
-> v6 -> v5
-> - removed description for reg in the dt-bindings and added
->   maxItems
-> - dropped label for example in the dt-bindings
-> - simplified the example in the dt-bindings
-> - changed dt-bindings filename to nxp,s32g2-siul2.yaml
-> - changed title in the dt-bindings
-> - dropped minItmes from gpio-ranges/gpio-reserved-ranges
->   and added maxItems to gpio-reserved-ranges
-> - added required block for -grp[0-9]$ nodes
-> - switch to using "" as quotes
-> - kernel test robot: fixed frame sizes, added description
->   for reg_name, fixed typo in gpio_configs_lock, removed
->   uninitialized ret variable usage
-> - ordered includes in nxp-siul2.c, switched to dev-err-probe
->   added a mention that other commits will add nvmem functionality
->   to the mfd driver
-> - switched spin_lock_irqsave to scoped_guard statement
-> - switched dev_err to dev_err_probe in pinctrl-s32cc in places
->   reached during the probing part
+> @@ -812,10 +812,9 @@ static int s32_pinctrl_parse_functions(struct device=
+_node *np,
+>         /* Initialise function */
+>         func->name =3D np->name;
+>         func->ngroups =3D of_get_child_count(np);
+> -       if (func->ngroups =3D=3D 0) {
+> -               dev_err(info->dev, "no groups defined in %pOF\n", np);
+> -               return -EINVAL;
+> -       }
+> +       if (func->ngroups =3D=3D 0)
+> +               return dev_err_probe(info->dev, -EINVAL,
+> +                                    "No groups defined in %pOF\n", np);
 >
-> v5 -> v4
-> - fixed di_div error
-> - fixed dt-bindings error
-> - added Co-developed-by tags
-> - added new MFD driver nxp-siul2.c
-> - made the old pinctrl driver an MFD cell
-> - added the GPIO driver in the existing SIUL2 pinctrl one
-> - Switch from "devm_pinctrl_register" to
->   "devm_pinctrl_register_and_init"
+>         groups =3D devm_kcalloc(info->dev, func->ngroups,
+>                                     sizeof(*func->groups), GFP_KERNEL);
+> @@ -886,10 +885,9 @@ static int s32_pinctrl_probe_dt(struct platform_devi=
+ce *pdev,
+>         }
 >
-> v4 -> v3
-> - removed useless parentheses
-> - added S32G3 fallback compatible
-> - fixed comment alignment
-> - fixed dt-bindings license
-> - fixed modpost: "__udivdi3"
-> - moved MAINTAINERS entry to have the new GPIO driver
->   together with other files related to S32G
+>         nfuncs =3D of_get_child_count(np);
+> -       if (nfuncs <=3D 0) {
+> -               dev_err(&pdev->dev, "no functions defined\n");
+> -               return -EINVAL;
+> -       }
+> +       if (nfuncs <=3D 0)
+> +               return dev_err_probe(&pdev->dev, -EINVAL,
+> +                                    "No functions defined\n");
 >
-> v3 -> v2
-> - fix dt-bindings schema id
-> - add maxItems to gpio-ranges
-> - removed gpio label from dt-bindings example
-> - added changelog for the MAINTAINERS commit and
->   added separate entry for the SIUL2 GPIO driver
-> - added guard(raw_spinlock_irqsave) in
->   'siul2_gpio_set_direction'
-> - updated the description for
->   'devm_platform_get_and_ioremap_resource_byname'
+>         info->nfunctions =3D nfuncs;
+>         info->functions =3D devm_kcalloc(&pdev->dev, nfuncs,
+> @@ -919,18 +917,17 @@ static int s32_pinctrl_probe_dt(struct platform_dev=
+ice *pdev,
+>  int s32_pinctrl_probe(struct platform_device *pdev,
+>                       const struct s32_pinctrl_soc_data *soc_data)
+>  {
+> -       struct s32_pinctrl *ipctl;
+> -       int ret;
+> -       struct pinctrl_desc *s32_pinctrl_desc;
+> -       struct s32_pinctrl_soc_info *info;
+>  #ifdef CONFIG_PM_SLEEP
+>         struct s32_pinctrl_context *saved_context;
+>  #endif
+> +       struct pinctrl_desc *s32_pinctrl_desc;
+> +       struct s32_pinctrl_soc_info *info;
+> +       struct s32_pinctrl *ipctl;
+> +       int ret;
 >
-> v2 -> v1
-> dt-bindings:
-> - changed filename to match compatible
-> - fixed commit messages
-> - removed dt-bindings unnecessary properties descriptions
-> - added minItems for the interrupts property
-> driver:
-> - added depends on ARCH_S32 || COMPILE_TEST to Kconfig
-> - added select REGMAP_MMIO to Kconfig
-> - remove unnecessary include
-> - add of_node_put after `siul2_get_gpio_pinspec`
-> - removed inline from function definitions
-> - removed match data and moved the previous platdata
->   definition to the top of the file to be visible
-> - replace bitmap_set/clear with __clear_bit/set_bit
->   and devm_bitmap_zalloc with devm_kzalloc
-> - switched to gpiochip_generic_request/free/config
-> - fixed dev_err format for size_t reported by
->   kernel test robot
-> - add platform_get_and_ioremap_resource_byname wrapper
+> -       if (!soc_data || !soc_data->pins || !soc_data->npins) {
+> -               dev_err(&pdev->dev, "wrong pinctrl info\n");
+> -               return -EINVAL;
+> -       }
+> +       if (!soc_data || !soc_data->pins || !soc_data->npins)
+> +               return dev_err_probe(&pdev->dev, -EINVAL,
+> +                                    "Wrong pinctrl info\n");
 >
-> Andrei Stefanescu (2):
->   pinctrl: s32cc: change to "devm_pinctrl_register_and_init"
->   pinctrl: s32cc: implement GPIO functionality
+>         info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+>         if (!info)
+> @@ -965,10 +962,9 @@ int s32_pinctrl_probe(struct platform_device *pdev,
+>         s32_pinctrl_desc->owner =3D THIS_MODULE;
 >
-> Khristine Andreea Barbulescu (5):
->   pinctrl: s32cc: use dev_err_probe() and improve error messages
->   pinctrl: s32cc: add/fix some comments
->   pinctrl: s32cc: remove inline specifiers
->   dt-bindings: pinctrl: s32g2-siul2: describe GPIO and EIRQ resources
->   arm64: dts: s32g: describe GPIO and EIRQ resources in SIUL2 pinctrl
->     node
+>         ret =3D s32_pinctrl_probe_dt(pdev, ipctl);
+> -       if (ret) {
+> -               dev_err(&pdev->dev, "fail to probe dt properties\n");
+> -               return ret;
+> -       }
+> +       if (ret)
+> +               return dev_err_probe(&pdev->dev, ret,
+> +                                    "Fail to probe dt properties\n");
 >
->  .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      | 107 ++-
->  arch/arm64/boot/dts/freescale/s32g2.dtsi      |  26 +-
->  arch/arm64/boot/dts/freescale/s32g3.dtsi      |  26 +-
->  drivers/pinctrl/nxp/pinctrl-s32.h             |  15 +-
->  drivers/pinctrl/nxp/pinctrl-s32cc.c           | 646 ++++++++++++++----
->  drivers/pinctrl/nxp/pinctrl-s32g2.c           |  25 +-
->  6 files changed, 707 insertions(+), 138 deletions(-)
->
+>         ipctl->pctl =3D devm_pinctrl_register(&pdev->dev, s32_pinctrl_des=
+c,
+>                                             ipctl);
 > --
 > 2.34.1
 >
