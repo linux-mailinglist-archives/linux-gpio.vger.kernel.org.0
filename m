@@ -1,33 +1,34 @@
-Return-Path: <linux-gpio+bounces-37140-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37141-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aJ1LLCdFDGrQcQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37140-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:10:31 +0200
+	id UI+tMTZFDGqLcgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37141-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:10:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3494957D3E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F3D857D3E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:10:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 83CA631556D8
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 10:38:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A11173202E85
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 10:39:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21353A9639;
-	Tue, 19 May 2026 10:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA513F074E;
+	Tue, 19 May 2026 10:38:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from twmbx01.aspeedtech.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F293A6418;
-	Tue, 19 May 2026 10:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62593A963C;
+	Tue, 19 May 2026 10:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779187111; cv=none; b=pOdy4P03TAhwztUALfIv3vIXUe1h0/3r/AF9idkAaUtoLvvUDA1MFwJx+eo24p/itlH/UMAyB4c9sZZGXuWXZ4wgfQijmqOfgjPKw0EOXZCZTlIMQmIFiT3mbsMKCQiwLZESyeVBVzee9euolAK0bjAaVIDH2A9WF1mk/N31Npc=
+	t=1779187113; cv=none; b=Li0jnQ9NDAMOYR6edJhU17DvCKAs5rctF1bLM4G7qgtcK2/Ntytjv9kTsnI/kV/4nKXdv/j8TZFMPotqUAUUfmL8ZbQDVoUPI4GGg7km7zFrlenFXXQZTbhvl65K8i0//hE8E2Y4zMstdv8W+KfPOinQj8BBIScT9DBSlroIqy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779187111; c=relaxed/simple;
-	bh=L1iLfDQrZwxvnw6/O3AJV6ahyxO2sv21yD4ZkfxrN4k=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=r+e8dua0kZXwv6nuyhRc3GPhXRH+vSD8H0dC01UQUHLrhFAgNCvjys7fmn4M0824dLPxODtbDCDhel6QlCly/bmZBxR0LBMN81SwBjF3UzR4Kujw1zhR/nE6xfQ7SXEN1MgrMlmt77dt7WsunmUcldjC4l5kaBZ+5d56+zms22s=
+	s=arc-20240116; t=1779187113; c=relaxed/simple;
+	bh=mifqQksma9lQEsIcCnr8yLdBewmIibN5Q3gHUJ1cct8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=UK3yt3QpPnjzEK9tddzAnsR0nNLUNgRteNNeYAHCn6NA/47qmRSAdjpnnxRvR1RSMCEopXqZUR6/uCxqgGsQ2V/2ugwunt8fUU8VkD52NgzsK3qZ5wC5e6riKeSed+TFnPTICFDvTGwayOS+O1Cx91R8qylEjT0jTpkS66R5Dn8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -39,9 +40,9 @@ Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
  (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
  Transport; Tue, 19 May 2026 18:38:20 +0800
 From: Billy Tsai <billy_tsai@aspeedtech.com>
-Subject: [PATCH v4 0/3] pinctrl: aspeed: Add AST2700 SoC1 support
-Date: Tue, 19 May 2026 18:38:11 +0800
-Message-ID: <20260519-pinctrl-single-bit-v4-0-5fe568a8ffde@aspeedtech.com>
+Date: Tue, 19 May 2026 18:38:12 +0800
+Subject: [PATCH v4 1/3] dt-bindings: mfd: aspeed,ast2x00-scu: Support
+ AST2700 SoC1 pinctrl
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,11 +51,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJQ9DGoC/23NTQqDMBCG4atI1k3JTPztqvcoXcQ40QGrkoi0F
- O/eVCgu6vL9YJ55i0CeKYhL8haeFg48DjHSUyJsZ4aWJDexBSrMFQLIiQc7+14GHtqeZM2zbAy
- CdliirTIRDydPjp8bervH7jjMo39tPxb4rj9OH3ELSCVtrhy6ulTk6qsJE1Ezk+3OdnyIr7ng7
- miVHzoYnaKqoLTO1HkKh47enQyyQ0dHh6qiMakGBJX+Oeu6fgAMHxhKSQEAAA==
-X-Change-ID: 20260211-pinctrl-single-bit-da213f282c95
+Message-ID: <20260519-pinctrl-single-bit-v4-1-5fe568a8ffde@aspeedtech.com>
+References: <20260519-pinctrl-single-bit-v4-0-5fe568a8ffde@aspeedtech.com>
+In-Reply-To: <20260519-pinctrl-single-bit-v4-0-5fe568a8ffde@aspeedtech.com>
 To: Linus Walleij <linusw@kernel.org>, Tony Lindgren <tony@atomide.com>, "Rob
  Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
  Dooley" <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
@@ -67,11 +66,11 @@ CC: <patrickw3@meta.com>, <linux-gpio@vger.kernel.org>,
 	<andrew@aj.id.au>, <linux-clk@vger.kernel.org>, Billy Tsai
 	<billy_tsai@aspeedtech.com>, Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779187100; l=5847;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779187100; l=1606;
  i=billy_tsai@aspeedtech.com; s=20251118; h=from:subject:message-id;
- bh=L1iLfDQrZwxvnw6/O3AJV6ahyxO2sv21yD4ZkfxrN4k=;
- b=yZ+Y7S6UBimAwm6wBTS+wu7ylZooUUWR9axObgWXnkPI/Jy4ScwWNWwQ/oxN2gtcn+HpJoFaY
- ms+njnXKTm3CoP/9uIqxvjO8JBWuxqkTALyd4RU0IwVRomo0NoCI+tE
+ bh=mifqQksma9lQEsIcCnr8yLdBewmIibN5Q3gHUJ1cct8=;
+ b=81ocsRhQYAvmkT3KwtcR61/d8wD183YFus7nUsSeqMKqfKevVDmSkDp61iFIdZifNB8CY41oR
+ 1GhkXwTOYgwDsDU0rLlyVbakX32gRzgi7w3t/AXl8KjkayyFDNe7pty
 X-Developer-Key: i=billy_tsai@aspeedtech.com; a=ed25519;
  pk=/A8qvgZ6CPfnwKgT6/+k+nvXOkN477MshEGJvVdzeeQ=
 X-Spamd-Result: default: False [1.54 / 15.00];
@@ -95,124 +94,51 @@ X-Spamd-Result: default: False [1.54 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37140-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37141-lists,linux-gpio=lfdr.de];
 	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[aspeedtech.com:mid,aspeedtech.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 3494957D3E1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,aspeedtech.com:mid,aspeedtech.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 4F3D857D3E8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Legacy ASPEED pin controllers have historically not had a coherent
-register interface. Control fields often had no consistent mapping to
-individual pins, and configuring a function frequently required
-coordinating multiple control bits across several registers. As a
-result, the existing ASPEED pinctrl drivers rely on complex macro
-infrastructure to describe the dependencies between pins, functions,
-and register fields.
+The AST2700 SoC integrates two interconnected SoC instances, each
+managed by its own System Control Unit (SCU).
 
-The pin controller for SoC1 in the AST2700 breaks from this legacy
-design.
+Allow the AST2700 SoC1 pin controller to be described as a child
+node of the SCU by extending the compatible strings accepted by
+the SCU binding.
 
-For SoC1, each pin maps directly to a dedicated function field in the
-SCU register space that determines the active mux function for that
-pin. This results in a much more regular register layout compared to
-previous generations.
+There is no functional change to the SCU binding beyond permitting
+the aspeed,ast2700-soc1-pinctrl compatible string.
 
-While the behaviour is conceptually similar to pinctrl-single, the
-register layout and configuration model differ enough that reusing
-pinctrl-single directly is not practical. Therefore this driver is
-implemented as a SoC-specific pinctrl driver using static data tables
-to describe the register layout.
-
-The binding reuses the standard pinmux and generic pin configuration
-schemas and does not introduce any custom Devicetree properties.
-
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
-Changes in v4:
-- Fix SGMII0 mux register: SGMII0's control bit is at SCU47C[0],
-  outside the contiguous pin-indexed MUX register range. Handle it as
-  a special case in set_mux (analogous to PCIERC2_PERST) using
-  field.mask = 0x1 to avoid clobbering adjacent bits in SCU47C.
-- Use devm_pinctrl_register_and_init() and pinctrl_enable(): populate
-  all groups and functions before enabling the controller, closing the
-  race window where a consumer could observe zero groups/functions.
-- pin_config_get: return -EINVAL when BIAS_DISABLE is not active; return
-  -ENOTSUPP for BIAS_PULL_UP and BIAS_PULL_DOWN because the hardware
-  has a single 1-bit enable/disable field per pin and pull direction
-  cannot be read back from the register.
-- Probe: preserve const qualification in the pinctrl_generic_add_group()
-  pin array cast.
-- Binding: retain additionalProperties: false for the state-node schema.
-  The state-node properties block re-declares the four pincfg properties
-  the hardware supports (bias-disable, bias-pull-up, bias-pull-down,
-  drive-strength) and intentionally rejects all others.
-  unevaluatedProperties: false was suggested as an alternative, but that
-  would permit the full set of pincfg-node.yaml properties
-  (input-schmitt-enable, slew-rate, etc.) even though the hardware does
-  not support them. additionalProperties: false is the correct mechanism
-  when the goal is to restrict the accepted properties to a known subset.
-- Link to v3: https://lore.kernel.org/r/20260515-pinctrl-single-bit-v3-0-e97da4312104@aspeedtech.com
+Note: The companion AST2700 SoC0 pinctrl series modifies the same
+binding and has been applied to pinctrl/for-next. Linus Walleij noted
+for the equivalent SoC0 MFD patch that it should be applied through the
+MFD tree by Lee Jones, providing an Acked-by in the process [1]. The
+same routing applies to this patch.
 
-Changes in v3:
-- Added pin configuration group support for AST2700 SoC1 by
-  implementing `pin_config_group_get()` and `pin_config_group_set()`.
-- Restricted AST2700 SoC1 `drive-strength` settings to the supported
-  4/8/12/16 mA values in the pinctrl driver.
-- Convert kernel-doc comment for aspeed_g7_soc1_drv_map to a regular
-  comment to avoid kernel-doc warning reported by kernel test robot.
-- Update the AST2700 SoC1 pinctrl binding to describe the `reg`
-  property and require it.
-- Allow standard pinconf properties in pin state nodes.
-- Add a binding example for the AST2700 SoC1 pinctrl node.
-- Add state-node description, function+groups dependency constraint,
-  and oneOf groups/pins constraint to the binding, matching the SoC0
-  binding style.
-- Add pins enum (212 entries) to the binding to cover all physical pins
-  that support per-pin configuration.
-- Add UART modem-line signals as independent functions/groups:
-  NCTS0/1/5/6, NDCD0/1/5/6, NDSR0/1/5/6, NDTR0/1/5/6,
-  NRI0/1/5/6, NRTS0/1/5/6; remove those pins from UART0/1/5/6 groups.
-- Add LTPI_PS_I2C0/1/2/3 functions/groups for I2C-over-LTPI;
-  extend I2C0/1/2/3 functions with the new LTPI groups.
-- Fix typo: rename RMII0RCKO/RMII1RCKO to RMII0RCLKO/RMII1RCLKO.
-- Fix wrong index: rename DSGPM1 to DSGPM0.
-- Kconfig: use "Aspeed G7 SoC1 pin control" to match neighbouring entries.
-- pin_config_get: fix BIAS_DISABLE readback (val=!val must be skipped
-  for BIAS_DISABLE since hardware bit=1 means pull disabled).
-- set_mux: remove dead null check on grp; propagate regmap_update_bits()
-  return value.
-- gpio_request_enable: propagate regmap_update_bits() return value.
-- Link to v2: https://lore.kernel.org/r/20260306-pinctrl-single-bit-v2-0-79918cfab641@aspeedtech.com
-
-Changes in v2:
-- Updated the series title to focus on AST2700 SoC1 support.
-- Reworked implementation to use static SoC-specific layout tables
-  instead of a generic packed-field model.
-- Dropped the generic "pinctrl-packed" driver approach.
-- Removed custom Devicetree properties.
-- Updated binding to reuse standard pinmux and generic pin
-  configuration schemas.
-- Link to v1: https://lore.kernel.org/r/20260213-pinctrl-single-bit-v1-0-c60f2fb80efb@aspeedtech.com
-
+[1] https://lore.kernel.org/all/CAD++jL=3p9BvDgaot3=emM4Zn5jU-ZAUKtB4UwT1HzDiyzKq4Q@mail.gmail.com/
 ---
-Billy Tsai (3):
-      dt-bindings: mfd: aspeed,ast2x00-scu: Support AST2700 SoC1 pinctrl
-      dt-bindings: pinctrl: Add aspeed,ast2700-soc1-pinctrl
-      pinctrl: aspeed: Add AST2700 SoC1 support
+ Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../bindings/mfd/aspeed,ast2x00-scu.yaml           |    1 +
- .../pinctrl/aspeed,ast2700-soc1-pinctrl.yaml       |  760 +++++++++
- drivers/pinctrl/aspeed/Kconfig                     |   14 +
- drivers/pinctrl/aspeed/Makefile                    |    1 +
- drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c    | 1754 ++++++++++++++++++++
- 5 files changed, 2530 insertions(+)
----
-base-commit: e532a5a81d0db872acd2c0a92d2639580ca3da44
-change-id: 20260211-pinctrl-single-bit-da213f282c95
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+index a87f31fce019..b81c561d2a8c 100644
+--- a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
++++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+@@ -87,6 +87,7 @@ patternProperties:
+             - aspeed,ast2400-pinctrl
+             - aspeed,ast2500-pinctrl
+             - aspeed,ast2600-pinctrl
++            - aspeed,ast2700-soc1-pinctrl
+ 
+     required:
+       - compatible
 
-Best regards,
 -- 
-Billy Tsai <billy_tsai@aspeedtech.com>
+2.34.1
 
 
