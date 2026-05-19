@@ -1,59 +1,61 @@
-Return-Path: <linux-gpio+bounces-37109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wNyfHaHaC2rRPQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37109-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:36:01 +0200
+	id gAkJOzvbC2ryPQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37110-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:38:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CA78576DA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53595576DDD
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 05:38:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9DAF7306B345
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 03:33:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B2F2C30427D1
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 03:36:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 475B62C15A5;
-	Tue, 19 May 2026 03:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFAD02DAFCC;
+	Tue, 19 May 2026 03:36:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZXeng8L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiKVIS8w"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063162C21C5;
-	Tue, 19 May 2026 03:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5162D47E9;
+	Tue, 19 May 2026 03:36:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779161596; cv=none; b=bErIy5IebC7cxd6XbXVjcloVxQoY53PII44YFyTGLGP1FS6kmKXjB7HhnyHG4gA/Rm5+e76lUMvBQnHcWD1XIuU4BX02VFVQzjHDtTik2Jw0PNaizvZUamkzCF2Au9zeka306RALVZ7dHdCWNJcyq047bdAg0XbvVwE2HcIkHVw=
+	t=1779161767; cv=none; b=gPnfv62XO0fErDa0crhb7nXHD6eeM3VGsRq9GpVs2nACzBtuDYq65nOuKe9HWQUtRwpoHMX6+2zScTGp46ZSs4b8KQV82zGUGmacE65echGIvFOA2LgPPVIQdGM/67W35B/Izld3bI9mMVjgztXQUX4Cnpu4DyLaB7V6c9ueSJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779161596; c=relaxed/simple;
-	bh=nNGLrblv0/b7AOEWkQKCScnySMIYkQZmQcO2r2Am1pg=;
+	s=arc-20240116; t=1779161767; c=relaxed/simple;
+	bh=9wUT23wJRSWBAy7V49IVwor34TwuZpIjPh5K+j8ijq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5iaX08hHW2wjazmCjUJrl79iIBZJv3CRM9qbo6F0oldjk29XsYFoY25WbR3iG7DA+/QcVT2P0wTxnVYhvIaBvz+/ZAJjVcTa+7evmefm6zVUdM5AbvKNnAxj0vKEeYcq1qNvzo7rht+AeRqIi8kK0ybvQr7bbKbuCrXAonJ/AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZXeng8L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C84DC2BCC7;
-	Tue, 19 May 2026 03:33:13 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5rKwm2ZWXDdxQTCcjs+m+i5kKHTI9vK0pcdRyLFz1UfdNNGlCcuw79t4BqkUMLsCf+gv6HxakDgY5t1lFn39d5dN5tU0kaFMRuhZodBhbWzfrOymYbUp5LN9aJu6SFpIbKpG/+wNmVGLTVDPshYOYsyKm6owV2jytzOKOsZ2A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiKVIS8w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F2AAC2BCB3;
+	Tue, 19 May 2026 03:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779161593;
-	bh=nNGLrblv0/b7AOEWkQKCScnySMIYkQZmQcO2r2Am1pg=;
+	s=k20201202; t=1779161767;
+	bh=9wUT23wJRSWBAy7V49IVwor34TwuZpIjPh5K+j8ijq4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dZXeng8LpbnwJ5sUDiKNrFv7Xpl0bw0de59RFGpioSQPwCtHhvAmKzhLoC9592tj6
-	 aGGHVfqzt2QMSkyl95bVvn43y4NnUFaQarKl9B4PxCooh4YWuX3+iWbxzRErfIsdGs
-	 nAc+oEF9L13q8IGWN4Yn3mikxp6zkgj2QLvieUKCEb+zopUlOaltsnMn8hAIncd18s
-	 qmecxdqko9sY/D6cMh9Jb+Fl2SoJm3cMAtv76mBrU+jwvhVdzIx3oCFbAVGOm6uiOT
-	 +WRw9TeSZcASoQV95tqFz6aVpJjL/fdAVrwNixuAiMJAgz483BbqOXO1N282+E1ng1
-	 ZuLdOxzdq0pjw==
-Date: Mon, 18 May 2026 22:33:10 -0500
+	b=PiKVIS8wLRB18sksYpfRX3It4h4TEMc+BqFKb+DkibU0mMJmeaaJaDfz4hu5Z3QPp
+	 8wE04z2yn/z5QMEYtne9uTXqQ/qNSI6J0nmNSK5msKru7sFZ2wFTCtdaVc7QWN8dzf
+	 MDFni9FiKgB8JHUK2mOLuy89rQLFH/b6r0yzfLmdk5nU9jU472SSQvuDaqRY5x7crG
+	 fR386/ue/K9GSgRXMSUOnqonEFRZjgwom+ARcT0s4bVYmwe+idxly7RmI9pl3Dz+6h
+	 g4jt9jf3VfIZpC7qMvRzYS2pLtGDK/A9lKKq1Dd3QR8MzLAlmqBg4T1ps1rvx8YJrq
+	 83lzvCwAaUF7g==
+Date: Mon, 18 May 2026 22:36:03 -0500
 From: Bjorn Andersson <andersson@kernel.org>
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Cc: Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: Replace open coded eoi call with
- irq_chip_eoi_parent()
-Message-ID: <agvXluPCLIQlq267@baldur>
-References: <20260514-pinctrl_msm_irq_eoi-v1-1-2d152f8695f8@oss.qualcomm.com>
- <agvW8hetKSsPAXgv@baldur>
+To: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexander Koskovich <akoskovich@pm.me>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] pinctrl: qcom: eliza: Merge QUP1_SE4 lane
+ functions
+Message-ID: <agvaboztafz63P2y@baldur>
+References: <20260515-eliza-tlmm-group-qup1-se4-lanes-v2-0-ebb630de0dcf@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +64,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <agvW8hetKSsPAXgv@baldur>
+In-Reply-To: <20260515-eliza-tlmm-group-qup1-se4-lanes-v2-0-ebb630de0dcf@oss.qualcomm.com>
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
@@ -74,92 +76,67 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37109-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37110-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email]
-X-Rspamd-Queue-Id: 0CA78576DA5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,msgid.link:url]
+X-Rspamd-Queue-Id: 53595576DDD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 18, 2026 at 10:20:55PM -0500, Bjorn Andersson wrote:
-> On Thu, May 14, 2026 at 02:08:25PM +0530, Maulik Shah wrote:
-> > Replace open coded eoi call to parent irqchip with irq_chip_eoi_parent().
-> > 
-> > No functional impact.
-> > 
+On Fri, May 15, 2026 at 02:21:50PM +0300, Abel Vesa wrote:
+> QUP1_SE4 uses GPIO36 and GPIO37 for two selectable lane pairs.
+> Splitting into function per lane works, but it forces the devicetree to
+> describe a state per pin while these are usually configured in pairs.
 > 
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+> Follow the pair-wise scheme used on Qualcomm Hawi platform and expose
+> the two selectable pairs as qup1_se4_01 and qup1_se4_23 in both the
+> binding and the driver.
 > 
 
-On second though, I'm not sure I want to r-b this patch.
+Given how fresh this binding is, I think it's okay to make the change.
 
-The commit message explains the action of the patch, not the reasons for
-the patch. From the description I inferred that irq_chip_eoi_parent()
-does implement what is open coded here, and a quick glance confirms
-that.
-
-I'm guessing that irq_chip_eoi_parent() didn't exist when
-msm_gpio_irq_eoi() was written? Or was it not used for some reason?
-
-> Regards,
-> Bjorn
-> 
-> > Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index 45b3a2763eb8..6771f5eb29e4 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -1012,10 +1012,8 @@ static void msm_gpio_irq_ack(struct irq_data *d)
-> >  
-> >  static void msm_gpio_irq_eoi(struct irq_data *d)
-> >  {
-> > -	d = d->parent_data;
-> > -
-> > -	if (d)
-> > -		d->chip->irq_eoi(d);
-> > +	if (d->parent_data)
-
-"I know that irq_chip_eoi_parent() will peak into d->parent_data, so
-let's peek into the object first to avoid it dereferencing a NULL
-pointer".
-
-I see one other caller to irq_chip_eoi_parent() doing this, most
-everyone else just register irq_chip_eoi_parent directly in the ops
-struct.
-
-Are we doing it right?
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
 Regards,
 Bjorn
 
-> > +		irq_chip_eoi_parent(d);
-> >  }
-> >  
-> >  static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
-> > 
-> > ---
-> > base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
-> > change-id: 20260514-pinctrl_msm_irq_eoi-ab736e16d411
-> > 
-> > Best regards,
-> > --  
-> > Maulik Shah <maulik.shah@oss.qualcomm.com>
-> > 
+> This has been proposed here:
+> https://lore.kernel.org/all/agIZOAa6nYSb5PWX@baldur/
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
+> ---
+> Changes in v2:
+> - Explicitly mentioned "per-lane qup1_se4_l[0-3] names" in the
+>   bindings commit message, as Krzysztof suggested.
+> - Picked up Krzysztof's A-b tag for the bindings patch.
+> - Link to v1: https://patch.msgid.link/20260513-eliza-tlmm-group-qup1-se4-lanes-v1-0-1babc6118829@oss.qualcomm.com
+> 
+> ---
+> Abel Vesa (2):
+>       dt-bindings: pinctrl: qcom,eliza-tlmm: Merge QUP1_SE4 lane functions
+>       pinctrl: qcom: eliza: Merge QUP1_SE4 lanes in groups
+> 
+>  .../bindings/pinctrl/qcom,eliza-tlmm.yaml          |  4 +--
+>  drivers/pinctrl/qcom/pinctrl-eliza.c               | 32 +++++++---------------
+>  2 files changed, 12 insertions(+), 24 deletions(-)
+> ---
+> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
+> change-id: 20260513-eliza-tlmm-group-qup1-se4-lanes-2861e6928685
+> 
+> Best regards,
+> --  
+> Abel Vesa <abel.vesa@oss.qualcomm.com>
 > 
 
