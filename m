@@ -1,55 +1,101 @@
-Return-Path: <linux-gpio+bounces-37152-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37153-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AJvuFvFWDGodfwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37152-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 14:26:25 +0200
+	id MM2XFaxiDGpXggUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37153-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 15:16:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDEDF57EA63
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 14:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ADBAE57F67E
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 15:16:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 58C683059E19
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 12:20:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C55C2303258F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 13:15:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107B84DC549;
-	Tue, 19 May 2026 12:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F15F4BC014;
+	Tue, 19 May 2026 13:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0MVaVz4"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HCW+IkFt";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Vk3C6X7h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7804F4DB559;
-	Tue, 19 May 2026 12:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA843BCD1E
+	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 13:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779193242; cv=none; b=oV3rC9yTvcbWc/RGEhtJbFEjDDe/mIssI2AvJv0euGwoNJXrKq/l0eHAqFPazG5P5DHfE5uNkFWdaSovC3N9wCbHIoPpAAAeMgu0qDoNwLpFDMvaFGf+M8Nc/ruJM8AYBmRZWXJuvUNt5GUtXN0zQrhKYHqVP7EVtk2DXJkEdyg=
+	t=1779196510; cv=none; b=O7Lu7HDymUWkiVV/zWVB8+dneMixAwjAsmuDXFjkseo4W1r5lBaeVpIuZuvWv+Qukhuh3ubXXxAjUVA9jwsDDPbg0WmnaIAHKtc48Oh3cHRGsIumOKJVDggedz1o5dMPvsQwqMHcTc5LATBRTUFaEcOvLFIV577Ls8WDL8iX6fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779193242; c=relaxed/simple;
-	bh=SPfamFp3YZ8OchMonJrLDO7yU7xsNqbzcTrUfCuqmDA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DfonpHLKT03BzzdhS39lI26bkAOhItjtEF5cmsM4wP87U0LwiyjuOtDFGbZqGQHk9oXnBlEDtP3M8s1s+aenzoGAdirjN8MnD/V7QpSvjcu0KVVLFRBrytdr3Q5drV75b1/V/bYvoBSFSfPWgs1rNoniHWW5qjhk0irxDoYQlFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0MVaVz4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E672C2BD01;
-	Tue, 19 May 2026 12:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779193242;
-	bh=SPfamFp3YZ8OchMonJrLDO7yU7xsNqbzcTrUfCuqmDA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=c0MVaVz4ggX5PiunyqcOJeQHPRCxtobnZsiwwAujU+h6ARSuZrQ2OC8c1Q92sydwN
-	 dlIhJy5Pl5wzOj8nBrwG/owT3M8V1nPgH/GNq2PBq1E0p7mDON6ilnnIclY8YzfpvP
-	 kNMP23cE9VJL3AD5MLoClqYERHDd3hfRn9gY83xEcDyqGp8B5uQLe/QqVhVfr6sSp3
-	 vJHSHY9ePxTBohSj6UPqoF7P99es5/jCX0RQTLQjLIY2TZAtXsi7tsWXSkxCgZjlKJ
-	 ypjYxCtOsiCapoNYTwELUs7qEL3lkIFTDtezT0iaC4LqmfSlFvQTcKKA6Uji//x+SW
-	 poHSQubMfaNjA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C5DCD4F5B;
-	Tue, 19 May 2026 12:20:42 +0000 (UTC)
-From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Date: Tue, 19 May 2026 15:20:27 +0300
-Subject: [PATCH v12 6/6] docs: iio: adc: ad4691: add driver documentation
+	s=arc-20240116; t=1779196510; c=relaxed/simple;
+	bh=YKWiZfPkIobtCo4vzcMMJlDElecXhx5I2N7ZmTnWs2w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CFZp+j809MP1cL9qokJySue4CEGJqnWzhqZBWr3ZfyiEk5zSBqAAfXT6vFm09fpAExSK8n9GAu42zO6RcltNkDY+p/mbeM/qrLlSLGetMJmHOX3d08H0eU5vJkKwZ05K92a2irzs8wVQFssHUIIte0KVVTbG19g07vQEJF0Hh78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HCW+IkFt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Vk3C6X7h; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64JCZnGM1395953
+	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 13:15:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=rcENiQasZV2cGHWd5fnBp8
+	yb558lW/33ZGqtPWbcmSU=; b=HCW+IkFtCOzGSPEH6H16/F89S/NQmNLNzazCiv
+	1Mlkq6oYHpd+hDGCYWbVFREw3lDZjRDE6Th2pryAhACD36ymykTzy4KmucKAJpnj
+	B+LYwFpFkdaSfGkCiPjkCDpgjleyRbluAQhsUaXxtfAkk/QmzICW0wAKPidtSKx3
+	jRBRINsMQsMW59Tpf6UPosQVH3iTXrtMYXxyjAwxHvlYrQJOu2u04Yw9fULlR09Q
+	I9o1FSdceuN8MkNzlynjuEaDDTpFK5rswASwjLQlsCXZqPsL4BN8sPVipLchqwh1
+	HsUCYHWIxWD75RNWDga8Kyx7xZQXHV854pMWXJI9JePcuODQ==
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com [209.85.221.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e8r0q04tp-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 13:15:06 +0000 (GMT)
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-57525c1ed46so2450739e0c.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 06:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1779196506; x=1779801306; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rcENiQasZV2cGHWd5fnBp8yb558lW/33ZGqtPWbcmSU=;
+        b=Vk3C6X7hIqExIgtklHgC3DQn8PBglSpgH2iKUTiY/4TMkOMHZiaDLAuCPbc1JER76T
+         lbtPV3lR9WFUiGJoBnx/2E7RkPW8LALZr+AFG4qTdcqQ8WfAE3Zqju1v45rUDKYpd/qE
+         qBKssuO7vUKoKKQMWzCu3Yc8a8pXQjOQRM1VOzl2zIwbLWbEpMst+sdWkLOn53kaRj/I
+         XfI6mHj9kudBYX6UK5q4CEVR7wwvy07uHXJ3H79zAKYs/mgyGZvWmt0EXkX+hn83yzZY
+         mm+f9gHogdeK8De0dmvhEhv7KNb+qfgfL7WThOlwe4w57V1+ybHzjegpDgqDGpi6zO/U
+         2q1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779196506; x=1779801306;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rcENiQasZV2cGHWd5fnBp8yb558lW/33ZGqtPWbcmSU=;
+        b=e3GeeD97hGLiEbZeAvSHKCimmtqkxYgXLSFdEy2QiOqL9JW3ZqnSedn//LbWVG9mVd
+         Gr5AFCP3nFXi9tvCGA5uM9mZzrjqTfBcF+vpTqTnVL9TTYrF1nUUmzc0v+Kg6GSWXO3f
+         IiPHF2qbyBs9y7zcnT3rsnOz5HfazXvNC7oVmIkyVYHZpb+xKTWyRgdkqZoIFz4+SB00
+         /dKNVgQUVMASCdiLPyub8o8U50vr4+HUsLaBVz0C79XoMFnSAQv1rSliBGT8nti1fkPG
+         2UZWvxW/Ue60x4kP4Rz1/sTB/y7sHKjkrvRzZ6cFIi8W2cMYSN4QIgT3eGaqe1arvGgN
+         dJxw==
+X-Gm-Message-State: AOJu0YymhQ5EGMXBr351FGT5moX9FlIDaye0BbKpoyZ81dA9xpKN1Ujz
+	RzfOnqJ2lJpkRidCTJdCRT1AXkDmxzVcimm5m2Q9x1aUJuBRJgc/I3lQxUySGOdu8rTBc8J5Ng3
+	6OgLXMJd2xCDZLGwOV9KdP8Nv0j05aF0F85ffgvtcXOuF/TJExluK6vplDZG65xVIpYEln2A/
+X-Gm-Gg: Acq92OGNNmKdLCYagr0X7PTyJKicB6SWoZsUECFOqj7ectFbhwQttIIuiCkcSPu/RQ4
+	jRic5pGy6mSfQhUSJQ7eoOjpYCZX/uZvJSUqOiROveNUApHXNTWy7lW0FAfsLBJPUpupwcYwBFQ
+	XcQ2RwLUhLOQFHdzMLazKGZ9SGg/eS98sePcsfjofK9vu2tw3CfhLhs/I2xM2mD0oHBWtWo/Eub
+	f2g6DhQ7IoFOiePxlP0gspEQ3C5b+ECdnPgssPHHUBA37FSG5QRPINsRdJ937jrTw8jDFt8h/KN
+	pHuh8akHgzIX2GFS0iFrpGN+L4axG10qSYCSGkYeNAqaAi0iBEe1t478ZcXsfELzvmvlpauKJmV
+	f6XyCKItYeZpb50D6GIcHTKZBSbyvkFbqaG2id7h3oUbmQsk40uA=
+X-Received: by 2002:a05:6122:9003:b0:56f:6cc0:681e with SMTP id 71dfb90a1353d-5760be3bf38mr10738326e0c.1.1779196505812;
+        Tue, 19 May 2026 06:15:05 -0700 (PDT)
+X-Received: by 2002:a05:6122:9003:b0:56f:6cc0:681e with SMTP id 71dfb90a1353d-5760be3bf38mr10738257e0c.1.1779196505400;
+        Tue, 19 May 2026 06:15:05 -0700 (PDT)
+Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:3fb6:74e3:3c25:ba2f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9ec3acf7sm45735877f8f.12.2026.05.19.06.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 06:15:04 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Date: Tue, 19 May 2026 15:14:53 +0200
+Subject: [PATCH] gpio: cdev: check if padding of uAPI v2 line config
+ attributes is zeroed
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,343 +103,129 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260519-ad4692-multichannel-sar-adc-driver-v12-6-5b335162aa51@analog.com>
-References: <20260519-ad4692-multichannel-sar-adc-driver-v12-0-5b335162aa51@analog.com>
-In-Reply-To: <20260519-ad4692-multichannel-sar-adc-driver-v12-0-5b335162aa51@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
- Radu Sabau <radu.sabau@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779193239; l=10118;
- i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
- bh=ziKrV/hpGVkRKcYXOfs3HQoVIa+3tfQmISbmKkj1m1g=;
- b=tedYBSfrAytfjH5TvAfYi+HZzuI5aj+KZ4LnUJGnd+vV2GhVbTjr81lG7PSQ2J5iRKWpo7Kwe
- v4uVg9iIOKABCnK7trpYVJQeDjlFfi0T3a+aCAMg9sVkC6TG1DlQEpH
-X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
- pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
-X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
- auth_id=642
-X-Original-From: Radu Sabau <radu.sabau@analog.com>
-Reply-To: radu.sabau@analog.com
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260519-gpio-cdev-attr-padding-check-v1-1-a0c6d4a698bf@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAE1iDGoC/x3MQQqDMBAF0KvIrB3QFGvtVaSLMPONQyGGRKQg3
+ r3B5du8kwqyodC7OSnjsGJbrOjbhmT1MYBNq8l17tkN/cQh2caiONjve+bkVS0GlhXy5RGDk+n
+ lH4qRapEyFvvd/fy5rj+u8IExbgAAAA==
+X-Change-ID: 20260519-gpio-cdev-attr-padding-check-7e52c98a3de7
+To: Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1586;
+ i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
+ bh=YKWiZfPkIobtCo4vzcMMJlDElecXhx5I2N7ZmTnWs2w=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqDGJTOhXl9t8usm+c4OipLzLoAndtW1HhfCBcN
+ 3iKWH9ELgqJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCagxiUwAKCRAFnS7L/zaE
+ w9gRD/9d31ecsIbvCb8S39qujE8NvxwuDxbBB1A6QjLMQr85JG287rLBm3T2fLqgkiE9WH9gRWn
+ 5bXjBDYURyhsUAlPyrckgNwFSIQ6PBS6+lsmp+5CLnIpnro6y6MruhNDvjcdphDR6xad6z7C/3e
+ DJs7vkJP83cQkPZ5+Zu21NN8uNl07Itfw76e7bCULYUishRt+nxsHGh0r5e/GymSXTWEhnPdUNr
+ NzBWzIXXeQasxfTPDVQTFMPw14ePz/KflBR1rzbybDAa5S+gB05is/R9/bG6ibIX2vQRRAZOvU6
+ lUuDdY5dJoxifgc/r9f9FhWrjtMb68IUI5fBQVUPlqBKWfV6dJXYegy+0umaxACN11BpCLtasrf
+ TztptEu6AxTVC8u54uch4DQ2HuSn3/sDwAoqmCgRvPAv0ECax1JsaMDv7bBsSVL3A0tJdkLPluL
+ g7UyuhvENlfL2j7NoIEZuM5K2fXaiBLozCL+dCRMeukoOSeA/ZaE+S+qu6cvfELqtF+fHbGHqri
+ OdBtfb7K9Uwv/EUBnhXTHRdzPZYFLOIZ2C9t++lgX/074AzsrRoOUXrb8bdK8yVggHLuDdE/8XN
+ WbvNjn+6UHqmggDLs46UYi+FIhP0K+QJPCyi1/fFry50gr8id+5CMdp/QPQEYkK63e9Mwi0ElC9
+ I7k/T6gew86SVxg==
+X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE5MDEzMSBTYWx0ZWRfX8RoTuqqZnNnG
+ 6h1BjRWWgE6gMi77RYbYlXj+HxG1JQXhHa8eB9caJM1WsFfPcXjWqLOyxVs+0uHeTee+yJoMw9n
+ M7jhimEi5ZRZErluVmGliNZUuZns3KuEHBVCZZ0T9TWvvS5F8YeEic8cS/eZvO0pShmjLnM0cdJ
+ kitdMZy8aiEK2JF+Ms3uthAZQdrVyD8fpJX6jZXNC5jscq/0/guV74pfI6NTxLPGjw1B7CxqeCx
+ RCxGAatR7a6YAgzM75vV1LQA8f7vr97QJoVeeDM4vfl/6VT0yWSSOcVOTrPxuvPOcdgLpo141yG
+ oB172Vovlx8016grBwo221y/4WFvTy+bFQ98pjZlAdqWTrKXOzI5sBqj39xt4zNWsjx2HaJsBnW
+ yOIkGloipR2EicJeDNHa03Pc0QJxMpcyY/qLMQB58GzVtYRnxmJyC3FCq2vu5e6FQlair6zWPvg
+ 1ZuVy6r+BWLHZt2MNiA==
+X-Proofpoint-GUID: LhDZhZeJLuQAYNPx9zzvHLzN2fIurDaa
+X-Authority-Analysis: v=2.4 cv=Q6/iJY2a c=1 sm=1 tr=0 ts=6a0c625a cx=c_pps
+ a=+D9SDfe9YZWTjADjLiQY5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22 a=EUspDBNiAAAA:8
+ a=BL_IfG5vSrN7on1ht2cA:9 a=QEXdDO2ut3YA:10 a=vmgOmaN-Xu0dpDh8OwbV:22
+X-Proofpoint-ORIG-GUID: LhDZhZeJLuQAYNPx9zzvHLzN2fIurDaa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-19_03,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 clxscore=1015 spamscore=0
+ phishscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605190131
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-37153-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37152-lists,linux-gpio=lfdr.de,radu.sabau.analog.com];
-	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,qualcomm.com:dkim];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,0.0.0.0:email,analog.com:url,analog.com:replyto,analog.com:mid,analog.com:email]
-X-Rspamd-Queue-Id: EDEDF57EA63
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: ADBAE57F67E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Radu Sabau <radu.sabau@analog.com>
+We check the padding of other uAPI v2 structures but not that of line
+config attributes. Add the missing check.
 
-Add RST documentation for the AD4691 family ADC driver covering
-supported devices, IIO channels, operating modes, oversampling,
-reference voltage, LDO supply, reset, GP pins, SPI offload support,
-and buffer data format.
-
-Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- Documentation/iio/ad4691.rst | 226 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst  |   1 +
- MAINTAINERS                  |   1 +
- 3 files changed, 228 insertions(+)
+ drivers/gpio/gpiolib-cdev.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/iio/ad4691.rst b/Documentation/iio/ad4691.rst
-new file mode 100644
-index 000000000000..5ec77846e317
---- /dev/null
-+++ b/Documentation/iio/ad4691.rst
-@@ -0,0 +1,226 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=============
-+AD4691 driver
-+=============
-+
-+ADC driver for Analog Devices Inc. AD4691 family of multichannel SAR ADCs.
-+The module name is ``ad4691``.
-+
-+
-+Supported devices
-+=================
-+
-+The following chips are supported by this driver:
-+
-+* `AD4691 <https://www.analog.com/en/products/ad4691.html>`_ — 16-channel, 500 kSPS
-+* `AD4692 <https://www.analog.com/en/products/ad4692.html>`_ — 16-channel, 1 MSPS
-+* `AD4693 <https://www.analog.com/en/products/ad4693.html>`_ — 8-channel, 500 kSPS
-+* `AD4694 <https://www.analog.com/en/products/ad4694.html>`_ — 8-channel, 1 MSPS
-+
-+
-+IIO channels
-+============
-+
-+Each physical ADC input maps to one IIO voltage channel. The AD4691 and AD4692
-+expose 16 channels (``voltage0`` through ``voltage15``); the AD4693 and AD4694
-+expose 8 channels (``voltage0`` through ``voltage7``).
-+
-+All channels share a common scale (``in_voltage_scale``), derived from the
-+reference voltage. Each channel independently exposes:
-+
-+* ``in_voltageN_raw`` — single-shot ADC result
-+* ``in_voltageN_sampling_frequency`` — per-channel effective output rate,
-+  defined as the internal oscillator frequency divided by the channel's
-+  oversampling ratio. Writing this attribute selects the nearest achievable
-+  rate for the current OSR; the value read back reflects the actual rate after
-+  snapping to the closest valid oscillator entry.
-+* ``in_voltageN_sampling_frequency_available`` — list of achievable effective
-+  rates for the channel's current oversampling ratio. The list updates
-+  dynamically when the oversampling ratio changes.
-+
-+The following attributes are only available in CNV Burst Mode:
-+
-+* ``in_voltageN_oversampling_ratio`` — per-channel hardware oversampling depth;
-+  see `Oversampling`_ below.
-+* ``in_voltageN_oversampling_ratio_available`` — valid ratios: 1, 2, 4, 8, 16,
-+  32.
-+
-+
-+Operating modes
-+===============
-+
-+The driver supports two operating modes, selected automatically from the
-+device tree at probe time.
-+
-+Manual Mode
-+-----------
-+
-+Selected when no ``pwms`` property is present in the device tree. The CNV pin
-+is tied to the SPI chip-select: every CS assertion triggers a conversion and
-+returns the previous result. A user-defined IIO trigger (e.g. hrtimer trigger)
-+drives the buffer.
-+
-+Oversampling is not supported in Manual Mode.
-+
-+CNV Burst Mode
-+--------------
-+
-+Selected when a ``pwms`` property is present in the device tree. A PWM drives
-+the CNV pin at the configured conversion rate. A GP pin wired to the SoC and
-+declared in the device tree signals DATA_READY at the end of each burst,
-+triggering a readout of all active channel results into the IIO buffer.
-+
-+The buffer output rate is controlled by the ``sampling_frequency`` attribute
-+on the IIO buffer. In practice the PWM rate should be set low enough to allow
-+the SPI readout to complete before the next conversion burst begins.
-+
-+Autonomous Mode (idle / single-shot)
-+-------------------------------------
-+
-+When the IIO buffer is disabled, ``in_voltageN_raw`` reads perform a single
-+conversion on the requested channel using the internal oscillator. The
-+oscillator is started and stopped around each read to save power.
-+
-+
-+Oversampling
-+============
-+
-+In CNV Burst Mode each channel has an independent hardware accumulator that
-+averages a configurable number of successive conversions. The result is always
-+a 16-bit mean, so the buffer data type (shown in ``buffer0/in_voltageN_type``)
-+is unaffected by the oversampling ratio. Valid ratios are 1, 2, 4, 8, 16 and
-+32; the default is 1 (no averaging). Oversampling is not supported in Manual
-+Mode.
-+
-+.. code-block:: bash
-+
-+    # Set oversampling ratio to 16 on channel 0
-+    echo 16 > /sys/bus/iio/devices/iio:device0/in_voltage0_oversampling_ratio
-+
-+    # Read the resulting effective sampling frequency
-+    cat /sys/bus/iio/devices/iio:device0/in_voltage0_sampling_frequency
-+
-+Writing ``oversampling_ratio`` stores the new depth for that channel and
-+snaps the internal oscillator to the largest valid table entry that is both
-+less than or equal to ``old_effective_rate × new_osr`` and evenly divisible
-+by ``new_osr``. This preserves an integer read-back of
-+``in_voltageN_sampling_frequency`` after the change and keeps the oscillator
-+as close as possible to the previous effective rate.
-+
-+All channels share one internal oscillator. Writing ``sampling_frequency`` for
-+any channel updates the oscillator and therefore affects the effective rate
-+read back from all other channels.
-+
-+
-+Reference voltage
-+=================
-+
-+The driver supports two reference configurations, mutually exclusive:
-+
-+* **External reference** (``ref-supply``): a voltage between 2.4 V and 5.25 V
-+  supplied externally.
-+* **Buffered internal reference** (``refin-supply``): an internal reference
-+  buffer is enabled by the driver.
-+
-+Exactly one of ``ref-supply`` or ``refin-supply`` must be present in the
-+device tree. The reference voltage determines the full-scale range reported
-+via ``in_voltage_scale``.
-+
-+
-+LDO supply
-+==========
-+
-+The chip contains an internal LDO that powers part of the analog front-end.
-+The supply configuration is mutually exclusive:
-+
-+* **External VDD** (``vdd-supply``): an external 1.8 V supply is used directly;
-+  the internal LDO is disabled.
-+* **Internal LDO** (``ldo-in-supply``): the internal LDO is enabled and fed
-+  from the ``ldo-in`` regulator. Use this when no external 1.8 V VDD is present.
-+
-+Exactly one of ``vdd-supply`` or ``ldo-in-supply`` must be provided.
-+
-+
-+Reset
-+=====
-+
-+The driver supports two reset mechanisms:
-+
-+* **Hardware reset** (``reset-gpios`` in device tree): the GPIO line is
-+  asserted for at least 300 µs then deasserted at probe.
-+* **Software reset** (fallback when ``reset-gpios`` is absent): written
-+  automatically at probe.
-+
-+
-+GP pins and interrupts
-+======================
-+
-+The chip exposes up to four general-purpose (GP) pins. In CNV Burst Mode
-+(non-offload), one GP pin must be wired to an interrupt-capable SoC input and
-+declared in the device tree using the ``interrupts`` and ``interrupt-names``
-+properties. The ``interrupt-names`` value identifies which GP pin is used
-+(``"gp0"`` through ``"gp3"``).
-+
-+Example device tree fragment::
-+
-+    adc@0 {
-+        compatible = "adi,ad4692";
-+        ...
-+        interrupt-parent = <&gpio0>;
-+        interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "gp0";
-+    };
-+
-+
-+SPI offload support
-+===================
-+
-+When a SPI offload engine (e.g. the AXI SPI Engine) is present, the driver
-+uses DMA-backed transfers for CPU-independent, high-throughput data capture.
-+SPI offload is detected automatically at probe; if no offload hardware is
-+available the driver falls back to the software triggered-buffer path.
-+
-+Two SPI offload sub-modes exist:
-+
-+CNV Burst offload
-+-----------------
-+
-+Used when a ``pwms`` property is present and SPI offload is available. The PWM
-+drives CNV at the configured rate; on DATA_READY the offload engine reads all
-+active channel results and streams them directly to the IIO DMA buffer with no
-+CPU involvement. The GP pin used as DATA_READY trigger is supplied by the
-+trigger-source consumer at buffer enable time; no ``interrupt-names`` entry is
-+required.
-+
-+Manual offload
-+--------------
-+
-+Used when no ``pwms`` property is present and SPI offload is available. A
-+periodic SPI offload trigger controls the conversion rate and the offload engine
-+streams results directly to the IIO DMA buffer.
-+
-+The ``sampling_frequency`` attribute on the IIO buffer controls the trigger
-+rate (in Hz). The initial rate is 100 kHz.
-+
-+Oversampling is not supported in Manual Mode.
-+
-+
-+Buffer data format
-+==================
-+
-+The sample format in the IIO buffer depends on whether SPI offload is in use.
-+
-+Software triggered-buffer path (no SPI offload)
-+------------------------------------------------
-+
-+Each active channel occupies one 16-bit big-endian slot (``storagebits=16``,
-+``endianness=be``). Active channels are packed densely in scan-index order,
-+followed by a 64-bit software timestamp appended by the IIO core.
-+
-+SPI offload path
-+----------------
-+
-+Each active channel occupies one 16-bit CPU-native slot (``storagebits=16``,
-+``endianness=cpu``). The SPI offload engine streams 16-bit words directly from
-+the SPI Engine into the DMA buffer; no software timestamp is appended.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index ba3e609c6a13..007e0a1fcc5a 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -23,6 +23,7 @@ Industrial I/O Kernel Drivers
-    ad4000
-    ad4030
-    ad4062
-+   ad4691
-    ad4695
-    ad7191
-    ad7380
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 020c1ffae31b..3fbac296b667 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1488,6 +1488,7 @@ L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-+F:	Documentation/iio/ad4691.rst
- F:	drivers/iio/adc/ad4691.c
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index f36b7c06996d70b2286edbd181899e4c572b9086..f6f49376a36288cdf44493334e766d6340294ed7 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1184,6 +1184,7 @@ static int gpio_v2_line_flags_validate(u64 flags)
+ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
+ 					unsigned int num_lines)
+ {
++	struct gpio_v2_line_config_attribute *attr;
+ 	unsigned int i;
+ 	u64 flags;
+ 	int ret;
+@@ -1194,6 +1195,13 @@ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
+ 	if (!mem_is_zero(lc->padding, sizeof(lc->padding)))
+ 		return -EINVAL;
  
- ANALOG DEVICES INC AD4695 DRIVER
++	for (i = 0; i < GPIO_V2_LINE_NUM_ATTRS_MAX; i++) {
++		attr = &lc->attrs[i];
++
++		if (!mem_is_zero(&attr->attr.padding, sizeof(attr->attr.padding)))
++			return -EINVAL;
++	}
++
+ 	for (i = 0; i < num_lines; i++) {
+ 		flags = gpio_v2_line_config_flags(lc, i);
+ 		ret = gpio_v2_line_flags_validate(flags);
 
+---
+base-commit: 6a50ba100ace43f43c87384367eb2d2605fcc16c
+change-id: 20260519-gpio-cdev-attr-padding-check-7e52c98a3de7
+
+Best regards,
 -- 
-2.43.0
-
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
 
