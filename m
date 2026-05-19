@@ -1,214 +1,198 @@
-Return-Path: <linux-gpio+bounces-37105-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37093-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eBWzI1rHC2qWMQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37105-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 04:13:46 +0200
+	id YLuTD+2zC2q2LAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37093-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 02:50:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECB21576566
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 04:13:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABB22575BFE
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 02:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8DE7C301BCF1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 02:13:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B3EF13014125
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 00:50:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FE530C17C;
-	Tue, 19 May 2026 02:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D48261B9B;
+	Tue, 19 May 2026 00:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUzdj70j"
+	dkim=pass (2048-bit key) header.d=nexthop.ai header.i=@nexthop.ai header.b="AtSx4k1S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A52E2BD022;
-	Tue, 19 May 2026 02:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637EC26A08F
+	for <linux-gpio@vger.kernel.org>; Tue, 19 May 2026 00:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779156796; cv=none; b=F3/+biJodMWUsHtLwXLOPVYQ7/Pb9umJCalXvl6RCksp5VjWlQmXsDZzv2UY+RaTZnsfp/FErenWoCKP6In6WRrTSkcUj7dereKmu2Y+TM0ynWGX42uio69acE31guNyVw2P9DrpRIhmwqUdmXe5H4yvlagFw97I8D8PesMN8Os=
+	t=1779151840; cv=none; b=kBS+eCsRjOYUs5mg4BAEnqa/5I82QYtGAvb6wCmfYbY0n/T17nBluOQ4/l+Q58GwR02lur+XBpWc1YgTtlIO78AChzip0dABjBRhGqObNpjYY2BEc17bGUhxlt/Hc8cLTWu6z532oAFQOC8P1w/8Z8wmne3rr98CS4Cecna7guw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779156796; c=relaxed/simple;
-	bh=YUmCsavKOtlk398DgQKYiDZ0NI/JX7vUuEM2/VVHOK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NjO63kevRTm5220s4aLi2u3hE6dQEdPqx7W7ehONiYpkqEa5VqLy7Vj4yqkqYByXDurHvJpTVgyiWpaWMIqJb0Pky4fUGg8aCbJuYi8KtPL7GH+cT1LkinTIikliCxYDGtJKFpXgeJ8BtvKN191+i+5Piw+ceXvQ/QMV5bSr134=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUzdj70j; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779156795; x=1810692795;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YUmCsavKOtlk398DgQKYiDZ0NI/JX7vUuEM2/VVHOK0=;
-  b=UUzdj70jvhBu5goDE0aE3gLhlHCNxKAN3p8uIR2qF4vLft/1npFYv1gx
-   OqDXUiYn+gEA31JNiXAmRdl9xPvC9rmvLyBqFfYKIsN4QeiOU2zVtMpJn
-   b0tDAoCQQCt0X84RnbejOGOxVB8LefAYxBpd04k/9Wz4KN3dgFtWE91RB
-   T1QWyD+eACpqu425jmNV7wQhNpO3Vnm48se9z3MuDW2w6Iz2XSXaAp0/1
-   g5HZBznbm4u7uHqTxZ9dPr1tCcJPpLyaTVnYBKrFS5IV9URSf0cpzV1Fn
-   Cs47H1mNSRaFp8icTPEd6iLFQJvkE2W3TxgvVvFbcG/BzfrAUJVo902Ph
-   A==;
-X-CSE-ConnectionGUID: 7qb+xokyQ5OxKPY9MqVlTw==
-X-CSE-MsgGUID: iPOf2RCTTzuYNQWTQYo90Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="67553783"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="67553783"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 19:13:14 -0700
-X-CSE-ConnectionGUID: VH/HwBksT7mZa7qATCvodA==
-X-CSE-MsgGUID: nDQMIyvaRIWtd4uEyuRzqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="239684783"
-Received: from lkp-server02.sh.intel.com (HELO 30e86e9c1927) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 18 May 2026 19:13:13 -0700
-Received: from kbuild by 30e86e9c1927 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wP9xF-00000000015-46vW;
-	Tue, 19 May 2026 02:13:09 +0000
-Date: Tue, 19 May 2026 06:42:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Markus Stockhausen <markus.stockhausen@gmx.de>,
-	wsa+renesas@sang-engineering.com, andi.shyti@kernel.org,
-	linusw@kernel.org, brgl@kernel.org, linux-i2c@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: Re: [PATCH v2] i2c: i2c-gpio: Enhance driver for buses with shared
- SCL
-Message-ID: <202605190501.z5y2mZnV-lkp@intel.com>
-References: <20260518161013.900504-1-markus.stockhausen@gmx.de>
+	s=arc-20240116; t=1779151840; c=relaxed/simple;
+	bh=PnOorzYYabHeSc3XxBftXhuC64icwN+rEkBLBJ5Sddw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=eq5E9W8mekENs32uSCesfR4fH2C60HWGRBhl8P48RxvOjPUz/izqQ3xolSZFLUah60uBg9moPuo5IPoiGw+z8Mt6PaoQTUxIfw51zloUQNPUbb65QUVtWf6RHC7slU2mU634w4jtLJhQGV7KiIx5Ee4KiRiE2kufk0zamc9aYoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nexthop.ai; spf=pass smtp.mailfrom=nexthop.ai; dkim=pass (2048-bit key) header.d=nexthop.ai header.i=@nexthop.ai header.b=AtSx4k1S; arc=none smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nexthop.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexthop.ai
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2f3c623322bso9321063eec.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2026 17:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nexthop.ai; s=google; t=1779151836; x=1779756636; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7tXl/22rkVvhZ4nUM4MbQlEreFWYdxVzxn1gtAZs1eA=;
+        b=AtSx4k1S/w4HtbRht68BANm4Se3ny9ye+1bDz738CYbmowcNhTd+eawQPKsji13bh2
+         Q1HiGT7EDb5DgWh8o76LC3JfPOkp4fk9e9S4ThVoz63Cm+ZFrzlTJ/XVu0gOlXO8gfzP
+         TtwYD8skqLMq23vqI3ljKLyiljdlR9hePg4QNyFxP0iHqyFVDQZwDOd+xe0BLbpv6tvq
+         O9pViAtqamwce0nE8h955nImgrk4D8qjY/t7gkkvd3Q0PoJPH5/Kru+zSNYUPCU5JFqc
+         ojySzmukTH8rxRW6A3VLJRiQbTfSOR0HnyAKcM1D79QcH7SttJx+lJcoVi58jO1nwQsL
+         y/Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779151836; x=1779756636;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7tXl/22rkVvhZ4nUM4MbQlEreFWYdxVzxn1gtAZs1eA=;
+        b=rlwFaTsRAqk7/n8jNLdmHXpTuXMp+oHjGqTex1no1t4p1N5boII/VEDRo/zFqAK5qT
+         P4bp3q7SzbjT/r1aSGZGN3fHN1uDVbZwpaKMJG0G3Hv0KesBFryZ+I5qrCiXt3c1zTQ1
+         P4fL2RC4FLE3XjTYKDCLXj5Tqy6BDEDFMDOMrvU554zvA//DH4quTY2vghR76VOS7rGa
+         1GsHf4fOq9SmUQf9NGDRFEDlTf+bCGdmfcet2v36tvat2SNsjO9sKHcBdw7f//kB6Q+T
+         NTRRCnfvJvd3gdQ5DVhLh6pf2sXgsaNhZB6+i3eJ0WFapICi55dYLRlu4tkAyfvcMMbC
+         vDGQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9+moaaB7MpQlzzzuW65RsQIBaTryqX95Q7M+GyBzyoRYCm1jS8FS3zdfkpPb44U8vJsYkCtBF6oBKW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVi/OmKn8R2rP6yE90WnXaRH3bbmd7Z0srRN/nch83stOWIFNb
+	XOq9CRDG21Pox2sPv8gWKRlNravw+Q/5tCO9+SiCZVhVNZK39m3nMS7DmFxUCXiM1Pg=
+X-Gm-Gg: Acq92OHKcpihDhgA9hxh2zj/n1nw1bFJwwSfBc3ZpnY16v4P5tVN2DewuNTtiA0ukE7
+	2wHgg8bI9VKDfWbxLivLbjeHQDDoDWsKbLEygvjKK9pwit8ipkWEXvF7Ft8dqaTOC30HjHo09Rx
+	kBDBfSM4dyT+E6C/8sYeJORkuyb7uh3/iZAUr1bUTK/LFqpyRq2CtLazbiWkBLQC9Zi7n8Wsqj0
+	ebauCDDk1cZJNRPjN23YCCm7SfHijjHR32uW65F/0JzVMNrS2Q0elh7L7JvxPoWeuUPeoS6bx8U
+	VVIs8o95OBBf4/LbO8OzjJP1ElsvWnpsnKJ1EjVEWIKXWRE3puzVriA+OJHH/GkWUCwQuO/X3yx
+	nINa2Z0rc3d6vFg0+CvjFfMUSP1lMH4rFRXL69VOBsAHCNxmMmcjUpQK9ZBVzXJjlQJQskgA0OD
+	SHsoPexUw8plRWQjNLBFqEfo4=
+X-Received: by 2002:a05:7300:fb83:b0:2ed:ff78:2c12 with SMTP id 5a478bee46e88-303986b7f00mr8980852eec.34.1779151835662;
+        Mon, 18 May 2026 17:50:35 -0700 (PDT)
+Received: from localhost ([50.145.100.174])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302978afe8dsm15256199eec.27.2026.05.18.17.50.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 May 2026 17:50:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260518161013.900504-1-markus.stockhausen@gmx.de>
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 18 May 2026 17:50:34 -0700
+Message-Id: <DIM8OTDD82P1.V7SRZ5IA5CDL@nexthop.ai>
+From: "Abdurrahman Hussain" <abdurrahman@nexthop.ai>
+To: "Guenter Roeck" <linux@roeck-us.net>, "Abdurrahman Hussain"
+ <abdurrahman@nexthop.ai>, "Alexandru Tachici"
+ <alexandru.tachici@analog.com>, "Linus Walleij" <linusw@kernel.org>,
+ "Bartosz Golaszewski" <brgl@kernel.org>
+Cc: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>, <linux-gpio@vger.kernel.org>, "Guenter Roeck"
+ <groeck7@gmail.com>
+Subject: Re: [PATCH v2 0/5] hwmon: (pmbus/adm1266) GPIO accessor fixes
+X-Mailer: aerc 0.21.0
+References: <20260516-adm1266-gpio-fixes-v2-0-801f13debcb2@nexthop.ai>
+ <6ec6270c-595e-49b2-8465-31b5019de87c@roeck-us.net>
+In-Reply-To: <6ec6270c-595e-49b2-8465-31b5019de87c@roeck-us.net>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[nexthop.ai,none];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[nexthop.ai:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lists.linux.dev,gmx.de];
-	TAGGED_FROM(0.00)[bounces-37105-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmx.de,sang-engineering.com,kernel.org,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37093-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[nexthop.ai:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_NEQ_ENVFROM(0.00)[abdurrahman@nexthop.ai,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,intel.com:email,intel.com:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: ECB21576566
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: ABB22575BFE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Markus,
+On Mon May 18, 2026 at 3:08 PM PDT, Guenter Roeck wrote:
+> Hi,
+>
+> On 5/16/26 16:18, Abdurrahman Hussain wrote:
+>> Five pre-existing bugs in the adm1266 GPIO path that all landed when
+>> GPIO support was first added (commit d98dfad35c38).  Each is
+>> reachable any time userspace queries an ADM1266 GPIO/PDIO line via
+>> the gpiolib char-dev or sysfs interfaces, or reads
+>> debugfs/gpio-<chip>.
+>>=20
+>> Patch 1 caps the PDIO scan loop in adm1266_gpio_get_multiple() at
+>> ADM1266_PDIO_NR (16) instead of ADM1266_PDIO_STATUS (0xE9 =3D 233, a
+>> PMBus command code that ended up in the bound by mistake).  As
+>> written, the scan walks find_next_bit() up to bit 242 across a
+>> 25-bit caller mask, reading out of bounds and -- if any of that
+>> incidental memory contains a set bit -- driving a corresponding
+>> out-of-bounds write to the caller's bits array.
+>>=20
+>> Patch 2 drops a redundant "*bits =3D 0" reset that sits between the
+>> GPIO and PDIO halves of adm1266_gpio_get_multiple().  As written,
+>> the GPIO bits the first loop populates are immediately discarded
+>> before the PDIO loop runs, so any caller asking for a mix of GPIO
+>> and PDIO lines sees the GPIO half always reported as 0.
+>>=20
+>> Patch 3 adds the missing "ret < 2" length check after the three
+>> i2c_smbus_read_block_data() calls in adm1266_gpio_get() and
+>> adm1266_gpio_get_multiple().  A device returning a 0- or 1-byte
+>> response would otherwise compose pin status from uninitialised
+>> stack memory and leak it to userspace via gpiolib.
+>>=20
+>> Patch 4 moves adm1266_config_gpio() past pmbus_do_probe() in
+>> adm1266_probe() so the gpio_chip isn't registered (and reachable
+>> from userspace) until the PMBus state the GPIO accessors depend
+>> on is initialised.  This is a prerequisite for patch 5.
+>>=20
+>> Patch 5 takes pmbus_lock at the top of adm1266_gpio_get(),
+>> adm1266_gpio_get_multiple(), and adm1266_gpio_dbg_show() so the
+>> GPIO PMBus reads can't land between a PAGE write and the paged
+>> read pmbus_core does in another thread.
+>>=20
+>> Signed-off-by: Abdurrahman Hussain <abdurrahman@nexthop.ai>
+>
+> Sashiko reported a number of additional problems. As far as I can
+> see those are real. Would you mind fixing those issues as well
+> as part of this series ?
+>
+> Thanks,
+> Guenter
 
-kernel test robot noticed the following build errors:
+Sure -- v3 (sending shortly) folds in everything Sashiko flagged on
+v2 that isn't already covered by the "buffer-bound and timestamp
+fixes" series you applied to hwmon-next:
 
-[auto build test ERROR on linux-review/Markus-Stockhausen/dt-bindings-i2c-Add-i2c-shared-gpio/20260515-102710]
+  - New patch 5: register the nvmem device after pmbus_do_probe();
+    same probe-ordering hazard v2 patch 4 fixed for the gpio_chip.
+  - New patch 7: take pmbus_lock in adm1266_nvmem_read().
+  - New patch 8: take pmbus_lock in adm1266_state_read().
+  - Patch 1 commit-message wording fix (Sashiko corrected the
+    "27 unsigned-long words" arithmetic; no code change).
+  - Reviewed-by tags from Linus Walleij (patches 1, 2) and
+    Bartosz Golaszewski (the rest).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Stockhausen/i2c-i2c-gpio-Enhance-driver-for-buses-with-shared-SCL/20260519-005100
-base:   https://github.com/intel-lab-lkp/linux Markus-Stockhausen/dt-bindings-i2c-Add-i2c-shared-gpio/20260515-102710
-patch link:    https://lore.kernel.org/r/20260518161013.900504-1-markus.stockhausen%40gmx.de
-patch subject: [PATCH v2] i2c: i2c-gpio: Enhance driver for buses with shared SCL
-config: hexagon-randconfig-001-20260519 (https://download.01.org/0day-ci/archive/20260519/202605190501.z5y2mZnV-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260519/202605190501.z5y2mZnV-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605190501.z5y2mZnV-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
-     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/lockdep.h:158:33: note: expanded from macro 'lockdep_set_class'
-     158 |         lockdep_init_map_type(&(lock)->dep_map, #key, key, 0,   \
-         |                                ~~~~~~  ^
->> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
-     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/lockdep.h:159:18: note: expanded from macro 'lockdep_set_class'
-     159 |                               (lock)->dep_map.wait_type_inner,  \
-         |                               ~~~~~~  ^
->> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
-     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/lockdep.h:160:18: note: expanded from macro 'lockdep_set_class'
-     160 |                               (lock)->dep_map.wait_type_outer,  \
-         |                               ~~~~~~  ^
->> drivers/i2c/busses/i2c-gpio.c:426:2: error: no member named 'dep_map' in 'struct rt_mutex_base'
-     426 |         lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/lockdep.h:161:18: note: expanded from macro 'lockdep_set_class'
-     161 |                               (lock)->dep_map.lock_type)
-         |                               ~~~~~~  ^
-   4 errors generated.
-
-
-vim +426 drivers/i2c/busses/i2c-gpio.c
-
-   393	
-   394	static struct i2c_gpio_scl_data *i2c_gpio_create_scl(struct fwnode_handle *fwnode)
-   395	{
-   396		struct fwnode_reference_args args;
-   397		struct i2c_gpio_scl_data *scl;
-   398		int ret;
-   399	
-   400		ret = fwnode_property_get_reference_args(fwnode, "scl-gpios",
-   401							 "#gpio-cells", 0, 0, &args);
-   402		if (ret)
-   403			/* try the ancient way */
-   404			ret = fwnode_property_get_reference_args(fwnode, "gpios",
-   405								 "#gpio-cells", 0, 1, &args);
-   406		if (ret)
-   407			return ERR_PTR(ret);
-   408	
-   409		if (args.nargs < 1) {
-   410			fwnode_handle_put(args.fwnode);
-   411			return ERR_PTR(-EINVAL);
-   412		}
-   413	
-   414		scl = kzalloc(sizeof(*scl), GFP_KERNEL);
-   415		if (!scl) {
-   416			fwnode_handle_put(args.fwnode);
-   417			return ERR_PTR(-ENOMEM);
-   418		}
-   419	
-   420		/* The unique identification from the SCL GPIO reference in the device tree */
-   421		scl->fw_node = args.fwnode;
-   422		scl->fw_pin = args.args[0];
-   423		scl->fw_flags = (args.nargs >= 2) ? args.args[1] : 0;
-   424	
-   425		rt_mutex_init(&scl->lock);
- > 426		lockdep_set_class(&scl->lock.rtmutex, &i2c_gpio_scl_lock_key);
-   427		refcount_set(&scl->ref, 1);
-   428	
-   429		return scl;
-   430	}
-   431	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Abdurrahman
 
