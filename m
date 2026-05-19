@@ -1,180 +1,156 @@
-Return-Path: <linux-gpio+bounces-37164-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37165-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cB/yD33SDGosnAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37164-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 23:13:33 +0200
+	id 1u94MenwDGoGqQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37165-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 01:23:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98EDA585165
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 23:13:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21193585FB1
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 01:23:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 830E1303D303
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 21:12:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 61C6C3056FC1
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2026 23:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DDD3DD51F;
-	Tue, 19 May 2026 21:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48AF3537E8;
+	Tue, 19 May 2026 23:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="vHmBAQyo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OH0BZj/N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ixit.cz (ixit.cz [185.100.197.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1103D9049;
-	Tue, 19 May 2026 21:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.100.197.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BC2352003;
+	Tue, 19 May 2026 23:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779225126; cv=none; b=e8qG/yrSVtq1NZPRpSDuRwkXPl0cVTsJHCp+5rjTh4CXySVMRr6ZIZGNCg7z5hM+0pIj0zmlwDrNCdJDKkoNjQk/Po1ZnGQTA+Ga2psLD45QVpFaUPO+2fLe6hxQsVWY9c5bQhc382qdZ88bBK3MKGFRTTG4pmeKR7Q4ykLIcFU=
+	t=1779232918; cv=none; b=nBVrcpNYFcqI2t7U+WUUeLtDYmp8voPfoCMrEmym7AEAzh3BzP1lrMaIX5I/JuYUGx7XJjIMwJOsIfzOtEJNbX/hc07hAF0/z/aHViYS/fMDJBhK4oFp9753l6P91c78Gm/NWnomuWM9CVf7P4SfAvblMReJ8Ck57zhxY7QGRrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779225126; c=relaxed/simple;
-	bh=9JMwSSLgNyfL49CsTnVSIMP671ydxjgXM0HUrJM8lAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FjOFEjJepShTZhHI5hkMlSY15A2ZtQAnK6pLGTxPaQ9Qh8yW2onZTidC22ZnsfaZ5epBXzWPK02Tk6bGwe1+H9j6CfyzVh/Ao3r8kb7+U2ICP+SButYYhEXptGnYM3G97smwIpR0Xl+f0hHiWq/db313H9PM9qDJMBVXBfTNN+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=vHmBAQyo; arc=none smtp.client-ip=185.100.197.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
-Received: from [10.0.0.200] (unknown [10.88.125.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 9E11A5341058;
-	Tue, 19 May 2026 23:03:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1779224582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MyMPIRDqjJPenGSERvDWs7fwWFvgDp+zAyYF2uoU87c=;
-	b=vHmBAQyoXrNPyA90hE9zPjAoRy72HDF3k1U4R8aWTgpAcFl9jTh4zJ7Pnb4hlaT4CFM9l/
-	HCanuYqjnscmJ4xK9IxZJNQjqD4CcPsEjrww9HHn4BCrNO3kz7kOyH77n1MAWeHGs/XXNh
-	daa2b9KByZ2HZpl8fi9n9R8P0w7PFN8=
-Message-ID: <4b797a3f-01c9-4b02-be98-7b82099c2e0e@ixit.cz>
-Date: Tue, 19 May 2026 23:03:00 +0200
+	s=arc-20240116; t=1779232918; c=relaxed/simple;
+	bh=of6cfuYDOuPHZQqFwY6adJj8H3lq4Bxw08GbEIKhY+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nf23c69c5Ia+FZQPq3n+FCdUn7qu15cJ/KiNZ8gTIl92el7fiuhZEa3on/Cb8wrFO8hkZowVno56R+c8TCXbukTs1NQDb0Tjx0ZnLagFLQHPJukLZUhYG0+lfR0sa+QOS6r8D5IUH00XYCKsj56mn2tEpk7nqeVnBjqgdNXdbpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OH0BZj/N; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA371F000E9;
+	Tue, 19 May 2026 23:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779232917;
+	bh=rTHVrMvCwYTZlktit7SkyBCR9EOe2m+vAOtAPQ7Cebk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=OH0BZj/N3kGv0Krj7B8nAn/aKUUeD0Rg7L0DfA3kXFym101kBPtk07yt3Jc2y0wEQ
+	 KROqKjkHqzcqj1jdg6WGggS81iCbX82cmNxjrFIQnBjzyDL3lGnMvaXSC7XPteDOiX
+	 uhxE1jgpaqweBOkwjytfCsqa9pNKtLw/Fj1UVEGrmrsF9G+UVDARBvDCffthdh1lVw
+	 0upvOwMEx37iVh8MDYANV03I9xE4QhrU50ne/CHZse9O9N4hdg+vz/Yx1nxNMVgd0M
+	 lPaBjARuSL+j5X4e/RCrAddi4cZJpmYSapDsA+vMKbMEV/nt1aoikZ/6/Ah1nLsvMg
+	 n9p2nEbTpi3oQ==
+Date: Tue, 19 May 2026 23:21:54 +0000
+From: Yixun Lan <dlan@kernel.org>
+To: Linus Walleij <linusw@kernel.org>, Han Gao <gaohan@iscas.ac.cn>
+Cc: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>,
+	Anand Moon <linux.amoon@gmail.com>,
+	Junhui Liu <junhui.liu@pigmoral.tech>,
+	Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Han Gao <rabenda.cn@gmail.com>
+Subject: Re: [PATCH] pinctrl: spacemit: fix NULL check in
+ spacemit_pin_set_config
+Message-ID: <20260519232154-GKA3708537@kernel.org>
+References: <20260519164007.122574-1-gaohan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] pinctrl: qcom: Register functions before enabling
- pinctrl
-To: MINETTE Alexandre <contact@alex-min.fr>, Linus Walleij <linusw@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Guru Das Srinagesh
- <linux@gurudas.dev>, Rob Clark <robin.clark@oss.qualcomm.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Kees Cook <kees@kernel.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
- phone-devel@vger.kernel.org
-References: <20260519-mainline-send-v1-sending-v3-0-3dd7aa125353@alex-min.fr>
- <20260519-mainline-send-v1-sending-v3-3-3dd7aa125353@alex-min.fr>
- <CAD++jLm=BxHsPJ4rgqwY8SvaefZUO+Pfv8E8xizqPsdJZw5weA@mail.gmail.com>
- <298550eb-1bdf-4d7c-8111-8b8f0b5dc056@app.fastmail.com>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- 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
-In-Reply-To: <298550eb-1bdf-4d7c-8111-8b8f0b5dc056@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260519164007.122574-1-gaohan@iscas.ac.cn>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ixit.cz,quarantine];
-	R_DKIM_ALLOW(-0.20)[ixit.cz:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37164-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[hammernet.be,gmail.com,pigmoral.tech,linux.spacemit.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-37165-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ixit.cz:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[david@ixit.cz,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dlan@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 98EDA585165
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,iscas.ac.cn:email]
+X-Rspamd-Queue-Id: 21193585FB1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 19/05/2026 10:48, MINETTE Alexandre wrote:
-> Thanks a lot Linus!
+Hi Linus,
+
+Can you take this as a fix for v7.1 cycle?
+
+On 00:40 Wed 20 May     , Han Gao wrote:
+> spacemit_pin_set_config() looks up the per-pin descriptor with
+> spacemit_get_pin() then checks the wrong variable for failure:
 > 
-> This patch is required for my Samsung Galaxy S4 GT-I9505 to boot but I also
-> have confirmation from another contributor that the same pinctrl patch
-> helped boot the ASUS Nexus 7 (2013), codenamed flo, which is also based
-> on APQ8064.
+> 	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
+> 	...
+> 	if (!pin)
+> 		return -EINVAL;
 > 
+> 	reg = spacemit_pin_to_reg(pctrl, spin->pin);
+> 
+> pin is an unsigned int pin id, where 0 (GPIO_0 / gmac0_rxdv on K3) is a
+> valid pin, so rejecting it here drops the PAD config write for the first
+> pin of every group. On K3 Pico-ITX the GMAC RGMII group lists pin 0 as
+> its first entry, so its drive-strength / bias configuration was silently
+> ignored.
+> 
+> The intended guard is against spacemit_get_pin() returning NULL when the
+> pin id isn't in the SoC's pin table. Check spin instead, which both
+> restores PAD setup for pin 0 and prevents a NULL deref on spin->pin.
+> 
+> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+> Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+LGTM, thanks
 
-Hello Alex,
-
-if what you wrote about asus-flo/deb is true, then this patch should have 
-`Fixes: ` tag, as I remember it was booting with few limited patches ~5 years 
-back then (only one serious was hack for proper clock bringup).
-
-David
+Reviewed-by: Yixun Lan <dlan@kernel.org>
+> ---
+>  drivers/pinctrl/spacemit/pinctrl-k1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> index b0be62b1c816..95024e2bb5a5 100644
+> --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
+> +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> @@ -795,7 +795,7 @@ static int spacemit_pin_set_config(struct spacemit_pinctrl *pctrl,
+>  	void __iomem *reg;
+>  	unsigned int mux;
+>  
+> -	if (!pin)
+> +	if (!spin)
+>  		return -EINVAL;
+>  
+>  	reg = spacemit_pin_to_reg(pctrl, spin->pin);
+> -- 
+> 2.47.3
+> 
 
 -- 
-David Heidelberg
-
+Yixun Lan (dlan)
 
