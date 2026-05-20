@@ -1,175 +1,165 @@
-Return-Path: <linux-gpio+bounces-37229-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37230-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGFgAzYGDmp25gUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37229-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 21:06:30 +0200
+	id KF2oE3wdDmro6AUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37230-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 22:45:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74375597C20
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 21:06:29 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7042759A118
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 22:45:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6FF363848471
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 18:47:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5EFC93396A61
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 18:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B26947D937;
-	Wed, 20 May 2026 18:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09E73FD131;
+	Wed, 20 May 2026 18:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxJsYXWd"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="1LX5NcJ1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E55E400E1D;
-	Wed, 20 May 2026 18:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288443FD133
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 18:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779302408; cv=none; b=jISA3eoemvuUIbfeM7cdhnQdmWUBXKTGiBAqGDYb16SwOHaJiLDefYJenj+lWtFfZQ0ZmCWAKo2PHHPD8yz5Jjh2lLqlZHX+EviNVxsNlNhF9z2GVa74uFdVvTI2XCBknprq4WS/7bF3nXwjravE3hqeH/6PCdA2DzW4d+SXdvg=
+	t=1779302661; cv=none; b=Zj9s3GGaNIPnFDpiZFRwp+9pUOIXArEuerW51WE368V4kJ3g/YLMzXCKUtB/Uj0gKCQodENIyhSHJkc/AE5z0Fg9OdSLZ2dOwb4sLWNbNmExSRwGvqUL8GJNqhXCKnRo86brj+lVE+X5KZUAa9yOVSVfz65joM01yZ1Tg6zxt+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779302408; c=relaxed/simple;
-	bh=DkSZfXOAffCCtFwAjz7g6qmQiQIlMDMjpPdApHgp6TE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pRUFecsEeEN3IRyBst/STNE6jz0/pjXzZ0VUsVFNPlAml3p/3WAUUN/8QzuiwiOAVLEfVyqHdGU7sZxTlA9YBZjd6d+YntRmgytd0/4K0nggH94BAWskBAwzoy5hcs9L8UiQR7VQwi5T/0OyEIe/6dZ+yr5XJbZ+JuS++Q8cmaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxJsYXWd; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B121F0089A;
-	Wed, 20 May 2026 18:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779302406;
-	bh=02+6d8dOXhR9E+F29QDQjM2pWkqHo3wDZDJjMa+yUu0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TxJsYXWdfmza+UhP3R5pB3RwB3VkdHYGSwnVCeXIfZWjcwPv5hyYy1pozAEtav9zc
-	 ST23wnlxbaQNSejo3rEHwIRi3+Vsb+rGxZgXDu6Wg2SRyCm1gKgYG9kyT1s0+eLdMh
-	 jLq+3jUpE8uIKfQfhWYcZI1RUu3KhaTsvYTa7fcRh4jeGeHIn1KWH1IQXk1A+GPle+
-	 /fk//MJVx/io/TegeiPOyqkC6PuFHo2UABrmL27yz5Omg47Zm8XFMz0oUKynX/ZKE6
-	 XwChghHVCC5r3gWZlyQSDgbWCdunVnBYtGrwFl8Zgn+l6bnK9CSl/JfztXE0nTPRKy
-	 fbtvXvNZAq/IQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Lamparter <chunkeey@googlemail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jonas Gorski <jonas.gorski@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-wireless@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 10/10] gpiolib: turn off legacy interface by default
-Date: Wed, 20 May 2026 20:38:15 +0200
-Message-Id: <20260520183815.2510387-11-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260520183815.2510387-1-arnd@kernel.org>
-References: <20260520183815.2510387-1-arnd@kernel.org>
+	s=arc-20240116; t=1779302661; c=relaxed/simple;
+	bh=LyHBGHh0pa8085eT7UHWuWdYRG7dAT6dfZHVJNoi4DE=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AyV0n+Ukxzs/QFg/VXj5NIrC1EKUjNE2RmdkWlYAq7sol7XQjCU1UPEha8kAdMfXJfo6mONuG8PJggJcFnK9xiRfu4n6T94INaWa2yC52oLNwW+14hCHRBeStFAQtubn41dg6t+hMMgyHaBnA2flCNeeTflBw291+mSR1vYNlTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=1LX5NcJ1; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Received: from [IPv6:2a02:1812:162d:3d00:c381:7255:a866:916d] (2a02-1812-162d-3d00-c381-7255-a866-916d.ip6.access.telenet.be [IPv6:2a02:1812:162d:3d00:c381:7255:a866:916d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id DCC16785F41;
+	Wed, 20 May 2026 20:44:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1779302657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LyHBGHh0pa8085eT7UHWuWdYRG7dAT6dfZHVJNoi4DE=;
+	b=1LX5NcJ1cD+X6QFdPyfLllb1+FvgX/YCJb2c8XI+OeMjjkNivSwscgCxCmRCNVodVPVIM8
+	odCuFIIEeDESCRgcl2FQrk1iUDDLt6hMZuN1693Fzt3XGJ3kNVWQ/sb9+HS9kjYxUddmZl
+	5I3H+nW7jyX1MCL2ERzimNBhu/wIDRAMZHWGjuzZjayPp9uVy7Y7t4ua8xewJ9jh97ycXa
+	XPyh2RGz2fcgm4P6bYWj8VfokchHBO/G+JexNrQXtLNqGWrlfJDddzfnqi8Uyl2VmPXnnW
+	ype3WKyphpVcXRZSNft7N3PlJfOa9iz78QQUDkAct1G7CJcn9pNTgNHcO1PUYQ==
+Message-ID: <bbdc75ed03f5af92a1dc16095ae5ea60875a774e.camel@svanheule.net>
+Subject: Re: [PATCH v3] i2c: i2c-gpio: Enhance driver for buses with shared
+ SCL
+From: Sander Vanheule <sander@svanheule.net>
+To: Markus Stockhausen <markus.stockhausen@gmx.de>, 
+	wsa+renesas@sang-engineering.com, andi.shyti@kernel.org, linusw@kernel.org,
+ 	brgl@kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 20 May 2026 20:44:15 +0200
+In-Reply-To: <20260520173129.1382489-1-markus.stockhausen@gmx.de>
+References: <20260520173129.1382489-1-markus.stockhausen@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[svanheule.net,none];
+	R_DKIM_ALLOW(-0.20)[svanheule.net:s=mail1707];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37229-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[40];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,arndb.de,googlemail.com,sipsolutions.net,iki.fi,kemnade.info,baylibre.com,kernel.org,atomide.com,alpha.franken.de,physik.fu-berlin.de,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,broadcom.com,lunn.ch,davemloft.net,google.com,lists.infradead.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37230-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[gmx.de,sang-engineering.com,kernel.org,vger.kernel.org];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[svanheule.net:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sander@svanheule.net,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,arndb.de:email]
-X-Rspamd-Queue-Id: 74375597C20
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,gmx.de:email]
+X-Rspamd-Queue-Id: 7042759A118
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hi Markus,
 
-All users of the legacy interface now select CONFIG_GPIOLIB_LEGACY,
-so it can be turned off by default and only get built on platforms
-that still have one unconverted driver.
+Thanks for looking into this. It was on my to-do list for _long_ time, but =
+I
+never got to it :-(
 
-Allow turning it on manually for compile testing, in order to keep
-the build coverage of the legacy drivers in allmodconfig and
-randconfig.
+On Wed, 2026-05-20 at 19:31 +0200, Markus Stockhausen wrote:
+> Some lower end hardware (especially Realtek based switches) are
+> designed with multiple I2C buses that share a single clock line.
+> E.g. the D-Link DGS-1250-28X realizes 4 I2C SFP busses with 5 gpios.
+>=20
+> Enhance the i2c-gpio driver so it can handle such hardware designs.
+>=20
+> - Detect GPIOs that are used by multiple I2C buses in the dts by
+> =C2=A0 using a unique identifier for each managed SCL.
+>=20
+> - The first probing instance allocates and requests the shared SCL
+> =C2=A0 GPIO plus an associated rt_mutex. Subsequent instances detect the
+> =C2=A0 existing entry via the identifier and increment a reference count
+> =C2=A0 to reuse the descriptor.
+>=20
+> - All data transfers are serialized via custom lock_ops that handle
+> =C2=A0 both the standard adapter bus lock and the shared SCL mutex. This
+> =C2=A0 ensures mutual exclusion across adapters sharing the clock line.
+>=20
+> This patch was successfully tested on Linksys LGS310C that has two
+> SFP slots with two GPIO based I2C buses that share a sinlge SCL.
+> Test environment: OpenWrt snapshot ported to kernel 6.19.14
+> including CONFIG_GPIO_SHARED=3Dy and CONFIG_GPIO_SHARED_PROXY=3Dy.
+>=20
+> Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/Kconfig | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+I've updated my Cisco SG220-26 devicetree and it now boots with:
 
-This patch depends on patches 1 through 9 to be applied first.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 00fcab5d09a4..eec17089eaa6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -4,7 +4,14 @@
- #
- 
- config GPIOLIB_LEGACY
--	def_bool y
-+	bool "Legacy GPIO interfaces" if COMPILE_TEST
-+	help
-+	  There are a few legacy platforms that use the traditional GPIO
-+	  number based interfaces instead of GPIO descriptors.
-+	  Say Y here to enable build testing drivers that are specific
-+	  to those platforms.
-+
-+	  If unsure, say N.
- 
- config HAVE_SHARED_GPIOS
- 	bool
--- 
-2.39.5
+[..] i2c-gpio i2c-temp: Slow GPIO pins might wreak havoc into I2C/SMBus bus
+timing
+[..] i2c-gpio i2c-temp: using lines 565 (SDA) and 551 (SCL)
+[..] i2c-gpio i2c-fan: Slow GPIO pins might wreak havoc into I2C/SMBus bus
+timing
+[..] i2c-gpio i2c-fan: using lines 567 (SDA) and 551 (SCL)
+[..] i2c-gpio i2c-sfp25: Slow GPIO pins might wreak havoc into I2C/SMBus bu=
+s
+timing
+[..] i2c-gpio i2c-sfp25: using lines 549 (SDA) and 551 (SCL)
+[..] i2c-gpio i2c-sfp26: Slow GPIO pins might wreak havoc into I2C/SMBus bu=
+s
+timing
+[..] i2c-gpio i2c-sfp26: using lines 550 (SDA) and 551 (SCL)
 
+
+Four busses sharing a clock line. Nice! SFP detection works and "sensors"
+provides meaningful output for the fan and temperature monitors.
+
+Tested-by: Sander Vanheule <sander@svanheule.net>
+
+Best,
+Sander
 
