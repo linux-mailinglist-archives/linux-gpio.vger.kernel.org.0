@@ -1,138 +1,141 @@
-Return-Path: <linux-gpio+bounces-37212-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 7rNTN97bDWpb4QUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37212-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 18:05:50 +0200
+	id 2DL1NnrUDWrA3wUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37213-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 17:34:18 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953A959171F
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 18:05:44 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84D11590F8E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 17:34:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BB4B6324479F
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 15:25:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 657C930B2B25
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 15:25:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89AA3F7AA9;
-	Wed, 20 May 2026 15:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6501E3F1ACB;
+	Wed, 20 May 2026 15:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tx92Vuby"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gnea7Wpc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1053EE1C0;
-	Wed, 20 May 2026 15:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0648B3F1AC7
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 15:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779290661; cv=none; b=gU8+cShO2gqocxNcRUEhX12ufx9PNtGKMx7Tl1AZ1/3K3uuZsbsVr+zXFG8eYSo6VJyDfYWHn8lSiMv5NPMwqCk+9TmkHasYpiHka5CasdeP8ru9E5RKZZovQIqbbLMI7dks0iEzv4I+YazKcF1JZciDzj/VS1VLCobGuD2lGV8=
+	t=1779290681; cv=none; b=e4NBkRyp6hwzhDfiDQWrK3jFuh3utaqew7PfnY8cjxMeu/CCtpAzRTNKyYOkklm60iv6qLY1BBYK3IVaBkldArBSfyTh9y7B7kbhbss9qeWN0r1JcZRNYhvCNhxF5CVt6J33eT2Cb3ZKbRqKHgO0RDR5XQ++0nMdWEneyk/ZOGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779290661; c=relaxed/simple;
-	bh=HCXAt+/CjoO40ifbH4DOvSdJDWcFojBTxr7q96nrv1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpK8f0IT9bN6/3ac1aAK+wWB5zPhCG7j6Wwr7z7GExoy/9zyLXpQsgTrGJWbmNb5q91XGCQjXpCEpoYqgkNkWUSSiwVAAHz6VywQNURB/T/1DISDrVcJtOvaHsYt1RNoLtMVrO0ItoGNKhScZMKC/NKK1lI4Qj/ZqO8uRto890k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tx92Vuby; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81CF41F000E9;
-	Wed, 20 May 2026 15:24:15 +0000 (UTC)
+	s=arc-20240116; t=1779290681; c=relaxed/simple;
+	bh=nANitG+94xK3D3yRGafYYdMzEGBdQLc3UnAbCFrD8aE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s+f/cI0NTQoR4s45Ws0wt77rZwJV0FMuXKcXIJp6q3X4IjzSUR+6fZoqDfcnP7tSnUNbwB7jxfhk/97u2VymODS150U9jjj23IIk9/l5GFHeFlzhEmtxqcaYPeHiql1hDVWuww+B8S/6djAiaEyn9f2QL4khvUmgXJ2PRxy8aLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gnea7Wpc; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65541F000E9
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779290660;
-	bh=HCXAt+/CjoO40ifbH4DOvSdJDWcFojBTxr7q96nrv1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Tx92VubyKRg+ITGsogm/sdyuVtRiJxs2ebmJBL67P52zRzrwF5ZZtXATvU/MCptjW
-	 UHmX6NMRPQESqonMF+PSlGJf3NxQ/7LrTd8cIzbOaRvDO3yrGl8VHiYmR100/AoVyo
-	 MSZ3RcEHAIzdh3mhL2KtwxKT7m5bACq+ltB5jNpYaIh1Fhu9OgFof37lcjpaEbpOSg
-	 sFTTfGJbB3iW5CddMLEaBCNpXa39fQ7YpzoRsE9vzqK/h0bbXGmU1n7w95YSAB+9ea
-	 v7W8ZSyvk2/S+b8tRNyWD3DUBLYdSQjlMtNhvxc9y/+CJSjDNEngYUyiWHfK3FNAb2
-	 4FjMf/tCl/rPg==
-Date: Wed, 20 May 2026 16:24:12 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Thomas Lin <thomas_lin@lecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, hoan@os.amperecomputing.com, linusw@kernel.org,
-	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	jsd@semihalf.com, andi.shyti@kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-	lucas_hao@lecomputing.com, puntar_liu@lecomputing.com,
-	jihua_tao@lecomputing.com, stan_xu@lecomputing.com,
-	lumin_liu@lecomputing.com, notics_zhang@lecomputing.com,
-	braden_zhang@lecomputing.com, harold_wu@lecomputing.com,
-	will_zhang@lecomputing.com, aurora_jiang@lecomputing.com,
-	ryen_lin@lecomputing.com, andy_jiang@lecomputing.com
-Subject: Re: [PATCH v4 1/3] gpio: dwapb: Add ACPI ID LECA0001 for LECARC SoCs
-Message-ID: <cc8dc59e-fc00-4f7b-9f24-467c670c5615@sirena.org.uk>
-References: <20260520081140.637637-1-thomas_lin@lecomputing.com>
- <20260520081140.637637-2-thomas_lin@lecomputing.com>
- <CAMRc=MfM38h=zJU5Uy7zu9pigjb-XBAteBhUmvMAKZRWHGZNKA@mail.gmail.com>
+	s=k20260515; t=1779290679;
+	bh=gi9yXyBJh6ZsOeGvzqOZwp2GKPCWOVDNkQ8ZHK/Fihk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Gnea7Wpc1KOC2R2t0qavHFAL81ZTEpomLHBdVjIEVzDlOu18nzN+0EnIWQ+EwzPVq
+	 3/Mp2roRY0Rwtfst5Zz6vBtwJBo11LmD5PshoKz3sdOhct5K+/RpRqwrjAzdmWajvb
+	 oVTGUPmjbUicMW32A40p8zsDTDBBlE0PalKFT9bQln+SupHi4cl1dZY+/3qGbjh9lJ
+	 7Ktt7i1Yqxror0EUOdQNJ6UFdW9esGQR3mjz5i1qTG3zAFF0Te7MIVgS5iho71NlRA
+	 rSdrBMOyeu8doxd3WUo71WgRuSfp7ase9gBd6omT8jQut+GtzKKaPmlKhF0tgSbb87
+	 XMYSL8LuaciGA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5a746f9c092so8006231e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:24:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/yS64FSyygpf37ZLOoxPVf/l9Wcn7vrDPGvLMSxokbgSwA2FUizWanOPnk5morZw5g/tHSfaEDCfE4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFMYBjiSjMHxzQyqhGHucQaLnEiuV4DmBHqasJs1lvpUFs3agm
+	eXtfSNQBqLA34Owr3BDyNPWtf33EBXkzuGIxkOglDvOfPD+oFcR/kGZVPsd1JxUwCVyW033q5d2
+	ijG+DFsGRZdkYUbHQQIJKhgNiPydkqBzxaKZRPI9+8g==
+X-Received: by 2002:a05:6512:10c6:b0:5a8:e129:af6f with SMTP id
+ 2adb3069b0e04-5a8ffd8bb3amr8129950e87.23.1779290678445; Wed, 20 May 2026
+ 08:24:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5NSLdtwUqjJNFgrs"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfM38h=zJU5Uy7zu9pigjb-XBAteBhUmvMAKZRWHGZNKA@mail.gmail.com>
-X-Cookie: Natural laws have no pity.
-X-Spamd-Result: default: False [-4.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+References: <tencent_89120B31E993041B07255B285D71C3CBA405@qq.com>
+In-Reply-To: <tencent_89120B31E993041B07255B285D71C3CBA405@qq.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 20 May 2026 17:24:25 +0200
+X-Gmail-Original-Message-ID: <CAMRc=MfJMnnLB+H7e53HT24DFgB-HC1NEOhkq4X-9unPh+Lxfw@mail.gmail.com>
+X-Gm-Features: AVHnY4I22IqVhhcQaqt7FLWUEsccvzlMUQE9oV-eg2YXJTvJNwT9J8Vm5WGY8Qg
+Message-ID: <CAMRc=MfJMnnLB+H7e53HT24DFgB-HC1NEOhkq4X-9unPh+Lxfw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: event-mon: Use O_RDONLY instead of 0 for open()
+To: 2564278112@qq.com
+Cc: warthog618@gmail.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Wang Jiang <jiangwang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37212-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kylinos.cn];
+	TAGGED_FROM(0.00)[bounces-37213-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[qq.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[27];
+	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sirena.org.uk:mid]
-X-Rspamd-Queue-Id: 953A959171F
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,qq.com:email]
+X-Rspamd-Queue-Id: 84D11590F8E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Wed, May 20, 2026 at 12:18=E2=80=AFPM <2564278112@qq.com> wrote:
+>
+> From: Wang Jiang <jiangwang@kylinos.cn>
+>
+> Using explicit O_RDONLY flag for open() improves code readability
+> and aligns with kernel coding standards instead of using raw 0.
+>
+> Signed-off-by: Wang Jiang <jiangwang@kylinos.cn>
+> ---
+>  tools/gpio/gpio-event-mon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
+> index b70813b0bf8e..590ca8db25cf 100644
+> --- a/tools/gpio/gpio-event-mon.c
+> +++ b/tools/gpio/gpio-event-mon.c
+> @@ -41,7 +41,7 @@ int monitor_device(const char *device_name,
+>         if (ret < 0)
+>                 return -ENOMEM;
+>
+> -       cfd =3D open(chrdev_name, 0);
+> +       cfd =3D open(chrdev_name, O_RDONLY);
+>         if (cfd =3D=3D -1) {
+>                 ret =3D -errno;
+>                 fprintf(stderr, "Failed to open %s\n", chrdev_name);
+> --
+> 2.25.1
+>
+>
 
---5NSLdtwUqjJNFgrs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Why only here and not elsewhere? Please mention in the commit message
+that 0 is effectively O_RDONLY so there's no functional change.
 
-On Wed, May 20, 2026 at 05:15:12PM +0200, Bartosz Golaszewski wrote:
-
-> I'm not sure about how to interpret the cover letter - is it fine to
-> take this independently through the GPIO tree for v7.2?
-
-AFAICT any dependency that exists is runtime only, it's just a bunch of
-quirks and none of the patches touch header files.
-
---5NSLdtwUqjJNFgrs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoN0hwACgkQJNaLcl1U
-h9B4TAf9FeEYqiA5zs8sL3fVdufh7wG+xHcOTo3HDGkHEmUaPW5nY9BGeUTdt/YX
-4cZikl0ZCXB8zMPboEVPri3ud0F7fd7fM8R68IWQQ0l9y9xpDVa9zkazDRNVfeVy
-p4FJ7U7bKuaSCtqgG+Xi10wwWdYVj50FZ+gAk3+aNnxAwPj5qwBeo7u21Xh5A9lB
-HiuoP+wFZjIMop7yJLE59ZaMSH8qKU9Ky0SiRgexJdjApSPSm2VKFTfzsfkWyEWu
-jmP5UmvH8a0PROx4A2FskHkp4MoScZ8oMdC0HfcjEh7OyWfUgw9pmkfHikBwrsEP
-u3HPdCLUkZSC/8e7860Y7BvabOcDgA==
-=EnsO
------END PGP SIGNATURE-----
-
---5NSLdtwUqjJNFgrs--
+Bart
 
