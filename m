@@ -1,104 +1,104 @@
-Return-Path: <linux-gpio+bounces-37185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KNO4FAt0DWp0xgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37185-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 10:42:51 +0200
+	id sFB+Df9wDWroxQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37186-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 10:29:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A786B589FBD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 10:42:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB1EE589C7E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 10:29:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8BF95312684B
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 08:22:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8300E318E12A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 08:22:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 900F63AD512;
-	Wed, 20 May 2026 08:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D373AD52E;
+	Wed, 20 May 2026 08:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nJB0KVmu";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="HnzI1bA+"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Z4DJMNey";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eNgDI0N/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB453A5438
-	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E453AE18D
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779265322; cv=none; b=hHLxc1YpK5DhoC3eXhgg+hjyeq97MVe1O8gdJ0GpfWQ5Gr4KMsuJVj8dv2CHoBJEPLjaGjOD6O5ama2pNZNq6LxKnpU8pVDBTj+LwIez0bfBvn5fKv9WwV7tzLk+9VBZKcX1Ao+zHVyMZPwa9/FfXiNxkxc5LyvAxox9zXJDrcc=
+	t=1779265324; cv=none; b=EJ/FlvF7RKcDhOBcUVLwcn/jnJXavCxKBvxqbJ1geFII3ZD24rSQ1qU/3G+vk0UQTI9p9tWmM2YnYjP/PwPF/1lFusYwbd25kHBdjYkrMX2rRvpdoxOhJl4IAYfl/V/s04dUwVKJRzaJUa1i97BHU40lee7ckovCdkfRCEmt9JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779265322; c=relaxed/simple;
-	bh=028gUqW7WcOSmGF7+T+T+hdvUW/4C3HpqpJfKtSYg7U=;
+	s=arc-20240116; t=1779265324; c=relaxed/simple;
+	bh=7YnHenPV9LU9HH0oXXRrIPZLMPovAnvfYPI2d8UeBlQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BMSuQ5CVguc7U3kjB1SU+t9objrJw3dnCJ+FmlvmrQiWetf5uwqjNvf1cG+3RSLR8+bbwIHnoZAS0D1AUwyfAcZ6ua9+eQag1d8seK2OjPJF2QNECL1G+7dwT77oKxs7r308NOt1Us/bdFC7mZUjUS3Yz/hrgAepDfdZv+Fk2Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nJB0KVmu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HnzI1bA+; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=mBnSWM4hvW8uANptgjDVJYTyDuIzWPQJwggG6a1dtC6BHx0UzVoOnvrmO8dsTXEwQ17tcqy2myrvln1JXfkB04S9vT/h5QtcQuV5rAZ3eEB6KXObQqu+h+Kh8kJJ5VMIxDGCcINjAnUfiq5S6IEalUTPQTB1FaRL0CkY4jFaZwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Z4DJMNey; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eNgDI0N/; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64K6ig2q2983959
-	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:00 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64K7YdJ71953932
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kctZDDV/1El3U8lFByxFlfEBdTTDs6EeFVn0Tn6oObg=; b=nJB0KVmuz+3g9tRa
-	RQe2ZJVZDteKYusCG6azwqiv0LC357PRU1SRExEaHxKne5zCOls7c1vkWaivrn9v
-	h1LfQeidP0/evCcPqmerQLWnQ8FpoG0RczbG/RVaubc7UDPW2y0UcE3XOFOypbqP
-	AhctUpiXP4QBrdwL+M63xWBI2YSQq0CCp9p/w70v+sq99qhI0zGR+ABNlpByjpZl
-	/UbwijDtT1uoe5O4NUusfThwrGIIfPC/jIoGzThzng6zrSgOeFUW5etbJC4H/ga4
-	Ugtbms+2ul11LXVXtHndqXpoHW5oW0uPps2q+DR1BdGxQkd5RXqAflvLlLwXiUtf
-	y4ocvg==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e8t3t3urf-1
+	gpOoi3K+3WVMMUDmiIwOSuu1JgGomDZPzYqit1n/jaQ=; b=Z4DJMNeygAkXxtNq
+	iO2pLmNFXClM3oS0SEAqNzp+9N7c8iJQkajRB+kxrgRneEorfqYLokvL2jETkqvU
+	dmlpACn1nrzDNKFoiOukl7DmEMaA9ec4A52AU0A7vZQz9YSzgfqpZCIuHOHTiCER
+	AkqNO7a4kOpKmxHCz2UYARqkVGn+vD4WjPib+muRd4ywCQEGhcd//KATJar8dxF1
+	Zm/a8It9J4EhgJZLuTTors55DQH9kut3aIv3FoG/U0EttPhLyZ5m98qsqbkcObfx
+	M9UnoWsJr0pxQB4EsRbSWKXnFPAEVrY+wREW2sXxhfOXhsDQSGm0mFSkPYxYTvNj
+	s+AOIQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e8t3xusu4-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:00 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-50d890580e1so101518041cf.3
-        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 01:22:00 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 08:22:02 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-8acb26fbbb2so18271476d6.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 01:22:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779265319; x=1779870119; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1779265321; x=1779870121; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kctZDDV/1El3U8lFByxFlfEBdTTDs6EeFVn0Tn6oObg=;
-        b=HnzI1bA+hMAck2x1Dbg11k3BUFIv/asaWQDpbBDA6p9JMByHzOYaXiIwjm9YILih4i
-         CGJyA5zwSgx8ytmpO/SkAWA3pU7Hp3Th+nVxEaaAjgAZ8Lw0SIrU6SSq1LrH9+c2SraI
-         1Y6a/ttXNSEmkyn2N2JA/VrtdyvdyLMWCcngqQuUe5bjkdTnFbX8YMPut+nFWrPNZhou
-         IBKXyab1ZsnsOVIrNkVMkHGH3mF5zia/WXdWJ4++6UtS23H+kMWKlAXgHXgIq+ktPpPN
-         mLbb0TjlslKpHtsAA4RuUAPeJzrhBsaNHX3rQB9w+UJPFh9XmwxqNUI6wEwUOWMgrTHC
-         gl6g==
+        bh=gpOoi3K+3WVMMUDmiIwOSuu1JgGomDZPzYqit1n/jaQ=;
+        b=eNgDI0N/oowLEEHlBfP2mTLLRSE83WxzOPQxblk2NfTaTqlVHKNsvSJGq99P2U2niu
+         cHCmzYwj2AokGF8SxE+3ByK9zKcmmnm0BsEFHMOHY6E9NYNK1naYYmSAIGCgh3wfXxXq
+         VAnQjSSrcCsN5u2T8Evp06zzgIyocaqgOJ3WfnDCVT+1hS774cNCVkCR0f7ezCkmT6nD
+         6fyEfe45plOkkq2tEaeY9wPxVLwFjqbO9ZSTZXfVoilhRpMKY813l3rdJDlTEBuBms3q
+         8qHO6Qw5/b2pl5L8Vk4aEkLr4dFdesPxqTfFf11871q3yXC+Pt9fCt/WtW2CdUSYCCxd
+         8Yvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779265319; x=1779870119;
+        d=1e100.net; s=20251104; t=1779265321; x=1779870121;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kctZDDV/1El3U8lFByxFlfEBdTTDs6EeFVn0Tn6oObg=;
-        b=tORaWOrwAbE+G9rRFwsZTefYJHqXeJT4RUkd5TnzNb5sK4bfN0X6umyj+OPCyDLQrZ
-         dSr0R0Cj52qozWv+roa/SPKBcl9BZQ+X1xJqMNDss2+8b1XcZuoisE5t9JvN5NdITdWh
-         IogxGL8wZkieS729mM8Qyrofe+QIVlxvr+5ExZ1PFOxfE66DiMxPP14Auf0YwrJrQhuc
-         FUldrp/mLnNxCi9WSXoUkhWhDLjecboi5WaEDFM4SCHjA46tZbOmS+qOzLBrQJi/XjDT
-         IbZrPrmuujj59TwHg0Lf6Av6WnIkpJW3zEaH89fQDzQGFy14zLIuV4olHQhSEOuPZJXx
-         z+Zw==
-X-Forwarded-Encrypted: i=1; AFNElJ+ejxMSPj5UcwSs3Pj2UGYg7hcofAhFK4IM2H3D8FVER+/fNMQxeQNS1UtPVkmyS3CiwoXCK7ec5g5b@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi8aKX3MnJOjYiqVoQaaMLPVIcXuQldS1zzpS4strIBLQztXfw
-	DSI2MJy9d7qd1n0Oow+vnOpCOjyws4wnlTbwxyhqe1tLBzNzGVYmmCycweJDfsDWrzzGGNRITJG
-	GkALa0NPt5wSOlf+euBO2+VEVKQovOIiMSnJ6mW2+r10ijrTwRNiQMd7SDs+aFd3EK/eN5rOA
-X-Gm-Gg: Acq92OEotennq+6R+EJDW3oEarDUZOXSeHjjfIqpPa6DC2S5wlbsi110vDZ6N0ZZjzD
-	j+pCmablmbpSI20PaiARF+STltBvC/t6u6x5ye7pB0AeHJaIWL4pQkwgqVlBlUV3NaY61vO4onS
-	/rVKVvQlHiAshOBy9frx0ZhMmJo1YVG+l4vV7WGRfYO0xqo4Q5s10AZ/b4GNFhJFF4UL9JB6oCr
-	cOGbAF5YhTVuVCE4Dupa8LuDgpY3qLWLSgNxmfQUnDYUkTKCscqDqM/hiRzwoQsPH+1SxioYetR
-	ktu+0p8CUsP5G4Ce+Vb42+RH3psTAEm+d0Lqbtlma/wRXzEE2/i9oQO/wOYbSfa+oUW/VIVpqno
-	9D4kbf3yCs+EnYt1/Y+VkSODGgHLDyMuKg0sjmVEeWDXqCKzkr28=
-X-Received: by 2002:a05:622a:4184:b0:50e:defb:77db with SMTP id d75a77b69052e-5165a012110mr38250681cf.10.1779265319328;
-        Wed, 20 May 2026 01:21:59 -0700 (PDT)
-X-Received: by 2002:a05:622a:4184:b0:50e:defb:77db with SMTP id d75a77b69052e-5165a012110mr38250551cf.10.1779265318909;
-        Wed, 20 May 2026 01:21:58 -0700 (PDT)
+        bh=gpOoi3K+3WVMMUDmiIwOSuu1JgGomDZPzYqit1n/jaQ=;
+        b=OvcwVWq7J9F+UbSo7NIl3+gnMG9DO81UBJh0vJGwx+wV3ic6DLJr4UqN7UuiiFHVx4
+         9O/dy1tu6OnkJz3MqsUoWp0xk0q7bjf9yW/9lRNyV4NClJES76HzXSb9wviQIPeL0inz
+         CC8kS0jaRRHr7AoSSUhPW7K2QrEpGyKkVdLD4aGBHpjzDjhA5v0Ix3tbzL1CW3205Axr
+         xWuO4+v7E+DU7adXkIzE203keUqZMXXwbVR6fgMSl+BzTo1KBFGLQM5Km2pmAzoJSwfV
+         xcH/ejDynCV8X+GJmPEdaM1LU3n+5ulIBu53dFUIfLy/AU8o0G6beCzUZcxxMPClTVdH
+         XSTQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9rsrZg5efQZptjaUGLMzqvJvGfdYWisoT1kW2QijMCbQsa+tBJ0rbcr5MuVgPVai4+5rKrkt2AB03f@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgQePVmajTfRV2yZl6bbiUZATiehc7XxC3XKmXGdgBGhbBuv2d
+	rqUo05pbkrKg2Stkamou7ecju4qTdqsCPeoZ28h/SSrLdNHVpu84V+mgsqr4N+ZU9oEmqi75vUz
+	mcc5bcHJlvg28gzRHO9TLZ8hrPDwa+RP4yIIxjy7csq28pQ118+AnSXZap3G7XESZ
+X-Gm-Gg: Acq92OHbrG/IgpvxwRZmhPOj6akD6o4eH6HdhyEcpElH5VuDYT6QQg2Jp3v+n2rjeu2
+	RPb9xzsfLS/YWnlCoX8n49aNDGZQO7REBK/MRCHfFZGp+gzf7uXeJagT5th3le6ASJqeg0Ts581
+	1LKnfLsoEDbh5rUuoZhnbal2uJDmxJa/uF/7dNDC3Hbm6uRkwEB4e16uA0iplVZpFyMnJGjcCj2
+	bw7YVgxJ6QNvcxADiMAuB7gVi8y9CbPeARRx5EcFmGjih9NJ6UOVL7l7EkHF3JLxpt6+GD6f2Vk
+	ZDihyx9v6BGAW0nMIJRZbym+HJBcTB067IBhNZAO7l6juya6MAZibuq1NZvFeorALdHmdZt6AD+
+	01MB1XuDrzrvZOCPIuyS/cA2fVIk4pWL/qG/2kWo3iLDf2E/kORI=
+X-Received: by 2002:ac8:7d94:0:b0:50e:5a87:6bfc with SMTP id d75a77b69052e-5165a06cc9emr309616641cf.24.1779265321052;
+        Wed, 20 May 2026 01:22:01 -0700 (PDT)
+X-Received: by 2002:ac8:7d94:0:b0:50e:5a87:6bfc with SMTP id d75a77b69052e-5165a06cc9emr309616481cf.24.1779265320531;
+        Wed, 20 May 2026 01:22:00 -0700 (PDT)
 Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:9ec3:885a:6d78:48d0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768072sm51518570f8f.5.2026.05.20.01.21.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e768072sm51518570f8f.5.2026.05.20.01.21.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 01:21:58 -0700 (PDT)
+        Wed, 20 May 2026 01:21:59 -0700 (PDT)
 From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Wed, 20 May 2026 10:21:43 +0200
-Subject: [PATCH v2 2/3] kunit: provide kunit_platform_device_unregister()
+Date: Wed, 20 May 2026 10:21:44 +0200
+Subject: [PATCH v2 3/3] gpio: add kunit test cases for the GPIO subsystem
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -107,7 +107,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260520-gpiolib-kunit-v2-2-cc9db39881da@oss.qualcomm.com>
+Message-Id: <20260520-gpiolib-kunit-v2-3-cc9db39881da@oss.qualcomm.com>
 References: <20260520-gpiolib-kunit-v2-0-cc9db39881da@oss.qualcomm.com>
 In-Reply-To: <20260520-gpiolib-kunit-v2-0-cc9db39881da@oss.qualcomm.com>
 To: Brendan Higgins <brendan.higgins@linux.dev>,
@@ -118,55 +118,55 @@ Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2269;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12281;
  i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=028gUqW7WcOSmGF7+T+T+hdvUW/4C3HpqpJfKtSYg7U=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqDW8f9H6wweB0pF/kIjU1nB2QZOjtHRcNHof2K
- jNeKC1uVq6JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCag1vHwAKCRAFnS7L/zaE
- w4oHEACQcllqqw6uFpKO+4gOkeWpbtB/pXUDDYB6uujlCC6DcdE8UDFiEBORbbBXDZc5rIrPQc3
- vOtJWqKRBbgDXiKajMovxDtyIrkXj6YpE64EyJ2+J3Z5DU2dhg/Yllhnkckz0plvbGEJ8rxiLgo
- U7GCJLK88Jiw1EWzIWFvXMbcO6fFkkeWz4bxdqncXqcX2jwoBYfVh8R8ADjDklYNBd3pSH8j6iK
- GkBd38EJjanRwdoW506/k9f9IWZSAVgZJV/O/bMhsEGXF0zI5Nle6mUghPrbS0xnl+EmFSr2mj7
- +DF0soO15MSdT4GBbs9VBwQf9CoK2ro7I3MXGMHW/exRIkMD2aBMZUa8s6y75CnL/mKJ6jnZBgu
- w5593R7rn1DIOlFd8F0OHZ7FNXiCbEfwdt9HgoUplIXAp78QuSLkkM06ZceRBDdjanc/ScJvDgn
- EJhKD67Ib2hFx3hItvJ1jvYqmRy73HL8POClLN+0ZUnHN7V6g38oJZAfxntqQ8k4chbJ00f281q
- dDew8oFwNgjaiDeyWih45Ny8OsSIixjy1G8SSufs5daKiTUzAg2haCIRzbFehkr1PJtCIuKuAjN
- JZAEnlJtU2morW4H5G3ro0tuXvWoztt+elyI546Z2CzvwDF/tkQiF5kVWWBHf0HKJgmS0W9PxNw
- +BUj+4nAfSEgWfQ==
+ bh=7YnHenPV9LU9HH0oXXRrIPZLMPovAnvfYPI2d8UeBlQ=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqDW8gI/iaMdqQ/KV4g0LGQ8ZlJrF0UnNUamtnE
+ ZERCPYkRZuJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCag1vIAAKCRAFnS7L/zaE
+ w9b8EACsL/Ck1loTwXkLmCXe62SuVGk3AFngor/BrY4VZo+Eq2s1Yst72Yb6nd5bNtwT17gfIs2
+ 1Cwi+O3zOTP7E7bSogcxQi8dsNTfjLvuu4gvqGda0yi051b5Ej7TYMVtQU/bMnvFPNBG8vEIzv2
+ oA5HoiOggnmXgd7EUKf4FVHIfh7xuLSXVna7zHLLyk7MW57JbuL9yVDycyNIuylP+qDFyeG8Ag/
+ ObFB3DT9LO9curOsxZWFPvxneQYCjTpE9OB8LHy4sjK9YQv7NjjlEjk0DpIkeaBtLO/zGyRwEH4
+ It0P6WBWPIOjh7+jx0FB603wbKHk67ima7YLKd+/dz87AWPiXCcs3kVCmh3i2usbyVws9iHdWZT
+ fYPIi6ZWXTzeQwMpe8sI65h0YUSKFZShrcKct18V/qNs+qJ56jMcyXaZ/8qy/Vs8DWc1EhEEHYU
+ mJ5/rBtCrCPROnM+eOcF0ro8gmq8YZh2LV0iKgwbgnOVipKg/GG8WHqjY3hAbQ2ssQpZ059eKzR
+ XwaAA7X2F1w7rBAh4oHkQLuTptcTH1zHq1X7/JzrSZQqnPDHCeRCXrv/zgTAJQeJsWE0UO0tDc8
+ AjhFuhwU+VaQwAUktetLD5RKR+A9pMxaMdqoNWWWYe6CATAbbbZspd52mAKljKwZzVzXprW2KqG
+ qVZpxKKHFCmGhiA==
 X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Authority-Analysis: v=2.4 cv=BOCDalQG c=1 sm=1 tr=0 ts=6a0d6f28 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Authority-Analysis: v=2.4 cv=WaY8rUhX c=1 sm=1 tr=0 ts=6a0d6f2a cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=EUspDBNiAAAA:8
- a=kmOvhMkJ8j3s7cJ8cD8A:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-ORIG-GUID: fisvj69WfDM6IcdwXamFyrwhKNhTRjmL
-X-Proofpoint-GUID: fisvj69WfDM6IcdwXamFyrwhKNhTRjmL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDA3OSBTYWx0ZWRfXzD1d3ixSrOa8
- P94YDfOcJ+Stwd8ExblDOh5vSoCrMoh2xLReaFU5/AHwKtX0nR9bDA5MqlmaPH87uCmJ01llx2E
- hgYKNi9mtpn1tPbwDx2IFQHsrJguzbMgDg6inRzABiuRDexq80Vbazw7Cf+sbP8l4dT83U4l/kl
- 7SytkbcG1sNPutLTBuEwBgbmH3B4jCxyxRm30bd7TrMqPUa51EDCxGHJHpj/YsLmw6wWtoY7lkg
- C/ZIhFln+LeHVRZDkP/gyWxzdbkdzWNUkZNSjOcYylKCZyxGGJUuYI+OLqh3WK95CnneGfnzYCy
- u5tTbfQge07l6DLxJv/1g+k9QccTk85cyVo+gdIv56zZKefZP7IbfTQHF+7H4OWYmf5Y/QNrCJU
- FrjW/bH9PopvhU6oRgKzIBYPFtvwfnj9DnUj/ufRPK1EWSgjQ+rDBJhDztSt24GcP+gb0QkSIyh
- 1Fo4RJgWo4XEKDIh7Hg==
+ a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=EUspDBNiAAAA:8
+ a=kd_SSO-Pc4bEN0uSuqsA:9 a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-GUID: 66fDu9vS1kt6UYi-baurqxvUmkwIte32
+X-Proofpoint-ORIG-GUID: 66fDu9vS1kt6UYi-baurqxvUmkwIte32
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDA3OSBTYWx0ZWRfX9P7QWHP25hnv
+ IArFSSzbzaF35j2E/LwDJQD0uH22x/8ezK5I2QNBSk62WtsjpdKQgb8jk7GENjsCI22zbw85+ll
+ 1dmZnBkriDioEGVN9ktrhYTl2eIewH1mB2zwicnuXyCNYYKx0fl3RbKRbivS4V01wIJN867ip+B
+ 9f0mH/Zr1Njsnjwx2ISwDf6E0q92YgjoqOEzOAXeCbhFhZaAYyyHlO6ZfSHEjBNAqhNbWkmk4QO
+ Yu/7FfLkkXSbxBKPdFvc1im2UVhNtIYHGkI05JK9Sz/Vb2qtUFhh1BRMHiRBJgVieHMcYk+6Ady
+ Ik2VoqlkPbc9YIbN63Dzx/40WF7925ewFjMm4yoNFKgRBw1O685cChZt84yAHl9kP1PxLdFONSt
+ /tuBt+of9X08e3pKSOYKGUy0KClrtZCwLEwnJ9HT4qDvfGjz3cJ3uOLOTZ3x3tiiZt7YPWixzME
+ 9/rJnISCMW6jQ02EBDQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-20_01,2026-05-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 malwarescore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 adultscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 clxscore=1015 impostorscore=0 spamscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605200079
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37185-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37186-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[linux.dev,davidgow.net,gmail.com,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -178,68 +178,427 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: A786B589FBD
+X-Rspamd-Queue-Id: DB1EE589C7E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Tests may want to unregister a platform device as part of the test case
-logic. Using the regular platform_device_register() with kunit
-assertions may result in a platform device leak or otherwise requires
-cumbersome error handling. Provide a function that unregisters a
-kunit-managed platform device and drops the release action from the
-test's list.
+Add a module containing kunit test cases for GPIO core. The idea is to
+use it to test functionalities that can't easily be tested from
+user-space with kernel selftests or GPIO character device test suites
+provided by the libgpiod package.
+
+For now add test cases that verify software node based lookup and ensure
+that a GPIO provider unbinding with active consumers does not cause a
+crash.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- include/kunit/platform_device.h |  2 ++
- lib/kunit/platform.c            | 15 +++++++++++++++
- 2 files changed, 17 insertions(+)
+ drivers/gpio/Kconfig         |   8 +
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpiolib-kunit.c | 358 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 367 insertions(+)
 
-diff --git a/include/kunit/platform_device.h b/include/kunit/platform_device.h
-index 8cad6e1c3e7efba862862b579089f2f317784a73..eee565d5d1d35c1d1bc82b45eb91d21d00c68428 100644
---- a/include/kunit/platform_device.h
-+++ b/include/kunit/platform_device.h
-@@ -14,6 +14,8 @@ int kunit_platform_device_add(struct kunit *test, struct platform_device *pdev);
- struct platform_device *
- kunit_platform_device_register_full(struct kunit *test,
- 				    const struct platform_device_info *pdevinfo);
-+void kunit_platform_device_unregister(struct kunit *test,
-+				      struct platform_device *pdev);
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 00fcab5d09a4294ed778cea78af5867a0f6e481b..0306005fb7d65ae85905e967b9065fd74db753db 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -102,6 +102,14 @@ config GPIO_CDEV_V1
+ 	  This ABI version is deprecated.
+ 	  Please use the latest ABI for new developments.
  
- int kunit_platform_device_prepare_wait_for_probe(struct kunit *test,
- 						 struct platform_device *pdev,
-diff --git a/lib/kunit/platform.c b/lib/kunit/platform.c
-index 583b50b538c79599ebbf33e261fe2e9ced35efa9..ccfbc70b4e12817f60490e8146f7f7773c9a4dbb 100644
---- a/lib/kunit/platform.c
-+++ b/lib/kunit/platform.c
-@@ -161,6 +161,21 @@ kunit_platform_device_register_full(struct kunit *test,
- }
- EXPORT_SYMBOL_GPL(kunit_platform_device_register_full);
- 
-+/**
-+ * kunit_platform_device_unregister() - Unregister a KUnit-managed platform device
-+ * @test: test context
-+ * @pdev: platform device to unregister
-+ *
-+ * Unregister a test-managed platform device and cancel its release action.
-+ */
-+void kunit_platform_device_unregister(struct kunit *test,
-+				      struct platform_device *pdev)
-+{
-+	kunit_remove_action(test, platform_device_unregister_wrapper, pdev);
-+	platform_device_unregister(pdev);
-+}
-+EXPORT_SYMBOL_GPL(kunit_platform_device_unregister);
++config GPIO_KUNIT
++	tristate "Build GPIO Kunit test cases"
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  Say Y here to build the module containing Kunit test cases verifying
++	  the functionality of the GPIO subsystem.
 +
- struct kunit_platform_device_probe_nb {
- 	struct completion *x;
- 	struct device *dev;
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 2ea47d9d3dca948e1cdc46965e83b0e1b6de5f70..c66b6dd659b16b80b6bb6b15fac3e3f462dec596 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+ gpiolib-acpi-y			:= gpiolib-acpi-core.o gpiolib-acpi-quirks.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-swnode.o
+ obj-$(CONFIG_GPIO_SHARED)	+= gpiolib-shared.o
++obj-$(CONFIG_GPIO_KUNIT)	+= gpiolib-kunit.o
+ 
+ # Device drivers. Generally keep list sorted alphabetically
+ obj-$(CONFIG_GPIO_REGMAP)	+= gpio-regmap.o
+diff --git a/drivers/gpio/gpiolib-kunit.c b/drivers/gpio/gpiolib-kunit.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..380b68f879e55433668353bb88067d561142a5bc
+--- /dev/null
++++ b/drivers/gpio/gpiolib-kunit.c
+@@ -0,0 +1,358 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) Qualcomm Technologies, Inc. and/or its subsidiaries
++ */
++
++#include <linux/fwnode.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
++#include <linux/notifier.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++
++#include <kunit/platform_device.h>
++#include <kunit/test.h>
++
++#define GPIO_TEST_PROVIDER		"gpio-test-provider"
++#define GPIO_SWNODE_TEST_CONSUMER	"gpio-swnode-test-consumer"
++#define GPIO_UNBIND_TEST_CONSUMER	"gpio-unbind-test-consumer"
++
++static int gpio_test_provider_get_direction(struct gpio_chip *gc, unsigned int offset)
++{
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int gpio_test_provider_set(struct gpio_chip *gc, unsigned int offset, int value)
++{
++	return 0;
++}
++
++static int gpio_test_provider_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_chip *gc;
++
++	gc = devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
++	if (!gc)
++		return -ENOMEM;
++
++	gc->base = -1;
++	gc->ngpio = 4;
++	gc->label = "gpio-swnode-consumer-test-device";
++	gc->parent = dev;
++	gc->owner = THIS_MODULE;
++
++	gc->get_direction = gpio_test_provider_get_direction;
++	gc->set = gpio_test_provider_set;
++
++	return devm_gpiochip_add_data(dev, gc, NULL);
++}
++
++static struct platform_driver gpio_test_provider_driver = {
++	.probe = gpio_test_provider_probe,
++	.driver = {
++		.name = GPIO_TEST_PROVIDER,
++	},
++};
++
++static const struct software_node gpio_test_provider_swnode = {
++	.name = "gpio-test-provider-primary",
++};
++
++struct gpio_swnode_consumer_pdata {
++	bool gpio_ok;
++};
++
++static const struct gpio_swnode_consumer_pdata gpio_swnode_pdata_template = {
++	.gpio_ok = false,
++};
++
++static int gpio_swnode_consumer_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_swnode_consumer_pdata *pdata = dev_get_platdata(dev);
++	struct gpio_desc *desc;
++
++	desc = devm_gpiod_get(dev, "foo", GPIOD_OUT_HIGH);
++	if (IS_ERR(desc))
++		return PTR_ERR(desc);
++
++	pdata->gpio_ok = true;
++
++	return 0;
++}
++
++static struct platform_driver gpio_swnode_consumer_driver = {
++	.probe = gpio_swnode_consumer_probe,
++	.driver = {
++		.name = GPIO_SWNODE_TEST_CONSUMER,
++	},
++};
++
++static void gpio_swnode_lookup_by_primary(struct kunit *test)
++{
++	struct gpio_swnode_consumer_pdata *pdata;
++	struct platform_device_info pdevinfo;
++	struct property_entry properties[2];
++	struct platform_device *pdev;
++	bool bound = false;
++	int ret;
++
++	ret = kunit_platform_driver_register(test, &gpio_test_provider_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ret = kunit_platform_driver_register(test, &gpio_swnode_consumer_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_TEST_PROVIDER,
++		.id = PLATFORM_DEVID_NONE,
++		.swnode = &gpio_test_provider_swnode,
++	};
++
++	pdev = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
++
++	properties[0] = PROPERTY_ENTRY_GPIO("foo-gpios",
++					    &gpio_test_provider_swnode,
++					    0, GPIO_ACTIVE_HIGH);
++	properties[1] = (struct property_entry){ };
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_SWNODE_TEST_CONSUMER,
++		.id = PLATFORM_DEVID_NONE,
++		.data = &gpio_swnode_pdata_template,
++		.size_data = sizeof(gpio_swnode_pdata_template),
++		.properties = properties,
++	};
++
++	pdev = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
++
++	wait_for_device_probe();
++	scoped_guard(device, &pdev->dev)
++		bound = device_is_bound(&pdev->dev);
++
++	KUNIT_ASSERT_TRUE(test, bound);
++
++	pdata = dev_get_platdata(&pdev->dev);
++	KUNIT_ASSERT_TRUE(test, pdata->gpio_ok);
++}
++
++static void gpio_swnode_lookup_by_secondary(struct kunit *test)
++{
++	struct gpio_swnode_consumer_pdata *pdata;
++	struct platform_device_info pdevinfo;
++	struct property_entry properties[2];
++	struct fwnode_handle *primary;
++	struct platform_device *pdev;
++	bool bound = false;
++	int ret;
++
++	/*
++	 * Can't live on the stack as it will still get referenced in cleanup
++	 * path after this function returns.
++	 */
++	primary = kunit_kzalloc(test, sizeof(*primary), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, primary);
++
++	ret = kunit_platform_driver_register(test, &gpio_test_provider_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ret = kunit_platform_driver_register(test, &gpio_swnode_consumer_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	fwnode_init(primary, NULL);
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_TEST_PROVIDER,
++		.id = PLATFORM_DEVID_NONE,
++		.fwnode = primary,
++		.swnode = &gpio_test_provider_swnode,
++	};
++
++	pdev = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
++
++	properties[0] = PROPERTY_ENTRY_GPIO("foo-gpios",
++					    &gpio_test_provider_swnode,
++					    0, GPIO_ACTIVE_HIGH);
++	properties[1] = (struct property_entry){ };
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_SWNODE_TEST_CONSUMER,
++		.id = PLATFORM_DEVID_NONE,
++		.data = &gpio_swnode_pdata_template,
++		.size_data = sizeof(gpio_swnode_pdata_template),
++		.properties = properties,
++	};
++
++	pdev = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
++
++	wait_for_device_probe();
++	scoped_guard(device, &pdev->dev)
++		bound = device_is_bound(&pdev->dev);
++
++	KUNIT_ASSERT_TRUE(test, bound);
++
++	pdata = dev_get_platdata(&pdev->dev);
++	KUNIT_ASSERT_TRUE(test, pdata->gpio_ok);
++}
++
++static struct kunit_case gpio_swnode_lookup_tests[] = {
++	KUNIT_CASE(gpio_swnode_lookup_by_primary),
++	KUNIT_CASE(gpio_swnode_lookup_by_secondary),
++	{ }
++};
++
++static struct kunit_suite gpio_swnode_lookup_test_suite = {
++	.name = "gpio-swnode-lookup",
++	.test_cases = gpio_swnode_lookup_tests,
++};
++
++static BLOCKING_NOTIFIER_HEAD(gpio_unbind_notifier);
++
++struct gpio_unbind_consumer_drvdata {
++	struct device *dev;
++	struct gpio_desc *desc;
++	struct notifier_block nb;
++	int set_retval;
++};
++
++static int gpio_unbind_notify(struct notifier_block *nb, unsigned long action,
++			      void *data)
++{
++	struct gpio_unbind_consumer_drvdata *drvdata =
++		container_of(nb, struct gpio_unbind_consumer_drvdata, nb);
++	struct device *dev = data;
++
++	if (dev != drvdata->dev)
++		return NOTIFY_DONE;
++
++	drvdata->set_retval = gpiod_set_value_cansleep(drvdata->desc, 0);
++
++	return NOTIFY_OK;
++}
++
++static void gpio_unbind_unregister_notifier(void *data)
++{
++	struct notifier_block *nb = data;
++
++	blocking_notifier_chain_unregister(&gpio_unbind_notifier, nb);
++}
++
++static int gpio_unbind_consumer_probe(struct platform_device *pdev)
++{
++	struct gpio_unbind_consumer_drvdata *data;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->dev = dev;
++
++	data->desc = devm_gpiod_get(dev, "foo", GPIOD_OUT_HIGH);
++	if (IS_ERR(data->desc))
++		return PTR_ERR(data->desc);
++
++	data->nb.notifier_call = gpio_unbind_notify;
++	ret = blocking_notifier_chain_register(&gpio_unbind_notifier, &data->nb);
++	if (ret)
++		return ret;
++
++	ret = devm_add_action_or_reset(dev, gpio_unbind_unregister_notifier, &data->nb);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, data);
++
++	return 0;
++}
++
++static struct platform_driver gpio_unbind_consumer_driver = {
++	.probe = gpio_unbind_consumer_probe,
++	.driver = {
++		.name = GPIO_UNBIND_TEST_CONSUMER,
++	},
++};
++
++static void gpio_unbind_with_consumers(struct kunit *test)
++{
++	struct gpio_unbind_consumer_drvdata *cons_data;
++	struct platform_device_info pdevinfo;
++	struct property_entry properties[2];
++	struct platform_device *prvd, *cons;
++	bool bound = false;
++	int ret;
++
++	ret = kunit_platform_driver_register(test, &gpio_test_provider_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	ret = kunit_platform_driver_register(test, &gpio_unbind_consumer_driver);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_TEST_PROVIDER,
++		.id = PLATFORM_DEVID_NONE,
++		.swnode = &gpio_test_provider_swnode,
++	};
++
++	prvd = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prvd);
++
++	properties[0] = PROPERTY_ENTRY_GPIO("foo-gpios",
++					    &gpio_test_provider_swnode,
++					    0, GPIO_ACTIVE_HIGH);
++	properties[1] = (struct property_entry){ };
++
++	pdevinfo = (struct platform_device_info){
++		.name = GPIO_UNBIND_TEST_CONSUMER,
++		.id = PLATFORM_DEVID_NONE,
++		.properties = properties,
++	};
++
++	cons = kunit_platform_device_register_full(test, &pdevinfo);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, cons);
++
++	wait_for_device_probe();
++	scoped_guard(device, &cons->dev)
++		bound = device_is_bound(&cons->dev);
++
++	KUNIT_ASSERT_TRUE(test, bound);
++
++	kunit_platform_device_unregister(test, prvd);
++
++	ret = blocking_notifier_call_chain(&gpio_unbind_notifier, 0, &cons->dev);
++	KUNIT_ASSERT_EQ(test, ret, NOTIFY_OK);
++
++	scoped_guard(device, &cons->dev) {
++		cons_data = platform_get_drvdata(cons);
++		ret = cons_data->set_retval;
++	}
++
++	KUNIT_ASSERT_EQ(test, ret, -ENODEV);
++}
++
++static struct kunit_case gpio_unbind_with_consumers_tests[] = {
++	KUNIT_CASE(gpio_unbind_with_consumers),
++	{ }
++};
++
++static struct kunit_suite gpio_unbind_with_consumers_test_suite = {
++	.name = "gpio-unbind-with-consumers",
++	.test_cases = gpio_unbind_with_consumers_tests,
++};
++
++kunit_test_suites(
++	&gpio_swnode_lookup_test_suite,
++	&gpio_unbind_with_consumers_test_suite,
++);
++
++MODULE_DESCRIPTION("Test module for the GPIO subsystem");
++MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>");
++MODULE_LICENSE("GPL");
 
 -- 
 2.47.3
