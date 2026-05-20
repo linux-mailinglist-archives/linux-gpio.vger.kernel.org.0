@@ -1,243 +1,201 @@
-Return-Path: <linux-gpio+bounces-37203-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37204-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wB65F07DDWr32wUAu9opvQ
-	(envelope-from <linux-gpio+bounces-37203-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 16:21:02 +0200
+	id OBFwI8DGDWrg3AUAu9opvQ
+	(envelope-from <linux-gpio+bounces-37204-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 16:35:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4D4758F7B8
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 16:21:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 062FC58FB57
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 16:35:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 95D7F31798CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 14:02:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A1AF53226633
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2026 14:15:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDC63E7BCC;
-	Wed, 20 May 2026 14:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC333EDADC;
+	Wed, 20 May 2026 14:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np5Eo/MD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpL99mZ/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970BE3E7BC3
-	for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 14:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEE43EEAE5;
+	Wed, 20 May 2026 14:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779285755; cv=none; b=Q7wLl06eOhwHzv/rxsqWOPDLT/8aeAEMtWwiEMfoS7aJx/5bCR2bOsQsTn5Wcdy0FUKixX1ClGNR04lrzHKWIN9vjiDlKUoWb1xy2qU3urhnRID5Z6Zd8EFfq4frP4yrg+PN8XIynguxgxfD87rvv81qN25ozAgIKTKUUJmI3ew=
+	t=1779286391; cv=none; b=n66OWMF3JNhRRzJs3LCH0Qd8hXusAD71C1EecuT5HuedvFcpTr8an6dDbqdmA9X0AezNHu7FMk8TUJA9j3vmZcsCVxdS63yvA+NN7UO+UoISardhkdAiOssYjy/LxEd034ZTBZLH+irHzq4ZzBXzkqcvJShOS4CYUFovwOUEEDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779285755; c=relaxed/simple;
-	bh=lfU22JuMTGqpNRTq06SvaHT2aCYrYJ0561qqJVpzVFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iC/f2HjZg31coBgBjSP0/907NWY+b+8FuMKu/jqHVXvS+iRqz7Ma3y4k/DtbLy6J1WsX5L9hkAM1FWIDAaj/rwyeX9edJSWzZUpC2PHDehw+JfXEJUaIxa2QC4jsonGeQMN4mlbaU6bAdO01U/vG+jg7z3PvlDInJmjR9qxaswI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=np5Eo/MD; arc=none smtp.client-ip=74.125.82.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-30246cfd41aso2040694eec.1
-        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2026 07:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779285753; x=1779890553; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=QH/+hBnpTGrzN0wXR/d49KtC+d0ximgNyQb80BoPFYo=;
-        b=np5Eo/MD5LAX/iJ9qESoz0oIMTdgSbEJmsZTcRYlokvoFDq/Ea8LChtTEnlVZTgreM
-         hfRx650/UjmJzeQ16wg8BYwSRTs1QUPkBgbrv0O9eLKG32Z3BQO4WhJobJzggqyZt5kW
-         iWOfoKKQ9S3Itlj9fKXoHZQF3Fhge3SnLC3iWHazfcNrrbF2B8BjpH1bKo47l2Nrul1l
-         32qTlUKqw0qkCkM5lzYGIGsYrNzW45qTpzHwhuxTff7OOh40Aqyv6c9kJ2bpJbrLisMd
-         UTmi1rEnH3iRE0M9ZEGt5mbsdCkxirccvp1/VSZ7HJqbrNKbHTfMVF4aKSUyf5d4OXT9
-         9kuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779285753; x=1779890553;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QH/+hBnpTGrzN0wXR/d49KtC+d0ximgNyQb80BoPFYo=;
-        b=rgtu0dEKgE6S+700Sr3E+e8+o5p1Pdf+/xiqIbAdk88rYIGdhLFU/CRundjRDUaGyI
-         vSaR5XGLqgPlXWaJsKcjzz8uNM7xG+ul/5dmkQ86mfyAn3NSNsnCwTqx6REyNgUmDhcM
-         eb2Cdk1gjm2qJaNyc1PHdhHSr7qtk9qXIJAfjd9bohf6Gr9j4g1KTKSsmR3nIIb5gztC
-         Bpw4WlNIvgr0SzmPhrPrRgpm0cFpq2ruEd6xIHqA6e6r5yzQkZzOwHVHCN3b0qpn3xkA
-         HmIhkOAC8i09OAg44sq4/yyLiFNA941YVcdCcV8LFAehCuBqyuVXqSUula9+Hd23OVa4
-         X+rQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8eFDKwqDXvzweYumPkKW6T43+ROzu9Umnqdl1zM60YYqdkwq086j5tRnNHAITJuACSn48XsQHKW2zv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz13014q2+s/43H+uC5Dqljq8aTGKsGyKcjb15lAmO4VfynWeP
-	GcypwGkgk5AWkt7PkSTZBXBgfsVbrHIMDldR5f20jkC7O07LlLCKcs4L
-X-Gm-Gg: Acq92OHVdIa31KJ53G2uCrK2Ru99RoNiLZOHjaRgXoWh36ZWqh2Do9mH/jHvLjShNr/
-	iQSbuXoNCvRaCqAHDFI8SRDvNrEZbTwHrvSXO5bpemTI7irdz2JMpr8/aIYyu4kdEw2gRiI07xq
-	D6IYx2JZ68kpCu+mMGCE27ykIU/lKtZn/BKcK4LCAfbtOWJOgg04pEHfHlgnvVUFIFWlbmHBGX3
-	+/iMdqEQI4u2+Rd9rkRO8e/U0fXFFgSxMRZwzlzwztM3dBMAyTtegzYHG5RBgxzqWa9u9C0qJcX
-	Kiq2ux2K+j32mQ9rCctmngvMJWjYHjqwoV1deP0GZ3zIXncOcTJZfthCpcDIGkFZzTa+N6bog8Y
-	R5YAidUicggRKQhcVSez/35nAQWX8Wam3zPPbVDmQOtuvH7ekCZ/S/ePtueTj1wzMdHdtOWQHQm
-	ZW04O4RB07PDDQ5ur/qbaLHwwtLbhs6jquDkvXhDYriIH1H8652bnHSmAkuHIMKpEdjnHR/6KAo
-	3+qyYGzJEI=
-X-Received: by 2002:a05:7300:6c21:b0:2da:4216:7ea3 with SMTP id 5a478bee46e88-303983c6376mr13070641eec.14.1779285752147;
-        Wed, 20 May 2026 07:02:32 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302973bbd50sm18484883eec.20.2026.05.20.07.02.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2026 07:02:31 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <57f31aba-b7d0-4e8d-8abe-84e4fc6cad84@roeck-us.net>
-Date: Wed, 20 May 2026 07:02:30 -0700
+	s=arc-20240116; t=1779286391; c=relaxed/simple;
+	bh=NRpwV9MWffZpYr7NgX302LhiIKxA0mi64NK7bsgefAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F1BThc5xS0ilrKTO7NpB7WM2HrXntOfULRLVCQ8MpbfXIsCRU5h/5u6JzXu/9rUlDx+IuxALz/a7qEen/+xSUSEHeaL/x1yIGAYM4GObYuKSHfv3g4aiDkzXhT0LjSKZSOgzzsoN40CYBfOHsoIYHRE7fmgNW0tFwJFIjQ8iDvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpL99mZ/; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 857421F000E9;
+	Wed, 20 May 2026 14:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779286389;
+	bh=KJr/URFxym0ZMrb5azCafonUL/4VJBqkePAae8JJsz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jpL99mZ/X1Yi3AGGp5lqJRUj0cDzTjB90sBRdEz0n2Df3Cn8qHiZCqlKXRn7j98vb
+	 BFBgNXvbmPnBnYfRgEDpPDOahgvDVpCqlZBWXWJY/Jj7lB4NrHaXkHdqlKfdCBNbox
+	 x8pOFW26zC7zF8ySBy3YC97W/ZxqGM+hQlaD0EElVaSyOYivuVJgolYFVx/kXYzQ/j
+	 dQJ714QceRRTLMxedO2bIFNQf14CC288FQjRkq/LcJgMdBKPh5DUoR53vEdaag2vNJ
+	 yOboU7/HJduK/w62FkRKZsBEJa8cI6/MdwdL+HIPtzjQ8VR1i6G3MTwqjsP+vkqKLN
+	 4B6DNrDfxLfUw==
+Date: Wed, 20 May 2026 15:13:05 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Dan Carpenter <error27@gmail.com>,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: avoid duplicate function definitions
+Message-ID: <20260520-princess-garden-a6d5ad4f164a@spud>
+References: <20260520075125.1514312-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/8] hwmon: (pmbus/adm1266) GPIO, NVMEM, and debugfs
- accessor fixes
-To: Abdurrahman Hussain <abdurrahman@nexthop.ai>,
- Alexandru Tachici <alexandru.tachici@analog.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-gpio@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-References: <20260518-adm1266-gpio-fixes-v3-0-e425e4f88139@nexthop.ai>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20260518-adm1266-gpio-fixes-v3-0-e425e4f88139@nexthop.ai>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BwO04UgHN+DSnFRs"
+Content-Disposition: inline
+In-Reply-To: <20260520075125.1514312-1-arnd@kernel.org>
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_FROM(0.00)[bounces-37203-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
+	FREEMAIL_CC(0.00)[kernel.org,nxp.com,microchip.com,arndb.de,intel.com,gmail.com,linaro.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37204-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[roeck-us.net:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C4D4758F7B8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,arndb.de:email,microchip.com:email]
+X-Rspamd-Queue-Id: 062FC58FB57
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/18/26 17:52, Abdurrahman Hussain wrote:
-> Eight pre-existing bugs in the adm1266 driver's userspace-facing
-> accessors and probe ordering.  Each is reachable any time userspace
-> touches an ADM1266 GPIO/PDIO line via the gpiolib char-dev or sysfs
-> interfaces, opens the nvmem device, or reads the sequencer_state
-> debugfs entry.  Five landed when GPIO support was added (commit
-> d98dfad35c38), one when blackbox/NVMEM was added (commit
-> 15609d189302), and one when the sequencer_state debugfs entry was
-> added (commit ed1ff457e187).
-> 
-> Patch 1 caps the PDIO scan loop in adm1266_gpio_get_multiple() at
-> ADM1266_PDIO_NR (16) instead of ADM1266_PDIO_STATUS (0xE9 = 233, a
-> PMBus command code that ended up in the bound by mistake).  As
-> written, the scan walks find_next_bit() up to bit 242 across a
-> 25-bit caller mask, reading out of bounds and -- if any of that
-> incidental memory contains a set bit -- driving a corresponding
-> out-of-bounds write to the caller's bits array.
-> 
-> Patch 2 drops a redundant "*bits = 0" reset that sits between the
-> GPIO and PDIO halves of adm1266_gpio_get_multiple().  As written,
-> the GPIO bits the first loop populates are immediately discarded
-> before the PDIO loop runs, so any caller asking for a mix of GPIO
-> and PDIO lines sees the GPIO half always reported as 0.
-> 
-> Patch 3 adds the missing "ret < 2" length check after the three
-> i2c_smbus_read_block_data() calls in adm1266_gpio_get() and
-> adm1266_gpio_get_multiple().  A device returning a 0- or 1-byte
-> response would otherwise compose pin status from uninitialised
-> stack memory and leak it to userspace via gpiolib.
-> 
-> Patch 4 moves adm1266_config_gpio() past pmbus_do_probe() in
-> adm1266_probe() so the gpio_chip isn't registered (and reachable
-> from userspace) until the PMBus state the GPIO accessors depend
-> on is initialised.  This is a prerequisite for patch 6.
-> 
-> Patch 5 does the same for adm1266_config_nvmem(): the nvmem
-> device is now also registered after pmbus_do_probe(), so the
-> nvmem callback (adm1266_nvmem_read) cannot race
-> pmbus_do_probe()'s own device accesses.
-> 
-> Patch 6 takes pmbus_lock at the top of adm1266_gpio_get(),
-> adm1266_gpio_get_multiple(), and adm1266_gpio_dbg_show() so the
-> GPIO PMBus reads can't land between a PAGE write and the paged
-> read pmbus_core does in another thread.
-> 
-> Patch 7 takes pmbus_lock in adm1266_nvmem_read() so its memset /
-> blackbox refill / memcpy run as a single critical section.  The
-> NVMEM core does not serialise concurrent reg_read invocations, so
-> without this two readers racing at offset 0 can interleave the
-> memset on data->dev_mem with another reader's memcpy to userspace
-> and return torn data.  The same lock also serialises the refill's
-> PMBus traffic against pmbus_core's own PAGE+register sequences.
-> 
-> Patch 8 takes pmbus_lock in adm1266_state_read() (the
-> sequencer_state debugfs handler) for the same defensive-locking
-> reason: any direct device access from outside pmbus_core should
-> be ordered with respect to pmbus_core's own.
-> 
-> Signed-off-by: Abdurrahman Hussain <abdurrahman@nexthop.ai>
 
-Series applied.
+--BwO04UgHN+DSnFRs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Guenter
+On Wed, May 20, 2026 at 09:51:14AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> The pinctrl_generic_to_map() and pinctrl_generic_pins_function_dt_node_to=
+_map()
+> functions are built whenever CONFIG_GENERIC_PINCTRL is enabled, including
+> configurations without CONFIG_OF.
+>=20
+> When CONFIG_OF is disabled, the dummy definitions are also present in the=
+ header,
+> which causes the build to fail:
+>=20
+> drivers/pinctrl/pinctrl-generic.c:20:5: error: conflicting types for 'pin=
+ctrl_generic_to_map'; have 'int(struct pinctrl_dev *, struct device_node *,=
+ struct device_node *, struct pinctrl_map **, unsigned int *, unsigned int =
+*, const char **, unsigned int,  const char **, unsigned int *, unsigned in=
+t)'
+>    20 | int pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct de=
+vice_node *parent,
+>       |     ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from drivers/pinctrl/pinctrl-generic.c:16:
+> drivers/pinctrl/pinconf.h:193:1: note: previous definition of 'pinctrl_ge=
+neric_to_map' with type 'int(struct pinctrl_dev *, struct device_node *, st=
+ruct device_node *, struct pinctrl_map **, unsigned int *, unsigned int *, =
+const char **, unsigned int,  const char **, unsigned int *, void *)'
+>   193 | pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device=
+_node *parent,
+>       | ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/pinctrl/pinctrl-generic.c:130:5: error: redefinition of 'pinctrl_=
+generic_pins_function_dt_node_to_map'
+>   130 | int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_d=
+ev *pctldev,
+>       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/pinctrl/pinconf.h:184:1: note: previous definition of 'pinctrl_ge=
+neric_pins_function_dt_node_to_map' with type 'int(struct pinctrl_dev *, st=
+ruct device_node *, struct pinctrl_map **, unsigned int *)'
+>   184 | pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *=
+pctldev,
+>       | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Removing either set of definitions is sufficient to avoid the problem.
+>=20
+> Remove the copy from the header for simplicity.
+>=20
+> Fixes: aaaf31be0426 ("pinctrl: extract pinctrl_generic_to_map() from pinc=
+trl_generic_pins_function_dt_node_to_map()")
+> Fixes: 43722575e5cd ("pinctrl: add generic functions + pins mapper")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+And all of the of functions it uses have NOP variants don't they, so
+this is the correct fix from a build coverage point of view.
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  drivers/pinctrl/pinconf.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+> index fa8fb0d290d1..60c0e9ac0464 100644
+> --- a/drivers/pinctrl/pinconf.h
+> +++ b/drivers/pinctrl/pinconf.h
+> @@ -167,7 +167,7 @@ pinconf_generic_parse_dt_pinmux(struct device_node *n=
+p, struct device *dev,
+>  }
+>  #endif
+> =20
+> -#if defined(CONFIG_GENERIC_PINCTRL) && defined (CONFIG_OF)
+> +#if defined(CONFIG_GENERIC_PINCTRL)
+>  int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pct=
+ldev,
+>  						 struct device_node *np,
+>  						 struct pinctrl_map **maps,
+> --=20
+> 2.39.5
+>=20
+
+--BwO04UgHN+DSnFRs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCag3BWwAKCRB4tDGHoIJi
+0jF8AP9X9T3DeHGpAkhYhIF3tdQjH9tI+mmqqCHSNW85SH6Q1QEA09pB7SPIU45v
+hG+8zmrGO3oZDA6ya3qmmhIHK1SD/Qk=
+=RK/z
+-----END PGP SIGNATURE-----
+
+--BwO04UgHN+DSnFRs--
 
