@@ -1,231 +1,196 @@
-Return-Path: <linux-gpio+bounces-37251-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37252-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YOM5Dy3PDmq7CQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37251-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:23:57 +0200
+	id ILmXEZbJDmoACQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37252-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:00:06 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 963255A240C
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:23:56 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFCF75A1B39
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:00:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A3F063028F15
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 08:59:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F40C6302E3B6
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 09:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD88364049;
-	Thu, 21 May 2026 08:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE69366561;
+	Thu, 21 May 2026 08:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCqnDG/3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqArCoFx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AE323392E
-	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 08:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9190332EA2
+	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 08:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779353968; cv=none; b=PT4PZ5ADJpbpd10TEzET77Ek2tG8INXslJbHIyb5r9dAnAU6w9DTh1iBb+5LTUEfXXfRUSj2nUCw0Zj0+9/O4rzQntMTa3YBqkPrDNkjGlctL7WDRJsO38pdq/n0e23lfsIS0gLkl0AqOMJ6YbyQndgpM7rPiOggy0uABWa04pA=
+	t=1779353995; cv=none; b=r9AyGDTrUASaEiV9MKTpKWuZAciWCry8EMEoeSsilmGweFk6WoZ+4aNpmwpkYHHS1qKsNvz0lvYgw7fxEm0NkedENm0xsRFhULxZqwzbtkAcoFOfYHJwM27xASgEotphSwTvCMK+rddChr9vDhvR6ABYpR4IwLPJJkf0M1v+lxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779353968; c=relaxed/simple;
-	bh=T5U+sHNh9SY1A3DhxmKruyqToYLu8Kmk4BpSzUhgDA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mml0h3T45VUBCIshOC5cFAXzdag5sMzKOEDwXxMMwxkLlDYoiaUVGl1z2V9/L3f8fWnhtieO86ULBEyAvrbCCvCxDXzu+oVzKXtJHvzUemnue9eVIqc++yEimCr2PmLy2sPJGBvxHgXD2A1gAQkNYd1wL0xW69mz0a5SvcrKpWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCqnDG/3; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8651F000E9
-	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 08:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779353967;
-	bh=x85DMC3FN6co4hcBdHKLxdvR9gcuHPSmRt07VBnTAPc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dCqnDG/38TPSTZM7pnxtHCFEBDRqWmkm8LU9Uw/G8OUQaPj8WQ/tWrG5/5ZQgnOD9
-	 R5JsUlUHDiOxi8RbqfUi8unsRhDAOG7ACdZIqlnNcYcI5Vpw3D2QlXjkfK1K5Vntqm
-	 UPz9r7Mdh0RpyxxzW34/OlD2YfQYVQ51/VxL4eqbwfavnNNBV9Mavf5Py9ygXP67DD
-	 vheLRMRh8cwhRfM7VrxS6P0nOx9w/giT/1aSiAzJN9yo/GkMg6wUbhH9MG944GZBDS
-	 TsmMCIRjGZO5Gj7ubdO9EHaYo6dA3dBaDfvSftmKVaE6w9ZuHPcebOEtnlkFG6wBol
-	 atL9FFFlIBQvw==
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-1331e851faaso3058713c88.1
-        for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 01:59:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+ErwID22tSSrdI3uz4cOxtx166NrzbCnRtzakiZ8qmgO5ftoKQpDtm2ep9N15TeQZgeSnb0DfHKSSU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZB+3pGQG7O4xISZ2xnDeogzSYuEMkLZCb769Q8rw01JSFiMkX
-	qRrrT0WbhWGMl2K4YWaZw6iX/i78/GAH7rM3IWBtKv5tYQpPgosHtZUQ+7q6yUdOnS3lwGwTpwH
-	G8qka8b6XWsn3dvnC+3aOzZoy0NZuvHPjbTzeMlWt9A==
-X-Received: by 2002:a05:7022:404:b0:12d:c9b6:bbe2 with SMTP id
- a92af1059eb24-13634938379mr812446c88.2.1779353966611; Thu, 21 May 2026
- 01:59:26 -0700 (PDT)
+	s=arc-20240116; t=1779353995; c=relaxed/simple;
+	bh=H38W0lBiSTIoOs/MoWLzTyAA7/6JpvyVmCV9VrUUq+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eZ7Oh/hoVdCu5bPG0+OcQJCLkMBFOypV/tkYpL82EsAl1vxKTh5ZAbECOl2uXTwRNjUM5qiAoQxuFP8S6EliNTQPHHjgNH/SDIjJWNO+F+vVsyg8jZI3HblwgiCYDj4iDFZvqodIXxEHHseMu+5P0XbtfmL22vcabg94RJAJmzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqArCoFx; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-841513664bbso177956b3a.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 01:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779353992; x=1779958792; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PrCn2ADSJjKIeaFMxDpe/OlWW/Wegrep/94pOz1YcEE=;
+        b=OqArCoFxMFXY356v4hQEIG3rCcgvjnX/rgIWAxlmgt/AvbJHe12DbM9BOrhqDYY+5K
+         8RfaiaW7utlpw5LTOi/y6jG3yHu0iI2HxNJZvRpPAuj7cYfj7Z1S+RkXvzlPYEhjvvYq
+         5LLTBSLN9na1gf5CZe9A17CWMeVzIpuVv6Dggqsltz/qEAIYk7ncftpHxLG0ZdD8baA2
+         JVChwIjP/QbntOBGjrBVLaNcThHn3aT+5bLYI2yePrdAW7kkq4CumbEbVB6UxWudbBv8
+         M9Ye947APfpf9wDUnJIjlEukunnR4MFTCRvxddpkpLevbGhZyZDdilw8RHepJz350I/+
+         /7Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779353992; x=1779958792;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PrCn2ADSJjKIeaFMxDpe/OlWW/Wegrep/94pOz1YcEE=;
+        b=lWRuYqCbCi1tqWhdMBeJBRJ1xF+Zp0y+Y4gTesMM/LeXb3tV46rTTWxOhYOmzNoROG
+         oQQkZ1osN1D5UaKD6d3gb/CLEcjzF6cenFzhGnPub1bNMQP4Okf8ZzZvvOM3rQi6CXcA
+         L3IEPEXTXkde1vvg6hq11urQL9zSmXwXOQfdAliXqoB+fRF7Ow47Fdv9PNhCZ8bk/Kk7
+         Spv6Vso93Wm/ZHA2DuHEWNcY2KQoJBt/ZZQaf8bxAQZ7IooVzgk6Ehh4xEHDIJklwCPd
+         3dvAyy4STVeNPRovugcUSErhg+MiXZO2YMw6p4Ssx/DcMNsZr2Pc/3E33eTJUm0orRC6
+         nXrA==
+X-Forwarded-Encrypted: i=1; AFNElJ/ZiE5Y5XniAO+Wlzb3qEdkI8BE8hjZP9BaF5tRQHxNDIQ5cau5UA6KgsQRBy/rNSfH0R20LwnI0qHw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk+sajtWIWDlr533IzSQenNGLjl+yYCbe5cH05IjEXYFnzSe89
+	U7WsKvtXVWcO+tOPqGpK5n+LOdtt3LuKrrD5AYWtBOOjSBbIR1u4ffZA
+X-Gm-Gg: Acq92OFCl+YDnjEnJVpHkNKIKEjF6ZOYmWzrwH+m8d1aioKlGeAs0+N3Ksi9bb9G9y1
+	fwe9gS/xQL5uwkUXQnSkCQl7VTr+fN+uhYqiebYV0DDMs4mUVHSWkbvOxqBUuMni4qCykPXMF0w
+	73aGtvse91+Nei/iKrWp7cNXtq4pjWHKmd3x2Q9FhQSC5aMmV45OOoVCTP7fYK3Ms9V7fIQfbjp
+	YF+8VZfgbvVbTS+UCI85Rx4hmYoTxWKOljMAual9Y9y28eqtDPS+esI9SPm02+DpE5MctQ8FV0y
+	gezT+ilgO9bvhgqZxzrO2E7W2ERrxuLsO0zMfwDSSutiDef9d2awJbDNsNqa1+gjkxOwX6xUwMk
+	VBgekR5Lo8owH1fvZdgZQyRlitWE9f5jTFWo8IPtTn9oFQG2pfnrSPQFI0oz/xnearinZXhck5k
+	JO2WJovzE9TzXgz3avIx3d+fBkFzHue0cl/gYhDVBp3eo=
+X-Received: by 2002:a05:6a00:240e:b0:82f:3017:6157 with SMTP id d2e1a72fcca58-8414b3e1583mr1782013b3a.7.1779353991933;
+        Thu, 21 May 2026 01:59:51 -0700 (PDT)
+Received: from rigel (106-68-217-148.tpgi.com.au. [106.68.217.148])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84154e02781sm720267b3a.32.2026.05.21.01.59.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 01:59:50 -0700 (PDT)
+Date: Thu, 21 May 2026 16:59:45 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] gpio: cdev: check if uAPI v2 config attributes are
+ correctly zeroed
+Message-ID: <20260521085945.GA59870@rigel>
+References: <20260521-gpio-cdev-attr-padding-check-v3-1-ec3bcbe2e358@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260520173129.1382489-1-markus.stockhausen@gmx.de>
-In-Reply-To: <20260520173129.1382489-1-markus.stockhausen@gmx.de>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 21 May 2026 10:59:06 +0200
-X-Gmail-Original-Message-ID: <CAMRc=Mf6EQDF-fSVb+jhmLvMUi2eJ5QhukKC08S-T12HKinibw@mail.gmail.com>
-X-Gm-Features: AVHnY4JpsDyZ1J4AFcHu2FM0JrI0aufZRorn5QAWhoQughYlsq5ZWEu9WPq198g
-Message-ID: <CAMRc=Mf6EQDF-fSVb+jhmLvMUi2eJ5QhukKC08S-T12HKinibw@mail.gmail.com>
-Subject: Re: [PATCH v3] i2c: i2c-gpio: Enhance driver for buses with shared SCL
-To: Markus Stockhausen <markus.stockhausen@gmx.de>
-Cc: wsa+renesas@sang-engineering.com, andi.shyti@kernel.org, linusw@kernel.org, 
-	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521-gpio-cdev-attr-padding-check-v3-1-ec3bcbe2e358@oss.qualcomm.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37251-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37252-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmx.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[warthog618@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Rspamd-Queue-Id: 963255A240C
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,msgid.link:url]
+X-Rspamd-Queue-Id: DFCF75A1B39
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 20, 2026 at 7:31=E2=80=AFPM Markus Stockhausen
-<markus.stockhausen@gmx.de> wrote:
->
-> Some lower end hardware (especially Realtek based switches) are
-> designed with multiple I2C buses that share a single clock line.
-> E.g. the D-Link DGS-1250-28X realizes 4 I2C SFP busses with 5 gpios.
->
-> Enhance the i2c-gpio driver so it can handle such hardware designs.
->
-> - Detect GPIOs that are used by multiple I2C buses in the dts by
->   using a unique identifier for each managed SCL.
->
-> - The first probing instance allocates and requests the shared SCL
->   GPIO plus an associated rt_mutex. Subsequent instances detect the
->   existing entry via the identifier and increment a reference count
->   to reuse the descriptor.
->
-> - All data transfers are serialized via custom lock_ops that handle
->   both the standard adapter bus lock and the shared SCL mutex. This
->   ensures mutual exclusion across adapters sharing the clock line.
->
-> This patch was successfully tested on Linksys LGS310C that has two
-> SFP slots with two GPIO based I2C buses that share a sinlge SCL.
-> Test environment: OpenWrt snapshot ported to kernel 6.19.14
-> including CONFIG_GPIO_SHARED=3Dy and CONFIG_GPIO_SHARED_PROXY=3Dy.
->
+On Thu, May 21, 2026 at 10:42:16AM +0200, Bartosz Golaszewski wrote:
+> We check the padding of other uAPI v2 structures but not that of line
+> config attributes. For used attributes: check if their padding is
+> zeroed, for unused: check if the entire structure is zeroed.
+> 
+> Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Thanks for testing!
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
-> Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
->
 > ---
->
-> v2 -> v3
->   - Fix lockdep_set_class() with DEBUG_LOCK_ALLOC=3Dy
-> v2: https://lore.kernel.org/linux-i2c/20260518161013.900504-1-markus.stoc=
-khausen@gmx.de/
->
-> v1 -> v2
->   - Convert fault injector to scl->gpio (reported by test robot)
->   - Use rt_mutex and i2c_lock_operations instead of pre/post_xfer
->     (logic taken from i2c-cht-wc.c and enhanced)
->   - i2c_gpio_lookup_scl()
->     - Improve list control flow
->     - Improve comment
->     - Carve out SCL node comparison into i2c_gpio_scl_matches()
->   - Drop "valid" attribute and directly check gpiod instead
->   - Improve fwnode args check for #gpio-cells=3D1 case
->   - Add sda/scl cleanup during probe failures
->   - Replace dev_info() with dev_dbg()
->   - Reflect changed locking in commmit message
->   - Tested with config option GPIO_SHARED/GPIO_SHARED_PROXY
->     as requested by Bartosz
-> v1: https://lore.kernel.org/linux-i2c/20260514092042.3265986-1-markus.sto=
-ckhausen@gmx.de/
->
-> v0 -> v1
->   - Initially this enhancement was submitted as a new driver with
->     a new devicetree structure. After some discussion Wolfram
->     advised to make only an enhancement to the i2c-gpio driver.
-> v0: https://lore.kernel.org/linux-i2c/20260511162528.84508-1-markus.stock=
-hausen@gmx.de/
+> Changes in v3:
+> - Don't try to check unused attributes if there are none
+> - Don't reuse the loop iterator from the attribute padding check
+> - Link to v2: https://patch.msgid.link/20260520-gpio-cdev-attr-padding-check-v2-1-0010daf8059f@oss.qualcomm.com
+> 
+> Changes in v2:
+> - Make checking even stricter: check if padding is zeroed for used
+>   attributes, for unused ones: check if the entire struct is zeroed
+> - Link to v1: https://patch.msgid.link/20260519-gpio-cdev-attr-padding-check-v1-1-a0c6d4a698bf@oss.qualcomm.com
 > ---
->  drivers/i2c/busses/i2c-gpio.c | 208 +++++++++++++++++++++++++++++++---
->  1 file changed, 194 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.=
-c
-> index f4355b17bfbf..80e1347ecbac 100644
-> --- a/drivers/i2c/busses/i2c-gpio.c
-> +++ b/drivers/i2c/busses/i2c-gpio.c
-> @@ -18,9 +18,23 @@
->  #include <linux/property.h>
->  #include <linux/slab.h>
->
-> +static LIST_HEAD(i2c_gpio_scl_list);
-> +static DEFINE_MUTEX(i2c_gpio_scl_list_lock);
-> +static struct lock_class_key i2c_gpio_scl_lock_key;
-> +
-> +struct i2c_gpio_scl_data {
-> +       struct fwnode_handle *fw_node;
-> +       u32 fw_pin;
-> +       u32 fw_flags;
-> +       struct gpio_desc *gpio;
-> +       struct rt_mutex lock;
-> +       refcount_t ref;
-> +       struct list_head list;
-> +};
-> +
->  struct i2c_gpio_private_data {
->         struct gpio_desc *sda;
-> -       struct gpio_desc *scl;
-> +       struct i2c_gpio_scl_data *scl;
->         struct i2c_adapter adap;
->         struct i2c_algo_bit_data bit_data;
->         struct i2c_gpio_platform_data pdata;
-> @@ -31,6 +45,11 @@ struct i2c_gpio_private_data {
->  #endif
->  };
->
-> +static inline struct i2c_gpio_private_data *adap_to_priv(struct i2c_adap=
-ter *adap)
-> +{
-> +       return container_of(adap, struct i2c_gpio_private_data, adap);
-> +}
-> +
->  /*
->   * Toggle SDA by changing the output value of the pin. This is only
->   * valid for pins configured as open drain (i.e. setting the value
-> @@ -53,7 +72,7 @@ static void i2c_gpio_setscl_val(void *data, int state)
+>  drivers/gpio/gpiolib-cdev.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index f36b7c06996d70b2286edbd181899e4c572b9086..82f27db0b2304679eae4c4f28302e9845d7cbaa3 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -1184,6 +1184,7 @@ static int gpio_v2_line_flags_validate(u64 flags)
+>  static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
+>  					unsigned int num_lines)
 >  {
->         struct i2c_gpio_private_data *priv =3D data;
->
-> -       gpiod_set_value_cansleep(priv->scl, state);
-> +       gpiod_set_value_cansleep(priv->scl->gpio, state);
-
-That one bothers me a bit. We're driving a clock line but may end up
-sleeping? That doesn't sound right. We typically do:
-
-setscl();
-udelay();
-
-I know it's been like this before and maybe I'm not understanding the
-whole picture so feel free to disregard the comment.
-
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> +	size_t unused_attrs;
+>  	unsigned int i;
+>  	u64 flags;
+>  	int ret;
+> @@ -1191,9 +1192,21 @@ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
+>  	if (lc->num_attrs > GPIO_V2_LINE_NUM_ATTRS_MAX)
+>  		return -EINVAL;
+>  
+> +	unused_attrs = GPIO_V2_LINE_NUM_ATTRS_MAX - lc->num_attrs;
+> +
+>  	if (!mem_is_zero(lc->padding, sizeof(lc->padding)))
+>  		return -EINVAL;
+>  
+> +	for (i = 0; i < lc->num_attrs; i++) {
+> +		if (lc->attrs[i].attr.padding != 0)
+> +			return -EINVAL;
+> +	}
+> +
+> +	if (unused_attrs) {
+> +		if (!mem_is_zero(&lc->attrs[lc->num_attrs], unused_attrs * sizeof(*lc->attrs)))
+> +			return -EINVAL;
+> +	}
+> +
+>  	for (i = 0; i < num_lines; i++) {
+>  		flags = gpio_v2_line_config_flags(lc, i);
+>  		ret = gpio_v2_line_flags_validate(flags);
+> 
+> ---
+> base-commit: 6a50ba100ace43f43c87384367eb2d2605fcc16c
+> change-id: 20260519-gpio-cdev-attr-padding-check-7e52c98a3de7
+> 
+> Best regards,
+> -- 
+> Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> 
 
