@@ -1,115 +1,101 @@
-Return-Path: <linux-gpio+bounces-37254-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37255-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qCL1DcnQDmrOCQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37254-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:30:49 +0200
+	id CF9rFJXSDmr2CQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37255-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:38:29 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F3C75A25E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:30:48 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6B935A279E
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:38:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2EF2F30F3EAD
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 09:05:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 378EC316CC6C
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 09:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2320036B076;
-	Thu, 21 May 2026 09:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA523537E5;
+	Thu, 21 May 2026 09:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKQomMCR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcFpV4QA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7ECE226D18
-	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 09:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D203624BC
+	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 09:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779354268; cv=none; b=hvoGguAaP3aPiMCLO58cIoWEoWK7zJmOYsI1XEX75n8I4vYnJFL7lZL14I8sl4X3AS2JfRlbXraGRLLelPiRRMswf1tMEmYhvdbacMONNUkLrK7Xz2T5BP3BTS+oPFNpGEI4DUvNLE0T5QeuuLcohrH556xX4pp3P9SegV8yRas=
+	t=1779354561; cv=none; b=mmI3w0jPqDxIqilE8COKTwQcw54JYsY+PJP5bVHjpjqidGrfpnlQkcJsvhFtdv1lMUf7k+Sqew27y7gcI4CAD/isQ14t9Fsbpbm+0crOzBV7+/ofP+D2XLL49es+1jnW4WIOCFEQSynYt9FHAf/PnXDpP50USwNoqn9ZdYcpp30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779354268; c=relaxed/simple;
-	bh=TKLGSf3GBjMP36BA0MEdaSC8c160hy43LOrQEKAZGHA=;
+	s=arc-20240116; t=1779354561; c=relaxed/simple;
+	bh=HpvRBY8lbmiyzUWTmQ6mLlMu3Ab39ZXALE9sv15k+3w=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uh60n7czKTCj9Z4uRbtaTHKovh7ITFUNOK703PAb1NVNxn2U1HQO/Mgql5BwiKnTbHWEGrmhUgImxkyENUomRHJERcwlb0gjjLvmo02ZUW7LdQJCDxrnijr8QAzXK5YHfElt6AoScahTzXUUhz9yihIYJGuuCVGtXJstyXJeY58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKQomMCR; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD6E1F00A3F
-	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 09:04:26 +0000 (UTC)
+	 To:Cc:Content-Type; b=WffN5qZU7icL0ZPMG2LO+EHeHyqt3ZiljX9nbmFhx1dWSi//33Cyaht7mZPqG8xpPiGdLfCvLr0nTS+KX+ynd7JDm0d5aebPfBzZWDrNDtaIPZ7jugnRVdCF3AwvGif36F6YR8DPNF+wYAEAQibbtPmZyD1ooILVpZ8DKr7yFwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcFpV4QA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3B61F00A3F
+	for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 09:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779354266;
-	bh=TKLGSf3GBjMP36BA0MEdaSC8c160hy43LOrQEKAZGHA=;
+	s=k20260515; t=1779354560;
+	bh=tZQ+ChGAmDE+uIHx0cmmqJIG4xuBBt/oi0plyigfTmc=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=eKQomMCRdagq0CrKNNAbWd+5SdT7HxEZk8SS5c8YukUkxYbmsHDNc/MTCkRogOOAR
-	 Pt90hL1Y+9+RT+N3XxUqrqLtC8PCPudBhj3TVnarBl21Gv9NEoCrtJ8+d5Jb/WMAeC
-	 ML0j7DPXCMlI6VpU6g8SKFHinb03aCauKOqSAnYd6mmg/ByxqHRUMCYHVZSLCbjYjR
-	 Jqr3WTarjbmTW+joe5Y++iCVDIgMGOqSp9V1U1/HCam6x7pvdtNk1FCRJOo8Tkv7FQ
-	 FOLySF45LYKr6CJSo7I6TQ3iC18Zx5azfFzHqJN/J5myRPJSuw9bweC9nSI3U1A2dq
-	 WJy66QWmIaooQ==
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-135e88b8e55so6396952c88.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 02:04:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ858e5pREeOKH9xzYuDvFwSi5KLNaD8QkfCFqPXEu6gtLzW2TCJF7Sa455rZJkxEJNI96PH4gwgb4pW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsHo8HbYuxlzzzuhFKreN4N+QQx7QXx5wY/IGr/GwqN4nxruWk
-	JduWRrqqFIZB2olMlKrfKI0G58cSsdSqvTaGGlwk6Zna9gVRb4aFqdsnQVUCn2QLQ/yW67gFMOL
-	+utYhjq2vO8HehtfiO5R24kq3Kf7ZQ+aIEIcCk4jQEA==
-X-Received: by 2002:a05:7022:ec88:b0:134:a731:e778 with SMTP id
- a92af1059eb24-13632f6adf6mr920006c88.39.1779354265385; Thu, 21 May 2026
- 02:04:25 -0700 (PDT)
+	b=mcFpV4QASf5he7XkX9GMiYvVKUp7RMFoHYMX1oX2w7udhqLGXIjgE2qxJxVNG7pv5
+	 xJdiPnCpGwdY+yvMGJo4gySH2yPII7slIDmMg9TmTkhPQs5YqoejSJeh/Jn4/XUMna
+	 aaIpzq0QNfdEXLLKb2if34+5+NodrnF48pUBoUfiNOqkb60hY3hNs/mOq0Q7+8Gevm
+	 2rLvdQG1kGdXntl9Iv+21S1jWEmz+msIW6rpYfFkUJhTxwXNFynxRJMieD/cj19Ih+
+	 uzD1zWxQGpx3S26EGx3d+8044Nt2hOEsQ1fngvfhRIP6rLMDfr31xodUK/DsjvJcjh
+	 xuH+iaoUY13fQ==
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-13621cca8f5so1723566c88.0
+        for <linux-gpio@vger.kernel.org>; Thu, 21 May 2026 02:09:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+DX+r75Yb4Lg9SC3rVObtJXZvPqMgo769denREbJVGnxDoZUNaQf81cxNMEdVc0170QIxPqZ9g40a4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr0wfKUE5NJvCvFofpHfq11nk79WrPGDHFxnaesCNv5S7X3KXM
+	KqYdAv8aRyQ9sn5MnZx6bbkPEdcCZ9USpo88nl/IywpKDDspDuhvnCcQqjUelIBLTdYnaKR2Som
+	8kv+TcVHJ/DMbfleqlU5knzDuITOxsmx/BSW4NNFIGw==
+X-Received: by 2002:a05:7022:2392:b0:130:ca3d:fa74 with SMTP id
+ a92af1059eb24-13632f5e0f3mr1015599c88.42.1779354559846; Thu, 21 May 2026
+ 02:09:19 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 21 May 2026 02:04:21 -0700
+ HTTPREST; Thu, 21 May 2026 02:09:17 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 21 May 2026 02:04:21 -0700
+ HTTPREST; Thu, 21 May 2026 02:09:17 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260520183815.2510387-8-arnd@kernel.org>
+In-Reply-To: <20260520-rsk7203-properties-v2-1-465f3308021b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260520183815.2510387-1-arnd@kernel.org> <20260520183815.2510387-8-arnd@kernel.org>
-Date: Thu, 21 May 2026 02:04:21 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Mebt+hpSBfpsnHh1+SKt9b1cRBNge5WSoRrsfX1BBFgtA@mail.gmail.com>
-X-Gm-Features: AVHnY4LWqhGtTeBYvpB-D8gN85zif4ar2-h8NZZ1yCLGF3pH11futzwzVDKQXSE
-Message-ID: <CAMRc=Mebt+hpSBfpsnHh1+SKt9b1cRBNge5WSoRrsfX1BBFgtA@mail.gmail.com>
-Subject: Re: [PATCH 07/10] [v6 net-next] dt-bindings: net: add
- st,stlc4560/p54spi binding
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Lamparter <chunkeey@googlemail.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
-	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-	Tony Lindgren <tony@atomide.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Jonas Gorski <jonas.gorski@gmail.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-wireless@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
-	netdev@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, linux-gpio@vger.kernel.org
+References: <20260520-rsk7203-properties-v2-0-465f3308021b@gmail.com> <20260520-rsk7203-properties-v2-1-465f3308021b@gmail.com>
+Date: Thu, 21 May 2026 02:09:17 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mcu+UTGz5keKgHqo4BdWMtK87CLiVU1jWBoLHNABJc2sA@mail.gmail.com>
+X-Gm-Features: AVHnY4Jr7rGL-1AgbjdFR6Z5eqHof0x8iAqjMz8AFfw842n9_b1NuawDkEv0zms
+Message-ID: <CAMRc=Mcu+UTGz5keKgHqo4BdWMtK87CLiVU1jWBoLHNABJc2sA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: renesas: gpio: isolate function gpiochip
+ from parent fwnode
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Arnd Bergmann <arnd@kernel.org>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Content-Type: text/plain; charset="UTF-8"
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37254-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,arndb.de,googlemail.com,sipsolutions.net,iki.fi,kemnade.info,baylibre.com,kernel.org,atomide.com,alpha.franken.de,physik.fu-berlin.de,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,broadcom.com,lunn.ch,davemloft.net,google.com,lists.infradead.org,microchip.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,microchip.com:email,qualcomm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email];
+	TAGGED_FROM(0.00)[bounces-37255-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[43];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -119,32 +105,62 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 8F3C75A25E2
+X-Rspamd-Queue-Id: B6B935A279E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 20 May 2026 20:38:12 +0200, Arnd Bergmann <arnd@kernel.org> said:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Thu, 21 May 2026 07:13:17 +0200, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> said:
+> The sh-pfc driver registers two separate gpiochip instances: one for
+> real GPIOs and another for function GPIOs. Since both share the same
+> parent platform device, gpiolib's fallback logic causes both chips to
+> share the same firmware node (fwnode).
 >
-> The SPI version of Prism54 was sold under a couple of different
-> names and supported by the Linux p54spi driver, but there was
-> never a DT binding for it.
+> This causes ambiguity when using software nodes to describe GPIOs, as
+> gpiolib may apply hogs meant for one chip to the other if they share the
+> same node.
 >
-> Document the four known names of this device and the properties
-> that are sufficient for its use on the Nokia N8x0 tablet.
+> Explicitly set gc->fwnode to ERR_PTR(-ENODEV) for the function GPIO
+> chip. This satisfies gpiolib's check for an existing fwnode and prevents
+> it from falling back to the parent device's node, while ensuring that no
+> actual properties or hogs are found on the function chip unless
+> explicitly assigned later.
 >
-> As I don't have this hardware or documentation for it, this is
-> purely based on existing usage in the driver.
->
-> Link: https://lore.kernel.org/all/e8dc9acb-6f85-e0a9-a145-d101ca6da201@gmail.com/
-> Acked-by: Christian Lamparter <chunkeey@gmail.com>
->
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Assisted-by: Gemini:gemini-3.1-pro
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
+>  drivers/pinctrl/renesas/gpio.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/pinctrl/renesas/gpio.c b/drivers/pinctrl/renesas/gpio.c
+> index 2293af642849..4e59dadb7364 100644
+> --- a/drivers/pinctrl/renesas/gpio.c
+> +++ b/drivers/pinctrl/renesas/gpio.c
+> @@ -278,6 +278,12 @@ static int gpio_function_setup(struct sh_pfc_chip *chip)
+>
+>  	gc->request = gpio_function_request;
+>
+> +	/*
+> +	 * Explicitly mask the parent's fwnode to prevent gpiolib from
+> +	 * reusing it for function GPIOs.
+> +	 */
+> +	gc->fwnode = ERR_PTR(-ENODEV);
+> +
+>  	gc->label = pfc->info->name;
+>  	gc->owner = THIS_MODULE;
+>  	gc->base = pfc->nr_gpio_pins;
+>
+> --
+> 2.54.0.669.g59709faab0-goog
+>
+>
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+
+Should we document this behavior in struct gpio_chip's kerneldoc?
+
+Bartosz
 
