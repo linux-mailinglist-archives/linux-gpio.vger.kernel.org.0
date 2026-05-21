@@ -1,47 +1,64 @@
-Return-Path: <linux-gpio+bounces-37265-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37349-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yHVoE0fXDmr2CQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37265-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:58:31 +0200
+	id OFbCCVgxEGoaUwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37349-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:35:04 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D11D5A2D13
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 11:58:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DB6F5B2365
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:35:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 02C623048C11
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 09:53:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F34ED302F240
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 10:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1588C37E2FF;
-	Thu, 21 May 2026 09:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F5E3FBED1;
+	Fri, 22 May 2026 10:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="a0paDOav"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXsGOZL8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ultrarisc.com (unknown [218.76.62.146])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3074337D116;
-	Thu, 21 May 2026 09:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED1A3CD8A4;
+	Fri, 22 May 2026 10:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779357191; cv=none; b=OjpAaYT3bBjD0A/5/DLt34ixKJ8mO+yCOyHj4JJt6Zc9ISE9N2tcG09BGqLp9V1ODXV2y/or0qZc+7vZzKjGhrRulmSVSkdxCmFYK9cfXbU9gylzTLwq3uvSlFSn4aRtjAaMnJkNXKgu3x5zMBPvtDVCr/QbiFVuNjaL2rDHWfM=
+	t=1779445424; cv=none; b=eCGX+QJ4GHn7ByRESbvYsHlMyO1diXAdimxa6TaOyN1k6sSlszKxvmwDxKWUI9t0nDlgx7d7qKyS7wD4ecok9nIUUXTCJn/dGnx1wKc0BTqSHhR4H+sbqHvNu9rvI7EIDkryWaeoz2ebTvlVMFrQIM1eFZAR4oy6S+PkQINH16k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779357191; c=relaxed/simple;
-	bh=oQuciAhPofGRVn6oybq8MD+S9f6md4Z7crcETX1NTeU=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=U8aashk3X34Kypac6ReGsB88WvVzPIer75vqXd+UrYqppS/9bN/DFj/INsuneRaBB4GEonzKxPTB4fKa+P+4s3K/GuwdoEc6pspDM1S5iIbbybaRwkycbiuIQzVFn/RSz/CFQNijHOJncz4m+kk6hjCNdG6Vg75ub1/7s/0JZ1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=none smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=a0paDOav; arc=none smtp.client-ip=218.76.62.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ultrarisc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
-	References:Date:Message-Id; bh=yeSeqiLDR0f7egc07t/OdNUi/rJU7dHEP
-	sFmSaMZ6gU=; b=a0paDOav8lG7Lwvzwtk6z4Z30Ca3tacQvMY1PicBH2DrENQvQ
-	MyylQdyVnCbqX/0gPUoBY376UO0A/CUP+jEqsWKKGPwKkhRQnqwMyWyWk1IYT1fj
-	1O/O5q0fQ5LR60lgQvb4VjuqE9t5I3cQR7Lf47ASjyC1X9L+ThBDG2Sgpk=
-Received: from [127.0.0.1] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAfwA3cUIL1g5qXQgFAA--.7169S2;
-	Thu, 21 May 2026 17:53:15 +0800 (CST)
+	s=arc-20240116; t=1779445424; c=relaxed/simple;
+	bh=eUs6YVU2iFtFB2JHUiISX/6iwqnt7Bq1OFgZKZQ0uKg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=AhQvajy98ZXKsPjpDVXFKTePEugevZ9SaM4EAdRSXxns2bwXDiS10UN9NvJba1YUeOpdZdmVd6okAPuYKDhZBlxcPjY3XVuJ3ULig46/S+dAI5XieSgf8rt4oNIz/WajY0OK3hlb0K3dubdt0zS3XYNhlONqtzCXgHkjdxLzxBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXsGOZL8; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F3F1F00A3D;
+	Fri, 22 May 2026 10:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779445423;
+	bh=xq2WMGxYrdq7+VpHGko1wAXp02qIJZ5EaLRL0m99YUo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=UXsGOZL8biEqFcm+yDxKBRmmTG7wr1b9UH9iU9EuR6OB5xaigS/PK7iSDw/Vm4W4N
+	 MC2XACcVHcPGTvcWYO6pDoxWAR1GJUvyG+VRTdn4Ow5feS300wzQMk+L2k+6ZxYkkE
+	 nk0Ca2W0d17+0UyKihAUDvBW0QirdOPzWKKWy+jfAddiTYyrRv5dwFgsPT7mQRGu8F
+	 ztEfRFh8KZ6oE4CFg968OvZmhGDY46xnF5TnqX27zGgdcnM/xZ2WyMSSFTuLD0R24Q
+	 JHhnDyOAAAicbO9T3PEfEf4UlW9m4ei9MWEpN7/AeAAzj3OgnIZc+XITt09RJw8N7D
+	 EUnVO+Pny6gKA==
+From: Mark Brown <broonie@kernel.org>
+To: Hoan Tran <hoan@os.amperecomputing.com>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Thomas Lin <thomas_lin@lecomputing.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-spi@vger.kernel.org, 
+ braden_zhang@lecomputing.com, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20260521-lecarc-acpi-ids-v1-0-ae0ae90b2817@lecomputing.com>
+References: <20260521-lecarc-acpi-ids-v1-0-ae0ae90b2817@lecomputing.com>
+Subject: Re: (subset) [PATCH 0/2] Subject: [PATCH v5 0/2] arm64: Add LECARC
+ ACPI IDs for DesignWare GPIO, SPI
+Message-Id: <177935811877.58022.6763569850673857398.b4-ty@b4>
+Date: Thu, 21 May 2026 11:08:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -49,209 +66,85 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/9] riscv: ultrarisc: add DP1000 SoC DT and pinctrl
- support
-From: Jia Wang <wangjia@ultrarisc.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Jia Wang <wangjia@ultrarisc.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-In-Reply-To: <20260515-brink-dealer-d0610c0dbc7b@wendy>
-References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-brink-dealer-d0610c0dbc7b@wendy>
-Date: Thu, 21 May 2026 17:52:34 +0800
-Message-Id: <177935715446.943957.13292482270209644157.b4-reply@b4>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779357154; l=5927;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=oQuciAhPofGRVn6oybq8MD+S9f6md4Z7crcETX1NTeU=;
- b=SSpb+MDjxdd6C7Rj9vlOM1y+DLUOhQ8FDQ/MtJWlWgutMQIL9GFLLY3KudiFG40M3FTrcH6T6
- 1Imgfz40EvkDfsxI31VhFiLQTPNVyZV9GSgy4TMO5TSQEYPC0Q7fnsx
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-CM-TRANSID:AQAAfwA3cUIL1g5qXQgFAA--.7169S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3AFWrJw13JFy8Xr17tr1xGrg_yoW7CF1kpF
-	43WF45AFyDJFWfKFWIq3W8C3W3X3WxArW3W3W7t3srJF45Z34UJFykKw45XF4Dur4DXryY
-	yF1jkFyxG3WjvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9l14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
-X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQANEWoNL8UAJwADs0
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=eUs6YVU2iFtFB2JHUiISX/6iwqnt7Bq1OFgZKZQ0uKg=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqEC6sfKu343MptDCXeGNaCumZEVJKfrQjhNA3J
+ 6agdVFSQWqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCahAurAAKCRAk1otyXVSH
+ 0IVRB/4jjzULxCcwXtugQpfoBXaIoe631zWgzVhxI8oyXQwUB/80TUP7HI67KBrsOUr8wlb8/Xn
+ zyKVcIqdisj5cUxOU8D3WcYyauBstYtgBvzhzzQ6IPkc5nwaEPUlttCiI4lcV/DJD7rgeZh3zU7
+ obshP4uzV5gx0Z/X2RqxyfqgzAa04cz1i/872sJv5NwleVQvo7m+32+mDjvgpvlOjsXSjrCYKDR
+ NX1fNyPKHDI9fjDcWN2fN2ktAYoNGa/3iXeO+x0552DrEsEJqbLSxkLtqibKX2+pOBYiODMGuHw
+ 2HOk8JK66w563dovBqPcXl18s/HT2GuIHEsKwOd+0RMaQW2n
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	DATE_IN_PAST(1.00)[24];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
-	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37349-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ultrarisc.com:+];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37265-lists,linux-gpio=lfdr.de];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:email,ultrarisc.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0D11D5A2D13
+	RCPT_COUNT_TWELVE(0.00)[12];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 7DB6F5B2365
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-05-15 11:05 +0100, Conor Dooley wrote:
-> Hey,
+On Thu, 21 May 2026 10:34:48 +0800, Thomas Lin wrote:
+> Subject: [PATCH v5 0/2] arm64: Add LECARC ACPI IDs for DesignWare GPIO, SPI
 > 
-> On Fri, May 15, 2026 at 09:17:56AM +0800, Jia Wang wrote:
-> > This series adds initial Devicetree support for the UltraRISC DP1000 RISC-V
-> > SoC and two DP1000-based boards (Milk-V Titan and Rongda M0).
-> > 
-> > The series introduces the required DT bindings, adds the DP1000 pinctrl
-> > driver, and provides the initial SoC/board DTS files.
-> > 
-> > Notes:
-> >   - Clocks are configured and enabled by firmware before Linux boots. Linux
-> >     does not manage clock rates or gating at runtime on this platform.
-> >     Therefore the initial DT only models the fixed clocks required by
-> >     standard drivers, and no clock controller/driver is provided.
+> This patch series adds ACPI identification for LECARC SoCs that
+> integrate Synopsys DesignWare peripherals.
 > 
-> I really disagree with this approach. In my experience it never ends up
-> working out and ends up being disruptive, because it is either an over
-> simplification of the clock tree and condenses multiple different clocks
-> into one where rates are similar or because firmware changes mean clock
-> rate changes down the line. I would much rather you modelled the clocks
-> accurately, even if that just means that a read-only clock controller is
-> implemented. Alternatively, if firmware does all of your clock control,
-> you can implement this using rpmi/mpoxy using clk-rpmi.c
+> LECARC platforms use the following ACPI HIDs:
 > 
+> [...]
 
-Understood. I'll implement a read-only clock controller in v2.
+Applied to
 
-> >   - The DP1000 pinctrl binding supports two child node styles under the same
-> >     controller compatible:
-> >       * legacy DP1000-specific nodes using phandle-array properties
-> >         "pinctrl-pins" and "pinconf-pins"
-> >       * generic pinctrl nodes using "pins", "function" and generic pin
-> >         configuration properties
-> >     The legacy form is kept for compatibility with existing vendor DTs.
-> 
-> Why would we want "legacy" stuff in mainline when this is a brand new
-> platform? "legacy" vendor devicetrees are not something that mainline
-> cares about, sorry.
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-7.2
 
-I'll drop the legacy pinctrl node format and keep only the generic pinctrl
-bindings in v2.
+Thanks!
 
-> Additionally, these pinctrl patches should be sent standalone to the
-> pinctrl maintainers, they're likely to go through lots of revisions and
-> a different maintainer applies them.
-> 
+[2/2] spi: dw-mmio: Add ACPI ID LECA0002 for LECARC SoCs
+      https://git.kernel.org/broonie/spi/c/019947c49585
 
-Just to confirm — for v2, should I completely remove the pinctrl
-binding/driver from this series and send them as a standalone pinctrl
-series, while keeping only the pinctrl references in the DTS?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> >   - The bindings for "ultrarisc,dp1000-uart" and "ultrarisc,dp1000-pcie" are
-> >     being reviewed in separate series, since the DP1000 SoC DTS introduced
-> >     here uses those compatibles:
-> >     * Link: https://lore.kernel.org/lkml/20260429-ultrarisc-serial-v7-3-e475cce9e274@ultrarisc.com/
-> >     * Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-2-98935f6cdfb5@ultrarisc.com/
-> >   - ARCH_ULTRARISC support is being reviewed separately:
-> >     * Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com/
-> 
-> IMO, this patch needs to be in this series so that it compiles.
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I’ll move the ARCH_ULTRARISC Kconfig patch into this series. Thanks for
-pointing this out.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> Cheers,
-> Conor.
-> 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Best Regards,
-Jia Wang
-
-> > 
-> > Testing:
-> >   - dt_binding_check and yamllint (all new/modified binding YAMLs)
-> >   - dtbs_check and dtbs (RISC-V, including dp1000-milkv-titan.dtb and
-> >     dp1000-rongda-m0.dtb)
-> >   - Kernel build for RISC-V and boot-tested on DP1000 (Milk-V Titan and
-> >     Rongda M0)
-> > 
-> > Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
-> > ---
-> > Jia Wang (9):
-> >       dt-bindings: vendor-prefixes: add Rongda
-> >       dt-bindings: riscv: cpus: Add UltraRISC CP100 compatible
-> >       dt-bindings: riscv: Add UltraRISC DP1000 bindings
-> >       dt-bindings: pinctrl: Add UltraRISC DP1000 pinctrl bindings
-> >       riscv: dts: ultrarisc: Add initial device tree for UltraRISC DP1000
-> >       pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl driver
-> >       riscv: dts: ultrarisc: add Rongda M0 board device tree
-> >       riscv: dts: ultrarisc: add Milk-V Titan board device tree
-> >       riscv: defconfig: enable ARCH_ULTRARISC
-> > 
-> >  .../bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml | 168 ++++
-> >  Documentation/devicetree/bindings/riscv/cpus.yaml  |   1 +
-> >  .../devicetree/bindings/riscv/ultrarisc.yaml       |  27 +
-> >  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
-> >  MAINTAINERS                                        |  15 +
-> >  arch/riscv/boot/dts/Makefile                       |   1 +
-> >  arch/riscv/boot/dts/ultrarisc/Makefile             |   3 +
-> >  .../dts/ultrarisc/dp1000-milkv-titan-pinctrl.dtsi  | 107 +++
-> >  .../boot/dts/ultrarisc/dp1000-milkv-titan.dts      | 182 +++++
-> >  .../dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi    |  85 ++
-> >  arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts | 111 +++
-> >  arch/riscv/boot/dts/ultrarisc/dp1000.dtsi          | 851 +++++++++++++++++++++
-> >  arch/riscv/configs/defconfig                       |   1 +
-> >  drivers/pinctrl/Kconfig                            |   1 +
-> >  drivers/pinctrl/Makefile                           |   1 +
-> >  drivers/pinctrl/ultrarisc/Kconfig                  |  23 +
-> >  drivers/pinctrl/ultrarisc/Makefile                 |   4 +
-> >  drivers/pinctrl/ultrarisc/pinctrl-dp1000.c         | 112 +++
-> >  drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c      | 746 ++++++++++++++++++
-> >  drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h      |  71 ++
-> >  .../dt-bindings/pinctrl/ultrarisc,dp1000-pinctrl.h |  65 ++
-> >  21 files changed, 2577 insertions(+)
-> > ---
-> > base-commit: 50897c955902c93ae71c38698abb910525ebdc89
-> > change-id: 20260316-ultrarisc-pinctrl-efa6e24c4803
-> > 
-> > Best regards,
-> > --  
-> > Jia Wang <wangjia@ultrarisc.com>
-> > 
-
+Thanks,
+Mark
 
 
