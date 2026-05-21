@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-37299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oAXRFRZyD2qxMQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37299-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 22:59:02 +0200
+	id OLFiEydyD2qxMQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37300-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 22:59:19 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA3AF5ABF4C
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 22:59:01 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50F555ABF5B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 22:59:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2C19F30356D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 20:57:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 727D03005169
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2026 20:59:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E413FE364;
-	Thu, 21 May 2026 20:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5E74028E1;
+	Thu, 21 May 2026 20:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XF8Do9bH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKYkeQtY"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F62388E63;
-	Thu, 21 May 2026 20:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDA339D3C0;
+	Thu, 21 May 2026 20:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779397074; cv=none; b=ozeEfDrZizrZf4pPPUMWMFHa+a0FJey1HCu9KWKgXok/tQyozZRC8dE2Z6JxW3GmAUCrnMFxxfItxu6gFmemXv5Rhp3iLtD18T+w1d7F2fpMJPQ/bXHnHBmLeVYyZOBh+rHGB3viv7WutTK2ViPldTNJiqPpMwUuO8OeEwSG/UA=
+	t=1779397151; cv=none; b=Gxns3KBqTj00HzIrGZGTIfcSLYjQN6OwKQwcVUg7oo2klggX18o8RUY5qApdq7pjLAciXjlO6e899WeCU3Kcid3Mrn2jRWrHhx1bQbNAl16g715ukZeDGF0nQLUbqK4nLmPB0j0Lomk44b4IBp3BCuGoZLTwAzk/274gTlLHWG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779397074; c=relaxed/simple;
-	bh=74SeUNHE6g+lyE0P6PzWWXbYVz9UVjzYKpu6/19IoEk=;
+	s=arc-20240116; t=1779397151; c=relaxed/simple;
+	bh=v1op30OCEgguz2KY20WKLNpjLAeywiEW/y+usZF3EPw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KXXEHDlRgaFkkI+3waOqdT1ffYkOW+4hEoXIq8DceBtJ7l1fLWfV//jqyNl6I/9eFCF3ABGQ390fMEQNZzc+da4Kln0Q9nsxavhYNEIbQe94l17IRJQNc5AMI0aMznpFdK9MSDNRJZIrEWx91fUY4MvsYvlDRzezPlntUsOr4N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XF8Do9bH; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FF51F000E9;
-	Thu, 21 May 2026 20:57:47 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=QktwLQLpeBBdkys2ZPJaf0da2V+d6KFNqiXYSulFvOVi4g40ydZy4t1mWGkqTJvjpcEKMXuykXslF3VfyffLCv0WRzN97eLjWNC2jWMRFBcXVRJYfIn/QDljlMwlDJl48CwdMJpwWpbVQCCh2orzPONkm4ZWH5ADUq4Q8EYvBWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKYkeQtY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039571F000E9;
+	Thu, 21 May 2026 20:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779397071;
-	bh=4MRxrVzpsK01ik90g9M2w+3BXjL6u4iHiruqkyeAGVs=;
+	s=k20260515; t=1779397149;
+	bh=JRXpWEig6IbgIhldDiRCEMAQ6F9oQTz24NXw/74K8mc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XF8Do9bHu/MYPEyY97yeJPH1ydtAgIAHjlfT1kLiXVbR+QfqXlEhhRsygi1On44+1
-	 aDccFlmBlzMlaN5/Mui2usNKFsCyxfTZrprxE3qK/0jDWoKlZ/R6OtyNbwgJpqL2T1
-	 bjsw4SsAQ5FJOuR8z/WtI8djvDPLteTqCYh2mTB/76B3ARcDujkIk4jiOifSuRRA9k
-	 bvPSKfAie4o0LZS3Ai+3o0zMQKaE8RtQUABibFOldMZbtVgqwbdLcbaSPPI6dYgc4N
-	 zZ6EGh1VMQ/kqNIBy8KH1u3Oz+XTUl+fiMAyrwWupXJ39WKhigrttbg0NMvnxSOhWw
-	 TXgCdQnH1ggkQ==
-Message-ID: <1b822b1e-cf1c-45c7-8109-3e0330911419@kernel.org>
-Date: Thu, 21 May 2026 22:57:45 +0200
+	b=fKYkeQtYytPYNhIhPJP87Uka/tb1YeGnCuv29j0jDp4xI31q0dS3IqvkmK1yUO7BG
+	 5oEK0wZEzLMlD0/wZHooDxLbi/zvfcc+H5y/YK2yWmlG1b5tHRK4c1BdK5L+WlPZ1i
+	 AYImOHBhtgNAy+Xj1zazjLBG1TPTnmgXcSoYLtpq2SI//HP4gGedoqzdu10invJp6s
+	 kZvirlkT3Q5mBRTD3e21hiTzUf+sT6vwcgp3+zG6JBF02wrdIOvQoUMFtitZXqLWhT
+	 I2llN08cx0GKsP2VshhxQi/qOMxPcLDIKbImF9mN37t/dg0zNyN30kQOXBSG4iryaz
+	 6/JAsI3Wx8pwQ==
+Message-ID: <1a4a54bc-1013-4ab0-85e9-7ad5cf7146cd@kernel.org>
+Date: Thu, 21 May 2026 22:59:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,7 +53,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] riscv: defconfig: enable ARCH_ULTRARISC
+Subject: Re: [PATCH 7/9] riscv: dts: ultrarisc: add Rongda M0 board device
+ tree
 To: wangjia@ultrarisc.com, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
@@ -66,7 +67,7 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
  devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-ultrarisc-pinctrl-v1-9-bf559589ea8a@ultrarisc.com>
+ <20260515-ultrarisc-pinctrl-v1-7-bf559589ea8a@ultrarisc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,7 +113,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260515-ultrarisc-pinctrl-v1-9-bf559589ea8a@ultrarisc.com>
+In-Reply-To: <20260515-ultrarisc-pinctrl-v1-7-bf559589ea8a@ultrarisc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -120,18 +121,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37299-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37300-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
@@ -141,38 +142,171 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: DA3AF5ABF4C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 50F555ABF5B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 15/05/2026 03:18, Jia Wang via B4 Relay wrote:
 > From: Jia Wang <wangjia@ultrarisc.com>
 > 
-> Enable `ARCH_ULTRARISC` in the default RISC-V defconfig.
-> 
-> Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com/
-
-Drop link, not relevant here.
-
+> Rongda M0 is an mATX motherboard based on the UltraRISC DP1000 SoC.
 > 
 > Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
 > ---
->  arch/riscv/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/riscv/boot/dts/Makefile                       |   1 +
+>  arch/riscv/boot/dts/ultrarisc/Makefile             |   2 +
+>  .../dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi    |  85 ++++++++++++++++
+>  arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts | 111 +++++++++++++++++++++
+>  4 files changed, 199 insertions(+)
 > 
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index c2c37327b987..9fdc4d1831ed 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -32,6 +32,7 @@ CONFIG_SOC_STARFIVE=y
->  CONFIG_ARCH_SUNXI=y
->  CONFIG_ARCH_TENSTORRENT=y
->  CONFIG_ARCH_THEAD=y
-> +CONFIG_ARCH_ULTRARISC=y
+> diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+> index 69d8751fb17c..702882974251 100644
+> --- a/arch/riscv/boot/dts/Makefile
+> +++ b/arch/riscv/boot/dts/Makefile
+> @@ -12,3 +12,4 @@ subdir-y += spacemit
+>  subdir-y += starfive
+>  subdir-y += tenstorrent
+>  subdir-y += thead
+> +subdir-y += ultrarisc
+> diff --git a/arch/riscv/boot/dts/ultrarisc/Makefile b/arch/riscv/boot/dts/ultrarisc/Makefile
+> new file mode 100644
+> index 000000000000..d01a770d3cba
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/ultrarisc/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000-rongda-m0.dtb
+> diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
+> new file mode 100644
+> index 000000000000..101b416b1079
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright(C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
+> + */
+> +
+> +#include "dp1000.dtsi"
+> +
+> +&pmx0 {
+> +	i2c0_pins: i2c0-pins {
+> +		pins = "PA12", "PA13";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	i2c1_pins: i2c1-pins {
+> +		pins = "PB6", "PB7";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	i2c2_pins: i2c2-pins {
+> +		pins = "PC0", "PC1";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	i2c3_pins: i2c3-pins {
+> +		pins = "PC2", "PC3";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	pciex4a_link_pins: pciex4a-link-pins {
+> +		pins = "PC0";
+> +		function = "func1";
+> +		bias-pull-down;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	pciex4b_link_pins: pciex4b-link-pins {
+> +		pins = "PC1";
+> +		function = "func1";
+> +		bias-pull-down;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	spi0_pins: spi0-pins {
+> +		pins = "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7";
+> +		function = "func1";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	spi1_pins: spi1-pins {
+> +		pins = "PA0", "PA1", "PA2", "PA3";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	uart0_pins: uart0-pins {
+> +		pins = "PA8", "PA9";
+> +		function = "func1";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	uart1_pins: uart1-pins {
+> +		pins = "PB4", "PB5";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +
+> +	uart2_pins: uart2-pins {
+> +		pins = "PC4", "PC5";
+> +		function = "func0";
+> +		bias-pull-up;
+> +		drive-strength = <33>;
+> +	};
+> +};
+> diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
+> new file mode 100644
+> index 000000000000..6f72d60ad55e
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright(C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
+> + */
+> +
+> +#include "dp1000-rongda-m0-pinctrl.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Rongda M0 Board";
+> +	compatible = "rongda,m0", "ultrarisc,dp1000";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		serial3 = &uart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	gpio-poweroff {
+> +		compatible = "gpio-poweroff";
+> +		gpios = <&gpio_b 0 GPIO_ACTIVE_HIGH>;
+> +		active-delay-ms = <100>;
+> +
+> +		status = "disabled";
 
-This patch should be sent with with the patch adding that config option.
-
+Why is this disabled? You just added final board, so it cannot have any
+nodes disabled. Disabled at this point means you add dead code without
+explanation.
 
 
 Best regards,
