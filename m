@@ -1,225 +1,203 @@
-Return-Path: <linux-gpio+bounces-37373-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37374-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8AM1MaVxEGqgXQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37373-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 17:09:25 +0200
+	id GJ3PGwp5EGoZXgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37374-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 17:40:58 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5AAE5B6AC5
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 17:09:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E06E75B70B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 17:40:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 95BC9304DB14
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 14:12:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 69421300DD55
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:36:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B222F8EB7;
-	Fri, 22 May 2026 14:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4F9425CF4;
+	Fri, 22 May 2026 15:36:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyvLieXv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMp3ANei"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7990410D3E
-	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 14:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84F6407575
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 15:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779459123; cv=none; b=XklPDRWBzQASOlM2y8e9hdviNcIiQf1oMRwhnED81Y3TBX9sJdeVTYTam8MDhET9IVvgnlXUQ/q0H0vTXPLI7EbowyNaHtExOGsRkDock9/Wudkq4JPTDg3y5xei/Mz+NFOmVU8YX/O8SnMOWskYp+/k12VKIWyeNQxue3Nh3CQ=
+	t=1779464180; cv=none; b=aS8hhNcX8N1Zek4YzWY88bsHoqFXbEeVAewDnhMvEVRsyx6rKnlDxB05uUhKr5BM45SID2kUtRiI/uM/DIci3QepjoKOcuuqR/hm3uS/5ZXa9ZZNcvpvSUy9gNY9ayY9GjAu6cz3BKnJL+EptZOCzWCPV2erYF9VQG3GKZsYmrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779459123; c=relaxed/simple;
-	bh=LOK18JoRaeQdrJ6kJo2lId9NtzfFZIMr3TWv1bBG748=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nQh964ZOT82v/VW4P+1LE/vra58OMt+IZhzjWPxrUKFco+g5ivvsfjFX0Y3gqhsofC7M+sfv+wqOx2tc0d5TZdCse1jC9eHWvCGin17wENYX3TUlImnZSIlDRByHOBiTk8/Ql7+13OiKxP53Scbg95m1G10SrhwZl29aGw3xr3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nyvLieXv; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7d4c383f2fcso6279747a34.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 07:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779459116; x=1780063916; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FSXE9Oey6vqItDyNGub1SS7syhqYd3bmpNkcjyrbyCI=;
-        b=nyvLieXvqv+R4FoxyOPMrJQliovLi0Aup5i9CMDuKQLQk46VKaEv33QL4pC7w/gXcI
-         nkrnsA3YKKaLKiynkQmPgxOffHUqcM9rV8J2tJO9Zp7xLhb+Nc0NLjklleg9AW5q+BlP
-         SIjHf/xAaLPTS5LibZUen4SSx6C90RzSOMDfjfpCMI6ekcrOEKl36RMSOQpaOFM1nJK9
-         qHnaOwNwlePwbn0p9Q6APxTamObsVGf7moMunYZacjPJf3tv3vqRBcaH/Za8zya9TAzX
-         +s9oyabBbavDCtJXdIbWMoTVu7ZfyBEsIra1Jdbxk1s6vQR88VURbKrWYSVl7MIT6hME
-         Z+lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779459116; x=1780063916;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSXE9Oey6vqItDyNGub1SS7syhqYd3bmpNkcjyrbyCI=;
-        b=TJu9reHos0tEnP9o34OEzyW6jirG8elBmglsSHZHpqsJDVLiZOCIrdjq+wEVqIBEEI
-         /AtnTTGtt79EtLrL1/UCz4yy57IaucF+VOpiegAmNWp+c6uRFjt8RVYQsUGkIf6ANGBF
-         xtFOULyr0gOB5I2mLEciH203yaqENP/ba39LOHe5F8wcxLvYzl/76CcObxs7ilPRr1Uf
-         HN6wUSMAa7VzdDGLJSfmL87yfv0OKSC9pD16mrTYSPycM1kcu13Tp+N10ZzrO0XOrEc8
-         Kj1oeyokDauxMNsll9oSB9XawoaltC5ypwWdwzXdw88kUK/6pMjPHGp4UI1ongn+A1yU
-         L4oA==
-X-Forwarded-Encrypted: i=1; AFNElJ/ocMMOVqcSLZKDd67tyqsGOnjLJ62qMHww2P7Q7oek6DBWKzHpqexDVMRYMAZzdD4blt1+saY/D+YL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv03s1LXb6yN7dntCiTZkmgtQq/GOfXsQkyfA9SXX9t6Ufz7L9
-	D1DwnMG1WWMUN1Q8ECgAN0MN/BvzHxg2HDgbwAsZwT55mOA9Ynf9aUbz
-X-Gm-Gg: Acq92OEkebLJj7XD9xJWobMfiU8/+7KnojVDYbIRU3ggvqzdjMh6tLtQhWM5Hk365ne
-	Zqh1GQid2XBY+IYJQMQqKvB9BWkvgDEF2bD3oNuoFiz2x77Dp9iHFjdbHtJweA49w3djg/ZJSIP
-	fVO3NH34IX37z8RFhpuuWjQAbyOc5TJoPT0aZseUg0Vs18WsajyXnhqWJNq04nT9vNPknb0Z6pN
-	aBVrT0jHcrvHoR2g0oh7rrMACysvp9DOkzxgcsicOZyURTA8zSrlM+MlPq5WxHRs+AH+IZKq5Mp
-	xsZtDReSnRuIWNWysqKssVFP5Qywja+NbcDtJHkRsnf5BwT5SBKK9Pcn84WOwH7pep1AsW6dEcP
-	nKER7NwmUtzszkgx6jVRv6oc2BkpTIxFMr06flyLsGlM5YhQRnk36iEmZKdEJhWxWNuQ+AiMiDJ
-	9h5vELBxExfb+WJur7Kmyzn30jFzQQhIBsvpGfzBV583cRMcrEOyeINUiD0lty
-X-Received: by 2002:a4a:e50d:0:b0:69d:79f5:f63b with SMTP id 006d021491bc7-69d7eb6cd39mr1480704eaf.23.1779459115927;
-        Fri, 22 May 2026 07:11:55 -0700 (PDT)
-Received: from workstation.home (71-212-98-95.ftth.glasoperator.nl. [95.98.212.71])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-43b6351a772sm1915628fac.3.2026.05.22.07.11.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 07:11:55 -0700 (PDT)
-From: Stanislav Zaikin <zstaseg@gmail.com>
-To: andersson@kernel.org,
-	linusw@kernel.org
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stanislav Zaikin <zstaseg@gmail.com>
-Subject: [PATCH] pinctrl: qcom: sm6115: Add egpio support
-Date: Fri, 22 May 2026 16:11:48 +0200
-Message-ID: <20260522141149.1425711-1-zstaseg@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1779464180; c=relaxed/simple;
+	bh=5XGxT/kvRZzrJ9UeYKMk4iaMnRVp2/GlN7y9XcCMlx0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rgAMJzBnR7JYsczmrnGFnDKgn+uGbfqsQ9dKfKXz/gCDd7W3Mec6HsqyA/oTG6LPmeiaSJz9Ya6UPmP/ndz/JHaRkWRZX/HJzb+s8orrhkDWFVr/qJ+2oeAR3ITG9q1iopJNoCFxDzymZFf8KpnjaQNUQuZ+5CB6LUhQmw7ZSJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMp3ANei; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651661F000E9
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 15:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779464179;
+	bh=yYNAqzKpRBo1WAiWby9n8a7qccyfcJTDiN3b/D7Fa0o=;
+	h=From:Date:Subject:To:Cc;
+	b=GMp3ANeiy5oSWXJxgU/p4gq9wdw9V6LvU5PXMKyQ8ovcq7VdRvoNg0wWyPobMlIB6
+	 IKE5wnJXKpgPckFzVf11YPDf9Ho7N0c3JValgCHI+craDgozB0TVXj6m9PI1hbXER/
+	 7nKokDcrhcopuEoFldCoPG6hp63SrkZxLHQJHvaied+D5pFSzz+GO7Tybn/p0FG8Jj
+	 f8gkNPa9+xUHF79WTwJrCLDqhiDpYvl7nTAln1QxD0HQXo5vi9q2K2eazgH/vj6+wB
+	 LidlYRmtEh2w4zVqTrlZvRZdvf8t01Xqm8eRC/06Lk/tQDCWrsbHpahwlh3nFbP78C
+	 zUdteg/YLDkGg==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a85b30dd54so8040771e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 08:36:19 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwcGOn62ELfy6IA7wFBneSIehg1mAP+AR7Q05y0Rr4Nruv3iVP1
+	18bZ7/6/+Q/tIDPxHxwcjuDT4aG1LwBEtZJBLNlLIohvNfCiimA5G2z3R6LaZQhUQqUx4qRgxsj
+	5e67e/JfSKlz1wrwkTnHUHdBBc2Rx1NA=
+X-Received: by 2002:a05:6512:3e1e:b0:5a8:76c0:a7b7 with SMTP id
+ 2adb3069b0e04-5aa323143f8mr1266219e87.7.1779464178180; Fri, 22 May 2026
+ 08:36:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 22 May 2026 17:36:06 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmCEJD+9LMJM0C9a6C-OdBCEb-gef4qFAY+=wULQWhECQ@mail.gmail.com>
+X-Gm-Features: AVHnY4Itzx6yw6lOY5r62Z2-1sh6VXZ6T4--j8S9CXBCxgYnsTHDUf8T8qe71Kg
+Message-ID: <CAD++jLmCEJD+9LMJM0C9a6C-OdBCEb-gef4qFAY+=wULQWhECQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for the v7.1 kernel
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux pin control <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-37373-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zstaseg@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-37374-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C5AAE5B6AC5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: E06E75B70B9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This mirrors the egpio support added to sc7280/sm8450/sm8250/etc. This change
-is necessary for GPIOs 98-112 (15 GPIOs) to be used as normal GPIOs.
+Hi Linus,
 
-Signed-off-by: Stanislav Zaikin <zstaseg@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-sm6115.c | 40 +++++++++++++++++----------
- 1 file changed, 25 insertions(+), 15 deletions(-)
+here are a pile of pin control fixes, some of which I should have definitely
+tagged and sent earlier but I got distracted.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115.c b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-index 234451fbf47b..97930db91476 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6115.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-@@ -47,6 +47,8 @@ enum {
- 		.mux_bit = 2,			\
- 		.pull_bit = 0,			\
- 		.drv_bit = 6,			\
-+		.egpio_enable = 12,		\
-+		.egpio_present = 11,		\
- 		.oe_bit = 9,			\
- 		.in_bit = 0,			\
- 		.out_bit = 1,			\
-@@ -374,6 +376,7 @@ enum sm6115_functions {
- 	msm_mux_ddr_pxi1,
- 	msm_mux_ddr_pxi2,
- 	msm_mux_ddr_pxi3,
-+	msm_mux_egpio,
- 	msm_mux_gcc_gp1,
- 	msm_mux_gcc_gp2,
- 	msm_mux_gcc_gp3,
-@@ -451,6 +454,11 @@ static const char * const gpio_groups[] = {
- 	"gpio105", "gpio106", "gpio107", "gpio108", "gpio109", "gpio110",
- 	"gpio111", "gpio112",
- };
-+static const char * const egpio_groups[] = {
-+	"gpio98", "gpio99", "gpio100", "gpio101", "gpio102", "gpio103",
-+	"gpio104", "gpio105", "gpio106", "gpio107", "gpio108", "gpio109",
-+	"gpio110", "gpio111", "gpio112",
-+};
- static const char * const ddr_bist_groups[] = {
- 	"gpio0", "gpio1", "gpio2", "gpio3",
- };
-@@ -681,6 +689,7 @@ static const struct pinfunction sm6115_functions[] = {
- 	MSM_PIN_FUNCTION(ddr_pxi1),
- 	MSM_PIN_FUNCTION(ddr_pxi2),
- 	MSM_PIN_FUNCTION(ddr_pxi3),
-+	MSM_PIN_FUNCTION(egpio),
- 	MSM_PIN_FUNCTION(gcc_gp1),
- 	MSM_PIN_FUNCTION(gcc_gp2),
- 	MSM_PIN_FUNCTION(gcc_gp3),
-@@ -839,21 +848,21 @@ static const struct msm_pingroup sm6115_groups[] = {
- 	[95] = PINGROUP(95, WEST, nav_gpio, gp_pdm0, qdss_gpio, wlan1_adc1, _, _, _, _, _),
- 	[96] = PINGROUP(96, WEST, qup4, nav_gpio, mdp_vsync, gp_pdm1, sd_write, jitter_bist, qdss_cti, qdss_cti, _),
- 	[97] = PINGROUP(97, WEST, qup4, nav_gpio, mdp_vsync, gp_pdm2, jitter_bist, qdss_cti, qdss_cti, _, _),
--	[98] = PINGROUP(98, SOUTH, _, _, _, _, _, _, _, _, _),
--	[99] = PINGROUP(99, SOUTH, _, _, _, _, _, _, _, _, _),
--	[100] = PINGROUP(100, SOUTH, atest, _, _, _, _, _, _, _, _),
--	[101] = PINGROUP(101, SOUTH, atest, _, _, _, _, _, _, _, _),
--	[102] = PINGROUP(102, SOUTH, _, phase_flag, dac_calib, ddr_pxi2, _, _, _, _, _),
--	[103] = PINGROUP(103, SOUTH, _, phase_flag, dac_calib, ddr_pxi2, _, _, _, _, _),
--	[104] = PINGROUP(104, SOUTH, _, phase_flag, qdss_gpio, dac_calib, ddr_pxi3, _, _, _, _),
--	[105] = PINGROUP(105, SOUTH, _, phase_flag, qdss_gpio, dac_calib, ddr_pxi3, _, _, _, _),
--	[106] = PINGROUP(106, SOUTH, nav_gpio, gcc_gp3, qdss_gpio, _, _, _, _, _, _),
--	[107] = PINGROUP(107, SOUTH, nav_gpio, gcc_gp2, qdss_gpio, _, _, _, _, _, _),
--	[108] = PINGROUP(108, SOUTH, nav_gpio, _, _, _, _, _, _, _, _),
--	[109] = PINGROUP(109, SOUTH, _, qdss_gpio, _, _, _, _, _, _, _),
--	[110] = PINGROUP(110, SOUTH, _, qdss_gpio, _, _, _, _, _, _, _),
--	[111] = PINGROUP(111, SOUTH, _, _, _, _, _, _, _, _, _),
--	[112] = PINGROUP(112, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[98] = PINGROUP(98, SOUTH, _, _, _, _, _, _, _, _, egpio),
-+	[99] = PINGROUP(99, SOUTH, _, _, _, _, _, _, _, _, egpio),
-+	[100] = PINGROUP(100, SOUTH, atest, _, _, _, _, _, _, _, egpio),
-+	[101] = PINGROUP(101, SOUTH, atest, _, _, _, _, _, _, _, egpio),
-+	[102] = PINGROUP(102, SOUTH, _, phase_flag, dac_calib, ddr_pxi2, _, _, _, _, egpio),
-+	[103] = PINGROUP(103, SOUTH, _, phase_flag, dac_calib, ddr_pxi2, _, _, _, _, egpio),
-+	[104] = PINGROUP(104, SOUTH, _, phase_flag, qdss_gpio, dac_calib, ddr_pxi3, _, _, _, egpio),
-+	[105] = PINGROUP(105, SOUTH, _, phase_flag, qdss_gpio, dac_calib, ddr_pxi3, _, _, _, egpio),
-+	[106] = PINGROUP(106, SOUTH, nav_gpio, gcc_gp3, qdss_gpio, _, _, _, _, _, egpio),
-+	[107] = PINGROUP(107, SOUTH, nav_gpio, gcc_gp2, qdss_gpio, _, _, _, _, _, egpio),
-+	[108] = PINGROUP(108, SOUTH, nav_gpio, _, _, _, _, _, _, _, egpio),
-+	[109] = PINGROUP(109, SOUTH, _, qdss_gpio, _, _, _, _, _, _, egpio),
-+	[110] = PINGROUP(110, SOUTH, _, qdss_gpio, _, _, _, _, _, _, egpio),
-+	[111] = PINGROUP(111, SOUTH, _, _, _, _, _, _, _, _, egpio),
-+	[112] = PINGROUP(112, SOUTH, _, _, _, _, _, _, _, _, egpio),
- 	[113] = UFS_RESET(ufs_reset, 0x78000),
- 	[114] = SDC_QDSD_PINGROUP(sdc1_rclk, WEST, 0x75000, 15, 0),
- 	[115] = SDC_QDSD_PINGROUP(sdc1_clk, WEST, 0x75000, 13, 6),
-@@ -886,6 +895,7 @@ static const struct msm_pinctrl_soc_data sm6115_tlmm = {
- 	.ntiles = ARRAY_SIZE(sm6115_tiles),
- 	.wakeirq_map = sm6115_mpm_map,
- 	.nwakeirq_map = ARRAY_SIZE(sm6115_mpm_map),
-+	.egpio_func = 9,
- };
- 
- static int sm6115_tlmm_probe(struct platform_device *pdev)
--- 
-2.51.0
+Details in the signed tag: all are driver fixes for misc SoCs, one single
+patch affects an Intel laptop and may be of particular interest.
 
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 254f49634ee16a731174d2ae34bc50bd5f45e731:
+
+  Linux 7.1-rc1 (2026-04-26 14:19:00 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v7.1-2
+
+for you to fetch changes up to 3812a9e84265a5cdd90d29fe8d97a023e91fb945:
+
+  pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7
+14AGP11 (2026-05-13 09:34:55 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v7.1 kernel:
+
+- Implement the GPIO .get_direction() callback in the Mediatek
+  driver to rid dmesg warnings.
+
+- Mark the Qualcomm IPQ4019 pins used as GPIO as using the
+  GPIO pin function, so there is no conflict with orthogonal
+  muxing.
+
+- Fix incorrect settings of the "PUPD" (pull-up-pull-down)
+  register during suspend/resume in the Renesas RZG2L.
+
+- Fix the SMT register cache to be per-bank in the Renesas
+  RZG2L.
+
+- Fix the QDSS track clock and control pin group names in the
+  Qualcomm Eliza driver.
+
+- Fix a deadlock in the Amlogic driver, caused by playing
+  around in sysfs.
+
+- Fix some GPIO wakeup interrupt handling in Qualcomm QCS615.
+  and a similar fix for the Qualcomm SM8150.
+
+- Allow parsing DTs without explicit function nodes in the
+  Freescale i.MX1 driver.
+
+- Enable the IRQ for the WACF2200 touchscreen using a DMI
+  quirk.
+
+----------------------------------------------------------------
+Alexander Koskovich (1):
+      pinctrl: qcom: eliza: Fix QDSS trace clock/control pingroup names
+
+Bartosz Golaszewski (1):
+      pinctrl: mediatek: moore: implement gpio_chip::get_direction()
+
+Biju Das (1):
+      pinctrl: renesas: rzg2l: Fix incorrect PUPD register offset for
+high pins during suspend/resume
+
+Frank Li (1):
+      pinctrl: imx1: Allow parsing DT without function nodes
+
+Hardik Prakash (1):
+      pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7 14AGP11
+
+Lad Prabhakar (1):
+      pinctrl: renesas: rzg2l: Fix SMT register cache handling
+
+Linus Walleij (1):
+      Merge tag 'renesas-pinctrl-fixes-for-v7.1-tag1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into fixes
+
+Maulik Shah (2):
+      pinctrl: qcom: Fix GPIO to PDC wake irq map for qcs615
+      pinctrl: qcom: Fix wakeirq map by removing disconnected irqs for sm8150
+
+Til Kaiser (1):
+      pinctrl: qcom: ipq4019: mark gpio as a GPIO pin function
+
+Xianwei Zhao (1):
+      pinctrl: meson: amlogic-a4: fix deadlock issue
+
+ drivers/pinctrl/freescale/pinctrl-imx1-core.c | 48 +++++++++++++++++++++++----
+ drivers/pinctrl/mediatek/pinctrl-moore.c      | 18 ++++++++++
+ drivers/pinctrl/meson/pinctrl-amlogic-a4.c    |  6 ++--
+ drivers/pinctrl/pinctrl-amd.c                 | 35 +++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-eliza.c          |  8 ++---
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c        |  2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h            |  5 +++
+ drivers/pinctrl/qcom/pinctrl-qcs615.c         |  6 ++--
+ drivers/pinctrl/qcom/pinctrl-sm8150.c         |  8 ++---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 23 ++++++++-----
+ 10 files changed, 129 insertions(+), 30 deletions(-)
 
