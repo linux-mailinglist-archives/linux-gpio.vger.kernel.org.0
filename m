@@ -1,85 +1,51 @@
-Return-Path: <linux-gpio+bounces-37366-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37367-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0EIVKAFXEGopWgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37366-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:15:45 +0200
+	id MCNUF4hXEGopWgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37367-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:18:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 615FD5B4EE4
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:15:45 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2EE85B4F85
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:17:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 48C42312DC4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:50:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0B60C301B3DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 13:01:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 652173BFE3E;
-	Fri, 22 May 2026 12:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10AFE394E80;
+	Fri, 22 May 2026 13:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9TdA1s9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5nGxVmZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D731820010A
-	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 12:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03C7388893;
+	Fri, 22 May 2026 13:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779453932; cv=none; b=aEzm4uiAjprIwhu4q+DX/tiG0WxLuKt1/vkM0ap2EMLOUCA0gJOCSpfVN8IBqI6O+6n4DLUjphblBchw+YpStamL8lRdICnZCOkbwqvi/zOxs8P4KYqFYa3CoIytPaBFnYNKebOGBbZn0hoZfR92+L4kBIMZ75zFns4htkvKwTo=
+	t=1779454914; cv=none; b=jbmaclz3C9Crs7yuxffjRUqcojUY/OQGv+R0tuSuQ13JIfZBtUgz2DD/GwCtBGCOEnh+aARdgDlBDtUrEu8IMg7L8YUKNpqFaf8R0zFEdYNQpZz2GHRriDJqZu52jKqdYFa6wn1KrzhnPrsWAMibs8fRzogA9bvd5HfiXdYYiqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779453932; c=relaxed/simple;
-	bh=B6Wrx8wptznPEXE7GgI4oCIpRWZlbijf1SHKh604G6I=;
+	s=arc-20240116; t=1779454914; c=relaxed/simple;
+	bh=Es7Vb9ABTUmgzzmnqEEGOu7GP+RMFAjOpM00ciITgFE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eWShlf7r/PNNUJnARAucr86B2+cdFPVGkfMDW/GWHBz/z16c/5d86Cjs7M7ONuL6NfuZS5YyoWWM1YC176iFloLmJa1GCj31uIfFBIqkH6inbY6lJ0z7lX99at60jihtwmZwU54Ar23KFdf2CKjKNaKfUe4yaqV+sIEdrz7gmdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S9TdA1s9; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a8891f0c88so4677832e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 05:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779453928; x=1780058728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jEx08WhtJbuH9Jvv5ffuVG6XRuDs6AIyFWz3HRiJmYw=;
-        b=S9TdA1s9sU06k7pAAsQhZgPt6Jm2cy1jpfHiVjy/+4+phsKTB39AbQjFrUaHHvTuHa
-         7xcha/kC9qOvlrvOc+x2JTP+jZxZ/e3H1ei/X60CDqJpjGmR8Nzbf9OwEeh6jXSYmMe6
-         1lqGhLX9WLcsDUNoRDwB8RN2/7jcZGUB/8QVzZr9eANTujcgTuVz1xsDUvY1h5CzWkhw
-         CjjnUJzTgxZB4Xvh+ERZIfoeKsbVY7GHoFXwuSABK574IaI9xqc2uETLj3zU1ZFqV2YS
-         GuqN5wtrNjE3MnCX7eUhhI4j839ntAaSS2DRdL1e8/Q6vQSCXDKpTqbm32FekGdEJyes
-         Fk2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779453928; x=1780058728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jEx08WhtJbuH9Jvv5ffuVG6XRuDs6AIyFWz3HRiJmYw=;
-        b=U8ngnA3CU2udqXkV2rxdtKQk4QL6CSuJRtZ0/x/gb3tfVVtUPXi/D30jgDBF7lBB95
-         idhUuH3zK/sx1y4MmlWiPwQiLKvcgbZpZLx+pK45PNkJ1lTh7DlpkynOt5UYCyl40F0g
-         manOO9PRS3T3mL5XuCYh5zm+XMNSWB8j1v/+lDPDZyperAYxvUehjflw6AYIQx1YuyDK
-         ZVCfiXmwas1CTCesT0pm17eyvZQZohCxDkWMrgDECVROxA0IKtbgEp49oDvoaqmj4ba/
-         cGCZhW3h0Aoo/itEG7yyWqLGreezzQJThVuRIZA2Lq8AFxDgXpzxwlX/hWYi16Ks62yh
-         VtuQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9KTuu7/MQFHYZsfTzIr1U245ozzSI6mKj1dIGHYVdQOU1m7FrYhkYf/kOY/V14Iwx9kqXy7ZgtaOtz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVEfiZZczevhVTmkHSZxPFclJw9nfJoeXdF3B6xyrXn781pXzZ
-	WOzGHeOfhPGwk3LT5KIYUjldm/i3sPcsMo/7mD1oYCswAfnD9bzaEgpD
-X-Gm-Gg: Acq92OHhxDVgbzO1Pr95AvZvrEyGeiguCXo2zaIHt2w2RpwxHnLZtN8QQIA5336BUah
-	J/f22ufOUzMznZ/gkV/gpzO3n+rf6rh1JXcrBrC4gn8MeivTV+yKz0Z7WPTHTe1fGiW+Ai5d0iO
-	ArEO894Cfo6ZnmAh/gfCJLi+6ov7C/0Vp5tms92RfJTblUlp2P1JsVOKnEKRHnhZEl71CHT3YJZ
-	kfqXH22pPqaLnNrGgTiZGSRald6FEcoCzp8UnzMO783r9CSLn5QvCT/J/RQPDx8k0eoY0B93Azg
-	n3l3e1kmFKXqSOpHjnfTiWKDAD/VehwjOn56NSlg0famd+IsM3wQ4LnC129hHlkKzXZNKz/bZ3C
-	p6WrbpiyAyxitYM1s4q+3iCL6tmQ7n71uYAMpv52wNger0Z3Y9oFookL3CCXNbvL+rdjGg5bWNA
-	43V25R4h9DPBOew/OubSgjjSEWcOsozxs+gbrfvSAKpzqp7nZiD54yiq5pu1PZnCNgbMwKu+7Yv
-	jxOibvS
-X-Received: by 2002:a05:6512:33c9:b0:5a8:64c4:38c4 with SMTP id 2adb3069b0e04-5aa32314258mr1031399e87.8.1779453927777;
-        Fri, 22 May 2026 05:45:27 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa32cb37bfsm401018e87.11.2026.05.22.05.45.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2026 05:45:27 -0700 (PDT)
-Message-ID: <55c36da0-6cc4-4c95-88ef-3dd5b2181b0d@gmail.com>
-Date: Fri, 22 May 2026 15:45:25 +0300
+	 In-Reply-To:Content-Type; b=h9g29ZaBcKOVdl8RkOWQcpOy0hPiHYyczMYl21Sm4TtBllanX4ejpk/LrbILWbDZ3fhe6jK/JaZWpXGiWQA5h8qS2++CTP3ESegQLuHnCb6RhDkidWcCX2L81sGQpco9zGxiFuzyNCNzm9rjiZtbrItL30B6OKA0FNfM4ESZxok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5nGxVmZ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEC11F000E9;
+	Fri, 22 May 2026 13:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779454913;
+	bh=iAvcOQlHfItm6RV8kDuEo5a7+X4i437AKkSh6Oa6+5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=T5nGxVmZhnWsSDibU0hWrbUOcLh39IfcYmSPjEoMhdS+SGEYRzQhUeKOomYjfeJX1
+	 hKbaSjobLHiKV6lzFL/6LClX7PZoKtSbp4CLMe/yvMVzILMdiNUwYPY1yUfXiq/7qh
+	 PB/8skuf3e6Y112NpVRICUhZ1PW0vmIGVzafRBwRStTg+xuLt4URx/FALzHXATUp2r
+	 2DNCwHw1T+Ke++b9/50j185f4KvZVceitez4wpPnjLdHonbAdu+AGNdmUvEod/qtSq
+	 c6LdcUpIgBoELj6Q/Fa5+sh++jHC+lyR/MzARpNY9H+8eSRNfUPjVxxlYeEGKp57MG
+	 8T8nX2rZhgyBQ==
+Message-ID: <f2ffcf92-34b7-40e8-877c-669c2d320506@kernel.org>
+Date: Fri, 22 May 2026 16:01:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,108 +53,106 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] [v3] input: gpio-keys: make legacy gpiolib optional
-To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org,
- Christian Lamparter <chunkeey@googlemail.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade
- <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>,
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Jonas Gorski <jonas.gorski@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Vladimir Oltean <olteanv@gmail.com>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-wireless@vger.kernel.org, Linux-OMAP <linux-omap@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-input@vger.kernel.org,
- linux-leds@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-References: <20260520183815.2510387-1-arnd@kernel.org>
- <20260520183815.2510387-3-arnd@kernel.org>
- <b79d8ad9-f36e-4769-9dc2-58baefe23000@gmail.com>
- <681f328c-bc8a-4410-b876-f8c5f116325d@app.fastmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <681f328c-bc8a-4410-b876-f8c5f116325d@app.fastmail.com>
+Subject: Re: [PATCH 9/9] arm64: dts: renesas: rzg3s-smarc-som: Enable I3C
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: geert+renesas@glider.be, linusw@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+ claudiu.beznea@tuxon.dev, linux-renesas-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
+ <20260522102251.1723392-10-claudiu.beznea@kernel.org>
+ <ahBMKWrKQDko3cG8@shikoro>
+Content-Language: en-US
+From: Claudiu Beznea <claudiu.beznea@kernel.org>
+In-Reply-To: <ahBMKWrKQDko3cG8@shikoro>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,googlemail.com,sipsolutions.net,iki.fi,kemnade.info,baylibre.com,kernel.org,atomide.com,alpha.franken.de,physik.fu-berlin.de,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,broadcom.com,lunn.ch,davemloft.net,google.com,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-37366-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[40];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[glider.be,kernel.org,gmail.com,tuxon.dev,vger.kernel.org,bp.renesas.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-37367-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 615FD5B4EE4
+X-Rspamd-Queue-Id: F2EE85B4F85
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 22/05/2026 11:28, Arnd Bergmann wrote:
-> On Fri, May 22, 2026, at 06:55, Matti Vaittinen wrote:
->> On 20/05/2026 21:38, Arnd Bergmann wrote:
->>> From: Arnd Bergmann <arnd@arndb.de>
->>>
->>> The two Rohm PMIC drivers use a gpio-keys device without an actual GPIO,
->>> passing an IRQ number instead. In order to keep this working both with
->>> and with CONFIG_GPIOLIB_LEGACY, change the gpio-keys driver to ignore
->>> the gpio number if an IRQ is passed.
->>>
->>
->> I am (still) all fine with this, even though I like Dmitry's set. I
->> suppose you already have a plan for merging this, but I still have to
->> ask - why the MFD changes aren't in own patch? I feel it would have
->> simplified merging, backporting, reviewing and reverting if needed.
+Hi, Wolfram,
+
+On 5/22/26 15:29, Wolfram Sang wrote:
+> Hi Claudiu,
 > 
-> Splitting it out would break bisection: The gpio-leds change without
-> the mfd change causes a build failure when assigning the .gpio
-> field, and the reverse causes a runtime failure when .gpio=0 is
-> a valid line.
+>> +	i3c_pins: i3c {
+>> +		pins = "I3C_SDA", "I3C_SCL";
+>> +#if SW_CONFIG4 == SW_ON
+>> +		power-source = <1200>;
+>> +#else
+>> +		power-source = <1800>;
+>> +#endif
+>> +		input-enable;
+>> +		renesas,i3c-standby = <0>;
+>> +	};
+>> +
+>> +	i3c_standby_pins: i3c-standby {
+>> +		pins = "I3C_SDA", "I3C_SCL";
+>> +#if SW_CONFIG4 == SW_ON
+>> +		power-source = <1200>;
+>> +#else
+>> +		power-source = <1800>;
+>> +#endif
+>> +		renesas,i3c-standby = <1>;
+>> +	};
+> 
+> That doesn't look like HW description to me because the pins are the
+> same for regular and standby mode.
 
-Ah, yes. Thanks for explanation. (I feel a bit [a lot] stupid, as I 
-somehow missed the problem of .gpio = 0 being valid. That even though I 
-had it explicitly set to -1 myself :rolleyes: ).
+Yes, same pins, different states. Isn't that the role of different pinctrl 
+entries in DT for the same node? E.g., for SHDI we use the same approach, same 
+pins but different states. Bellow is an example from RZ/G3S but same approach is 
+used for other Renesas SoCs as well:
 
-No further questions ;)
+https://elixir.bootlin.com/linux/v7.1-rc4/source/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi#L305
 
-Yours,
-	-- Matti
+https://elixir.bootlin.com/linux/v7.1-rc4/source/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi#L321
+
+> Their state is changed when powering
+> down, but that should not need DT encoding, I'd think. The driver should
+> know what to do, or?
+
+Through different pinctrl states different pinctrl settings are applied in the 
+pin controller HW by calling well known pinctrl APIs from the consumer drivers 
+(e.g. pinctrl_pm_select_sleep_state() in case of the I3C driver as proposed in [1]).
+
+Is there another way the I3C driver (or any pinctrl driver consumer) could apply 
+pinctrl settings?
+
+[1] https://lore.kernel.org/all/20260522101815.1722909-18-claudiu.beznea@kernel.org
 
 -- 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+Thank you,
+Claudiu
 
-~~ When things go utterly wrong vim users can always type :help! ~~
 
