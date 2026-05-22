@@ -1,95 +1,107 @@
-Return-Path: <linux-gpio+bounces-37317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qIlKOPsGEGqLSQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37317-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:34:19 +0200
+	id iErVFqgHEGotSwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37318-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:37:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 494315B0086
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:34:18 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C68575B0105
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:37:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CBC74304D7F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 07:29:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EA8CB300B858
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 07:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CAC390608;
-	Fri, 22 May 2026 07:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E32B37CD34;
+	Fri, 22 May 2026 07:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/WHGuGo"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I61iOry/";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MHkbC2CI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FDC3905EF
-	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 07:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA998360ED6
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 07:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779434953; cv=none; b=b6PFEP8jD4kpoPXqGSZaaOXQIDKOeo3WdYCvAG3N+smUZeWx/PviNPhBg5dZicjMBYnQsSqC5Ey3tT7AZMaabmBFBcdFGpIHibblGgvVp1eEdpeTIrb+wIacLmuPJbivUOoWtbTBW3365AxFrEstyk52fRBYIS7Eu+7Btq5e6wM=
+	t=1779435341; cv=none; b=muireGqXSRfLlaW98EHSXJgGdx70oVa5m/atMXMLOP02argGVwDj27BzAL2yp9StLrJUKCZLMaUxpTGw+/A0e5MsTH2Mp0ogCwaUXvYilNU+x6TCzFpK0RXgUh2K/ry/QaJyXPOtauFUC2O9J4nV+pLsHKxndy6cC575vZAay8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779434953; c=relaxed/simple;
-	bh=RGDVCkuX8L2jKRbDFlSgCZRa2aETj6u0TaeHrVW0G/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g0qEcuBC3myq/GnHBHVjXPGMZDM5FlHMarAvzFMKBHYzRRK58wZYRrvc3Fnp9iJVZnGLeaebSZEUpmPbDMuV5/gmXVphnLriI+tLwpjI4F/1+7NKMcV7IFIqntlHv5QrUchnu7Rad8knH/vwNvi34C0ush2nPIzZrw/MVt2MlLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/WHGuGo; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-449de065cb3so6572771f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 00:29:11 -0700 (PDT)
+	s=arc-20240116; t=1779435341; c=relaxed/simple;
+	bh=34A3NYQ2nCAvmhCIXKxDkNjNqS+iKEl9ON6EMSLZu4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VGZ/qqbXH08Y9UDkvAM3trWLxvFBYaCCGK3pGoeOG6Egpm5q0nrMw0S4FtquxLmgBYKi27o2ZoBS+PYnzfDVT55Y00Onh169i9dUnvRny7K+LLa7tLWwM2reJrDMV5+3MHEf3L/G4aSVDzA8/hmet2bUVDV7lF6/BxQ4CuOLjXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I61iOry/; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MHkbC2CI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64M7FrVa1297968
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 07:35:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=XrO5HrprjNU8qYtCKE6JyzhJV/eGBCYR9oZ
+	lGB26sVU=; b=I61iOry/om8cPUmjIwICmqgXmM6ukhM575yzzZ2LFRS9HKSVVlz
+	Pj/4y3jVwdMkJad13VeoZvv1InEPUUCk9yC/WKMfg4ldxafziHkaq1+u1AKQEpL6
+	JLiBeFDEhgF9/z2vuHSA4mxgoOKwmLu25gv/M/u6s4xuvF1jgWgHC4GkEMnScXfz
+	BwKGpez8J+C2w4enV6rvD1lPdVOC16luBn+w+kIwkOq1eRN7QYLeruzdPXQ3Voiv
+	i7+47+e6GW3sqQhiBFYYwrhUnGse6IZRn6LJOSDyAzJ2pK+FVE7Cuvb5nWfpndxd
+	e8gL/immyvyDipO9npXsg7w+t8ul0qQoLIQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eaah09nk2-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 07:35:39 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50fb3403e99so76498651cf.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 00:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779434950; x=1780039750; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZP5HGEG7RkqBfIWelZAQ4wNFPRPuiwlQ3GodP84F42g=;
-        b=e/WHGuGoIdOE6tz4gpzYPxrmTWb8cVq3d2q/vqP1oaPsgzDPyDNpLulmV1CuvNScm2
-         CBce2JoiCnUpq8B4bIChWjDCtQSt0o1wR4dbCOFnIe5l6gWDwoIqnxGqWt6ES6XkIlwt
-         AjCuDrx/VfD3OJCIGi8mMRBWihcwy1H6suU51Bxwn2qdmVaW3SNfrE4PBle14zwtegvw
-         3L42bg+Ley+IzHJBxJrqJCS3dvTgyHIpFm94VGLDP8lrhgl3ELyZCRs2lXNHsh557PsN
-         2IC85As2mzDD6qbudu0rjkJKEuQeyLMW1OX8k2tGtDjixnN4rF5zcqyR6kpQxNChWikL
-         nEvg==
+        d=oss.qualcomm.com; s=google; t=1779435338; x=1780040138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XrO5HrprjNU8qYtCKE6JyzhJV/eGBCYR9oZlGB26sVU=;
+        b=MHkbC2CIAFy0rpViPpmo02jPEva3C0TvZtlz8qmIyeRAcrnV69X6Mgj9Wsx4byO9BW
+         0cgdwJokFEab0bio/DPsBkaWyX0YO4RAXYe/gE0nisLhLDhQXS03nQnzJ0kf+tYLgWUm
+         nKy+IpQvN4Mf4zIWBMvRYdL1qCcrQsdiP947XY3Ld52xut6DhHIoC8njpkY8jFaVb6VH
+         M6hvSL+/sVZ4uuFrS0OTNeMSyOWFIWEW0ns0tdi6iFsZKBpzUd3T/Gw3Mnen8Ov5Byt5
+         +nND32ZTeIOEpH6uS7yi8gJb3wlXBHwO1+F7yH8D9MfL0z6MA+J1AbSWhx9zqrSfwtTC
+         kLCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779434950; x=1780039750;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZP5HGEG7RkqBfIWelZAQ4wNFPRPuiwlQ3GodP84F42g=;
-        b=UjKFj8bsFGs+OaeXbC9ruR8xOPbPfTohH3yVwP+m2bI/SqyxPlo9pGlX1l+IeVbPR5
-         qJReExyPd5nG5xSJ7V0HTxcTKWjNsEEO3Mttu8UnsS3+4aOd1UXshIbXbkmvTh979Do9
-         kxIlzUIQ9Uo7v9ybTVVF0PhBLKvHw1/XdaSmfNNj5aatAzkK5oImvt7/7ae6qUGsiR3V
-         DTpSgdRgS2/HDyQBcDRDF0vaxao9aKRVh1a1wedpBP6xWqYi8rC0wk2/0DyuGf2DZvQb
-         wCsL/1k+saMu8tBNTE0TUyOcXw4rZeWuTP9Vfm5GBthdY7ferMA4ED5OWCcGeX9pMc9q
-         9mCg==
-X-Gm-Message-State: AOJu0YyaPqZwP9bzvYNmBZlHkAHHDEcVrJaLaEJ4RmlhRxEn2ofJSrxO
-	SncPmqGDoUtw2iYJpNS1XThegwfxba/NSBAJZ7Fo/KZGvIgqby2lWt1WEqTsCg==
-X-Gm-Gg: Acq92OFw7aKpOh4yI8i/7cR6J5Xd03ghyL8j9wnN6HB9YQTNIuVMFhrqBTFTJ5ZbZ8o
-	+Vsx6KyTM5T1GW2E3KJhEZt14o3l3jOoVbiHHKahHuDTbAZc2o4FVGCnJRX+NbypycxveB7xDD4
-	T3diWY5fFcO+Gr8pZGTWRWW3vxICkHEV/wJFT/aLuC+nEoDq7fyr1nsG9pW1Sguyz+NAPMjHs1h
-	bc+bljeAApS1kDSHQ0R6RGkYcaw8quuPI2Em01IQJKgcvrpTR3Xy9xESE61ybT+tKGWF6yD+eJV
-	lSklGgaMeKN5rBIqpam5o+8VfdPzhegdxdbjaLUE53RfhgtzMWk3imAaPTTa/vqCgU840xmykOk
-	ZMALeLqLwDC7yoC5WA7qTtJCW5xSt7XZi3hIDLUnkGNvA3X++cLjqQfZI6qxcP2RJrgLmDLlzPU
-	Xcckf9I6xu5rEoQh9cvCllWByD7ItLoZGPfynTQ7cqWzi6aiJBwZvnvwGULkNvFUtxrcq8cQ==
-X-Received: by 2002:a5d:64c2:0:b0:43d:7868:21f0 with SMTP id ffacd0b85a97d-45eb3670591mr2944276f8f.9.1779434949527;
-        Fri, 22 May 2026 00:29:09 -0700 (PDT)
-Received: from camaron.. (147.red-88-9-50.dynamicip.rima-tde.net. [88.9.50.147])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6d5cb76sm1699970f8f.25.2026.05.22.00.29.06
+        d=1e100.net; s=20251104; t=1779435338; x=1780040138;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XrO5HrprjNU8qYtCKE6JyzhJV/eGBCYR9oZlGB26sVU=;
+        b=CrrdLQRl+MtScujYmL3MwF8W72eaqEpfkyHZu7R+NIXxtcOI+RGM3GBeHiz2X/Wwr4
+         OGdN3+x5NxhornOa5u23ZePv8BGB+nyz2SE9O4VbkOGf2f9FRE0Q7hAQdZzgui0xZkPS
+         qfIe7XdPs69+hnfCTEMyF1Ae6GMvHIEWc0Zpmd9PJNByEiitVGfA6irzyDACIScCkPQ6
+         MMU5DxHtWW4lWcC7Qem8dYSkJlCobLuzgwv84zrWwVGsTEv1QxriQsRO1JPY+q5M5zRJ
+         EVTS5LCafBled5ERnunl+jKVgKBMgFzGUgZup5M3xT8NoxRMfcJX5dV4al/aJ8tW0ciY
+         RxDQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+MaFzGllxwtCaY6MxPox7MRs3oHZv8y2mhrSwQY8l1PoYAW3iGPFGOTH/eQLC5c8d2mdXNY10bnVH3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrUk0tayhmPhBL7PCUor2fOTT5OcOHb++LnfvC8cWZMBLALrag
+	5Iq2b9Nemzg4sbJgLsCvgcKp4NlLrwBkHj5nsholMqq5JIntRHyghF5XfuRsMrW3p81ct/xkOFK
+	rzObbxEH2zMfUX6afRNNHLCiCOAqwPBKepbDkP3P566DaUlASrxY56CARIGND8f0n
+X-Gm-Gg: Acq92OHYH7brvIT7fNBY3oy6jXi3yHq3TW7vWxJQC1JSBHOb8u3UyRvQn1eC/0osGa0
+	zLuOxU522ap3NGscyYApkvsjGqXJbrQCZPDN9tWqD7SURmDQ7rckWhOaIjC3xer7AWAFWTL77mg
+	Hn7IErXETD6GQkBDNGU+raO1jfGm8BskcWJpNUd4lTd8VDwZRFUagdSQINT+cyfGNSA6l7aAvAQ
+	WolyNOmvZFWrY12W9doyd4sSIb9vVfsq7Uvyg8UghqEygCn8ej4KZZVbGSEfAf7OmGlXKbFH/Nh
+	OMH2V5YVdXqRLWOreAEnyTUi0nE0eEB0flrbmxOkWLw26TI4sNXLwcuFjUHYOSAjHqT6D10J3Ml
+	OPZT/h3seMAOiDuXWpa/sJyuSuqZqwgKEtuNeyPjMzpi8z1r/
+X-Received: by 2002:ac8:5cd5:0:b0:509:2b02:c1bd with SMTP id d75a77b69052e-516d442805fmr40940571cf.12.1779435338174;
+        Fri, 22 May 2026 00:35:38 -0700 (PDT)
+X-Received: by 2002:ac8:5cd5:0:b0:509:2b02:c1bd with SMTP id d75a77b69052e-516d442805fmr40940311cf.12.1779435337812;
+        Fri, 22 May 2026 00:35:37 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:2fa:6280:a48f:fb37])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49042aeafa8sm9768775e9.27.2026.05.22.00.35.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 00:29:07 -0700 (PDT)
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: linusw@kernel.org,
-	brgl@kernel.org,
-	tglx@kernel.org,
-	grant.likely@secretlab.ca,
-	anna-maria@linutronix.de,
-	vicencb@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] gpio: mt7621: fix interrupt banks mapping on gpio chips
-Date: Fri, 22 May 2026 09:29:04 +0200
-Message-ID: <20260522072904.2028774-1-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAMhs-H-dHfQeMxmQYOpVS-tnj++nX5_mNKcu1xot3SQETyh4Xg@mail.gmail.com>
-References: <CAMhs-H-dHfQeMxmQYOpVS-tnj++nX5_mNKcu1xot3SQETyh4Xg@mail.gmail.com>
+        Fri, 22 May 2026 00:35:36 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        David Lechner <dlechner@baylibre.com>
+Subject: [PATCH] gpio: adnp: fix flow control regression caused by scoped_guard()
+Date: Fri, 22 May 2026 09:35:27 +0200
+Message-ID: <20260522073527.9812-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -97,529 +109,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIyMDA3MyBTYWx0ZWRfX57pU4KYA20vv
+ Bz6dOxCzbiPBa7xSAkk+cjZ7DrrFpxGa8VG1JMTybH7t5xu68cp/tpKj1aKjwNVXxJuYvwL4L/D
+ TzA5yONeVKreYxQI/516zC0uhkCCocm2XiwEF3YfZr69JNI4c9Yniw9cUJfFTrs3IA+/YYcfZTl
+ X50lqd4ukEcjPYlL/hbSVyLUSUzqZB+bCtqBu9uu1mi0zL6Szqn4HaL+vlsdYVNqp13FhK42sjR
+ ehPOR1zhMtuG2O8fUU2Qwmwo3h6gULaFckL24dtjmufc5ixS37OUDfta4Dmg2dz/nMRbhpmJkco
+ lOe4nD3eKKaiXg3WoLlpyLStSEQHYYbBJ6Rt+iHdR+hixk/G5G1X4aTs3Z2xNOtVwtrqenLd5Oc
+ 0zW/8S0uOPo0Y8FrBGBoIIb+A1bh56y3+MfrniGpquodTERpYm8czjmgV3HOOEQb9QEPfjGPEed
+ wiyEsgOcZLLspAhMDvA==
+X-Proofpoint-GUID: EC2ugAe1v9y_Me_w-et-SWAG5_TK6CSf
+X-Authority-Analysis: v=2.4 cv=LNdWhpW9 c=1 sm=1 tr=0 ts=6a10074b cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=NGcC8JguVDcA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=DJpcGTmdVt4CTyJn9g5Z:22 a=VwQbUJbxAAAA:8 a=IpJZQVW2AAAA:8 a=EUspDBNiAAAA:8
+ a=VaRsTcMx-6-8SV5EPosA:9 a=a_PwQJl-kcHnX1M80qC6:22 a=IawgGOuG5U0WyFbmm1f5:22
+X-Proofpoint-ORIG-GUID: EC2ugAe1v9y_Me_w-et-SWAG5_TK6CSf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-22_01,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605220073
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,secretlab.ca,linutronix.de,gmail.com,vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_NONE(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37317-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37318-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim,baylibre.com:email];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 494315B0086
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: C68575B0105
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Regarding the issue reported by Vicente[0], we have been trying different
-things and we are still having issues to make this work. I have noticed
-that the gpio-brcmstb is similar to our use case sharing one interrupt
-for all the banks and also using gpio chips instances with 32 pins each.
-That said, I tried to setup mt7621 driver in the same way as you can see 
-on the following proposed code. With these changes, we are able to make
-properly working the previous problem with the touchscreen that was
-registered on bank 2 instead of bank 0. Now it is properly registered
-on bank 0 and interrupts works perfect and the device is properly
-working. However, every single gpio-keys fail to claim the IRQ HW as
-follows:
+scoped_guard() is implemented as a for loop. Using it to protect code
+using the continue statement changes the flow as we now only break out
+of the hidden loop inside scoped_guard(), not the original for loop. Use
+a regular code block instead.
 
-mt7621_gpio 10000600.gpio: Mapping irq 41 for gpio line 38 (bank 1)
-gpio gpiochip1: (10000600.gpio-bank1): unable to lock HW IRQ 38 for IRQ
-genirq: Failed to request resources for S3 (irq 41) on irqchip mt7621-gpio
-gpio-keys keys: error -EINVAL: request_irq(41) gpio_keys_gpio_isr 0x0 S3
-gpio-keys keys: Unable to claim irq 41; error -22
-gpio-keys keys: probe with driver gpio-keys failed with error -22
+Fixes: c7fe19ed3973 ("gpio: adnp: use lock guards for the I2C lock")
+Reported-by: David Lechner <dlechner@baylibre.com>
+Closes: https://lore.kernel.org/all/cde2abb2-4cc8-4fc9-b34a-0c5d2b95779f@baylibre.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+ drivers/gpio/gpio-adnp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-So IIUC the kernel is saying that the gpio chip is not IRQ-capable somehow.
+diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
+index 27a80d1143a1..350feea2afa3 100644
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -237,7 +237,9 @@ static irqreturn_t adnp_irq(int irq, void *data)
+ 		unsigned long pending;
+ 		int err;
+ 
+-		scoped_guard(mutex, &adnp->i2c_lock) {
++		{
++			guard(mutex)(&adnp->i2c_lock);
++
+ 			err = adnp_read(adnp, GPIO_PLR(adnp) + i, &level);
+ 			if (err < 0)
+ 				continue;
+-- 
+2.47.3
 
-Once I touch the irq field just setting up the irq_chip_ops on gpio chip to bypass 
-this issue: 
-
-gpio_irq_chip_set_chip(&rg->chip.gc.irq, &mt7621_irq_chip);
-
-the kernel stops calling our custom to_irq callback and calls gpiochip_to_irq
-callback instead and also warning as follows:
-
-gpio gpiochip0: (10000600.gpio-bank0): to_irq is redefined in
-gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-gpio gpiochip1: (10000600.gpio-bank1): to_irq is redefined in
-gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-gpio gpiochip2: (10000600.gpio-bank2): to_irq is redefined in
-gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-
-This register gpio-keys and now are shown on /proc/interrupts but they
-are not working (touchscreen still works, don't really understand why):
-
-$ cat /proc/interrupts
-40: 10 mt7621-gpio  0  ft6236
-41:  0 mt7621-gpio  6  S3
-42:  0 mt7621-gpio  7  S2
-43:  0 mt7621-gpio 22  S1
-
-I have tried also to get rid of custom to_irq compiling kernel with
-IRQ_DOMAIN_HIERARCHY and setting up the followings as replacement of
-custom to_irq:
-
-static int
-mt7621_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-                                 unsigned int hwirq,
-                                 unsigned int type,
-                                 unsigned int *parent_hwirq,
-                                 unsigned int *parent_type)
-{
-       *parent_hwirq = gc->irq.child_offset_to_irq(gc, hwirq);
-       *parent_type = type;
-    
-       return 0;
-}
-
-static unsigned int
-mt7621_gpio_child_offset_to_irq(struct gpio_chip *gc, unsigned int offset)
-{
-       return gc->offset + offset;
-}
-
-rg->chip.gc.irq.child_to_parent_hwirq = mt7621_gpio_child_to_parent_hwirq;
-rg->chip.gc.irq.child_offset_to_irq = mt7621_gpio_child_offset_to_irq;
-
-This return us to the original scenario where touchscreen is mapped in the
-wrong bank 2 instead of bank 0...
-
-Also tried to setup domain for every single gpio chip using Linus previous
-suggestion gpiochip_irqchip_add_domain() but ended up in kernel complaning
-also for IRQ HQ lock and getting a kernel panic:
-
-kernel panic "Unhandled kernel unaligned access[#1]")
-
-I am totally lost now. Can you point me out in the right way to make everything
-working?
-
-Thanks a lot in advance.
-
-Best regards,
-    Sergio Paracuellos
-
-[0]: https://lore.kernel.org/linux-gpio/CAAMcf8C_A9dJ_v4QRKtb9eGNOpJ7BZNOGsFP4i2WFOZxOVBPnQ@mail.gmail.com/T/#u
-diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-index 91230be51587..353dc56411eb 100644
---- a/drivers/gpio/gpio-mt7621.c
-+++ b/drivers/gpio/gpio-mt7621.c
-@@ -29,8 +29,8 @@
- #define GPIO_REG_EDGE		0xA0
- 
- struct mtk_gc {
--	struct irq_chip irq_chip;
- 	struct gpio_generic_chip chip;
-+	struct mtk *parent_priv;
- 	int bank;
- 	u32 rising;
- 	u32 falling;
-@@ -43,18 +43,27 @@ struct mtk_gc {
-  * data of the platform driver. It is 3
-  * separate gpio-chip each one with its
-  * own irq_chip.
-- * @dev: device instance
-+ * @pdev: platform device instance
-  * @base: memory base address
-  * @gpio_irq: irq number from the device tree
-  * @gc_map: array of the gpio chips
-  */
- struct mtk {
--	struct device *dev;
-+	struct platform_device *pdev;
- 	void __iomem *base;
-+	struct irq_domain *irq_domain;
- 	int gpio_irq;
-+	int num_gpios;
- 	struct mtk_gc gc_map[MTK_BANK_CNT];
- };
- 
-+static inline struct mtk *
-+mt7621_gpio_gc_to_priv(struct gpio_chip *gc)
-+{
-+	struct mtk_gc *bank = gpiochip_get_data(gc);
-+	return bank->parent_priv;
-+}
-+
- static inline struct mtk_gc *
- to_mediatek_gpio(struct gpio_chip *chip)
- {
-@@ -67,7 +76,7 @@ static inline void
- mtk_gpio_w32(struct mtk_gc *rg, u32 offset, u32 val)
- {
- 	struct gpio_chip *gc = &rg->chip.gc;
--	struct mtk *mtk = gpiochip_get_data(gc);
-+	struct mtk *mtk = mt7621_gpio_gc_to_priv(gc);
- 
- 	offset = (rg->bank * GPIO_BANK_STRIDE) + offset;
- 	gpio_generic_write_reg(&rg->chip, mtk->base + offset, val);
-@@ -77,60 +86,79 @@ static inline u32
- mtk_gpio_r32(struct mtk_gc *rg, u32 offset)
- {
- 	struct gpio_chip *gc = &rg->chip.gc;
--	struct mtk *mtk = gpiochip_get_data(gc);
-+	struct mtk *mtk = mt7621_gpio_gc_to_priv(gc);
- 
- 	offset = (rg->bank * GPIO_BANK_STRIDE) + offset;
- 	return gpio_generic_read_reg(&rg->chip, mtk->base + offset);
- }
- 
--static irqreturn_t
--mediatek_gpio_irq_handler(int irq, void *data)
-+static void
-+mt7621_gpio_irq_bank_handler(struct mtk_gc *bank)
- {
--	struct gpio_chip *gc = data;
--	struct mtk_gc *rg = to_mediatek_gpio(gc);
--	irqreturn_t ret = IRQ_NONE;
-+	struct mtk *priv = bank->parent_priv;
-+	struct irq_domain *domain = priv->irq_domain;
-+	int hwbase = bank->chip.gc.offset;
- 	unsigned long pending;
--	int bit;
-+	unsigned int offset;
-+
-+	pending = mtk_gpio_r32(bank, GPIO_REG_STAT);
-+	if (!pending)
-+		return;
-+
-+	mtk_gpio_w32(bank, GPIO_REG_STAT, pending);
-+
-+	for_each_set_bit(offset, &pending, MTK_BANK_WIDTH)
-+		generic_handle_domain_irq(domain, hwbase + offset);
-+}
-+
-+static void
-+mt7621_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct mtk *priv = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	int i;
- 
--	pending = mtk_gpio_r32(rg, GPIO_REG_STAT);
-+	chained_irq_enter(chip, desc);
-+	for (i = 0; i < MTK_BANK_CNT; i++) {
-+		struct mtk_gc *bank = &priv->gc_map[i];
- 
--	for_each_set_bit(bit, &pending, MTK_BANK_WIDTH) {
--		generic_handle_domain_irq(gc->irq.domain, bit);
--		mtk_gpio_w32(rg, GPIO_REG_STAT, BIT(bit));
--		ret |= IRQ_HANDLED;
-+		mt7621_gpio_irq_bank_handler(bank);
- 	}
-+	chained_irq_exit(chip, desc);
-+}
- 
--	return ret;
-+static int
-+mt7621_gpio_hwirq_to_offset(irq_hw_number_t hwirq, struct mtk_gc *bank)
-+{
-+	return hwirq - bank->chip.gc.offset;
- }
- 
- static void
- mediatek_gpio_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct mtk_gc *rg = to_mediatek_gpio(gc);
--	int pin = d->hwirq;
-+	struct mtk_gc *rg = gpiochip_get_data(gc);
-+	u32 mask = mt7621_gpio_hwirq_to_offset(d->hwirq, rg);
- 	u32 rise, fall, high, low;
- 
--	gpiochip_enable_irq(gc, d->hwirq);
--
- 	guard(gpio_generic_lock_irqsave)(&rg->chip);
- 
- 	rise = mtk_gpio_r32(rg, GPIO_REG_REDGE);
- 	fall = mtk_gpio_r32(rg, GPIO_REG_FEDGE);
- 	high = mtk_gpio_r32(rg, GPIO_REG_HLVL);
- 	low = mtk_gpio_r32(rg, GPIO_REG_LLVL);
--	mtk_gpio_w32(rg, GPIO_REG_REDGE, rise | (BIT(pin) & rg->rising));
--	mtk_gpio_w32(rg, GPIO_REG_FEDGE, fall | (BIT(pin) & rg->falling));
--	mtk_gpio_w32(rg, GPIO_REG_HLVL, high | (BIT(pin) & rg->hlevel));
--	mtk_gpio_w32(rg, GPIO_REG_LLVL, low | (BIT(pin) & rg->llevel));
-+	mtk_gpio_w32(rg, GPIO_REG_REDGE, rise | (BIT(mask) & rg->rising));
-+	mtk_gpio_w32(rg, GPIO_REG_FEDGE, fall | (BIT(mask) & rg->falling));
-+	mtk_gpio_w32(rg, GPIO_REG_HLVL, high | (BIT(mask) & rg->hlevel));
-+	mtk_gpio_w32(rg, GPIO_REG_LLVL, low | (BIT(mask) & rg->llevel));
- }
- 
- static void
- mediatek_gpio_irq_mask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct mtk_gc *rg = to_mediatek_gpio(gc);
--	int pin = d->hwirq;
-+	struct mtk_gc *rg = gpiochip_get_data(gc);
-+	u32 mask = mt7621_gpio_hwirq_to_offset(d->hwirq, rg);
- 	u32 rise, fall, high, low;
- 
- 	scoped_guard(gpio_generic_lock_irqsave, &rg->chip) {
-@@ -138,22 +166,19 @@ mediatek_gpio_irq_mask(struct irq_data *d)
- 		fall = mtk_gpio_r32(rg, GPIO_REG_FEDGE);
- 		high = mtk_gpio_r32(rg, GPIO_REG_HLVL);
- 		low = mtk_gpio_r32(rg, GPIO_REG_LLVL);
--		mtk_gpio_w32(rg, GPIO_REG_FEDGE, fall & ~BIT(pin));
--		mtk_gpio_w32(rg, GPIO_REG_REDGE, rise & ~BIT(pin));
--		mtk_gpio_w32(rg, GPIO_REG_HLVL, high & ~BIT(pin));
--		mtk_gpio_w32(rg, GPIO_REG_LLVL, low & ~BIT(pin));
-+		mtk_gpio_w32(rg, GPIO_REG_FEDGE, fall & ~BIT(mask));
-+		mtk_gpio_w32(rg, GPIO_REG_REDGE, rise & ~BIT(mask));
-+		mtk_gpio_w32(rg, GPIO_REG_HLVL, high & ~BIT(mask));
-+		mtk_gpio_w32(rg, GPIO_REG_LLVL, low & ~BIT(mask));
- 	}
--
--	gpiochip_disable_irq(gc, d->hwirq);
- }
- 
- static int
- mediatek_gpio_irq_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct mtk_gc *rg = to_mediatek_gpio(gc);
--	int pin = d->hwirq;
--	u32 mask = BIT(pin);
-+	struct mtk_gc *rg = gpiochip_get_data(gc);
-+	u32 mask = BIT(mt7621_gpio_hwirq_to_offset(d->hwirq, rg));
- 
- 	if (type == IRQ_TYPE_PROBE) {
- 		if ((rg->rising | rg->falling |
-@@ -216,10 +241,124 @@ static const struct irq_chip mt7621_irq_chip = {
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
-+static void mt7621_gpio_remove(struct platform_device *pdev)
-+{
-+	struct mtk *priv = platform_get_drvdata(pdev);
-+	int i, offset, virq;
-+
-+	if (priv->gpio_irq > 0)
-+		irq_set_chained_handler_and_data(priv->gpio_irq, NULL, NULL);
-+
-+	/* Remove all IRQ mappings and delete the domain */
-+	if (priv->irq_domain) {
-+		for (offset = 0; offset < priv->num_gpios; offset++) {
-+			virq = irq_find_mapping(priv->irq_domain, offset);
-+			irq_dispose_mapping(virq);
-+		}
-+		irq_domain_remove(priv->irq_domain);
-+	}
-+
-+	for (i = 0; i < MTK_BANK_CNT; i++) {
-+		struct mtk_gc *bank = &priv->gc_map[i];
-+
-+		gpiochip_remove(&bank->chip.gc);
-+	}
-+}
-+
-+static struct mtk_gc *
-+mt7621_gpio_hwirq_to_bank(struct mtk *priv, irq_hw_number_t hwirq)
-+{
-+	int i;
-+
-+	for (i = 0; i < MTK_BANK_CNT; i++) {
-+		struct mtk_gc *bank = &priv->gc_map[i];
-+
-+		if (hwirq >= bank->chip.gc.offset &&
-+		    hwirq < (bank->chip.gc.offset + bank->chip.gc.ngpio))
-+			return bank;
-+	}
-+
-+	return NULL;
-+}
-+
- static int
--mediatek_gpio_bank_probe(struct device *dev, int bank)
-+mt7621_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-+		    irq_hw_number_t hwirq)
-+{
-+	struct mtk *priv = d->host_data;
-+	struct mtk_gc *bank = mt7621_gpio_hwirq_to_bank(priv, hwirq);
-+	struct platform_device *pdev = priv->pdev;
-+	int ret;
-+
-+	if (!bank)
-+		return -EINVAL;
-+
-+	dev_dbg(&pdev->dev, "Mapping irq %d for gpio line %d (bank %d)\n",
-+		irq, (int)hwirq, bank->bank);
-+
-+	ret = irq_set_chip_data(irq, &bank->chip.gc);
-+	if (ret < 0)
-+		return ret;
-+
-+	irq_set_chip_and_handler(irq, &mt7621_irq_chip, handle_simple_irq);
-+	irq_set_noprobe(irq);
-+
-+	return 0;
-+}
-+
-+static void
-+mt7621_gpio_irq_unmap(struct irq_domain *d, unsigned int irq)
-+{
-+	irq_set_chip_and_handler(irq, NULL, NULL);
-+	irq_set_chip_data(irq, NULL);
-+}
-+
-+static const struct irq_domain_ops mt7621_gpio_irq_domain_ops = {
-+	.map = mt7621_gpio_irq_map,
-+	.unmap = mt7621_gpio_irq_unmap,
-+	.xlate = irq_domain_xlate_twocell,
-+};
-+
-+static int
-+mt7621_gpio_irq_setup(struct platform_device *pdev,
-+		      struct mtk *priv)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	priv->irq_domain = irq_domain_create_linear(dev_fwnode(dev),
-+						    priv->num_gpios,
-+						    &mt7621_gpio_irq_domain_ops,
-+						    priv);
-+	if (!priv->irq_domain) {
-+		dev_err(dev, "Couldn't allocate IRQ domain\n");
-+		return -ENXIO;
-+	}
-+
-+	irq_set_chained_handler_and_data(priv->gpio_irq,
-+					 mt7621_gpio_irq_handler, priv);
-+	irq_set_status_flags(priv->gpio_irq, IRQ_DISABLE_UNLAZY);
-+
-+	return 0;
-+}
-+
-+static int
-+mt7621_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct mtk *priv = mt7621_gpio_gc_to_priv(gc);
-+	/* gc_offset is relative to this gpio_chip; want real offset */
-+	int hwirq = offset + gc->offset;
-+
-+	if (hwirq >= priv->num_gpios)
-+		return -ENXIO;
-+
-+	return irq_create_mapping(priv->irq_domain, hwirq);
-+}
-+
-+static int
-+mediatek_gpio_bank_probe(struct platform_device *pdev, int bank)
- {
- 	struct gpio_generic_chip_config config;
-+	struct device *dev = &pdev->dev;
- 	struct mtk *mtk = dev_get_drvdata(dev);
- 	struct mtk_gc *rg;
- 	void __iomem *dat, *set, *ctrl, *diro;
-@@ -228,6 +367,7 @@ mediatek_gpio_bank_probe(struct device *dev, int bank)
- 	rg = &mtk->gc_map[bank];
- 	memset(rg, 0, sizeof(*rg));
- 
-+	rg->parent_priv = mtk;
- 	rg->bank = bank;
- 
- 	dat = mtk->base + GPIO_REG_DATA + (rg->bank * GPIO_BANK_STRIDE);
-@@ -253,47 +393,25 @@ mediatek_gpio_bank_probe(struct device *dev, int bank)
- 
- 	rg->chip.gc.of_gpio_n_cells = 2;
- 	rg->chip.gc.of_xlate = mediatek_gpio_xlate;
-+	rg->chip.gc.ngpio = MTK_BANK_WIDTH;
- 	rg->chip.gc.label = devm_kasprintf(dev, GFP_KERNEL, "%s-bank%d",
- 					dev_name(dev), bank);
- 	if (!rg->chip.gc.label)
- 		return -ENOMEM;
- 
- 	rg->chip.gc.offset = bank * MTK_BANK_WIDTH;
-+	if (mtk->gpio_irq > 0)
-+		rg->chip.gc.to_irq = mt7621_gpio_to_irq;
- 
--	if (mtk->gpio_irq) {
--		struct gpio_irq_chip *girq;
--
--		/*
--		 * Directly request the irq here instead of passing
--		 * a flow-handler because the irq is shared.
--		 */
--		ret = devm_request_irq(dev, mtk->gpio_irq,
--				       mediatek_gpio_irq_handler, IRQF_SHARED,
--				       rg->chip.gc.label, &rg->chip.gc);
--
--		if (ret) {
--			dev_err(dev, "Error requesting IRQ %d: %d\n",
--				mtk->gpio_irq, ret);
--			return ret;
--		}
--
--		girq = &rg->chip.gc.irq;
--		gpio_irq_chip_set_chip(girq, &mt7621_irq_chip);
--		/* This will let us handle the parent IRQ in the driver */
--		girq->parent_handler = NULL;
--		girq->num_parents = 0;
--		girq->parents = NULL;
--		girq->default_type = IRQ_TYPE_NONE;
--		girq->handler = handle_simple_irq;
--	}
--
--	ret = devm_gpiochip_add_data(dev, &rg->chip.gc, mtk);
-+	ret = devm_gpiochip_add_data(dev, &rg->chip.gc, rg);
- 	if (ret < 0) {
- 		dev_err(dev, "Could not register gpio %d, ret=%d\n",
- 			rg->chip.gc.ngpio, ret);
- 		return ret;
- 	}
- 
-+	mtk->num_gpios += rg->chip.gc.ngpio;
-+
- 	/* set polarity to low for all gpios */
- 	mtk_gpio_w32(rg, GPIO_REG_POL, 0);
- 
-@@ -322,16 +440,26 @@ mediatek_gpio_probe(struct platform_device *pdev)
- 	if (mtk->gpio_irq < 0)
- 		return mtk->gpio_irq;
- 
--	mtk->dev = dev;
-+	mtk->pdev = pdev;
- 	platform_set_drvdata(pdev, mtk);
- 
- 	for (i = 0; i < MTK_BANK_CNT; i++) {
--		ret = mediatek_gpio_bank_probe(dev, i);
-+		ret = mediatek_gpio_bank_probe(pdev, i);
- 		if (ret)
--			return ret;
-+			goto fail;
-+	}
-+
-+	if (mtk->gpio_irq > 0) {
-+		ret = mt7621_gpio_irq_setup(pdev, mtk);
-+		if (ret)
-+			goto fail;
- 	}
- 
- 	return 0;
-+
-+fail:
-+	(void)mt7621_gpio_remove(pdev);
-+	return ret;
- }
- 
- static const struct of_device_id mediatek_gpio_match[] = {
 
