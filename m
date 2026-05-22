@@ -1,106 +1,106 @@
-Return-Path: <linux-gpio+bounces-37325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eBE9G+EdEGrqTgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37325-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 11:12:01 +0200
+	id 4PJuBEgeEGrqTgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37326-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 11:13:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 158545B0EAF
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 11:12:00 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D8715B0F22
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 11:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9334F3011EAA
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:11:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 02CB6301B305
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 09:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8D103B8D78;
-	Fri, 22 May 2026 09:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18BE93A9D8A;
+	Fri, 22 May 2026 09:12:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F332D3BAD96
-	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 09:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89B33BED61
+	for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 09:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779441110; cv=none; b=nIvdyKzGLlL9ABerw3kE2tVPiD8pvJJtPzgaFZdoowuVZoncRS54dxfQX3StvblmvdpbuCyi8QH2r7Of/QOa7lnIMSZ2WhshZyAE6liGXvHUqXSmQf+604c1sAYNFnB8OW/rQVPXhGWv8geQO1HLVucwJ8pyoQxngew+VDvufKI=
+	t=1779441140; cv=none; b=EId7UjVAOdvMVrvQySMRiGdPcFv6BDlIMfbdIekzATQk30h0lVsNkJWBOJuuCBLiL9/bD2NLpZI/4z9sVWNMwlgxzyLImnYe8xEvnfuhPFmr3STIRdbGhv6rrrY7RPKbsbHJfc4OmW+aTSMqbgQp7nKk0o85z1FMFjhd3zHy8Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779441110; c=relaxed/simple;
-	bh=tAi5UeQ8Wn/ZsGeuB5ybx0KShfl8F3H/Z/vQg1bKe9M=;
+	s=arc-20240116; t=1779441140; c=relaxed/simple;
+	bh=+UJzkg48lMkoSQyNJu94NJ5U0X3TUzcERqMbRbzsVRM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j8ZRgy2194HBTTMNfqNCJ7Pu0iHEztQY7l9+ie6dKm7cD5TfImSDezGDenbX2eFVqSnhP+JgUEaW/0Foc/kWYcoEe5Tsjtos+GTC+INnE32c+YP5JYwdJw2GGphjpub0SJ8Y+jMZSErQs7hTExLPA8QOK0yPiGNtoyREHW0MLR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+	 To:Cc:Content-Type; b=Nhk3n++bmP5y/opkgdjzisNnnRVKtcvcTYSwdkazUPGRNpUUz51JVULb0QiMbMVHRNKkPJ8FFPzw5WZy/InjPjHbdqC5g7rju8wuaeAgyjrrAmFWa1Z4b6Gb4yA6WAvCF8v7sxav+fcMPCOKE5WfZfeEXB15P1QY3UdkcElunlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-57747a2bf20so2140890e0c.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 02:11:43 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-57611a6a69eso2090945e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 02:12:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779441101; x=1780045901;
+        d=1e100.net; s=20251104; t=1779441135; x=1780045935;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=euPMq2UyJF5E3NPJ82QmWExcUbi1ANEh3LXTW7bdXbw=;
-        b=hNNU3cea/o0u7t9+W1xrAFK/jP5kgIIaIAwKzzTDZvp+dazsGnlL4gT0gcq9FxkDCp
-         KTO8dPCfU2qJWIELyb6xCZtO+CqBxaiXpWWyMxx/WRwUQLbCpYAOPJT/4LiwipP0+Tmu
-         Gr/lr6KrHczXgDh330k8JMjl74QtawAzd5sNCwFE92J1oW5zuFxwenvaPlXFcey5VbUd
-         ARqR86B+IQGVUQQ2P14PRWg/SI/KEu8eDWJd/UWZe/HAun48HlAFdQ59XygukEKUqLqh
-         J8+rbo/O5lGUmE/r+4kZZMetkANA5LJOoNPVcTLJMT5GxVw7EDoI9xtLdceaXEADWFZ4
-         9NQQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8hujFko8Rws/g61XkrGlf8A0UoIavg+aeS5+iBkgzx/CHaSwM4/Axls3CQI8f4xIiLV2/3nunpcWOV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBpTZKu/W6NqFvK9ptPzlMXxco5hzR8S8NespKeJei5y5RsW6N
-	LWGe+zyU/HFgPDm9QS3qefX+9t/EaYTGZ1RMOXrUrph7D6aLU2BSnJGVg1fq/3Ir
-X-Gm-Gg: Acq92OH16qOhZoMAHlJ+iaiXdPAhxfuMyPbE1LJnCWvQKm7/f0XRAk8CqDt8cGpXsfy
-	GzNefpS3b5UChc6RDmYBRYGUDiFFda/2ZbF/ai6u9FOEXE2JIF/aWEURfNIGqeWHG/WTwTsnFWq
-	IR/mJtNuKFKEzXFpSWTY1Ac2EgCGac5Wayx0TMRTTJfBGEbGZnLqo6swgUmsRdc+qoSHXqT8u5j
-	wvtifnVu126bV0xr9ASSOW1emdI+cvrrLKDa3uH8T2vk038tDLn2w2JdQxN5JwS4iZ1C7Vg1DLK
-	u5K/JzQyLJsptBBmseOjrlxsLb9qZhT12dXgkCRahVznp1WJX4n1xLCYEa99z41vDdwNw3VfH+V
-	0Kyu+DmXhb280tZjg0kyIa73mF1J1Vhfqdr1gGx6cwDh4u9M2wq/C3DL1HCGCsRP5ErTxnoUP19
-	wduhaI6haLuDOODd7vBpztQIvcwvz41Ga10VlUf3Tuge/UPzIWp7kBPjV5xgbK
-X-Received: by 2002:a05:6102:4b0b:b0:650:a9f6:4e3a with SMTP id ada2fe7eead31-67c7e11f6e9mr1051965137.1.1779441100969;
-        Fri, 22 May 2026 02:11:40 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96173afb1ecsm892404241.9.2026.05.22.02.11.40
+        bh=7lSGt0XkeFIiWkTNBDsqiKTBjOhow5nFx28sgXv7vGk=;
+        b=l886lFLu6/ROqfLIDpshpzDjtSylY6JNG/C9kQMUn3eve26IaIxGaHcyzVmwtITMgZ
+         bLIjHW4J2A3BZ8L30b97/ZZPxVudaSBYUz9GcE53qPsU5qVm3EC8JPsG3MGmd+AaWk1C
+         XZdD3cSe+nYyEV4CzqOOosdoK+Bd0jIFKfx4SNYM1i0ZkrVfcKGaKr2+DhcH/K41o+zR
+         C2ZzpGiOiOE1qudWTUi2UD/n7CdMztyCncbuAaQo/xVuto1DFXqh11eqdhe5iYudSKOn
+         FEv9f6EoZbkFxlnT+6MGSaRTK0a8U4GYAlUSyR2rnfyCc+OaK1j0rKmtem0wAzaaLNCf
+         lbiA==
+X-Forwarded-Encrypted: i=1; AFNElJ+oCnu2RVaxp33xTi+1Yp62V6sUs0F20PdLjecnGS5P2q4L/xb+GGK7Vp39aejkVAtVbEtsbpzdPRzx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXuUzptKTtATfe3Fyks1sL4+9EnZ6lORU3/bKWIO2kyRwxLe4T
+	NYUFP8yeBKSJjimp5ll/7My8G7Q7WuRFxxC+85WeYwAKzy4brGEsV3qQbojt2ovg
+X-Gm-Gg: Acq92OGX6X8+pK/kaskKfoRswUXb/G5HX7XHNgpEly+htgRACxu9QDvjUik1TsTr6TJ
+	rqP83Dn6zxCY5/uJxABO6mtTTZ4GmE+6NELgVrOGmFI8WRaCihFdCUOX5xfz7O5OnjNXzf67vge
+	bwfbCNxBM9WjlBLJx+KSp12P2Y2ypaBBl3mtWLN4F2mKD2pL7tbe53fBTdxyeB0S6oZCVlueT0p
+	3lcq63ssbOSo4XNnYRI5Bal2khn6UgznVW8xBxVstSetMRcTqzlWghb2bsQb63ZKmdIFHOVTa+j
+	bAXbDccdIyzWNwul33WNUG6LPsbzZ/YW2JWIeeirTwK9LKw1WQdlv5vXbqcrMmCDCsY8bJdLhT6
+	O4HmtAkD/1TRpRTUZ87WCrlAf68z1E1onwgATH817LIAAF+IvytLfZ9rJhYXbf3MGzn9kF4Tyei
+	YYRFrpfaE/pLOmbpJZjJneAaTB1zgtLnVsPaRadD1a2k3V9m/o+lCJWpwiMdu2BDW4E1osqA4=
+X-Received: by 2002:a05:6122:4fa4:b0:56c:d623:896e with SMTP id 71dfb90a1353d-58663a5c2bdmr1254384e0c.14.1779441134844;
+        Fri, 22 May 2026 02:12:14 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-586f889e7e3sm1408065e0c.15.2026.05.22.02.12.14
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2026 02:11:40 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-95699e8e26aso2337427241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 02:11:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8vnH9BATnAxYRDjIwQHQTQfOKVEUVg/25BKCq1FYwVbMXF1bTEu0KGR9MKL5Ne44C/6trQMe9AIAag@vger.kernel.org
-X-Received: by 2002:a05:6102:f93:b0:660:e01d:d684 with SMTP id
- ada2fe7eead31-67c7e1209e2mr1145939137.3.1779441100124; Fri, 22 May 2026
- 02:11:40 -0700 (PDT)
+        Fri, 22 May 2026 02:12:14 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-6314d2e31d6so2435220137.0
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2026 02:12:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/8xYkyOVt90xYKcoOy4gvBMEx4k6LBM1pksg80pEVDJIT3RyRUTqZPROoC31fYYBT6/2pVsaTFph43@vger.kernel.org
+X-Received: by 2002:a05:6102:15a1:b0:622:702c:fd3f with SMTP id
+ ada2fe7eead31-67c835b842cmr901643137.21.1779441134377; Fri, 22 May 2026
+ 02:12:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260515124008.2947838-1-claudiu.beznea@kernel.org> <20260515124008.2947838-2-claudiu.beznea@kernel.org>
-In-Reply-To: <20260515124008.2947838-2-claudiu.beznea@kernel.org>
+References: <20260515124008.2947838-1-claudiu.beznea@kernel.org> <20260515124008.2947838-3-claudiu.beznea@kernel.org>
+In-Reply-To: <20260515124008.2947838-3-claudiu.beznea@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 22 May 2026 11:11:29 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVK7Wu=Lv1Qhu0+CMCQSXv6Lj6BoTdzVoW1K5Z=kgecag@mail.gmail.com>
-X-Gm-Features: AVHnY4Iw_vr8Guqtk2YAOmBMghsTC9zOxmpEROEYDnyaYtfvfPRQWvVAvaAm2po
-Message-ID: <CAMuHMdVK7Wu=Lv1Qhu0+CMCQSXv6Lj6BoTdzVoW1K5Z=kgecag@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: renesas: rzg2l: Use -ENOTSUPP instead of -EOPNOTSUPP
+Date: Fri, 22 May 2026 11:12:00 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUEeo-aCgopHt8CVkdedqd11S98HE6Ckkqk49Bj0LrxuA@mail.gmail.com>
+X-Gm-Features: AVHnY4JnKZOmF5oPEGearuYvmvs7T4LU-ClYXmPyGIj8obiKu4rAdqagY3X8Tg4
+Message-ID: <CAMuHMdUEeo-aCgopHt8CVkdedqd11S98HE6Ckkqk49Bj0LrxuA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: renesas: rzg2l: Populate struct gpio_chip::set_config
 To: Claudiu Beznea <claudiu.beznea@kernel.org>
 Cc: linusw@kernel.org, brgl@kernel.org, 
 	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
 	claudiu.beznea@tuxon.dev, linux-renesas-soc@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37325-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37326-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
 	DMARC_NA(0.00)[linux-m68k.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -111,43 +111,27 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	NEURAL_HAM(-0.00)[-0.990];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	R_DKIM_NA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,renesas.com:email,glider.be:email]
-X-Rspamd-Queue-Id: 158545B0EAF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,linux-m68k.org:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,renesas.com:email,glider.be:email]
+X-Rspamd-Queue-Id: 1D8715B0F22
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-
-Hi Claudiu,
 
 On Fri, 15 May 2026 at 14:40, Claudiu Beznea <claudiu.beznea@kernel.org> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> The pinctrl and GPIO core code make exceptions for the -ENOTSUPP error
-> code. One such example is gpio_set_config_with_argument_optional(), which
-> returns success when gpio_set_config_with_argument() returns -ENOTSUPP, but
-> reports failure for all other error codes.
+> Populate struct gpio_chip::set_config to allow various GPIO settings.
 >
-> Returning -EOPNOTSUPP from the pinctrl driver on the unsupported pinctrl
-> operation may lead to boot failures when pinctrl drivers implements
-> struct gpio_chip::set_config, the system uses GPIO hogs, and the
-> struct gpio_chip::set_config implementation returns -EOPNOTSUPP for the
-> unsupported operations.
->
-> Return -ENOTSUPP for the unsupported pinctrl operation.
->
-> Fixes: 560c633d378a ("pinctrl: renesas: rzg2l: Drop oen_read and oen_write callbacks")
-> Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
-> Cc: stable@vger.kernel.org
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-
-Thanks for your patch!
+> ---
+>
+> Changes in v2:
+> - used gpiochip_generic_config()
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-pinctrl for v7.2.
-
-I guess drivers/pinctrl/renesas/pinctrl-rzv2m.c needs a similar patch?
 
 Gr{oetje,eeting}s,
 
