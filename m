@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-37342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8N5PMdsxEGoaUwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37342-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:37:15 +0200
+	id AIJIIboyEGqEUwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37343-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:40:58 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BEBA5B2446
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:37:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3DD75B2565
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:40:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2EC6730DA3F6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 10:26:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 83F96315F0A6
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 10:27:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E2A3E8670;
-	Fri, 22 May 2026 10:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D1D3EB7E8;
+	Fri, 22 May 2026 10:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOpJv9h/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4AcwFSO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F603E5590;
-	Fri, 22 May 2026 10:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B1E3E1714;
+	Fri, 22 May 2026 10:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779445395; cv=none; b=cMad57cfjWduhOGrsDY9kZp0ZGeEL9SDgQF99pMnLmWXv4B49B33rfC2Ixs1aJdrgu8Ac9l5PgD7yI5h2Ib+FThRqe+g0Zy5qFw++/rkmKmOF2Kga56YsWGkxwM33oogqDYtBXIYIrg4F5z83VA7u7zbhUEK/4pBHB2+iwMLyuw=
+	t=1779445397; cv=none; b=o7ce0wGzZ/I9FK9Mc8NFZjHQxP9hZbKbSuowTTYF+EBKWKKnWyX2NJ2koDpDmUucSXJLRtAcVg3lJoirTDDaC5hfJLMi01tTXxIWygHa0V3gcur/ZzrebWU0OsegFILh5cl9xw1OpSw8JZzjNpUbKcv12ceBzd16ox8ew79SJeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779445395; c=relaxed/simple;
-	bh=l2Uj4xt+63HmKdjgb7EezycxDf+kepwJpwznf4eHN6A=;
+	s=arc-20240116; t=1779445397; c=relaxed/simple;
+	bh=r94YYOnneZl5g78y1Es6ziDHoQfYcRQPd4LSXbGifKE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5zvrvarT8BXjUS/as1wUbDru9/bvQo3LdcdZTJ3XDm6sAtoOskJ4vVy+rLxUWkz3Xyk0KoaNtTa2vvTcEFK0H1e7Ru5pQo9rPNYAN5kV9mwa1U7kB5k3w33CgaGJAOzSGatbcwu0vA+u2XQFSy/RdhRMG2kNai/djBQGq2tppA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOpJv9h/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD051F00A3F;
-	Fri, 22 May 2026 10:23:09 +0000 (UTC)
+	 MIME-Version; b=fAfYPM4b/WQ8mZ63+Iq5kx/viBGX624VkRYv329jTYDZGXSwH3Aip0hr0K8O8wwFIpOo7siMNDL/6l1TLfPYNQf0mtDymLKu/RSVlV9xBeU+W4Vbz8ze32Kju57mAFjRd0gNuh8xucmrpqoOlqGMZseyUcvNUebJAQJNQhLHCgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4AcwFSO; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301461F00ADF;
+	Fri, 22 May 2026 10:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779445392;
-	bh=P3cBV2PxnmWeSNwKUBnmjOtO2VySEPTJeALnjDSE/Lc=;
+	s=k20260515; t=1779445396;
+	bh=gbq0415eDXwHx+EGm1lEW07SwsGVGhqSlRkLd2RKaRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dOpJv9h/0C/d+W4Zn1BzuT4dL9kQl+SAZWxntCPHrl/3IkcloQ9a3iuQXIFYf5BV9
-	 ooR8Qdf/nj+ElJ8tjYuTsWLwrtUoQGcQ2TT606KjjeTNZNnIweF4WtTvxketfhf/VM
-	 EnqpbeFEkgw3Bz6VOjcAsF9+NroXm9bHg37mfibtB6Y8WnlMmzazMNuphdGfKqLg35
-	 EgZYbAZY6gR2K+UVRsT+0++wa+4Ebez65u6tKTJ0yUxYJpeJCz5NWeXjkAu3udlUnD
-	 LX4DB0JFJZxIDR4fdOcPjYuRnctX8uazzuhlyNAAHKQGdfHqXhf0eNbZDiumrULpdH
-	 CgTNLlaBTyocg==
+	b=D4AcwFSOPwtCgn/zd8cI/X4smXYqc9Kx5X0OeC/WuJzX45TkGOFKppFX0Kdk2Xx+z
+	 iUCQz22SQjKKIDsu2jOspmlvDhi4JvwXVUpYQlN3pDoJclvi5XL8rtJazlX9tMC22M
+	 lA87RfPINmNG7ZjKYoS0xVLzdeM/cchbr02w6oS5W3I80a2Eu470T1M8J1UDHm04Dp
+	 fPM95kN0gByalsYpwuwkbclwpQayiBN/0K8/OqaBTOr+X5z1TAG6sVE5fL9UQH+GTv
+	 JDANR2+jGD7h6BW/W9yRsgcpcFrABXLS0zU3EyQe+GdPfin0s/g4rV4mZhCf9ZGH6L
+	 MEOQfIC31dFDQ==
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
 To: geert+renesas@glider.be,
 	linusw@kernel.org,
@@ -59,9 +59,9 @@ Cc: claudiu.beznea@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 3/9] pinctrl: renesas: rzg2l: Keep member documentation aligned
-Date: Fri, 22 May 2026 13:22:45 +0300
-Message-ID: <20260522102251.1723392-4-claudiu.beznea@kernel.org>
+Subject: [PATCH 4/9] pinctrl: renesas: rzg2l: Use tab instead of spaces
+Date: Fri, 22 May 2026 13:22:46 +0300
+Message-ID: <20260522102251.1723392-5-claudiu.beznea@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
 References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
@@ -83,7 +83,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37342-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37343-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com,sang-engineering.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -100,43 +100,32 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 4BEBA5B2446
+X-Rspamd-Queue-Id: F3DD75B2565
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Keep the documentation for struct rzg2l_pinctrl_reg_cache members aligned
-with the struct member order.
+Use tab instead of spaces to follow the same coding style.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 77443cf1f431..b1ffdc133987 100644
+index b1ffdc133987..517001145bd0 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -380,16 +380,16 @@ struct rzg2l_pinctrl_pin_settings {
-  * @pmc: PMC registers cache
-  * @pfc: PFC registers cache
-  * @iolh: IOLH registers cache
-- * @pupd: PUPD registers cache
-  * @ien: IEN registers cache
-+ * @pupd: PUPD registers cache
-  * @smt: SMT registers cache
-  * @sr: SR registers cache
-  * @nod: NOD registers cache
-  * @clone: Clone register cache
-  * @sd_ch: SD_CH registers cache
-  * @eth_poc: ET_POC registers cache
-- * @other_poc: OTHER_POC register cache
-  * @oen: Output Enable register cache
-+ * @other_poc: OTHER_POC register cache
-  * @qspi: QSPI registers cache
-  */
- struct rzg2l_pinctrl_reg_cache {
+@@ -407,7 +407,7 @@ struct rzg2l_pinctrl_reg_cache {
+ 	u8	sd_ch[2];
+ 	u8	eth_poc[2];
+ 	u8	oen;
+-	u8      other_poc;
++	u8	other_poc;
+ 	u8	qspi;
+ };
+ 
 -- 
 2.43.0
 
