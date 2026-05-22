@@ -1,158 +1,200 @@
-Return-Path: <linux-gpio+bounces-37367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37368-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MCNUF4hXEGopWgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37367-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:18:00 +0200
+	id 0H2uOnNeEGoLWwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37368-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:47:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2EE85B4F85
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92B0F5B571A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 15:47:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0B60C301B3DC
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 13:01:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6026A3016CEA
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 13:38:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10AFE394E80;
-	Fri, 22 May 2026 13:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE9A400DF1;
+	Fri, 22 May 2026 13:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5nGxVmZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipeDJUhq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03C7388893;
-	Fri, 22 May 2026 13:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0753FA5DA;
+	Fri, 22 May 2026 13:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779454914; cv=none; b=jbmaclz3C9Crs7yuxffjRUqcojUY/OQGv+R0tuSuQ13JIfZBtUgz2DD/GwCtBGCOEnh+aARdgDlBDtUrEu8IMg7L8YUKNpqFaf8R0zFEdYNQpZz2GHRriDJqZu52jKqdYFa6wn1KrzhnPrsWAMibs8fRzogA9bvd5HfiXdYYiqQ=
+	t=1779457124; cv=none; b=Yh3S3KoS6sEbzjiJts/T6ZG1j4Uw6bz17aK04wTMvcMi11ZDBCZesghrpciJyWfKxFfvTF3t8YvHwrKgq7cFN8SJzUQjL/DvKcssTtyZM9TLkPoiI9H3l7yk0N116E5eY6NGRe+xfn+sXZo8vwsVFh7bL/2RRrs7V2AEkuUSMiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779454914; c=relaxed/simple;
-	bh=Es7Vb9ABTUmgzzmnqEEGOu7GP+RMFAjOpM00ciITgFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h9g29ZaBcKOVdl8RkOWQcpOy0hPiHYyczMYl21Sm4TtBllanX4ejpk/LrbILWbDZ3fhe6jK/JaZWpXGiWQA5h8qS2++CTP3ESegQLuHnCb6RhDkidWcCX2L81sGQpco9zGxiFuzyNCNzm9rjiZtbrItL30B6OKA0FNfM4ESZxok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5nGxVmZ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEC11F000E9;
-	Fri, 22 May 2026 13:01:50 +0000 (UTC)
+	s=arc-20240116; t=1779457124; c=relaxed/simple;
+	bh=VTIq37iy9DUOokRQnz3PLEP+l6B+THmSP5B+u2rjDgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rn7aI0UqVsymVvuFR4Nj+ErXbsTsQ3jLz0tucwDjCiZqW7z53qNUma3QSgHtBwUk1sJYXTuRqGwQzeRz2OCpx0p6Axb3tAx27yP5ZkSHO0TKPdN75sjVPx1LFCWcZG70KX67uSqE9/vw7IbyL7T4/6l0cS+HvPwMXqDvfBJy62Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipeDJUhq; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCAB1F000E9;
+	Fri, 22 May 2026 13:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779454913;
-	bh=iAvcOQlHfItm6RV8kDuEo5a7+X4i437AKkSh6Oa6+5Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=T5nGxVmZhnWsSDibU0hWrbUOcLh39IfcYmSPjEoMhdS+SGEYRzQhUeKOomYjfeJX1
-	 hKbaSjobLHiKV6lzFL/6LClX7PZoKtSbp4CLMe/yvMVzILMdiNUwYPY1yUfXiq/7qh
-	 PB/8skuf3e6Y112NpVRICUhZ1PW0vmIGVzafRBwRStTg+xuLt4URx/FALzHXATUp2r
-	 2DNCwHw1T+Ke++b9/50j185f4KvZVceitez4wpPnjLdHonbAdu+AGNdmUvEod/qtSq
-	 c6LdcUpIgBoELj6Q/Fa5+sh++jHC+lyR/MzARpNY9H+8eSRNfUPjVxxlYeEGKp57MG
-	 8T8nX2rZhgyBQ==
-Message-ID: <f2ffcf92-34b7-40e8-877c-669c2d320506@kernel.org>
-Date: Fri, 22 May 2026 16:01:48 +0300
+	s=k20260515; t=1779457120;
+	bh=2sEt+pfVTqi62XRpqK9+If4oDJrLR/RRwahq5GJ1eB4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ipeDJUhqXzLNXV3/kjrZjDcIBrdBMJrwhEHGT2yPJuyIrzQGmgeY0+FCUspfdVakj
+	 tKtadiizz3RYaUAl/qxmetY8aUqVwRKhcKNnc1UI81X9WPjCQRGX6uGy833WAmoo/v
+	 pNs2OGjecBi4w8XzEExuumnilUumrLyq9oDY2pxIVNPb3cpXP7UZ/fukc76kkcUo0P
+	 mg2BrZCa+bsYI8JnwmJqXAVkVk/Fh+gS7rXE2XYI9rK2/aMGjNny/SRXRLUZoUk2zU
+	 052gpvCVoi3e4HmokXZA8wMezUzWEmpRXkWs489liV+CIW+dh1/Jh3ozRFoy42sjMZ
+	 GV2/wMk0o5l7w==
+Date: Fri, 22 May 2026 14:38:27 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, "Hennerich, Michael"
+ <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, "Sa,
+ Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
+ Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v12 5/6] iio: adc: ad4691: add oversampling support
+Message-ID: <20260522143827.013a985c@jic23-huawei>
+In-Reply-To: <LV9PR03MB8414E63DA5C2C22A46E98215F70F2@LV9PR03MB8414.namprd03.prod.outlook.com>
+References: <20260519-ad4692-multichannel-sar-adc-driver-v12-0-5b335162aa51@analog.com>
+	<20260519-ad4692-multichannel-sar-adc-driver-v12-5-5b335162aa51@analog.com>
+	<LV9PR03MB8414CA3DB26235605C9323E5F70E2@LV9PR03MB8414.namprd03.prod.outlook.com>
+	<20260522121628.21bf03f9@jic23-huawei>
+	<LV9PR03MB8414E63DA5C2C22A46E98215F70F2@LV9PR03MB8414.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] arm64: dts: renesas: rzg3s-smarc-som: Enable I3C
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: geert+renesas@glider.be, linusw@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
- claudiu.beznea@tuxon.dev, linux-renesas-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
- <20260522102251.1723392-10-claudiu.beznea@kernel.org>
- <ahBMKWrKQDko3cG8@shikoro>
-Content-Language: en-US
-From: Claudiu Beznea <claudiu.beznea@kernel.org>
-In-Reply-To: <ahBMKWrKQDko3cG8@shikoro>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37368-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[glider.be,kernel.org,gmail.com,tuxon.dev,vger.kernel.org,bp.renesas.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-37367-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: F2EE85B4F85
+X-Rspamd-Queue-Id: 92B0F5B571A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi, Wolfram,
+On Fri, 22 May 2026 11:38:55 +0000
+"Sabau, Radu bogdan" <Radu.Sabau@analog.com> wrote:
 
-On 5/22/26 15:29, Wolfram Sang wrote:
-> Hi Claudiu,
+> > -----Original Message-----
+> > From: Jonathan Cameron <jic23@kernel.org>
+> > Sent: Friday, May 22, 2026 2:16 PM  
 > 
->> +	i3c_pins: i3c {
->> +		pins = "I3C_SDA", "I3C_SCL";
->> +#if SW_CONFIG4 == SW_ON
->> +		power-source = <1200>;
->> +#else
->> +		power-source = <1800>;
->> +#endif
->> +		input-enable;
->> +		renesas,i3c-standby = <0>;
->> +	};
->> +
->> +	i3c_standby_pins: i3c-standby {
->> +		pins = "I3C_SDA", "I3C_SCL";
->> +#if SW_CONFIG4 == SW_ON
->> +		power-source = <1200>;
->> +#else
->> +		power-source = <1800>;
->> +#endif
->> +		renesas,i3c-standby = <1>;
->> +	};
+> ...
 > 
-> That doesn't look like HW description to me because the pins are the
-> same for regular and standby mode.
+> > > >
+> > > > +	iio_for_each_active_channel(indio_dev, bit) {
+> > > > +		ret = regmap_write(st->regmap,
+> > > > AD4691_ACC_DEPTH_IN(bit), st->osr[bit]);  
+> > >
+> > > Unfortunately enough, I think a v13 will come, too...
+> > >
+> > > Had a look again on what Sashiko had to say, and seeing the sampling  
+> > frequency  
+> > > shared_by_all comment again made me have a deeper look see how the  
+> > code could  
+> > > be commented so he wouldn't complain about this anymore, and...
+> > >
+> > > Perhaps he is a bit right after all. I found a section stating that in standard
+> > > sequencer mode (which the driver uses right now), all the channels actually  
+> > use  
+> > > the ACC_DEPTH_IN0 for osr, and so changing ACC_DEPTH_INn for other  
+> > channels  
+> > > doesn't really do much. And so I tested this selecting both voltage0 and  
+> > voltage1  
+> > > for sampling with osr4 for voltage0 and osr1 for voltage1 and with a 100kHz  
+> > osc freq  
+> > > indeed DR fell after approximately 80us which points out both channels were  
+> > actually  
+> > > using OSR of 4. Perhaps the OSR should be shared by all and therefore the
+> > > sampling frequency would also be shared by all, right?  
+> > 
+> > I kind of lost track on the modes. What are the chances we later move to or
+> > add
+> > support for a mode where the different OSRs do matter?  If that's a possibility
+> > we should avoid ABI change by allowing for it from the start.
+> > 
+> > Then if we are in this mode, they'll have separate controls but change any,
+> > changes
+> > them all, if we are in a different mode that connection breaks.
+> > If that's the case, just throw in a comment saying something to the effect this
+> > may change.
+> > 
+> > It's not wrong ABI to do this, it's just less intuitive for users which is why
+> > we prefer the shared_by stuff where there isn't a disadvantage.  That is at
+> > most
+> > a hint to what actually happens.   A simple example is where different
+> > channels have one OSR field but they aren't the same - i.e. channel 1 is twice
+> > the OSR of channel 2.  Hence we can't share the attribute but any change
+> > effects
+> > both.
+> >   
+> 
+> Hi Jonathan,
+> 
+> I don't think a mode where different OSR will matter will be added in the future. Better
+> yet, this advanced sequencer functionality is not really mode dependent and is actually
+> something that allows you to manually rearrange channels and samples in the
+> sequence, and unless this functionality is active (it is not by default nor is it used by
+> the driver, since we use the standard sequencer).
+> 
+> Personally, I don't see any reason to have this advanced sequencer stuff implemented
+> since DR is only falling at the end of the sequence no matter if it is standard config or not,
+> the only "disadvantage" to say so is that the standard sequencer uses the same OSR field
+> for all channels. But that advanced sequencer stuff would only complicate the buffer
+> enable/disable functions even more, which I don't think it's worth the effort.
+> 
+> So, with this in mind. Letting the driver use standard sequencer would ultimately mean
+> that the osr would be the same for all the channels, and then effective rate the same for
+> all channels, which I suggest having it like that from initial driver patch to the end, so no
+> ABI change mid-patch series. This change will simplify the driver.
 
-Yes, same pins, different states. Isn't that the role of different pinctrl 
-entries in DT for the same node? E.g., for SHDI we use the same approach, same 
-pins but different states. Bellow is an example from RZ/G3S but same approach is 
-used for other Renesas SoCs as well:
+Ok.  Thanks for the analysis.  It may well be that those fancy sequencer things are
+only really useful for very specific use cases we won't see in Linux.
 
-https://elixir.bootlin.com/linux/v7.1-rc4/source/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi#L305
+So I'm fine with following the simple path!
 
-https://elixir.bootlin.com/linux/v7.1-rc4/source/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi#L321
+Jonathan
 
-> Their state is changed when powering
-> down, but that should not need DT encoding, I'd think. The driver should
-> know what to do, or?
-
-Through different pinctrl states different pinctrl settings are applied in the 
-pin controller HW by calling well known pinctrl APIs from the consumer drivers 
-(e.g. pinctrl_pm_select_sleep_state() in case of the I3C driver as proposed in [1]).
-
-Is there another way the I3C driver (or any pinctrl driver consumer) could apply 
-pinctrl settings?
-
-[1] https://lore.kernel.org/all/20260522101815.1722909-18-claudiu.beznea@kernel.org
-
--- 
-Thank you,
-Claudiu
+> 
+> Radu
 
 
