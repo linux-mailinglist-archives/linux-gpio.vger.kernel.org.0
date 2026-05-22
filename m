@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-37347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +IG4EwgxEGoaUwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37347-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:33:44 +0200
+	id cGYqHRsxEGoaUwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37348-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:34:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB4945B22D6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 185AA5B230A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 12:34:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C535D308F395
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 10:27:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 92A793094AF0
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2026 10:27:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423933F5BF7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975DE3F7A86;
 	Fri, 22 May 2026 10:23:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FURRJO1e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaUCIE1k"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FCB3E558E;
-	Fri, 22 May 2026 10:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404FA3F54AA;
+	Fri, 22 May 2026 10:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779445417; cv=none; b=AQwT0JmB6sIR/Su9GBn7D3AbG8Z/gShsC9v/5V8hFuLf59r5euaw+AbrR7iohX7XVvIVteR+FQvx/5xrd3V/4UM3/rLgaOcwmjWXkoZAD0X6VZaGRZpt2bD3fYsGGU9+lj3rwvYPr9ItwHkyBqlnVlle3J4r67exF8MdygCZlCo=
+	t=1779445417; cv=none; b=tCg6pkLU/bxL24yQapci48S4UiRIPVbhIBd3f+lnJ4jSmDkGPP46xWFuUytfip6OoxoBcszmCBHeK8VCYMT4ikimdFw1DwN4PF5/HDI7I0EdQYAAdpztpryr7eAYF7NKJX7eiDwkvLWKEmd9Wa3U4Hk2kj0UNOufa55Zph+TYfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779445417; c=relaxed/simple;
-	bh=3ieREa1l0OIGxVr2h0+jei79Cqol5ZZWYWjHXdW0cTw=;
+	bh=W9lPTgx6mDxArcLHARU/ZZqLqgXOeySBXq57O5dffOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EIvQPcORdSJqG5x0kO+dBaaajWfu9u7j2PTyJ/2DGrOoPr9z/5YzduEDZ23/8kQ0tA+Ji8IqFnJpBq7gPXPrsCIT+CsPRxh4eLFfdLz+MWk1Fs6XIocDzR54Rx2rTGd+GFUY01yDry1udk8yk1mAWQ9kMyDfD/Tu7lIuyJjG8Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FURRJO1e; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755A01F00A3D;
-	Fri, 22 May 2026 10:23:28 +0000 (UTC)
+	 MIME-Version; b=SWGCi6tKDzwYC4IGVBTBB04zlenHDZLugup0pzQYK8hXg8O7G4lVuUfgyY/mhsvk8Iupkh1rjTL//VRDaZU0A5CZ5m28yX4KbSXQH1olu0wZ6USIEoJIDmZngmrcB6KTNDlKx6mc/tP9WwmCBuG5HDMVU1u4dTnwQvzT9/c1u7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaUCIE1k; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34031F00A3F;
+	Fri, 22 May 2026 10:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779445412;
-	bh=SpzT0kfCrLKElIpEGkZ7lbyJuca/WmE2raj0yWcYax8=;
+	s=k20260515; t=1779445416;
+	bh=6QEWAjHSDHCKnr4dwU2wD6RoMsBK3plNIjm7Iq3i+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=FURRJO1emf/MSMNnJECgBRN1aDo8vmJbo1iYOo/qD6ycdWNKV84Sz5PTzdgE7fFFW
-	 9wj/i8EaYBjcA7PC/9tAY0xHKC7qMJ5ce+b2XBkjAcmB5mcrzbr6FfBwFobVQuRkhf
-	 1+CX/GzSsi6Uq5OkuamuHSmk4hiJI6/4KbF4ngiXk86a7liGOhBuOrvy+Wpb1r7nP2
-	 8WVE4xeCyotpAQedDLsRaoDx18gR2kHGX1EkiKjkZaXHAo/RJjsbc4lBZXKDBEKoJl
-	 8U4wv/jFbD/YuJpa4h5xdbsFEzKC4Wa6+AKj+bD9S8b9mZ3tzbPhTCdL+HdjVf/2qA
-	 fR8TkxEISX0/g==
+	b=BaUCIE1kfn+KGCxtZcLLpv0Y863cq/kKP75/p17kFXApysgQCbjRPhocHhu/IaBFN
+	 3u66CR12I398qeXH123vQMeXsT+Ew+gTqLuQco5rm8IupF5I5mGPQkBfgbXMBRP6x5
+	 Hoig1NUC+STlw353HUNCDqKw916OGcdRq32uXaTCCDek+qt3vO5tahJNeXDa+u4eFD
+	 QFXTjNs8/Q2WozqWzgREVGFySQ7BeVjnk4I1GloLYcqTa6AqANo7q4cWAtWbHv45fP
+	 RFr9AZPd+22TYJP3SWaSsu9Ho4XjnWWWBM0SgyjrMQSxHRVsrnSQ+TXvj5No3yAWde
+	 XOhgQYSCP1Yxg==
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
 To: geert+renesas@glider.be,
 	linusw@kernel.org,
@@ -59,9 +59,9 @@ Cc: claudiu.beznea@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 8/9] pinctrl: renesas: rzg2l: Add RZ/G3S support for selecting the I3C standby state
-Date: Fri, 22 May 2026 13:22:50 +0300
-Message-ID: <20260522102251.1723392-9-claudiu.beznea@kernel.org>
+Subject: [PATCH 9/9] arm64: dts: renesas: rzg3s-smarc-som: Enable I3C
+Date: Fri, 22 May 2026 13:22:51 +0300
+Message-ID: <20260522102251.1723392-10-claudiu.beznea@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
 References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
@@ -83,7 +83,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37347-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37348-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com,sang-engineering.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -95,168 +95,92 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@kernel.org,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.982];
+	NEURAL_HAM(-0.00)[-0.983];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: AB4945B22D6
+X-Rspamd-Queue-Id: 185AA5B230A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The I3C pins on the Renesas RZ/G3S SoC can be switched to a standby mode
-when the controller operates in I2C mode. According to the RZ/G3S HW
-manual (Rev. 1.20), in standby mode "the output is fixed at Hi-Z and no
-data is transferred to the inside even if data is input from outside".
-
-Add support to configure the I3C standby mode.
+The Renesas RZ/G3S SMARC SoM board has a connector for I3C interface.
+Enable I3C.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 49 ++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     | 30 +++++++++++++++++++
+ .../boot/dts/renesas/rzg3s-smarc-switches.h   |  4 +++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 68329b6c6649..b313de35e9df 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -70,6 +70,7 @@
- #define PIN_CFG_PVDD1833_OTH_ISO_POC	BIT(20) /* known on RZ/G3L only */
- #define PIN_CFG_WDTOVF_N_POC		BIT(21) /* known on RZ/G3L only */
- #define PIN_CFG_IO_VMC_I3C		BIT(22)
-+#define PIN_CFG_I3C_STANDBY_RZG3S	BIT(23)
- 
- #define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
- #define RZG2L_VARIABLE_CFG		BIT_ULL(62)	/* Variable cfg for port pins */
-@@ -215,15 +216,24 @@
- 
- /* Custom pinconf parameters */
- #define RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE	(PIN_CONFIG_END + 1)
-+#define RENESAS_RZG3S_PIN_CONFIG_I3C_STANDBY		(PIN_CONFIG_END + 2)
- 
- static const struct pinconf_generic_params renesas_rzv2h_custom_bindings[] = {
- 	{ "renesas,output-impedance", RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE, 1 },
- };
- 
-+static const struct pinconf_generic_params renesas_rzg3s_custom_bindings[] = {
-+	{ "renesas,i3c-standby", RENESAS_RZG3S_PIN_CONFIG_I3C_STANDBY, 0 },
-+};
-+
- #ifdef CONFIG_DEBUG_FS
- static const struct pin_config_item renesas_rzv2h_conf_items[] = {
- 	PCONFDUMP(RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE, "output-impedance", "x", true),
- };
-+
-+static const struct pin_config_item renesas_rzg3s_conf_items[] = {
-+	PCONFDUMP(RENESAS_RZG3S_PIN_CONFIG_I3C_STANDBY, "standby", NULL, true),
-+};
- #endif
- 
- /* Read/write 8 bits register */
-@@ -279,6 +289,7 @@ struct rzg2l_register_offsets {
-  * @other_poc_pvdd1833_oth_iso_poc: PVDD1833_OTH_ISO_POC mask
-  * @other_poc_wdtovf_n_poc: WDTOVF_N_POC mask
-  * @i3c_set_poc: I3C_SET_POC mask
-+ * @i3c_set_stbn: I3C_SET_STBN mask
-  */
- struct rzg2l_register_masks {
- 	union {
-@@ -292,6 +303,7 @@ struct rzg2l_register_masks {
- 		/* RZ/G3S masks */
- 		struct {
- 			u8 i3c_set_poc;
-+			u8 i3c_set_stbn;
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+index b45acfe6288a..370b39b6a33d 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -168,6 +168,15 @@ a0 80 30 30 9c
  	};
  };
-@@ -1560,6 +1572,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 	struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
-+	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-+	const struct rzg2l_register_masks *masks = &hwcfg->masks;
- 	u32 param = pinconf_to_config_param(*config);
- 	u64 *pin_data = pin->drv_data;
- 	unsigned int arg = 0;
-@@ -1702,6 +1716,14 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 		arg = rzg2l_read_pin_config(pctrl, IOLH(off), bit, IOLH_MASK);
- 		break;
  
-+	case RENESAS_RZG3S_PIN_CONFIG_I3C_STANDBY:
-+		if (!(cfg & PIN_CFG_I3C_STANDBY_RZG3S))
-+			return -EINVAL;
++&i3c {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i3c_pins>;
++	pinctrl-1 = <&i3c_standby_pins>;
++	i2c-scl-hz = <400000>;
++	i3c-scl-hz = <12500000>;
++	status = "okay";
++};
 +
-+		arg = readb(pctrl->base + regs->i3c_set);
-+		arg = !field_get(masks->i3c_set_stbn, arg);
-+		break;
-+
- 	default:
- 		return -ENOTSUPP;
- 	}
-@@ -1720,6 +1742,8 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	struct rzg2l_pinctrl_pin_settings settings = pctrl->settings[_pin];
-+	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-+	const struct rzg2l_register_masks *masks = &hwcfg->masks;
- 	u64 *pin_data = pin->drv_data;
- 	unsigned int i, arg, index;
- 	u32 off, param;
-@@ -1846,6 +1870,19 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 			rzg2l_rmw_pin_config(pctrl, IOLH(off), bit, IOLH_MASK, arg);
- 			break;
+ &pcie_port0 {
+ 	clocks = <&versa3 5>;
+ 	clock-names = "ref";
+@@ -302,6 +311,27 @@ mux {
+ 		};
+ 	};
  
-+		case RENESAS_RZG3S_PIN_CONFIG_I3C_STANDBY:
-+			if (!(cfg & PIN_CFG_I3C_STANDBY_RZG3S))
-+				return -EINVAL;
-+
-+			scoped_guard(raw_spinlock, &pctrl->lock) {
-+				u8 tmp = readb(pctrl->base + regs->i3c_set);
-+
-+				tmp &= ~masks->i3c_set_stbn;
-+				tmp |= field_prep(masks->i3c_set_stbn, !arg);
-+				writeb(tmp, pctrl->base + regs->i3c_set);
-+			}
-+			break;
-+
- 		default:
- 			return -ENOTSUPP;
- 		}
-@@ -2551,8 +2588,10 @@ static const struct rzg2l_dedicated_configs rzg3s_dedicated_pins[] = {
- 	{ "AUDIO_CLK1", RZG2L_SINGLE_PIN_PACK(0x2, 0, PIN_CFG_IEN) },
- 	{ "AUDIO_CLK2", RZG2L_SINGLE_PIN_PACK(0x2, 1, PIN_CFG_IEN) },
- 	{ "WDTOVF_PERROUT#", RZG2L_SINGLE_PIN_PACK(0x6, 0, PIN_CFG_IOLH_A | PIN_CFG_SOFT_PS) },
--	{ "I3C_SDA", RZG2L_SINGLE_PIN_PACK(0x9, 0, (PIN_CFG_IEN | PIN_CFG_IO_VMC_I3C)) },
--	{ "I3C_SCL", RZG2L_SINGLE_PIN_PACK(0x9, 1, (PIN_CFG_IEN | PIN_CFG_IO_VMC_I3C)) },
-+	{ "I3C_SDA", RZG2L_SINGLE_PIN_PACK(0x9, 0, (PIN_CFG_IEN | PIN_CFG_IO_VMC_I3C |
-+						    PIN_CFG_I3C_STANDBY_RZG3S)) },
-+	{ "I3C_SCL", RZG2L_SINGLE_PIN_PACK(0x9, 1, (PIN_CFG_IEN | PIN_CFG_IO_VMC_I3C |
-+						    PIN_CFG_I3C_STANDBY_RZG3S)) },
- 	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x10, 0, (PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x10, 1, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
- 						     PIN_CFG_IO_VMC_SD0)) },
-@@ -3934,6 +3973,7 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
- 		.oen = 0x3018,
- 	},
- 	.masks = {
-+		.i3c_set_stbn = BIT(0),
- 		.i3c_set_poc = BIT(2),
- 	},
- 	.iolh_groupa_ua = {
-@@ -4020,6 +4060,11 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
- 	.pin_to_oen_bit = &rzg3s_pin_to_oen_bit,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
-+	.num_custom_params = ARRAY_SIZE(renesas_rzg3s_custom_bindings),
-+	.custom_params = renesas_rzg3s_custom_bindings,
-+#ifdef CONFIG_DEBUG_FS
-+	.custom_conf_items = renesas_rzg3s_conf_items,
++	i3c_pins: i3c {
++		pins = "I3C_SDA", "I3C_SCL";
++#if SW_CONFIG4 == SW_ON
++		power-source = <1200>;
++#else
++		power-source = <1800>;
 +#endif
- };
++		input-enable;
++		renesas,i3c-standby = <0>;
++	};
++
++	i3c_standby_pins: i3c-standby {
++		pins = "I3C_SDA", "I3C_SCL";
++#if SW_CONFIG4 == SW_ON
++		power-source = <1200>;
++#else
++		power-source = <1800>;
++#endif
++		renesas,i3c-standby = <1>;
++	};
++
+ 	sdhi0_pins: sd0 {
+ 		data {
+ 			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3";
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-switches.h b/arch/arm64/boot/dts/renesas/rzg3s-smarc-switches.h
+index bbf908a5322c..9cccc87da057 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-switches.h
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-switches.h
+@@ -25,9 +25,13 @@
+  * @SW_CONFIG3:
+  *	SW_OFF - SD2 is connected to SoC
+  *	SW_ON  - SCIF1, SSI0, IRQ0, IRQ1 connected to SoC
++ * @SW_CONFIG4:
++ *	SW_OFF - I3C voltage is 1.8V
++ *	SW_ON  - I3C voltage is 1.2V
+  */
+ #define SW_CONFIG2	SW_OFF
+ #define SW_CONFIG3	SW_ON
++#define SW_CONFIG4	SW_OFF
  
- static struct rzg2l_pinctrl_data r9a08g046_data = {
+ /*
+  * SW_OPT_MUX[x] switches' states:
 -- 
 2.43.0
 
