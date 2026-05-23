@@ -1,187 +1,366 @@
-Return-Path: <linux-gpio+bounces-37406-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37407-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0GdTLiOBEWo4mwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37406-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 12:27:47 +0200
+	id UIHtBO+gEWpvoQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37407-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 14:43:27 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D3895BE817
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 12:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B25A5BEF04
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 14:43:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 05A32300E3B4
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 10:27:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B23723013262
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 12:43:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97BA938331E;
-	Sat, 23 May 2026 10:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F1AB38945C;
+	Sat, 23 May 2026 12:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+a694oT"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KAsckSbR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010020.outbound.protection.outlook.com [40.93.198.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35948371876
-	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 10:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779532036; cv=none; b=mtxlhiXbElufeTWB+7goNjIqZxWD1mbntli2zC5kzxw/z7sSqBjZWL8G6BsfM3HJMMc8n39td+cokv/g0kMEasa/PvbtsbqwHVd4bnezmUSSFXN2JFbdIwb9dPYAJVGAyVCyBQle8SIUI3DM3zSFb8aKxNqYxpHvFDbtqSVW8FM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779532036; c=relaxed/simple;
-	bh=qcgqBwja4CHu5wwuF/A96Ah+f+QE9tKst8z6RkEiVGM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FRseL1xTFZT3cpnHQ9WUoqaKRM3enbf18SIRlrOd//+yEWT8w6CwNlDZAi/3XIPJibSOaYzqrucEb3GTLNdy3ig/OwIuYfX1mbCyfeUl3zZk42qXBYlU7IBNbyYapvyC3J8cjII2pU/aSGzja5t5MQT+rSUAxnntSrneqNM7C6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D+a694oT; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-83d31ac4017so4055828b3a.3
-        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 03:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779532034; x=1780136834; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k6UvRxauUxHtkSOdYEC9vPPJYNErnPXZyVXoKgtsN7o=;
-        b=D+a694oTsnZrYLPAtZGj3RWvCypEZ0Fk/AAjUDhjl9ssZ9dS5zwRB/LzfnJnr1UfCp
-         XsMB+xiixi5ek5uegAoHSYNhiDXNDsV0sFy66AqBOrCzIS8mnga7W+R4Co/eGA7w6S4w
-         Sz+zzLDCxDZRAO9EMCiUlvzE2HpOcoV2/ensJYr+HVzRlyTJJ3ivwwvBZyOfJ0VfI/+D
-         CmQb1EooCzN1cwL7dztBBaS93RWy/1wi0c1zpNtvzs8Z6nZjqbmVCzAgZ7kPcNn2aeXD
-         Ub+LhyJibHrE3IgzSioqQ+lAVZVo2Std/8D1gCcAcqB/slbte3E0c9vpZc+FIG5LcA17
-         4AEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779532034; x=1780136834;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k6UvRxauUxHtkSOdYEC9vPPJYNErnPXZyVXoKgtsN7o=;
-        b=JaY+GG5QBsjLZOZPxFb+dDqKfOSfijZcnE9vo80evmqgIS9c8lU4f4zWDTNp6MkduU
-         Qa5S0svdop5dPN+8NdPG61pKjwB4OC8vsbu+wCvfStyQf80dBkOPiqk2a1pY3lp8CQO7
-         6DxP79/PPwwmDtShTyr/sToGZ8SQhD9DZw+CGbX0R88W5/ffzrVPp7h8omxgCTm76nSc
-         EYYAv62eM5Z98Nmd+ZVtvhFvk8Hd5QMeNIEefNbZ+YB4qQdIqVqCUuC14cMm1beBhXTd
-         FYswaxgHjZln+jEStgoqUHZNIH1IgzxSXfukNIoEFP1xMkwy+I6R3o+hczIs6tqODcDl
-         +h0g==
-X-Gm-Message-State: AOJu0Yw68Jd96sRKUJjDR68IVuYDnZN+3pE8h3oqs8OFle2Tt1eiOKLb
-	4DMWI522BqunFB9sWn0c3HF+lABMNxYnIk2/EjlnAZPp/widGGWhSXDV
-X-Gm-Gg: Acq92OGq6m09waDPy7XuY7jTJzPykY8XmmbcBEJCgx1o+8idO8BWsbDUfUwpCf9kPew
-	XbMtVQSJ09G4Ux3Fe2D+XG8WbnpjAE0pc2bhDPFFSk0MKjtNE50x+a87EYd60NZ1jN9snd3Tdhw
-	zE+8SgWao3qFyYVhsUgPbEl+fvqWpb2pnIMOwdPpI+4rspW0uQXkDOLXZoVfgIf2gXcpUUlqlu2
-	J96JJRlQKO79BjbsWqEYGxAhbHfsZa6t1k8+YlxzSDnZIcfwctv4SLjU2kVL4pK0AiyHI3RIFZb
-	ddHJUJXUEDOGCyCyOFZShVkXhB5wG2sehUwE7L9DrcQm4Dtjy09LBE4hniMvHxXbGELr6MLDxHB
-	pgq2Z99io7iqBjkg9ZxUvLag9WNcxBZmZCk7p/1zz8uvz0qYmChLE3S7wYHaUxGfCmNUD1ZyTbS
-	pkUAYiFNVl0dBAS5+JaO/r0cS+TMS0Hyz7zpNaX3C6V9RUouqYHxMI5v2G+wYbiyyY19YnhNb3E
-	RHgqjX1H6Im3LeB6w==
-X-Received: by 2002:a05:6a00:1d86:b0:834:df57:9d36 with SMTP id d2e1a72fcca58-8415f66dd37mr7142262b3a.25.1779532033889;
-        Sat, 23 May 2026 03:27:13 -0700 (PDT)
-Received: from junjungu-PC.localdomain ([223.166.246.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84164e9e522sm5137201b3a.36.2026.05.23.03.27.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2026 03:27:13 -0700 (PDT)
-From: Felix Gu <ustc.gu@gmail.com>
-Date: Sat, 23 May 2026 18:27:05 +0800
-Subject: [PATCH] pinctrl: imx1: fix device_node leak in
- dt_is_flat_functions()
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D016387578;
+	Sat, 23 May 2026 12:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779540202; cv=fail; b=sHjKwgAg2ayTRiwti7bv7iKzFNTcmIkEbFcN+Les/hv9zCB+CGSm9BK3ZRv3sp8IPkAkJ2EVYx+Qg9hPXG4Srk6CZHBWYwOQGPXQ5erF+oqEKJYYM9vVOR2b1LZXHPpakUuxQUgbv6AWQeXsamLKTlnhtKCVJSg/rSCi4DRBlEM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779540202; c=relaxed/simple;
+	bh=UDxw7irPovsyUYijLfkbU+cGiXw/2qjKb15yYLB8Pek=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Qjuq2H3foKFPDouu2LCrlG1BD59hkSo/wXRkeMHyKVVH0SzQCE/Hp+AbTlclw5aqkHMbEGJL2N9NQ9EZ8SFVs96G4tMaBrF7qiqkt+2AoU/vY8VPb5bPZjqFf040cUCfXu5NfDcVR6SyAoxssJbMPIwwEytehliMxQ84aA/gaPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KAsckSbR; arc=fail smtp.client-ip=40.93.198.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eqL4cLX8UK/xIlHHC9HwPm15tXCIPlLUhu4r0ZFmWEQ8VPsVEoZTP9rowUnh4AKcX1Kc3wF7CwkNgqaGdefL6PnO8fq4R3raUxPlOlsHb8I46T+JMMkOOWsLZrDMm22xjijmHfW5agsA16XJGs81wRw2hcBe2qRtoxOXvI4nl0xLXszEhW3ohnTg1dZb+LIRaNaoUx2v+leRnsStb/upOh+cd6oRl2YN2c1CrIBTnGixTR4J9mNBsZsNLbNw/k14qzHM2Y05G7tq9NPKkuRnj3f5ulFSLoy9UcIXPmO49m4qatpN0kAxT8rQjKiRy1qEPpzOm6jw6mZbiRyKk5oDfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+rbnlfmuSFOGr8OGnZm7NgJ60pxBMXDuXT71znzPI6g=;
+ b=ZOJICib5c8EhkKIhddyG1P83o7ZbBu52q1muWWB4YhzuyxAAniqaiK7uwFHkmzrDHRDT64G4s4KVnYY9J6dEHJ779yQsKCroalXK4cv87DfxeMgvNLlueISjqnli0F2yP+Pc+1S94HPygGAwpulJ7jHD+Wz/JDvkeuu4hm73zPC7IUC/W/5x8dDB4d8Fxy9NfmIfsmVbxp8H+l71wmrP1BCMyTnww+x0T4QYgjh6REw3qHVvvontr9YRssD2nRw4qFvWtuGdHMdthAuw7/rUS5/KA9YUKU87ud6EjaeOfe/6/l6yhMODZyqSA1+ii9pL909X3g33zQIMh7GiFifK+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+rbnlfmuSFOGr8OGnZm7NgJ60pxBMXDuXT71znzPI6g=;
+ b=KAsckSbRgFVntwbXPtTGiyPspgU9dy4b8G/YL4jB7mNvx5pnXxRhn8gwYqO0oBdPdlc8OksEC30YAgDVUAAWObJrX+VKLw6Agme4SBwKM5g3MIhcG18L2W/2RZ/3xE5z26YJTjITKl0GFTiqXcIXc+FU8GVfVvQV1xdAmW63+O8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by BL4PR12MB9534.namprd12.prod.outlook.com (2603:10b6:208:58f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.18; Sat, 23 May
+ 2026 12:43:16 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0048.016; Sat, 23 May 2026
+ 12:43:16 +0000
+Message-ID: <1fe21869-35ac-4363-99bc-7e39451c48b4@amd.com>
+Date: Sat, 23 May 2026 07:43:14 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/1] i2c: designware: fix probe ordering for AMD GPIO
+ on Lenovo Yoga 7 14AGP11
+To: Hardik Prakash <hardikprakash.official@gmail.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>, linux-i2c@vger.kernel.org,
+ linux-gpio@vger.kernel.org, wsa@kernel.org, basavaraj.natikar@amd.com,
+ linus.walleij@linaro.org
+References: <20260518122814.8975-1-hardikprakash.official@gmail.com>
+ <9d5da93e-bbe0-4359-9f17-e3c6b3a5cb34@amd.com>
+ <CAMRc=MfT_WVMxPnYZW=mg52PHew0O4VQMGFrfo6G9vxZDDoArw@mail.gmail.com>
+ <CANTFpSUX5rYhuTQH3dTTvzW+_yhW8Gs0U=A1t_8LDzKz4dzzAw@mail.gmail.com>
+ <agsh652HlC4rg1_1@ashevche-desk.local>
+ <CANTFpSU7XaNKwe_FPsTCkxQYeq78Tqusr-nsB-Ww0_teuiWdEA@mail.gmail.com>
+ <f0ee2722-1e56-41b1-b70c-5503a2495853@amd.com>
+ <CANTFpSWT+cR8Yxyr5jrB2MUidqKteWuPjHOyK_rpSkDUN6SWQQ@mail.gmail.com>
+ <c4993bce-5d39-416f-90ed-d870f4ac9254@amd.com>
+ <CAMRc=McSLEF_nrkRdJJu9=Bc_KmPWYKDHd6tOD9tJqs0fksv0w@mail.gmail.com>
+ <498bad3f-6a0c-4da8-b645-1cc837ba1836@amd.com>
+ <CANTFpSWB6Fb3mo9sUtxo2Aaa-Ryx-YqUw-tqT-y1RpurJfq57A@mail.gmail.com>
+ <CANTFpSU+wTQeESDGqV=xizrJeQw_LA8y7stDYMm=H-UrbWXeYQ@mail.gmail.com>
+ <e31e28e7-62b0-44a3-b155-57504be09c69@amd.com>
+ <CANTFpSVnhst-25KPa-m2e14rR_dqJNq_s6k_ZO-MFazqLa=AEQ@mail.gmail.com>
+ <CANTFpSWLUfNZyjJXApgf60MyJ9imWYVKLy9vj=Lin3Lh=qoAMw@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CANTFpSWLUfNZyjJXApgf60MyJ9imWYVKLy9vj=Lin3Lh=qoAMw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1P222CA0072.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:2c1::28) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260523-pinctrl-imx-v1-1-73b7cb731351@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAPiAEWoC/yXMQQ5AMBBA0avIrDVpKwRXEQutKSOUtIhEenfF8
- i3+v8GjI/RQJzc4PMnTaiNEmoAeOzsgoz4aJJcFz2XGNrJ6dzOj5WJKVKUps0p0ykAsNoeGru/
- WtL/9oSbU+7uAEB6uc0wSbwAAAA==
-X-Change-ID: 20260523-pinctrl-imx-b198f8391abf
-To: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
- Frank Li <Frank.Li@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- NXP S32 Linux Team <s32@nxp.com>, Linus Walleij <linusw@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Felix Gu <ustc.gu@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779532030; l=1610;
- i=ustc.gu@gmail.com; h=from:subject:message-id;
- bh=qcgqBwja4CHu5wwuF/A96Ah+f+QE9tKst8z6RkEiVGM=;
- b=TDWZmut8c/UsJuZ34Imt8NoqEeM0PpEU9Mu+fWpsx5fO0+0lK/CKvVOP1rGb0JTH1GYl6LIQ0
- m4LTlwTPTOgB7znVwyNrGhXUgbS3V/d65TmQ7AYntqW1v8GFhlfnklw
-X-Developer-Key: i=ustc.gu@gmail.com; a=ed25519;
- pk=fjUXwmjchVN7Ja6KGP55IXOzFeCl9edaHoQIEUA+/hw=
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|BL4PR12MB9534:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbd86942-5238-499a-f345-08deb8c8dc66
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|22082099003|56012099003|18002099003|4143699003|6133799003|11063799006|5023799004;
+X-Microsoft-Antispam-Message-Info:
+	27qhq8Jl0Lzu6KyRQ1m+hc0rhd7r5rex8zyK5IbOXBuk6U0Gwj2DzCEzWbztG4NLmQMOnRl/6UWOYzdKPJnoMZ8ERaFx0YMIXfWmzwY4T9L+XpUbeh/MtMuW9UcRcSaa9gFPHEcQWN2jQyoUG/XWN9roYQty4aogAmsCoaDB1G+a4AqjuWMMsq0AtIjWCMKCdFQ8TEGZC6X2ELj7FRqtwPuuw2fBz/TIec+3WWunbKiuKaQs6MvuQ7MLq4FjKWQ7eGp9t27ap5/V6nUe0erO4CO+CBaMSL90tUIwx6iesVLebnrN2Hpqmm/M90L4myLzQ5Itn4rxxd637PJK4Aab0QGefjLlCv/hkWagF7mvEMbYdt2/Gcz1WY60o0fbe0ix6SBMlO4JiM95PY/Mh4ZDwgt+Qrxa6SpBIjPIf4GOPRKhaWbZGofWhbSJYSYGq2jK8Qjmx06ux+ZiYCXHjoK5HlJF6ZxDr/pvOAYi2WTlA5WN6DD6AuoeRIxuF5HQ5qVNYMEEX27fdGidMVOWLP7/sf4Jg1CpLtg/AdVG/gRWIqHwJk4xxQyaUQ8DpC/dkR3Q+E8+UY13zzGShXvNzSi7vLyPx4krw4qKwft7Drgx9XkNqxUMxZOJFHxYBi5QX3vTwPNFG+e8x1GC7yWOWPEb3jIyfui9DQ82LB3W4vUx1n30eQN2PdakKKw50LrHS6GR
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(22082099003)(56012099003)(18002099003)(4143699003)(6133799003)(11063799006)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eVdkajhrWWxreEVuVGgwOGIzdUtyMDBFcnd4Z3FDNDhYN3dOVVNLZy9aR3hi?=
+ =?utf-8?B?NVJKVTVaVjVvMEptYXo1ckFzdFFSZHB5bTZUcEpaWTBybEZHcUpJOWFabHdZ?=
+ =?utf-8?B?RnJON3lHcXJnQUg2MzFKMllmWWt5aDFkV0lJK2N0UGwvdmJyVW5EZlR3ZzNW?=
+ =?utf-8?B?cm9LWDBuUTZFN0VhWEphZlh6aWxMZnFLNVNkWGV1RDQ1L1FtRzl1NkU3WURS?=
+ =?utf-8?B?cWluRWVrN0Jkblh1dlhkdkV1cTVnZTYyMXo0V2cvaHFRajhhUWZRMHAyTWRJ?=
+ =?utf-8?B?Wm1lenZtcGEydHZNaUdyK2VuaUJ0bHEySnNGc29Hb3hjUXJncWpzL2tpS2Qv?=
+ =?utf-8?B?RHNncUlTaTBaOXhZMnZaVXVYeXgwZndRUnhYWnlEN0dGa3g2UE15SGd1UWNY?=
+ =?utf-8?B?N3krWDZ1ck01U2xVUUMwTkxueVdESHc0VWpCWWFkU0lna0dUYzNnZXIxS2xE?=
+ =?utf-8?B?cGlFWEo4NUJrRStoVStOK0lvM2ZFaDlqNWY3ZS9BOEYrc2ppajlGdm1UVHds?=
+ =?utf-8?B?TExTYTZYbTlHVnlsbjl1WnRVd1ZacUJVbU5FeU9QNzNnWmlONlFoRUhiTitz?=
+ =?utf-8?B?Tmd6a2k5QkxwV1Y5d1I1Uk8vdEZUaUxneEJhUjhUQ3hqY1JlT1QzMGVWdlNW?=
+ =?utf-8?B?Z1dJVDY0aURCbjJaa2gwcW5peDNSdmtpL201ckVpbW1HOFdGZmg0UStGM1Ri?=
+ =?utf-8?B?WDl4a2ZrbWZEVkZVaFljL3RUdVBMeC8yWSt2NWpUWDl1ZGtydHpPd0VNNis2?=
+ =?utf-8?B?dVg5b0Q0QTVBcGRyN2cyRm1YL2VvRjRIdGwrRTlGamg3NHVMa2Z4ZzkzWkdl?=
+ =?utf-8?B?VkkxaHRtNllLYmFWM1ZWbnd1ZGFXZ0Y1TGJLQkNCUlVkRG15cTE0cXFWSTU3?=
+ =?utf-8?B?SFhhZnFkZW9Gcjh5QmkvZU9Tc2Nsc2RuVERvTlBVQ0hwYVNUbWo1TWt3SStR?=
+ =?utf-8?B?c05QZGRvQ1BhN1NYbTByL0tEb3RheVhYS2I5dWxqcms1aUYvTXg4dDhCMVc5?=
+ =?utf-8?B?ODgwVm11ZCtXenRqSnd2d0RucE4wZGg5NmtaLzh4Sk9lU2o2WkRrTUl5MmpJ?=
+ =?utf-8?B?OGVhS1FoeW0xVS9xbEkxcFNuWERIeUJXQkdUN3FybHM3NDVzc0RVa1BKUm5F?=
+ =?utf-8?B?dWo5ci9BbmxkZVNZakNkYy9TdkZKSFZOTjBvQ09TR0xoVWp2SlJydEF1NURK?=
+ =?utf-8?B?YnVhVi9Rd2p2WjltVkV6MGJ0WGlVQ1EwMm1Na2NLdGoxN0NuTUd0OFVoaFZh?=
+ =?utf-8?B?aDl3OVBMT0NRWlJ6R2pxL1ZhcWFrY05jd0FlU2loeVJBWU1CQmV1Nk12MlVr?=
+ =?utf-8?B?VGVQMDFKemxvbmxBRkp2OEc4cmgyMENaVUwyaGMzWVRjNTdtQTNXZHA5K1Zv?=
+ =?utf-8?B?TXZCalBXTFpQeXM5by92YWpick4rRnZYa0hLSjUzWTVSeDl2TlRjeXZSMDVi?=
+ =?utf-8?B?b0ZGdnNYMytVRGhtb3pIbHg2bnFNaDAxWmRPeDkwYXJxalh3cnR4UlpKT1ZF?=
+ =?utf-8?B?U1U0NUROU3d1M1k4VXpGN0p6aVVac2RMMFlqUHJmVVBQYkZoYk84ZmI3L0ZN?=
+ =?utf-8?B?QkVySVR1eklJOWNmTUFtNnpWRFROSW50Uy9NZHdxQjkvTmVIcmV5NHl0alhI?=
+ =?utf-8?B?Z1h6dklWclo2VXk5NnBaanduRXVwYVlROXVjQzdBWWtNNWxjTnF1Q3N6QUx5?=
+ =?utf-8?B?VThmTWRxL2ZCUHVodzFNRUpPclZucDlLOElmYzYrZjZNZjhHeWJWSUIzM1h0?=
+ =?utf-8?B?K1J6eTlNYW5rbm5jWGNidWRXQ0pzd1cxS2dPK21jWkNTa3VLeUdIaE9HbFBR?=
+ =?utf-8?B?bEttYkhnMXE1bDZZVDRZWUJ2S1ZOOU1pTi95Q1VncDMzNzAwWTY3V1lMY2pw?=
+ =?utf-8?B?M0pScmprOHdXZFhGL0xWbHllZFpJYW5CWUZ4ajVQdmZPbzNXV1Y4MElVbTB6?=
+ =?utf-8?B?VUllalgvSzh1enZ6SUpacm1Sc0ZBVU1DRDRiWXcrVFkvOXMveElEVlJWWTVN?=
+ =?utf-8?B?R0NBakhFTXNFZWtadGhaR1NRM1JlaU9tMGZ2OTRRRUZTTm8xQmw0VDdIKzRv?=
+ =?utf-8?B?U3hDdGM0TVphd0FEcHFSVHdrOElBRjlLYXVUQ0RmS0dYKzJUSTlGY1g2dVg0?=
+ =?utf-8?B?VTByVnB5SGpmQWpXUzhPMnVldlNwbmdZWW5HOTNpVnJ4RHFjYjFvMTJYejlC?=
+ =?utf-8?B?azIxQzdLcE9lZjhXUmRYelBubWNndGk0M2pJVTRkS2hyWlBYZG9xZUxiWG4r?=
+ =?utf-8?B?REpra0pRaW9xdkxpaDYyeTNISGNYTTdXN2plUHFhbVFhZnNPSWcva2JQVW8r?=
+ =?utf-8?Q?uvlQ+9fN7MhbwNTBtO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbd86942-5238-499a-f345-08deb8c8dc66
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2026 12:43:16.5906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A++u6xtUP02MG96Cx7cctVy+bI8XSrBcLHOLma4d6cNgwibuF0Sm296KATXWxHJb0SqI/NzA3i30/gCM1TD5RA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9534
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37406-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[nxp.com,gmail.com,pengutronix.de,kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,lists.infradead.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-37407-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ustcgu@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[mario.limonciello@amd.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0D3895BE817
+X-Rspamd-Queue-Id: 6B25A5BEF04
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-for_each_child_of_node() holds a reference on the iterator node that
-must be released on early return. imx1_pinctrl_dt_is_flat_functions()
-has two early return paths inside the loop that skip this cleanup.
 
-Replace both loops with the scoped variant so that the reference is
-automatically dropped when the iterator goes out of scope.
 
-Fixes: 63d2059cd665 ("pinctrl: imx1: Allow parsing DT without function nodes")
-Signed-off-by: Felix Gu <ustc.gu@gmail.com>
----
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+On 5/23/26 02:51, Hardik Prakash wrote:
+> On Tue, May 19, 2026 at 02:23, Mario Limonciello wrote:
+>> In the same line of thinking - how about something like this instead
+>> (AI generated and attached).
+> 
+> I've cleaned up your patch (fixed kzalloc_obj, moved goto outside
+> scoped_guard, wrote a proper commit message) and am planning to submit
+> it as v6 with Co-developed-by and Signed-off-by carrying your name.
+> 
+> Please let me know if you're happy with that, or if you'd prefer to
+> submit it yourself.
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index b7bd4ef9c0db..4a6bdaefa42f 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -547,14 +547,11 @@ static int imx1_pinctrl_parse_functions(struct device_node *np,
-  */
- static bool imx1_pinctrl_dt_is_flat_functions(struct device_node *np)
- {
--	struct device_node *function_np;
--	struct device_node *pinctrl_np;
--
--	for_each_child_of_node(np, function_np) {
-+	for_each_child_of_node_scoped(np, function_np) {
- 		if (of_property_present(function_np, "fsl,pins"))
- 			return true;
- 
--		for_each_child_of_node(function_np, pinctrl_np) {
-+		for_each_child_of_node_scoped(function_np, pinctrl_np) {
- 			if (of_property_present(pinctrl_np, "fsl,pins"))
- 				return false;
- 		}
+It was 100% written by the robot, just shared by me for a reference.
+I don't think it needs a S-o-b, you can leave a Suggested by for me at most.
 
----
-base-commit: c1ecb239fa3456529a32255359fc78b69eb9d847
-change-id: 20260523-pinctrl-imx-b198f8391abf
+Go ahead and drive it forward for discussion.
 
-Best regards,
---  
-Felix Gu <ustc.gu@gmail.com>
+> 
+> Thanks,
+> Hardik
+> 
+> On Wed, 20 May 2026 at 10:32, Hardik Prakash
+> <hardikprakash.official@gmail.com> wrote:
+>>
+>> On Tue, May 19, 2026 at 02:23, Mario Limonciello wrote:
+>>> In the same line of thinking - how about something like this instead
+>>> (AI generated and attached).
+>>>
+>>> Basically walk through the resources at probe time and make sure they're
+>>> all bound.
+>>
+>> Tested. Works perfectly — clean boot, no arbitration errors, touchscreen
+>> and stylus fully functional:
+>>
+>>    patch 1 + generic GPIO dependency check:   clean boot, touchscreen works
+>>
+>> The generic approach is better. With this patch, patch 2 (the
+>> DMI-specific i2c-designware deferral) is no longer needed.
+>>
+>> Note: I applied kzalloc(sizeof(*ref), GFP_KERNEL) in place of
+>> kzalloc_obj(*ref, GFP_KERNEL), and moved the goto outside the
+>> scoped_guard using a local bool. Happy to share the exact diff I tested
+>> if useful.
+>>
+>> Thanks,
+>> Hardik
+>>
+>> On Wed, 20 May 2026 at 02:23, Mario Limonciello
+>> <mario.limonciello@amd.com> wrote:
+>>>
+>>>
+>>>
+>>> On 5/19/26 14:49, Hardik Prakash wrote:
+>>>> On Tue, May 19, 2026 at 20:18, Mario Limonciello wrote:
+>>>>> I like this idea. I guess something like this:
+>>>>> [gpiolib-acpi-core.c patch]
+>>>>
+>>>> Tested patch 1 + gpiolib-acpi deferral, without patch 2. Arbitration
+>>>> errors persist:
+>>>>
+>>>>     patch 1 + gpiolib-acpi deferral:   arbitration errors, WACF2200 does not probe
+>>>>     patch 1 + patch 2 (v5):           clean boot, touchscreen fully functional
+>>>>
+>>>> I think the reason is that i2c-designware does not call acpi_get_gpiod()
+>>>> during its probe. The GpioInt resource is on the WACF2200 touchscreen
+>>>> device (TPNL), not on the I2C controller itself. So the deferral in
+>>>> acpi_get_gpiod() never triggers for AMDI0010:02 -- nothing in that probe
+>>>> path requests a GPIO descriptor.
+>>>>
+>>>> The race is between amd_gpio_probe() completing and dw_i2c_plat_probe()
+>>>> starting for AMDI0010:02. Without something that explicitly checks
+>>>> whether the GPIO controller is fully bound before the I2C controller
+>>>> probes, the race remains.
+>>>>
+>>>
+>>> In the same linke of thinking - how about something like this instead
+>>> (AI generated and attached).
+>>>
+>>> Basically walk through the resources at probe time and make sure they're
+>>> all bound.
+>>>
+>>>> Thanks,
+>>>> Hardik
+>>>>
+>>>> On Wed, 20 May 2026 at 00:37, Hardik Prakash
+>>>> <hardikprakash.official@gmail.com> wrote:
+>>>>>
+>>>>> On Tue, May 19, 2026 at 19:58, Mario Limonciello wrote:
+>>>>>> You add a debug statement to amd_gpio_irq_enable() too right? Can you
+>>>>>> please share your debugging messages patch and full log?
+>>>>>
+>>>>> I did not add debug to amd_gpio_irq_enable() - the statements were
+>>>>> only in amd_gpio_probe() and dw_i2c_plat_probe(). I can add one there
+>>>>> if useful, but given Bart's suggestion below I'll hold off unless
+>>>>> needed.
+>>>>>
+>>>>>> What is the boot time impact to adding device_is_bound() check?
+>>>>>
+>>>>> I haven't measured this explicitly. The deferral only fires on DMI-
+>>>>> matched hardware (Lenovo 83TD), so on other machines dw_i2c_defer_for_
+>>>>> amd_gpio() returns 0 immediately with no overhead.
+>>>>>
+>>>>> On Tue, May 19, 2026 at 20:18, Mario Limonciello wrote:
+>>>>>> I like this idea.
+>>>>>
+>>>>> I'll test this patch, and let you know how it goes.
+>>>>>
+>>>>> Thanks,
+>>>>> Hardik
+>>>>>
+>>>>> On Tue, 19 May 2026 at 20:18, Mario Limonciello
+>>>>> <mario.limonciello@amd.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 5/19/26 09:39, Bartosz Golaszewski wrote:
+>>>>>>> On Tue, May 19, 2026 at 4:28 PM Mario Limonciello
+>>>>>>> <mario.limonciello@amd.com> wrote:
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> gpiochip_add_data() at 0.285952 makes the GPIO chip visible to the
+>>>>>>>>> system before amd_gpio_probe() has finished. AMDI0010:02 starts probing
+>>>>>>>>> at 0.301454 while amd_gpio_probe() is still completing. This is why
+>>>>>>>>> device_is_bound() works and initcall promotion does not -- it waits for
+>>>>>>>>> probe completion, not just gpiochip registration.
+>>>>>>>>
+>>>>>>>> What is the boot time impact to adding device_is_bound() check?
+>>>>>>>>
+>>>>>>>> Bartosz, thoughts?
+>>>>>>>>
+>>>>>>>
+>>>>>>> My thoughts are that ACPI could use some fw_devlink. :) It's not a new
+>>>>>>> problem, we've fixed it for OF systems.
+>>>>>>>
+>>>>>>> Could we modify gpiolib-acpi.c to return -EPROBE_DEFER if the parent
+>>>>>>> device of the GPIO chip is not bound yet instead? When resolving the
+>>>>>>> reference to the remote GPIO controller we have an address of the
+>>>>>>> struct acpi_device. I suppose there's a platform device that is its
+>>>>>>> child and then the logical GPIO controller device, is that correct?
+>>>>>>> Can we check if the platform device in question is bound at the
+>>>>>>> subsystem level?
+>>>>>>>
+>>>>>>> Bart
+>>>>>>
+>>>>>> I like this idea.  I guess something like this:
+>>>>>>
+>>>>>> diff --git a/drivers/gpio/gpiolib-acpi-core.c
+>>>>>> b/drivers/gpio/gpiolib-acpi-core.c
+>>>>>> index eb8a40cfb7a98..e3511398b1f84 100644
+>>>>>> --- a/drivers/gpio/gpiolib-acpi-core.c
+>>>>>> +++ b/drivers/gpio/gpiolib-acpi-core.c
+>>>>>> @@ -142,6 +142,13 @@ static struct gpio_desc *acpi_get_gpiod(char *path,
+>>>>>> unsigned int pin)
+>>>>>>            if (!gdev)
+>>>>>>                    return ERR_PTR(-EPROBE_DEFER);
+>>>>>>
+>>>>>> +       if (gdev->dev.parent) {
+>>>>>> +               scoped_guard(device, gdev->dev.parent) {
+>>>>>> +                       if (!device_is_bound(gdev->dev.parent))
+>>>>>> +                               return ERR_PTR(-EPROBE_DEFER);
+>>>>>> +               }
+>>>>>> +       }
+>>>>>> +
+>>>>>>            /*
+>>>>>>             * FIXME: keep track of the reference to the GPIO device somehow
+>>>>>>             * instead of putting it here.
+>>>>>>
 
 
