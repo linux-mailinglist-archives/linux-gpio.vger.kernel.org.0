@@ -1,143 +1,133 @@
-Return-Path: <linux-gpio+bounces-37400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eCJOMN5vEWo1mAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37400-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:14:06 +0200
+	id CB6hMwNxEWq5mAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37401-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:18:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE9085BE220
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:14:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 733795BE259
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:18:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B1D323004C82
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 09:14:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3951E3016522
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 09:18:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA34B37C101;
-	Sat, 23 May 2026 09:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41FD4384239;
+	Sat, 23 May 2026 09:18:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2+BKGp5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmP5Tzr9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0F3312819
-	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:13:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34823845BC
+	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779527639; cv=none; b=AcByvCZNO4eDe8D95aLxVYyaTZ0IDiyFQwN6sOvqMv5oBce4eYKmnDjlSX1I3x8AlKQaBLBedCb4sFO54xZhsTbHgDDuG0+WGTro0pIOKZCjypZIxljroPthdi6WiuIvTtO2FlL/hOGPG/ggJvDNMlti/9MTg3vk86YrE1PA45A=
+	t=1779527930; cv=none; b=KOHt3pfI2bCOHuGG27YvAuPkxDqqmJVhlQKAD7hqGtnYzKEXgpsUUAPhC/ziEN43xBU21+g3igUhz/QON8WSHbpdludxof536pmonw1pYW8FDVETMooSPnS100Q+IjQzhM4JHXPXt9BnzAAYVQHb9vO9BZXYJ9pnY1cUa1kv03M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779527639; c=relaxed/simple;
-	bh=Oj9WONT2LmJnuM+KabzKdwYNSGGC4sxCi7v5wRCbaKs=;
+	s=arc-20240116; t=1779527930; c=relaxed/simple;
+	bh=TQ8x6W2VkQNawhKHTtSrP2jT7BvbDzctIfpRw7ijmfs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mD6Y8CqBekkreQuDD7uanu0dfzRu/GXoYN84XP3o9a6EjfU8HOCuPymceJVcP0croC3KbrJrzyw7SmJkIxY1hRz1NUm9rRXnoHHXiExX50VLnI1nerWZ+5BrreVA39966sB8dquUG/9DDS74UVrhRSepfg/n/zgjSHKC1X22R9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2+BKGp5; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923731F00A3C
-	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:13:58 +0000 (UTC)
+	 To:Cc:Content-Type; b=YLm1LkL0RNyb7DgYUw95zPwQybGeAquslxM3n0HY53kWcnGedU6TqxF+OjHXRit8QNfR16gQ7RvUwHhB5MDmt5R2gbdijEM+kx643nHZiiuIfh+9J480SFTYVNawz+foFQMkotozf8IUAyVizeFjjoocRdI6oaMSQtxSHGFVR1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmP5Tzr9; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DAB1F0155C
+	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779527638;
-	bh=Oj9WONT2LmJnuM+KabzKdwYNSGGC4sxCi7v5wRCbaKs=;
+	s=k20260515; t=1779527927;
+	bh=TQ8x6W2VkQNawhKHTtSrP2jT7BvbDzctIfpRw7ijmfs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=H2+BKGp56W+IThiQWqZOx5odAcV1/nQu6v2pjNnwPVgID3MBs7aKNZ7toGsu7hLNy
-	 oIiv5XV8d2Z5t2v5l3yf2pLdhjJxxsahsxwCDus6jbKbQrcqqfQ4/si0jKNcj4GQRg
-	 PdNpNOiSdfSwBCcOWA5UDsrZKOu9Oabw4PBQKpmKLk58U7/voKt5jcdN1YopnWe/4Z
-	 X5M14WuXuSQvspAVooJcGbmjYQffcpTus1r9IbR3pePGQJgpxGeQyLiq61cbqM5gz/
-	 KeGSzHRLopOlcHxsPGEC8C/EsLIRlVc/HsLaThoeKqY26UGz68xMKZ9iJ2N/VcnASR
-	 kqWKAtKTLa1qg==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-393c40246afso92481671fa.1
-        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 02:13:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9aAb3qQanQaXD99a+y0rXQ7ua3JXJSL3dWYjhp5vuwKj8H2BYhoIW6OZrL+6FPYjK2OPYJeoh7QfZo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2UXX1uPWqZ02FJn0s41F0V3rBPUU9bQNPKK47cldLBtYVhEzg
-	mpzDxSaaSAoOCkrmHUAy/wunV4GCXdLqCh64zMI18BwaixoV8G+de8InP+vKYSV8XEqMdZNSQ/8
-	ZkO6iK6SKRXDWw3Jqiw0o7CIIETMHdno=
-X-Received: by 2002:a05:6512:1094:b0:5a8:8222:7fc9 with SMTP id
- 2adb3069b0e04-5aa323ab2e4mr2502434e87.13.1779527637399; Sat, 23 May 2026
- 02:13:57 -0700 (PDT)
+	b=fmP5Tzr9npguHZm4IZxldm2XUudECehSbZBMvoXNtrw4Ix0inUdagBbXgUYfC9D4B
+	 sxagbtyGtB9hmTpGlq85xKhP9dLMp084u3tzJOdxVK5LU4nx69ufMXIfpftcPpF2n6
+	 T+Tf/kCv/7Bwm4iQDyaB2gN9SY72Q0Pl62hZTyxaJzXl/asG416+dB1qfGHW34jHEu
+	 kvN121p1QYIOTAvgrNwFtrjSq7Zraa0OvU6Q+GDru3fa2goxbQ3pB80oRRIGzyS5D2
+	 LeV/iPV10ApSIn2kSD1zGhkYZhQCcRmXW8rMTJhxiUaN5/psOSyHRskXLC9AdYrNw3
+	 +DNLJ+WNNBFhg==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a877510541so9275111e87.2
+        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 02:18:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/DqEv9Yk48sVCpx6WXAM5bJ2JzRKASRBUlgM4B1kuxW12fAj8MLdj81+KHay23gFIecbwHHn2YzUFm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZOcWwws4FEdt/31oymvUkQLT187/1p4BSPK3JYwth0aiYBMVU
+	9rxsZJtlSvQ9UlgnG0e7Jcp2oUM+WpfIdpIkdUrAlplqR95MWJtTALCm1QxWUXcNyeoq8RtDNtJ
+	YWXIMgad+oH8fkIyWzC4Svmq/Clbw5VE=
+X-Received: by 2002:a05:6512:61d8:10b0:5a3:ffed:8443 with SMTP id
+ 2adb3069b0e04-5aa323bbfd8mr1664992e87.23.1779527926425; Sat, 23 May 2026
+ 02:18:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
- <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com>
- <106b7b64-ed6e-499f-b5ac-60c1277f2f03@axiado.com> <CAD++jLn4R9ubqHsek-56s1sF9YhxYt4-C2TPdYGcYjy2MC6q_Q@mail.gmail.com>
- <fd2ee102-db52-4a37-b96e-c16211e3d8e3@axiado.com> <CAD++jL=51iWK2SyxoWOTxSQHAq-Frd0mm6cPxqYu81qifFfHGg@mail.gmail.com>
- <c20dc0cb-252b-4637-bb22-6078be62b21d@axiado.com>
-In-Reply-To: <c20dc0cb-252b-4637-bb22-6078be62b21d@axiado.com>
+References: <20260513-scmi-client-probe-log-v1-0-00b47b1be009@oss.qualcomm.com>
+ <20260513-scmi-client-probe-log-v1-5-00b47b1be009@oss.qualcomm.com>
+In-Reply-To: <20260513-scmi-client-probe-log-v1-5-00b47b1be009@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 23 May 2026 11:13:45 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkos3kC_ALAaoevaF29_Jf_WY5Z_2mZ1_Ldi+hCDbzt9w@mail.gmail.com>
-X-Gm-Features: AVHnY4JJRfkcZxFTflgIKJvV2OpxrOyssZ0mBCArzoYH6Vt9eiME0imygNfv-1c
-Message-ID: <CAD++jLkos3kC_ALAaoevaF29_Jf_WY5Z_2mZ1_Ldi+hCDbzt9w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
-To: Petar Stepanovic <pstepanovic@axiado.com>
-Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>, 
-	Prasad Bolisetty <pbolisetty@axiado.com>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Harshit Shah <hshah@axiado.com>, SriNavmani A <srinavmani@axiado.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 23 May 2026 11:18:34 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=6ikpC-BqVqP1Ev5HC37fw=K_n6rP96AxKi0jdVcyvmw@mail.gmail.com>
+X-Gm-Features: AVHnY4ITOyxIjMQnX36Ad3zAiWdBbfyUfI5jUIQb0t2xoh5_kwVjSKEq8ZFTExw
+Message-ID: <CAD++jL=6ikpC-BqVqP1Ev5HC37fw=K_n6rP96AxKi0jdVcyvmw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] pinctrl: pinctrl-scmi: Log number of pins, groups, functions
+To: Alex Tran <alex.tran@oss.qualcomm.com>
+Cc: Jyoti Bhayana <jbhayana@google.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Sudeep Holla <sudeep.holla@kernel.org>, 
+	Cristian Marussi <cristian.marussi@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37400-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37401-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[axiado.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: BE9085BE220
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 733795BE259
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 13, 2026 at 10:59=E2=80=AFAM Petar Stepanovic
-<pstepanovic@axiado.com> wrote:
+On Wed, May 13, 2026 at 6:44=E2=80=AFPM Alex Tran <alex.tran@oss.qualcomm.c=
+om> wrote:
 
-> Some SGPIO outputs may control host-critical signals. For example, if the
-> BMC reboots while the host/server remains powered on, changing SGPIO outp=
-ut
-> values during driver initialization could potentially reset or shut down =
-the
-> running host.
+> The SCMI pinctrl driver does not currently log the number of pins,
+> groups, and functions discovered from firmware. This information is
+> useful for confirming the firmware exposed pinctrl resources during
+> debugging.
 >
-> The purpose of `dout-init` is to provide a deterministic safe output stat=
-e
-> during SGPIO initialization, before any GPIO consumer has requested the l=
-ine.
+> Log these counts after a successful probe to align with the existing
+> SCMI client driver logging pattern.
 >
-> That said, if the preferred approach is to preserve the existing hardware
-> DOUT state during probe and only change the value when a GPIO consumer
-> requests the line, I can rework the driver in that direction.
+> Signed-off-by: Alex Tran <alex.tran@oss.qualcomm.com>
 
-That is usually the best. The gpio framework scans the direction
-of each line at probe(). While it does not know about the initial *value*
-of each line, consumers can take this into account
-when requesting a GPIO line like this:
+Other kernel maintainers want a minimalist dmesg, but not me,
+so I just applied this.
 
-gpio_vbus =3D devm_gpiod_get(dev, "vbus", GPIOD_ASIS);
-
-This means the kernel does not put any initial value on the line.
+If someone is upset about the noise they can send a patch
+changing it to dev_dbg().
 
 Yours,
 Linus Walleij
