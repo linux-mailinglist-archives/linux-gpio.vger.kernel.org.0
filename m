@@ -1,119 +1,141 @@
-Return-Path: <linux-gpio+bounces-37403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cDLlIgJyEWq5mAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37403-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:23:14 +0200
+	id ZNZSJ1F1EWq5mQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37404-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:37:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B9285BE327
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E158A5BE372
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 11:37:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8EDB3301992F
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 09:22:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 52C2030131EC
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 09:37:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D4D9346A18;
-	Sat, 23 May 2026 09:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C2F37189D;
+	Sat, 23 May 2026 09:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QsJCYesh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqWQgYrf"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2F53859D2
-	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAE71FB1
+	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779528176; cv=none; b=mStKOAQ3NkWKss28fcH9BWS1b5RhnnXpgPxvzMdetyvjkg1uYmHaAJVvLjjVgBU/A58yy8AzUHSlkqnGJB+Psi4wS3pC+FiatC7eC+AVY1zrB/ui7Rs5bR683D4HQSTznntcO+xsKowI/EEpvDqJIEOrz4vbvjiRTCQop5PXE3s=
+	t=1779529038; cv=none; b=u7jPIrhEpuePVvCaDAM5l3rCLThQSHO3LD+i9Zhzh7xVmsqnRpfq97w3LIfof2HjoWiX7/ug0ukUIdfW2Mwk8jGKORo5Iycx1V03jJprY9LkVBJMyEBJiMeeLq8shMheLWOR+Y3xs61UTXsmso1jMgqWNc+PvxnQu/X/UI3TPqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779528176; c=relaxed/simple;
-	bh=rHPrvzMzPdhFTtb3ErSSuGGOXx/xIWfmwULlE32hmLk=;
+	s=arc-20240116; t=1779529038; c=relaxed/simple;
+	bh=11e6tmUF+BcQmt36bxrCztET5YUxkRxYcIMrH1p1AxQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VwfGyVw+QirYWKyeh1GkszsERdPRTCC4OMtb0QthYbgkw7LGz36wyBS/WCpc5Z61+s6F9D71AVespqwpzOOH2Sji2i1rx7H6tsqenCpjySgTL6zu0i9zLbySkDbkI2MrwHURj85NzgpjqNrZr2CTbIskWMw96Cs15u+J7wZbxcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QsJCYesh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139801F000E9
-	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:22:55 +0000 (UTC)
+	 To:Cc:Content-Type; b=ItLLIUc4V0HN35V53BzDpsnsvNuWqLHieMl8jMsx1mQMf7bonDxkE2rIoR5raNTFOz692Fo4gcClKw9FflYrmeHELOl8ATMQCoqV9aCKAPcbW/UCMwiTp65PIvIkJGCPA133A8gVAetr3HqD1ROrOMbrGOgs3K7fMHXKYp+Alps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqWQgYrf; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3911F1F00A3D
+	for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 09:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779528175;
-	bh=rHPrvzMzPdhFTtb3ErSSuGGOXx/xIWfmwULlE32hmLk=;
+	s=k20260515; t=1779529037;
+	bh=11e6tmUF+BcQmt36bxrCztET5YUxkRxYcIMrH1p1AxQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=QsJCYeshsT54sc8eoUQVcykobsFp2njIy+PZAQBWog1hmI18niqASDacOdXk/Jbp5
-	 gGyuJQjT/yUtlM5gpTNSw/UUpieuYZrGuHOX5koI4tKO55kCAnP8zgNg2pUaP5giZk
-	 SLW+DL2IhLGLVa9w4rGZHCsvnqm+b6W4WL718Kx9CmoYVatYEDT7xeYraJjruqTeeO
-	 VMMsF61C81Fhq8fXadk3wYy3lwcIm4Xyqlvj4gYTQwI2bGrmOD1xZeuBABLiod6VS5
-	 QYJFxjm3csVEF/X6+ycWuBm8kQuZHdHvH1Iii22wDRzak50Sf1Ai2Sb2fzQK5NAZYF
-	 35ptt63kpN7ew==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a8891f0c51so8403911e87.1
-        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 02:22:55 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yy2RVAzYMkyJhTBrm2yo/QNXWo1a8kNeckTlTfAy8YFS1boV76b
-	QHdVfSvzSZAYb6Eqlo7kdZZc12oUrIJICBooqmP6xYagcRVv4e0F9fywi00CHqcc0B5seGyp1At
-	pIuEFbHvfi7ctuxlN3TeBN5kqU4QaAP4=
-X-Received: by 2002:a05:6512:3ca7:b0:5a8:f6fd:f201 with SMTP id
- 2adb3069b0e04-5aa3235ec9emr2112367e87.15.1779528173908; Sat, 23 May 2026
- 02:22:53 -0700 (PDT)
+	b=RqWQgYrfdGQEWSkw6614n5xbO9htsJcfX17wLts7sxwK3ZVBWek7fJz2fcnShBVP8
+	 8r4nH2cBVYUnZFOw3Sx4gPF5AgTcPwJ7EEDBSipEmYUoTme4tx6kqlenRY5VI+eW4j
+	 5ebVkNspes1QDCvsSFT+oz+S4RI9PzvgImbL9WfuklcsKMZVt8cN5ijliNAdRPauY4
+	 N7jKFOq144jc+sTZn7ETXzE/Lf/GzJlv2UGe9+aA9p0r74S8hbU5umvGFnKrtYo3SR
+	 2YLasifsnjciz/2LCejnzE//aUrf/R7pZ6tCpBHyKlMX2kN6T46LOhtkpZik2NepEL
+	 295BEiHLB9fSg==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3942e9977a5so84169581fa.1
+        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2026 02:37:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+bM6eigUYT/AVKLRmR6yxjcYcs64G7lQWUo+0HLlCaGj6oX4tqCb/gn4x6ijuqMSWoKDu+JOpYkwAF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFBEnyLv8Wfxz1Lm1A5oF54NLCl0QSuwxLUk3MCQyM40kyRv1Y
+	zkssALi9M06nqESaOLaKGalL5GjUL0tK8i1HF4B196cMEnekx1QYQqJN+5mF/Y6X2EbPg8JcCSR
+	20rG+2rfbfIfL9GVOZWya9V1EASFR1Wk=
+X-Received: by 2002:a05:6512:114e:b0:5a8:7eda:7d8f with SMTP id
+ 2adb3069b0e04-5aa2ba85a0cmr3647436e87.12.1779529036009; Sat, 23 May 2026
+ 02:37:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260513231154.2703292-1-jm@ti.com>
-In-Reply-To: <20260513231154.2703292-1-jm@ti.com>
+References: <20260515160537.115808-1-o.rempel@pengutronix.de> <20260515160537.115808-4-o.rempel@pengutronix.de>
+In-Reply-To: <20260515160537.115808-4-o.rempel@pengutronix.de>
 From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 23 May 2026 11:22:41 +0200
-X-Gmail-Original-Message-ID: <CAD++jLn83aR_FiRDH+F_vhtMrDt+nrRjpXV+0c5a8=6_icM+5Q@mail.gmail.com>
-X-Gm-Features: AVHnY4Jw0sIYz_yHxYaOe8OFvTAk1lAY3w7gTFjgsb3ObA-s_o-fdC4svHKScik
-Message-ID: <CAD++jLn83aR_FiRDH+F_vhtMrDt+nrRjpXV+0c5a8=6_icM+5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mcp23s08: Fix probe issues
-To: Judith Mendez <jm@ti.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 23 May 2026 11:37:03 +0200
+X-Gmail-Original-Message-ID: <CAD++jLntC2_v68z6dcCCzvdLPQNo8ZYEru8=vO7hxQA9AvV6zA@mail.gmail.com>
+X-Gm-Features: AVHnY4Kz-M5FI-BNqQ24DfcoYzQbAVYXn57oRkLed4jVFTFJSmUTkuoY7Iv6os0
+Message-ID: <CAD++jLntC2_v68z6dcCCzvdLPQNo8ZYEru8=vO7hxQA9AvV6zA@mail.gmail.com>
+Subject: Re: [PATCH v12 3/6] pinctrl: core: Make pin group callbacks optional
+ for pin-only drivers
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-37404-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-37403-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0B9285BE327
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,pengutronix.de:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: E158A5BE372
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 14, 2026 at 1:12=E2=80=AFAM Judith Mendez <jm@ti.com> wrote:
+On Fri, May 15, 2026 at 6:05=E2=80=AFPM Oleksij Rempel <o.rempel@pengutroni=
+x.de> wrote:
 
-> MCP23S18 driver probe failures on AM62L3 BeagleBadge[0].
+> Currently, the pinctrl core strictly requires all drivers to implement
+> .get_groups_count and .get_group_name callbacks in their pinctrl_ops.
 >
-> Fix MCP23S18 probe failures found with BeagleBadge which has a MCP23S18
-> on board chip. Fixes are made up of initializing chip data before regmap
-> init, and using device_property_read_u8 to match binding spec. First fix
-> prevents kernel oops and second fix prevents MCP chip probe failure.
+> However, for simple pinctrl drivers that act purely as GPIO controllers
+> and pin-specific configuration proxies, without any concept of muxing or
+> pin groups, this strict requirement forces the implementation of dummy
+> callbacks just to satisfy pinctrl_check_ops().
 >
-> [0] https://github.com/beagleboard/BeagleBadge
+> Relax this requirement for pin-only drivers by making the group callbacks
+> optional when no muxing or group pin configuration support is provided.
+> Update the core and debugfs helpers to check for the existence of these
+> callbacks before invoking them.
+>
+> Drivers that provide muxing or group pin configuration operations still
+> must implement group enumeration and naming callbacks, and are rejected
+> at registration time if they do not.
+>
+> Suggested-by: Linus Walleij <linusw@kernel.org>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Patches applied for fixes!
+Since it's unlikely that the rest of the series will be merged for v7.2
+I just applied this one patch to the pinctrl tree, because why not.
 
-Thanks for digging in and solving this.
+I stripped off the controversial Sashiko review tag until we know
+what to do with these.
 
 Yours,
 Linus Walleij
