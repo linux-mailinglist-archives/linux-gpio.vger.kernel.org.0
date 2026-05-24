@@ -1,167 +1,171 @@
-Return-Path: <linux-gpio+bounces-37411-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37412-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOWgLOfqEWq5rwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37411-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 19:59:03 +0200
+	id yOD/JPZTEmrGxwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-37412-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 03:27:18 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17BEB5C03C7
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 19:59:03 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FCAB5C104F
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 03:27:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 201143015E38
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2026 17:57:23 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8B38030074CE
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 01:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 459A53446B9;
-	Sat, 23 May 2026 17:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C9AE23D297;
+	Sun, 24 May 2026 01:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DtU/sp75"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhz7iK4s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067512BB1D;
-	Sat, 23 May 2026 17:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE04222580;
+	Sun, 24 May 2026 01:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779559042; cv=none; b=bc3Are96wbWX4uToBFYvxIke3zpmu7eSC4LgTNc9+EGhrnKeh7NAV1ayGYRvWnVNvsHS3gtyxvbP6eD/mVPcBa4VBSTHa0oSS+XgbtbSxSQQa8+7tuWM5OcCX2XuiHK7uWWXJByrac0pO79igHZpSj56E3vWSHwmnC4+GU6aXgA=
+	t=1779586033; cv=none; b=rGn3G+iAw1BHbKyVhD/SFF8SUHfzhErj5ULOZPv7fq97dmCzR1l5Yh7PXMDHlwzuf8HyvJJLfLZ7KtYRq+3Q/BHixLlPUN4lGSvfPcu5Q2JPJOMXevll8fAws/7vZhS30JX9R/yCCMN7UExgchA7ZY+TqPjjK7tZBpZKSYZeHXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779559042; c=relaxed/simple;
-	bh=dG8m2Fc0j6LzN9SMfsdDp1y1HNxo/JPVWQkXUNkG5Pw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YjnMjkZJU7LcsS6wANbx8c+xmyLP1P0yjiilJgWS/ryM3+I1can3ozUuGX86Q9IHpCQojbQpkrM7JU/ctn4VUxT+I2pnkDNHtJqhC4rfm234HTxR5Uz1mfi8R7+iEoKJodEQrQ13YY82n9vIDgy8GE1/2a76hqt19liKZnWaPy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DtU/sp75; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE811F000E9;
-	Sat, 23 May 2026 17:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779559040;
-	bh=G/RetKAJRSwpWdu1PDP+KMyGok8pM1UY/4YpGi6zfmo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DtU/sp75ffhhDIzl9v0McwLqsOf6oNmOyLfs/pi7yL+Fv19bosCzAGfcGX7VVV7Zz
-	 hIBbQYsunmbS7gKEjTFOT3ULTBU/EaHT0DNtPRdukH4h+52dq2eb0QDWLTtBrJno+L
-	 av4i8h66h4qPOGlb48H5RMnA5hkzhVzhurv8t7NbA0bxWata3twnBhS0VinEL/6Nyh
-	 ILKjME8w/hkSWmTqN3BaTzQZA1OJkwZXN/Nv47y53eMoyt1yA8pk0Vg1xLmsbiq9U8
-	 900q3ciXfP99GXsVPbVO98jgQos3Y7DikhZiVh9Rv83yKBuf2ghXJA1+VoAHxDBgYS
-	 wMQi3jvMydFaw==
-Message-ID: <5e467847-34b3-4d29-a09a-18f6fa8641a5@kernel.org>
-Date: Sat, 23 May 2026 12:57:18 -0500
+	s=arc-20240116; t=1779586033; c=relaxed/simple;
+	bh=bWBrStZuXpTD4PVBcwXkbtifi1txjP2AbaVOCVckkwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mziB87Yl/Mrolklqu0O2FzIwyj0W9gWAUSdwZ1CU08PrZ3hcUwqmNMCE336AvqfAo4j4zLPx2bkT9Sn4lCU0Y22qSuCDol6hdL24UQd8EIU23qOcWfmEIwt650GMNZr5I/P8QXeLHt2kVMQHXA+vOwowCg03UtcQZi3SH/ggryU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhz7iK4s; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779586032; x=1811122032;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bWBrStZuXpTD4PVBcwXkbtifi1txjP2AbaVOCVckkwA=;
+  b=jhz7iK4s4EYSGb0jrgEI6mSxrbwL5F+8SITzwAPMscd4z5slUWU5jndg
+   DLhODf+jvfTj4VxaM1f4r4/2wYD4avJhAzNf/wHNo6ejaSRU2ZoE//P5r
+   FVagv1b6H+CsUrS9J2u4SrPJTJElg7qKj3XlLRbQ1ji/8Lt45SvFuix1q
+   lqPK2hHqd/8qMchShpmdeuiyMUFPRVhqgSdI7qyiduSnxW+kE6rpTf1xM
+   Qb0zbJxo+ZUwa9OJtualsX0foWVqcXV1Ncv6BJ7fjg/MzzfBuEgShpGmw
+   OTd0tXXBM2ILea7n/1imTgk0jFeWGwEXMAUcQFSVL+SwNrZKjvp90JmK7
+   g==;
+X-CSE-ConnectionGUID: 7CB/fEZOSpqucnhAfWIAUA==
+X-CSE-MsgGUID: 6614asOOSAa9TT1bzX/qBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11795"; a="79607437"
+X-IronPort-AV: E=Sophos;i="6.24,165,1774335600"; 
+   d="scan'208";a="79607437"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2026 18:27:08 -0700
+X-CSE-ConnectionGUID: LyWsdOGsQ6W+1tgHqIKy7w==
+X-CSE-MsgGUID: l8OPKolxSmGrLmQi2/44rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,165,1774335600"; 
+   d="scan'208";a="265105511"
+Received: from lkp-server01.sh.intel.com (HELO 6ba8523b1a8f) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 23 May 2026 18:27:05 -0700
+Received: from kbuild by 6ba8523b1a8f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wQxcN-000000000XT-2yYC;
+	Sun, 24 May 2026 01:27:03 +0000
+Date: Sun, 24 May 2026 09:26:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Sylwester Nawrocki <sylvester.nawrocki@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH] media: camif-core: Drop GPIO handling
+Message-ID: <202605240943.CiZtuwD9-lkp@intel.com>
+References: <20260523-s3c-camif-descriptors-v1-1-797052aab553@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/1] i2c: designware: defer probe if child GpioInt
- controllers are not bound
-To: Hardik Prakash <hardikprakash.official@gmail.com>,
- linux-i2c@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, wsa@kernel.org, andriy.shevchenko@intel.com,
- mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com,
- linus.walleij@linaro.org
-References: <20260523174440.9629-1-hardikprakash.official@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260523174440.9629-1-hardikprakash.official@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260523-s3c-camif-descriptors-v1-1-797052aab553@kernel.org>
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37411-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37412-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[superm1@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 17BEB5C03C7
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:mid,intel.com:dkim,01.org:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 8FCAB5C104F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Linus,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 254f49634ee16a731174d2ae34bc50bd5f45e731]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Linus-Walleij/media-camif-core-Drop-GPIO-handling/20260523-063811
+base:   254f49634ee16a731174d2ae34bc50bd5f45e731
+patch link:    https://lore.kernel.org/r/20260523-s3c-camif-descriptors-v1-1-797052aab553%40kernel.org
+patch subject: [PATCH] media: camif-core: Drop GPIO handling
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20260524/202605240943.CiZtuwD9-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260524/202605240943.CiZtuwD9-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605240943.CiZtuwD9-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/media/platform/samsung/s3c-camif/camif-core.c: In function 's3c_camif_remove':
+>> drivers/media/platform/samsung/s3c-camif/camif-core.c:510:37: warning: unused variable 'pdata' [-Wunused-variable]
+     510 |         struct s3c_camif_plat_data *pdata = &camif->pdata;
+         |                                     ^~~~~
 
 
-On 5/23/26 12:44 PM, Hardik Prakash wrote:
-> Patch 1/2 (pinctrl-amd GPIO IRQ fix) is already in Linus Walleij's
-> tree. 
+vim +/pdata +510 drivers/media/platform/samsung/s3c-camif/camif-core.c
 
-Is patch 1 still needed with this approach?
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  506  
+10ded2312724b4 drivers/media/platform/samsung/s3c-camif/camif-core.c Uwe Kleine-König         2023-03-26  507  static void s3c_camif_remove(struct platform_device *pdev)
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  508  {
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  509  	struct camif_dev *camif = platform_get_drvdata(pdev);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22 @510  	struct s3c_camif_plat_data *pdata = &camif->pdata;
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  511  
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  512  	media_device_unregister(&camif->media_dev);
+9832e155f1ed30 drivers/media/platform/s3c-camif/camif-core.c         Javier Martinez Canillas 2015-12-11  513  	media_device_cleanup(&camif->media_dev);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  514  	camif_unregister_media_entities(camif);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  515  	v4l2_device_unregister(&camif->v4l2_dev);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  516  
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  517  	pm_runtime_disable(&pdev->dev);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  518  	camif_clk_put(camif);
+d5e9bddb280576 drivers/media/platform/s3c-camif/camif-core.c         Dongliang Mu             2021-10-19  519  	s3c_camif_unregister_subdev(camif);
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  520  }
+babde1c243b255 drivers/media/platform/s3c-camif/camif-core.c         Sylwester Nawrocki       2012-08-22  521  
 
-> This replaces patch 2 with a generic solution suggested by
-> Mario Limonciello.
-> 
-> The root cause: i2c_designware probes AMDI0010:02 before pinctrl-amd
-> completes. Dynamic debug tracing confirmed the race:
-> 
->    0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
->    0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
->    0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
->    2.348157  lost arbitration
-> 
-> Previous attempts to fix this via initcall promotion (subsys_initcall,
-> fs_initcall, arch_initcall) all failed because the race is not about
-> when the driver registers but about when probe completes. The GPIO chip
-> becomes visible to the system via gpiochip_add_data() before
-> amd_gpio_probe() finishes, and i2c-designware probes AMDI0010:02 in
-> that window.
-> 
-> This patch adds a generic check that walks ACPI child devices, finds
-> any GpioInt resources, and defers probe if the referenced GPIO
-> controllers are not yet fully bound. No DMI matching required.
-> 
-> v6:
->   - Replace DMI-specific deferral with generic GpioInt dependency check
->     walking ACPI child devices (suggested by Mario Limonciello)
-> 
-> v5:
->   - Add blank line before #include <linux/acpi.h> (Bartosz Golaszewski)
->   - Use scoped_guard(device, gpio_dev) (Bartosz Golaszewski)
-> 
-> v4:
->   - Rebase onto Linus Walleij's tree (patch 1 already there)
->   - Use --base so series is correctly 1/1 (Andy Shevchenko)
->   - Add subsys_initcall test results (Mario Limonciello)
-> 
-> v3:
->   - Fix variable declaration style in dw_i2c_needs_amd_gpio_dep (Andy Shevchenko)
->   - Add BugLink tag (Andy Shevchenko)
->   - CC AMD engineers (Andy Shevchenko)
-> 
-> v2:
->   - Replace custom HID/UID lookup with acpi_dev_get_first_match_dev()
->   - Use device_is_bound() under device_lock() with explanatory comments
->   - Add Assisted-by tags per coding-assistants.rst
-> 
-> Kernel bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=221494
-> Related: https://bugzilla.kernel.org/show_bug.cgi?id=221454
-> 
-> Hardik Prakash (1):
->    i2c: designware: defer probe if child GpioInt controllers are not
->      bound
-> 
->   drivers/i2c/busses/i2c-designware-platdrv.c | 157 ++++++++++++++++++++
->   1 file changed, 157 insertions(+)
-> 
-> base-commit: 3812a9e84265a5cdd90d29fe8d97a023e91fb945
-> 
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
