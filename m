@@ -1,213 +1,138 @@
-Return-Path: <linux-gpio+bounces-37429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cJK3J5MGFGpSIwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37429-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 10:21:39 +0200
+	id wAlBNpcJFGrVJAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37430-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 10:34:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0D065C7A42
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 10:21:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CD75C7D09
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 10:34:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 24F3C3004DAF
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 08:21:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CC7293004F24
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 08:34:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80223E1CE4;
-	Mon, 25 May 2026 08:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 097463E2ADF;
+	Mon, 25 May 2026 08:34:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbdoETWZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnSp8BvJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EDD3E16B2
-	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 08:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FB03E2AAF
+	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 08:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779697275; cv=none; b=UD/5Nc8+EZO46Klgv/vpcIY9J/XEJ4/9tcmBSRsVFz/zemgkQ8z3NVy2JIdusAAzve327f9cBc5WUIhJnyJ+ckzNRWoITgn/3cW6yScSfkN+CVHXV2xOWek/0ge/AsgsReOFnjJ7s1htF+fQX9YOzZv6XC7fi+53fHY34i4Oxu0=
+	t=1779698066; cv=none; b=ZWO/dPiFUry9lN2MPDMrH91sIoe3G0XtVbRswQu5KEK6EJC9ySpgN5FlpbSJ7I/BSH47OFOh5lig/sXdUD/xs/JB542sT7OF/yec6Yr6ziHPL3Rfr3Xjg8mBBMSW2nI8VNUYlld0r5r430SJRpwgu8/TpEBI8Yy69KE42oiqPNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779697275; c=relaxed/simple;
-	bh=cnpeNyrRTMfn71Iw1My7ZiOgcb+W5DMHV+tEtk3Jprw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j9p0z2NcpVZ0UwqvKl8Z2xTH6Jz7OM3P987aGXBsTqfFGeDLI4n8NI+rubpKTBBUw28E7rYpTuLrKuiSkJfZ7+NrkDoe9WlSLbDVw8hCyR2jMr/GV0zllTBNDJ7vUrsdLRrAPVe77ZBuPFk8ogpLockEcop/5R/nEjRxNKGpanM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbdoETWZ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2bea7176c72so30508125ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 01:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779697272; x=1780302072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h73HPPR4b8cE2zhlXM66PdYigBOxMozGSruLRQEyEiQ=;
-        b=MbdoETWZnVu54cAdDYI+IcH7dP3KiMFUYIRxUXnG2Ab/xV7Ss0URUFR6Odm+pBRpqf
-         PekTC9McdvzdVJcyapSELOrilu+qAdhIZMQkgfX3bzBJJlSpBT6lOJBe5RnBY06WK+t2
-         XcXOt6hEq2rJaZMJP1daWYE41gC3xYCUUWXRW9vF3PdL7iu5fQyrjtJypt/BqxaRC2nl
-         ltjyta0KdmPnzj7zUjF65Er4+TvQHtZi3QA19E1SbY1lC9pjbtnhxyP5GQQTFBDbLZcw
-         D0wII5njH1rwFNM3iByK1cDPDckSOx6/yR5JW5IADz2NYgTq+koaLTdKR4mlCbSeRsuj
-         1bJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779697272; x=1780302072;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h73HPPR4b8cE2zhlXM66PdYigBOxMozGSruLRQEyEiQ=;
-        b=S5l3EJ4DH6cmJ2QbDnNsQIT/l+0XPUyaLbfmFmodSXsUd3N2dt69sP12yYRfv18jZ1
-         5BfNDweAXeY0TRl3cG/giAoKAmxzCBSpxlLocgzZJ++0k8d6WwJwr/f/9T0n4czEf8Vc
-         Lx1edbkP1CT6abA7cmgy5+p62g39jGhidIqTsk5Mj5kUbSuYa1JFHn3ABZmhPwn+cFSc
-         q7lubJEdOjo7NJY5KkP6akj/lBuvq5JgHcb2k/ypY33SWQa4ZXNtknzxbDnUGTPlgLkL
-         EfgAePtEghnpZ8y5qkOGezQ+J67+ruWOJ5E4+2D+VS2WFdDtdKSAfrhwlCm5GJQh29mN
-         WmYA==
-X-Forwarded-Encrypted: i=1; AFNElJ+rJ1rtm6P6H7+vHGrrEyFjnY8KgSrP/PAw3ufVnLMeHT/pND527dndnZaYWh8DpMLxou2Y4Xe3Ln6t@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDwFxsB9PttHJlFhxXPQUYMQufWk4PvYi1iALLPut/tg8dElJt
-	lTZ9JYdN4LqaQiUDMXEb3QzpO1bkIUP+nOJe1IRYXkoOpSQfKNpfTrmp
-X-Gm-Gg: Acq92OGxLV/AUQukW/NOmpSRNatFRLML2oJK0NfKj8uDe26pxaCUgTv7Doyd9GpMrPw
-	51sJ2wew4z6nBjSJQkE3IT3sqsurXoHWEyS6OcpNcVQE32VoOYIH4pljDVP6N8Bs12wFRcIjibF
-	dciDA3BnQeTY3FqB9KwIZB9T800c1JWLYviyd6EpG3bJ6BGqOXXqTZSyAREqCY34dGf8cqquEj7
-	+Pl03etpNjD+3uXqmHiF7Z7LLjaASH3aapYDFN7iA5yi4RoakqhTKpXkVO6OjIbfpthHW4hB/Bb
-	fX/8fauGiNFBlE1ovxBJV/iVgYZljfy/M7nwUeJbVme2D1aweOH8wiou2LGVltjeN0EhcO4L0u7
-	GtFj0jz8mFvpb6iyH7IoA++9pGVComFBm6T0hjN+SjUykMGQp9BA6rogXMPgD6o08r8hRumCnd7
-	BJr3hmjq5Z1XgGnsRZvGQMkdv/ZZOIjrOFlBKkmn3ikm7gXYNLL0TLjqRJMBj9oc/T+w==
-X-Received: by 2002:a17:902:e74b:b0:2bc:7d09:dcef with SMTP id d9443c01a7336-2beb06bc155mr153249445ad.29.1779697272248;
-        Mon, 25 May 2026 01:21:12 -0700 (PDT)
-Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58b3bb6sm88798165ad.47.2026.05.25.01.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2026 01:21:11 -0700 (PDT)
-From: a0282524688@gmail.com
-To: tmyu0@nuvoton.com,
-	linusw@kernel.org,
-	brgl@kernel.org,
-	linux@roeck-us.net,
-	andi.shyti@kernel.org,
-	lee@kernel.org,
-	mkl@pengutronix.de,
-	mailhol@kernel.org,
-	alexandre.belloni@bootlin.com,
-	wim@linux-watchdog.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Ming Yu <a0282524688@gmail.com>
-Subject: [PATCH v5 0/7] mfd: nct6694: Refactor transport layer and add HIF (eSPI) support
-Date: Mon, 25 May 2026 16:20:49 +0800
-Message-Id: <20260525082049.2906283-1-a0282524688@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1779698066; c=relaxed/simple;
+	bh=ocdluSnvPrajohiha17GJ29fdKK8Wu3tb+aFtvggHIg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DAbVU1Gtw4OymPmKZkDUMK2lXK2FLOHVxZ4akxDuym2THzblI6YtR4qpsNHhcccZ4kGuwCbxKDbwGthZwE+OQ94CiObALXT96ULor2FHorru9Zr8xG8IFVxw8qsGs6S6ulR3rwR4qBqUY1hTl6DI/gG6s0Tj5uVLjQjLgh9e64o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnSp8BvJ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA261F00ADE
+	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 08:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779698065;
+	bh=ocdluSnvPrajohiha17GJ29fdKK8Wu3tb+aFtvggHIg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=fnSp8BvJfPkA04wxA7mKTPbAve6r/Z636vOY7whORBxplpYMAfV/wkIzs/q3/i2kU
+	 WSylGbm5FPI/FIZ80h8rBFkcL7YIWfl2Tvmv4Hn8GME56dJw454mXQsmyz580RiJib
+	 gyU/S97sGNd5c/GiPD36dhMtBWOTRXGKlC5f592aABylxp/uZgKFZ7gPRY9Mlfr5w1
+	 7Kyiz37jA0NydxK2lw2LEDAySWkh1EwjDUNIwJXUojPX569EN+Wdv6msvBVo4DCfoJ
+	 SfjcCp3DkU5Q5/fmn938Q7HVJfEXHnMiXnIP1cAEe5NLoxt0DU81yDyuYOBf/PzOFr
+	 /RtWzh9XFxLhA==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a40b2bc96dso3790924e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 01:34:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+fjRmai+hvlU8p7avRk0iPkI6TGsocakhjlaRxNOeZjSX/hRmOgom1Yb79jZTEzHmf2sX5zU0eLv3w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+p7G2lgBoh+LegTqIQOiqTd2eUIbmKusV4VK8LLP4LtCWc3o4
+	yceuIdTUPyZEzRG0qc798OJSg933QGI5RJYr4KQNHUGoAIOqqKSsf952dkdA6WotcyD5W/HfzKA
+	3xgn9KGL8CDuJRck+sLJsDEmEPkYS5bA=
+X-Received: by 2002:a05:6512:31c4:b0:5a8:7317:5417 with SMTP id
+ 2adb3069b0e04-5aa32369f4amr3970074e87.9.1779698064269; Mon, 25 May 2026
+ 01:34:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+References: <20260518-fix-set-value-glitch-v1-1-d350732dc934@amlogic.com>
+In-Reply-To: <20260518-fix-set-value-glitch-v1-1-d350732dc934@amlogic.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 25 May 2026 10:34:11 +0200
+X-Gmail-Original-Message-ID: <CAD++jLkmm4BbOMZCbJD4H4xfa8nHfExczbXCyF7SapHzQwRZFg@mail.gmail.com>
+X-Gm-Features: AVHnY4IyGTi3BnZWsq4c-wualt0vr2BsufA5tdx1c0CYn_gbaKAGwoMKhoJOICc
+Message-ID: <CAD++jLkmm4BbOMZCbJD4H4xfa8nHfExczbXCyF7SapHzQwRZFg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: amlogic-a4: fix gpio output glitch
+To: xianwei.zhao@amlogic.com
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-37429-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,lists.infradead.org,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-37430-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[a0282524688@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.997];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: E0D065C7A42
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,amlogic.com:email]
+X-Rspamd-Queue-Id: 73CD75C7D09
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Ming Yu <a0282524688@gmail.com>
+On Mon, May 18, 2026 at 10:26=E2=80=AFAM Xianwei Zhao via B4 Relay
+<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
 
-The Nuvoton NCT6694 is a peripheral expander that provides GPIO, I2C,
-CAN-FD, Watchdog, HWMON, PWM, and RTC sub-devices. Currently, the
-driver only supports USB as the host transport interface.
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>
+> When the system transitions from bootloader to kernel, the GPIO is
+> expected to keep driving high.
+>
+> However, the Linux kernel first configures the pin direction and then
+> sets the output value. This may cause a brief low-level glitch on the
+> GPIO line, which can be problematic for regulator control.
+>
+> By configuring the output value before switching the pin direction to
+> output, the glitch can be avoided.
+>
+> This commit fixes the issue by swapping the configuration order.
+>
+> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-This series refactors the NCT6694 MFD core to support multiple transport
-backends and adds a new Host Interface (HIF) transport driver that
-communicates over eSPI using Super-I/O shared memory.
+Is this a regression? I.e. does it cause problems on a supported
+system with mainline?
 
-Changes since version 4:
-- Split the monolithic refactoring and HIF support patch into a series of
-  smaller, logical commits to improve reviewability and adhere to the
-  single logical change principle.
-- Decoupled USB-specific data into a dedicated 'nct6694_usb_data' 
-  structure.
-- Abstracted device I/O operations by introducing 'read_msg' and 
-  'write_msg' function pointers in the core structure.
-- Renamed the existing driver to 'nct6694-usb.c' to strictly identify its
-  transport boundary, alongside Kconfig/Makefile updates.
-- Extracted transport-agnostic device management (IRQ domain setup, IDA
-  initialization, and MFD cell registration) into a standalone
-  'nct6694-core.c' module.
-- Added the 'nct6694-hif' eSPI transport driver clean on top of the new
-  core abstraction.
+Linus (the big penguin) is unhappy with too many non-critical fixes
+so I wanna check this before this goes into fixes.
 
-Changes since version 3:
-- Remove redundant module type macro definitions from sub-device drivers
-  that are now provided by the shared header <linux/mfd/nct6694.h>,
-  fixing -Wmacro-redefined warnings.
-
-Changes since version 2:
-- Restore per-device IDA and mfd_add_hotplug_devices()/PLATFORM_DEVID_AUTO
-  to avoid child device ID conflicts with multiple NCT6694 chips.
-- Validate irq_find_mapping() return value before dispatching IRQs.
-- Check superio_enter() return value in nct6694_irq_init().
-
-Changes since version 1:
-- Reworked the Super-I/O access helpers.
-
-Ming Yu (7):
-  mfd: nct6694: Move module type macros to shared header
-  mfd: nct6694: Refactor USB-specific data into nct6694_usb_data
-  mfd: nct6694: Introduce transport abstraction with function pointers
-  mfd: nct6694: Rename static I/O functions with _usb_ prefix
-  mfd: nct6694: Rename driver to nct6694-usb and update Kconfig
-  mfd: nct6694: Extract core device management into a separate module
-  mfd: nct6694: Add Host Interface (HIF) eSPI transport driver
-
- MAINTAINERS                              |   2 +-
- drivers/gpio/gpio-nct6694.c              |   7 -
- drivers/hwmon/nct6694-hwmon.c            |  21 -
- drivers/i2c/busses/i2c-nct6694.c         |   7 -
- drivers/mfd/Kconfig                      |  38 +-
- drivers/mfd/Makefile                     |   4 +-
- drivers/mfd/nct6694-core.c               | 136 ++++++
- drivers/mfd/nct6694-hif.c                | 529 +++++++++++++++++++++++
- drivers/mfd/{nct6694.c => nct6694-usb.c} | 185 +++-----
- drivers/net/can/usb/nct6694_canfd.c      |   6 -
- drivers/rtc/rtc-nct6694.c                |   7 -
- drivers/watchdog/nct6694_wdt.c           |   7 -
- include/linux/mfd/nct6694.h              |  63 ++-
- 13 files changed, 821 insertions(+), 191 deletions(-)
- create mode 100644 drivers/mfd/nct6694-core.c
- create mode 100644 drivers/mfd/nct6694-hif.c
- rename drivers/mfd/{nct6694.c => nct6694-usb.c} (62%)
-
--- 
-2.34.1
-
+Yours,
+Linus Walleij
 
