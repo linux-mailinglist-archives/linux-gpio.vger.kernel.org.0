@@ -1,185 +1,409 @@
-Return-Path: <linux-gpio+bounces-37456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eKu+HSFEFGpGLgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37456-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:44:17 +0200
+	id qBCqGg5GFGpTLwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37457-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:52:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0B795CAA3E
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:44:16 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BA085CAB87
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:52:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4954E301739B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 12:44:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EB8593007498
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 12:52:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2BCA382F12;
-	Mon, 25 May 2026 12:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39A87382F2D;
+	Mon, 25 May 2026 12:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IYRiWHmS";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Jet+oYbu"
+	dkim=pass (2048-bit key) header.d=realsil.com.cn header.i=@realsil.com.cn header.b="pyht0Q78"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C392837FF7F
-	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 12:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78A53815FA;
+	Mon, 25 May 2026 12:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779713052; cv=none; b=Vh2KxMAg8CwT24zXA4vM/kPgrX2Mr1qzz6dWa5OiusMm7VwhawjDQux199nXaiBRNTMrHBTtTl0KPXdMDk23/KHaqA345hSnOOJk4kzxx3+EZOMu3kPO4zD2KhFzlId9IputPw8I4WtNfs9vBI1v/56itGL1IGxL65nPJqtGxB8=
+	t=1779713545; cv=none; b=hMAyRtKXLVKbNG+OPjDmwZWE8EtVL5l65jq0SK2lzI5/ACBA14vdYZcPnWNIfTsg12Ua2PccbyQIpdJAOfb4RlMNHXn6xdpSfk05kQgaIhZ0quo0W0xkC9/cwE2X7ZoyIEBiNuVUhkgg7R/cPfrjGgkPBE1/O6Fr0ngv7iBUHjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779713052; c=relaxed/simple;
-	bh=0l0FUTgfd/bqln04/9dA5OoUSKU/Xb+dFE0/6AzHq48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pHa/P1CJE9cRnL+cpunOORAwBlT/otaZSqpPH5REHuB0FutC46FCn2Ul713ZDRyPCtQtifeVYuuaQl8uH1RoatNpRXqy1kc26Yh62PdAnhiyU8MAlRJd9AyX9dZpaiRJlBAqgH8pTi7D2dFDh5jfzFv+/U36shNDwzcJCBH9Yxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IYRiWHmS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Jet+oYbu; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64P7F6pV3132975
-	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 12:44:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4pIyAKElVfmOSXDKpxS/qE0T24eL34OfdEb+4InNyaU=; b=IYRiWHmS5MllFFAl
-	ZgZq6MV8o5XZk5Vxn4j/TPkeQB09lXYfw/e0sXC+pAqb2JwwUtFTaHBXOUdDV2iv
-	MY0stX+BHm7G+gSrkyFmZwEGA1R1p5O0TPi1q79QEj30HwFf6G1MTKMDfeS8G+lU
-	O+XxDmj2p44S2JXFOuL2KtRkF9NvmTA3UrK8Wuz/gvgX8sp95qBAvjQBmq7yYZhX
-	uUwT/ClBOIU49/nfLItUttHvlcsF8cYzOIqeZm5RbLnM4/yIX3sI1XI5jngxK1Rl
-	fbtvhCxWu8w8CQE85v0ldz7QeWQoOtppH84UWopmD1bo36m15DxAyVTtKf/TG+QA
-	xunlGA==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eb36t6u2d-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 12:44:10 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-516cadbd70eso8317651cf.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 05:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779713049; x=1780317849; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4pIyAKElVfmOSXDKpxS/qE0T24eL34OfdEb+4InNyaU=;
-        b=Jet+oYbuSkDdC5y0FjpjyqbWsemIl18Nvm5yHOi6Y4AWHNsBj7ZtsbiJev/zWlyN8l
-         7dqEjUzCmOfZoS0XaXhHaixIktzXfRx3sIwa6vhZnLrmZVoDFaB49VbiZT3jwDUMl6xz
-         PAPwa+yDjysGffmUtFFdrZvIU1GfsMOplpiaiL9J1pn/WbMa09dFoBVtbmex6yyZC/o+
-         ZqlFAfYX7PxGFrhu0I7t1ooQFmas6il6MfbPh5bdpJRMRQNVlFHaiB0EkYQ4fM6FmpWu
-         M4ujdeyi/aNd+pD9dk0/MZtky+mUKmR8ywun9eLiE0/Ot22cw6PmZARk7uzIGq/NEdXO
-         l8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779713049; x=1780317849;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4pIyAKElVfmOSXDKpxS/qE0T24eL34OfdEb+4InNyaU=;
-        b=hmIrys05VElwo4UsRdccnVFKzrpYNZ2OgJnX/JAidQwwxsaC6x2FHROzGRyhKgZxrg
-         p0NhdYnWKAoabP4ckHG0jKHIrR5imyaatx27Hggn9VCh7S/K2WWRLtVraF2xpGXa9tC+
-         6e1hg8Z522QJhqqK+05PWeECy/3L1vMXhL2TZ7A6UKNW5Hd+jDQJxEWfdSmEL8Ijqdrs
-         6Cii4aOUXTQ9VmoyoK0ppJEos8M8GJtgWI6Ltq83ssn8G+YAiJ6gDHJk/P38FAiZZrHB
-         hVImMvJ2FrmxWyR3zWpBaOuBXzSIUwkkYpm8CzIz5n9/fD5u5BYUmtXFTjMeMBB+Ua9h
-         AZow==
-X-Forwarded-Encrypted: i=1; AFNElJ+Ca0JR2HLP/eST4aNo9gnm1WsQw9XcfseU+56YMAxsp5KmPYx5HEfl7zDRsUsryim33ZFO1sgAul+p@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTcwKw5LSKgdX5la+5at+QaRnY3wXv0p8ORLORrfOSdZTiyg4M
-	OzcOcZAcPZjv6/2ulrA2dMlG9A9VfsMDWrOfaDDoi/RbnB6IV4O7zEttSC8sTQo/4cny6KTT+/E
-	GpeT/FY8D7VWjm5lQm4xW3fiMx+QZN8LKIZ8gWlqmQeYbJPuM36q3+59gFCDJClyW
-X-Gm-Gg: Acq92OESo3j6swhlRCZh2NbdSkNLda9AyH58sEYLzN8qffa7ZuOWm7r9xh02jxM9w3Q
-	awEZUVv2I+Dif0jyJox6bOAKZHxgBCXDxxgNyZBi+bqohpmc88sWNer1LhGYMwQzUWZVuajhyqb
-	pVqTJG8dNQRoff9+uCoc4MA2UI6vI+bjKXxYOxn6PAW0AutAcyzqq1cO8JhPZzFWQN1yUppzMq7
-	iSXdHRfAiSmNiDpmu2bhXHaxWqMDbe0oWXywuC0OUXeFys64WX66rJsNOnQALyYEBYuThKYsUG5
-	3dn2D0fVJH7D6Nj2rrnH2WaHPb533sWQbUph3QbmtloetjTnpcZ/lkPziGv4Qsp/e0NuyW62Ez8
-	mIvr4vEmlagKEeyDA+NfeieFaZdGYvhrLjUp6NajTPlXM7w==
-X-Received: by 2002:a05:622a:a6c4:b0:50b:5286:f756 with SMTP id d75a77b69052e-516d4631a28mr105769041cf.6.1779713049205;
-        Mon, 25 May 2026 05:44:09 -0700 (PDT)
-X-Received: by 2002:a05:622a:a6c4:b0:50b:5286:f756 with SMTP id d75a77b69052e-516d4631a28mr105768701cf.6.1779713048589;
-        Mon, 25 May 2026 05:44:08 -0700 (PDT)
-Received: from [192.168.119.254] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc264d98asm394663366b.9.2026.05.25.05.44.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 May 2026 05:44:07 -0700 (PDT)
-Message-ID: <438196f5-677c-4797-8315-27767afd1cb1@oss.qualcomm.com>
-Date: Mon, 25 May 2026 14:44:06 +0200
+	s=arc-20240116; t=1779713545; c=relaxed/simple;
+	bh=6ia9If4p5ELlMHzXcCL2ncMHZvn8D2QDM9egXntQjxk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eSQxk7Mqs40kDg475Cf19YTRFvRQBTGFjAQH6zP0rvvWpRODNaU8Ga5wSBEzkPASuZarJgdLheVK7P78mNU+b9pXmR/7kEptlJalgP0/uB0lE6rovvaLrSboEqvX75uiIFjSB1d9v3xHYg9+PiHGWTmfpgZoq4gmcbAvZNAV11o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realsil.com.cn; spf=pass smtp.mailfrom=realsil.com.cn; dkim=pass (2048-bit key) header.d=realsil.com.cn header.i=@realsil.com.cn header.b=pyht0Q78; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realsil.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realsil.com.cn
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 64PCpesuF1058787, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realsil.com.cn;
+	s=dkim; t=1779713501;
+	bh=HhuAfq0KrjWR2hOdUgLXv8apqAQKmXIb959Lev66uvE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=pyht0Q78EiaIC6iJIjqw82xk6qOYzBBQYM1XQgHw4FnU3QBcLkHQGXM4hXj3Rx63s
+	 IINYyHVdMcJNimOgpi3to4fXBSum/VRH93zi9EtpnYNYJBF40jPMvbiweQ0rZ4Eo/w
+	 QBZfkrbY3wWeiflA+lM0Ers2RKoP7CJVFsykn+1uFZR9WRXd595i3k3lZo3SUbxGFU
+	 +KwzzS4eJBY6CjR3+V6cfLALLRribH1ZM1DkZL0QwGV8OCtlZz3fkONBqJ68dLjs1k
+	 o1HiD2Q/qcGxZSHcHLNOo7jjVUMXox/lDShLWF/EWPoCqGPRwAEJHAPXfgziUj0dui
+	 0ZcCgbLVRM9Ng==
+Received: from RS-EX-MBS2.realsil.com.cn ([172.29.17.102])
+	by rtits2.realtek.com.tw (8.15.2/3.28/5.94) with ESMTPS id 64PCpesuF1058787
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 25 May 2026 20:51:41 +0800
+Received: from A106071510.realsil.com.cn (172.29.42.211) by
+ RS-EX-MBS2.realsil.com.cn (172.29.17.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Mon, 25 May 2026 20:51:40 +0800
+From: <zain_zhou@realsil.com.cn>
+To: <linux-staging@lists.linux.dev>, <linux-i3c@lists.infradead.org>,
+	<devicetree@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <alexandre.belloni@bootlin.com>,
+	<Frank.Li@nxp.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linusw@kernel.org>, <brgl@kernel.org>,
+	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<wei_wang@realsil.com.cn>, Yin Zhou <zain_zhou@realsil.com.cn>
+Subject: [PATCH v2 1/2] dt-bindings: i3c: add Realtek RTS490x I3C HUB
+Date: Mon, 25 May 2026 20:51:27 +0800
+Message-ID: <20260525125128.297-1-zain_zhou@realsil.com.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: qcom: sm6115: Add egpio support
-To: Stanislav Zaikin <zstaseg@gmail.com>, andersson@kernel.org,
-        linusw@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20260522141149.1425711-1-zstaseg@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260522141149.1425711-1-zstaseg@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: k2AdTBNOuyeYDQsXAaxnXZ0O89s1kMod
-X-Authority-Analysis: v=2.4 cv=Fto1OWrq c=1 sm=1 tr=0 ts=6a14441a cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=D2ltqR5BaqNGB7-Ic-UA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-ORIG-GUID: k2AdTBNOuyeYDQsXAaxnXZ0O89s1kMod
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI1MDEzMSBTYWx0ZWRfX+jE9C63ROUs9
- uthAhL6oSEAIzK+bHT06GmjjVkxI0vnOS5Q+8Etm3H+Ar4LRV2BMZngmJaz7S+JxJhwUfI+2ZTY
- HMVkgSrDM5JNH206GbEFgHNlm1d1VZSuD5LFA+61nO/Gguxca4PMA1FWczbfl3Wqj3hLJF36DBs
- Q/L+WDeItBQPp58mDhbmnoX1H6v6rlp4zHsRP3QSiwrPX8SmI9Vj9302VC/UsKuCpGA9HcW5Zpg
- JUa+qcITm00EdeURLDuanSvPOEKAsiDxggr5lfxu1/wrKcossWjFSWnTsDlyZTFYaNmNFPWlWiS
- W8hPCqNXfrxUNNrcqgGZDqhanPrYLilTo8A1PaKc/zwGHkPkuJAejl9aGO7IWjmqVKgdhcHsCv/
- ZjN1jH4LiGLdEDXzspc3L/hTxhdT2jfDfOt7PtnNfh9rUWkrf7P8L5svjZtbYOs3/0SH0K3Zqly
- GnQikokOudrREcgOmyw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-25_03,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 adultscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605250131
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RS-EX-MBS1.realsil.com.cn (172.29.17.101) To
+ RS-EX-MBS2.realsil.com.cn (172.29.17.102)
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[realsil.com.cn,none];
+	R_DKIM_ALLOW(-0.20)[realsil.com.cn:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37456-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,qualcomm.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37457-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[realsil.com.cn:+];
+	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: E0B795CAA3E
+	FROM_NEQ_ENVFROM(0.00)[zain_zhou@realsil.com.cn,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.2:email,0.0.0.3:email];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,0.0.0.70:email,0.0.0.0:email,0.0.0.1:email]
+X-Rspamd-Queue-Id: 9BA085CAB87
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 5/22/26 4:11 PM, Stanislav Zaikin wrote:
-> This mirrors the egpio support added to sc7280/sm8450/sm8250/etc. This change
-> is necessary for GPIOs 98-112 (15 GPIOs) to be used as normal GPIOs.
-> 
-> Signed-off-by: Stanislav Zaikin <zstaseg@gmail.com>
-> ---
+From: Yin Zhou <zain_zhou@realsil.com.cn>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Add DT binding schema for Realtek RTS490x series I3C HUB devices.
 
-Konrad
+The binding describes configuration properties for:
+  - LDO enable/disable and voltage level per port group
+  - Pull-up resistance per port group
+  - IO driver strength per port
+  - Per target-port mode (I3C/SMBus/GPIO/disabled), pull-up,
+    IO mode, SMBus clock frequency and polling interval
+  - Hub network always-I3C mode
+  - Hardware identification via CSEL pin (id) and CP1 pins (id-cp1)
+
+Signed-off-by: Yin Zhou <zain_zhou@realsil.com.cn>
+
+Changes in v2:
+- Rework binding per Krzysztof Kozlowski's review:
+  add realtek, vendor prefix to all custom properties; use boolean
+  for enable flags; use u32 with unit suffixes (-microvolt, -ohms)
+  for voltage/resistance; change to unevaluatedProperties: false;
+  fix title, maintainer name, description, $nodename pattern
+- Consolidate examples; add dt-bindings/i2c/i2c.h include
+---
+ .../bindings/i3c/realtek,rts490x-i3c-hub.yaml | 263 ++++++++++++++++++
+ 1 file changed, 263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/realtek,rts490x-i3c-hub.yaml
+
+diff --git a/Documentation/devicetree/bindings/i3c/realtek,rts490x-i3c-hub.yaml b/Documentation/devicetree/bindings/i3c/realtek,rts490x-i3c-hub.yaml
+new file mode 100644
+index 000000000000..851a433abcd3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i3c/realtek,rts490x-i3c-hub.yaml
+@@ -0,0 +1,263 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i3c/realtek,rts490x-i3c-hub.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek RTS490x I3C HUB
++
++maintainers:
++  - Yin Zhou <zain_zhou@realsil.com.cn>
++
++description:
++  The Realtek RTS490x is an I3C HUB device that provides voltage level
++  translation between I3C controller and target devices, bus capacitance
++  isolation, address conflict isolation, I3C port expansion (up to 8
++  target ports), simultaneous dual-controller port support, and per-port
++  mode selection (I3C, SMBus, GPIO, or disabled).
++
++properties:
++  $nodename:
++    pattern: "^hub@[0-9a-f]+(,[0-9a-f]+)*$"
++
++  compatible:
++    const: realtek,rts490x-i3c-hub
++
++  reg:
++    maxItems: 1
++    description:
++      Encodes the static I2C address, manufacturer ID, and part/instance ID
++      as defined by the I3C specification.
++
++  assigned-address:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0x1
++    maximum: 0xff
++    description:
++      Dynamic I3C address to assign to this device.
++
++  dcr:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Device Characteristic Register value of the hub.
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  realtek,cp0-ldo-enable:
++    type: boolean
++    description:
++      Enable the on-die LDO for Controller Port 0.
++
++  realtek,cp1-ldo-enable:
++    type: boolean
++    description:
++      Enable the on-die LDO for Controller Port 1.
++
++  realtek,tp0145-ldo-enable:
++    type: boolean
++    description:
++      Enable the on-die LDO for Target Ports 0/1/4/5.
++
++  realtek,tp2367-ldo-enable:
++    type: boolean
++    description:
++      Enable the on-die LDO for Target Ports 2/3/6/7.
++
++  realtek,cp0-ldo-microvolt:
++    enum: [1000000, 1100000, 1200000, 1800000]
++    description:
++      Output voltage of the Controller Port 0 on-die LDO, in microvolts.
++
++  realtek,cp1-ldo-microvolt:
++    enum: [1000000, 1100000, 1200000, 1800000]
++    description:
++      Output voltage of the Controller Port 1 on-die LDO, in microvolts.
++
++  realtek,tp0145-ldo-microvolt:
++    enum: [1000000, 1100000, 1200000, 1800000]
++    description:
++      Output voltage of the Target Ports 0/1/4/5 on-die LDO, in
++      microvolts.
++
++  realtek,tp2367-ldo-microvolt:
++    enum: [1000000, 1100000, 1200000, 1800000]
++    description:
++      Output voltage of the Target Ports 2/3/6/7 on-die LDO, in
++      microvolts.
++
++  realtek,tp0145-pullup-ohms:
++    enum: [0, 250, 500, 1000, 2000]
++    description:
++      Pull-up resistance for Target Ports 0/1/4/5, in ohms. 0 disables
++      the pull-up.
++
++  realtek,tp2367-pullup-ohms:
++    enum: [0, 250, 500, 1000, 2000]
++    description:
++      Pull-up resistance for Target Ports 2/3/6/7, in ohms. 0 disables
++      the pull-up.
++
++  realtek,cp0-io-strength-ohms:
++    enum: [20, 30, 40, 50]
++    description:
++      Output driver impedance for Controller Port 0, in ohms.
++
++  realtek,cp1-io-strength-ohms:
++    enum: [20, 30, 40, 50]
++    description:
++      Output driver impedance for Controller Port 1, in ohms.
++
++  realtek,tp0145-io-strength-ohms:
++    enum: [20, 30, 40, 50]
++    description:
++      Output driver impedance for Target Ports 0/1/4/5, in ohms.
++
++  realtek,tp2367-io-strength-ohms:
++    enum: [20, 30, 40, 50]
++    description:
++      Output driver impedance for Target Ports 2/3/6/7, in ohms.
++
++  realtek,id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 3]
++    description: |
++      I3C HUB hardware ID based on CSEL pin state. Values:
++        0 - CP0 is selected as primary Controller Port
++        1 - Primary Controller Port selected by software
++        3 - CP1 is selected as primary Controller Port
++
++  realtek,id-cp1:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3]
++    description:
++      I3C HUB hardware ID based on CP1 SDA and SCL pin state probed
++      during power-on.
++
++patternProperties:
++  "^target-port@[0-9]+$":
++    type: object
++    description:
++      I3C HUB target port child node, named target-port@<id>.
++
++    properties:
++      compatible:
++        const: realtek,rts490x-i3c-hub-port
++
++      reg:
++        maxItems: 1
++        description:
++          Target port index (0-based).
++
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      realtek,mode:
++        enum: [disabled, i3c, smbus, gpio]
++        description:
++          Operating mode of this target port.
++
++      realtek,pullup-enable:
++        type: boolean
++        description:
++          When present, enables the pull-up for this target port.
++
++      realtek,always-enable:
++        type: boolean
++        description:
++          When present, the target port is always enabled. Otherwise
++          the port is enabled on demand and disabled after use.
++
++      realtek,polling-interval-ms:
++        minimum: 0
++        description:
++          SMBus polling interval in milliseconds. If absent or 0,
++          polling is disabled and IBI is used instead.
++
++      clock-frequency:
++        enum: [100000, 200000, 400000, 1000000]
++        description:
++          SMBus clock frequency in Hz. Applies only when mode is smbus.
++          Defaults to 400000 if absent.
++
++    additionalProperties: true
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/i2c/i2c.h>
++    i3c-master@d040000 {
++      reg = <0xd040000 0x1000>;
++      #address-cells = <3>;
++      #size-cells = <0>;
++
++      hub@70,4ba00000000 {
++        compatible = "realtek,rts490x-i3c-hub";
++        reg = <0x70 0x4ba 0x00000000>;
++        assigned-address = <0x70>;
++        dcr = <0xc2>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        realtek,cp0-ldo-enable;
++        realtek,cp1-ldo-enable;
++        realtek,cp0-ldo-microvolt = <1000000>;
++        realtek,cp1-ldo-microvolt = <1100000>;
++        realtek,tp0145-ldo-enable;
++        realtek,tp0145-ldo-microvolt = <1200000>;
++        realtek,tp2367-ldo-microvolt = <1800000>;
++        realtek,tp0145-pullup-ohms = <2000>;
++        realtek,tp2367-pullup-ohms = <500>;
++        realtek,tp0145-io-strength-ohms = <50>;
++        realtek,tp2367-io-strength-ohms = <30>;
++        realtek,cp0-io-strength-ohms = <20>;
++        realtek,cp1-io-strength-ohms = <40>;
++
++        target-port@0 {
++          compatible = "realtek,rts490x-i3c-hub-port";
++          reg = <0>;
++          realtek,mode = "i3c";
++          realtek,pullup-enable;
++          realtek,always-enable;
++        };
++
++        target-port@1 {
++          compatible = "realtek,rts490x-i3c-hub-port";
++          reg = <1>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++          realtek,mode = "smbus";
++          realtek,pullup-enable;
++          clock-frequency = <1000000>;
++          realtek,polling-interval-ms = <10>;
++
++          i2c@10 {
++            compatible = "i2c-slave-mqueue";
++            reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
++          };
++        };
++
++        target-port@2 {
++          compatible = "realtek,rts490x-i3c-hub-port";
++          reg = <2>;
++          realtek,mode = "gpio";
++        };
++
++        target-port@3 {
++          compatible = "realtek,rts490x-i3c-hub-port";
++          reg = <3>;
++          realtek,mode = "disabled";
++        };
++      };
++    };
+-- 
+2.34.1
+
 
