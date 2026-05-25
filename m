@@ -1,400 +1,218 @@
-Return-Path: <linux-gpio+bounces-37449-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6L91Ci4gFGpGKAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37449-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 12:10:54 +0200
+	id IG4RH5UvFGqUKgcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37452-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 13:16:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCCBF5C9152
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 12:10:53 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8399F5C9D71
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 13:16:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B4BFF301A414
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 10:10:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9976E3002D3A
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 11:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D83C34C9AC;
-	Mon, 25 May 2026 10:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A84D1331A4B;
+	Mon, 25 May 2026 11:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrJfqANA"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="yA63Ic6a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023098.outbound.protection.outlook.com [52.101.127.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8DB3451B3;
-	Mon, 25 May 2026 10:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779703813; cv=none; b=HIY4YWs0JgjztyZvWRzFidoKYO0tVM+4LbDcTA6CKui7uIOOrqwsXbIlay2h/oiUNy2p0BTdms8o8goKVdsb9GXXAgU3s9pN6OYz3g4l63QFNmPT7NZ7HqoXwLxrU47OGGu3xoirZ679i37aYsmJDDkudptEN9sXwvw5+batAS0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779703813; c=relaxed/simple;
-	bh=pQNu2xlleloQc/oJIVszUd8RXaJcV1q3jy3qy+cE3Dg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rOXjqNLCBV0FmrBoYwGoj2y7cYomw8GOfe0d4R9+MCXzuQjQ1L+QgYPrfiJ/oXHulhjeZlapg8+iAicHkjsZR6kjQlRk+AuRzbMfCJuzDvLauIPYtgMEo7yAjp15AXa2sCYlieT4Yxu7jVwJIpnS2HzosdQP0fJwfhUpy40MURA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrJfqANA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D4D4C2BCFF;
-	Mon, 25 May 2026 10:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779703813;
-	bh=pQNu2xlleloQc/oJIVszUd8RXaJcV1q3jy3qy+cE3Dg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VrJfqANAQ/yYou5CZWknFH2XZqbm5TcEsMTzAiUrePvZKrkKCCEyi91Ci9t2Vs+St
-	 TJMz1ridjo/67dNzl9jStiYk4bgqseJhYDUhyKBom0Wcg29QwiVJOUNQa8Vfwf6hNj
-	 hFmzsD1Cs4rFInT15W2CAH0nPlSLzVxrXSDavYDaKZwgAjUC6uiEoKyBgPgT6VngWP
-	 sJK+hCn/1/3U1YAFXrDELwMGwp55HGsNAIUo0SdWarq0/6Q1tHC1DulDxidDVVThuP
-	 Tzz+HTVXMV2dHKLQRkiSIuoosyebzV6TPy3evKediqIUVpTelufujn7bUTjG9lSmn5
-	 YaPsPqbuQzy5w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424ADCD5BD0;
-	Mon, 25 May 2026 10:10:13 +0000 (UTC)
-From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Date: Mon, 25 May 2026 13:10:15 +0300
-Subject: [PATCH v13 6/6] docs: iio: adc: ad4691: add driver documentation
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44094343D91;
+	Mon, 25 May 2026 11:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779707790; cv=fail; b=mIBQc3vu7eA8HBrS6QLhJtm22Vdhp8r7HuUWw/qYg+eR05oNS/w8D3greiS7XO27YOd261eHZ4MSO+rl0MDp8MAYaQIBme2pTpr6+NPU5N/uNSWGaQypMibeh+lmcZjAeYGFJgF06z5hYJjd+HxToxvGxqEnXxc4d9SmC/VOB70=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779707790; c=relaxed/simple;
+	bh=AVXxnMfW1UAimGiDkywQx4V/HSlKfA3dFjKLYH6bOb8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UbSUxAeA5nD9EWNqdunHyGp0TDvbkKdoCv6QSXMNE7dXg40oCEOq6YM+UzSooViYkQW3/xh05OER5JCTUGUWjDW5twhfvzeDDPgn35vSNoen2ReAxNw3DZ+sma7zrIV7ZJYit5JL/WpogXk0Ubm07jvLdXrkz3HTvgPGJ+JlXH0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=yA63Ic6a; arc=fail smtp.client-ip=52.101.127.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m1wPMonr74smnEQZuu8OU/Bay8QZwUmOOzDhL7cNqjvU+pgL1CM4tJ3heXDywHYtwAwHH2jE0xZNt9FY64SwAnCn6Ig9C9SMt2Lbonjx1vcPuqbJeV/U07sGZie4gPczSLrZrcALCpPphZoSd/6g6/ygSiz47CwwA/n9aJhFUHVYWsspRpjDeHSryTTXM/JOFAEU2WWHJ+QXVDX6Requ4Y1gcRCTMc/8mYrObd46w6ylKkD6f7kwaObnomR7UbLYf2gzFGKc5L+Ubsdt2ybDzQj/GYKE39CpFRsI5pRdit1v4+0sqKpjahU9FrkzzBVBE4I8TE/1xhp4G+bcTf+ZVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WBTeDLxSfPCU7MCkI9n5aRDqk0p8Y8vXwxFwJy7nE54=;
+ b=KGCMKQgyM8ZcEC9EP823y93PpZKPObdoN/3+CZAk/MhdVjbMalEuGrn/5mg1ukSydk+k8kTDMoSFZL1UNrS0LYn8+Q3Wvxzy7tRORrycmBUoSLn3z9VZrbsbUpFGwha0bFdL8XPHyQaBGFQS0HGKE8XA2mkZvZa5tDLxSTbXtdhvxa6w/Xg2Bc/9jNVqfKPl8hwC3bWzXSwKMAw7Q1i1KhuDvyVx2gO/Iths7RHMwTAsszmD1ZL1yWMIojFAE1QXLyrz4x1upLjsOu5PyS8l2/u/XV+TcMjrFK2fzgL36HC1JvN1Xe4NejA3CVXWFxqMDTxszWlnQeiWzmKbohupYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WBTeDLxSfPCU7MCkI9n5aRDqk0p8Y8vXwxFwJy7nE54=;
+ b=yA63Ic6a17H6wTcpBVMdOiBcgGc37XcDa2dLWo7BkirDiPwrIA+tAnlwvGzZkyOgUk31u3vrQy4QGsTgOz+tAwd7ij48woch4kt4YKkdnPJV3rUvrscuLQj1ST3Mts3WSYIdHahUI5EFRwLq/Z/TTH8Vjm+xN4I1WfIRO/gbmcrmjBN+58JghdT/2yfzrJPvVKuu4zOaHOe7tPfSmZ8Q/tBPbyXqDIsJwchGyncG+JD75LlLApdnSvP3GPFus+IhED66kT2AXj6zHTTFmDQObOhvbnrBTqes6uh/PEF7VW0I0FFA1t8jHlH4Mk+Q6WmLHHLiBKJakE1Fl2LioMJAsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by TY0PR03MB6582.apcprd03.prod.outlook.com (2603:1096:400:21a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.10; Mon, 25 May
+ 2026 11:16:24 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4%3]) with mapi id 15.21.0071.010; Mon, 25 May 2026
+ 11:16:24 +0000
+Message-ID: <0ea637d9-6d79-4c8f-8c45-68cfdd84c262@amlogic.com>
+Date: Mon, 25 May 2026 19:16:20 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: meson: amlogic-a4: fix gpio output glitch
+Content-Language: en-US
+To: Linus Walleij <linusw@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260518-fix-set-value-glitch-v1-1-d350732dc934@amlogic.com>
+ <CAD++jLkmm4BbOMZCbJD4H4xfa8nHfExczbXCyF7SapHzQwRZFg@mail.gmail.com>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <CAD++jLkmm4BbOMZCbJD4H4xfa8nHfExczbXCyF7SapHzQwRZFg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TPYP295CA0037.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:7::16) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260525-ad4692-multichannel-sar-adc-driver-v13-6-1b7626d3b35c@analog.com>
-References: <20260525-ad4692-multichannel-sar-adc-driver-v13-0-1b7626d3b35c@analog.com>
-In-Reply-To: <20260525-ad4692-multichannel-sar-adc-driver-v13-0-1b7626d3b35c@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
- Radu Sabau <radu.sabau@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779703810; l=9992;
- i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
- bh=ehwgFuZ34Caajsb+Ayq3e7A4CqJo1K5DtYhNAHIum9A=;
- b=7XiuaAQtr6fSwYdafQbobvWmnfaLvUoa1JZFa0MNwhRK2Xe27ZKljBzNjpSt2mn8xHOot7f/m
- 4/JDFDIjdHoB0BiQ9q6RclFQEZCBkrckWh2g0Yt48wi5YPaaqGlEN+v
-X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
- pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
-X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
- auth_id=642
-X-Original-From: Radu Sabau <radu.sabau@analog.com>
-Reply-To: radu.sabau@analog.com
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TY0PR03MB6582:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44827a75-a906-463f-89c1-08deba4f0ec4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|6133799003|4143699003|3023799007|11063799006|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	bWq+Pn0dJ639r/lktb9Qp6rjoJQkbmcWvdEZDWRnyatQm7EI9TwsArzHlfCLtb0F1l2FKk+tw21vjA/2gGNO/6pYq32RW6EFxzi1Ztb8txs3XYjKfTb2TsJUKr1Ci0Dsnp7bI60t3y6wjsjyI+gfS9OO2r8ZZzcSd0TEjkNnpdgGo0Z7+AmixX7AN9qpTzetjIGx/PPCL7suajaUjZRXTq9Pf7+YF9+ef6NsrgkYgw8ouRfWwTH//n2dkzsuJAJVy5VUbHx/F5JzxLiSy3G251y16HMcw+ansa6m78sy1lXYH8wrZYidM4KS+L2NG5s3T2cBDjGfsZEW63y8VYzD3ihd0XVTWYISfMjdyAmWUs+6abF1dfzjL2TRzHU/hpIwat+0q/DevVOJuEf2BBCGbPZ4mVP97JZebfpdk8QgybvKjHj470694tjZe5MKzDF+Ek1FFUrhAyUO+f4Inu42qwe5dvUXSyKVKf4DHGXfIKzmtKsJUgdNtTOt2nHltBElFDW4Uex0mZ4c+rwrkEgsU1fDmbHi3Jwr0IRmbPk5qQDyH/tuT85lPSIAzcJnZpvzpy/MKS4oMUWROy5dOZDXDxn7vKAf3lBTOm0TN6UHRqpF82XSWXHJJgvjckPtio5LJcUIorL4DTT76zaA+cI8vaYQrCj5tWCTBkBS62pVfAfWxxYNFDl17R3grejmez6/
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(6133799003)(4143699003)(3023799007)(11063799006)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Y0w1dExOZjVsMzR2U3dsWjBvdm5keWo0K1l6cm9VWHc2bkNzUWlUOHRBVC9Q?=
+ =?utf-8?B?Q09OK04waGIwM1dwMWZnYVFWdnNUS1JuckYwVVJhaDlwS0R6ck1qeXZXWWhL?=
+ =?utf-8?B?UG9nbVJRTUR4YnlHSk80eGFIdnNBdmNiL3BiMWNXNHFDbEd3YWZWVzk5V2Nn?=
+ =?utf-8?B?VDBidmR5S0VOVmhybXRscHpKVDBwekZEeUk1Smx5QkNOVmI0SW96QUZLekhY?=
+ =?utf-8?B?RWx3UG14SzhPU3NiUHBiQmRTeHU5VmFTQVl0Zm9XejlTbkZzUkpSK3B3eXVC?=
+ =?utf-8?B?MTN2TDdKYmRUQTM5dERHcGhQTkFxL2NQQnBqUkRQbEFmcnhxem9VdWRGcTlX?=
+ =?utf-8?B?YTR4cVg0bXAzZzNETm1yUUpheUdOZlJ2cW10Qk12V0VPWGowVzRqcVhWaWJC?=
+ =?utf-8?B?NG5vWlBmU1hnalRDbUtyR3YzSnJUL1Z3TlJxVWtScUsrcU1DcEVyS0t4c3h4?=
+ =?utf-8?B?UHpWQUJweDJuL3FNWWxjYXpiWXp2aU1VWUZsZjhVRzZraHczUlJubUFXNUdx?=
+ =?utf-8?B?WlhpWGJ4T050cERQdzdOV0I5K09vRTdvK09vQUE3S0I3N05zS0FHWEdLQ0lZ?=
+ =?utf-8?B?VlY0eFpOTXdMWUpkd1oxZ3NmSzNXQ0RXL0lid1N0YWlxSmdzMHorU3ViVEVM?=
+ =?utf-8?B?UGdCT1NBVmJGbkx0V3BrcUQ5TGlvMjVLVEFyY2w3ODhzcVVHa2Q2Y1lCM3ZZ?=
+ =?utf-8?B?NVRKcmpvS1lNd2Y4eFI0TXVkRHVtemhTRjZmQjY3MWdFSmFmUnY4aWYvQmxk?=
+ =?utf-8?B?eFFQV1RmTVdpWlNWeUpMM2UrWDVwUGpJZWxSN3gxdnMzVmpGZFZ1bjEvWThV?=
+ =?utf-8?B?U1QxRUp6MG1sZ05FTTVoWkIxSXNEZitzWk5ZZFU2TDVZVWlnLzhzREZ5bnp1?=
+ =?utf-8?B?MnpIcThWcXNSbHV0NGo5NDVGekVBSzVlM3ZEbDJWSmcwWkcrNEc0ZnZqeC9h?=
+ =?utf-8?B?dXJsTkYwRkMzZHY3MFc0d3JYdWtHbUg5TzFMWGdUYWkyM1cwYnpKbjR3S2Fz?=
+ =?utf-8?B?SmxndURVOWhubmhCZStVZFBudUlzQ1l1c0x6WkM3ZmpDWm1VZlBNQkovYk5r?=
+ =?utf-8?B?ajU4bVFWdjZJb1NtU0JvaXlYZElXb3A3TTF5VGppUU9FanpiYnkwU0czam9y?=
+ =?utf-8?B?UU5vR2ppTzNHaGNjQmdLenFnaytwWExXUXJsUnlOZDhSMXlyNTBrUmkwanBa?=
+ =?utf-8?B?RWF3K09ma2xjTUIySDBjbWVNZHpUd29mQS9XdGx3TU0yTEQzN01xT3dNRUpt?=
+ =?utf-8?B?ZjNVTHAzYlBRWGpZbU1wYk5ERytpTGY2dmg0MmVHZGcwYncrcDMwSkhoV0Uz?=
+ =?utf-8?B?UmFYTXpmbnc0bitEKzRwZTZRWEV3OGNWZ1o4aGJMRUFqNXpGTXpic3lRaFNv?=
+ =?utf-8?B?UTNubllWdkp1cU85Sk5lYkJ3UlhHOUNsWHlHZVFIQ2VuYVJvYUFkWUkrSW1E?=
+ =?utf-8?B?NHhoT3VUSmM0OWJMUU9hMGlxN2tlbnFqdHJKMG9YOEU5MWJRaENmQjBlUnRD?=
+ =?utf-8?B?L1o4RzJ6UTU3TktqS2swekNYODFXL3lnbC9WTERaWldIVFZkQnZuUUtkajZj?=
+ =?utf-8?B?VkRZb0tSWFErdVlhQlFtM29Lbm1UL1FscnFCakFBYUIwTm13WDEzY0wzK1dn?=
+ =?utf-8?B?WnU2TlBwejdYTkJobjJSVWFaaEZ3UUw5YVF6Z2F5cUU3a1B5R3BDL0Nhd2FJ?=
+ =?utf-8?B?cm0wSzdhWkVkQ05JbzRJbU9lc1p6Zmd1YlQzMG4rYU90TVZvNGNKNUpoaGNv?=
+ =?utf-8?B?RjRoYjRlTEMzdWpUVVdLSEpTMkR0VWdUNFd1c1UzS3h1VmFaUE4vRUxHQzFa?=
+ =?utf-8?B?Yk1URk11RkY2MDdJVjBrSmZrMW85ZkNkbUJ0R1ZJeDJaRUEvT3ZJdUtGbFpp?=
+ =?utf-8?B?bDRLbHlueEpoYTVpM1ByU1ZJcFVieGxsd0Y2Z09qTzFtWGRRV2dteG5rZEM1?=
+ =?utf-8?B?eUFrYzk4amxxVWxQTDhJaXUyZ1M5T09RTkNJa1BadUNpT2UvSG5TMkFZalNZ?=
+ =?utf-8?B?WkpJT3pFY2xHeW5yZ0pPN1hMdzA0SU8yQk1TYklydDNjWkZQZUU1KzBtNlV5?=
+ =?utf-8?B?OHgzWXFzYzJCaGpHSG13SVZZcnNVQnRJeUJnOXk1K1Q2UGZ2azVhN0xWZXk4?=
+ =?utf-8?B?Q2lNK25DejlqSzhudnhTR2dUUFdBRHhnTVRVVFdleVU4YTZOc0dFWFc1MW92?=
+ =?utf-8?B?Zk5jQVhuajNLSTNsdXJmZXVIN3pFVHp2U09vYjdPQS9Xb0tPZEJWL1ZlWlBP?=
+ =?utf-8?B?cUc1TW1QRWthMFRFdis0SVpvNjZjVmd2VWEvOU5NUloxU1JYYmkzRmtBNk1H?=
+ =?utf-8?B?M0J5ZktxOWErTk5RdWNxZlNCZW9tTTl1NVUzNnRwUzNOYzVlU3RtZz09?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44827a75-a906-463f-89c1-08deba4f0ec4
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2026 11:16:24.7627
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E4eX2YHO4nnH5KjKdLwSXu3Tt1K5SFzWeQsQbIDXaChXYjxYl6Z5QWyQI5CJCVeh0QGsExCYx775Zkexn/U6vzu6ByNG+8jcBemvMa0b/rg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR03MB6582
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amlogic.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amlogic.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37449-lists,linux-gpio=lfdr.de,radu.sabau.analog.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,lists.infradead.org,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37452-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[amlogic.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FROM_NEQ_ENVFROM(0.00)[xianwei.zhao@amlogic.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,0.0.0.0:email]
-X-Rspamd-Queue-Id: DCCBF5C9152
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,amlogic.com:email,amlogic.com:mid,amlogic.com:dkim]
+X-Rspamd-Queue-Id: 8399F5C9D71
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Radu Sabau <radu.sabau@analog.com>
+Hi Linus,
+    Thanks for your review.
 
-Add RST documentation for the AD4691 family ADC driver covering
-supported devices, IIO channels, operating modes, oversampling,
-reference voltage, LDO supply, reset, GP pins, SPI offload support,
-and buffer data format.
+On 2026/5/25 16:34, Linus Walleij wrote:
+> On Mon, May 18, 2026 at 10:26 AM Xianwei Zhao via B4 Relay
+> <devnull+xianwei.zhao.amlogic.com@kernel.org>  wrote:
+> 
+>> From: Xianwei Zhao<xianwei.zhao@amlogic.com>
+>>
+>> When the system transitions from bootloader to kernel, the GPIO is
+>> expected to keep driving high.
+>>
+>> However, the Linux kernel first configures the pin direction and then
+>> sets the output value. This may cause a brief low-level glitch on the
+>> GPIO line, which can be problematic for regulator control.
+>>
+>> By configuring the output value before switching the pin direction to
+>> output, the glitch can be avoided.
+>>
+>> This commit fixes the issue by swapping the configuration order.
+>>
+>> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
+>> Signed-off-by: Xianwei Zhao<xianwei.zhao@amlogic.com>
+> Is this a regression? I.e. does it cause problems on a supported
+> system with mainline?
+> 
+> Linus (the big penguin) is unhappy with too many non-critical fixes
+> so I wanna check this before this goes into fixes.
+> 
 
-Signed-off-by: Radu Sabau <radu.sabau@analog.com>
----
- Documentation/iio/ad4691.rst | 226 +++++++++++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst  |   1 +
- MAINTAINERS                  |   1 +
- 3 files changed, 228 insertions(+)
+The issue only occurs when the critical power supply uses GPIO control. 
+Otherwise, it is not significant.
 
-diff --git a/Documentation/iio/ad4691.rst b/Documentation/iio/ad4691.rst
-new file mode 100644
-index 000000000000..362baabed6b3
---- /dev/null
-+++ b/Documentation/iio/ad4691.rst
-@@ -0,0 +1,226 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=============
-+AD4691 driver
-+=============
-+
-+ADC driver for Analog Devices Inc. AD4691 family of multichannel SAR ADCs.
-+The module name is ``ad4691``.
-+
-+
-+Supported devices
-+=================
-+
-+The following chips are supported by this driver:
-+
-+* `AD4691 <https://www.analog.com/en/products/ad4691.html>`_ — 16-channel, 500 kSPS
-+* `AD4692 <https://www.analog.com/en/products/ad4692.html>`_ — 16-channel, 1 MSPS
-+* `AD4693 <https://www.analog.com/en/products/ad4693.html>`_ — 8-channel, 500 kSPS
-+* `AD4694 <https://www.analog.com/en/products/ad4694.html>`_ — 8-channel, 1 MSPS
-+
-+
-+IIO channels
-+============
-+
-+Each physical ADC input maps to one IIO voltage channel. The AD4691 and AD4692
-+expose 16 channels (``voltage0`` through ``voltage15``); the AD4693 and AD4694
-+expose 8 channels (``voltage0`` through ``voltage7``).
-+
-+All channels share a common scale (``in_voltage_scale``), derived from the
-+reference voltage. Each channel exposes:
-+
-+* ``in_voltageN_raw`` — single-shot ADC result
-+
-+The following attributes are shared across all channels:
-+
-+* ``in_voltage_sampling_frequency`` — effective output rate, defined as the
-+  internal oscillator frequency divided by the oversampling ratio. Writing this
-+  attribute selects the nearest achievable rate for the current OSR; the value
-+  read back reflects the actual rate after snapping to the closest valid
-+  oscillator entry.
-+* ``in_voltage_sampling_frequency_available`` — list of achievable effective
-+  rates for the current oversampling ratio. The list updates dynamically when
-+  the oversampling ratio changes.
-+
-+The following attributes are shared across all channels and only available in
-+CNV Burst Mode:
-+
-+* ``in_voltage_oversampling_ratio`` — hardware oversampling depth applied to
-+  all channels; see `Oversampling`_ below.
-+* ``in_voltage_oversampling_ratio_available`` — valid ratios: 1, 2, 4, 8, 16,
-+  32.
-+
-+
-+Operating modes
-+===============
-+
-+The driver supports two operating modes, selected automatically from the
-+device tree at probe time.
-+
-+Manual Mode
-+-----------
-+
-+Selected when no ``pwms`` property is present in the device tree. The CNV pin
-+is tied to the SPI chip-select: every CS assertion triggers a conversion and
-+returns the previous result. A user-defined IIO trigger (e.g. hrtimer trigger)
-+drives the buffer.
-+
-+Oversampling is not supported in Manual Mode.
-+
-+CNV Burst Mode
-+--------------
-+
-+Selected when a ``pwms`` property is present in the device tree. A PWM drives
-+the CNV pin at the configured conversion rate. A GP pin wired to the SoC and
-+declared in the device tree signals DATA_READY at the end of each burst,
-+triggering a readout of all active channel results into the IIO buffer.
-+
-+The buffer output rate is controlled by the ``sampling_frequency`` attribute
-+on the IIO buffer. In practice the PWM rate should be set low enough to allow
-+the SPI readout to complete before the next conversion burst begins.
-+
-+Autonomous Mode (idle / single-shot)
-+-------------------------------------
-+
-+When the IIO buffer is disabled, ``in_voltageN_raw`` reads perform a single
-+conversion on the requested channel using the internal oscillator. The
-+oscillator is started and stopped around each read to save power.
-+
-+
-+Oversampling
-+============
-+
-+In CNV Burst Mode a shared hardware accumulator averages a configurable number
-+of successive conversions across all active channels. The result is always a
-+16-bit mean, so the buffer data type (shown in ``buffer0/in_voltageN_type``)
-+is unaffected by the oversampling ratio. Valid ratios are 1, 2, 4, 8, 16 and
-+32; the default is 1 (no averaging). Oversampling is not supported in Manual
-+Mode.
-+
-+.. code-block:: bash
-+
-+    # Set oversampling ratio to 16 (shared across all channels)
-+    echo 16 > /sys/bus/iio/devices/iio:device0/in_voltage_oversampling_ratio
-+
-+    # Read the resulting effective sampling frequency
-+    cat /sys/bus/iio/devices/iio:device0/in_voltage_sampling_frequency
-+
-+Writing ``in_voltage_oversampling_ratio`` stores the new shared depth and snaps
-+the internal oscillator to the largest valid table entry that is both less than
-+or equal to ``old_effective_rate × new_osr`` and evenly divisible by
-+``new_osr``. This preserves an integer read-back of
-+``in_voltage_sampling_frequency`` after the change and keeps the oscillator as
-+close as possible to the previous effective rate.
-+
-+
-+Reference voltage
-+=================
-+
-+The driver supports two reference configurations, mutually exclusive:
-+
-+* **External reference** (``ref-supply``): a voltage between 2.4 V and 5.25 V
-+  supplied externally.
-+* **Buffered internal reference** (``refin-supply``): an internal reference
-+  buffer is enabled by the driver.
-+
-+Exactly one of ``ref-supply`` or ``refin-supply`` must be present in the
-+device tree. The reference voltage determines the full-scale range reported
-+via ``in_voltage_scale``.
-+
-+
-+LDO supply
-+==========
-+
-+The chip contains an internal LDO that powers part of the analog front-end.
-+The supply configuration is mutually exclusive:
-+
-+* **External VDD** (``vdd-supply``): an external 1.8 V supply is used directly;
-+  the internal LDO is disabled.
-+* **Internal LDO** (``ldo-in-supply``): the internal LDO is enabled and fed
-+  from the ``ldo-in`` regulator. Use this when no external 1.8 V VDD is present.
-+
-+Exactly one of ``vdd-supply`` or ``ldo-in-supply`` must be provided.
-+
-+
-+Reset
-+=====
-+
-+The driver supports two reset mechanisms:
-+
-+* **Hardware reset** (``reset-gpios`` in device tree): the GPIO line is
-+  asserted for at least 300 µs then deasserted at probe.
-+* **Software reset** (fallback when ``reset-gpios`` is absent): written
-+  automatically at probe.
-+
-+
-+GP pins and interrupts
-+======================
-+
-+The chip exposes up to four general-purpose (GP) pins. In CNV Burst Mode
-+(non-offload), one GP pin must be wired to an interrupt-capable SoC input and
-+declared in the device tree using the ``interrupts`` and ``interrupt-names``
-+properties. The ``interrupt-names`` value identifies which GP pin is used
-+(``"gp0"`` through ``"gp3"``).
-+
-+Example device tree fragment::
-+
-+    adc@0 {
-+        compatible = "adi,ad4692";
-+        ...
-+        interrupt-parent = <&gpio0>;
-+        interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "gp0";
-+    };
-+
-+
-+SPI offload support
-+===================
-+
-+When a SPI offload engine (e.g. the AXI SPI Engine) is present, the driver
-+uses DMA-backed transfers for CPU-independent, high-throughput data capture.
-+SPI offload is detected automatically at probe; if no offload hardware is
-+available the driver falls back to the software triggered-buffer path.
-+
-+Two SPI offload sub-modes exist:
-+
-+CNV Burst offload
-+-----------------
-+
-+Used when a ``pwms`` property is present and SPI offload is available. The PWM
-+drives CNV at the configured rate; on DATA_READY the offload engine reads all
-+active channel results and streams them directly to the IIO DMA buffer with no
-+CPU involvement. The GP pin used as DATA_READY trigger is supplied by the
-+trigger-source consumer at buffer enable time; no ``interrupt-names`` entry is
-+required.
-+
-+Manual offload
-+--------------
-+
-+Used when no ``pwms`` property is present and SPI offload is available. A
-+periodic SPI offload trigger controls the conversion rate and the offload engine
-+streams results directly to the IIO DMA buffer.
-+
-+The ``sampling_frequency`` attribute on the IIO buffer controls the trigger
-+rate (in Hz). The initial rate is 100 kHz.
-+
-+Oversampling is not supported in Manual Mode.
-+
-+
-+Buffer data format
-+==================
-+
-+The sample format in the IIO buffer depends on whether SPI offload is in use.
-+
-+Software triggered-buffer path (no SPI offload)
-+------------------------------------------------
-+
-+Each active channel occupies one 16-bit big-endian slot (``storagebits=16``,
-+``endianness=be``). Active channels are packed densely in scan-index order,
-+followed by a 64-bit software timestamp appended by the IIO core.
-+
-+SPI offload path
-+----------------
-+
-+Each active channel occupies one 16-bit CPU-native slot (``storagebits=16``,
-+``endianness=cpu``). The SPI offload engine streams 16-bit words directly from
-+the SPI Engine into the DMA buffer; no software timestamp is appended.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index ba3e609c6a13..007e0a1fcc5a 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -23,6 +23,7 @@ Industrial I/O Kernel Drivers
-    ad4000
-    ad4030
-    ad4062
-+   ad4691
-    ad4695
-    ad7191
-    ad7380
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 020c1ffae31b..3fbac296b667 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1488,6 +1488,7 @@ L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-+F:	Documentation/iio/ad4691.rst
- F:	drivers/iio/adc/ad4691.c
- 
- ANALOG DEVICES INC AD4695 DRIVER
-
--- 
-2.43.0
-
-
+> Yours,
+> Linus Walleij
 
