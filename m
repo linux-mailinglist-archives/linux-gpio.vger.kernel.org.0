@@ -1,161 +1,163 @@
-Return-Path: <linux-gpio+bounces-37421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aAIQDWgnE2rR8QYAu9opvQ
-	(envelope-from <linux-gpio+bounces-37421-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 18:29:28 +0200
+	id mBoLBiD3E2puHwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37422-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 09:15:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86C955C3235
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 18:29:26 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EB1D5C6FEB
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 09:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1A46B3019B8E
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2026 16:28:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 09FC830015AD
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 07:15:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 243693AEB2C;
-	Sun, 24 May 2026 16:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12603C584B;
+	Mon, 25 May 2026 07:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="CSjD9M4N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5kGxe9R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171013AE196;
-	Sun, 24 May 2026 16:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB4B3C552B
+	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 07:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779640072; cv=none; b=bvs5NPg0HeYW4gtov1teY1w6KWdFm70u2oT7HuGgw/4TX6zGCKbwOlIaLynm8Smb6gIkm35gj5GC00Q5CeLkeNwNu4bB5t1AS6U34bug2OK+u/Hg03nb1anaWObj6nGant3kwhNy+8gIf/BDWV5JAsDkcaY5PMwrnkPKAEP1neQ=
+	t=1779693322; cv=none; b=PLI/e7D5eCngU6gxMXzHLrW412QEAdVxCMrQjUhoA+nbsIwGdVe+k8LtTrJ3pljpBtcdJEtvWD1BPZMx4ojyL7O4iBAJ7fvFYEc1d99StL56l9OhcExIo6l2lKdgV33LBSWuee8rRG5xLtr7OeZE8a6+tAO36iJbhVVJRLVOoZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779640072; c=relaxed/simple;
-	bh=v9uSFaqt6JGmmCo0t552KayYGFYQOyW+nHwKqaTwbMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OGwaZz+R2IfT73ih3YMOBthaiynVPZ4yMJNQLssLXg4axz9RamYUhH6idXbJn5tN6C/cCfIohDFZy+vS5g2XFJ/FdixhAUV9YpKBv8LsDz/SgloDb/45Enavv2NVYA0yY0SKCgNtHtF96SSZhWnQIKsguU3I3B8c9Cn2puzYjMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=CSjD9M4N; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 03C0C26AAB;
-	Sun, 24 May 2026 18:27:48 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id XmiF6tB3ZQ8g; Sun, 24 May 2026 18:27:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1779640062; bh=v9uSFaqt6JGmmCo0t552KayYGFYQOyW+nHwKqaTwbMY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CSjD9M4Nx4ODTRcIoExYMD4agZcTjIl4gbTPFgspBMAQcI1Cu9HfS4Z1DssMGmPZk
-	 s3cfdfrtHb+Af9sIy/i99MVYEYdzRPhMd6DtaaJczSGPJVopvYKmnMDBAmr4KToJek
-	 AriUYsnxcTkSGACIkoKwd9B62+oNu2r2uRtC7JOuj3He6b/x/9eAPKXGzMk+Wn57p8
-	 F+HId2OXMHEBOQ/rt/JoK1UILtV+jQQB99DLIqYAEqwoyb604YvoRVoB1kFzTEg3wM
-	 cmB4Nwmc37IgUTqU+hqrUDGaO6cKkzhS7Kg5IND40slDTObSM3f3DDu1b06HHTFLMH
-	 p9264hmAekK/A==
-From: "Marco Scardovi (scardracs)" <scardracs@disroot.org>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Marco Scardovi (scardracs)" <scardracs@disroot.org>
-Subject: [PATCH 2/2] gpio: remove obsolete UAF FIXMEs from lookup paths
-Date: Sun, 24 May 2026 18:27:08 +0200
-Message-ID: <20260524162708.62949-3-scardracs@disroot.org>
-In-Reply-To: <20260524162708.62949-1-scardracs@disroot.org>
-References: <20260524162708.62949-1-scardracs@disroot.org>
+	s=arc-20240116; t=1779693322; c=relaxed/simple;
+	bh=mZ4KnxOox8XVDHY1nDh0/a8GjdvSDmvGTIyanCnS7MU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pXX6x7GViYoBoivL2JozVx1ii5ZMGtYBUPT+4oPJ7dOobE3MiNDs7yeQWvN8OQzXh662/IoPXZzBTeYooOUZ/fGy9QpxWm4mmlz+thNqIyAbip7f7F9+ln0gCk/H5emRliT36v01OR5DpTNAmo8awDWsZ4+VRN2OILOcxk0XlWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5kGxe9R; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48a563e4ef7so68554065e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 00:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779693320; x=1780298120; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=47oa6+bWcTdZtRyJkBYrwULdTRG5mV9VUpeXnfu9Pl0=;
+        b=g5kGxe9RYQGtcMrjBYQ/Rb5QZHkPY7D25USs8q0oHmHMqphXLXGvitgte9f9TSYa/X
+         njI9go/vXdx/GOQGHzKeQfC5WGYKzHet7+wE89n6uORqc6soo//r/DpC75u2CIH17nyS
+         axtD86txzWDE1wpihQitq10h+5n7g60WJBQruqse1/WRb0EaUjfacgv2gMD58AW8H2Tj
+         tJVBu9jNC8CTeC1oGyX+6VMXkMFouIvzDGPX+VbebzfY3NZI3DGCcASgnTeQbRposAXE
+         qhSjI9n2jp+NgAIqR60M3s2itlSK1FE4EchK4+7+l4QDuDio5+U5Ls66CslzLLkOiep+
+         Z4tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779693320; x=1780298120;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=47oa6+bWcTdZtRyJkBYrwULdTRG5mV9VUpeXnfu9Pl0=;
+        b=kqb6ZiAdqbVikYLAU985x+EJJSgUQQi0ahEI+zFFkMTMk9/+HeCCxXL61ZLssSUT1a
+         t0TefyLuN4pcFvkDuxJCcZ7Job8JKrIeySiEs1Kw/YBVozZUjnKJk/27GUrBoKARxa2d
+         4a/cC2NsByw+xMSMalJh4zO+iM36lXgBMnYGA5xnnFXD64Wg2rWDk/npi4rI+rWuqrSc
+         iOwQI4McUt0ZBx3dlgmSQJtQ5kZjcwowd+dbGlfwCdWVUfLZJxqrsjs08/nDhC8pkJDk
+         ewtZcsG7Il9L/SEh/Yk6GCCBewGFNx8omrwlYlvgfOgz+uP86H23RDeKdZTcHLyqZTQl
+         Q5eg==
+X-Forwarded-Encrypted: i=1; AFNElJ+JO1M+FcHA0SCXKY3BRJxC1gFePaSla9Ot36Gtcn+7PMAvM39GaNFRKVdIGCWLmS0e0+xXZJvMJGcv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0x0vo7w+Tp+RKpxDr2l/dowpLE56+ovYQ3BiplN8BEPh07gDQ
+	/taCZTcGnzSGIVr1jNWwLH+rXgmj7Fi6DojgMD1qSBcgMurYhmqxk0wNa0fmow==
+X-Gm-Gg: Acq92OErOr0YYRSWG4eqNSzGv8EPS+TpExPt5m20dg9v2juN8UQaX+y2C/b1CSPga1a
+	/7hX6HljAaLJ9+fzTLGLyZWdRfW5cfZ3Vm/Rb7d1IeXVbOuezoZL4iFsxEwiYElLTX33BXoXERV
+	vroNRh+JHsQEDsdDbSHW0dOcvZfXMYLUG6gK0UYogISkJXmx0BZd5dbgY1p6DcN2AcbJdY/MUQV
+	BB+Ohkmn3awanOOU54dS+TmdLaHVFOf2lvsf9H3aW0Hhh0Abl6DIbbEBvcrMut7Vmhg0/n1X/Mh
+	ek79ohHlV8w16FBDm82ulMwfZVFU6ob56hGBb6T0gGqxErZUZlD7dc13n+SeRENEEtQKdMj7B5z
+	xX6WLozycee7RsZUVIajAXCmv/auylNuCW6sT1VxT0BD7oU2Snhg2utT12jRfiOaS1zwAhXMhDF
+	Yy3yUsp0qb5rLvodQX8EQLKnKe+OX2NSvr1g==
+X-Received: by 2002:a05:600c:3593:b0:488:8bdd:cfcc with SMTP id 5b1f17b1804b1-4904225ae0emr248431945e9.0.1779693319595;
+        Mon, 25 May 2026 00:15:19 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49044f2bad3sm244022805e9.0.2026.05.25.00.15.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2026 00:15:19 -0700 (PDT)
+Date: Mon, 25 May 2026 10:15:16 +0300
+From: Dan Carpenter <error27@gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] gpio: virtuser: Fix uninitialized data bug in
+ gpio_virtuser_direction_do_write()
+Message-ID: <ahP3BJWWy-m_qI0X@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37421-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[disroot.org:+];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-0.999];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-37422-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,disroot.org:email,disroot.org:mid,disroot.org:dkim]
-X-Rspamd-Queue-Id: 86C955C3235
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[error27@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.990];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,stanley.mountain:mid]
+X-Rspamd-Queue-Id: 1EB1D5C6FEB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The ACPI and swnode GPIO lookup backends both temporarily grab a reference
-to the gpio_device, resolve the descriptor, and then drop the reference
-before returning the descriptor to the caller. They carry FIXME comments
-warning that the descriptor is being returned without its backing device
-reference.
+If *ppos is non-zero then simple_write_to_buffer() won't initialize the
+start of the buffer.  Really, non-zero values for *ppos aren't going to
+work at all.  Check for that return -EINVAL at the start of the function.
 
-However, the gpiod_find_and_request() core functionally prevents any
-use-after-free window by wrapping the entire lookup operation inside the
-gpio_devices_srcu read lock. The lookup functions are correct to drop
-their references since the caller (gpiod_request) will subsequently take
-its own permanent module and device references safely.
-
-Remove these obsolete FIXMEs to prevent misleading future subsystem
-developers.
-
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+Fixes: 91581c4b3f29 ("gpio: virtuser: new virtual testing driver for the GPIO API")
+Signed-off-by: Dan Carpenter <error27@gmail.com>
 ---
- drivers/gpio/gpiolib-acpi-core.c | 4 ----
- drivers/gpio/gpiolib-swnode.c    | 4 ----
- 2 files changed, 8 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index eb8a40cfb7a9..1a762a2988b7 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -142,10 +142,6 @@ static struct gpio_desc *acpi_get_gpiod(char *path, unsigned int pin)
- 	if (!gdev)
- 		return ERR_PTR(-EPROBE_DEFER);
+ drivers/gpio/gpio-virtuser.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
+index 128520d340d4..846f8688fec5 100644
+--- a/drivers/gpio/gpio-virtuser.c
++++ b/drivers/gpio/gpio-virtuser.c
+@@ -397,7 +397,7 @@ static ssize_t gpio_virtuser_direction_do_write(struct file *file,
+ 	char buf[32], *trimmed;
+ 	int ret, dir, val = 0;
  
--	/*
--	 * FIXME: keep track of the reference to the GPIO device somehow
--	 * instead of putting it here.
--	 */
- 	return gpio_device_get_desc(gdev, pin);
- }
+-	if (count >= sizeof(buf))
++	if (*ppos != 0 || count >= sizeof(buf))
+ 		return -EINVAL;
  
-diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-index 4374067f621e..8d9591aa9304 100644
---- a/drivers/gpio/gpiolib-swnode.c
-+++ b/drivers/gpio/gpiolib-swnode.c
-@@ -114,10 +114,6 @@ struct gpio_desc *swnode_find_gpio(struct fwnode_handle *fwnode,
- 	if (IS_ERR(gdev))
- 		return ERR_CAST(gdev);
+ 	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
+@@ -622,7 +622,7 @@ static ssize_t gpio_virtuser_consumer_write(struct file *file,
+ 	char buf[GPIO_VIRTUSER_NAME_BUF_LEN + 2];
+ 	int ret;
  
--	/*
--	 * FIXME: The GPIO device reference is put at return but the descriptor
--	 * is passed on. Find a proper solution.
--	 */
- 	desc = gpio_device_get_desc(gdev, args.args[0]);
- 	*flags = args.args[1]; /* We expect native GPIO flags */
+-	if (count >= sizeof(buf))
++	if (*ppos != 0 || count >= sizeof(buf))
+ 		return -EINVAL;
  
+ 	ret = simple_write_to_buffer(buf, GPIO_VIRTUSER_NAME_BUF_LEN, ppos,
 -- 
-2.54.0
+2.53.0
 
 
