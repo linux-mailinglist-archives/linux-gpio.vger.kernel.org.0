@@ -1,183 +1,200 @@
-Return-Path: <linux-gpio+bounces-37470-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37471-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eA20KuRYFGofMwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37470-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 16:12:52 +0200
+	id 2P/8AvtgFGqgMwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37471-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 16:47:23 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3DE65CB9B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 16:12:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EDCC5CBE06
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 16:47:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EB3C3301A277
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:01:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B8AFE3004CB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 14:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A325388E66;
-	Mon, 25 May 2026 14:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E60F3EDE44;
+	Mon, 25 May 2026 14:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X0/xnwk/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWzhKUDT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71583876DF;
-	Mon, 25 May 2026 14:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7463815DF
+	for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 14:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779717627; cv=none; b=Ns+7Av2uuHDuj/mFUBJZwzUSsUBwdD2c/YeUEZfaYad+wvn85TJ/TxICbN7XuAvhLa7a5fwAz67UMUlPdwQvWC/K4pDSdBQlqLLVzbgGPpVPpxok/DRwJjSsgT1+I5eszmjZ3N4+h5XYSYrnI16Isf77rWLj6Bp+NyOEcR01ikQ=
+	t=1779720437; cv=none; b=aNxb6s/ohGTi9wxtKTZcnTPBxn0IU3s0DKRTfyxVsHuP6OdgOlBfjRM84aSREAPOoliSEwlF3z0/vpu4jBTlnmk3dENurlFBk/it23p+0Z3aDjqE/yxXSjAVV4w/AerVq7/JDirq15X+tWEKbyx/cHkNgtqsqiSp6rg/IX0H8gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779717627; c=relaxed/simple;
-	bh=AHC/DtX/47mroppjma6l3/8R/uoB9k1+uHayLq+sKcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DREugmqWLIZkOmo7nZTHbhNi2ZJn8tktWotvG2vLk8YT1ulWK2cx6wrHVy1olphh3327pvPbt2daGYJp1wQzybVFNmuYQO6RSnriu5M4tg7vQUtndsUn1mtkD3D1QDZihIxs9UQ09TinD2qDSuzqP8e1NhVabGKKGZqmRTgA7Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X0/xnwk/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 166AF1F000E9;
-	Mon, 25 May 2026 14:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779717626;
-	bh=g5oYXv2b6VWLtIK2iS3P4ZRH+VT0xnxpOXO2zb2Mwn4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=X0/xnwk/nDGlpyNWKtOfNmiJlNNFYI7lNsr2OxC2holR3uVFyOXpIzD/pOU2QG6iB
-	 DVIWOwQNE/PJ5hwhf7Rnq1WBaiDvzalPiCEEO/RZP3bpAj4TDh+RyoNetC5z+sF9tG
-	 O16YZHQ3oHVoybQKKEPOaJNPX0f6hO9zoRVGlQyInOhYtR1giRXfGDB33PJZq5uigG
-	 uTPzejogswCFHFzWlK9zmWjOooJJ1CcZmUdAWNQM73vcXqdVR/Mz4AfdnoZj/guLIS
-	 jH9ZGnFRcXxH6a5JsNEbe2oRXTlnB589NSj5J6nZTPfFchbOuBX4VJVmrA/APrMV70
-	 pBnkJgRHbtMAQ==
-Message-ID: <c38c3c96-a775-45a9-b2e0-64ed5d0a49d4@kernel.org>
-Date: Mon, 25 May 2026 16:00:21 +0200
+	s=arc-20240116; t=1779720437; c=relaxed/simple;
+	bh=yr/1+spXVlyoOEnPXkKwQNNmxgFyrMF8Vg6TrpaWpNI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=trqS5RXmLKkoGLHf45DtY+dgsryEZfyh6I5TneTrpE3/xFLqa8Pb8bUE+4kK8ePl2kr8qsOLB4V6U0uLbrQsGBW0mbrY/tgZHWFr8RjLgBMRr7gv/zzeCOEkweXkFZR3RcXd2dWHuMqqKnCh9f7rG3uF8xWkGz55vqe3oGCTptc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWzhKUDT; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-366139223e4so5828665a91.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2026 07:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779720435; x=1780325235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vJLkAaWkaR/u6MnpMROmXCnK0KgC4u6HMrcHQXc6x1s=;
+        b=cWzhKUDT4MDKwMF3U/26YHbGor/ejRGmaXsUZh49ZKgizDoqfXXuUDtpsAj7u23PTk
+         xcj27oRzefUwu2oRnVRwrBINeuWIWQonbIX4zGWpwvl5s+NdJs71SvOLQoMFbCzPFjo4
+         m4FH4jKS9IlGGV1PxjflOKpjGlbUeaFGGArcA9qMlhiwX2TcwRDbq3EAzxn76JAxlLSh
+         UOTvC+dmUmr2DkYvh9oO1RTZ67d1QfQUUB0yStOEXBTUtnQcSEYowQ2cC0WtepneA7kM
+         SkiBJ+JXuxLkBLH+NEw2HCkZz3seTL5hDT232LUV3AfSflcUJ4iXGVTmG89S/hHozHvj
+         BcuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779720435; x=1780325235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vJLkAaWkaR/u6MnpMROmXCnK0KgC4u6HMrcHQXc6x1s=;
+        b=oPTejLFQUtDPTR0jKznLABk68qLsquoUx43Tj2KQ2ivRzHZB50xf5r9T22NQmfe6P6
+         KcNs9L6yF0NgYd0KLrZBZCdWgU12vSvQyAXWP9XVR6S+dRbTo+ZJb2UySDAmMvOdz2fx
+         Ggz7Nofj+67X3XiS2uQtGmnJVIhkg39HM8GSzfg4U3xWlMdJ8SI2Nbx9MTiL014wM6nt
+         pEhQRL43vfP/6c60aVe8dI3pkcVD866q1+cvpFcR2lY6y3LCA+wp21FEt2VJNXkn7R7l
+         0ObDnmadn6XNX288gAWrj/QckIoDIC7pBuyho/J89U7MMUSrjoKVR4yBWoVVjpiHhoyZ
+         QRvw==
+X-Forwarded-Encrypted: i=1; AFNElJ9KnEjwdHRTI7cu8a7GmRFuOy4MT4PWgMuUGqAav4BFC8teJZIqc8RN1khd/1k3zpExWYWLNsEGZ/2f@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6rUNk/xVau/Ya8T14edoi8ztPWCoc7tMR3rS1sYQf/kxh/wUZ
+	bLMOcRN0L17DSgPxO1yihg0TQlyTg4Vj6FmqLcYrapHFobnpDdMTypPH
+X-Gm-Gg: Acq92OGd7TxMFWtp158+Gc5N66lKhb3yNFxYzuKoST6Bmus8GbjI4HwKk+Xv108wtVx
+	SdpYtxXyR8yWhfGXHBSaOj5EuweDRLdnlYkrrS65wiU4QreR3oLWFLPAztfWrdZk/hDl4MXKym6
+	NrLhjXA305BQtexWJl1MmD75kcBKaoUUJjN/UpSFcGuEbsTjLOagzQdqSvpCUEa3V8DCiDA2oCj
+	6D5bS8QivGVzOAsrHPMl6oBtnJrdjzayN6UftJd8QKcQkTDlleSEju9CF8Nwe1ltyXY/fFbZlP7
+	zgEBfh3VmumcwDjaUy2A4hi4Sa5XRxk5sKQZvhLlzqi5p/SJH0ZE2UlgFqBvZWXqeaxWJ1iejzR
+	Ti+7CrRYB9XFLC2+vUqW6JIKwkPodaDgbkbiS4YmoOr23ydaZpS8ET4IuhH9b1tBeAJ7AGQp3k7
+	BJKqiHDeimCKGvZXkxRAL0q+VTNHPZNvXeUvBxzZo=
+X-Received: by 2002:a17:90b:1909:b0:368:433:b697 with SMTP id 98e67ed59e1d1-36abe37ef9cmr4093720a91.19.1779720435013;
+        Mon, 25 May 2026 07:47:15 -0700 (PDT)
+Received: from arch.localdomain ([2409:8a28:a5f:4fa1:cc65:18c0:209b:38a4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36abfe17c95sm2721993a91.0.2026.05.25.07.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2026 07:47:14 -0700 (PDT)
+From: Jun Yan <jerrysteve1101@gmail.com>
+To: linusw@kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com,
+	Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Vincent Knecht <vincent.knecht@mailoo.org>,
+	Grant Feng <von81@163.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Marko <robert.marko@sartura.hr>
+Cc: Jun Yan <jerrysteve1101@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/6] leds: is31fl319x: Fix shutdown GPIO and update DT bindings
+Date: Mon, 25 May 2026 22:46:06 +0800
+Message-ID: <20260525144629.498630-1-jerrysteve1101@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] staging: i3c: add Realtek RTS490x I3C HUB driver
-To: zain_zhou@realsil.com.cn, linux-staging@lists.linux.dev,
- linux-i3c@lists.infradead.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, alexandre.belloni@bootlin.com,
- Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linusw@kernel.org, brgl@kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, wei_wang@realsil.com.cn
-References: <20260525125128.297-1-zain_zhou@realsil.com.cn>
- <20260525125128.297-2-zain_zhou@realsil.com.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20260525125128.297-2-zain_zhou@realsil.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-37470-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FREEMAIL_CC(0.00)[gmail.com,ucw.cz,kernel.org,glider.be,socionext.com,foss.st.com,vger.kernel.org,lists.infradead.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-37471-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[kernel.org,oss.qualcomm.com,lunn.ch,bootlin.com,gmail.com,mailoo.org,163.com,arm.com,amd.com,linaro.org,sartura.hr];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	TO_DN_NONE(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jerrysteve1101@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	NEURAL_HAM(-0.00)[-0.997];
 	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[realsil.com.cn:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B3DE65CB9B0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 2EDCC5CBE06
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 25/05/2026 14:51, zain_zhou@realsil.com.cn wrote:
-> From: Yin Zhou <zain_zhou@realsil.com.cn>
-> 
-> Add driver for Realtek RTS490x series I3C HUB devices.
-> 
-> The driver supports:
->   - Device Tree based configuration of LDO, pull-up, IO strength
->     and per-port mode (I3C/SMBus/GPIO/disabled)
->   - Logical I3C bus registration per target port
->   - SMBus agent functionality with IBI and polling modes
->   - GPIO chip with IRQ support
->   - DebugFS interface for register access and DT config inspection
->   - IBI (In-Band Interrupt) handling
-> 
-> The driver is placed in staging as it has known issues to be resolved
-> before mainlining; see drivers/staging/rts490x/TODO for details.
-> 
-> Signed-off-by: Yin Zhou <zain_zhou@realsil.com.cn>
-> 
-> Changes in v2:
-> - Update driver to match v2 DT binding: parse physical values
->   directly via of_property_read_bool/u32; drop string enum lookup
->   tables; update property names with realtek, prefix and unit suffixes
-> - Fix maintainer name; move MAINTAINERS entry to driver patch
-> - Code style: rename TPn_* macros to TPN_*; rename SMBus frequency
->   constants to UPPER_CASE; add mutex field comments
-> ---
->  MAINTAINERS                                |    6 +
->  drivers/staging/Kconfig                    |    2 +
->  drivers/staging/Makefile                   |    1 +
->  drivers/staging/rts490x/Kconfig            |   16 +
->  drivers/staging/rts490x/Makefile           |    2 +
->  drivers/staging/rts490x/TODO               |   35 +
+This series fixes incorrect shutdown GPIO polarity and improves
+shutdown-gpios description in DT bindings.
 
-So this is staging driver? Then why do you send us bindings? We don't
-need them. You must follow staging rules then.
+Patch 1 adds detailed shutdown-gpios description and fixes example
+in DT bindings.
 
-Best regards,
-Krzysztof
+Patch 2 fixes shutdown GPIO initial state and removes redundant
+startup toggling.
+
+Patch 3 adds fixup to force consumer active low for legacy device 
+trees in gpiolib.
+
+Patches 4-6 correct shutdown GPIO polarity in board DTS files.
+
+Changes in v2:
+- Add comments explaining the reason for this GPIO line level.
+- Add fixup to force consumer active low for legacy device trees in gpiolib.
+- Link to v1: https://lore.kernel.org/all/20260508152435.21389-1-jerrysteve1101@gmail.com
+
+Jun Yan (6):
+  dt-bindings: leds: issi,is31fl319x: Update description for the
+    shutdown-gpios property
+  leds: is31fl319x: Fix shutdown GPIO initial state and remove redundant
+    startup pulse
+  gpiolib: of: add quirk for IS31FL319X shutdown line
+  arm64: dts: qcom: msm8916-alcatel-idol347: Fix sn3190 shutdown GPIO
+    polarity
+  ARM: dts: qcom: msm8974-oneplus-bacon: Fix sn3193 shutdown GPIO
+    polarity
+  arm64: dts: marvell: armada-7040-mochabin: Fix is31fl3199 shutdown
+    GPIO polarity
+
+ .../devicetree/bindings/leds/issi,is31fl319x.yaml     |  9 +++++++--
+ .../boot/dts/qcom/qcom-msm8974pro-oneplus-bacon.dts   |  2 +-
+ arch/arm64/boot/dts/marvell/armada-7040-mochabin.dts  |  2 +-
+ arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts  |  2 +-
+ drivers/gpio/gpiolib-of.c                             | 10 ++++++++++
+ drivers/leds/leds-is31fl319x.c                        | 11 ++++-------
+ 6 files changed, 24 insertions(+), 12 deletions(-)
+
+-- 
+2.54.0
+
 
