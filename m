@@ -1,121 +1,164 @@
-Return-Path: <linux-gpio+bounces-37484-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37485-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IJuyN2yfFGoLPAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37484-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 21:13:48 +0200
+	id 2IauAXzBFGrkPwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37485-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 23:39:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49F145CDF8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 21:13:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 677D85CEE6B
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 23:39:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5CA2D3010B8A
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 19:13:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 96B57300DDD8
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2026 21:39:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7384E388E62;
-	Mon, 25 May 2026 19:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B12A836215F;
+	Mon, 25 May 2026 21:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RC3leRm2"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="qDrIXuT7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522DB290DBB;
-	Mon, 25 May 2026 19:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FB793368B8;
+	Mon, 25 May 2026 21:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779736423; cv=none; b=qQGDvluakxJ4cmfT7Pm5Tk2BMfRb1Q4/UTe//sIJietTV7vjOWrT3xj8Gzbg6dQc7R83vaULVHLyX4fSX8wwycY2AVsg+zDAfoKlRFDcd29fk/twEbAwsbQyrQU5TBXdnPB1XQBf4qQLVLUILH+Rpb647nSpiHWmj0UWINUp0bg=
+	t=1779745143; cv=none; b=akID7AeG4HkyaGzI3sqSd2nAO3M8N/JfZ4m/N65KbURtZ6P4mmBfzCOFPq8XqQQyQukPcQQWrtnwluuDvwpb6KH9lWi43S8kWQD24d4skul38O7npdzJ/yNfnOq7h8K7thbPQFxr7wx+Vi0a11uMur7e3NVNTVTxAgDNW6U9NRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779736423; c=relaxed/simple;
-	bh=Nb//zmvaiULAOj+JTmDD3mOwurSeBpbF7LlUDMDxTvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/GgMtp3YaeyLr+krUCBweOpiOWVX2ieDdf0FUN/OMDuHVREd1SVAqdCuZ7dNSEPq4OQU6t8AqxJT7TmbGnuyI5igOIpaYuqUu/yZo1feWK36+RqBAGIm4gLZ0w7jAtLjEoSDBrmOk+eErEr4qTWzdcN6AEnSb465rf0kH1cYZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RC3leRm2; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84481F000E9;
-	Mon, 25 May 2026 19:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1779736422;
-	bh=HLZq2vt2meYiHOLEktlUSaZkqA50JlxcEcB4xiULLZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RC3leRm2W0E9mLmKcdKEhffmzz97Kf/VGwIKmLVBiFWtT8wNql61jzjkNintnZTPj
-	 Y7LmkxQLNo21PQkU/h91hjEWSBk+2DOOnjoL4M/vzr28wMXp2PvqqCTVQuIZAMqEyO
-	 UZQD9tn+c5A/0vtGYyB1H6xc+4pcFKMsc8AtdeWQ=
-Date: Mon, 25 May 2026 21:12:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: =?utf-8?B?5ZGo5a+F?= <zain_zhou@realsil.com.cn>
-Cc: "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	"linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-	"Frank.Li@nxp.com" <Frank.Li@nxp.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linusw@kernel.org" <linusw@kernel.org>,
-	"brgl@kernel.org" <brgl@kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	=?utf-8?B?546L54Kc?= <wei_wang@realsil.com.cn>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQw==?= =?utf-8?Q?H?= 2/2] staging:
- i3c: add Realtek RTS490x I3C HUB driver
-Message-ID: <2026052533-flattop-carat-c489@gregkh>
-References: <20260430121354.6253-1-zain_zhou@realsil.com.cn>
- <20260430121354.6253-2-zain_zhou@realsil.com.cn>
- <2026050412-bush-rosy-959d@gregkh>
- <1a79b9c3c6c64e5ba65292efa2f0472f@realsil.com.cn>
+	s=arc-20240116; t=1779745143; c=relaxed/simple;
+	bh=xmlZyiLM/KlQv4wu5tJkU7v4YAEMiImxkEyCCggM9jI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rySBfbXT53gF/1jWXbG4QlCLmZUtNgQFORDXffQ1572iB8vSjIRoovu9EsxVtPDRxlG843kAmF19fKE4gvAhJZ3X9436vPEwTrysCecswTAuSXsEvxdxXsZa0nPSmrdpVq6aAchjqLwlEyYqBrV6UpnTXVZ8Gu+SvK4wUPy6kAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=qDrIXuT7; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB9381758;
+	Mon, 25 May 2026 14:38:55 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E5543F632;
+	Mon, 25 May 2026 14:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1779745141; bh=xmlZyiLM/KlQv4wu5tJkU7v4YAEMiImxkEyCCggM9jI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qDrIXuT7h1R7aairMJhZ7AQ0aqjUW0JeR/oLswk+6MuIyQ0ENo5fU5+xxmKG4GNK+
+	 1XfDeUNR8nvkGPUkAXwd1wJUo/qll0+G1OxatpuagZ8zXYJSfE9DpXtJDYEHSYzcPY
+	 l0hLvnPjkDXel5XMUq6GUShsHS8aknfU1Bli+Nhw=
+Date: Mon, 25 May 2026 23:38:08 +0200
+From: Andre Przywara <andre.przywara@arm.com>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, Linus Walleij
+ <linusw@kernel.org>, Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH] pinctrl: sunxi: Implement function_is_gpio
+Message-ID: <20260525233808.20e75a21@ryzen.lan>
+In-Reply-To: <20260517171405.3697469-1-paulk@sys-base.io>
+References: <20260517171405.3697469-1-paulk@sys-base.io>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1a79b9c3c6c64e5ba65292efa2f0472f@realsil.com.cn>
-X-Spamd-Result: default: False [3.84 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
-	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37484-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,kernel.org,gmail.com,sholland.org];
+	TAGGED_FROM(0.00)[bounces-37485-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linuxfoundation.org:+];
-	NEURAL_HAM(-0.00)[-0.846];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[arm.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linuxfoundation.org:dkim]
-X-Rspamd-Queue-Id: 49F145CDF8B
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ryzen.lan:mid,arm.com:dkim]
+X-Rspamd-Queue-Id: 677D85CEE6B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 25, 2026 at 12:58:33PM +0000, 周寅 wrote:
-> Thank you for the review.
+On Sun, 17 May 2026 19:14:05 +0200
+Paul Kocialkowski <paulk@sys-base.io> wrote:
+
+Hi Paul,
+
+> The function_is_gpio pinmux op allows the core to find out whether a
+> GPIO can be safely requested from a pinctrl property and requested as a
+> GPIO at the same time.
 > 
-> We noticed that the NXP P3H2x4x series (v10) introduces a generic
-> I3C hub framework. Would you recommend waiting for that to land
-> before resubmitting to the proper location?
+> This is especially useful to request a GPIO with a particular drive
+> strength, which would otherwise not be possible.
 
-I have no context, and do not know, why not ask the i3c maintainer?
+That looks a easy enough solution, but:
 
-greg k-h
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index d3042e0c9712..6162f2d86723 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -821,6 +821,17 @@ static int sunxi_pmx_get_func_groups(struct pinctrl_dev *pctldev,
+>  	return 0;
+>  }
+>  
+> +static bool sunxi_pmx_function_is_gpio(struct pinctrl_dev *pctldev,
+> +				       unsigned function)
+> +{
+> +	struct sunxi_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	if (!strncmp(pctl->functions[function].name, "gpio", 4))
+
+I wonder if this condition is a bit too relaxed? There could be
+some (theoretical) function just starting with gpio, but not being mux
+0 or 1. So should we check for gpio_in or gpio_out, explicitly? Or at
+least use (strcmp(name, "gpio_", 5)? Or maybe even better for the mux
+value directly? Is "function" an indicator of this, or does this rely
+on the two GPIO functions being always listed first, at least so far?
+
+And what about the IRQ function? Isn't that some GPIO as well, or does
+that not count for the purpose of the function_is_gpio() callback?
+
+Cheers,
+Andre
+
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static void sunxi_pmx_set(struct pinctrl_dev *pctldev,
+>  				 unsigned pin,
+>  				 u8 config)
+> @@ -952,6 +963,7 @@ static const struct pinmux_ops sunxi_pmx_ops = {
+>  	.get_functions_count	= sunxi_pmx_get_funcs_cnt,
+>  	.get_function_name	= sunxi_pmx_get_func_name,
+>  	.get_function_groups	= sunxi_pmx_get_func_groups,
+> +	.function_is_gpio	= sunxi_pmx_function_is_gpio,
+>  	.set_mux		= sunxi_pmx_set_mux,
+>  	.gpio_set_direction	= sunxi_pmx_gpio_set_direction,
+>  	.request		= sunxi_pmx_request,
+
 
