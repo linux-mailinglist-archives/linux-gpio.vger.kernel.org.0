@@ -1,243 +1,192 @@
-Return-Path: <linux-gpio+bounces-37533-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37534-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oDAgGXOJFWqGWQcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37533-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 13:52:19 +0200
+	id 4NiDHTmNFWrUWQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37534-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:08:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 328505D52C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 13:52:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA6145D54E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:08:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6B5B2300FAA6
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 11:52:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B7D40307512B
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931953E8339;
-	Tue, 26 May 2026 11:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2463F5BD0;
+	Tue, 26 May 2026 12:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vbmz1ItG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pHwwspWc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20A13F65F9
-	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 11:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779796331; cv=pass; b=EMqOY77E7YacGoUDfPmlhVlm8Uc0msn8oHrRkvhcYUU/Xv9rsUtcSV7GnWV8bmZ7rLfK/zsZLE8kbjqXqmQNjF41KeDshgDuU4NnEm3leTi5J3avxxNI3vNYeG94zDwM8BOpkYLKeJKqUyB7BWWbp0jfmVJnDWzujPW6VmPeZ38=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779796331; c=relaxed/simple;
-	bh=6xhj1lqt2b2bNz2Qilzwv7dO8Gqe41oYd3knA5L4Klw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JD4a2H35rWN141f4aJZ6xQepbUtUbn9GArRB5MuX6ulPTqwj3Vfv89kZs+3N6TKkcS4LEsrN3wEt/Bk2We7FSnAW8rW+iKOWTNoT/Pvbay8nah3r/hUGO8q9p3f4P86Rt6Wh+fQtfW1QfBWBgE/oEVG6fMW5QRgVDdWillAzu8I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vbmz1ItG; arc=pass smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-13621cca8f5so8954603c88.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 04:52:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779796318; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LeOqcfE0S4SD7+us/FujEkmQgMLigAu9Ph9an5cuI9WIgdFHu4pLYSFBcJaW8l7s2W
-         hGq2i7ciS2mPPVxg8YLpu7WEy+c7FhR+FuRKMYfRoTwDjcBnbUwxfubeueuehtPPEb1o
-         QCJQaWTl7z/VssWnh8doXRTWDa3fOq/buBNYBYlfdH9vAfeMpIQ/jdgVs4zSZDifw3Fq
-         eQke9u9WJYtEFIcGLcdUIaGhFIOwuMoFtGDJ3rrvf5LfuedCBouUSUdsz3VxS22CFD7g
-         i4x0obKcYZvsMe9G7KyJPa+VdXQN7uzj26eKlRKN8rbeGyQuT5gTPlA4lpAHaW/Innz8
-         Rufw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=+uih+gic5K0dMmIxHvxizREphLsC9XHTiJnGqe/y/Fs=;
-        fh=a8Eb0aFr+S5j5eneeLzMP2L1yAfzfHAJfQ4TrRM0fU8=;
-        b=jpdTD8AmxPwmBm+9yHDr4JmYZ3IR0ZHlZG8A7XEvBcBlWRYSEz819BU0H7RunKqo1S
-         P2927Pd56x08UpUggvwA//TySHLzqN3VlX+cLFwTykMpbzlwVdpRmcSr7Ig8SWz6wd4C
-         4n1VFmdgG7Dk3sKeayThQ9HNyLlhIXG7yiWkJXZT7f4oT/7Hl9PUAWBGDZA+BhsWzOb0
-         YFOZCEKf1wXMb5wdsL1qjoI2ii1Fhq2R+mn9ehnKXeG/cqwQ3v299B2yUZ/MxCalahqS
-         PTLdJtatti52MiX0RCQG7Lunw0/8fRFzS/uljf1qs+GfzhUxrhtJJ47hJ4IBGVfuKaD4
-         5AWg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE22DECBA
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 12:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779796812; cv=none; b=PS781q17/vKnNqzs2tHhzQ21a1hPkEEUzfu6TeiYBNQZbSkO2FwSxrzB0nXT8Kg8Ef0ldeWum8Js5cGgrLuoQ2eJtP7DzAaARjg0Uq9UZYXjvnTpdhI99MuSHdh+e00/nup04gtChbqIyWHjT1jZ9aIZAvBkFj8YQ/dIpw/WEIc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779796812; c=relaxed/simple;
+	bh=hTZYyqvqtGqppwXg4HP3xZpz+TZopttkYVxm+x/q8Jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g7Vj3tufJ9/Bq9NVE90s0O095PuHnk26gs9KwG54NyjYTuqXawYboUIFJa0AJKTfn83/aJ0WyFkSvo7n4b2ykfO1cUyE+uc3pYNgqIbCuMwH2RdPdtSIniKVycbWYHguB6NYaAzVG2KjV3PtqJcFd6jxU9bN/0xicWDVcw6rDCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pHwwspWc; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bd9a71b565aso1199792166b.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 05:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779796318; x=1780401118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+uih+gic5K0dMmIxHvxizREphLsC9XHTiJnGqe/y/Fs=;
-        b=Vbmz1ItGbrA2mN1IjqRYKzUxSxuPTy4V7R5YoMwXOmgIOWArVSNDU5t3EfkEn3O+PF
-         4ELh0WujZShdHJm69E0h4BMrXhC+O9lIj9WsjFiU6+/NFEwrZqpVb4m4BOCiCsMsyU/D
-         JyYhSupGXiw5OKkW5+ZtVKSXXB8C3StOD5h79/ahHkGm8mesHX5Wuv9UrKeDWuS/CGKc
-         X/Sbz6+BeYlOoaM1eATdLGU3Yq399wWNKc5lB2IEum3qdO9cnBc+SEd6D8coQEUIBUrW
-         NFN7Ynjtb0Q+zOiFtJYssEk8WTf7vaIF6Wgq6WmmwTO0lgeGumHELmvDRvyFWDva5nA3
-         xVQA==
+        d=linaro.org; s=google; t=1779796805; x=1780401605; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CoKLuje7HUGv4pGCvIBQiUOeF+gz3p4jM4FxO+bIdX0=;
+        b=pHwwspWcu5HViVH9PrTg3VZGKAXTnNGteSs54531z1yqAvoQ9iBT7CEw4t9D0baKUH
+         byMt2zeqQnIntjhhwu20JIzFZbDq9LEAweNjSM/QJ+ooJMiyVZM+4a1VFYcCW3lUrfkm
+         e+pPq1JQ46/j0lw0YAKPCxdvoLZFK2ixC8DBCGhSSXq5YXwYfElqzUSc/uNEZQpzVYeQ
+         wpTxmiHgcLyVfyrHBh4ID7utw8G10oFWuFzl3TYMXdPnb8nSgtmebQ+/E1R9DXQ+hpO8
+         JiaYJ2R/MmMxrJlu5caCZgP1L7gh2ei9wZmnkuPZZMArcD2gYwFM+3qbAj6//UKppe7/
+         Askg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779796318; x=1780401118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+uih+gic5K0dMmIxHvxizREphLsC9XHTiJnGqe/y/Fs=;
-        b=FqnT2sk9uPyG0LfU/JIwRJYkzlc5xAATAO5I1/HE6hnda1G0d3cpOtlkn3Wocr1Eku
-         5ykXtiugATW6F4c0D7xScWYZwqAlHvfehI2/ofTQE72Ro5yQlshlxeMaXD6h+MzNzvoI
-         bt9v6BtTyGnPaj0DTmQh5AXsejqxE6fme0l+FG0JFMTEbIHVwgF3A9KiaWnaUwLBl9rx
-         bHBGJDDkmkxNRryg32VGtvuSiE7Kizsw/fqo8DHrwbGFRDXHj7/E09uE7hKvz5//RAo3
-         1gAsCQJaaTPuZCLWpPG3RE6GP8KZy6ir3dZBHokuxAtLdUWBN0rQpq5uoC1umOVLkGHG
-         ZCLw==
-X-Gm-Message-State: AOJu0YzTpLLdcjnNv5oWEVwdvrUy6zmHGUPXEyeBE1h/d+3NPU+LUC5S
-	qqqLgR1YvihTbqMHw4p2EwKHryCdChofQMx74JLlvq9Lsaj0SHP/Q8wgHj++QwoQo/PsJGQ7PW6
-	fzLF66PHGkGHBkybDWr0IMnD8FrAZ0eg=
-X-Gm-Gg: Acq92OGXGoDHln2Exfw6q2x7orfV8jYtEdm1jWpX9nTHIVMAkiYVnftrMk7RlEI/4JW
-	/KhxBVLamSa8FGlob6DbezPWVDLl46WwooXBR/O5Xe4laQnlODVBlE7/Wg7vy0uICZsXDWbi4H+
-	SB5qvWlQxqlTodiufSj6M7EnIrygozsJPtps2RUCG7QGo6FgeBL5sgxIEKf2NV26nt44sTWJyPR
-	woRAr+0ZtBGuqjsh2rakLhSHbrISuCu32N90O8NY4cF2PwbosOZOtSmZR51PxzHuoYMzuNSyfMd
-	Qom3
-X-Received: by 2002:a05:7022:60d:b0:130:ab68:2b6f with SMTP id
- a92af1059eb24-1365f812d70mr6745733c88.9.1779796317642; Tue, 26 May 2026
- 04:51:57 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1779796805; x=1780401605;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CoKLuje7HUGv4pGCvIBQiUOeF+gz3p4jM4FxO+bIdX0=;
+        b=IkKaAlT3H0d1fvsCDghf8fIsBezjAAMWT3pQ6J4WbFr0FQjueiMmMxDk2JSA6MLdAf
+         tgFrLtL3aJNtZNc75hwPiOsGI+J5yzK1Y4tQT31wSEm2oNbjhOLLqX3ptpo3Gn6PF0rY
+         /sNCLZQNvm39DQpDKURBrX42UtAvovTxs5z7NN/g2zBgnY9e1PUnvWByngGNv4vMGpOb
+         HvtZzpEIrL6aTGWZHyRUsYyBjSM3GOSQJ7ztQsECQy05DvRcgLcVmqtFxYv4X5a01NRf
+         JNslwdanFAvSbkclSLksL49BxTd8fmyDavQEPngj9OsptPWts+S22xck2JWxEq4O7Yfg
+         RzjA==
+X-Forwarded-Encrypted: i=1; AFNElJ+3ojUmI58piAg32E+X35e5nAUOcVDr2yQ54a9/M8TIPTEuhv9+QX+G+J6/HnPwtqBB/iUktSkE/WEt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEgrHpxeR2VyKAX9rNO/F6OdEF3NAmNKfI+RR4oRnnjW6Dwku0
+	yy/caurAP3p+zxPU/CJl6A/kpJfPwcCZxQdXSbVxyRUMl2Fzauo3eM+UkZjdy/iHJn0BCII3Ky2
+	MRIs8
+X-Gm-Gg: Acq92OE6/67HcK5AoW0Hov4EddrIo2jTuhxb3q3OqxDyw2Nbc2zxzB8C19GOaCFpugF
+	nHYYkRQX1lnZbN1ozkfaZg/l4HqW5btP9+42Wuv0R03/6g8WoM0q0gfHJ2Jr1JZZR1+nJk9KDcc
+	B9jpjvN/GjujIC/rwiqbYMJHGL0LElealyYkKiWVjsuWht3lnXspZoM4jiykBHDNUIC79V5lLap
+	ePQVepkFz2gqpyh/TnutXPpzkhMdSSkyneK2uUDF7Vm7W6QQQqa9Mx0Lkj89tqQkX8IheqCkrE9
+	7JcYA18ZSFcrJhPZwkOrWDkVmn23fFr56oSGCVCwUtrdXKzXXy10fdbnKRHETkW0KHK85llfmOc
+	G/nZMurfHFoFxG9w2nVEp7RRGgxyt72tX3wjL3lnLI43JL+bltUg3cL0OMO/j6RHcdfhRlnItaO
+	ojlHH7eqQHX/DZxSi4Ux6CANWNTYai
+X-Received: by 2002:a17:907:a80c:b0:bd5:ec9:e063 with SMTP id a640c23a62f3a-bdd267cae6cmr1071905766b.49.1779796804514;
+        Tue, 26 May 2026 05:00:04 -0700 (PDT)
+Received: from linaro.org ([77.64.147.108])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc61de4c4sm497740166b.42.2026.05.26.05.00.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2026 05:00:04 -0700 (PDT)
+Date: Tue, 26 May 2026 13:59:59 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/8] x1e80100: Enable PDC wake GPIOs and deepest idle
+ state
+Message-ID: <ahWLPy8vg_neYgrX@linaro.org>
+References: <20260526-hamoa_pdc-v2-0-f6857af1ce91@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMhs-H-dHfQeMxmQYOpVS-tnj++nX5_mNKcu1xot3SQETyh4Xg@mail.gmail.com>
- <20260522072904.2028774-1-sergio.paracuellos@gmail.com> <CAMRc=Mejrj2NedWx7JQvg2rkH4ubWfDMxRdQhAZ5US7p5Ly-ow@mail.gmail.com>
-In-Reply-To: <CAMRc=Mejrj2NedWx7JQvg2rkH4ubWfDMxRdQhAZ5US7p5Ly-ow@mail.gmail.com>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Tue, 26 May 2026 13:51:45 +0200
-X-Gm-Features: AVHnY4LTFCrgQt1AyXLYYSyH6KkUR_RdgHHniqYHODyVx5e9PfVwf-QEG85nCMI
-Message-ID: <CAMhs-H90akt3HsR9P3XKwfA65F4caeY1=SZ+7W44iLMmQfW2Mw@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: mt7621: fix interrupt banks mapping on gpio chips
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linusw@kernel.org, tglx@kernel.org, 
-	grant.likely@secretlab.ca, anna-maria@linutronix.de, vicencb@gmail.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260526-hamoa_pdc-v2-0-f6857af1ce91@oss.qualcomm.com>
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,secretlab.ca,linutronix.de,gmail.com];
-	TAGGED_FROM(0.00)[bounces-37533-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2600:3c09:e001:a7::12fc:5321:from];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37534-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[100.90.174.1:received,74.125.82.53:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com]
-X-Rspamd-Queue-Id: 328505D52C7
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[stephan.gerhold@linaro.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: DA6145D54E5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Bartosz,
+On Tue, May 26, 2026 at 04:24:36PM +0530, Maulik Shah wrote:
+> There are two modes PDC irqchip can work in
+>         - pass through mode
+>         - secondary controller mode
+> 
+> Secondary mode is supported depending on SoC using PDC HW Version v3.0
+> or higher.
+> 
+> +------------------------------------------------------------------------+
+> | SoC             |  SM8350, SM8450  | SM8550, Hamoa   | SM8650, SM8750  |
+> |----------------------------------------------------------- ------------|
+> | Version         |        v2.7      |       v3.0        |       v3.2    |
+> |------------------------------------------------------------------------|
+> | Pass through    |        Yes       |       Yes         |       Yes     |
+> |------------------------------------------------------------------------|
+> | Secondary       |        No        |       Yes         |       Yes     |
+> +------------------------------------------------------------------------+
+> 
+> All PDC irqchip supports pass through mode in which both Direct SPIs and
+> GPIO IRQs (as SPIs) are sent to GIC without latching at PDC, PDC only does
+> inversion when needed for falling edge to rising edge or level low to level
+> high, as the GIC do not support falling edge/level low interrupts.
+> 
+> Newer PDCs (v3.0 onwards) also support additional secondary controller mode
+> where PDC latches GPIO IRQs and sends to GIC as level type IRQ. Direct SPIs
+> still works same as pass through mode without latching at PDC even in
+> secondary controller mode.
+> 
+> All the SoCs defaulted to pass through mode with the exception of some x1e.
+> 
+> x1e PDC may be set to secondary controller mode for builds on CRD boards
+> whereas it may be set to pass through mode for IoT-EVK boards. The mode
+> configuration is done in firmware and initially shipped windows firmware
+> did not have SCM interface to read or modify the PDC configuration.
+> Later only write access is opened up for non secure world.
+> 
+> Using the write access available add changes to modify the PDC mode to
+> pass through mode via SCM write. When the write fails (on older firmware)
+> assume to work in secondary mode.
+> 
+> As the deepest idle state as the PDC can now wake up SoC from GPIOs and
+> revert commit 602cb14e310a ("pinctrl: qcom: x1e80100: Bypass PDC wakeup
+> parent for now").
+> 
+> The series has been tested on x1e80100 CRD with both old and new firmware
+> and also on kaanapali.
+> 
 
-On Tue, May 26, 2026 at 1:38=E2=80=AFPM Bartosz Golaszewski <brgl@kernel.or=
-g> wrote:
->
-> On Fri, May 22, 2026 at 9:29=E2=80=AFAM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> >
-> > Regarding the issue reported by Vicente[0], we have been trying differe=
-nt
-> > things and we are still having issues to make this work. I have noticed
-> > that the gpio-brcmstb is similar to our use case sharing one interrupt
-> > for all the banks and also using gpio chips instances with 32 pins each=
-.
-> > That said, I tried to setup mt7621 driver in the same way as you can se=
-e
-> > on the following proposed code. With these changes, we are able to make
-> > properly working the previous problem with the touchscreen that was
-> > registered on bank 2 instead of bank 0. Now it is properly registered
-> > on bank 0 and interrupts works perfect and the device is properly
-> > working. However, every single gpio-keys fail to claim the IRQ HW as
-> > follows:
-> >
-> > mt7621_gpio 10000600.gpio: Mapping irq 41 for gpio line 38 (bank 1)
-> > gpio gpiochip1: (10000600.gpio-bank1): unable to lock HW IRQ 38 for IRQ
->
-> At which line in gpiolib.c does this fail exactly?
+Tested how?
 
-This was failing because of using a linear domain with 96 pins in
-total but having three gpio chip instances with
-32 pins each so it looks gpiolib found hwirq number out of range 0-32
-for the chip and refused to mark the pin as IRQ capable.
-If I get rid of GPIOCHIP_IRQ_RESOURCE_HELPERS and add my owns
-converting irq into the proper pin within the chip
-as follows, gpio-keys are properly registered and also properly working:
-
-static int
-mt7621_gpio_irq_reqres(struct irq_data *d)
-{
-struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-struct mtk_gc *rg =3D gpiochip_get_data(gc);
-unsigned int irq =3D mt7621_gpio_hwirq_to_offset(d->hwirq, rg);
-
-return gpiochip_reqres_irq(gc, irq);
-}
-
-static void
-mt7621_gpio_irq_relres(struct irq_data *d)
-{
-struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-struct mtk_gc *rg =3D gpiochip_get_data(gc);
-unsigned int irq =3D mt7621_gpio_hwirq_to_offset(d->hwirq, rg);
-
-gpiochip_relres_irq(gc, irq);
-}
-
-We are still testing but I will send a proper working patch for you to
-review and comment during this week.
+I recommend testing with the tlmm-test module Bjorn added, in all
+supported configurations, to make sure you don't introduce regressions
+for one of them. It would be also good to provide the test results here
+in the cover letter.
 
 Thanks,
-    Sergio Paracuellos
-
->
-
-> > genirq: Failed to request resources for S3 (irq 41) on irqchip mt7621-g=
-pio
-> > gpio-keys keys: error -EINVAL: request_irq(41) gpio_keys_gpio_isr 0x0 S=
-3
-> > gpio-keys keys: Unable to claim irq 41; error -22
-> > gpio-keys keys: probe with driver gpio-keys failed with error -22
-> >
-> > So IIUC the kernel is saying that the gpio chip is not IRQ-capable some=
-how.
-> >
-> > Once I touch the irq field just setting up the irq_chip_ops on gpio chi=
-p to bypass
-> > this issue:
-> >
-> > gpio_irq_chip_set_chip(&rg->chip.gc.irq, &mt7621_irq_chip);
-> >
-> > the kernel stops calling our custom to_irq callback and calls gpiochip_=
-to_irq
-> > callback instead and also warning as follows:
-> >
-> > gpio gpiochip0: (10000600.gpio-bank0): to_irq is redefined in
-> > gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-> > gpio gpiochip1: (10000600.gpio-bank1): to_irq is redefined in
-> > gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-> > gpio gpiochip2: (10000600.gpio-bank2): to_irq is redefined in
-> > gpiochip_irqchip_add_allocated_domain and you shouldn't rely on it
-> >
->
-> Are you calling gpiochip_add_irqchip() in your changes?
->
-> Bart
+Stephan
 
