@@ -1,142 +1,161 @@
-Return-Path: <linux-gpio+bounces-37513-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37514-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELXcCGZvFWojVAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37513-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:01:10 +0200
+	id KMSmDRFyFWpbVAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37514-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:12:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38C5B5D3DB3
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:01:07 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0B685D3FC2
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:12:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 16805302B804
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 10:00:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7FB4301DAD5
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 10:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3693DB64E;
-	Tue, 26 May 2026 10:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA453DA7D6;
+	Tue, 26 May 2026 10:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SGLXMpP6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GviGtrXf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C05B3DB651
-	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779789618; cv=none; b=Vw/EPKAApnCaV8wcNCz+y7O8mpikYuyilfHdHwp7M+ZwjTmjqUielD1R1x8jYIrSZeCJuB6cbU1Fb2jcAutqosUCKgq8tnhR318HjBOLHdLpGG4CO0O+vu+XNm29++lBukQXp6shaTO+fFO8jDm8b2rsmYcvQpS5Av0nOOSFj4A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779789618; c=relaxed/simple;
-	bh=53oS0HoMXN71cfEfBWsGmGMf1p53/OTWbjv/KCX5QcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poG9ME9vnerwHIURXVi4LYE/spk0aHiJCDXHHfnVLJwHtSdNw0hIl2G3QECUDMeFqXPj8+IWbIYsBqDF3d85jke5QweS6m1ldR/wThjMWfMroq2an1YAqxvqq1Uu5Af/XVuQCusZm3QrYuZdSZlkh04ZWKr/K+dqiX7L/zqZ3pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SGLXMpP6; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=53oS
-	0HoMXN71cfEfBWsGmGMf1p53/OTWbjv/KCX5QcQ=; b=SGLXMpP67cpswj0Znz4R
-	3n7p+lKq+Ly/+iIVPYZ7O8tQXObxJPkr2GRW9elaKR/TIaxYxsmXFiE+MjKI3BdD
-	aEdb/hYccMuzuMwL9PJZiSnT62UYcpkDmYV+3cVNdVK2EfMwRO09WEGoaKnbG1Mi
-	iKFAgljnP+gEhsQ0ATQqk3BJ+XatZKAEDjtwMRzSujYmUAphOG1lPZ4wS23lqpZi
-	FzwaD7k8TK81Ml4a+X9KUrLXVKKbYwOB4paTQWD0/W59/itoYZ8t3jHUV0Fh6K4O
-	vVLouNMFmhGvlqJUqep9uKm8W2GVcARJFLPWJdm/r+os6XezWPMWlk1W54BQSqFw
-	xg==
-Received: (qmail 223124 invoked from network); 26 May 2026 12:00:07 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 May 2026 12:00:07 +0200
-X-UD-Smtp-Session: l3s3148p1@7otHj7VSDXVtKXCf
-Date: Tue, 26 May 2026 12:00:06 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Claudiu Beznea <claudiu.beznea@kernel.org>
-Cc: geert+renesas@glider.be, linusw@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
-	claudiu.beznea@tuxon.dev, linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH 9/9] arm64: dts: renesas: rzg3s-smarc-som: Enable I3C
-Message-ID: <ahVvJmsUuhINA58Y@shikoro>
-References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
- <20260522102251.1723392-10-claudiu.beznea@kernel.org>
- <ahBMKWrKQDko3cG8@shikoro>
- <fb892151-33e5-4bb2-9a01-9abebe0f3b39@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8277B3D9DAB
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 10:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779789972; cv=pass; b=Z1WcSP/th2cps/5DUWMN+OZ/fwYR71bGFZdSmME+4J7ZwrEOha/zCBZa8N98CcpXz4k5n65aB309iApPhcFqcJUv179fFAuYsUinea7F2AIdr8xH6E9rNfQHBXxJV9TOs7mK5+9TajzqEcf5aEfUljDNBcgg+spk8ewwTJDoUUA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779789972; c=relaxed/simple;
+	bh=LzC78n/1cSkKY2MkbnFZtdzczAtKa4M13Zh07S4fs9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=of7rszicSQJWZbdLBoVxOj9UO/34WnlkXj0/7Ngnvi7nVM4ZQ0C1ybDiuii5so9g/ULWO5z8eHZ2dzPqoXCEx4Pf55EK3ZmyGCr//1dHLta3izbuREc8uTvypbSNOrmQ20tckqtju3k7npt/lZ+HDqGP4ZwVq2VGAxLXW8u8HOE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GviGtrXf; arc=pass smtp.client-ip=74.125.224.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-65eb1b25c77so4976817d50.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 03:06:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779789970; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Hws7Yq7hqB7LEyVLpZsHqS28dknGjvvHlKFgXlSmrvH6xVzu619S65T/OvMrWQUYnO
+         eOfaxHtHReftJVEQ4fOVc6vzWPuYHiEbhOHtONJymypGkDKxu8IMmnHiRPIptH2JZkN6
+         rulZXrv+JNZbcV8vGAa+5EgQ4HuD4Orl4VK37uF4TDwf/sQDsYTxsSMuDbtF8KiY7/3p
+         VrNnZedrbsJD0bwOgHozYJTG0FCJ1jdwJ5stniO6feWIMtLg3tuNsi/THR/8BiynriU8
+         ST+ZHGrZf1JWwqLB23qerJgxQIIqpfDyBh8ceglTHpcQ7jaruMPtA6NudMfCjn2VAc4F
+         M9vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=LzC78n/1cSkKY2MkbnFZtdzczAtKa4M13Zh07S4fs9I=;
+        fh=o51YPPJueUtxv7MO8+bdFgyZgN2SSnWXchDIygNgDZ4=;
+        b=alNkdths2mSa2WYdtiZa8FSFnBbVov5PA4tZ6QRaPMrzUeKnfC2FtAJdufZytdM+XN
+         RK4LUv/PAziEr3QZFfVfE06JNDPLdADifbYDirqq6zRHmmlSPouSSpY5vFEkGEbJjQii
+         q3nVs5V/yN5u4P6oKjapTld8g1w15rCkSfOu1vZrHnWnlQQAU1f906p0PSJFcYk4/nuW
+         XiMKpyjVwrMFzwjH5NuawtJsWrjcr2yWNTd0KzfQy1Vy725+mAhviekvg3P7PJiLYjy/
+         Y+e+F8IQo4F/xEqFQ2uueFGmsDRnh+N5AW9vTP9A33fEj8Rb2bzz902hci6KiGqki5+Z
+         3zMg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779789970; x=1780394770; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LzC78n/1cSkKY2MkbnFZtdzczAtKa4M13Zh07S4fs9I=;
+        b=GviGtrXfvT92u/zxcXo9AEpbMCghGOWpWelI8m1Q38JNgID7Xv74MdWp7ZycmrPvB2
+         +2rZFQrMIKmb269qm7Nv+qn71OmYo41zBux8y+AAiRCTbfyxBM7EiBI1mC3SCJ51xvzZ
+         hK6N6Qfbqxzgi7ciQwLT7S7Ux0rJ8HQZfiHUHdUhZ62zyBoJucS4sPnXYGyhCzoJG7O3
+         SQCmlFmq2tgCCEhBQEPLEa6BgB9N8I8UibxDbxwtH3b0tn+bRDTA4sN8sfG+SncpSOQ2
+         lOBrNhMXMpqLvpbNi2qEelxjXf3mc+1vpuC8INQq/CRKNcrpnHPuKpu84BCRRB3NtqdZ
+         Tc7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779789970; x=1780394770;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LzC78n/1cSkKY2MkbnFZtdzczAtKa4M13Zh07S4fs9I=;
+        b=fTmoxtUB/SS0LI11D8ceV9IJ8EbAI9TSmf4vSinBRngaDDf9aPNU95ofM1LARFOQGg
+         YyUekbeynxduni6261w0g0BMKMaLVrkC+Svd3+H6g667OkdinrapjwmVEEC51OkB/4AU
+         kRFZ/g+Cbi57pU6gOquog/b89zbM5MZjKRa7G8CJ0fRo3L08cC4WloRlyYXztl1ICDc9
+         UjiZ0HZY+FvvCp+3rjfCVbfw34aPiVicDxlS5OnL4Edfi3fkUMDsVEvEeszKiVIm9bCZ
+         PRob3SJcXl8J9/tS/gunyw8+GCulELpMYTgPEjUMGp6W70CXDkWAFbZWe53n+ThVx/4l
+         adGw==
+X-Forwarded-Encrypted: i=1; AFNElJ/qi27xVS5MNIF5NbS+i2yvcxCz1NpsuNrj+vvUspxnex4jviJjB+TOs9+lzmm3yzS5TSgOoXHUNNr2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIx58Y+Utr76Ulm2miYwsYP/gmJLXFJZHHlV9wrRui028GSD3t
+	HqYI0GvbRdJQipDhFkiR4Z8pkt/xeFprAajJfPVSHV2bOZJGHSNYks83knijs8zTUrjTI7OPW58
+	Zvw6bfe4yRwl40vjSeayVxh/RsjGrvPo=
+X-Gm-Gg: Acq92OG7vC480bZjJ0TpAKAuMn6xDWdHyOQ7jiJU/k3RY/46MuvlJLcauBp4MrfBnSj
+	bzam4Oilh4d9O39eaCw08X6qWLK0e3GcvAo24zT79EYaabmXKlXunrv54xddDGSn5L+aIVPbarM
+	7TpeTO95+4MR2GUrRlh1DAklOM3Vsie33Ny/m0kIddZQEBm+oREFgx6j2DkgREdzgthBr8f3nsi
+	Smb3thfMlVH58rdlQXJmBxJ5YHqUNuAJJ0awnmgTvzGHcEo7g4rDWkEOK68zBco7y20GQ/slJdB
+	30WCxHQMhtDVu/lT5owp8heSKuN0SvUgVtaUSc2WAMsOKTczs0ZRLmaMpWUe3AsWq0Y13h7J2eI
+	2WABN+59snmSNHudGdEjbh6sfQG+Xv+H+Tt/zLj9ueAanG3U+3U49VV991qk=
+X-Received: by 2002:a05:690e:154c:10b0:656:7cd:98e4 with SMTP id
+ 956f58d0204a3-65ec96555b3mr13525257d50.16.1779789970393; Tue, 26 May 2026
+ 03:06:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YB4F818Z5KMz1Xnb"
-Content-Disposition: inline
-In-Reply-To: <fb892151-33e5-4bb2-9a01-9abebe0f3b39@kernel.org>
-X-Spamd-Result: default: False [-1.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+References: <20260523174440.9629-1-hardikprakash.official@gmail.com> <CAMRc=McOJ6FoLWYfFGeFgh20CNpFASj0gMtfn0+v25BqNUn5dQ@mail.gmail.com>
+In-Reply-To: <CAMRc=McOJ6FoLWYfFGeFgh20CNpFASj0gMtfn0+v25BqNUn5dQ@mail.gmail.com>
+From: Hardik Prakash <hardikprakash.official@gmail.com>
+Date: Tue, 26 May 2026 15:35:58 +0530
+X-Gm-Features: AVHnY4Ibft4-GqOxKTXkPI0fDR3Kssg7RiKV0mTuOEbmY3NWYUNxobWViGXQV7k
+Message-ID: <CANTFpSXNLLYs526dGgXUGeOY2fuKcpsbGvqiuv0eE=W2305TKA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/1] i2c: designware: defer probe if child GpioInt
+ controllers are not bound
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org, 
+	andriy.shevchenko@intel.com, mario.limonciello@amd.com, 
+	basavaraj.natikar@amd.com, linus.walleij@linaro.org, linusw@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37514-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[sang-engineering.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37513-lists,linux-gpio=lfdr.de,renesas];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[sang-engineering.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[glider.be,kernel.org,gmail.com,tuxon.dev,vger.kernel.org,bp.renesas.com];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 38C5B5D3DB3
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: B0B685D3FC2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Mon, May 26, 2026 at 15:12, Bartosz Golaszewski wrote:
+> What happened to the idea of doing this in subsystem-level GPIO ACPI code?
 
---YB4F818Z5KMz1Xnb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I tested it and reported back on May 20th in this thread -- it didn't
+work. The deferral in acpi_get_gpiod() never triggers for AMDI0010:02
+because i2c-designware does not call acpi_get_gpiod() during its probe.
+The GpioInt resource is on the WACF2200 touchscreen device (TPNL), not
+on the I2C controller itself. So the gpiolib-acpi path is never
+exercised when AMDI0010:02 probes.
 
+The race is between amd_gpio_probe() completing and dw_i2c_plat_probe()
+starting. Nothing in the gpiolib-acpi layer gets called in that window.
 
-> > The driver should
-> > know what to do, or? Am I missing something?
-
-I have it on my agenda. Travelling today. Hope I can squeeze it in.
-
-
---YB4F818Z5KMz1Xnb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmoVbyIACgkQFA3kzBSg
-KbY98A/9FKZ3Q0ih0Em1cDJ1nizb1S+3PfQYwRc8phE+m9uDW41njIjH/Ut9E+4d
-V7fW2pgwNIu0RmQ3jECYUVXyYwLQSumGevAPTxalGx1sHh+ZzO4qo0Mv9XJmE2dl
-YEmWRjPm1toI+/YTRd+ylGrUKKKdnA9NU66Mj9VL1FraVFxf7RMFyX/pwwJAUFW3
-6T4olHIg8mSt0qnEnQmpcdEXwL1E4gLeb5/tVxW5ulEShoiDUF7xoBL600TaHLU8
-ixnEtmMR/iKMc8SLcVwpZWsw3fn5NLYExtmtLmbkYbkF/t7hK3D9uPr8buSBdi9h
-YglkafT37Iu60AgpfyQSuzVu3jWZkvAdjk/hcSKy4YachWnPpL1F2Km52NNFZ/L8
-WkdbuwgjnUnACwZpmlOi3pPN6WAR2s6Jnw2lv2meU873+uuM0dEIOJS3xWM4urIS
-6exkbXqkht6XOgH9DByHYXorFMjww2v6OnUVyE0ijz0CyL7lQvFB6btbxfBrIuGl
-cZMYbGbZKOoOqz8KiIXu6yRaaqZp0jqLhb+lnUXR6BwYvicB52ScStR5+CSw8Dh1
-YETuY7sAsAgU5j4GVIBpdqiIOR+O+bEdarfPb9FzoN6sn7wZqFY1h5WCJSZUIbra
-5EEE9tgHU7a+gx5rTxnaDniu0C31bMLoG6iWEXty6J0LKeR9boM=
-=7Vg5
------END PGP SIGNATURE-----
-
---YB4F818Z5KMz1Xnb--
+Thanks,
+Hardik
 
