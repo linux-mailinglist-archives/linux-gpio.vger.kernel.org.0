@@ -1,158 +1,201 @@
-Return-Path: <linux-gpio+bounces-37489-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37490-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNgdOOxHFWqLUAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37489-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:12:44 +0200
+	id YIVHMqFIFWqLUAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37490-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:15:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE09F5D18B2
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:12:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E2725D1977
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:15:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0CD873008CBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 07:12:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1E517301225D
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 07:14:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CE83BAD9F;
-	Tue, 26 May 2026 07:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96643C7E17;
+	Tue, 26 May 2026 07:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="ExW3m2pT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q2MqKXTC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ultrarisc.com (unknown [218.76.62.146])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CE13A75AC;
-	Tue, 26 May 2026 07:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4720C36DA02
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 07:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779779549; cv=none; b=KTkGaGtFB73Q2dPe9HUyigRM7EBtPa+AQT8VfZeVj1Flkvi/V4IZG5JLlIodyTUwPMp/vsO17gmxzy+6K7ia/QnCEcOpoR63jFql9lRJWEwBFyOCC5k9FKMffENIGciTz7QMXnAG+Xa4Cy0AiygptmMgpjyAToVrxbHohiRGZoQ=
+	t=1779779687; cv=none; b=MqApkbSGz5p1XCc7Aehz1Jz0jsXaqrP6rXhwQyiUFZJ3wRDa4Aa3XzYmICKrKPiwTmdNO107S2ztvjQSGiLjV49xu4H9Onv0X8YvteHIt1YpnGj7soR2tQY5bGys0vBV3zCcJffaxIo8u1cLW2wlJNxZZZqgL7kv6+kJ1AjSNBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779779549; c=relaxed/simple;
-	bh=Kxhh7KR6iwJWM3QD/Mg3E6gH0ENEw3j5HM3LIkiOX8M=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=U4muMWHPYZDaucfP7IFMXu9HZ5hYH8HriB/wtO5lP944uj5/jZceLouctwhfLhdSrODCReQRWVK94i+BH6DXcd2lSg/pa1lm6abLWNAlcIPP4DijdIoa6++4DawJpJCQC6vseZYFFrfbQ47PUs0Rc1Tqwvn6tisWbojcpsLs8Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=pass smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=ExW3m2pT; arc=none smtp.client-ip=218.76.62.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ultrarisc.com
+	s=arc-20240116; t=1779779687; c=relaxed/simple;
+	bh=cjmSgMZBQqtrDKgzXep52C68RW11t7FWOD5rw1BSI/M=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=p8BzEkZkBNBhWu9WZ6xVxYFXunwzUsQ9wJzMa+ZzWkNJUmVXxlQCXgBsrFDtEP5PzQIxUNwuFPiGXdrDO99AkcGmHldGS8lIAmJD80prAY+wbtalzcWFB5cMXtT6dgZSwUFNeRfLS8Ev2JbA/pVkLpWCuxQmakDC+CvZaQlSaxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q2MqKXTC; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-44ce78ab5feso8228450f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 00:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
-	References:Date:Message-Id; bh=xdLV9XCgYqsM5OHnHy0sw5i8Vew1uihlr
-	uMczZDwmYg=; b=ExW3m2pTqQLrnnqiAOLQ7nd6qeE6M0/6cZS8n2SwH18A73SCx
-	xV0UUjkrV4+HKQ/R50qrxcs8t/Z3kerAs9VWGT4S0JJ1KMNt76pZgynWVG2Ou8Lr
-	FvLVNXW/3owW5zRIOfARplQUdiYb5crOWkGHaRusrQnoovFBVegW3hgIGg=
-Received: from [127.0.0.1] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAfwAnEkPrRxVq0gMGAA--.7913S2;
-	Tue, 26 May 2026 15:12:43 +0800 (CST)
+        d=linaro.org; s=google; t=1779779684; x=1780384484; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eCUC1w8o3SPo/dQIjvTcR6pWtcHK4WC6Ve79t1hbi2E=;
+        b=q2MqKXTC71t9DsOh3SdPTtOUnxCBOFaPJoXN0MqguQ76CbZyFiDcDFlF+sEjxLPuKI
+         bjz37aBSeIKrNDboMSETVP/PrImjuw6j6L6TACW27MChbwavpiu/6g5877V3zCDWQkBc
+         hEZikSh5iPmA8FmtVsgaWclWkQ86SfaPD7OVzuJesLuLOlVHgbvGwqesWbCrD2v41IeH
+         ZZ5Y6s2W26j1DmWKEV58oUgBWSbDwc27iqK+weKZlN+xyopvA5EVO98iNDGse5D7Gnk+
+         f+HlrKYNA5MfyBW6RFDeJgtWNB8+qvqsCYslb20wbUiot+BZwfwVqtInShrekJklXtkx
+         DL5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779779684; x=1780384484;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eCUC1w8o3SPo/dQIjvTcR6pWtcHK4WC6Ve79t1hbi2E=;
+        b=JZLWdSLYGKABfs978361k2aVfHIK76l5d9DUoAYzuqaTUZ28qoPYaOCHgKtajmpimX
+         zOPFA7OJ6LKfHqCOYmvIymFnfkwa82ca9feq6CqdlOolObrQz3up+qsgX7WXP1QlcM34
+         ma4edlWRdYCMqkLRzbiNTwsg8yVN056xXi4x0oJbJpgpzGFEw67Y6XWbzMEnSD0mWfw9
+         VqhCF8zUprSzxbGEuzoefcXnCXUZ2GJ+W0Hou/wHlxbG5JmVaeisWWbMCKjhA7GycV8+
+         tr/IZ/K8i4vNp07H5wo++teT+rUfk3Xw06va8i6YgLin0A8Bb7/Q+ZuKIsADs5vsu+YD
+         WZOA==
+X-Gm-Message-State: AOJu0Yx7pogBkElrTZ6ZHSQrzjy15cjMmI4b0pJFZh9hr9Ca1RfJLWEB
+	Mu0jhw+amzFip76JqqVqFEJ4mpMAprebSGDKQEHKuglkdxhEQyBtR1iN7TodO1gvVc8=
+X-Gm-Gg: Acq92OEjuBBlj3iR6LAHhgEHbxJM0tHrdo7M0CGTc+cK3qACYaYo3InlBXit3fqVwKK
+	HFxVERaH96DEMN50zENSSOATaMK5SxPWlnAGda8pIGwX3Ck7Zoqx7ZN5TLuqcbUbMSBmsZUeoK5
+	ncZmz0JVBUi2IsJBjuVtfE2uxZ71GghLrYUBEsIH4Q2LnEd6PuVOc58vmJ6CXPLkaqc+KPbhHS+
+	VqmeEuAQ6Ltm5yOimc78BSQk5sW+Xpbn5WGg04dtSe+cz2XHMsQoiJYZhVJhljH6Hi+d93EUs4I
+	qDVw2eefmDittsDpUiBY4/T2FIoeH5SFydzIzDPKRFn7x1Sk0Dj6eKMnT1oXK6hvggn1E5cSudU
+	mF1opGj+OzSyLww4sciXCX/PCgNG2H+/DmrkBt0Bix2bKyBFjuDGR9VJX8VtkCGzgHlXckgf2Se
+	gCuECslz0FQqo5KhKlG4Ib6rMV+y1Vk7+ayQG7IdM7LQuGfkVn5UeIsFDa6YSmc9EkOLizCUP9C
+	RABjL4=
+X-Received: by 2002:a05:6000:4283:b0:45e:633e:a7cc with SMTP id ffacd0b85a97d-45eb38bade1mr29186012f8f.24.1779779683519;
+        Tue, 26 May 2026 00:14:43 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:aba9:2be3:1465:636a? ([2a01:e0a:106d:1080:aba9:2be3:1465:636a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6cce01asm34146772f8f.11.2026.05.26.00.14.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2026 00:14:43 -0700 (PDT)
+Message-ID: <45081b91-7b49-44f0-998c-af9927deadf0@linaro.org>
+Date: Tue, 26 May 2026 09:14:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] dt-bindings: gpio: meson-axg: Fix whitespace issue
+To: Jun Yan <jerrysteve1101@gmail.com>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20260524154954.385778-1-jerrysteve1101@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20260524154954.385778-1-jerrysteve1101@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/9] dt-bindings: vendor-prefixes: add Rongda
-From: Jia Wang <wangjia@ultrarisc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: wangjia@ultrarisc.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-In-Reply-To: <51dfcffa-1f8f-4a51-afc4-2999748421a7@kernel.org>
-References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-ultrarisc-pinctrl-v1-1-bf559589ea8a@ultrarisc.com>
- <51dfcffa-1f8f-4a51-afc4-2999748421a7@kernel.org>
-Date: Tue, 26 May 2026 15:12:03 +0800
-Message-Id: <177977952368.1243441.14554680726787022592.b4-reply@b4>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779779524; l=686;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=Kxhh7KR6iwJWM3QD/Mg3E6gH0ENEw3j5HM3LIkiOX8M=;
- b=ti5d/XWaly+TePGbcsCTGPdS7xDmz9VMatjcxDzr3AFRI03LMtglkK2UiKuL0YX97CaHPaMxu
- y//z916nWBTAQHrrludAf8B9sIy+WZ6mx5fAakXRmQJ9nwSKCeCZmTw
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-CM-TRANSID:AQAAfwAnEkPrRxVq0gMGAA--.7913S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF47XryUCr4xWw4xWrWrGrg_yoWxArg_ur
-	Z0y3sIva4DXFs3tan3AFs3G345tFsYvryY9348Xwn7C347Ary8uw4kCr4akwn3XF4UW3W2
-	kr4Svayq93W3ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb-AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-	1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAOEWoOgUUACgASsm
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
-	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ultrarisc.com:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37489-lists,linux-gpio=lfdr.de];
-	NEURAL_HAM(-0.00)[-0.998];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_FROM(0.00)[bounces-37490-lists,linux-gpio=lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org,baylibre.com,googlemail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:email,ultrarisc.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: DE09F5D18B2
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linaro.org:replyto,linaro.org:email,linaro.org:mid,linaro.org:dkim];
+	HAS_REPLYTO(0.00)[neil.armstrong@linaro.org];
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[neil.armstrong@linaro.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_EQ_FROM(0.00)[]
+X-Rspamd-Queue-Id: 2E2725D1977
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-05-21 22:51 +0200, Krzysztof Kozlowski wrote:
-> On 15/05/2026 03:17, Jia Wang via B4 Relay wrote:
-> > From: Jia Wang <wangjia@ultrarisc.com>
-> > 
-> > Add Shenzhen Rongda Computer Co., Ltd. to the vendor prefixes.
-> > 
-> > Link: http://www.shenrongda.com/
+On 5/24/26 17:49, Jun Yan wrote:
+> Clean up whitespace misalignment in meson-axg-gpio.h
 > 
-> So your prefix is shenrongda.
->
-
-Thanks for the clarification.
-
-I'll update the vendor prefix to "shenrongda" and adjust the compatible
-accordingly in the next version.
-
-As discussed with Conor, this patchset will retain only the pinctrl binding
-and driver. The DTS and the related bindings will be split out and submitted
-separately. 
-
-> Best regards,
-> Krzysztof
+> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
+> ---
+>   include/dt-bindings/gpio/meson-axg-gpio.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/dt-bindings/gpio/meson-axg-gpio.h b/include/dt-bindings/gpio/meson-axg-gpio.h
+> index 25bb1fffa97a..a0d42bcd9bd3 100644
+> --- a/include/dt-bindings/gpio/meson-axg-gpio.h
+> +++ b/include/dt-bindings/gpio/meson-axg-gpio.h
+> @@ -23,7 +23,7 @@
+>   #define GPIOAO_11	11
+>   #define GPIOAO_12	12
+>   #define GPIOAO_13	13
+> -#define GPIO_TEST_N 14
+> +#define GPIO_TEST_N	14
+>   
+>   /* Second GPIO chip */
+>   #define GPIOZ_0		0
+> @@ -52,7 +52,7 @@
+>   #define BOOT_12		23
+>   #define BOOT_13		24
+>   #define BOOT_14		25
+> -#define GPIOA_0	    26
+> +#define GPIOA_0		26
+>   #define GPIOA_1		27
+>   #define GPIOA_2		28
+>   #define GPIOA_3		29
 
-Best regards,
-Jia Wang
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-
+Thanks,
+Neil
 
