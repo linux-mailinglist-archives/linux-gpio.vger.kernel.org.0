@@ -1,183 +1,189 @@
-Return-Path: <linux-gpio+bounces-37544-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37545-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oN82DTXUFWrRcgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37544-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:11:17 +0200
+	id yN6PFFLcFWpzdQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37545-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:45:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBE0F5DA638
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:11:16 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B9105DAE32
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:45:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 43BBF3015899
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 17:11:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6E3A0300C7E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 17:45:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08A49403EAB;
-	Tue, 26 May 2026 17:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E78C41C30F;
+	Tue, 26 May 2026 17:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="brMpP/3u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baQx7Cas"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31439CA45;
-	Tue, 26 May 2026 17:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779815470; cv=none; b=ZTxeN4nc6j0pkT6imiRGRgb6eLBv0ezoswp0/9xzPogfRuR/rfzzc/Y5qM9fOGsyRm+FREM9b+sf+FgbfQhmw+flkWE51qDXXGnY3egMktu12wqE16YmsiIqmvaDpQ6VbQaYIQ3HRltqj7CuLpOsZus0zBplJPzIrPtizfQtArU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779815470; c=relaxed/simple;
-	bh=nG8T2sDyMTvq1VTUzB4uTiqI65Ywba/cU0io/fgNHAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JItAKsar9fpLmrmknymjGBFeZvXxbqIbai/ebpO254Kr2FHp0vuoT2gbjSAy9Yuno81AHzzLBUk8l5DyFq5Jec8rwaNql8cZJJm0PYpCwYUj1J3xUZhAMQx6qle0C7Nb3iJTYqMLCbqeN3lXV4bRsP5Wsyqm8OjtqqBxXvqFCBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=brMpP/3u; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C740A26FB1;
-	Tue, 26 May 2026 19:11:07 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id KdRAlyE6vvhA; Tue, 26 May 2026 19:11:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1779815467; bh=nG8T2sDyMTvq1VTUzB4uTiqI65Ywba/cU0io/fgNHAM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=brMpP/3uRaqBFyS/3FuWaqj1LkIPLM+tFUWQRmjORbIzViIkjkFoIPeTkRbUS8zKs
-	 T1lRwi0t99btr6XxUHAVG4C867WQISraNMZIsSq24o+dcwB1tXcVQIAz46Yh2bvpCu
-	 JgxJHhkG4XyFoYHChl+8F6RP/G28Wj3wGQdNDiVyYd1q2i5OeRYb4N44AuWaxPU8wV
-	 cDiG69QFl4XFcpm8RbK5qeD/h/21HpPgUfOryzfzHg3bFWUz6ZGXaYH3ODantIsYCH
-	 jZeX0y86TV0PKcZeFCmMbsqNpvYcwszxdeD/c5Uy6Cgotvehm5IEut3i+vkoFwoctl
-	 9CYvG703MaCow==
-From: Marco Scardovi <scardracs@disroot.org>
-To: brgl@kernel.org
-Cc: heiko@sntech.de,
-	linusw@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	scardracs@disroot.org
-Subject: [PATCH v2 2/2] gpio: rockchip: teardown bugs and resource leaks
-Date: Tue, 26 May 2026 19:02:46 +0200
-Message-ID: <20260526171050.12785-3-scardracs@disroot.org>
-In-Reply-To: <20260526171050.12785-1-scardracs@disroot.org>
-References: <CAMRc=Mfk9tP091DN=5kjb8fvFhj1=MiBZSq4NJ7+k5LNCVy9bw@mail.gmail.com>
- <20260526171050.12785-1-scardracs@disroot.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C51F410D37
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 17:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779817548; cv=pass; b=mRt4GU/vWlZcgpm9RkwqaZYEQnwdDqy5oQXKHas/i2Sun8A5c1HWdwxxV/KgvDBSGkLJN6jBlxvNZgLLNRQLBYb/MBF8C8wCoiq8ij+nRLrjWp7Acz2+x2kN7lyDHFJhqozrc2/WkTrx63iLc7fKQoWbeq/uJDbKQeX6tDgUrlg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779817548; c=relaxed/simple;
+	bh=y1lMBuG4tB8iDBcWBkJjpV7w6ve9zeNKYweoLhSqFP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g2HQQCkU95jaXFScJLqJTg5Z0W07YFEjyTdpXVeU5TJw4g0rnIoYaw9STJnP606Z9BZ/rDBXdk5uSzAY8De1E1h1Xub8WE8vx/PShLY2tVon1TjUUJnDX0RX43+hyypL55MObKjMx9U4hGYEBqj6QrekUPk3ruQIUbbPS62WpoU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=baQx7Cas; arc=pass smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7bde9d73678so111210887b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 10:45:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779817546; cv=none;
+        d=google.com; s=arc-20240605;
+        b=URqhdh1NqVRKk3j8QByiiKXOcVxkRRejtg0h2r6GbCAfUKk75Zchik/y6UEsnyhNp3
+         Kn4Td9z0fVnePW3DvGewbgLWAGaizSCzltgpEkVP/3vno64PO08m9/mq7AqcQK6AwJYE
+         MIZIINeICYOtrDOt6c+p47vIhXIJQY9Lwru4qeAoapY68XF/cEzrOhFUPeDffc60GAb5
+         lHremGLLIGIMHNO4SvBFUrJ1Ughicz+/1a/uqFPtLiraiaZazL76FGsFIjlSSe4VSxPY
+         AFtt7R/+DE5nqonlto6paiZXMLEY7MUCdl+gDZpNqGecAYG97dkeJg5/pRYRetQF0+vE
+         Q8aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
+        fh=lVbY9JkkIKGU0bgEFTL/gADrkzuiP+/5Ir7IXoxPEiY=;
+        b=fFxOmRW85alr5ZpuXtIOmy7xq7DGhT9J/RuzMxIVzQh01niEHZ2KdYnpipdOQFy+4r
+         M7tn7RpD8EdCv/h8Np6AEHxwLt8JkaefhWcNiprhBRnZvhoWzfDsrb1pvDm4Rqi1kXLJ
+         RHs+Fj/9a4x+2tZnYeXTr4eCR7v8n+kZ1xfXlVfWPm5GsOvKI0sQQtzTrbP5cUad51uY
+         UFn7qVSwCnL5uYmlOMjPbmnvt2GMCrAxAOovVPXgfbydiCIvVm8KBeKtNKwDz2aEfYLa
+         pqWSSx9GsOkvWsgbLiZPMZaQKiy3DX43trZGLL47ysUYx56o5DgieEZb+UE1UPMyp52w
+         mW5w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779817546; x=1780422346; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
+        b=baQx7Casz9Vy0D+wsR8WyZzMriJDcdeMi7CRM6lE9+yAsOo/GUY/1NKTmFsOpwBUQO
+         DxrV/dfde5RdVN6lgPEKzeEmo6r9TtN4e6zsuBP1XGz9hNbWL1VaDC4LnQm25OA5ApsB
+         p3xr9ESTSHfctkzbZO7Tz27qlcJ/miypvFaL/s28y2lsAkqWnTWfA/B6mOsukG0jD2/p
+         Drv/BWAanYZr7jiQD2e2gApdCKYdixkCMnrrtJBpZQPGvZB9GIt3yZI0+7V5FHMELN/Y
+         DhswMOZRhPjg1skSVr5fV/aESt+sQ5J56a/QvvSrwbNy8UV4w6tNHk833kalimIUsiur
+         n5lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779817546; x=1780422346;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
+        b=YZU6czIuYqMjv5g+xIEYT30Orb4+gcUj1WWn+r2lzdhC4EMvMUPB04whuIY1Az8syc
+         JM0ApS1XGyEpg4ElGRujB+1BXrJFjUhB0HY4euIDkmjIuJSK8hdxeTmjQd6V21RgZJ3c
+         VdZi+Ts/YqfvM8ZJj+osTwbO5Jij0/c+wkMhJE4TU+vv7xu49DzitWb5WT5ihaMxkZaA
+         yO13hy3+ub0Y0t4HUtfOyBlRK+5Dhz9eCvy3dPWhVeT6DsTdDhJoIYWy3H3ctDrT6TN/
+         kfgDn34Fc8DS7m/1EdOM6Bx5auNrnuvEW8BzC7zTY+bKMP04Y3NrMY0mw5TqwlRIq6XM
+         hfOg==
+X-Gm-Message-State: AOJu0YzR+zxnuAxAeNPhwplDk7676TvV81e/pjwIentHQWSriyImDiHk
+	qi5M+lZB1afn78Y2TREwL1mEQrccaDmzX60aJmISwIbKSx2Hret2kkdU1N7j/CzCBBGq+GYiOfG
+	Oix3NlxNSNZ7fwLKSWZ1P1K1k1c8TB4rDOg==
+X-Gm-Gg: Acq92OG2Wdituap4OSkxy5lh5sz9F1L4HCx0ENUUyQ9PTGhr4aCDxdVPosK0AnVspVm
+	uYk7FSKmsB3aKN4Lx6O2zlA7mZLUVbofJ2CrjW1RtR+MyXznsw7kzOMvvwmndXSvuU8KHlLdlP3
+	X8lyqpWQjdisqMSEASjHyhyI1LTNgXRtpqoOZEVDFJhLuF2h+w3LMQkwfG2Q3mRtCwcnA/VdKVD
+	fHGtOYgEOH0ixdcmP5bZ9DI6d9zUOeHGNUKARlyEkyTwAG45Rp9Orh3xXJEBfohguXgmJBOpIIm
+	F/HGkIh4zQlhY9kplxUfgdZP0oxtS6BDvB+tIVsJ
+X-Received: by 2002:a05:690c:16:b0:7c2:db9a:7bdc with SMTP id
+ 00721157ae682-7d20d50d345mr190974927b3.22.1779817546031; Tue, 26 May 2026
+ 10:45:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+References: <20260522200419.105496-1-vfazio@gmail.com> <20260522200419.105496-2-vfazio@gmail.com>
+ <CAMRc=Mdbx79maxLFXOf-=UPe298fin9hqFzdzY7vc59P1Fss-w@mail.gmail.com>
+In-Reply-To: <CAMRc=Mdbx79maxLFXOf-=UPe298fin9hqFzdzY7vc59P1Fss-w@mail.gmail.com>
+From: Vincent Fazio <vfazio@gmail.com>
+Date: Tue, 26 May 2026 12:45:34 -0500
+X-Gm-Features: AVHnY4IRHM1jGKcV4bz5-RhzAilLEEohAr6PJLcjS7oh6EIUyLN-lTvoMk640H8
+Message-ID: <CAOrEah7sz2r0qzsd74kO5UfGw19qze-dLxd8U9gWA0_7r6tY-w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/3] bindings: python: tests: add multi-threaded tests
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37544-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[disroot.org:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-37545-lists,linux-gpio=lfdr.de];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[disroot.org:email,disroot.org:mid,disroot.org:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: CBE0F5DA638
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,python.org:url]
+X-Rspamd-Queue-Id: 4B9105DAE32
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Address several teardown issues and resource leaks in the driver's remove
-path and error handling:
+On Tue, May 26, 2026 at 6:06=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.or=
+g> wrote:
+>
+> On Fri, 22 May 2026 22:04:16 +0200, Vincent Fazio <vfazio@gmail.com> said=
+:
+> > Add new multi-threaded test cases to ensure the bindings operate as
+> > expected and do not lead to crashes or data corruption.
+> >
+>
+> Awesome work, thanks for doing this!
+>
+> I assume these tests effectively don't test anything in single-threaded p=
+ython?
+>
 
-1. Debounce clock reference leak: The debounce clock (bank->db_clk) is
-   obtained using of_clk_get() which increments the clock's reference
-   count, but clk_put() is never called. Register a devm action to
-   cleanly release it on unbind. Note that of_clk_get(..., 1) remains
-   necessary over devm_clk_get() because the DT binding does not define
-   clock-names, precluding name-based lookup.
+The tests still run since there's a small chance that the Python interprete=
+r
+could switch threads at an inopportune time and cause issues. We could try
+to bring this out with `sys.setswitchinterval` [0][1].
 
-2. Unregistered chained IRQ handler: The chained IRQ handler is not
-   disconnected in remove(). If a stray interrupt fires after the driver
-   is removed, the kernel attempts to execute a stale handler, leading
-   to a panic. Fix this by clearing the handler in remove().
+It didn't seem like something we needed to test explicitly because if we're
+passing on a free-threaded build, we're more than likely going to pass on a
+standard GIL-enabled build if proper synchronization is used.
 
-3. IRQ domain leak: The linear IRQ domain and its generic chips are
-   allocated manually during probe but never removed. Remove the IRQ
-   domain during driver teardown to free the associated generic chips
-   and mappings.
+> > +    def shortDescription(self) -> None:
+> > +        return None
+> > +
+>
+> Is this needed? Tests seem to work without it.
 
-Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
----
- drivers/gpio/gpio-rockchip.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 33580093a4e7..c804f970d823 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -638,10 +638,17 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
- 	return ret;
- }
- 
-+static void rockchip_clk_put(void *data)
-+{
-+	struct clk *clk = data;
-+
-+	clk_put(clk);
-+}
-+
- static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
- {
- 	struct resource res;
--	int id = 0;
-+	int id = 0, ret;
- 
- 	if (of_address_to_resource(bank->of_node, 0, &res)) {
- 		dev_err(bank->dev, "cannot find IO resource for bank\n");
-@@ -673,6 +680,13 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
- 			dev_err(bank->dev, "cannot find debounce clk\n");
- 			return -EINVAL;
- 		}
-+
-+		ret = devm_add_action_or_reset(bank->dev, rockchip_clk_put,
-+					       bank->db_clk);
-+		if (ret) {
-+			dev_err(bank->dev, "failed to register debounce clk action\n");
-+			return ret;
-+		}
- 		break;
- 	case GPIO_TYPE_V1:
- 		bank->gpio_regs = &gpio_regs_v1;
-@@ -789,6 +803,9 @@ static void rockchip_gpio_remove(struct platform_device *pdev)
- {
- 	struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
- 
-+	irq_set_chained_handler_and_data(bank->irq, NULL, NULL);
-+	if (bank->domain)
-+		irq_domain_remove(bank->domain);
- 	gpiochip_remove(&bank->gpio_chip);
- }
- 
--- 
-2.54.0
+It's a short-cut to stop unittest from printing out the first line of the
+docstring as the test description [2] which I found irritating while debugg=
+ing
+in verbose mode. Instead of trying to make the docstrings more succinct, I =
+just
+neutered the feature by stubbing this out.
 
+-Vincent
+
+[0]: https://docs.python.org/3/library/sys.html#sys.setswitchinterval
+[1]: https://py-free-threading.github.io/testing/#validating-thread-safety-=
+with-testing
+[2]: https://docs.python.org/3/library/unittest.html#unittest.TestCase.shor=
+tDescription
 
