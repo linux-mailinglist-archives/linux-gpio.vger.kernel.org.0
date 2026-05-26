@@ -1,154 +1,158 @@
-Return-Path: <linux-gpio+bounces-37487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37489-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id k4UgEig/FWrZTwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37487-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 08:35:20 +0200
+	id QNgdOOxHFWqLUAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37489-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:12:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FBC05D1331
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 08:35:18 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE09F5D18B2
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 09:12:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 866FF301DCF2
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 06:35:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0CD873008CBE
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 07:12:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02185385520;
-	Tue, 26 May 2026 06:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97CE83BAD9F;
+	Tue, 26 May 2026 07:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="KDGebqiS"
+	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="ExW3m2pT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from www537.your-server.de (www537.your-server.de [188.40.3.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE55C284B3B;
-	Tue, 26 May 2026 06:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.3.216
+Received: from ultrarisc.com (unknown [218.76.62.146])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CE13A75AC;
+	Tue, 26 May 2026 07:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779777316; cv=none; b=kEKv/KMcx3XP8p2bfXvmnwOgo3VRFpFnd9acJM876H1BjORmxp/R3KXGpyUYJpALbPW7DaivKhhvQaPlAu0BkZqg5dwi/vtPhrlHlhNT9698RJHDdBpKTFpmcYcsYU6Jz91zw54vez7arUlyCJfJzRUngnhPfSftu8O9VAblEm0=
+	t=1779779549; cv=none; b=KTkGaGtFB73Q2dPe9HUyigRM7EBtPa+AQT8VfZeVj1Flkvi/V4IZG5JLlIodyTUwPMp/vsO17gmxzy+6K7ia/QnCEcOpoR63jFql9lRJWEwBFyOCC5k9FKMffENIGciTz7QMXnAG+Xa4Cy0AiygptmMgpjyAToVrxbHohiRGZoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779777316; c=relaxed/simple;
-	bh=+DPhe0f9n/BdhOA+tCs0kwl815jMEZvP20htrUqfg+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=edAZHgcI9Ck2QKhIarGBFlJIAwV4qDbtUYA8YSoxECLK1tm3oHbESrwfFMnMldHkVVxLiSPnEepxOFoBYLAkq/FZX2Gp1AABk6V3qnduI4fUg0WTHKRZ8Gx8NQ5bnvVVHOqRj4iGBP0HZwHUXZSmJAylimoIFDVBm/TQDRQUYKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=KDGebqiS; arc=none smtp.client-ip=188.40.3.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=ew.tq-group.com; s=default2602; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=8XVBgfioNoFF3XKmhaeZO33+RcBSbm4amlt4C5V5yD4=; b=KDGebqiSbDLX4U8zIhDPAPmY0v
-	xT4XZltu+uzeO9efqmny5UcqLSX89y7V0fKqiWd5zcigYhi1Dv2RgJWVVpCyGgOwGVwLGHsR8flx/
-	fSmTSPFWxjIAVz9Nq+bencsVzin5awLvYm/4KBqigF5pQ1/uJhWK2FFB3wsn3xBxwCNjdvaGV/x91
-	HgZEx+VLT5ktrxo3bClz6JgcLlcQlerhEB2e2ncQoP77Ukej43mGODy+53b7Z/t0mvyyooemWcEcm
-	BzYoy6rBwhXi52O4vTwZLwALGAYKB2Xp+ZIgw7nuYFqJQx+f+wBqSFwhpOtH8CztUSXMZNVNTbQTv
-	CBZ+rIFA==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www537.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <alexander.stein@ew.tq-group.com>)
-	id 1wRlNb-000Dvn-0K;
-	Tue, 26 May 2026 08:35:07 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <alexander.stein@ew.tq-group.com>)
-	id 1wRlNZ-000M6u-2q;
-	Tue, 26 May 2026 08:35:06 +0200
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] gpio: mxc: use BIT() macro
-Date: Tue, 26 May 2026 08:35:02 +0200
-Message-ID: <20260526063504.25916-2-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260526063504.25916-1-alexander.stein@ew.tq-group.com>
-References: <20260526063504.25916-1-alexander.stein@ew.tq-group.com>
+	s=arc-20240116; t=1779779549; c=relaxed/simple;
+	bh=Kxhh7KR6iwJWM3QD/Mg3E6gH0ENEw3j5HM3LIkiOX8M=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=U4muMWHPYZDaucfP7IFMXu9HZ5hYH8HriB/wtO5lP944uj5/jZceLouctwhfLhdSrODCReQRWVK94i+BH6DXcd2lSg/pa1lm6abLWNAlcIPP4DijdIoa6++4DawJpJCQC6vseZYFFrfbQ47PUs0Rc1Tqwvn6tisWbojcpsLs8Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=pass smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=ExW3m2pT; arc=none smtp.client-ip=218.76.62.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ultrarisc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
+	References:Date:Message-Id; bh=xdLV9XCgYqsM5OHnHy0sw5i8Vew1uihlr
+	uMczZDwmYg=; b=ExW3m2pTqQLrnnqiAOLQ7nd6qeE6M0/6cZS8n2SwH18A73SCx
+	xV0UUjkrV4+HKQ/R50qrxcs8t/Z3kerAs9VWGT4S0JJ1KMNt76pZgynWVG2Ou8Lr
+	FvLVNXW/3owW5zRIOfARplQUdiYb5crOWkGHaRusrQnoovFBVegW3hgIGg=
+Received: from [127.0.0.1] (unknown [192.168.100.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAfwAnEkPrRxVq0gMGAA--.7913S2;
+	Tue, 26 May 2026 15:12:43 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: Clear (ClamAV 1.4.3/28011/Mon May 25 08:24:46 2026)
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/9] dt-bindings: vendor-prefixes: add Rongda
+From: Jia Wang <wangjia@ultrarisc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: wangjia@ultrarisc.com, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <51dfcffa-1f8f-4a51-afc4-2999748421a7@kernel.org>
+References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
+ <20260515-ultrarisc-pinctrl-v1-1-bf559589ea8a@ultrarisc.com>
+ <51dfcffa-1f8f-4a51-afc4-2999748421a7@kernel.org>
+Date: Tue, 26 May 2026 15:12:03 +0800
+Message-Id: <177977952368.1243441.14554680726787022592.b4-reply@b4>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779779524; l=686;
+ i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
+ bh=Kxhh7KR6iwJWM3QD/Mg3E6gH0ENEw3j5HM3LIkiOX8M=;
+ b=ti5d/XWaly+TePGbcsCTGPdS7xDmz9VMatjcxDzr3AFRI03LMtglkK2UiKuL0YX97CaHPaMxu
+ y//z916nWBTAQHrrludAf8B9sIy+WZ6mx5fAakXRmQJ9nwSKCeCZmTw
+X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
+ pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
+X-CM-TRANSID:AQAAfwAnEkPrRxVq0gMGAA--.7913S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF47XryUCr4xWw4xWrWrGrg_yoWxArg_ur
+	Z0y3sIva4DXFs3tan3AFs3G345tFsYvryY9348Xwn7C347Ary8uw4kCr4akwn3XF4UW3W2
+	kr4Svayq93W3ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb-AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAOEWoOgUUACgASsm
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[ew.tq-group.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ew.tq-group.com:s=default2602];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
+	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_FROM(0.00)[bounces-37487-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,nxp.com,pengutronix.de,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[alexander.stein@ew.tq-group.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	NEURAL_HAM(-0.00)[-0.992];
-	DKIM_TRACE(0.00)[ew.tq-group.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[ultrarisc.com:+];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,tq-group.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 7FBC05D1331
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37489-lists,linux-gpio=lfdr.de];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:email,ultrarisc.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: DE09F5D18B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace the open-code with the BIT() macro.
+On 2026-05-21 22:51 +0200, Krzysztof Kozlowski wrote:
+> On 15/05/2026 03:17, Jia Wang via B4 Relay wrote:
+> > From: Jia Wang <wangjia@ultrarisc.com>
+> > 
+> > Add Shenzhen Rongda Computer Co., Ltd. to the vendor prefixes.
+> > 
+> > Link: http://www.shenrongda.com/
+> 
+> So your prefix is shenrongda.
+>
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
-Changes in v2:
-* Improved commit message as suggested by Frank
-* Collected Frank's
+Thanks for the clarification.
 
- drivers/gpio/gpio-mxc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'll update the vendor prefix to "shenrongda" and adjust the compatible
+accordingly in the next version.
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 12f11a6c96653..7e2690d92df6f 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -330,13 +330,13 @@ static int gpio_set_wake_irq(struct irq_data *d, u32 enable)
- 			ret = enable_irq_wake(port->irq_high);
- 		else
- 			ret = enable_irq_wake(port->irq);
--		port->wakeup_pads |= (1 << gpio_idx);
-+		port->wakeup_pads |= BIT(gpio_idx);
- 	} else {
- 		if (port->irq_high && (gpio_idx >= 16))
- 			ret = disable_irq_wake(port->irq_high);
- 		else
- 			ret = disable_irq_wake(port->irq);
--		port->wakeup_pads &= ~(1 << gpio_idx);
-+		port->wakeup_pads &= ~BIT(gpio_idx);
- 	}
- 
- 	return ret;
--- 
-2.43.0
+As discussed with Conor, this patchset will retain only the pinctrl binding
+and driver. The DTS and the related bindings will be split out and submitted
+separately. 
+
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
+Jia Wang
+
 
 
