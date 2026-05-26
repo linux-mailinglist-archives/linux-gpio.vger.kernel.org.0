@@ -1,111 +1,111 @@
-Return-Path: <linux-gpio+bounces-37545-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37546-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yN6PFFLcFWpzdQcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37545-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:45:54 +0200
+	id OPwvDyveFWrTdQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37546-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:53:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B9105DAE32
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:45:53 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADE845DAFA4
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 19:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6E3A0300C7E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 17:45:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 343C9302864F
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 17:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E78C41C30F;
-	Tue, 26 May 2026 17:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83FFB41C319;
+	Tue, 26 May 2026 17:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baQx7Cas"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8eqL98R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C51F410D37
-	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 17:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C338C42F
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 17:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.172
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779817548; cv=pass; b=mRt4GU/vWlZcgpm9RkwqaZYEQnwdDqy5oQXKHas/i2Sun8A5c1HWdwxxV/KgvDBSGkLJN6jBlxvNZgLLNRQLBYb/MBF8C8wCoiq8ij+nRLrjWp7Acz2+x2kN7lyDHFJhqozrc2/WkTrx63iLc7fKQoWbeq/uJDbKQeX6tDgUrlg=
+	t=1779817857; cv=pass; b=vEhwYYnuH4w434iGZFrR4sPoi9RZsNJFOr34zXFD/Q3XTbefLjT4vHxWIKXRBcmWWfbvWscJsmkDW8karRz4P4RkxafUHBrZh30nUHmgyTG6WxIoy/hT7+rhCiMVVA883rUgwemeTr7i1hriJzF+cWzp5af+cAOFX8ALIg4k5wU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779817548; c=relaxed/simple;
-	bh=y1lMBuG4tB8iDBcWBkJjpV7w6ve9zeNKYweoLhSqFP0=;
+	s=arc-20240116; t=1779817857; c=relaxed/simple;
+	bh=kfNjzPONj99z0SVG0Q6anqC7yEoD/nhQOvijAYwNCMg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g2HQQCkU95jaXFScJLqJTg5Z0W07YFEjyTdpXVeU5TJw4g0rnIoYaw9STJnP606Z9BZ/rDBXdk5uSzAY8De1E1h1Xub8WE8vx/PShLY2tVon1TjUUJnDX0RX43+hyypL55MObKjMx9U4hGYEBqj6QrekUPk3ruQIUbbPS62WpoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=baQx7Cas; arc=pass smtp.client-ip=209.85.128.182
+	 To:Cc:Content-Type; b=rsMYeKh8BtQoQgF62jraH7kLYHIvkLuY/0JdzmoNS6dyfcD+98GY66DQqscJqc8Dil8Udcg2qQaIUZQNp+CfsWtpu6vn0EkUncXX9dWOxuTV2+Q9Bu3K1djfuTiRmrKkbaMsprh8i71gPvneZkZ9lCYQNwZ1deBMNQoiL4eRWrU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8eqL98R; arc=pass smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7bde9d73678so111210887b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 10:45:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779817546; cv=none;
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7cfd0d8eb09so74028757b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 10:50:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779817855; cv=none;
         d=google.com; s=arc-20240605;
-        b=URqhdh1NqVRKk3j8QByiiKXOcVxkRRejtg0h2r6GbCAfUKk75Zchik/y6UEsnyhNp3
-         Kn4Td9z0fVnePW3DvGewbgLWAGaizSCzltgpEkVP/3vno64PO08m9/mq7AqcQK6AwJYE
-         MIZIINeICYOtrDOt6c+p47vIhXIJQY9Lwru4qeAoapY68XF/cEzrOhFUPeDffc60GAb5
-         lHremGLLIGIMHNO4SvBFUrJ1Ughicz+/1a/uqFPtLiraiaZazL76FGsFIjlSSe4VSxPY
-         AFtt7R/+DE5nqonlto6paiZXMLEY7MUCdl+gDZpNqGecAYG97dkeJg5/pRYRetQF0+vE
-         Q8aQ==
+        b=kwHUKGtCO5r+jT+cWvsJkrpJNL1ZNkqtkuo6fTJy693aIuMpZE6+T8XHk808egPDnF
+         TQY30pkYpzJXSKeT3HUzz9pxOh3IBJcaXJ14ksMjdJ+OP6GQ3k0mNBXhHX02YBqM4ZmS
+         UZVCBE/WRJpMVGDAu+R0wao0xPpC6wIwjFHNG2JJxTAnICITQuohkgK+M0eT2g/ToRzK
+         9cP5w/F5oD3Mj1yvOjfKKBUkkdrp+XZWUPuhlVUSHx2UavAzpwcMaL/uam4uzD4oynus
+         4S4bHkRPbxbWUr9ldoht4j+Lp2Gq8gV1WZwCpOS9pFzYpVZUYlkZEpTftJHCsZt/9qMy
+         RiPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
+        bh=kfNjzPONj99z0SVG0Q6anqC7yEoD/nhQOvijAYwNCMg=;
         fh=lVbY9JkkIKGU0bgEFTL/gADrkzuiP+/5Ir7IXoxPEiY=;
-        b=fFxOmRW85alr5ZpuXtIOmy7xq7DGhT9J/RuzMxIVzQh01niEHZ2KdYnpipdOQFy+4r
-         M7tn7RpD8EdCv/h8Np6AEHxwLt8JkaefhWcNiprhBRnZvhoWzfDsrb1pvDm4Rqi1kXLJ
-         RHs+Fj/9a4x+2tZnYeXTr4eCR7v8n+kZ1xfXlVfWPm5GsOvKI0sQQtzTrbP5cUad51uY
-         UFn7qVSwCnL5uYmlOMjPbmnvt2GMCrAxAOovVPXgfbydiCIvVm8KBeKtNKwDz2aEfYLa
-         pqWSSx9GsOkvWsgbLiZPMZaQKiy3DX43trZGLL47ysUYx56o5DgieEZb+UE1UPMyp52w
-         mW5w==;
+        b=XzvF7qmGplaLeVBgl+pkAh78BcYnqvBUiVqR3asaFACVMb+Qne/vioe91jzw6rxVWL
+         JEuU/FbKQ7KdoDD6kpyDp946T51ir9xCLqICwLIwIfzJbYxxtibXnSDQlSQyrW8sJcCK
+         nEeAMA7Wn9R3zwI9wdsbxLzQEZX+CPCrmct2d3GBydTbC7dX3XSeNoG63VJWXxUWoQJK
+         nRvK2SO7bUyzDm38MrU5mT+wtpPMish0GrNhe8m88Ghln4hykoesK6twtJ4y5ODUWVoO
+         uWIjIxDWOK3NtkGtXWZfRd22AG0NWeyM3GLX28IgLewtMNER/Nuj4kAByoqRzgmdNn4R
+         nAbg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779817546; x=1780422346; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779817855; x=1780422655; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
-        b=baQx7Casz9Vy0D+wsR8WyZzMriJDcdeMi7CRM6lE9+yAsOo/GUY/1NKTmFsOpwBUQO
-         DxrV/dfde5RdVN6lgPEKzeEmo6r9TtN4e6zsuBP1XGz9hNbWL1VaDC4LnQm25OA5ApsB
-         p3xr9ESTSHfctkzbZO7Tz27qlcJ/miypvFaL/s28y2lsAkqWnTWfA/B6mOsukG0jD2/p
-         Drv/BWAanYZr7jiQD2e2gApdCKYdixkCMnrrtJBpZQPGvZB9GIt3yZI0+7V5FHMELN/Y
-         DhswMOZRhPjg1skSVr5fV/aESt+sQ5J56a/QvvSrwbNy8UV4w6tNHk833kalimIUsiur
-         n5lA==
+        bh=kfNjzPONj99z0SVG0Q6anqC7yEoD/nhQOvijAYwNCMg=;
+        b=b8eqL98R4Ch9MDfH+hDrrrO3uyHqwNIXdONNspH9vensQK0N3kH/31uR4Oo77VecbC
+         zq3jtBlG5TzhvPUqmou4QFkLidZkyhkSYdlWXjEYcbEwUapX+1jdJhC+PMaI2ijSVkpO
+         HKqH/NB1DS1MtsdXGF5jp9ms6JZZSOamAz7UhZ0Z9yV1q4oZudQDX8U6PwSFmKUw24L1
+         I1KyNYmDVKijSXfxxR8kPcL0nxMSPTK5wLD2g13wIkeYMmVzCfYycwcR2EWuoBMrLOdW
+         pgyqqFMM2qKShKkaLR3LQyh8F26UjW2sTMjsFHxe3BxBoMIUzDYP1K7O+EURyq5pXWeP
+         E7cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779817546; x=1780422346;
+        d=1e100.net; s=20251104; t=1779817855; x=1780422655;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gNaHFxMYzogeNLVau+FaeyKV8yS5iM27JnCQOsp9/Pc=;
-        b=YZU6czIuYqMjv5g+xIEYT30Orb4+gcUj1WWn+r2lzdhC4EMvMUPB04whuIY1Az8syc
-         JM0ApS1XGyEpg4ElGRujB+1BXrJFjUhB0HY4euIDkmjIuJSK8hdxeTmjQd6V21RgZJ3c
-         VdZi+Ts/YqfvM8ZJj+osTwbO5Jij0/c+wkMhJE4TU+vv7xu49DzitWb5WT5ihaMxkZaA
-         yO13hy3+ub0Y0t4HUtfOyBlRK+5Dhz9eCvy3dPWhVeT6DsTdDhJoIYWy3H3ctDrT6TN/
-         kfgDn34Fc8DS7m/1EdOM6Bx5auNrnuvEW8BzC7zTY+bKMP04Y3NrMY0mw5TqwlRIq6XM
-         hfOg==
-X-Gm-Message-State: AOJu0YzR+zxnuAxAeNPhwplDk7676TvV81e/pjwIentHQWSriyImDiHk
-	qi5M+lZB1afn78Y2TREwL1mEQrccaDmzX60aJmISwIbKSx2Hret2kkdU1N7j/CzCBBGq+GYiOfG
-	Oix3NlxNSNZ7fwLKSWZ1P1K1k1c8TB4rDOg==
-X-Gm-Gg: Acq92OG2Wdituap4OSkxy5lh5sz9F1L4HCx0ENUUyQ9PTGhr4aCDxdVPosK0AnVspVm
-	uYk7FSKmsB3aKN4Lx6O2zlA7mZLUVbofJ2CrjW1RtR+MyXznsw7kzOMvvwmndXSvuU8KHlLdlP3
-	X8lyqpWQjdisqMSEASjHyhyI1LTNgXRtpqoOZEVDFJhLuF2h+w3LMQkwfG2Q3mRtCwcnA/VdKVD
-	fHGtOYgEOH0ixdcmP5bZ9DI6d9zUOeHGNUKARlyEkyTwAG45Rp9Orh3xXJEBfohguXgmJBOpIIm
-	F/HGkIh4zQlhY9kplxUfgdZP0oxtS6BDvB+tIVsJ
-X-Received: by 2002:a05:690c:16:b0:7c2:db9a:7bdc with SMTP id
- 00721157ae682-7d20d50d345mr190974927b3.22.1779817546031; Tue, 26 May 2026
- 10:45:46 -0700 (PDT)
+        bh=kfNjzPONj99z0SVG0Q6anqC7yEoD/nhQOvijAYwNCMg=;
+        b=Hlo9mre1j1rpLdaIAZOt/lvHdJmkagdhk16AL7cTzQnzaH9Uz03zMqCuWcMC+056u0
+         THSNS37eXy/ON+xs8fkEf7Uh4nR27/9ieCyQSDGlDWP1O4GOnGe/Ubh2HLF2x5jO5JDI
+         a29g/6y09fMsDIie5dDSKcIsbOxhvU7NNRhrL+NylcGctstFmJ6WkxCqWkPf6pkVceol
+         DEqoPPqejFNIA1ZZrBTTtY18IOA7b8HRcKce0AUB35KYci0Kc+02t6YvtqCFs0Ai+x2r
+         f9+7+9xXDI45nfG/kylYRrOkYrw10yKWPDtgAArD9F0G0pLC0xF0trmFKn2fr3560+Nz
+         +j7g==
+X-Gm-Message-State: AOJu0YzBq7CEr28nqDozdoDY5RFh+IXXxY7Mwo5/Ja7YRfk3THd2WoXh
+	CRv7bqtc0uOiV3c5h6i41ly8ky/9f1QtBM1JqIhyW9aRHDD1AWOMvQNwySG3ZcG/siMBNtd1Fcv
+	23ZHvLxbw/h6J5CcnUYbsn34A6jjrKhI=
+X-Gm-Gg: Acq92OG3lk/EgP7yAu8Y61i/uZoK+HKC9cTCEWWwW7O4vgnfqrks0ixjYMzvQeQV7gz
+	3iFAXOtaswEDmI4bymTkp4qd+9HuAsEPalImHahSeJq+WKZJ+l2CaeYfRoppeRTXkACRcPNQcmD
+	8se3GRxHn/B4t/9SKpUtWjHrg7tMlefp1Cko949NMbd4lJ4PBO5/pX5jr6YDIn56ZMPMemHoKCR
+	Hxd3QYKu58cNoChC2CT+Q2SNitKVu2TyQNy7NMDH9oBHZJ83f+WCYlhpnS4Mc0afSVtp8krW4s5
+	0WEGbx81WQOMQEhrBcX9me5RIoyoCZsi4avPs0+3
+X-Received: by 2002:a05:690c:88e:b0:7bd:5d03:dc1a with SMTP id
+ 00721157ae682-7d337db19d7mr210541817b3.1.1779817855044; Tue, 26 May 2026
+ 10:50:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260522200419.105496-1-vfazio@gmail.com> <20260522200419.105496-2-vfazio@gmail.com>
- <CAMRc=Mdbx79maxLFXOf-=UPe298fin9hqFzdzY7vc59P1Fss-w@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdbx79maxLFXOf-=UPe298fin9hqFzdzY7vc59P1Fss-w@mail.gmail.com>
+References: <20260522200419.105496-1-vfazio@gmail.com> <20260522200419.105496-3-vfazio@gmail.com>
+ <CAMRc=Mfh=NkxE-i88gvfC2X1dMTX_2wXT4G4bvvzOvTxxq7=qA@mail.gmail.com>
+In-Reply-To: <CAMRc=Mfh=NkxE-i88gvfC2X1dMTX_2wXT4G4bvvzOvTxxq7=qA@mail.gmail.com>
 From: Vincent Fazio <vfazio@gmail.com>
-Date: Tue, 26 May 2026 12:45:34 -0500
-X-Gm-Features: AVHnY4IRHM1jGKcV4bz5-RhzAilLEEohAr6PJLcjS7oh6EIUyLN-lTvoMk640H8
-Message-ID: <CAOrEah7sz2r0qzsd74kO5UfGw19qze-dLxd8U9gWA0_7r6tY-w@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/3] bindings: python: tests: add multi-threaded tests
+Date: Tue, 26 May 2026 12:50:44 -0500
+X-Gm-Features: AVHnY4JU8eZKr6_oc0qziCaWje9mwBvvLmsOJHefPsayAq-x9Ytl33fusDKl8hE
+Message-ID: <CAOrEah6eP=K=3Eq6st8CVjAoObgVffPjP-mbz7B-nXPK3VpsOQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/3] bindings: python: support free-threaded CPython
 To: Bartosz Golaszewski <brgl@kernel.org>
 Cc: linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -114,7 +114,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -122,7 +122,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37545-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37546-lists,linux-gpio=lfdr.de];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -133,57 +133,28 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,python.org:url]
-X-Rspamd-Queue-Id: 4B9105DAE32
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: ADE845DAFA4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 26, 2026 at 6:06=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.or=
+On Tue, May 26, 2026 at 6:07=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.or=
 g> wrote:
 >
-> On Fri, 22 May 2026 22:04:16 +0200, Vincent Fazio <vfazio@gmail.com> said=
-:
-> > Add new multi-threaded test cases to ensure the bindings operate as
-> > expected and do not lead to crashes or data corruption.
-> >
+> > +The Python bindings, much like the C API they wrap, are not thread-saf=
+e and do
+> > +require external synchronization by the caller to serialize access to =
+objects
+> > +shared across threads.
 >
-> Awesome work, thanks for doing this!
->
-> I assume these tests effectively don't test anything in single-threaded p=
-ython?
->
+> Do we need to document which classes and methods need synchronization?
 
-The tests still run since there's a small chance that the Python interprete=
-r
-could switch threads at an inopportune time and cause issues. We could try
-to bring this out with `sys.setswitchinterval` [0][1].
+This seems fair. I already did some of that documentation in the threaded u=
+nit
+test so I can copy some of that into the docs API consumers actually read.
 
-It didn't seem like something we needed to test explicitly because if we're
-passing on a free-threaded build, we're more than likely going to pass on a
-standard GIL-enabled build if proper synchronization is used.
-
-> > +    def shortDescription(self) -> None:
-> > +        return None
-> > +
->
-> Is this needed? Tests seem to work without it.
-
-
-It's a short-cut to stop unittest from printing out the first line of the
-docstring as the test description [2] which I found irritating while debugg=
-ing
-in verbose mode. Instead of trying to make the docstrings more succinct, I =
-just
-neutered the feature by stubbing this out.
-
--Vincent
-
-[0]: https://docs.python.org/3/library/sys.html#sys.setswitchinterval
-[1]: https://py-free-threading.github.io/testing/#validating-thread-safety-=
-with-testing
-[2]: https://docs.python.org/3/library/unittest.html#unittest.TestCase.shor=
-tDescription
+I'll fixup this patch unless you want other fixes folded into the series.
 
