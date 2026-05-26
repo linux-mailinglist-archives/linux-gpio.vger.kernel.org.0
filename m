@@ -1,192 +1,153 @@
-Return-Path: <linux-gpio+bounces-37534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37535-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4NiDHTmNFWrUWQcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37534-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:08:25 +0200
+	id mPlBHfiPFWohWgcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37535-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:20:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA6145D54E5
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:08:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B7B55D5711
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 14:20:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B7D40307512B
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:00:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D12813027305
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2026 12:19:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2463F5BD0;
-	Tue, 26 May 2026 12:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88AA3F9F2F;
+	Tue, 26 May 2026 12:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pHwwspWc"
+	dkim=pass (2048-bit key) header.d=gapp-nthu-edu-tw.20251104.gappssmtp.com header.i=@gapp-nthu-edu-tw.20251104.gappssmtp.com header.b="L9pSo6B9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE22DECBA
-	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 12:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1823F8EDB
+	for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 12:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779796812; cv=none; b=PS781q17/vKnNqzs2tHhzQ21a1hPkEEUzfu6TeiYBNQZbSkO2FwSxrzB0nXT8Kg8Ef0ldeWum8Js5cGgrLuoQ2eJtP7DzAaARjg0Uq9UZYXjvnTpdhI99MuSHdh+e00/nup04gtChbqIyWHjT1jZ9aIZAvBkFj8YQ/dIpw/WEIc=
+	t=1779797981; cv=none; b=XwUhmFYxFZPV1tpD8QnGuRF33flrBx+0FTj3QhZc2RQCiBYZpuO7SOMawar7BktdsA9RzAqfJIPOiZUINlqwP+XpaOfdv5mOEPnZ44mIjK1Lx/AVS8rg2NbUPcMUscUc1YuD45dh05364UfqYBeeKhZePoLYN0SPOEBIzrpSPNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779796812; c=relaxed/simple;
-	bh=hTZYyqvqtGqppwXg4HP3xZpz+TZopttkYVxm+x/q8Jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g7Vj3tufJ9/Bq9NVE90s0O095PuHnk26gs9KwG54NyjYTuqXawYboUIFJa0AJKTfn83/aJ0WyFkSvo7n4b2ykfO1cUyE+uc3pYNgqIbCuMwH2RdPdtSIniKVycbWYHguB6NYaAzVG2KjV3PtqJcFd6jxU9bN/0xicWDVcw6rDCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pHwwspWc; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bd9a71b565aso1199792166b.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 05:00:06 -0700 (PDT)
+	s=arc-20240116; t=1779797981; c=relaxed/simple;
+	bh=l33H8jeplfwI2v4aEzHDB76Rs38QZmGJZDaqs83VQZc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dz0eeQWmTo4s1Zulnntdu0gJXNgpYMOvsPg0LF4BdWebrfFJGYfV6u6CTLK/ZgleUE6++Q56ELSPCa1d/M+pUzaEJDYfPg3oStOhVFMUVrMB04M17DqjAxhxL6hpCOeEjiBNBEMP7AeZ09vSeN+ozK33JPsK0aaNa79d0U2bY6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gapp.nthu.edu.tw; spf=pass smtp.mailfrom=gapp.nthu.edu.tw; dkim=pass (2048-bit key) header.d=gapp-nthu-edu-tw.20251104.gappssmtp.com header.i=@gapp-nthu-edu-tw.20251104.gappssmtp.com header.b=L9pSo6B9; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gapp.nthu.edu.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gapp.nthu.edu.tw
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ba856db1c0so77053115ad.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2026 05:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1779796805; x=1780401605; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CoKLuje7HUGv4pGCvIBQiUOeF+gz3p4jM4FxO+bIdX0=;
-        b=pHwwspWcu5HViVH9PrTg3VZGKAXTnNGteSs54531z1yqAvoQ9iBT7CEw4t9D0baKUH
-         byMt2zeqQnIntjhhwu20JIzFZbDq9LEAweNjSM/QJ+ooJMiyVZM+4a1VFYcCW3lUrfkm
-         e+pPq1JQ46/j0lw0YAKPCxdvoLZFK2ixC8DBCGhSSXq5YXwYfElqzUSc/uNEZQpzVYeQ
-         wpTxmiHgcLyVfyrHBh4ID7utw8G10oFWuFzl3TYMXdPnb8nSgtmebQ+/E1R9DXQ+hpO8
-         JiaYJ2R/MmMxrJlu5caCZgP1L7gh2ei9wZmnkuPZZMArcD2gYwFM+3qbAj6//UKppe7/
-         Askg==
+        d=gapp-nthu-edu-tw.20251104.gappssmtp.com; s=20251104; t=1779797978; x=1780402778; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nNjc6hdeP19AY8GeuH3uphO5Ltq9yMQpHpBo9KrDePk=;
+        b=L9pSo6B9cbk+TG0BlYRxeAnLUnEItY4jg6CmvGRJ/0ok4TUWZlBbcHT3rj3OvWtt4C
+         Pd0rZkUFqXUWWEnoDSjV2EwbzVbg3eiZYvTonlIB8KAcoU4TpESc5BmFn5A9b3rZH6Oi
+         DhMvr7XXAhpsdVST5RDBN9+A5PFZ89m3dLvFTXmVv1VnIkaXRp2WiB6VDPAM5HcxEvJx
+         gl6zepYkK7nh/CwF58xJHDgQUA99miNzPfk2DNuKo63k++FDVJd8ouHtq7D91L71RrwA
+         6s+WD63DsqXmkKk0FlmkcvrwC26nwvPvaPGwaX+l7XB1Anmg+ICZw0quZF5EdhnOKTnZ
+         d4JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779796805; x=1780401605;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CoKLuje7HUGv4pGCvIBQiUOeF+gz3p4jM4FxO+bIdX0=;
-        b=IkKaAlT3H0d1fvsCDghf8fIsBezjAAMWT3pQ6J4WbFr0FQjueiMmMxDk2JSA6MLdAf
-         tgFrLtL3aJNtZNc75hwPiOsGI+J5yzK1Y4tQT31wSEm2oNbjhOLLqX3ptpo3Gn6PF0rY
-         /sNCLZQNvm39DQpDKURBrX42UtAvovTxs5z7NN/g2zBgnY9e1PUnvWByngGNv4vMGpOb
-         HvtZzpEIrL6aTGWZHyRUsYyBjSM3GOSQJ7ztQsECQy05DvRcgLcVmqtFxYv4X5a01NRf
-         JNslwdanFAvSbkclSLksL49BxTd8fmyDavQEPngj9OsptPWts+S22xck2JWxEq4O7Yfg
-         RzjA==
-X-Forwarded-Encrypted: i=1; AFNElJ+3ojUmI58piAg32E+X35e5nAUOcVDr2yQ54a9/M8TIPTEuhv9+QX+G+J6/HnPwtqBB/iUktSkE/WEt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEgrHpxeR2VyKAX9rNO/F6OdEF3NAmNKfI+RR4oRnnjW6Dwku0
-	yy/caurAP3p+zxPU/CJl6A/kpJfPwcCZxQdXSbVxyRUMl2Fzauo3eM+UkZjdy/iHJn0BCII3Ky2
-	MRIs8
-X-Gm-Gg: Acq92OE6/67HcK5AoW0Hov4EddrIo2jTuhxb3q3OqxDyw2Nbc2zxzB8C19GOaCFpugF
-	nHYYkRQX1lnZbN1ozkfaZg/l4HqW5btP9+42Wuv0R03/6g8WoM0q0gfHJ2Jr1JZZR1+nJk9KDcc
-	B9jpjvN/GjujIC/rwiqbYMJHGL0LElealyYkKiWVjsuWht3lnXspZoM4jiykBHDNUIC79V5lLap
-	ePQVepkFz2gqpyh/TnutXPpzkhMdSSkyneK2uUDF7Vm7W6QQQqa9Mx0Lkj89tqQkX8IheqCkrE9
-	7JcYA18ZSFcrJhPZwkOrWDkVmn23fFr56oSGCVCwUtrdXKzXXy10fdbnKRHETkW0KHK85llfmOc
-	G/nZMurfHFoFxG9w2nVEp7RRGgxyt72tX3wjL3lnLI43JL+bltUg3cL0OMO/j6RHcdfhRlnItaO
-	ojlHH7eqQHX/DZxSi4Ux6CANWNTYai
-X-Received: by 2002:a17:907:a80c:b0:bd5:ec9:e063 with SMTP id a640c23a62f3a-bdd267cae6cmr1071905766b.49.1779796804514;
-        Tue, 26 May 2026 05:00:04 -0700 (PDT)
-Received: from linaro.org ([77.64.147.108])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc61de4c4sm497740166b.42.2026.05.26.05.00.03
+        d=1e100.net; s=20251104; t=1779797978; x=1780402778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nNjc6hdeP19AY8GeuH3uphO5Ltq9yMQpHpBo9KrDePk=;
+        b=ajhyx05+aNoszKnRZH4KkkH/bbHiyqYgEBZWx9vTlobmOGm/xTdbxiTJlwEuV6toEp
+         YuwKeJpV/iceSW0PxjsVYR1PzjD2+QSGr+hAFgZEivOBBz56QiDfx0tB59x1mRarHrVO
+         a93F5hb/7ANt9edYSqYwlTnzppEDT/lGB78hmX/EL/yOYmjk9ZWd/u89lEOXX0bktDto
+         ekwnJOJRJufiVzG2+Zitjh4kZDbmKojmVyPgdZxr+txBEyVHNCe6W1BF0NFS6ZsDtxV9
+         rbd8lMIYEW2WjdfXzISwtb9sAyFs7JKem3LkEHeSYiDBDosF9PB6vMCrCTWHtJXak1Az
+         OiuQ==
+X-Gm-Message-State: AOJu0Yzneq/5ur7Ph8EjLupz/GERtitihtPc3es4sndnjaJFayXJw8OU
+	u66eglI+1oIqsltIcctXInhVCxOL1btch4pdFMDZ+iIZDcDIDdzN2sD5fpho5wPywZU=
+X-Gm-Gg: Acq92OHF5Liqp5otqlyvTIlOdXzbaKMY9SCX3ZHYipHMyBFz6Ep9+QZMlA/Ahvwd8/1
+	Vn1PyNd5QSbzaNFzLzKzlaKt7TbWyScj5cGK6eH0U6ndJAjeOz3IQk4d3QxC+s9Zps8WDUcHMEH
+	oSbJ86z2YqDxjgYC44k8ZXhbSSKcDMdMhUIEVHYRthKl2MRGi+EB5nXWSowz6bU/ULwi33sFaJj
+	ur33yjHN/Y7NqAoWJ09521jlGUZhugYaqnqseM8RMOQKY/WjfRoe2i9ax+9vbxElVIsWaiQegpW
+	Aw+5kmBrz0OgelONpnXj55vh3Vv3s4WVq1ozVVKX6NU3fprsewrwf/txGS096l8rQlFc0NU09Wh
+	bLh/kublf/6/V5y+8GIlU5vRrsyIxZaUpBF/7wHjjUSaaz+Xl+0EN4s+0sI1KOfQjT8Z9fVuNyA
+	aanNBzEXEbzhsAn0tLu04ZJMJjvUGm5x8msteWmDo7dF9z7imhxwMHghZoDnFUv1VBNM8Z+lKkM
+	BX1ivWtmcjhduviv9YuPPEK1xZfxFZPTvFt0K+sXM2qbY/RC2yM63XfEt2L/IVO
+X-Received: by 2002:a17:902:c951:b0:2b4:5aff:de60 with SMTP id d9443c01a7336-2beb06fc2c0mr220261445ad.22.1779797977635;
+        Tue, 26 May 2026 05:19:37 -0700 (PDT)
+Received: from tomato-cultivator-HP-ZBook-15-G6.. (2001-b400-e3f1-2f92-139b-8208-b437-a033.emome-ip6.hinet.net. [2001:b400:e3f1:2f92:139b:8208:b437:a033])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58b387dsm126917765ad.50.2026.05.26.05.19.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 05:00:04 -0700 (PDT)
-Date: Tue, 26 May 2026 13:59:59 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Sneh Mankad <sneh.mankad@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/8] x1e80100: Enable PDC wake GPIOs and deepest idle
- state
-Message-ID: <ahWLPy8vg_neYgrX@linaro.org>
-References: <20260526-hamoa_pdc-v2-0-f6857af1ce91@oss.qualcomm.com>
+        Tue, 26 May 2026 05:19:37 -0700 (PDT)
+From: Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
+Subject: [PATCH] gpio: gpiolib: use seq_puts() for plain strings
+Date: Tue, 26 May 2026 20:19:05 +0800
+Message-ID: <20260526121905.46345-1-ku.loong@gapp.nthu.edu.tw>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260526-hamoa_pdc-v2-0-f6857af1ce91@oss.qualcomm.com>
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gapp-nthu-edu-tw.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[nthu.edu.tw : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37534-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[stephan.gerhold@linaro.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-37535-lists,linux-gpio=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ku.loong@gapp.nthu.edu.tw,linux-gpio@vger.kernel.org];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[gapp-nthu-edu-tw.20251104.gappssmtp.com:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: DA6145D54E5
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nthu.edu.tw:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,gapp.nthu.edu.tw:mid]
+X-Rspamd-Queue-Id: 0B7B55D5711
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 26, 2026 at 04:24:36PM +0530, Maulik Shah wrote:
-> There are two modes PDC irqchip can work in
->         - pass through mode
->         - secondary controller mode
-> 
-> Secondary mode is supported depending on SoC using PDC HW Version v3.0
-> or higher.
-> 
-> +------------------------------------------------------------------------+
-> | SoC             |  SM8350, SM8450  | SM8550, Hamoa   | SM8650, SM8750  |
-> |----------------------------------------------------------- ------------|
-> | Version         |        v2.7      |       v3.0        |       v3.2    |
-> |------------------------------------------------------------------------|
-> | Pass through    |        Yes       |       Yes         |       Yes     |
-> |------------------------------------------------------------------------|
-> | Secondary       |        No        |       Yes         |       Yes     |
-> +------------------------------------------------------------------------+
-> 
-> All PDC irqchip supports pass through mode in which both Direct SPIs and
-> GPIO IRQs (as SPIs) are sent to GIC without latching at PDC, PDC only does
-> inversion when needed for falling edge to rising edge or level low to level
-> high, as the GIC do not support falling edge/level low interrupts.
-> 
-> Newer PDCs (v3.0 onwards) also support additional secondary controller mode
-> where PDC latches GPIO IRQs and sends to GIC as level type IRQ. Direct SPIs
-> still works same as pass through mode without latching at PDC even in
-> secondary controller mode.
-> 
-> All the SoCs defaulted to pass through mode with the exception of some x1e.
-> 
-> x1e PDC may be set to secondary controller mode for builds on CRD boards
-> whereas it may be set to pass through mode for IoT-EVK boards. The mode
-> configuration is done in firmware and initially shipped windows firmware
-> did not have SCM interface to read or modify the PDC configuration.
-> Later only write access is opened up for non secure world.
-> 
-> Using the write access available add changes to modify the PDC mode to
-> pass through mode via SCM write. When the write fails (on older firmware)
-> assume to work in secondary mode.
-> 
-> As the deepest idle state as the PDC can now wake up SoC from GPIOs and
-> revert commit 602cb14e310a ("pinctrl: qcom: x1e80100: Bypass PDC wakeup
-> parent for now").
-> 
-> The series has been tested on x1e80100 CRD with both old and new firmware
-> and also on kaanapali.
-> 
+Replace seq_printf() with seq_puts() where the format string is a
+plain string literal with no format specifiers.
 
-Tested how?
+No functional change intended.
 
-I recommend testing with the tlmm-test module Bjorn added, in all
-supported configurations, to make sure you don't introduce regressions
-for one of them. It would be also good to provide the test results here
-in the cover letter.
+Signed-off-by: Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
+---
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Stephan
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1e6dce430dca..ac2b9546d843 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -5498,8 +5498,8 @@ static int gpiolib_seq_show(struct seq_file *s, void *v)
+ 	if (gc->label)
+ 		seq_printf(s, ", %s", gc->label);
+ 	if (gc->can_sleep)
+-		seq_printf(s, ", can sleep");
+-	seq_printf(s, ":\n");
++		seq_puts(s, ", can sleep");
++	seq_puts(s, ":\n");
+ 
+ 	if (gc->dbg_show)
+ 		gc->dbg_show(s, gc);
+-- 
+2.43.0
+
 
