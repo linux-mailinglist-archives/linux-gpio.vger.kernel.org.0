@@ -1,137 +1,134 @@
-Return-Path: <linux-gpio+bounces-37572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37573-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8LnhMrPIFmpVrwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37572-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 12:34:27 +0200
+	id WMD/BR/fFmphugcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37573-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 14:10:07 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31D645E2CEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 12:34:27 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE9CF5E3E0F
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 14:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3522030C1F51
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:26:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 93BE83042C6C
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 12:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14553F166A;
-	Wed, 27 May 2026 10:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 263DF3CE4A5;
+	Wed, 27 May 2026 12:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fiQnfptP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5mCvAEx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC6E3E4C95
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 10:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F633CFF50
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 12:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779877500; cv=none; b=ZEw9cB71Ye0484xoUt7qQp/3VKte8ROe9o+EHaCAdSDNq33sEsRzr1b+4OdfuD/iWIW3tTKzoGtb9Fk3xwvtW1uTGeMxTdg6qR+wMGfqF0wlpOtB+yUV6EnWmrB/VesS61EEUOtOEjXBb7EiCEJ3+EtT49HvNtGkiROtCr4uo4M=
+	t=1779883770; cv=none; b=mxeCh3eW31XIa/a0JK2bOZLUlbHeZ2S2sVxXKWRutX1RHm+9qinsjjILnEisI7cK7vnuniWVKJ18uUPO0spsqdd0Rh37+WaDtGPovCONDoBYlcrwAIOOHYanGxbHKdQF6+lRUvdCmx21pC/e27l9UQVFXoqAGijIPKx3ptXMC38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779877500; c=relaxed/simple;
-	bh=54Vut8yEUPqwoDxtfS6e/+CRmN6rV6D4iOKfCHrDefM=;
+	s=arc-20240116; t=1779883770; c=relaxed/simple;
+	bh=48xVH2ydHUSzkmkXtFg8FJeaKVTBONbp/dt4isx7Ht4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F+a5omIm84tDdbEehCkmc7CjntQcuQvB+Z3og24oJcdzidhyjw6mh06p8RnTNO7Vc3rf0EyFQuuHPM92lSCVbcABii4wAfU9dIVv6v7EJL/jkptg4CyrZeR8Z2v9eeigoaOLhnTjpFHMhVNMIzSGdCtmM54LUl+0UBAtiTanIN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiQnfptP; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5261F00A3E
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 10:24:59 +0000 (UTC)
+	 To:Cc:Content-Type; b=WxiEwzUCrSTY8gwxZ0pggone4/sqD2WUU8cMNYLA2T8aXLYJGrcla7A5pBAGnvxL3frbmLNl+HZO17xnFQhoJ/mJKHKJAI/BUVN3Jw7ocBoehrxEXmB9MDu9J4qozMEGBpfGnYLvI/WqFoz+wtZXs9iyb0QFm7AGxlzjxepWllo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5mCvAEx; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83AD51F01558
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 12:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779877499;
-	bh=PhjmxFjwwCN9mtL0tweSuVfQWxjCoorbOogxFYHAm6g=;
+	s=k20260515; t=1779883768;
+	bh=FTXkfOnDfFOTWvqRAuPOSVt2uty57HoIgjltwQPQoFU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=fiQnfptPOhWQF4VrktqLigvY3/5wu+QuTdnXVssp/5NGyJeTZq/O4Fj9Ij+Fq3OfT
-	 iE/JdEjaaBFqhrhJqv37ovl0nASlhBOmMmZi6jqCigYW9SIs2ExwYnfy4njIgDktAf
-	 uz8FCmh8yyvranRiyV9OZZDqyiGdggBIys9dc6eiZOmG9sa7dtaU1mJRo8wG1wnvLa
-	 phn23ZAya5dck2djyhgHKn4dPHP1AbMFQe6LM3Ve8WxjEExEFbAiorbNgpuN60uCds
-	 3eJopsetYpIk2zwBKWs7WZUiSTBc+KVNPGEXTTm4xig0Zu9cMJDypYqrUHgilBaQ/F
-	 Rukc/2+AEs1gw==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5aa4b50e054so637814e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 03:24:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8+VI1ZU+Lb0jZbV6iLRzoLBB3BE39RPCmqcm4WFSrli9Su3SRt9TGTWfuLHHG+8ifLmeugGT6fhzC/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP2EQCKBtrSdw7SNMRTVUFAroT0NbVNQx6z21vfMT4AHI2b38g
-	JhJBqSjtP0JdLqGOhG4V+ZPY0EdBn+7U8Hxjj+bCuUcnbx7Aww781xqXkalcXUN+qnbARRscmKA
-	8UzEfB90r/k7k40lJtJ7kUFQUN0IttGM=
-X-Received: by 2002:a05:6512:66c6:20b0:5a8:fbe0:bc59 with SMTP id
- 2adb3069b0e04-5aa323713femr5083827e87.26.1779877497800; Wed, 27 May 2026
- 03:24:57 -0700 (PDT)
+	b=W5mCvAExioPbWSMpLlS3cvZsX7FL3JLnM+jz3Gk+fGVT7DTto9l83tyjB0duJy551
+	 +Anm+McoL+ATRFuUtLadwR1CsMzLdBxCv05X2cIrCGFvYqHE353aq1RNyRJHgVoMzA
+	 RsQ++1+GvgUqx5Vv/78rZmdhAidJ3vJwUcKgbNI7DkQzISaU3irxdiif7O53VdJWPH
+	 C/Po1imBk6IA1ue96Ey5plTHIjuyoYd9S4HR1cgC/72rTodU/vaav/F/V7lXRCOwbD
+	 ZU3AFJ2bZ64+w9/QhItakKgFy5rJ20BOVGols+ecb88EDQC9lE9LypHft95fwjk6iF
+	 7K+L4oahe3BAA==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso12572957e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 05:09:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8n5LvMh9VNdYZsB+Ch3pACDCTnppZitUltaZrO4TWb5ZmKLrJAAB3b53JitGDEghipAM2bSxal4iBO@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn91AX/rixDZYCz5dH8BEdD+w2hrnElQKihjrCj9yVmCUD56ri
+	axPhdGOskso6lIMB/2NF1wDkitUQrJGWKnrYWyRWiiI2CUZlxR5v4kcZYI56Iy2TBFbAqubuVVD
+	q2nh7O0X+MLOAblVZk79xrZJSEDO0jLQ=
+X-Received: by 2002:a05:6512:3ca7:b0:5a8:8825:15fc with SMTP id
+ 2adb3069b0e04-5aa3238ba06mr8164473e87.3.1779883767164; Wed, 27 May 2026
+ 05:09:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260520173129.1382489-1-markus.stockhausen@gmx.de> <CAMRc=Mf6EQDF-fSVb+jhmLvMUi2eJ5QhukKC08S-T12HKinibw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf6EQDF-fSVb+jhmLvMUi2eJ5QhukKC08S-T12HKinibw@mail.gmail.com>
+References: <20260427134231.531222-1-pshete@nvidia.com>
+In-Reply-To: <20260427134231.531222-1-pshete@nvidia.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 27 May 2026 12:24:44 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=d9e5HiR=JtwNjiDy-ihq-kzPo+1JtxH4Mwm+LZ6CG5A@mail.gmail.com>
-X-Gm-Features: AVHnY4KsezWlZhA89NKwYqbOlKvs0VxGBAW0VxlCJY7vE6O64KDdhO6fPwFE_8A
-Message-ID: <CAD++jL=d9e5HiR=JtwNjiDy-ihq-kzPo+1JtxH4Mwm+LZ6CG5A@mail.gmail.com>
-Subject: Re: [PATCH v3] i2c: i2c-gpio: Enhance driver for buses with shared SCL
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Markus Stockhausen <markus.stockhausen@gmx.de>, wsa+renesas@sang-engineering.com, 
-	andi.shyti@kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 27 May 2026 14:09:13 +0200
+X-Gmail-Original-Message-ID: <CAD++jLknF3oSMC3=FJ_RK-xwW5p26BcjiG6BGivrjRoqTRrKAQ@mail.gmail.com>
+X-Gm-Features: AVHnY4K8_P6is2XDE_AI6bl-s0O8Bgg55Zzg51voovFh3rgPjMzEXLxRnfzrlGk
+Message-ID: <CAD++jLknF3oSMC3=FJ_RK-xwW5p26BcjiG6BGivrjRoqTRrKAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Add Tegra238 and Tegra264 pinctrl support
+To: pshete@nvidia.com
+Cc: thierry.reding@kernel.org, jonathanh@nvidia.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, webgeek1234@gmail.com, 
+	rosenp@gmail.com, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmx.de,sang-engineering.com,kernel.org,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-37572-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,gmail.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37573-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Rspamd-Queue-Id: 31D645E2CEC
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: CE9CF5E3E0F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 21, 2026 at 10:59=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
-rg> wrote:
+On Mon, Apr 27, 2026 at 3:43=E2=80=AFPM <pshete@nvidia.com> wrote:
 
-> >  /*
-> >   * Toggle SDA by changing the output value of the pin. This is only
-> >   * valid for pins configured as open drain (i.e. setting the value
-> > @@ -53,7 +72,7 @@ static void i2c_gpio_setscl_val(void *data, int state=
-)
-> >  {
-> >         struct i2c_gpio_private_data *priv =3D data;
-> >
-> > -       gpiod_set_value_cansleep(priv->scl, state);
-> > +       gpiod_set_value_cansleep(priv->scl->gpio, state);
+> From: Prathamesh Shete <pshete@nvidia.com>
 >
-> That one bothers me a bit. We're driving a clock line but may end up
-> sleeping? That doesn't sound right. We typically do:
->
-> setscl();
-> udelay();
->
-> I know it's been like this before and maybe I'm not understanding the
-> whole picture so feel free to disregard the comment.
+> Add pinctrl driver support for Tegra238 and Tegra264 along with the
+> corresponding device tree binding documentation. Additionally, export
+> tegra_pinctrl_probe() to allow the drivers to be built as loadable module=
+s.
+(...)
+> Prathamesh Shete (6):
+>   pinctrl: tegra: Export tegra_pinctrl_probe()
+>   dt-bindings: pinctrl: Document Tegra238 pin controllers
+>   pinctrl: tegra: Add Tegra238 pinmux driver
+>   dt-bindings: pinctrl: Document Tegra264 pin controllers
+>   pinctrl: tegra: Add Tegra264 pinmux driver
 
-I think there are people driving I2C on slow buses, i.e. a bit-banged
-GPIO I2C on a GPIO expander which is itself on I2C.
+These 5 patches applied to the pinctrl tree.
 
-I'm not saying such hardware design is a good idea, but I think
-I've seen it...
+>   arm64: tegra: Add pinctrl nodes for Tegra264
 
-The only way to make that work is to use gpiod_set_value_cansleep().
+Please funnel this through the SoC tree.
+
+Sorry for taking so long, trying to use korgalore
+and manage to screw things up for myself...
 
 Yours,
 Linus Walleij
