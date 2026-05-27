@@ -1,572 +1,167 @@
-Return-Path: <linux-gpio+bounces-37550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EDhLNW+YFmrmngcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37550-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:08:31 +0200
+	id MAK1J5WXFmrVngcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37551-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:04:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DC895E0398
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:08:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA5B65E02EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A566E3056DFA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 07:04:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8D29F301C3E7
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 07:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7892B3B7B9D;
-	Wed, 27 May 2026 07:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="OOYXhsgE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5B73B7B98;
+	Wed, 27 May 2026 07:04:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ultrarisc.com (unknown [218.76.62.146])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA2F3B1019;
-	Wed, 27 May 2026 07:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B053B6347
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 07:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779865477; cv=none; b=VZRAA3+p4s1//1UC3tUnKE0DKJsUzMIy/ez64jRE9yKpyg7BGIRJk2G40vKxCJ58NCUGYdTL/QnekV6Vpn10NiTiMPLNAjhHzxVYIxaV1bdgq53zzrs5QOF9Q9yh71yGumxm+chsTcvm0n12JoUaG0aga77TATNE7q4Vfpm7Sms=
+	t=1779865491; cv=none; b=kDNjodD/+HZcQ1FXCNj4vmSYrOEKhlWO/GgZDy0uNBMEI7g+Joiq6trMg7QwrXuPxR5NUKjdnsonxM4+E48P/s5zz+ZDT+O/yeMeVtuDjUSi0TkVdrT/gsXGT2jERae7xq0hxkrsBAFSyIVxdBmPRUoVyrlBzuKqFQMu/RkZWms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779865477; c=relaxed/simple;
-	bh=tGdFSqzMEN3NmxQwAjal9tpkjB0+/g95acl0NbBI+Jk=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=OclicmfA6vaMJzKj1ttAS6dH7bz98CXPJouAXBcaJRQ5gnRqxanF2++6VVRtaptYPgdqP6fzZmnX/pbacI4dqEAEO7IYtl1WvZfBud1W9QK6xdmsFyasntXIkSV718FKmbecSIFTuSXFzugQG7r6DbFOYbdMvrM4fvjRcn/tq4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=pass smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=OOYXhsgE; arc=none smtp.client-ip=218.76.62.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ultrarisc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
-	References:Date:Message-Id; bh=1WM/39//WGvXHW1V0RC8H+uIQUK0lDDH9
-	5c7F7QKUkc=; b=OOYXhsgEop6fWzrQZ2+wRysohytXyUu0TBcwJqX4JNINKm4aX
-	5k+1/pV3RLB26wjjvEmZxhHyCJdV1idxQeSVkQCXvQslru/9xxmYP2iose21o4Re
-	obfnX0WFwEvggvIBnF4CVDhacz9E0Pl/zB3sMDGrbvMczeKJ7x1jjMWKVE=
-Received: from [127.0.0.1] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAfwA3cUKWlxZqrVUGAA--.7991S2;
-	Wed, 27 May 2026 15:04:54 +0800 (CST)
+	s=arc-20240116; t=1779865491; c=relaxed/simple;
+	bh=GKMmnSobBzwl8JTLQd/YSJsYNvtWz84m/vNFGhXlBbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pTkZKHNTQvcuhXAIgdPAgrwuT3glJ8Tmc5EoX7TSNd+PRLbiqBmgGTVUOGl9P62dS5wyzPATM/sVXllGLY65cGr/kcwSCLCvtkNlLmCKc2eUn3RmmE14LY6hawSVa4bwkFkkrzjh4nvwG2wnx6ay39Tg/qhUOM5TwU1H0HAHa7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-63124ac76f5so3621840137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 00:04:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779865488; x=1780470288;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6b1O7SqPXRKk3Tzhi5LoKK3yhm2w/yWFcqIE+eebFbc=;
+        b=dIYrp2/aKewmSU+VAOmD7CWL7Jc5j6Cx2zkpME68UDzbdiUSpIK8YO/VC7BtCU6Qka
+         /u/YV6YKS58zLR06WEhxhmWTs3oMeJLX/5pHI8/ml/Iy84JCosa3N5+lsSdTpCERXDF+
+         BMkXCHXFDEUlocGv3eoyEjP6s1kbztlzB99NuLwp64gI6e6thBHoXNiCrnvph49ekZ6l
+         ru/roRhJdMCLz3HjXP+1lEnpsuct7BgLoFfDg1g1cbqIWG8PotbDLaWnSiivZ/A3Ihrh
+         ldCuuUYABuZwPZDi1HgCEQHHguUQzwGGxGyrKug2XVR9OHRuV4n330dHh/iGTXPSiKKZ
+         R2uA==
+X-Forwarded-Encrypted: i=1; AFNElJ/qPWQj9O76SPyMbe+/uK6sL38PrI68fPMYhh6CjvezPw5gmxfrR9z+RcMFLVE5soVOIpfhxv8LyYwQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0JubJOVh/O+8QA7bZQjAd3WYrPgqx8V2Hxg9g5Cp8EJD60Y43
+	4+DvhAW8HclUV6rsZAK7ivetIX237Iy3wsn6iGPQrf3Er8mVANkDAzJeiWz+MHX/3G4=
+X-Gm-Gg: Acq92OEcOzHb604lk8o4lH/nf/bAEFCiPJAujmWcpRuLMN5C2RYhUixcFfh8stNc0Ik
+	VbE5gQh8oD5pCmiUezW83i3+ZCmdYNyxrl0Qi8nc5Z2rnjAhhaylLwAXgQ8mZC6I0OMKtNdLNjQ
+	IjlPLPw5JpXeRQlEukKk9kZU8pYs3/ilx23BiNZMTamXKyQscmyiRqjEuoOBmE4AtQtmR4yTgsW
+	oK3zGn7C/t3u8nBzKpEE/MDNoG3Gw8WU1DuLgGb8WpHCoDpu8baY0GYqXrl6KM4My2YE1iUChSC
+	STiEvv6NHPjOtG7Yg0hjEMZNBYYyN3ef5UnK8CzOsuCARfHN14l8+LQMbdxCMePFcKR97+V32kz
+	aAyEDfAoGGgmjTwL4rFHvvBEBYf4mRagCQ/1C3hcaYBycX93ICV6zfKg1FRNWIfx4R5j+vo2qjp
+	HLAf1DRtdYEgbDpKCtDZoIagTqs9pn+ImW3yV44XLz3B/euay+cXiqaAGhT4rStr6ZElQU2ac=
+X-Received: by 2002:a05:6102:6a88:b0:6a2:b2a1:f16a with SMTP id ada2fe7eead31-6a2b2eee043mr2110891137.2.1779865488519;
+        Wed, 27 May 2026 00:04:48 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-67ff5f1140asm16350380137.12.2026.05.27.00.04.48
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2026 00:04:48 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-95699e8e26aso3778078241.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 00:04:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9RrxtDQDPYOpKrwKRPDWs2qSZDjg/CEhNZv9Q7/mgXai2Igim2kNUqO1cUN1Vm5vNKlnNLmBvDFJJj@vger.kernel.org
+X-Received: by 2002:a05:6102:3e8d:b0:62f:34db:9474 with SMTP id
+ ada2fe7eead31-67c8c3f0c9amr10644205137.20.1779865487931; Wed, 27 May 2026
+ 00:04:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 5/9] riscv: dts: ultrarisc: Add initial device tree for
- UltraRISC DP1000
-From: Jia Wang <wangjia@ultrarisc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: wangjia@ultrarisc.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@sifive.com>, Conor Dooley <conor@kernel.org>, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-In-Reply-To: <2d7b660c-97d4-4896-97df-7868b1d2fb50@kernel.org>
-References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-ultrarisc-pinctrl-v1-5-bf559589ea8a@ultrarisc.com>
- <2d7b660c-97d4-4896-97df-7868b1d2fb50@kernel.org>
-Date: Wed, 27 May 2026 15:04:14 +0800
-Message-Id: <177986545456.2389245.4189212092340927900.b4-reply@b4>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779865454; l=14219;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=tGdFSqzMEN3NmxQwAjal9tpkjB0+/g95acl0NbBI+Jk=;
- b=0zqjQQ3oPHK466iw08X4uM2f7R/QiRS81acc5nydWc/5nzQR/ki4e9kKfDpvmahypsBZx9a8Z
- MCxEnVpGBWvDJX1LpE+uTvnOXLNyo6jkobYL4C6boKdnmE75GqJEv2c
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-CM-TRANSID:AQAAfwA3cUKWlxZqrVUGAA--.7991S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3ZrWxGrW8Jw1kAr1fur4DArb_yoW8JrWruo
-	Zxtrs3GF48Ga4UJFn5t347tF4jkrWvga13KrW5GF13JF1Yga48Gw1rJr4jyr45WrWYyFyq
-	y3y293WUAayqyrs5n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYH7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	JVWxJwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
-	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
-X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAAEWoVGMYADgAFs6
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+References: <20260522105717.1727837-1-claudiu.beznea@kernel.org>
+In-Reply-To: <20260522105717.1727837-1-claudiu.beznea@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 27 May 2026 09:04:37 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVQCKmmNMYOs1nbE3nEoBk5uoQBVPy448pKAEq8aqLPDw@mail.gmail.com>
+X-Gm-Features: AVHnY4JnV7OBtFs3jVCT30b4PRifJZS7GqIqdG2hkN5jrcNMinu4UQ3d7c-uTdo
+Message-ID: <CAMuHMdVQCKmmNMYOs1nbE3nEoBk5uoQBVPy448pKAEq8aqLPDw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzv2m: Use -ENOTSUPP instead of -EOPNOTSUPP
+To: Claudiu Beznea <claudiu.beznea@kernel.org>
+Cc: linusw@kernel.org, brgl@kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
-	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ultrarisc.com:+];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37550-lists,linux-gpio=lfdr.de];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 4DC895E0398
+	TAGGED_FROM(0.00)[bounces-37551-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-0.992];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,renesas.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: EA5B65E02EB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-05-21 23:05 +0200, Krzysztof Kozlowski wrote:
-> On 15/05/2026 03:18, Jia Wang via B4 Relay wrote:
-> > +
-> > +		cluster0_l3: l3-cache0 {
-> > +			/* L3 cache:
-> 
-> Use Linux coding style. In other places as well. Even netdev does not
-> use that style anymore!
+On Fri, 22 May 2026 at 12:57, Claudiu Beznea <claudiu.beznea@kernel.org> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-
-Will fix comment style, thanks!
- 
-> > +			 * cache-unified, block-size 64B
-> > +			 * 16-way set associative, size 4MB
-> > +			 * per-cluster.
-> > +			 */
-> > +			compatible = "cache";
-> > +			cache-block-size = <64>;
-> > +			cache-level = <3>;
-> > +			cache-size = <0x400000>;
-> > +			cache-sets = <0x1000>;
-> > +			cache-unified;
-> > +			next-level-cache = <&l4_cache>;
-> > +		};
-> > +
-> > +		cluster1_l3: l3-cache1 {
-> > +			/* L3 cache:
-> > +			 * cache-unified, block-size 64B
-> > +			 * 16-way set associative, size 4MB
-> > +			 * per-cluster.
-> > +			 */
-> > +			compatible = "cache";
-> > +			cache-block-size = <64>;
-> > +			cache-level = <3>;
-> > +			cache-size = <0x400000>;
-> > +			cache-sets = <0x1000>;
-> > +			cache-unified;
-> > +			next-level-cache = <&l4_cache>;
-> > +		};
-> > +	};
-> > +
-> > +	clocks {
-> > +		device_clk: device_clk {
-> 
-> You need to follow DTS coding style.
-> 
-> Anyway, something like "device clock" is completely uninformative or
-> even incorrect. I really doubt such thing as "device clock" exists...
-> 
-> Please use name for all fixed clocks which matches current format
-> recommendation: 'clock-<freq>' (see also the pattern in the binding for
-> any other options).
-> 
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml
-> 
-
-Will fix the clock naming.
-
-As discussed with Conor, I will also introduce a separate read-only clock
-driver and binding in a separate series to replace the current fixed-clock
-usage. The DTS will be updated accordingly once this new clock is in place.
-
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <62500000>;
-> > +			#clock-cells = <0>;
-> > +		};
-> > +
-> > +		timer_clk: timer_clk {
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <50000000>;
-> > +			#clock-cells = <0>;
-> > +		};
-> > +
-> > +		csr_clk: csr_clk {
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <250000000>;
-> > +			#clock-cells = <0>;
-> > +		};
-> > +	};
-> > +
-> > +	l4_cache: l4-cache {
-> > +		/* L4 cache:
-> > +		 * cache-unified, block-size 64B
-> > +		 * 16-way set associative, size 16MB
-> > +		 * shared by the SoC.
-> > +		 */
-> > +		compatible = "cache";
-> > +		cache-block-size = <64>;
-> > +		cache-level = <4>;
-> > +		cache-size = <0x1000000>;
-> > +		cache-sets = <0x4000>;
-> > +		cache-unified;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x00 0x80000000 0x4 0x00000000>;
-> > +	};
-> > +
-> > +	soc {
-> > +		compatible = "simple-bus";
-> > +		ranges;
-> > +		#address-cells = <0x02>;
-> > +		#size-cells = <0x02>;
-> 
-> <2> This is not hex and definitely does not need padding with 0.
-> 
-> > +
-> > +		clint: clint@8000000 {
-> > +			compatible = "sifive,clint0", "riscv,clint0";
-> > +			reg = <0x00 0x8000000 0x00 0x100000>;
-> > +			interrupts-extended = <&cpu0_intc 0x03>, <&cpu0_intc 0x07>,
-> > +					      <&cpu1_intc 0x03>, <&cpu1_intc 0x07>,
-> > +					      <&cpu2_intc 0x03>, <&cpu2_intc 0x07>,
-> > +					      <&cpu3_intc 0x03>, <&cpu3_intc 0x07>,
-> > +					      <&cpu4_intc 0x03>, <&cpu4_intc 0x07>,
-> > +					      <&cpu5_intc 0x03>, <&cpu5_intc 0x07>,
-> > +					      <&cpu6_intc 0x03>, <&cpu6_intc 0x07>,
-> > +					      <&cpu7_intc 0x03>, <&cpu7_intc 0x07>;
-> > +		};
-> > +
-> > +		plic: plic@9000000 {
-> > +			compatible = "ultrarisc,dp1000-plic", "ultrarisc,cp100-plic";
-> > +			reg = <0x00 0x9000000 0x00 0x4000000>;
-> > +			#interrupt-cells = <1>;
-> > +			#address-cells = <0>;
-> 
-> So hex or not hex? Please fix your DTS so it is consistent.
-> 
-
-I will clean up the inconsistent hex/decimal formatting across the DTS and
-remove the unnecessary padding in the next version.
-
-> > +			interrupt-controller;
-> > +			interrupts-extended = <&cpu0_intc 0xb>, <&cpu0_intc 0x9>, <&cpu0_intc 0xa>,
-> > +					      <&cpu1_intc 0xb>, <&cpu1_intc 0x9>, <&cpu1_intc 0xa>,
-> > +					      <&cpu2_intc 0xb>, <&cpu2_intc 0x9>, <&cpu2_intc 0xa>,
-> > +					      <&cpu3_intc 0xb>, <&cpu3_intc 0x9>, <&cpu3_intc 0xa>,
-> > +					      <&cpu4_intc 0xb>, <&cpu4_intc 0x9>, <&cpu4_intc 0xa>,
-> > +					      <&cpu5_intc 0xb>, <&cpu5_intc 0x9>, <&cpu5_intc 0xa>,
-> > +					      <&cpu6_intc 0xb>, <&cpu6_intc 0x9>, <&cpu6_intc 0xa>,
-> > +					      <&cpu7_intc 0xb>, <&cpu7_intc 0x9>, <&cpu7_intc 0xa>;
-> > +			riscv,ndev = <160>;
-> > +		};
-> > +
-> > +		pmx0: pinmux@11081000 {
-> > +			compatible = "ultrarisc,dp1000-pinctrl";
-> > +			reg = <0x0 0x11081000  0x0 0x1000>;
-> > +			#pinctrl-cells = <2>;
-> > +		};
-> > +
-> > +		gpio: gpio@20200000 {
-> > +			compatible = "snps,dw-apb-gpio";
-> > +			reg = <0x0 0x20200000 0x0 0x1000>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clock-names = "bus", "db";
-> > +			clocks = <&csr_clk>, <&device_clk>;
-> > +
-> > +			gpio_a: gpio-port@0 {
-> > +				compatible = "snps,dw-apb-gpio-port";
-> > +				reg = <0>;
-> > +				gpio-controller;
-> > +				#gpio-cells = <2>;
-> > +				snps,nr-gpios = <16>;
-> > +				interrupt-controller;
-> > +				#interrupt-cells = <2>;
-> > +				interrupt-parent = <&plic>;
-> > +				interrupts = <34>;
-> > +				gpio-ranges = <&pmx0 0 0 16>;
-> > +			};
-> > +
-> > +			gpio_b: gpio-port@1 {
-> > +				compatible = "snps,dw-apb-gpio-port";
-> > +				reg = <1>;
-> > +				gpio-controller;
-> > +				#gpio-cells = <2>;
-> > +				snps,nr-gpios = <8>;
-> > +				gpio-ranges = <&pmx0 16 0 8>;
-> > +			};
-> > +
-> > +			gpio_c: gpio-port@2 {
-> > +				compatible = "snps,dw-apb-gpio-port";
-> > +				reg = <2>;
-> > +				gpio-controller;
-> > +				#gpio-cells = <2>;
-> > +				snps,nr-gpios = <8>;
-> > +				gpio-ranges = <&pmx0 24 0 8>;
-> > +			};
-> > +
-> > +			gpio_d: gpio-port@3 {
-> > +				compatible = "snps,dw-apb-gpio-port";
-> > +				reg = <3>;
-> > +				gpio-controller;
-> > +				#gpio-cells = <2>;
-> > +				snps,nr-gpios = <8>;
-> > +				gpio-ranges = <&pmx0 32 0 8>;
-> > +			};
-> > +		};
-> > +
-> > +		uart0: serial@20300000 {
-> > +			compatible = "ultrarisc,dp1000-uart", "snps,dw-apb-uart";
-> > +			reg = <0x00 0x20300000 0x00 0x10000>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <17>;
-> > +			clock-frequency = <62500000>;
-> > +			reg-io-width = <0x04>;
-> > +			reg-shift = <0x02>;
-> > +		};
-> > +
-> > +		uart1: serial@20310000 {
-> > +			compatible = "ultrarisc,dp1000-uart", "snps,dw-apb-uart";
-> > +			reg = <0x00 0x20310000 0x00 0x10000>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <18>;
-> > +			clock-frequency = <62500000>;
-> > +			reg-io-width = <0x04>;
-> > +			reg-shift = <0x02>;
-> > +		};
-> > +
-> > +		uart2: serial@20400000 {
-> > +			compatible = "ultrarisc,dp1000-uart", "snps,dw-apb-uart";
-> > +			reg = <0x00 0x20400000 0x00 0x10000>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <25>;
-> > +			clock-frequency = <62500000>;
-> > +			reg-io-width = <0x04>;
-> > +			reg-shift = <0x02>;
-> > +		};
-> > +
-> > +		uart3: serial@20410000 {
-> > +			compatible = "ultrarisc,dp1000-uart", "snps,dw-apb-uart";
-> > +			reg = <0x00 0x20410000 0x00 0x10000>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <26>;
-> > +			clock-frequency = <62500000>;
-> > +			reg-io-width = <0x04>;
-> > +			reg-shift = <0x02>;
-> > +		};
-> > +
-> > +		spi0: spi@20320000 {
-> > +			compatible = "snps,dw-apb-ssi";
-> > +			reg = <0x0 0x20320000 0x0 0x1000>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <19>;
-> > +			num-cs = <3>;
-> > +		};
-> > +
-> > +		spi1: spi@20420000 {
-> > +			compatible = "snps,dw-apb-ssi";
-> > +			reg = <0x0 0x20420000 0x0 0x1000>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <27>;
-> > +			num-cs = <3>;
-> > +		};
-> > +
-> > +		i2c0: i2c@20330000 {
-> > +			compatible = "snps,designware-i2c";
-> > +			reg = <0x0 0x20330000 0x0 0x100>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clock-frequency = <400000>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <20>;
-> > +		};
-> > +
-> > +		i2c1: i2c@20340000 {
-> > +			compatible = "snps,designware-i2c";
-> > +			reg = <0x0 0x20340000 0x0 0x100>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clock-frequency = <400000>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <21>;
-> > +		};
-> > +
-> > +		i2c2: i2c@20430000 {
-> > +			compatible = "snps,designware-i2c";
-> > +			reg = <0x0 0x20430000 0x0 0x100>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clock-frequency = <400000>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <28>;
-> > +		};
-> > +
-> > +		i2c3: i2c@20440000 {
-> > +			compatible = "snps,designware-i2c";
-> > +			reg = <0x0 0x20440000 0x0 0x100>;
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			clock-frequency = <400000>;
-> > +			clocks = <&device_clk>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <29>;
-> > +		};
-> > +
-> > +		pcie_x16: pcie@21000000 {
-> > +			compatible = "ultrarisc,dp1000-pcie";
-> > +			reg = <0x0 0x21000000 0x0 0x01000000>,
-> > +			      <0x0 0x4fff0000 0x0 0x00010000>;
-> > +			reg-names = "dbi", "config";
-> > +			ranges = <0x81000000  0x0 0x4fbf0000  0x0 0x4fbf0000  0x0 0x00400000>,
-> > +				 <0x82000000  0x0 0x40000000  0x0 0x40000000  0x0 0x0fbf0000>,
-> > +				 <0xc3000000 0x40 0x00000000 0x40 0x00000000  0xd 0x00000000>;
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			#interrupt-cells = <1>;
-> > +			device_type = "pci";
-> > +			dma-coherent;
-> > +			bus-range = <0x0 0xff>;
-> > +			num-lanes = <16>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <43>, <44>, <45>, <46>, <47>;
-> > +			interrupt-names = "msi", "inta", "intb", "intc", "intd";
-> > +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map = <0x0 0x0 0x0 0x1 &plic 44>,
-> > +					<0x0 0x0 0x0 0x2 &plic 45>,
-> > +					<0x0 0x0 0x0 0x3 &plic 46>,
-> > +					<0x0 0x0 0x0 0x4 &plic 47>;
-> 
-> Why PCIe without any devices is enabled? That's a bus.
-> 
-> Please look how other DTS are written because you created something
-> pretty different than entire kernel style.
-> 
-
-I will review the PCIe node and update it to align with existing DTS
-conventions in the next version.
-
-> > +		};
-> > +
-> > +		pcie_x4a: pcie@23000000 {
-> > +			compatible = "ultrarisc,dp1000-pcie";
-> > +			reg = <0x0 0x23000000 0x0 0x01000000>,
-> > +			      <0x0 0x6fff0000 0x0 0x00010000>;
-> > +			reg-names = "dbi", "config";
-> > +			ranges = <0x81000000  0x0 0x6fbf0000  0x0 0x6fbf0000  0x0 0x00400000>,
-> > +				 <0x82000000  0x0 0x60000000  0x0 0x60000000  0x0 0x0fbf0000>,
-> > +				 <0xc3000000 0x80 0x00000000 0x80 0x00000000  0xd 0x00000000>;
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			#interrupt-cells = <1>;
-> > +			device_type = "pci";
-> > +			dma-coherent;
-> > +			bus-range = <0x0 0xff>;
-> > +			num-lanes = <4>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <63>, <64>, <65>, <66>, <67>;
-> > +			interrupt-names = "msi", "inta", "intb", "intc", "intd";
-> > +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map = <0x0 0x0 0x0 0x1 &plic 64>,
-> > +					<0x0 0x0 0x0 0x2 &plic 65>,
-> > +					<0x0 0x0 0x0 0x3 &plic 66>,
-> > +					<0x0 0x0 0x0 0x4 &plic 67>;
-> > +		};
-> > +
-> > +		pcie_x4b: pcie@24000000 {
-> > +			compatible = "ultrarisc,dp1000-pcie";
-> > +			reg = <0x0 0x24000000 0x0 0x01000000>,
-> > +			      <0x0 0x7fff0000 0x0 0x00010000>;
-> > +			reg-names = "dbi", "config";
-> > +			ranges = <0x81000000  0x0 0x7fbf0000  0x0 0x7fbf0000 0x0 0x00400000>,
-> > +				 <0x82000000  0x0 0x70000000  0x0 0x70000000 0x0 0x0fbf0000>,
-> > +				 <0xc3000000 0xc0 0x00000000 0xc0 0x00000000 0xd 0x00000000>;
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			#interrupt-cells = <1>;
-> > +			device_type = "pci";
-> > +			dma-coherent;
-> > +			bus-range = <0x0 0xff>;
-> > +			num-lanes = <4>;
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <73>, <74>, <75>, <76>, <77>;
-> > +			interrupt-names = "msi", "inta", "intb", "intc", "intd";
-> > +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> > +			interrupt-map = <0x0 0x0 0x0 0x1 &plic 74>,
-> > +					<0x0 0x0 0x0 0x2 &plic 75>,
-> > +					<0x0 0x0 0x0 0x3 &plic 76>,
-> > +					<0x0 0x0 0x0 0x4 &plic 77>;
-> > +		};
-> > +
-> > +		ethernet: ethernet@38000000 {
-> > +			compatible = "snps,dwmac", "snps,dwmac-5.10a";
-> > +			reg = <0x00 0x38000000 0x00 0x1000000>;
-> > +			clocks = <&csr_clk>;
-> > +			clock-names = "stmmaceth";
-> > +			interrupt-parent = <&plic>;
-> > +			interrupts = <84>;
-> > +			interrupt-names = "macirq";
-> > +			local-mac-address = [ff ff ff ff ff ff];
-> 
-> Drop. Not a property of the SoC.
+> The pinctrl and GPIO core code make exceptions for the -ENOTSUPP error
+> code. One such example is gpio_set_config_with_argument_optional(), which
+> returns success when gpio_set_config_with_argument() returns -ENOTSUPP, but
+> reports failure for all other error codes.
 >
-
-Will drop it in the next version.
- 
-> > +			max-speed = <1000>;
-> > +			phy-mode = "rgmii-id";
-> > +			snps,txpbl = <8>;
-> > +			snps,rxpbl = <8>;
-> 
-> I doubt that Ethernet is complete on the SoC - without MAC and all other
-> resources. IOW, it is very weird that this is enabled here. Please explain.
+> Returning -EOPNOTSUPP from the pinctrl driver on the unsupported pinctrl
+> operation may lead to boot failures when pinctrl drivers implements
+> struct gpio_chip::set_config, the system uses GPIO hogs, and the
+> struct gpio_chip::set_config implementation returns -EOPNOTSUPP for the
+> unsupported operations.
 >
-
-I will move the PHY configuration to the board DTS and keep only the MAC
-controller description in the SoC dtsi in the next version.
- 
-> > +		};
-> > +
-> > +		dmac: dma-controller@39000000 {
-> > +			compatible = "snps,axi-dma-1.01a";
-> > +			reg = <0x0 0x39000000 0x0 0x400>;
-> 
-> <0x0 here but why in other places is <0x00?
-> 
-> Write consistent code.
+> Currently, the driver does not implement struct gpio_chip::set_config().
+> To avoid future failures, return -ENOTSUPP from
+> rzv2m_pinctrl_pinconf_set().
 >
+> rzv2m_pinctrl_pinconf_group_get() is used when dumping pinctrl
+> configuration. pinconf_generic_dump_one(), which calls it, makes
+> exceptions for the -EINVAL and -ENOTSUPP error codes. The documentation
+> for struct pinconf_ops::pin_config_group_get states that it "should
+> return -ENOTSUPP and -EINVAL using the same rules as pin_config_get()".
+> The documentation for struct pinconf_ops::pin_config_get states:
+>
+> "get the config of a certain pin, if the requested config is not available
+> on this controller this should return -ENOTSUPP and if it is available but
+> disabled it should return -EINVAL".
+>
+> Return -ENOTSUPP for the unsupported pinctrl operation.
+>
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Will fix to use consistent hex formatting across the DTS. Thanks!
- 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v7.2.
 
-Best regards,
-Jia Wang
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
