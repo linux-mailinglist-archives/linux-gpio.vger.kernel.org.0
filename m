@@ -1,64 +1,64 @@
-Return-Path: <linux-gpio+bounces-37560-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37561-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CG48EVmnFmrAoAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37560-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:12:09 +0200
+	id KCZ9Mo+nFmrEoAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37561-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:13:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98C225E0E2A
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:12:07 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44D845E0E51
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:13:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1FAF93008A5D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:12:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9EFE0301588A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:13:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995E63CFF72;
-	Wed, 27 May 2026 08:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 319013D0937;
+	Wed, 27 May 2026 08:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfZ92c0x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftnF4fhA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C133CFF57
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30743CFF7F
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779869524; cv=none; b=tf/+Qe4/zw0dQbuKFEATY4JYfsrIQ/2sxafxAwK7lxx4H9I9NDdUOVbmb08aic+G8tVzgK/Ouqp0CfdY0r8S4rjmjZalgOM9o62gG4hZ/ilMS8lK2KVvW2Ku+RvrmO8K2/2HTwMFjl9qZGoamHyNwDugbiVatfHAvmc9vvbMcus=
+	t=1779869580; cv=none; b=eoo9w+jIzzZUN96u8DT4faQepTjsux3uWG6za0wl6ip1YJYWJ/FqNYT/HGzNHRVbvG/YI33iNF5jgczYMvKnd3tbONV9CxjMw7UIVSmys/dUJkRvgDna+wMCwGZX04XdPVRoELwNRUJNQHN2RLSxhScZPydnuVbLG0ni2V+H67g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779869524; c=relaxed/simple;
-	bh=BdCRqzp0hLtZVSxP+40v5Ejwp80hUPgziwRcKo0qKQE=;
+	s=arc-20240116; t=1779869580; c=relaxed/simple;
+	bh=HWC9fwCuTJ9oOdNtWLVoGh1IjbBPxggRuAyj9NJ7kzM=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZW5F6B/9TWymhDh1PrqIqMmVMwg7lJAyEFu5tJChtablzHc+CYW7XwwIYze9MNoWB/AT5b/W2amjdZwlf0ewVEHnnjHuxsjOcnNkN8S8JCXXkjs0dduKh2Dn3PHxiQon92ekH8kt6m8RNJEwtXqPJZMq/X/FhrNrGASirTfzS6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfZ92c0x; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D89801F00ACF
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:12:02 +0000 (UTC)
+	 To:Cc:Content-Type; b=YW6Mdx0EmdI7KGdRKkXJaBFHMATdf7LNartVx5boOVCXcPZrq5npJa9mOFQhRmEkpKzWEl/0Htsi9Y8IECigdA9YIRvK0vbZcmGGMs/G/ZBzXD93PXdRT3cUO2sEvDAWHMA1XZQ/1SR2mYFej2uPN5bmLfehrx7UAlHVO6q+nKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftnF4fhA; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F911F00ADB
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779869522;
-	bh=uw2so0frtoJ7L36BG8ZMy2KRPedLJY369P26BUJOLLk=;
+	s=k20260515; t=1779869578;
+	bh=Jh2My/4PVMTyrzVKY1/X4qz5ahSG+REoamijQn1whwA=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=NfZ92c0xHqFVYEwjCEaR10h4Zq7VdUdg23WgrwjKsc9r29Dpuna/TsEzLUGOjY/+b
-	 DasguJf7uRtfrp2IeWPfpNN68WZKq1+H1AgQbSJnezzs1tbZ4tbieTAe2W4c84fK1y
-	 GNEwEdzk1Axh7KRHs+m2nX7M/L80K2wTkrzI5Z0T/wVXstzm6KpPoefrqrkXei7DE3
-	 dtcBYQ+SaqsTb5oVTD/X3nLW0V3MEkmGRSZbOM2ot/1pLTc9/0wboIHnSh/8aMahY8
-	 NB8d7VOSMnOG/T/5zjjJ+BJ3EK2t8nKulOgqteIDfxgueIdWLyV0i8e6OYhTBxtB5o
-	 /NlrYLFHgJiqg==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-393da8f389bso96747291fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 01:12:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8eISa49cm45lK8Sb3msl68n/WkORhdd4p0kRfv62VU7lqNBr3cMC0fV7zyz1rpnoV8Y4oVFS8UO6KL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPbn89uWoTeQh++eImSgOz22cSDe7yUnXkjBbHGPTKESXZq9Ug
-	F95xVRoK7wStUz1+yoRAOd2G0szeBiByqtleGNVyDvn8ovi2tNvUy8Pp3mx7z2Q6z8wcfuGr/Ai
-	2KpgWO02TUyu/E2UEzgVfDOxBP+mn2RqYY91IYdpmNQ==
-X-Received: by 2002:a2e:9187:0:b0:38e:294a:d447 with SMTP id
- 38308e7fff4ca-395d8d1d2a3mr51655011fa.28.1779869521582; Wed, 27 May 2026
- 01:12:01 -0700 (PDT)
+	b=ftnF4fhA2HYjSyeCQJmmgUYVt46QoseJlLvYe+tEnTi7PAsGwi0RWsDOnTfzClziT
+	 KiGjm4SaKCfHKKmP/tCYIxyzbZvP4k+QzOviAWYc+yaCFG9AfrCXYFmWI3lP3SKwDr
+	 UyzRbk7VDJCOwRH1U98M4fPz5r9Be8bhLWHyXJyBWvj1UNy1WnLa4Db8VI0NU6Lzfq
+	 c8n+/6ZTBriwDTG5tb8MbnSlhDKwBbi0GDPer8vRbpwPID8TVJ2BrWiQ5to0Re6iOy
+	 SnTmy+jimZigEJmksEekHzqkyp0YdlR0k35KqzviVfG7b0xYX4z44awmrQ8g/Tfs5+
+	 /0ANeRFXELnEA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-393d6025f99so111000391fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 01:12:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9YKqk0fMpTipFHb/3HSYdVifnEaPIBvCaGwLEVTkS63TZJXDZJbSMBDiCuOK4UqecT/sTHFjwaVJ/c@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuHC47KN2p1cjy1QwkEpYk7Za5BlMM1yHWrHhHgr3ktwv3WBZz
+	APWBPNCZeMqytFCeMvIMCK+8R1tO+t2+UV/JAOxoOAkslbTxIloy1F7/tqS8APeIzghrHcreH2I
+	XsiixqZUKQAg3RoI/tc8m0E+I7xg5DZOvQV7PArOVpQ==
+X-Received: by 2002:a2e:bea0:0:b0:38e:866c:4340 with SMTP id
+ 38308e7fff4ca-395d8e1ac2fmr70867421fa.6.1779869577440; Wed, 27 May 2026
+ 01:12:57 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 27 May 2026 04:11:59 -0400
+ HTTPREST; Wed, 27 May 2026 04:12:55 -0400
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 27 May 2026 04:11:59 -0400
+ HTTPREST; Wed, 27 May 2026 04:12:55 -0400
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260526171050.12785-3-scardracs@disroot.org>
+In-Reply-To: <CAMRc=Mdid6eE0_Vy4WBBz5OQuNg6fOmBGjjGHpWW_mXrcSMA9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,21 +66,21 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CAMRc=Mfk9tP091DN=5kjb8fvFhj1=MiBZSq4NJ7+k5LNCVy9bw@mail.gmail.com>
- <20260526171050.12785-1-scardracs@disroot.org> <20260526171050.12785-3-scardracs@disroot.org>
-Date: Wed, 27 May 2026 04:11:59 -0400
-X-Gmail-Original-Message-ID: <CAMRc=McuW+fU2m+oy6Q0+cOB_Kh0Biz_NRgD5m60M4bmAyuJZg@mail.gmail.com>
-X-Gm-Features: AVHnY4IMDCoU0IV6a-vUPw7eiuq2thFTlobhU6B8muFXFThBWn-86qTSkIm69ug
-Message-ID: <CAMRc=McuW+fU2m+oy6Q0+cOB_Kh0Biz_NRgD5m60M4bmAyuJZg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: rockchip: teardown bugs and resource leaks
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: brgl@kernel.org, heiko@sntech.de, linusw@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+ <20260526171050.12785-1-scardracs@disroot.org> <CAMRc=Mdid6eE0_Vy4WBBz5OQuNg6fOmBGjjGHpWW_mXrcSMA9w@mail.gmail.com>
+Date: Wed, 27 May 2026 04:12:55 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Mer5Ped1G+6xcuUhnzBoK_KLWjgD6VP6W9F=M6=U7sjkw@mail.gmail.com>
+X-Gm-Features: AVHnY4IPDrzwDPTV0moNh90kVcpKP4hnCVac7KNo_swmvzfdOXrfSiJb0NLgTYY
+Message-ID: <CAMRc=Mer5Ped1G+6xcuUhnzBoK_KLWjgD6VP6W9F=M6=U7sjkw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: rockchip: fix resource leaks and teardown bugs
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: heiko@sntech.de, linusw@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, Marco Scardovi <scardracs@disroot.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -89,110 +89,66 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37560-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37561-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 98C225E0E2A
+X-Rspamd-Queue-Id: 44D845E0E51
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 26 May 2026 19:02:46 +0200, Marco Scardovi <scardracs@disroot.org> said:
-> Address several teardown issues and resource leaks in the driver's remove
-> path and error handling:
+On Wed, 27 May 2026 10:10:23 +0200, Bartosz Golaszewski <brgl@kernel.org> said:
+> On Tue, 26 May 2026 19:02:44 +0200, Marco Scardovi <scardracs@disroot.org> said:
+>> Hi Bartosz,
+>> thank you for the review on the first version of this series.
+>>
+>> TL;DR: There's no clock-names property in the DTBs for the GPIO banks,
+>>        and they don't expose a separate debounce clock in hardware.
+>>
+>> Regarding your question: existing DTBs currently do not provide clock-names
+>> for these GPIO nodes and instead rely on positional clock ordering.
+>>
+>> While we could extend the binding to optionally support clock-names going
+>> forward, the driver still needs to remain compatible with existing DTBs, so
+>> it cannot rely on name-based lookup here.
+>>
+>> For this reason, keeping the index-based of_clk_get(..., 1) lookup together
+>> with devm_add_action_or_reset() for cleanup seemed like the safest option.
+>>
+>> A good example can be gpio1 in rk3399-base.dtsi, where the clocks property
+>> is defined as:
+>>
+>>   clocks = <&pmucru PCLK_GPIO1_PMU>;
+>>
+>> If we switched to name-based lookup via devm_clk_get(dev, "db"), it would
+>> fail for existing DTBs because they do not define the corresponding
+>> clock-names property.
+>>
+>> Additionally, PMU banks such as gpio1 do not expose a separate debounce
+>> clock in hardware, so there would not be a matching entry anyway.
+>>
+>> Therefore, using of_clk_get(..., 1) is currently the only approach that
+>> preserves compatibility with existing DTBs while avoiding regressions.
+>>
 >
-> 1. Debounce clock reference leak: The debounce clock (bank->db_clk) is
->    obtained using of_clk_get() which increments the clock's reference
->    count, but clk_put() is never called. Register a devm action to
->    cleanly release it on unbind. Note that of_clk_get(..., 1) remains
->    necessary over devm_clk_get() because the DT binding does not define
->    clock-names, precluding name-based lookup.
+> I see. Can you please reverse the order of the patches? The fix should go into
+> v7.1 and stable branches, patch 1/2 is a new feature so it'll go into v7.2.
 >
-> 2. Unregistered chained IRQ handler: The chained IRQ handler is not
->    disconnected in remove(). If a stray interrupt fires after the driver
->    is removed, the kernel attempts to execute a stale handler, leading
->    to a panic. Fix this by clearing the handler in remove().
+> Bart
 >
-> 3. IRQ domain leak: The linear IRQ domain and its generic chips are
->    allocated manually during probe but never removed. Remove the IRQ
->    domain during driver teardown to free the associated generic chips
->    and mappings.
->
-> Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-> Assisted-by: Antigravity:gemini-3.5-flash
-> Signed-off-by: Marco Scardovi <scardracs@disroot.org>
-> ---
->  drivers/gpio/gpio-rockchip.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 33580093a4e7..c804f970d823 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -638,10 +638,17 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
->  	return ret;
->  }
->
-> +static void rockchip_clk_put(void *data)
-> +{
-> +	struct clk *clk = data;
-> +
-> +	clk_put(clk);
-> +}
-> +
->  static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->  {
->  	struct resource res;
-> -	int id = 0;
-> +	int id = 0, ret;
->
->  	if (of_address_to_resource(bank->of_node, 0, &res)) {
->  		dev_err(bank->dev, "cannot find IO resource for bank\n");
-> @@ -673,6 +680,13 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
->  			dev_err(bank->dev, "cannot find debounce clk\n");
->  			return -EINVAL;
->  		}
-> +
-> +		ret = devm_add_action_or_reset(bank->dev, rockchip_clk_put,
-> +					       bank->db_clk);
-> +		if (ret) {
-> +			dev_err(bank->dev, "failed to register debounce clk action\n");
-> +			return ret;
 
-Use return dev_err_probe() for brevity.
-
-> +		}
->  		break;
->  	case GPIO_TYPE_V1:
->  		bank->gpio_regs = &gpio_regs_v1;
-> @@ -789,6 +803,9 @@ static void rockchip_gpio_remove(struct platform_device *pdev)
->  {
->  	struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
->
-> +	irq_set_chained_handler_and_data(bank->irq, NULL, NULL);
-> +	if (bank->domain)
-> +		irq_domain_remove(bank->domain);
->  	gpiochip_remove(&bank->gpio_chip);
-
-Maybe if you're already touching the driver, use devres for gpiochip_remove()
-too and schedule an action for removing the irq handler?
-
->  }
->
-> --
-> 2.54.0
->
->
+Ah, nevermind my comment, I see patch 1/2 is a fix as well. I'll queue these
+and fix the dev_err_probe() thing in tree.
 
 Bart
 
