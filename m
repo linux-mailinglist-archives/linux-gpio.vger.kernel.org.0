@@ -1,106 +1,106 @@
-Return-Path: <linux-gpio+bounces-37566-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37568-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MXZBJCO4FmqLqAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37566-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:23:47 +0200
+	id AA66LTO4FmqLqAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37568-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:24:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2EB35E1BBF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5BC65E1BE8
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:24:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4BA033006922
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:23:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 625AE3006015
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:23:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 870913EB7E9;
-	Wed, 27 May 2026 09:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20FA73EC2C4;
+	Wed, 27 May 2026 09:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="D/Ezx8zy";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jm9nNa+u"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ULqD3VQj";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YR8K1ZTZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE083EA942
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5134523AB88
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779873812; cv=none; b=NHaJzMX4S0lW8X//o27ABB6j1Z6azbaWiqnouzl83gJCxDoaBUY8dK9+Bmq2E7jVmhl8wrvHw2NSd+RXtwK1085mUvcAFmQ6iV4L/wEaA7OOS4uODm5doN89S0mVVN/R5SEMTQx5zb4FXKeNwumAEEGaagEg2+cElzByxK7xo5g=
+	t=1779873817; cv=none; b=bpaMoFIFdXapuXZTXG1NPLo8iILLyj2p3hsix95b9PEqBKhyFN6qqLeopjcxHBr4hbdiuZ/DWQZPB0v51u+WMum0weut4u/DuyF2edWqRixE5ZzblzP9CNp7cwlb1FPrAMUEtJDnwB45qHvWPmkyOuTeFCAjZEygIcLGjBsLWnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779873812; c=relaxed/simple;
-	bh=zzUV0jy6gFznLS/8IxgTuw9hcE+Kof+0IvFnyhhZ+74=;
+	s=arc-20240116; t=1779873817; c=relaxed/simple;
+	bh=gSdLgqSkpOoecfv/3VBJHW/YQFShiUNpAWkMPY6bhI4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=deGA55xoWC5lLC+sw4KvyGw4SK+YXnB/YEEHwGygHGbtWA4DUkWPm0fg9pDXpIifK0bh5x1c5y+YHAwThOQvy9UI8rNAhbj7odF//+a9HVQXjaFCbCp33Q1J2oVETBvGIkDK/ICchcbWtAJlpW8W6/WG4aiW/P5FKDpTxrCje/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=D/Ezx8zy; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jm9nNa+u; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=JUCVIOK2cBNgBwqz4xmINg8X4hgvcDTjn88h/SIPZYstsFa1XR4e4D5Yf2tLIC5xMocIYMPoXAda0XWsPftyAnNR84dv0ayw7Nn0x53F+Zytm1HM8De/mwEvFP0VJkDp0WMQlkY3G5UO/y+p9lH3em4WU3lCm3oCUSkxs5R54K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ULqD3VQj; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YR8K1ZTZ; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64R8mSGu973121
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:27 GMT
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64R8mZvi051293
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yH718uLubEk87H++cFbixr/BktM2LwHrJfhtUjmE6/Y=; b=D/Ezx8zyQksA+gAz
-	V8Ghh6KCdjVozZVAN8nR4wKjP7ynwuEAUWRCw8lTrWhCA++qdRZCzxPGyOrNzyPW
-	H2GwoTasnHFGkVInV1MUJTUOAwpGKuaD3ayVXVWLXFgz7yxM6CiU2KOmKaaId4yQ
-	zlqEhr9mRvDkVzq+UwRDxX87aEhebzW/1KNLbMWJ4by+4Zu0Yaj8Do0odgq4g3AR
-	EQqv+k1LkQWgtCMBN9I5QeyCRT3GEzL1LF2JmAe328EIdsoBp4Fif3eBvyhCh6C0
-	rgv58GlpSrRpPAvnNedCugxZLdde9MXaehsWxVvXJYK8UQ0Can0w03T9GafbDI3F
-	thumVw==
+	Kf2yRmT+Apw2wjvS6hL1oN8FcR4BN6jTzUh686bjw/g=; b=ULqD3VQj2RF+s/j2
+	BDUiyWtrXt/lpzSDXxI/RBrhpdeJGCgSnKw2sSC8hAi/cr5JclyDEWAlV/pbAu9j
+	mWXDF5tCQdM5/ob/FkwPfzN0oRh3KC/Rug9ANw/gg995V2fLS5EVzhWS5I+mtbOe
+	t4V5VoTf3Kj02N/S31xUJWJNMoAYieRzeHRM+lYhzzjcai7UgLqh7lWHzMtO/iek
+	oIyZwhv7PSSbW2R3kHjJOtPla56Xdw36UI3ltRHkKEi1b0XcOIUuKpCZFt26moVs
+	3ItjXxdAEOMCb/Duj/c9gnA2k1oQiDl8uynl0upv37nuKUN2m6AenJNNBlPSrSS0
+	91ScVg==
 Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4edeff3er5-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4edg5paux0-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:26 +0000 (GMT)
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-304950e5901so1581275eec.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 02:23:26 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 09:23:29 +0000 (GMT)
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-2f3eb8f3419so6769112eec.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 02:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779873806; x=1780478606; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1779873808; x=1780478608; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yH718uLubEk87H++cFbixr/BktM2LwHrJfhtUjmE6/Y=;
-        b=jm9nNa+uoi09vnPfbB5njnsdwVzqraimNxpglIb4fCWqDM+Jx9hG/yogvFD4mU+n8r
-         5nxYv4bPlAHU6Q93JxcBeN3wSuSQHuP4DYNzaXxBF3m+VewhGbMX2tFvC1Eyt5WLKeIg
-         4rzzH2/PoKb5uHyZON8v6NYAX6tHxJOERGhw900a1moHsBzfDVgMBtobAcbsKhA0FUVv
-         qDMAHedMY2U6NwPRLU/2jF4MoOUPrGcd7+qlXu4ZJi0NgzAVb+cU1Uh5kXBxXHwbsopX
-         2iAH1V7ecbMjtTgeEA+OlHWESPCksfP7Ivp5N4DKjoeiqXMTigEWi3ItQHW2596fF4km
-         W2hw==
+        bh=Kf2yRmT+Apw2wjvS6hL1oN8FcR4BN6jTzUh686bjw/g=;
+        b=YR8K1ZTZsK0TT6FoPLPX567zu45VGywj3nE/0FjCRiV16cF5hxtcwoAZSCkfbbLo1U
+         nV+o1EF5Yuiuhls35qvRLNe42HOsslbT3H2WGdHFMxIHjj/FRQP85oT1gFc8ltFO7Swa
+         RNhgX9mkoaHtcvOmFVcMTOXyRG86xzvsj2aVJcV7pC5QrH2AfoLuClrlpaWdhspuJgCS
+         f+JcgyDg0u0hedxqETHx1l1+retPNteu3rTLGMILzpd11Ouafpo9e9JC8TxfIfp+5GoZ
+         8Vx7ZaNFsWpY8qmWNzn2ieCKbROk+anp2+JuM1VPosER9Avks6XDDV80qrABYKKmTHmL
+         JjYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779873806; x=1780478606;
+        d=1e100.net; s=20251104; t=1779873808; x=1780478608;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=yH718uLubEk87H++cFbixr/BktM2LwHrJfhtUjmE6/Y=;
-        b=k/vPP0vD5PlwauVWqgqfDqmclSL7YEzsahjih84Uxr5D8L1Gc+U8j4EEiScRe/jakX
-         vW5lHcT7+eIop8ZrYRq1wKxwhmBxZKyVRmgsSXsxzm8ujEYHRI05M7QqSdQKXZ/heyo4
-         cSygHEq5aPMM/NVnr6ojUBenwj5EFqdt7UiqCXp1hO9NfPEKVPrMcJC5iwhwwpcDcYz+
-         xy1SIcUECOK0aXjuEXzvpPYjRwCnT+JtiioVEdcaGnDgN/zAgln2fbuHFQpCaQQIS37m
-         qJL/MMW5L8Jzta7tlr1pWLo9qbsvI6bkpsIuO02xLa2bGZI6hpmS0njlSbLFyICS9fuV
-         KouQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9ImP2dkoGU/cT6FqMfslZE2xyEV4i/938KgfUpRl7rOTNICz+hzTwbHv7VYE/KBBW+fA2edP25bVQc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYzqivEk+3KGnVP/OAa1Vpk+0nJWW0Xy4/TgXIZ60Lbvj1MYsy
-	KwwO6VqV1gbbo0ciGucWMysUTn5Y2xze8/Y2gFz4yN0kpkowiHDVDm4OEqhPmHOYbAwzaO6kS9R
-	MHahl2vHS46wveh3q8TkvBkohal/IKJo5Wz8FUc+S+5kbieOjloCd13QNqWS/xxG6
-X-Gm-Gg: Acq92OEvVTAK+H4GNm5C0OkwoDa+dfTQ88H0cyw3EWUkRs60NaV0zWvaoaL1gBmY9h6
-	V5YXMeSez5aGQc3zxl1pihwfXc2p6aQTXl+5q2Dzh9b/6bnJaVdhc931gjnF7CCs+vFqYZ28/ss
-	enqP2rGoWQk8u+rVR+139ZFM2MKZ8xyJe8q2MysIGYWDCKS+Vf9k42mdN68W8f7KXKSnDQ3Ga0G
-	Jp0RDCcaTPQ9dc+y2b7LElCi4642Yd301tHDrG7z95UAZGHYi0fHbiaM+/lJALOblSkDDJsTTAo
-	OwwPOAouClj50ylTEP3hux+Eyd7TQYhRdE725kRhIphsRm94YX9nDMidox9bobCqWoccfPnppWj
-	FMMmbss15QrydngDZBu+Bgd8sUudrWd3uEPv+4gY5DhKt+D/FOPBvUoBdDCCQxt19h8DX08sk62
-	+yaunES37V
-X-Received: by 2002:a05:693c:3103:b0:2c1:67e1:61a9 with SMTP id 5a478bee46e88-3044a5ed1abmr8284050eec.13.1779873806039;
-        Wed, 27 May 2026 02:23:26 -0700 (PDT)
-X-Received: by 2002:a05:693c:3103:b0:2c1:67e1:61a9 with SMTP id 5a478bee46e88-3044a5ed1abmr8284028eec.13.1779873805481;
-        Wed, 27 May 2026 02:23:25 -0700 (PDT)
+        bh=Kf2yRmT+Apw2wjvS6hL1oN8FcR4BN6jTzUh686bjw/g=;
+        b=F12HL6TyuKFAu76szR1SCMnbJ/JjaoHdBw0JGEB/+BR3eql3zhvh/DO4wD1Nybctfr
+         wEDjpM1PPkN//ROxXeHmIUxYpVMM3cWNAxXdFPVGqHiFJkyKWaP7Uct685UMRtpV0ymo
+         402Uw6g7PolgU5C6IEq+EPyoP1VONUw/emAVpRZ9hYSmWFyk229XC2RX4O7rnyuSjstf
+         8Lsw4udKF88qOqnRoxTisWM7K6CZdsaNMCa8LFQ9brPPedKD8vrL0X1305XecjSyRrv+
+         Z3mjUle3f9PO+hzUo1xlbQEtogzOK63svbcx52kcIydDiTIqJuOirPnQz+XXxjiFkcju
+         bKpg==
+X-Forwarded-Encrypted: i=1; AFNElJ+COH6+OdRczlemFym6ZdEQlIWawGC7+zy5YUWy6gz0JRS3ppPGcJMq3xPkEkZQTqqh06zEtFIXWl1U@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0fDuT+xUDjHjFjVmj85Tei9vO6shFsyZrFmkshW5MJSOLbbfH
+	qVB3PhFnd89eKsvJLsfWj48Nxb3ct4uprSOFy8GgTEPSZQhUg5a07WSkdLtZAYgFCvWhElfEBwD
+	TaEyR9TRC0W6KIdk3weRiMItf14OM3qkxiSibjK91TsKNZNLrDzJ1Ne96qPrTRy0D
+X-Gm-Gg: Acq92OEtiCf6DHRcFJ7LZsCSvdiv2Wz741LKIdGH14QV9UqZxLx6sB0QfMORbY3Y8OE
+	nnwUWqwPbXv79Dm50JlKp8cdkdtysgzD4/p7i/6VxURq0SqSo76SM9c7k0YruWZT1h5sToAXdX+
+	ksR8AcZwo9r1zyfhD5/P/vgdGSqLbn79ESF9hJECdamWjh5DvOuW6ghQ/aarcw7i0XR68N58itf
+	kAog8NYSYgJyVUuFfCxywMYdhqwXmicCbjOh19fD6cDfrWJ48TAau5D15IRVhL5z0kRwAM+GrGa
+	DPT+MLEPA0qcPw4eKluVigSSauYGmsCiI7XqmVRSH4gM+mZrVMO2DzoClQ5Y0m9S3BtyQLz9Hz5
+	t2OAPv2FkuJmx8sd69NFcCwJRalUf+fwmdyWbEjhKnQQSyruHT/VkGYReJ0Tx2/O+94kTYC22OQ
+	==
+X-Received: by 2002:a05:7300:b507:b0:2ed:e15:c927 with SMTP id 5a478bee46e88-304491471cemr11088581eec.35.1779873808204;
+        Wed, 27 May 2026 02:23:28 -0700 (PDT)
+X-Received: by 2002:a05:7300:b507:b0:2ed:e15:c927 with SMTP id 5a478bee46e88-304491471cemr11088547eec.35.1779873807558;
+        Wed, 27 May 2026 02:23:27 -0700 (PDT)
 Received: from hu-fenglinw-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30451ef4afdsm12598732eec.5.2026.05.27.02.23.24
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30451ef4afdsm12598732eec.5.2026.05.27.02.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 02:23:25 -0700 (PDT)
+        Wed, 27 May 2026 02:23:26 -0700 (PDT)
 From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-Date: Wed, 27 May 2026 02:22:45 -0700
-Subject: [PATCH 2/4] dt-bindings: pinctrl: qcom,pmic-gpio: Add
- level-shifter function
+Date: Wed, 27 May 2026 02:22:46 -0700
+Subject: [PATCH 3/4] pinctrl: qcom: spmi-gpio: Rearchitect for flexible
+ group support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -109,7 +109,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260527-pinctrl-level-shifter-v1-2-1965461d0a7c@oss.qualcomm.com>
+Message-Id: <20260527-pinctrl-level-shifter-v1-3-1965461d0a7c@oss.qualcomm.com>
 References: <20260527-pinctrl-level-shifter-v1-0-1965461d0a7c@oss.qualcomm.com>
 In-Reply-To: <20260527-pinctrl-level-shifter-v1-0-1965461d0a7c@oss.qualcomm.com>
 To: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
@@ -125,38 +125,37 @@ Cc: David Collins <david.collins@oss.qualcomm.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, Fenglin Wu <fenglin.wu@oss.qualcomm.com>
 X-Mailer: b4 0.16-dev-17187
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779873802; l=4717;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779873802; l=16625;
  i=fenglin.wu@oss.qualcomm.com; s=20260324; h=from:subject:message-id;
- bh=zzUV0jy6gFznLS/8IxgTuw9hcE+Kof+0IvFnyhhZ+74=;
- b=fm6Vm71vjQ/cT5mcOuidqAMfp7wRPDLJX12JtwvLLlUkIMDa+aqpgsCT6K1PffhADWwuRzWOq
- QOnugF/WWqJAPhXlAfXePWogIlHMVFVoluKtfYDyHJodt7otBTACn4E
+ bh=gSdLgqSkpOoecfv/3VBJHW/YQFShiUNpAWkMPY6bhI4=;
+ b=7JOHHPfi6jMOMs8bMzQP2SOqUYy3lXw91cMQJbp1kIDJEnk84nUHPRl0CzgWKRUYbL1dMHFaH
+ e68nn7RBCrCC2qg1cXcvEHx+QwDGgyIRunsdky0/Fr+zkuq+A1Fy4U5
 X-Developer-Key: i=fenglin.wu@oss.qualcomm.com; a=ed25519;
  pk=hJdt3E7o54lql+miD2GaxwF74cDyhgNwMbmFOZ46bRU=
-X-Authority-Analysis: v=2.4 cv=ONEXGyaB c=1 sm=1 tr=0 ts=6a16b80e cx=c_pps
+X-Proofpoint-ORIG-GUID: ZZZH9wLYU5ySPRmsO2rz_3GqqPKVkewC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDA5MCBTYWx0ZWRfX9BCYZEWd6IMo
+ eKFw32B4d6QRJpXYEbGjwxRn+wRSXj3qaWBoVLbt5QmKdCbMWh2HrvO86PNcnslUCSJQrgqy11J
+ 6t0FB/CEbUpSfdg8RMna/tOSBe7z4pbk/8VoF7d+sjJK0F89qjEGuQnHm0L035dLbHRy+IjQ8Kv
+ fSgK0TNsl2mmCO2i4iOoKxU/BrMg6kGv1p+0Jf5Pm1XnWZMbWvpzvHNEw2Oi07ILCRRBjH7dRlE
+ HDBVYY1oLom0GNyDiP2uAmAdPyGD20xW3FIIi7TXEhezAvb3uiXeFK3ned/OD68xXjUhhSl6n/a
+ VAUaqYtYfAwt7eAa/wNoLHxZdYZFQZdpGrCM4yyXcy0+3YA1QwLAknttWo76GBRl6x+vi9OiOqO
+ TnDrGl0wiEr2q8uM/RDzjxCg9IA0n/UhkJVMoDVuTJ2lvzoFdVBVgqDYAkIHVOXI0K/hvhJQMLU
+ ViQOc8XGwjJAdOHmW0A==
+X-Authority-Analysis: v=2.4 cv=I95Vgtgg c=1 sm=1 tr=0 ts=6a16b811 cx=c_pps
  a=wEP8DlPgTf/vqF+yE6f9lg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
  a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
- a=EUspDBNiAAAA:8 a=oPYuZtxd-o3nixQqOr8A:9 a=QEXdDO2ut3YA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=EUspDBNiAAAA:8 a=OvJITaBzo-gp9VRKLXEA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
  a=bBxd6f-gb0O0v-kibOvt:22
-X-Proofpoint-ORIG-GUID: EG9AxfEWY_Vvg-KooNj0nEbUi-AKwT8I
-X-Proofpoint-GUID: EG9AxfEWY_Vvg-KooNj0nEbUi-AKwT8I
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDA5MCBTYWx0ZWRfX8EvkZoqZytEX
- xFAHcYrGVrMsegaNDZiGabsdzFi3kWDWYtBdkW9RjNSNXir/q6YrW3yj0v6ll/KyRm4YCT01LzR
- P62aTfqe1SY8yRpY/Xx+zECGPz2ovTtQz/0kCenTpNU/UiRM/aszh17UOMGgJnCx798iLmiReVs
- /WU18ZYm0N8frYiguJAZWXg6QFKWRUfpkzlgveKHikQ/jGyzosdwOc/C3e/xLLY1Cul75CO5yhl
- w1uBbuDO71/UHY4WJsHuhxD+bt+qvL/1pED0fAhDwrkxf2V+QpJhAtJlLYp3Xcl6esPTbFL3b04
- oMrb/EYRdTXVDUnAbvycSxjw+2xGls4mnobgrffYMgJ/hvD/OW7oFSaPrnd+GpUq12qxMX8uVR3
- oJixAdD/TIkXP1Faf/Eyeoh8uhKDsQbA8HlugZVak12zOiMHN3K6h4p7cJGD1dzH7XUPNTVbJSP
- vwd+bkc5Oh5tbwND5lg==
+X-Proofpoint-GUID: ZZZH9wLYU5ySPRmsO2rz_3GqqPKVkewC
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-05-27_01,2026-05-26_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 spamscore=0 suspectscore=0 impostorscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 clxscore=1015
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
- definitions=main-2605270090
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605270090
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
@@ -167,12 +166,12 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-37566-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37568-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[fenglin.wu@oss.qualcomm.com,linux-gpio@vger.kernel.org];
@@ -183,144 +182,513 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: C2EB35E1BBF
+X-Rspamd-Queue-Id: B5BC65E1BE8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add the "level-shifter" function and add the required DT properties to
-allow RPMh firmware to control the level-shifter. Introduce a custom
-parameter "qcom,1p2v-1p8v-ls-en" for enabling or disabling the
-level-shifter function.
+Currently, the driver treats each pin as a group, and every pin or
+group can function correctly in all existing functions. However,
+this approach is no longer valid since some PMIC pins only operate
+together in specific functions, which are limited to certain GPIO
+groups. For example, in pmh0101, the level-shifter function is
+supported only between GPIO pairs like GPIO11/12, GPIO13/14,
+GPIO15/16, and GPIO17/18.
 
-Additionally, add the "groups" property with the allowed group names
-that can be used to control the level-shifter function on pmh0101.
+To better accommodate these new functions and restrict GPIOs to
+those that support them, rearchitect the driver to enable flexible
+pinctrl group configurations by utilizing the generic pinctrl group
+and function APIs.
 
 Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
 ---
- .../bindings/pinctrl/qcom,pmic-gpio.yaml           | 69 +++++++++++++++++++++-
- include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |  1 +
- 2 files changed, 67 insertions(+), 3 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 367 +++++++++++++++++++++----------
+ 1 file changed, 249 insertions(+), 118 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index b8109e6c2a10..016f4ad75033 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -119,6 +119,21 @@ properties:
-       The first cell will be used to define gpio number and the
-       second denotes the flags for this gpio
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index cdd61dae74cf..f159c56784b4 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -24,6 +24,7 @@
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
  
-+  qcom,rpmh:
-+    description:
-+      Phandle to the RPMh controller device. Required for PMICs that support
-+      bidirectional level shifters (e.g., pmh0101) to enable communication
-+      with RPMh firmware for level shifter control.
-+    $ref: /schemas/types.yaml#/definitions/phandle
+ #include "../core.h"
++#include "../pinmux.h"
+ #include "../pinctrl-utils.h"
+ 
+ #define PMIC_GPIO_ADDRESS_RANGE			0x100
+@@ -253,139 +254,124 @@ static int pmic_gpio_write(struct pmic_gpio_state *state,
+ 	return ret;
+ }
+ 
+-static int pmic_gpio_get_groups_count(struct pinctrl_dev *pctldev)
+-{
+-	/* Every PIN is a group */
+-	return pctldev->desc->npins;
+-}
+-
+-static const char *pmic_gpio_get_group_name(struct pinctrl_dev *pctldev,
+-					    unsigned pin)
+-{
+-	return pctldev->desc->pins[pin].name;
+-}
+-
+-static int pmic_gpio_get_group_pins(struct pinctrl_dev *pctldev, unsigned pin,
+-				    const unsigned **pins, unsigned *num_pins)
+-{
+-	*pins = &pctldev->desc->pins[pin].number;
+-	*num_pins = 1;
+-	return 0;
+-}
+-
+ static const struct pinctrl_ops pmic_gpio_pinctrl_ops = {
+-	.get_groups_count	= pmic_gpio_get_groups_count,
+-	.get_group_name		= pmic_gpio_get_group_name,
+-	.get_group_pins		= pmic_gpio_get_group_pins,
++	.get_groups_count	= pinctrl_generic_get_group_count,
++	.get_group_name		= pinctrl_generic_get_group_name,
++	.get_group_pins		= pinctrl_generic_get_group_pins,
+ 	.dt_node_to_map		= pinconf_generic_dt_node_to_map_group,
+ 	.dt_free_map		= pinctrl_utils_free_map,
+ };
+ 
+-static int pmic_gpio_get_functions_count(struct pinctrl_dev *pctldev)
+-{
+-	return ARRAY_SIZE(pmic_gpio_functions);
+-}
+-
+-static const char *pmic_gpio_get_function_name(struct pinctrl_dev *pctldev,
+-					       unsigned function)
+-{
+-	return pmic_gpio_functions[function];
+-}
+-
+-static int pmic_gpio_get_function_groups(struct pinctrl_dev *pctldev,
+-					 unsigned function,
+-					 const char *const **groups,
+-					 unsigned *const num_qgroups)
+-{
+-	*groups = pmic_gpio_groups;
+-	*num_qgroups = pctldev->desc->npins;
+-	return 0;
+-}
+-
+-static int pmic_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned function,
+-				unsigned pin)
++static int pmic_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
++				unsigned int selector)
+ {
+ 	struct pmic_gpio_state *state = pinctrl_dev_get_drvdata(pctldev);
+ 	struct pmic_gpio_pad *pad;
+-	unsigned int val;
+-	int ret;
++	struct group_desc *group;
++	unsigned int val, pin, func;
++	int ret, i;
+ 
+ 	if (function > PMIC_GPIO_FUNC_INDEX_DTEST4) {
+ 		pr_err("function: %d is not defined\n", function);
+ 		return -EINVAL;
+ 	}
+ 
+-	pad = pctldev->desc->pins[pin].drv_data;
+-	/*
+-	 * Non-LV/MV subtypes only support 2 special functions,
+-	 * offsetting the dtestx function values by 2
+-	 */
+-	if (!pad->lv_mv_type) {
+-		if (function == PMIC_GPIO_FUNC_INDEX_FUNC3 ||
+-				function == PMIC_GPIO_FUNC_INDEX_FUNC4) {
+-			pr_err("LV/MV subtype doesn't have func3/func4\n");
+-			return -EINVAL;
++	group = pinctrl_generic_get_group(pctldev, selector);
++	if (!group)
++		return -EINVAL;
 +
-+  qcom,pmic-id:
-+    description:
-+      The ID of the PMIC which supports bidirectional level shifter function.
-+      It is used as the RPMh resource name suffix to request control of the
-+      level shifter to the RPMh firmware.
-+    $ref: /schemas/types.yaml#/definitions/string
-+    pattern: "^[A-N]_E[0-3]+$"
++	/* For standard functions, iterate over all pins in the group */
++	for (i = 0; i < group->grp.npins; i++) {
++		pin = group->grp.pins[i];
++		pad = pctldev->desc->pins[pin].drv_data;
 +
- additionalProperties: false
++		func = function;
++		/*
++		 * Non-LV/MV subtypes only support 2 special functions,
++		 * offsetting the dtestx function values by 2
++		 */
++		if (!pad->lv_mv_type) {
++			if (func == PMIC_GPIO_FUNC_INDEX_FUNC3 ||
++					func == PMIC_GPIO_FUNC_INDEX_FUNC4) {
++				dev_err(state->dev,
++					"pin%d: LV/MV subtype doesn't have func3/func4\n",
++					pin);
++				return -EINVAL;
++			}
++			if (func >= PMIC_GPIO_FUNC_INDEX_DTEST1)
++				func -= (PMIC_GPIO_FUNC_INDEX_DTEST1 -
++						PMIC_GPIO_FUNC_INDEX_FUNC3);
+ 		}
+-		if (function >= PMIC_GPIO_FUNC_INDEX_DTEST1)
+-			function -= (PMIC_GPIO_FUNC_INDEX_DTEST1 -
+-					PMIC_GPIO_FUNC_INDEX_FUNC3);
+-	}
  
- required:
-@@ -330,6 +345,25 @@ allOf:
-           contains:
-             enum:
-               - qcom,pmh0101-gpio
-+    then:
-+      properties:
-+        gpio-line-names:
-+          minItems: 18
-+          maxItems: 18
-+        gpio-reserved-ranges:
-+          minItems: 1
-+          maxItems: 9
-+        qcom,rpmh: true
-+        qcom,pmic-id: true
-+      required:
-+        - qcom,rpmh
-+        - qcom,pmic-id
+-	pad->function = function;
++		pad->function = func;
+ 
+-	if (pad->analog_pass)
+-		val = PMIC_GPIO_MODE_ANALOG_PASS_THRU;
+-	else if (pad->output_enabled && pad->input_enabled)
+-		val = PMIC_GPIO_MODE_DIGITAL_INPUT_OUTPUT;
+-	else if (pad->output_enabled)
+-		val = PMIC_GPIO_MODE_DIGITAL_OUTPUT;
+-	else
+-		val = PMIC_GPIO_MODE_DIGITAL_INPUT;
++		if (pad->analog_pass)
++			val = PMIC_GPIO_MODE_ANALOG_PASS_THRU;
++		else if (pad->output_enabled && pad->input_enabled)
++			val = PMIC_GPIO_MODE_DIGITAL_INPUT_OUTPUT;
++		else if (pad->output_enabled)
++			val = PMIC_GPIO_MODE_DIGITAL_OUTPUT;
++		else
++			val = PMIC_GPIO_MODE_DIGITAL_INPUT;
+ 
+-	if (pad->lv_mv_type) {
+-		ret = pmic_gpio_write(state, pad,
+-				PMIC_GPIO_REG_MODE_CTL, val);
+-		if (ret < 0)
+-			return ret;
++		if (pad->lv_mv_type) {
++			ret = pmic_gpio_write(state, pad,
++					PMIC_GPIO_REG_MODE_CTL, val);
++			if (ret < 0)
++				return ret;
+ 
+-		val = pad->atest - 1;
+-		ret = pmic_gpio_write(state, pad,
+-				PMIC_GPIO_REG_LV_MV_ANA_PASS_THRU_SEL, val);
+-		if (ret < 0)
+-			return ret;
++			val = pad->atest - 1;
++			ret = pmic_gpio_write(state, pad,
++					PMIC_GPIO_REG_LV_MV_ANA_PASS_THRU_SEL, val);
++			if (ret < 0)
++				return ret;
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-               - qcom,pmih0108-gpio
-     then:
-       properties:
-@@ -523,6 +557,19 @@ $defs:
-         items:
-           pattern: '^gpio([0-9]+)$'
++			val = pad->out_value
++				<< PMIC_GPIO_LV_MV_OUTPUT_INVERT_SHIFT;
++			val |= pad->function
++				& PMIC_GPIO_LV_MV_OUTPUT_SOURCE_SEL_MASK;
++			ret = pmic_gpio_write(state, pad,
++				PMIC_GPIO_REG_LV_MV_DIG_OUT_SOURCE_CTL, val);
++			if (ret < 0)
++				return ret;
++		} else {
++			val = val << PMIC_GPIO_REG_MODE_DIR_SHIFT;
++			val |= pad->function << PMIC_GPIO_REG_MODE_FUNCTION_SHIFT;
++			val |= pad->out_value & PMIC_GPIO_REG_MODE_VALUE_SHIFT;
  
-+      groups:
-+        $ref: /schemas/types.yaml#/definitions/string-array
-+        description:
-+          List of GPIO groups to apply properties to. Only valid for
-+          function "level-shifter" on pmh0101. Valid groups are
-+          gpio11, gpio12; gpio13, gpio14; gpio15, gpio16; gpio17, gpio18.
-+        items:
-+          enum:
-+            - gpio11, gpio12
-+            - gpio13, gpio14
-+            - gpio15, gpio16
-+            - gpio17, gpio18
+-		val = pad->out_value
+-			<< PMIC_GPIO_LV_MV_OUTPUT_INVERT_SHIFT;
+-		val |= pad->function
+-			& PMIC_GPIO_LV_MV_OUTPUT_SOURCE_SEL_MASK;
+-		ret = pmic_gpio_write(state, pad,
+-			PMIC_GPIO_REG_LV_MV_DIG_OUT_SOURCE_CTL, val);
+-		if (ret < 0)
+-			return ret;
+-	} else {
+-		val = val << PMIC_GPIO_REG_MODE_DIR_SHIFT;
+-		val |= pad->function << PMIC_GPIO_REG_MODE_FUNCTION_SHIFT;
+-		val |= pad->out_value & PMIC_GPIO_REG_MODE_VALUE_SHIFT;
++			ret = pmic_gpio_write(state, pad, PMIC_GPIO_REG_MODE_CTL, val);
++			if (ret < 0)
++				return ret;
++		}
+ 
+-		ret = pmic_gpio_write(state, pad, PMIC_GPIO_REG_MODE_CTL, val);
++		val = pad->is_enabled << PMIC_GPIO_REG_MASTER_EN_SHIFT;
 +
-       function:
-         items:
-           - enum:
-@@ -536,6 +583,7 @@ $defs:
-               - dtest4
-               - func3  # supported by LV/MV GPIO subtypes
-               - func4  # supported by LV/MV GPIO subtypes
-+              - level-shifter  # supported only by pmh0101
++		ret = pmic_gpio_write(state, pad, PMIC_GPIO_REG_EN_CTL, val);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
  
-       bias-disable: true
-       bias-pull-down: true
-@@ -592,9 +640,24 @@ $defs:
-           configured as digital input.
-         enum: [1, 2, 3, 4]
+-	val = pad->is_enabled << PMIC_GPIO_REG_MASTER_EN_SHIFT;
+-
+-	return pmic_gpio_write(state, pad, PMIC_GPIO_REG_EN_CTL, val);
++	return 0;
+ }
  
--    required:
--      - pins
--      - function
-+      qcom,1p2v-1p8v-ls-en:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Enable or disable the bidirectional 1.2V/1.8V level shifter
-+          associated with the specified GPIO group. When set to 1, an RPMh
-+          vote is sent to AOP to enable the level shifter. When set to 0,
-+          the vote is withdrawn. Only valid when function is "level-shifter"
-+          and groups is a level-shifter GPIO pair (e.g., "gpio11, gpio12"
-+          on pmh0101).
-+        enum: [0, 1]
+ static const struct pinmux_ops pmic_gpio_pinmux_ops = {
+-	.get_functions_count	= pmic_gpio_get_functions_count,
+-	.get_function_name	= pmic_gpio_get_function_name,
+-	.get_function_groups	= pmic_gpio_get_function_groups,
++	.get_functions_count	= pinmux_generic_get_function_count,
++	.get_function_name	= pinmux_generic_get_function_name,
++	.get_function_groups	= pinmux_generic_get_function_groups,
+ 	.set_mux		= pmic_gpio_set_mux,
+ };
+ 
+-static int pmic_gpio_config_get(struct pinctrl_dev *pctldev,
+-				unsigned int pin, unsigned long *config)
++/**
++ * pmic_gpio_pinconf_pin_get() - Get configuration for a single pin
++ * @pctldev: pinctrl device
++ * @pin: Pin number
++ * @config: Configuration parameter to get
++ *
++ * Core function to read a single pin's configuration.
++ * Used by both per-pin and per-group config get operations.
++ */
++static int pmic_gpio_pinconf_pin_get(struct pinctrl_dev *pctldev,
++				     unsigned int pin, unsigned long *config)
+ {
+ 	unsigned param = pinconf_to_config_param(*config);
+ 	struct pmic_gpio_pad *pad;
+@@ -476,8 +462,48 @@ static int pmic_gpio_config_get(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
+-				unsigned long *configs, unsigned nconfs)
++/**
++ * pmic_gpio_pinconf_group_get() - Get configuration for a pin group
++ * @pctldev: pinctrl device
++ * @selector: Group selector
++ * @config: Configuration parameter to get
++ *
++ * For multi-pin groups, we assume all pins have the same configuration,
++ * so we read the configuration from the first pin in the group.
++ */
++static int pmic_gpio_pinconf_group_get(struct pinctrl_dev *pctldev,
++				       unsigned int selector,
++				       unsigned long *config)
++{
++	const struct group_desc *group;
++	unsigned int pin;
 +
-+    oneOf:
-+      - required:
-+          - pins
-+          - function
-+      - required:
-+          - groups
-+          - function
++	group = pinctrl_generic_get_group(pctldev, selector);
++	if (!group)
++		return -EINVAL;
++
++	/*
++	 * For multi-pin groups, we assume all pins have the same configuration,
++	 * so we read the configuration from the first pin in the group.
++	 */
++	pin = group->grp.pins[0];
++
++	return pmic_gpio_pinconf_pin_get(pctldev, pin, config);
++}
++
++/**
++ * pmic_gpio_pinconf_pin_set() - Set configuration for a single pin
++ * @pctldev: pinctrl device
++ * @pin: Pin number
++ * @configs: Array of configuration parameters
++ * @nconfs: Number of configurations
++ *
++ * Core function to configure a single pin.
++ * Used by both per-pin and per-group config set operations.
++ */
++static int pmic_gpio_pinconf_pin_set(struct pinctrl_dev *pctldev,
++				     unsigned int pin,
++				     unsigned long *configs, unsigned int nconfs)
+ {
+ 	struct pmic_gpio_state *state = pinctrl_dev_get_drvdata(pctldev);
+ 	struct pmic_gpio_pad *pad;
+@@ -651,12 +677,58 @@ static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	val = pad->is_enabled << PMIC_GPIO_REG_MASTER_EN_SHIFT;
  
-     additionalProperties: false
+ 	ret = pmic_gpio_write(state, pad, PMIC_GPIO_REG_EN_CTL, val);
++	if (ret < 0)
++		return ret;
  
-diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-index e5df5ce45a0f..b0824d5eb056 100644
---- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-+++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-@@ -105,6 +105,7 @@
- #define PMIC_GPIO_FUNC_DTEST2		"dtest2"
- #define PMIC_GPIO_FUNC_DTEST3		"dtest3"
- #define PMIC_GPIO_FUNC_DTEST4		"dtest4"
-+#define PMIC_GPIO_FUNC_LEVEL_SHIFTER	"level-shifter"
+-	return ret;
++	return 0;
++}
++
++/**
++ * pmic_gpio_pinconf_group_set() - Set configuration for a pin group
++ * @pctldev: pinctrl device
++ * @selector: Group selector
++ * @configs: Array of configuration parameters
++ * @nconfs: Number of configurations
++ *
++ * Iterates over all pins in the group and applies config to each.
++ */
++static int pmic_gpio_pinconf_group_set(struct pinctrl_dev *pctldev,
++				       unsigned int selector,
++				       unsigned long *configs,
++				       unsigned int nconfs)
++{
++	const struct group_desc *group;
++	unsigned int pin;
++	int i, ret;
++
++	group = pinctrl_generic_get_group(pctldev, selector);
++	if (!group)
++		return -EINVAL;
++
++	/* Iterate over all pins in the group and apply config to each */
++	for (i = 0; i < group->grp.npins; i++) {
++		pin = group->grp.pins[i];
++
++		ret = pmic_gpio_pinconf_pin_set(pctldev, pin, configs, nconfs);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
+ }
  
- #define PM8038_GPIO1_2_LPG_DRV		PMIC_GPIO_FUNC_FUNC1
- #define PM8038_GPIO3_5V_BOOST_EN	PMIC_GPIO_FUNC_FUNC1
+-static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
+-				      struct seq_file *s, unsigned pin)
++/**
++ * pmic_gpio_pinconf_pin_dbg_show() - Show configuration for a single pin
++ * @pctldev: pinctrl device
++ * @s: seq_file for output
++ * @pin: Pin number
++ *
++ * Core function that dumps the configuration of a single GPIO pin.
++ * Used by pinconf-pins debugfs, pinconf-groups debugfs, and gpio debugfs.
++ */
++static void pmic_gpio_pinconf_pin_dbg_show(struct pinctrl_dev *pctldev,
++					   struct seq_file *s,
++					   unsigned int pin)
+ {
+ 	struct pmic_gpio_state *state = pinctrl_dev_get_drvdata(pctldev);
+ 	struct pmic_gpio_pad *pad;
+@@ -716,11 +788,46 @@ static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
+ 	}
+ }
+ 
++/**
++ * pmic_gpio_pinconf_group_dbg_show() - Show configuration for a pin group
++ * @pctldev: pinctrl device
++ * @s: seq_file for output
++ * @selector: Group selector
++ *
++ * Shows the configuration for all pins in a group.
++ * Used by the pinconf-groups debugfs interface.
++ */
++static void pmic_gpio_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
++					     struct seq_file *s,
++					     unsigned int selector)
++{
++	const struct group_desc *group;
++	unsigned int pin;
++	int i;
++
++	group = pinctrl_generic_get_group(pctldev, selector);
++	if (!group)
++		return;
++
++	/* Iterate over all pins in the group and show status for each */
++	for (i = 0; i < group->grp.npins; i++) {
++		pin = group->grp.pins[i];
++
++		if (i > 0)
++			seq_puts(s, "\n       ");
++
++		pmic_gpio_pinconf_pin_dbg_show(pctldev, s, pin);
++	}
++}
++
+ static const struct pinconf_ops pmic_gpio_pinconf_ops = {
+ 	.is_generic			= true,
+-	.pin_config_group_get		= pmic_gpio_config_get,
+-	.pin_config_group_set		= pmic_gpio_config_set,
+-	.pin_config_group_dbg_show	= pmic_gpio_config_dbg_show,
++	.pin_config_get			= pmic_gpio_pinconf_pin_get,
++	.pin_config_set			= pmic_gpio_pinconf_pin_set,
++	.pin_config_dbg_show		= pmic_gpio_pinconf_pin_dbg_show,
++	.pin_config_group_get		= pmic_gpio_pinconf_group_get,
++	.pin_config_group_set		= pmic_gpio_pinconf_group_set,
++	.pin_config_group_dbg_show	= pmic_gpio_pinconf_group_dbg_show,
+ };
+ 
+ static int pmic_gpio_get_direction(struct gpio_chip *chip, unsigned pin)
+@@ -745,7 +852,7 @@ static int pmic_gpio_direction_input(struct gpio_chip *chip, unsigned pin)
+ 
+ 	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_ENABLE, 1);
+ 
+-	return pmic_gpio_config_set(state->ctrl, pin, &config, 1);
++	return pmic_gpio_pinconf_pin_set(state->ctrl, pin, &config, 1);
+ }
+ 
+ static int pmic_gpio_direction_output(struct gpio_chip *chip,
+@@ -756,7 +863,7 @@ static int pmic_gpio_direction_output(struct gpio_chip *chip,
+ 
+ 	config = pinconf_to_config_packed(PIN_CONFIG_LEVEL, val);
+ 
+-	return pmic_gpio_config_set(state->ctrl, pin, &config, 1);
++	return pmic_gpio_pinconf_pin_set(state->ctrl, pin, &config, 1);
+ }
+ 
+ static int pmic_gpio_get(struct gpio_chip *chip, unsigned pin)
+@@ -788,7 +895,7 @@ static int pmic_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
+ 
+ 	config = pinconf_to_config_packed(PIN_CONFIG_LEVEL, value);
+ 
+-	return pmic_gpio_config_set(state->ctrl, pin, &config, 1);
++	return pmic_gpio_pinconf_pin_set(state->ctrl, pin, &config, 1);
+ }
+ 
+ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
+@@ -810,7 +917,7 @@ static void pmic_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 	unsigned i;
+ 
+ 	for (i = 0; i < chip->ngpio; i++) {
+-		pmic_gpio_config_dbg_show(state->ctrl, s, i);
++		pmic_gpio_pinconf_pin_dbg_show(state->ctrl, s, i);
+ 		seq_puts(s, "\n");
+ 	}
+ }
+@@ -1129,11 +1236,11 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	pctrldesc->custom_conf_items = pmic_conf_items;
+ #endif
+ 
+-	for (i = 0; i < npins; i++, pindesc++) {
++	for (i = 0; i < npins; i++) {
+ 		pad = &pads[i];
+-		pindesc->drv_data = pad;
+-		pindesc->number = i;
+-		pindesc->name = pmic_gpio_groups[i];
++		pindesc[i].drv_data = pad;
++		pindesc[i].number = i;
++		pindesc[i].name = pmic_gpio_groups[i];
+ 
+ 		pad->base = reg + i * PMIC_GPIO_ADDRESS_RANGE;
+ 
+@@ -1154,6 +1261,30 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(state->ctrl))
+ 		return PTR_ERR(state->ctrl);
+ 
++	/* Register pin groups - each GPIO is a group for standard functions */
++	for (i = 0; i < npins; i++) {
++		ret = pinctrl_generic_add_group(state->ctrl,
++						pmic_gpio_groups[i],
++						&pindesc[i].number, 1, NULL);
++		if (ret < 0) {
++			dev_err(dev, "failed to register group %s\n",
++				pmic_gpio_groups[i]);
++			return ret;
++		}
++	}
++
++	/* Register standard functions - all GPIOs support these */
++	for (i = 0; i < ARRAY_SIZE(pmic_gpio_functions); i++) {
++		ret = pinmux_generic_add_function(state->ctrl,
++						  pmic_gpio_functions[i],
++						  pmic_gpio_groups, npins, NULL);
++		if (ret < 0) {
++			dev_err(dev, "failed to register function %s\n",
++				pmic_gpio_functions[i]);
++			return ret;
++		}
++	}
++
+ 	parent_node = of_irq_find_parent(state->dev->of_node);
+ 	if (!parent_node)
+ 		return -ENXIO;
 
 -- 
 2.43.0
