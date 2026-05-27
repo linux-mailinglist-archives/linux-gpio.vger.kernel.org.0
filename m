@@ -1,191 +1,226 @@
-Return-Path: <linux-gpio+bounces-37557-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MLQmLAOlFmoOoAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37557-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:02:11 +0200
+	id qOtSLZ2mFmoOoAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37558-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:09:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 274375E0C8D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:02:10 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 581E15E0DB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 555C73074795
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 07:59:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B706A300E148
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:09:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C0C73CF045;
-	Wed, 27 May 2026 07:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OM1Za8y7";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="E+obiT6Z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897F93D0901;
+	Wed, 27 May 2026 08:08:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A453A3CF026
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 07:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9113CFF6C;
+	Wed, 27 May 2026 08:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779868789; cv=none; b=Qufq5gN/MYZSB+/ij5SketI73YMAWigt94Ak3WF4hyhnznkQ+E4NNtphNjBkj6j8KyeWLeBxM4h+AH95OsL4VWleiT8M2fRcFzFgg/B2r7jBgKdOg6W+IZ7Lb4JQOBy7rxok6pXyqho+mObeSXFOX+fTxRUhmRZbm70AojsriyE=
+	t=1779869337; cv=none; b=YaamVSUQZodBQwsygef4K1WKeywIcEMs5uTxH8lz4eFoQ8L6vnzr/9lCNctYd1eh4K/YsML0cXs2z58chwpQibvYhhtBk1AY7VnstkcZ+0dldp4ufPLIdg5YxkjabuzSDa8iwf8uY4TatjgFnFWXaJR2GQw53qSKxAHk3F+xYYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779868789; c=relaxed/simple;
-	bh=kTNiuN+X5MpZ5JYS+hXYHbBrAwHQnd6npdpLaOFkfRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eLalEUpJqbISDJ/OuvouwBp/swMY+vwju+R/yt4kT3K+v9FNunXQnv3xQwfbRfz7Nf6Zeawnd7B7ABPUfgAF89WP/l4G7kDLWH/m800UhHvvr+E7FWTaKIDeAE4CWosYqTOp/BVWDbsbNQfqImQ1cxMhS/4gRUKS9kbOxbS6ee8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OM1Za8y7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=E+obiT6Z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64R6G42p1803459
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 07:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZObU4uZM0oBiD0PA/fhBGD2+qqPIChL9ob6IC3X5NU8=; b=OM1Za8y78f312cyV
-	hGJIdLegDZFVQgFFEQ/lqtWkFLr5+L9KAl8m0rP76CAWK9mwiqJnqexY7bcG9zfk
-	O/4RagghUO5rY9LHcuUnNEGkgPTa5VD9zafxoc07PmBe5UZ6RJTJH0/hJ4lcRkLT
-	9vnN+i6oe5apbbWQ43gazfPFguwPSKNjxvOM+FgsNc68EbGYi5FG1nTTh8lNtNrd
-	TwP1g9OA3XhropdExH479EcqRXtGRliPVoQdpwYFajjxFmAgUCjLTAFyHM28dsCI
-	YQHk3PhShctknNqU5x9gXW0tIGJIgoZu+p/2Rb0uAA9Np8KiQUoSJ96/MpyUaviq
-	82um7Q==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4edu6rgc5t-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 07:59:47 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-516d1a8a6c8so54831771cf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 00:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779868787; x=1780473587; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZObU4uZM0oBiD0PA/fhBGD2+qqPIChL9ob6IC3X5NU8=;
-        b=E+obiT6ZVZrVipcgu929gHfP5CH3GTgFMaHNrjA1ii/xwswB2L5FknrP8FU67Agb5g
-         7rDcvm0DEKp8eAv/mNl/ryGRHvzkTa+BKPbN8a8EJI8Jc0hZd/4ChDenGAhImyv3io7O
-         LMfIBWDXRevMbtcg84VK0PQ+AAC5+0NepOf0qAiUCqbpB1sriMZpzzbIdxmXexbkUze5
-         AQhZG87YW8bEENeBXiItiK3l/UtT/dNGb3O9JjmK0yli+B9nkoFfJk3Qrvjg4Cix9vJK
-         AqTYRB6RcUzP6Ff2phj1jfqKskOpLXn+Jg87YKMk9NGM6jvXSUVFQyFoN/HJlra7JEp1
-         c/lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779868787; x=1780473587;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZObU4uZM0oBiD0PA/fhBGD2+qqPIChL9ob6IC3X5NU8=;
-        b=Jc+0KzWgb+MICbQjMDRmveXwU5SvA/00qcVeH8cTmfYtG0kCIK8RTzG5vQ1qj3nbgY
-         zXLJnkaWcOivitFnR+XGzG+AeI9WByHaUGsa/8w4il2zgjtpA6gyVO4G9ErAEoPlC84j
-         m8828EKk2pqvx7+RhEiVZNIV7BORfRcyKY64tij8BMw28/V1FfC8F7M9bJnstpiO/1zw
-         ac+MLnd470U46JrhmzzJOTWgsnWPD/fGDY85Lzel8a+Ti4PTm5kYNrsFSEOZp/ij0A4M
-         eSdtvXsLchCWpFfVPtOjlfzWxnW4TRb3RSkPicB6vbW4Q/78U6g8ZFTkZVOQJ5U7Zedm
-         5/cw==
-X-Forwarded-Encrypted: i=1; AFNElJ/opOJZCcd/BnQugJA7vxkC8hcYpwrSYANzi5Bi/8F3aEMSBCp1jzPZc3mtZzP97oZumFIKos0K+boQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+a2KOkgg0Ob1QzOONYKmWf/KLHqGl9M2InxcyLvnr5VfjdqiC
-	VekqofvVgAeH7t7RlSd4GhTxwFiclX6eK6/Po7ENqm0lJaxofBSi/uleVqZOQGgMl8Ye+c+Ptn9
-	IQmXSE/Jc9DwbUTjyJgmfur+vFDNNRtCggSvql0BP8ibxkXJ/X7J0vuZrPhm9XrV8
-X-Gm-Gg: Acq92OGsaopy8Q5M+xyv60ge0M1w4mQ/oTav34YCpqYioFA61o8gCpB0JV5E27tezqv
-	JQuDXz/fAq+7dQcC2Y2rz1kWA0m4pddK5J1WpWRSzt6gJGuoxItn51pO3lK/WF4lOu/lplEA3Qx
-	revWS+MVrFNgokVk9MSHiw1CfLEJpGsHQQzikxfrhPaejNjePCx0Bt5JkocDCnQeE4olOMID8Hj
-	HxqcuEEWPnDTfEc2NXM+yR13FTCaOUqbiVgKj7eKqH1A9TYSU5tjfZFjeqoukUCpnqCirlFzF3E
-	VA3DbZNGFpFONxDHmaIbvlEXE+ZKnvBoAX6QkazKp5a+K9ZXYwgJhJnJsHsqeZ0bFkWvtgkiSvj
-	BQooK0YY8fKdwN7clVoBeWdBMTwUcY33cV08IIDh5NJtGNcqo4UJp537ToeLnoQPD5OJGI/wPTX
-	1My4RPydG2J28RGhnd0xKRRfpm4aHrjla0M15+LVtkS287PxrPmQ==
-X-Received: by 2002:a05:622a:5a0a:b0:516:dcbd:aabb with SMTP id d75a77b69052e-516dcbe03ddmr270491641cf.16.1779868786888;
-        Wed, 27 May 2026 00:59:46 -0700 (PDT)
-X-Received: by 2002:a05:622a:5a0a:b0:516:dcbd:aabb with SMTP id d75a77b69052e-516dcbe03ddmr270491471cf.16.1779868786480;
-        Wed, 27 May 2026 00:59:46 -0700 (PDT)
-Received: from brgl-qcom.local (2a02-8440-e500-3194-8c70-1be9-4d87-8bf7.rev.sfr.net. [2a02:8440:e500:3194:8c70:1be9:4d87:8bf7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490454ac6a6sm391766305e9.12.2026.05.27.00.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 00:59:45 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: gpiolib: use seq_puts() for plain strings
-Date: Wed, 27 May 2026 09:59:43 +0200
-Message-ID: <177986878032.4028.9942873809600019702.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260526121905.46345-1-ku.loong@gapp.nthu.edu.tw>
-References: <20260526121905.46345-1-ku.loong@gapp.nthu.edu.tw>
+	s=arc-20240116; t=1779869337; c=relaxed/simple;
+	bh=sT6vr2tV7pQ3YriBWCUwxRT255L7NxnyNB2kjgm/too=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2Kig0ggW+51z+sN6Bwt25jPNtlnTElpC6t+D8MYEG7bRBe22b/4AHiA2qhWyU2FiqZJGGy3kb7si3AJf7y2TGqQHmhoPwOv+F7bt+4IzOJcdKnXwZI0voe8m+VGD6TVxyf5iHtzZhPCHoYIo/gvRuq/2lgp3rJT+cHGqBrdPPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 01A9137002E2;
+	Wed, 27 May 2026 08:08:46 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 4D515B40915; Wed, 27 May 2026 08:08:45 +0000 (UTC)
+X-Spam-Level: 
+Received: from shepard (unknown [37.167.96.158])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 4760AB4090E;
+	Wed, 27 May 2026 08:08:42 +0000 (UTC)
+Date: Wed, 27 May 2026 10:08:38 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH] pinctrl: sunxi: Implement function_is_gpio
+Message-ID: <ahamhtes_HAh-fhr@shepard>
+References: <20260517171405.3697469-1-paulk@sys-base.io>
+ <20260525233808.20e75a21@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=MoJiLWae c=1 sm=1 tr=0 ts=6a16a473 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=j0SYY4YQUj0_SLCMx94A:9 a=QEXdDO2ut3YA:10
- a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDA3NSBTYWx0ZWRfX5Io6LdoRn6EG
- UKj5FS45utOI1HsIUOclucf2pniU8ZFaWN/MPRlTLjq1dpHuAf0Y6Ft+QVun/qWO3ki97jBBGmo
- hVd4CcI6UB6KkVMbJheayQ0OmvTxyz3MVEtzT5m3LhpBT9b0q5NVCYU+KVxl+h28Y9pIoayD33J
- iu+LmimchLxsGn5/CCrSXgd1Ou1HWyMqe8yined59nGrKAHjROkNnseo75MoE8NXHHHgDudNO2F
- cyBciFcdo5X79Z3dPPHhUE5YV4eYUyQClLRBt4n7Nkd4qQ1LSNEEPbhW9+Kkx3DvlrNG7j2bztb
- W+WNCbAg2RL18GmxtmSSuHOuwRV2raQaVnuS5ki+tkLG0S6apoAUPer9g/X4mpfnvnOgw2JHKWa
- kW2G4cGOIxxCOYbgrd04lNLSqQJDJjPZUTNiZ8B22j7FN9GTvesMfIwsCPzYiJ/jVl4VNk4cjrP
- t3VivrJ0AZFfNzCyx8g==
-X-Proofpoint-GUID: ifBom4jeymx4KgypdG7eInBBJoOchJ0A
-X-Proofpoint-ORIG-GUID: ifBom4jeymx4KgypdG7eInBBJoOchJ0A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-05-26_05,2026-05-26_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
- definitions=main-2605270075
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xXnRIhy8Zq17CPb5"
+Content-Disposition: inline
+In-Reply-To: <20260525233808.20e75a21@ryzen.lan>
+X-Spamd-Result: default: False [-1.56 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37557-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,qualcomm.com:email,qualcomm.com:dkim];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,kernel.org,gmail.com,sholland.org];
+	TAGGED_FROM(0.00)[bounces-37558-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[sys-base.io];
+	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 274375E0C8D
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[paulk@sys-base.io,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.953];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,paulk.fr:url,sys-base.io:url,sys-base.io:email]
+X-Rspamd-Queue-Id: 581E15E0DB4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
-On Tue, 26 May 2026 20:19:05 +0800, Chen Jung Ku wrote:
-> Replace seq_printf() with seq_puts() where the format string is a
-> plain string literal with no format specifiers.
-> 
-> No functional change intended.
-> 
-> 
+--xXnRIhy8Zq17CPb5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+Hi Andrew,
 
-[1/1] gpio: gpiolib: use seq_puts() for plain strings
-      https://git.kernel.org/brgl/c/20de1f993ea6ca9a9d15fe2e433f9e58841999f0
+On Mon 25 May 26, 23:38, Andre Przywara wrote:
+> On Sun, 17 May 2026 19:14:05 +0200
+> Paul Kocialkowski <paulk@sys-base.io> wrote:
+>=20
+> Hi Paul,
+>=20
+> > The function_is_gpio pinmux op allows the core to find out whether a
+> > GPIO can be safely requested from a pinctrl property and requested as a
+> > GPIO at the same time.
+> >=20
+> > This is especially useful to request a GPIO with a particular drive
+> > strength, which would otherwise not be possible.
+>=20
+> That looks a easy enough solution, but:
+>=20
+> > Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> > ---
+> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >=20
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/su=
+nxi/pinctrl-sunxi.c
+> > index d3042e0c9712..6162f2d86723 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > @@ -821,6 +821,17 @@ static int sunxi_pmx_get_func_groups(struct pinctr=
+l_dev *pctldev,
+> >  	return 0;
+> >  }
+> > =20
+> > +static bool sunxi_pmx_function_is_gpio(struct pinctrl_dev *pctldev,
+> > +				       unsigned function)
+> > +{
+> > +	struct sunxi_pinctrl *pctl =3D pinctrl_dev_get_drvdata(pctldev);
+> > +
+> > +	if (!strncmp(pctl->functions[function].name, "gpio", 4))
+>=20
+> I wonder if this condition is a bit too relaxed? There could be
+> some (theoretical) function just starting with gpio, but not being mux
+> 0 or 1.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Yes maybe this is a bit too relaxed.
+
+> So should we check for gpio_in or gpio_out, explicitly? Or at
+> least use (strcmp(name, "gpio_", 5)? Or maybe even better for the mux
+> value directly? Is "function" an indicator of this, or does this rely
+> on the two GPIO functions being always listed first, at least so far?
+
+I considered mathcing the function to the mux index, but we can't really re=
+ly
+on Allwinner keeping GPIO to mux 0/1 either so I think the string comparison
+is still the best approach.
+
+But I am totally fine with having an explicit check against
+"gpio_in" || "gpio_out".
+
+And to answer your question it's not safe to use the function as mux value,
+even though the values are the same in practice. The muxval field of
+struct sunxi_desc_function should be used instead and that can be looked up=
+ by
+sunxi_pinctrl_desc_find_function_by_name.
+
+All the best,
+
+Paul
+
+> And what about the IRQ function? Isn't that some GPIO as well, or does
+> that not count for the purpose of the function_is_gpio() callback?
+>=20
+> Cheers,
+> Andre
+>=20
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  static void sunxi_pmx_set(struct pinctrl_dev *pctldev,
+> >  				 unsigned pin,
+> >  				 u8 config)
+> > @@ -952,6 +963,7 @@ static const struct pinmux_ops sunxi_pmx_ops =3D {
+> >  	.get_functions_count	=3D sunxi_pmx_get_funcs_cnt,
+> >  	.get_function_name	=3D sunxi_pmx_get_func_name,
+> >  	.get_function_groups	=3D sunxi_pmx_get_func_groups,
+> > +	.function_is_gpio	=3D sunxi_pmx_function_is_gpio,
+> >  	.set_mux		=3D sunxi_pmx_set_mux,
+> >  	.gpio_set_direction	=3D sunxi_pmx_gpio_set_direction,
+> >  	.request		=3D sunxi_pmx_request,
+>=20
+
+--=20
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--xXnRIhy8Zq17CPb5
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmoWpoYACgkQhP3B6o/u
+lQxDYQ//RPAy0EjHEhhuvtJsBrWAL0jzTj3G1QNSUISrPzn58Ei3wMu0P4sYUUOH
+BY/qY5O6aShsgzwNRfI4iqJpS6Tcf7i6WMvErll+wksZGlO13XEwIshoOA5GNiD3
+qNiYjGxY9eXFgDeEZbWJOu/vNvC33H/bRkfsMzBcJHLhTEOOZYdS9P+m7HG3okTd
+Q3X4uFWoA5eUTxJqo0MbCuyBHYKFroBWFzE6ixtSxZhHRA4Mn7aMiOg0nkD92sPt
+y6mMKxaMakpWSnU30wwZwa6tUVxUS4pJgu+EZl0HQ/FZU1ORww2ApQ+QGdqD6ceF
+Ny2Ls0FAN9FpPdb2V/6L9HkWjn2VLl+3sLU7EIfLIEXThdXev+QeFbqorNKLV6rr
+k9J1Bbg83BBfDVs4kLVQDFxO0z9d8P9PgeZwcpbmJBW+L3tUyvrwrnZS9462o5WY
+ot5xC7o3sJWpVOdlfUxu0A9yeRMFtywauQXioz5SEdTVM0/kHIc7FYeicjjmgJiW
+hnBxwIsQtfYX0tkcl5b5MJpr2N/rrW0FqJnxWgxMacnSMIpv9zedsBhnFq5NtoPP
+R5JWZtV1xuJKReTIbjSRrW141OCqVjFly3LMZFUEY9INWtgSIxZlSZBe9rkyX2xQ
+iJZfGcvAG3LDVcbKOhzmbQs51wxl1T8LqY5QIleaeP0LMZKzJPw=
+=RJQy
+-----END PGP SIGNATURE-----
+
+--xXnRIhy8Zq17CPb5--
 
