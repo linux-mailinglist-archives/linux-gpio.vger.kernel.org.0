@@ -1,151 +1,182 @@
-Return-Path: <linux-gpio+bounces-37563-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37564-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eJeGGaewFmokogcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37563-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:51:51 +0200
+	id CMlsA960FmokogcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37564-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:09:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 002135E157D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:51:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E51E5E190E
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 11:09:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E4C74304DEAF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:51:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 50E92306CF66
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 09:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1A33E315C;
-	Wed, 27 May 2026 08:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7084C3E63A3;
+	Wed, 27 May 2026 09:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l27fnzla"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkMAgueW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDEE3E314C
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AF73E5EC7;
+	Wed, 27 May 2026 09:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779871875; cv=none; b=o0NE2mrHOvEnkONeimeDkmtY24lccD2pDPQQHG3gjBUN/8o6qTi2eenAeJbSeVG7q8x6JRdFHBEL++YOTe7johnAIh2qOF2izHZmzkZL8/+laWTehyXgn6YChOljixJDqEERfRqcIuVizOzBJZkmTAXEZxuXYEarUzBlwEQmBeA=
+	t=1779872820; cv=none; b=UupQck3CZ+9DFq7pD3tViekgF6+iIKXqYLzQC1NuTBpr6T/ZerHG4QkRqooSXaXmfUMjgCUSEOkcL/O54z+AR7Rg0KKuRdsIzRcHOqPCQBo8n1vmEl+SdtPYT8VnZ04uc7tkdCJaMJIUWHr/gf3aYVdBPnnSYeo/V8mpqPA0jA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779871875; c=relaxed/simple;
-	bh=8RDWauARouTeuWItiHH63krrhuIeCVg6xgUplztW2DA=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZR0TrAsydV1SsC6d6IXxEsObv8gZLGZWLX1NpJY0MZSSyfZ0m10KL8bQ0zEZlMVeGKJc06OzBMdo5yl1w1sLvABz/En/m3bvEf5YQSrYtw4J8XH13Hy8g/ZWO1u3tFtYA1CDEspzKlDOAlBzKqyBEfUtGwmJNBZ1uggbji/cP9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l27fnzla; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2091F00ADB
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:14 +0000 (UTC)
+	s=arc-20240116; t=1779872820; c=relaxed/simple;
+	bh=OQVJZfwHpXN0n/v7h29x/cHNl444YSA1UCol0sqqDpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PDc61mwv2X2632KVqmvLoMYffwx2w4vgfnecJQC+CAIurc/3UKk6LALNfVnYEqDtrOhhNMJVuXJ/6/gBZLp1+oQnJ5+rsc7A2Q5l89CzcDqym/ocMExC5Svso/GxbjX4nO2ddHnkHcB8wZq7Uc7TVxIAD8IHMUklVJ0G7lC6ItQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkMAgueW; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE9A1F000E9;
+	Wed, 27 May 2026 09:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779871874;
-	bh=shyNmS0wjwDnw1+R8QdLkwtiexSQXIOg00oT8h6CiLw=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=l27fnzla+Ei3cZ2ayC1xetXsehBIqjcU/ZP7YGYXYE0qmDWtL6MLdWIsp3xemq9Vj
-	 yMKaM+hYr9jXX71S+JvrNONsqYo8SjTKHLxFmMjKlk8imzMXo9ldKJSvsw3QmF22/B
-	 D2C5oqjHjE2YMmi1WCZBlykahq6k9JmkpvqGg5SvUvj6KoxW9lHIjD1Sl4S60d4ABU
-	 qyEEF7UJa3VfdNq9Ys34dYjjkjt20HotTEx2C0B6t2Qe19jqgNYgVpKzM1KSVSdmGE
-	 8n5vZdFlEfTJx7l+d+XoHlFcrdkl0bpMbXaFp0ocfPiV1uDIfhh4OMWv3QKrGKqn3A
-	 4NBwg9DLNV1zw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso12384340e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 01:51:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ98hHzC6rJ9uO7XWm98+g48fxAv05/IgTZS6pWv0VeqUYEvIQjS1bGTU82hRpOTp90sks8xnlNKACKb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjmPIvtbF3qfJqYYqkSHiYDUkv1kTVskgjyoszmnLktHIEnrJ9
-	SsvVac61obwYOWgLzKvMa28gz1MPlM+FUOVK3snhqiCqvzBtKvQpgf/5IxlERxiX7mYD9+79lc+
-	bi/7HXzZnMDh890INqVnoxnbZSNy/5iCxl1Sw9SdF9Q==
-X-Received: by 2002:a05:6512:3ba9:b0:5a4:56:aa88 with SMTP id
- 2adb3069b0e04-5aa323c4598mr6986239e87.27.1779871872797; Wed, 27 May 2026
- 01:51:12 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 27 May 2026 04:51:10 -0400
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 27 May 2026 04:51:10 -0400
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260526131243.2160348-1-sergio.paracuellos@gmail.com>
+	s=k20260515; t=1779872818;
+	bh=Ka6yC3QrHcEkiDk7alcfHWrv6N92oBkr2LoopdWzh7Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nkMAgueWuwGVRv0HOVp+lcKpTELX8upnzcUnPp3tNS1p4S4x3iB0NS5KSyHXzMvnZ
+	 aU5hGJKwUyxUBQw9g7fSNZ5y5tcrYKNLK3B6/rwV6+3HeuuxhcBz2ZX/F9pUWTbYEs
+	 YBXBgRwY6uB7lRQlxxo4kXrb8nMhy0IW616dPfsdF77zbHaCcp8btD4JhIBUMknHW5
+	 d4MeuIJM7GJ6F9oDQ4lwUHJ54+SaJ0awD7/Q+RHUMGNY2hz/iqIRk0dcT6pWDCChqm
+	 s7UovzhkqzWyRU6o+5nu0ShMvqjiHijzNY+q6XTIE8y5xkfFep41mW8bJMOwb8w2ql
+	 lnOkwlcwQq+JQ==
+Message-ID: <a35b5300-c5f4-4af7-b566-194724451d37@kernel.org>
+Date: Wed, 27 May 2026 12:06:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260526131243.2160348-1-sergio.paracuellos@gmail.com>
-Date: Wed, 27 May 2026 04:51:10 -0400
-X-Gmail-Original-Message-ID: <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
-X-Gm-Features: AVHnY4JWQFPP4i3Y1Vsk1tHJ3qdczXTXtOETSkHmLLIKPU6ZdxxzC_L9np0-4OY
-Message-ID: <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mt7621: fix interrupt banks mapping on gpio chips
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: linusw@kernel.org, brgl@kernel.org, tglx@kernel.org, 
-	grant.likely@secretlab.ca, anna-maria@linutronix.de, vicencb@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 9/9] arm64: dts: renesas: rzg3s-smarc-som: Enable I3C
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: geert+renesas@glider.be, linusw@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+ claudiu.beznea@tuxon.dev, linux-renesas-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20260522102251.1723392-1-claudiu.beznea@kernel.org>
+ <20260522102251.1723392-10-claudiu.beznea@kernel.org>
+ <ahBMKWrKQDko3cG8@shikoro> <fb892151-33e5-4bb2-9a01-9abebe0f3b39@kernel.org>
+ <ahXQnt4MTVoBB9bF@shikoro>
+Content-Language: en-US
+From: Claudiu Beznea <claudiu.beznea@kernel.org>
+In-Reply-To: <ahXQnt4MTVoBB9bF@shikoro>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,secretlab.ca,linutronix.de,gmail.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37563-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-37564-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[glider.be,kernel.org,gmail.com,tuxon.dev,vger.kernel.org,bp.renesas.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 002135E157D
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 7E51E5E190E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 26 May 2026 15:12:43 +0200, Sergio Paracuellos
-<sergio.paracuellos@gmail.com> said:
->
-> Device tree is using two cells for this, so only the interrupt pin and the
-> interrupt type are described there. Changing to have three cells to setup
-> also the bank and implement 'of_node_instance_match()' would also work but
-> this would be an ABI breakage and also a bit incoherent since gpios itself
-> are also using two cells and properly mapped in desired bank using through
-> its pin number on 'of_xlate()'.
->
-> That said, the solution adopted here is registering register a linear IRQ
+Hi, Wolfram,
 
-s/registering register/registering/ but better just use imperative tone:
-"Register a linear IRQ..."
+On 5/26/26 19:55, Wolfram Sang wrote:
+> Hi Claudiu,
+> 
+>> Could you please let me know what do you consider we should do here? Do you
+>> think we could drop these pin controller setting and do some particular I3C
+>> controller settings instead?
+> 
+> My original thought was: If it was a boolean state which is active when
+> suspending and disabled when resuming, then we wouldn't need a customer
+> specific binding for it and just do this in the suspend/resume functions
+> of the pin-controller...
+> 
+> ... BUT ...
+> 
+> reading more about this in the manual, just raises more questions for
+> me.
+> 
+>> The output is fixed at Hi-Z and no data is transmitted to the inside even if
+>> data is input from outside. “Standby mode” is available when using I2C mode
+>> only. (Not available when using I3C mode).
+>>
+>> The current driver proposal don't take into account the IP mode when setting
+>> STBN though
+>> pinctrl_pm_select_sleep_state()/pinctrl_pm_select_default_state() to keep
+>> the code simpler, relying on the "Not available when using I3C mode" part of
+>> the note, and considering setting it when the IP is in I3C mode is harmless.
+> 
+> This is one question I also had: What does "not available" actually
+> mean? Did you confirm with HW guys that it is really harmles?
 
-...
+I asked this yesterday, but I don't have an answer to it.
 
->  	for (i = 0; i < MTK_BANK_CNT; i++) {
-> @@ -331,7 +466,17 @@ mediatek_gpio_probe(struct platform_device *pdev)
->  			return ret;
->  	}
->
-> +	if (mtk->gpio_irq > 0) {
-> +		ret = mt7621_gpio_irq_setup(pdev, mtk);
-> +		if (ret)
-> +			goto fail;
-> +	}
-> +
->  	return 0;
-> +
-> +fail:
-> +	mt7621_gpio_remove(pdev);
+In my testing I haven't noticed any issues with it.
 
-Don't you need to undo this in remove path as well?
+> 
+> I also wonder about the intended use-case of this mode. "no data is
+> transmitted to the inside even if data is input from outside" doesn't
+> really sound like a mode intended when the whole SoC goes to sleep.
 
-The approach looks sane to me. I'll give some time for tglx or linusw to
-respond before queueing it for fixes.
+Indeed, that's why I chose in the driver to touch it though the runtime PM APIs, 
+so it can be configured after the I3C IP is no longer used.
 
-Bart
+> Why
+> or how would input be even transmitted to the inside if everything is in
+> a deep-sleep state? I could also imagine that this mode is rather used
+> to hide from the bus for a while for some corner-case reason.
+> 
+> And finally: does this really save energy? 
+
+I don't expect. I'm not sure I can measure it. I also asked to the HW team.
+
+> Could you measure a benefit?
+> Maybe there is nothing driven at all in the sleep state? Then, nothing
+> is gained? Not clear from the datasheet.
+> 
+> Because the datasheet is so sparse with information and because it
+> doesn't say how STBN is intended to be used, I would argue we should
+> skip it until we know what it is for and how it is used. If we know this
+> somewhen, we can still add this in a second step.
+
+OK for me.
+
+> 
+> But for now, enabling I3C realiably is the first step, and for that we
+> surley need the POC bit to select the voltage. This is easily
+> understandable and straightforward to do. So, my suggestion is to pick
+> this low-hanging fruit now and reach for the other one once we have more
+> information about it.
+
+OK, I'll re-spin this dropping the STBN feature until further clarification.
+
+-- 
+Thank you,
+Claudiu
+
 
