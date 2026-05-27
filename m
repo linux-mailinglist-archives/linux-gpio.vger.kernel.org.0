@@ -1,196 +1,151 @@
-Return-Path: <linux-gpio+bounces-37562-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37563-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFFuK7ioFmrEoAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37562-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:18:00 +0200
+	id eJeGGaewFmokogcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37563-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:51:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2863D5E0F58
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:18:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 002135E157D
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 10:51:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0840D30154AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:17:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E4C74304DEAF
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 08:51:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D81D93D6CB6;
-	Wed, 27 May 2026 08:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB1A33E315C;
+	Wed, 27 May 2026 08:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Aex/DVH7";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="UPxkriq/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l27fnzla"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEFD3B5E15
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDEE3E314C
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779869873; cv=none; b=Um9f/esS+uqPDdINLjfx+lDXnld4VEcw3RIylzKao7IRFIdfF4EW5Onshk8aXYvbBJNSWOwTBGj/W6xurxmCNKxg4lz0/l8jEk1l3RSPpSNslS8c9eIBI+oF8j0ld9Bf1474onQFH8z/fPwjIbOLNPnwEn5JVLhQ2ZnB2qC2xhE=
+	t=1779871875; cv=none; b=o0NE2mrHOvEnkONeimeDkmtY24lccD2pDPQQHG3gjBUN/8o6qTi2eenAeJbSeVG7q8x6JRdFHBEL++YOTe7johnAIh2qOF2izHZmzkZL8/+laWTehyXgn6YChOljixJDqEERfRqcIuVizOzBJZkmTAXEZxuXYEarUzBlwEQmBeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779869873; c=relaxed/simple;
-	bh=Fc3yvhFubxiHMiXXS4ewmdA8fb+AbChFhfEfh7qFQxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ov8eRsEsvTuAKV9Og06mDeC6mjI8gGbc9rKtC6Y5vCe2ZVJfMJRAignHkH6KqFOqU2jIQpvfEl4rR+hcPpAhLVWwuVVTK0CrWnT1Aea0uU3NRUROFupCUxm3csl3uBdl+MaSGYCgs3iNXr7ehLpQ4Fg6zBiqDYPFxz3y7C4kKJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Aex/DVH7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=UPxkriq/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64R8Bt9e795668
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:17:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VlDTUSZSL9yEYzzXWBCrB8EeTzg12q8rDn+nYTVfQ90=; b=Aex/DVH7ew19a7yk
-	wurAUeH3Z/oh4Bo4Yyb45HQqBXrRxanPWx6IuePC3tMxxxmjX0/uTsjhl51TYbih
-	O9XHAL6G6uqKQwmrTtAOk1KRVwGfBUMhQPVuOEJ8MAVU8bhoMZmVN8xzgCZ73n4a
-	Ywc5N3YkmJoWZUUlHAkJUYEjGqP+fANeQNQ1kS39Rvx+zps6BrviafLvpFPrwSmw
-	TWvNQCeeFjs2+9NgCfTvcPBQFHzQbsVQuWWZqfC1A7SY5Bw2pA9nm7mtYwVfZxXk
-	aU+xrOC4fpXWFl9jfpG9eeUuTBMV2lrfcF3RB3j3b6v5f3RLRPyIBvVz3q4VeCQp
-	z3twjA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4edvvqr0wq-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:17:47 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-516e0846095so74616291cf.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 01:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779869866; x=1780474666; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VlDTUSZSL9yEYzzXWBCrB8EeTzg12q8rDn+nYTVfQ90=;
-        b=UPxkriq/a0lsd7+um+SXqmAXaEhHUy8BQ38mExI2pOJNom1bXYIw1thI44zY50lC+8
-         E3fVKVQjlfd5UppH9DaMzw9oksbKV8roTwje+KHTPX6hJWE8/ZgMlOKpFsbscQaOeTzE
-         bVfhrBI2xLMn0QzcWwU+VekRy8IV72rwAadxI0JuTL3nFKJRayFy4LPOD9Zos96hoNVo
-         3KeWYD0KYNDO2t+o3f4f92SwWkCYhcmG7VKVEQzUWUFg4e7Mt0qzTbKcI2ibvJuNzYSU
-         NY66dSHcrZF9LIR4r3clH4mcZNStykZ+gWPQYElrGItGILpFJQw+2xVqeZkmMoY1fc3M
-         12rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779869866; x=1780474666;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VlDTUSZSL9yEYzzXWBCrB8EeTzg12q8rDn+nYTVfQ90=;
-        b=D9hPFiO+VWCDO1qURk+65QTdLpSNtOFVXpycIrfexshdJv19Hj5Z/3qWyi5OBeRnk3
-         FDGjPHWh/kdOWtqiDeQ+myf6OqkDAsxIjYyNerg2+HMROgpjGjkEfE+It8IijqjtnD/M
-         78eML8dbaiozegYnIEIkkXu6++ykiDMlmiR7ct+OUd7y7QndyBHvL5tCpsyF1lO9SloA
-         dDOD79XmJT6wN9u4QwbIsw9pmnx3/WvhcJI0jDzRdGV0Lmq0Y8vIpqb5cua4nfi/4TcT
-         UIkfOVMplL6JMMcnTcueOWG72FKCFm97kxpIjUxCCi3lQCdwIKjZhxDf8FNkJiNXS+e0
-         srMQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/UWHcJILx/IUSrfTI0MR1GBnjW5xulwrvcinhINL89v4EXmWAWXAY/cYpQ0EM22FQSBun8dlkqtd6K@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCsdZv0/YOHmCoBtbKvNIY6Dbv8xd+Uns1md/5xz9w+8QkV6Tv
-	IR5/pQHJrSnn/ArQSdavLDp0RJQL6BfRnKN4eLVv0qf2vi33U/gyXunEm7BT81vk46jErXeErEk
-	1Mk45Mf+RggzqK72r1BaknkKhsKAXDGam+r1HeMov96GmJxv1BuYv+ZZC7V1rCn99
-X-Gm-Gg: Acq92OHLHc1WSuWxiohfppGjcmzI5gk8bX1hNf6kgEJPDbl5248J3Ykw/SbyRyj7+pv
-	GJYDGhtgGQ7bfeSJwwTAPVI+KyamCgYfC959+gfmLhplQZlblIwwi4+Pn7BiuAoX3n8yn04xCva
-	DKwVg1d+QKoaS1GkkcUU4hM674kPIj8MNuhjz/bXYAGzLD1uZIQCyTiljWVYlznVJZ+9L23leH1
-	gdq3zEC99+1tPzq+gQUG3eDeb/7tUY+xnRkup5FZh5YZXOX1WAYrAtso6simXH3UO6ED0wwoh+3
-	zSMjeRf0irsMjtnmcKbzP2sTcF6Q0a5u/tbW5AlMiYqet4QRpPzbWPxDyGc/yXGnMowaor4Oj+r
-	vF9ufC8P9F/wtVOUmw0DnNKF3H+/wfc2CEKC374NgzvKSH3mBttqeEeHU7y5N4Yp4cV+RLEdcTA
-	bpPzNn4/3FFCDf0zX9A2HeP/bhLo2txzG9olc3pI8=
-X-Received: by 2002:a05:622a:8588:b0:50f:de06:45e2 with SMTP id d75a77b69052e-516d436f402mr240966641cf.31.1779869866423;
-        Wed, 27 May 2026 01:17:46 -0700 (PDT)
-X-Received: by 2002:a05:622a:8588:b0:50f:de06:45e2 with SMTP id d75a77b69052e-516d436f402mr240966461cf.31.1779869865924;
-        Wed, 27 May 2026 01:17:45 -0700 (PDT)
-Received: from brgl-qcom.local (2a02-8440-e500-3194-8c70-1be9-4d87-8bf7.rev.sfr.net. [2a02:8440:e500:3194:8c70:1be9:4d87:8bf7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4904561f682sm403458845e9.13.2026.05.27.01.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 01:17:44 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: brgl@kernel.org, Marco Scardovi <scardracs@disroot.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        heiko@sntech.de, linusw@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 0/2] gpio: rockchip: fix resource leaks and teardown bugs
-Date: Wed, 27 May 2026 10:17:42 +0200
-Message-ID: <177986985872.16795.8547602828633072606.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260526171050.12785-1-scardracs@disroot.org>
-References: <CAMRc=Mfk9tP091DN=5kjb8fvFhj1=MiBZSq4NJ7+k5LNCVy9bw@mail.gmail.com> <20260526171050.12785-1-scardracs@disroot.org>
+	s=arc-20240116; t=1779871875; c=relaxed/simple;
+	bh=8RDWauARouTeuWItiHH63krrhuIeCVg6xgUplztW2DA=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZR0TrAsydV1SsC6d6IXxEsObv8gZLGZWLX1NpJY0MZSSyfZ0m10KL8bQ0zEZlMVeGKJc06OzBMdo5yl1w1sLvABz/En/m3bvEf5YQSrYtw4J8XH13Hy8g/ZWO1u3tFtYA1CDEspzKlDOAlBzKqyBEfUtGwmJNBZ1uggbji/cP9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l27fnzla; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2091F00ADB
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779871874;
+	bh=shyNmS0wjwDnw1+R8QdLkwtiexSQXIOg00oT8h6CiLw=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=l27fnzla+Ei3cZ2ayC1xetXsehBIqjcU/ZP7YGYXYE0qmDWtL6MLdWIsp3xemq9Vj
+	 yMKaM+hYr9jXX71S+JvrNONsqYo8SjTKHLxFmMjKlk8imzMXo9ldKJSvsw3QmF22/B
+	 D2C5oqjHjE2YMmi1WCZBlykahq6k9JmkpvqGg5SvUvj6KoxW9lHIjD1Sl4S60d4ABU
+	 qyEEF7UJa3VfdNq9Ys34dYjjkjt20HotTEx2C0B6t2Qe19jqgNYgVpKzM1KSVSdmGE
+	 8n5vZdFlEfTJx7l+d+XoHlFcrdkl0bpMbXaFp0ocfPiV1uDIfhh4OMWv3QKrGKqn3A
+	 4NBwg9DLNV1zw==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso12384340e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 01:51:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ98hHzC6rJ9uO7XWm98+g48fxAv05/IgTZS6pWv0VeqUYEvIQjS1bGTU82hRpOTp90sks8xnlNKACKb@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjmPIvtbF3qfJqYYqkSHiYDUkv1kTVskgjyoszmnLktHIEnrJ9
+	SsvVac61obwYOWgLzKvMa28gz1MPlM+FUOVK3snhqiCqvzBtKvQpgf/5IxlERxiX7mYD9+79lc+
+	bi/7HXzZnMDh890INqVnoxnbZSNy/5iCxl1Sw9SdF9Q==
+X-Received: by 2002:a05:6512:3ba9:b0:5a4:56:aa88 with SMTP id
+ 2adb3069b0e04-5aa323c4598mr6986239e87.27.1779871872797; Wed, 27 May 2026
+ 01:51:12 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 27 May 2026 04:51:10 -0400
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 27 May 2026 04:51:10 -0400
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260526131243.2160348-1-sergio.paracuellos@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDA3OSBTYWx0ZWRfX/qrZonWrJ5ey
- qrWkAeOqL2pAkxYUr2S0DYLYGRLmQqIgvOQ8Q/+J39ySEAeuGupkfAVkKfHyjuZgcP+AnhPL8kq
- PEvf3lR68QA0Xs1ePDt24kTb8tAwQleAUvaNUCdnTjNz/dBBaC0WsJYTKzozLBjHtd2Qjast26w
- Q3MKEpjrWXijD143ly7dOlqE3otSBW06YrcT4nj7IufU84F+riImlaZRbJ8sliFcfWHnzM7AzYO
- VPHgMyRaGY87B5OrHljEweqQA6R27fHcLbr5t620j0EirGloeaFK8Dw6jRwhF7+6qTn4ccYbIe1
- bTv+Q60julYPaUq3szMZzTN7tJ2ywWGezbRicq6bN52ebHMAxh5MrDui5QYAkCeSSWqZl0UDhjj
- oqoKNU4jHwBmgrB5P70TswxQTaFX5VTGJn3hRTE/wnpu+pivfIkhn157HU+i8AzgUG9Yad0Lq5g
- RBCwWPrxsdz0OL7nGMw==
-X-Proofpoint-GUID: 1JK27Xh6UJ-cJD4Er-HFkF21Wj1TkRGx
-X-Proofpoint-ORIG-GUID: 1JK27Xh6UJ-cJD4Er-HFkF21Wj1TkRGx
-X-Authority-Analysis: v=2.4 cv=fLMJG5ae c=1 sm=1 tr=0 ts=6a16a8ab cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=-TlZYsTrXPYVLYuQEvMA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-05-26_05,2026-05-26_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605270079
-X-Spamd-Result: default: False [-2.16 / 15.00];
+References: <20260526131243.2160348-1-sergio.paracuellos@gmail.com>
+Date: Wed, 27 May 2026 04:51:10 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
+X-Gm-Features: AVHnY4JWQFPP4i3Y1Vsk1tHJ3qdczXTXtOETSkHmLLIKPU6ZdxxzC_L9np0-4OY
+Message-ID: <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mt7621: fix interrupt banks mapping on gpio chips
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: linusw@kernel.org, brgl@kernel.org, tglx@kernel.org, 
+	grant.likely@secretlab.ca, anna-maria@linutronix.de, vicencb@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	FREEMAIL_CC(0.00)[kernel.org,secretlab.ca,linutronix.de,gmail.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37563-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid];
+	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37562-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 2863D5E0F58
+X-Rspamd-Queue-Id: 002135E157D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Tue, 26 May 2026 15:12:43 +0200, Sergio Paracuellos
+<sergio.paracuellos@gmail.com> said:
+>
+> Device tree is using two cells for this, so only the interrupt pin and the
+> interrupt type are described there. Changing to have three cells to setup
+> also the bank and implement 'of_node_instance_match()' would also work but
+> this would be an ABI breakage and also a bit incoherent since gpios itself
+> are also using two cells and properly mapped in desired bank using through
+> its pin number on 'of_xlate()'.
+>
+> That said, the solution adopted here is registering register a linear IRQ
 
-On Tue, 26 May 2026 19:02:44 +0200, Marco Scardovi wrote:
-> thank you for the review on the first version of this series.
-> 
-> TL;DR: There's no clock-names property in the DTBs for the GPIO banks,
->        and they don't expose a separate debounce clock in hardware.
-> 
-> Regarding your question: existing DTBs currently do not provide clock-names
-> for these GPIO nodes and instead rely on positional clock ordering.
-> 
-> [...]
+s/registering register/registering/ but better just use imperative tone:
+"Register a linear IRQ..."
 
-Applied, thanks!
+...
 
-[1/2] gpio: rockchip: convert bank->clk to devm_clk_get_enabled()
-      https://git.kernel.org/brgl/c/d4573b270d934c35eb77fc348866384fcb4e8eeb
-[2/2] gpio: rockchip: teardown bugs and resource leaks
-      https://git.kernel.org/brgl/c/9c95f4b920e15c183ebbb15b0a011ba32fcb6d59
+>  	for (i = 0; i < MTK_BANK_CNT; i++) {
+> @@ -331,7 +466,17 @@ mediatek_gpio_probe(struct platform_device *pdev)
+>  			return ret;
+>  	}
+>
+> +	if (mtk->gpio_irq > 0) {
+> +		ret = mt7621_gpio_irq_setup(pdev, mtk);
+> +		if (ret)
+> +			goto fail;
+> +	}
+> +
+>  	return 0;
+> +
+> +fail:
+> +	mt7621_gpio_remove(pdev);
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Don't you need to undo this in remove path as well?
+
+The approach looks sane to me. I'll give some time for tglx or linusw to
+respond before queueing it for fixes.
+
+Bart
 
