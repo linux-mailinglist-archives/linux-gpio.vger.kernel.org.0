@@ -1,158 +1,155 @@
-Return-Path: <linux-gpio+bounces-37591-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37592-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EDApLUwRF2o12wcAu9opvQ
-	(envelope-from <linux-gpio+bounces-37591-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 17:44:12 +0200
+	id oN8qDwsVF2ok3wcAu9opvQ
+	(envelope-from <linux-gpio+bounces-37592-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 18:00:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 943755E713B
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 17:44:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D66A65E7579
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 18:00:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D84803050BC1
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 15:43:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 26751308ED66
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2026 15:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663A342EEC4;
-	Wed, 27 May 2026 15:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="Dq+TW16i"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8093937E2E7;
+	Wed, 27 May 2026 15:51:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD46C3DC4DC
-	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 15:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0933D544
+	for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 15:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896596; cv=none; b=Zmun8HmwI7S2JahooAebtBuPASlUUsD4QkD/oFRS+UuxYTgzTXPmLD4HC2p2I3QoaH2M69AsJVj5MEK4/mXHVFKFJ2zsnuzmjPB0jzY4aS6S25s40Gv9aNCJj36E9w26fhYx3ZhMn6QaTu1A0Y6yIEihuPp2ZCIbvO4M+4Hgxkw=
+	t=1779897095; cv=none; b=U9+2HF+hx03T16q5uCDmbat6BEkyrm4SYc1SHZOht4fn+GVclD4YHAHtgzbMEP5K8KnpoEFrw1Rh4ds88fsgpNtyTKdN7vVGAf3JBVwlPV6/mzMbtCUVKOf9Kb6kGemuImcuN4K+H7/CdYWdPUVm7EE1jQfiY1qCdMqCF2nFYDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896596; c=relaxed/simple;
-	bh=wk+ZfnUs0TU+dESihkwAC46n1pq4njyS5t82Crc4TGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H7W7GmTPzCvqs/sm3cmdvN9ebA0ZndOtdJl1xBabkORJd+nGC2iEgfvd6fGJMqKTaZi1a9zulF+85Rao9bsjJMzL4YXI+VjzOlwLNO+ddIZI+IDMZxC/0EtB9bJs+iiAB8viMna4k8nLgv1HFIl4uqc3JYnh8v+MB36A3VHcDqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=Dq+TW16i; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49056b9f04aso56266075e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1779896593; x=1780501393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m35jp3Py6wjAdvxeZDnp0MkWyh3TLwkNAGMef3b8C3U=;
-        b=Dq+TW16iUwxnE+VL60GbHGpD3yUEW/nclH/gQiZjtH0MFfQLXuQf4CbqAS9gt5Zcla
-         r0E12rl/Hjx1xaQuTLZgGe8FLh1xrxUbFNnXQnUyeqnyiXas7nhQ4UR/BNScxuRixwt0
-         bxcT5PRYWYqydeaw6XlYhnqH8PyRVdIgDz333K5O0Yoio/Mb1Ucv77I08Cf+1QJkHhUm
-         njo11sJ3N7lS3B2WNPDDb/Ky+4n+KjRm8qIeUqPH8r0wmIv8Y4/PDhzLZpyIH6kOtkDo
-         IwE/cJqFzijvD+zUH1Sz6AZussjxXgeL0kocJxSHLLsI2vwQ6BQjcBfEtbzR8QheZ6bW
-         pgwQ==
+	s=arc-20240116; t=1779897095; c=relaxed/simple;
+	bh=qKbkZMJtkt73q6MVdq9NtMxASPvqyv84AwgiiThd+7k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwukxSUyM2/V1iBLGsh5KQz9vWU9M8SN7dCrkKTx0KSl2Pa2TffliaLQIi6Lv8JFYv8etwDt9JK4C3siPqC1Liv/1LFsX2lGmKdOBcBGPhdsSmrnG0Xa+V8g8XLv3p6+lUGNRMVtedlVt1suCvxA/FtXaqbSsByv9BnX/MhuCz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-631466587e9so8922464137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779896593; x=1780501393;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1779897093; x=1780501893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=m35jp3Py6wjAdvxeZDnp0MkWyh3TLwkNAGMef3b8C3U=;
-        b=BHTNkGJgRxzWBtrq9u1qexMVFeQDROcBpWr99Q2c3Lwpub2/K1wiN4EwebrWoagRKC
-         CsISQcEYqX2tkEqQM5hHqaZt9V8Dqlb9nKrakevqJYpR2tJgiAxjYrjH9+eFowXxqjiS
-         CBz7G/JVY12XdSkSrOGr0CLdoKFlydm676YvcLlynDP9LKLFTNU20MbL1/4LiupRfwRQ
-         QC0tSDCKT7T/rD55P5tTEMhMuVgceI4I15P+qtGAo9YwzpY9SIPoSsAJF0vyCkXE7wtn
-         B5pCY2m9oCVWmdsbKTinrczbakAnkYmmZF7gclmRtPPA+jtznPHbp2jbVRkm1a50jfH6
-         B9xA==
-X-Gm-Message-State: AOJu0Yzk+/IV8eD3fsfP6WUKoydQLqhahPs8vIvZtxSeTwe9rtGjJbXH
-	q4chALaaZhGG4eKfNwGHrfag4ziApV+4/IqzcQVYJ7VtXn25QdhZbprot3+jOkdzNRg=
-X-Gm-Gg: Acq92OFgeD7Ni/G3BKpYEYhL+RX2X5iB1ebK56mkwi0pBh/4rvL6ocS/K0rltlRoLSX
-	JcgE3jpeo59KE50A+YU+sA3EDOFAYXbMBNlDWxnPLL3bk1qQX7mETUuYSeiPQT1Ka8532kG72K7
-	AFBPeDtyLswbSBhmIeUSLt+6sgJKcCiiEQyWJP18ooAa/83lp/RCeFT2vO7Wm2b0XBkWQZirzNP
-	Ft166mDZVLYC19ec2jQDG2ff/XPdNub7tBwsH+qcXSc+Bqa+9UmZF0nMrVnNsBesWyjFyAjpY1+
-	8XWDvH57z+/jGMImHEjGEv7WjWpjxUZ5zP+AGhXegyNjvFikRslqwXrZyZAVXu2oZ/TDIAhjuM/
-	c5RwxzZBP7Jh7UcjTx9W3zD55i9mYchbAGzOKrCRY8CfjZ0d/TLqFF74/T04E0Dvt5aACRWgrsM
-	2T+qxvCSFBbFtkQ2/FIClKwPu1vfo9ckZb9mjKKDZmNzDjTr0JJx5fsQtlyr3eLqSpiakfWu8k/
-	OJIQJY6LMKc/ZKYSgseIDAnlg==
-X-Received: by 2002:a05:600c:4688:b0:490:4224:e0a2 with SMTP id 5b1f17b1804b1-49042ae265bmr408015645e9.33.1779896592997;
-        Wed, 27 May 2026 08:43:12 -0700 (PDT)
-Received: from localhost (p200300f65f47db042b54ed4dbf2ca0b5.dip0.t-ipconnect.de. [2003:f6:5f47:db04:2b54:ed4d:bf2c:a0b5])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4904527dbf3sm381384805e9.6.2026.05.27.08.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 08:43:12 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] pinctrl: max77620: Unify usage of space and comma in platform_device_id array
-Date: Wed, 27 May 2026 17:43:01 +0200
-Message-ID:  <1d8c53fb9ca44697c6a1f650311ac2bf72ef9f54.1779896151.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1779896151.git.u.kleine-koenig@baylibre.com>
-References: <cover.1779896151.git.u.kleine-koenig@baylibre.com>
+        bh=2bh+b2FSQ4S9tWiMljtZE1x8DvPABI/MvIYcGMABymU=;
+        b=mfIEqaqCsh6u6ttp3Vo2d2aKLKW30TVXavyf3EbszFAgo0Okm6KOSba0+z0q1ZyQd+
+         2AXLu0sHsC7jGSFPj8OW4roavzpnNDMv3sD28XiA5sJRdAEiZsRM14mi/I/pNRItgT0W
+         XBhhSq14sxBRAX3b6qLz21qV6klvwokweHIMzS3vWrHGMXAk7zmuw2Y36228Ko8j8xdQ
+         jxmZbooBfIBc2LaUOX04TY5gaZrpBtgcxZlIdPKrXP3C7ud0oOq/6lgHbIclEwmdLYyx
+         WN//MYgJa8AW3jYco9tXmtKaK5vPWTYNJvBquVuxWoizWyAKVUSrTHZbN3omnlVkrTO3
+         H76A==
+X-Forwarded-Encrypted: i=1; AFNElJ/CTMKxafawafI1YaeFB1YNbgQWsvoCjQ3huKsfFnWEyxP/AJVLXk+13tqxKgFTVHc1u1+t72rBdHgp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmR8s8pgQtt7geUXKPjqKPWG1KvW5nwVw20caRzqpdkfO7K6tg
+	X8JWkDemGgVwNhDZoEdVxTuKFDHZYA/P2EvsSD4BNleX5H2e00GaGVKMQKU9HnY2oP0=
+X-Gm-Gg: Acq92OG3leiCTDmbVK/Sk3txIWu0qfxsKLGJlnAciklmDTs0v8fbbgBf4KlApXzQrNn
+	MuRfMp+UH8PTiKhy5/r/6AVjhGUYjmAkFkU5KJXXNaFS06dZr7ZSECAj6Isfqz2/ssP0P6ESgUd
+	w6sqywIkqTVaYXy5knNEg0iIpGOMqDcb7jy83Oo/5sJbJWuXxI5TlO0ZlddplTFMtRUCmNS36hh
+	JUc/d9+ecejd3DzKWmwpCO+0Be5BapsAdv3ac5EgkvnCxTCZzZewvN6Ix7daN7EIaZiZ2XGuZT4
+	EXA9kaSCU0NMjpeFkG9PJY0D+nS+iYFkmiTqcz9o7dN5DOZtj5009wA8eLK9u0cBy/w508V41DA
+	NbsO18a2cvuxrTc88ASCX4X7I+pr2HXHyDeMjThv5x6MwJegQ8CHCBa+0Q9o/8jKNm9CEeb/5EX
+	LR38erYcJzQdA5DLEhpcb4/qj4ooFk6r0GsXIS/a009nAUJZVhA+nddaEV6ZBi
+X-Received: by 2002:a05:6102:568d:b0:631:81d6:e152 with SMTP id ada2fe7eead31-67c60e899bcmr12751734137.0.1779897092914;
+        Wed, 27 May 2026 08:51:32 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96173afdb54sm17570477241.8.2026.05.27.08.51.31
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2026 08:51:31 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-6313b7e3d03so7803467137.3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2026 08:51:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ883yjrBX3ogIjB2rPkpVk/PSYPYk/vK+7o0BHnrxcvqRU0ScKtJ5RZPSMuciVHkjXQRzSHr4Y46mRw@vger.kernel.org
+X-Received: by 2002:a05:6102:1494:b0:633:34c6:6ace with SMTP id
+ ada2fe7eead31-67c8293fb73mr13015180137.26.1779897091174; Wed, 27 May 2026
+ 08:51:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=999; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=wk+ZfnUs0TU+dESihkwAC46n1pq4njyS5t82Crc4TGc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqFxEJwp1SOEmtvbqQNKibz29YFbtqAWvrms6lG H+FqMsVy4iJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCahcRCQAKCRCPgPtYfRL+ TiFVB/9iV5fZrJcABFu1dICWRGm5/I291po04O6Fj8QSXcSE4qM7MxdLlnvSvbck0Am/rq8wNZ5 wWX1NxXrDOB6ENgC20G+kVaj/FI1GM9hqNir1bixsvD0PFeb8TzSV3CKpELZVW1AZQArn6BqtMc 7SOD7GFsmToa3Groe06GNBSYMXomRNszRlT85RFq5cFo2vQ53idLYKNU6BZUn/XlnLyt9eNkhOk 2Y1QWCB/WINhhfe1v/OxO9+CyNNx8HCnoVutdhC5Ve+g7PYit58RhL68Bhw6MmcnTEl3K9SpFXz 781IObNituoMTpRBGgNgjWCNYtsODU/VlKL3wWbrzwZ6zT0R
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+References: <cover.1779896151.git.u.kleine-koenig@baylibre.com> <fbe2d29f785798b3e0b7c1b5707e917035a0b442.1779896151.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <fbe2d29f785798b3e0b7c1b5707e917035a0b442.1779896151.git.u.kleine-koenig@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 27 May 2026 17:51:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWkYhoaN80b2xXvNLqwMdFgJV7cfPj_SPUea39Ft-AnqA@mail.gmail.com>
+X-Gm-Features: AVHnY4JpYSaPlViJEZLn2urWPttxXKooTYEBn-cJQAbGcaWZK9sJWm1CqYq_4bU
+Message-ID: <CAMuHMdWkYhoaN80b2xXvNLqwMdFgJV7cfPj_SPUea39Ft-AnqA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: Use named initializers for
+ platform_device_id arrays
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+Cc: Linus Walleij <linusw@kernel.org>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37591-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[baylibre.com:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_FROM(0.00)[bounces-37592-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 943755E713B
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,glider.be:email,baylibre.com:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: D66A65E7579
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The most accepted style for the array terminator is to use a single
-space between the curly braces and no trailing comma. Also don't use a comma
-directly before a closing brace in the other entries.
+On Wed, 27 May 2026 at 17:43, Uwe Kleine-K=C3=B6nig (The Capable Hub)
+<u.kleine-koenig@baylibre.com> wrote:
+> Named initializers are better readable and more robust to changes of the
+> struct definition. This robustness is relevant for a planned change to
+> struct platform_device_id replacing .driver_data by an anonymous unit.
+>
+> While touching these arrays unify spacing and usage of commas.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig (The Capable Hub) <u.kleine-koenig@b=
+aylibre.com>
 
-Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
----
- drivers/pinctrl/pinctrl-max77620.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/pinctrl/renesas/core.c            | 24 +++++++++++------------
 
-diff --git a/drivers/pinctrl/pinctrl-max77620.c b/drivers/pinctrl/pinctrl-max77620.c
-index acb945a25743..c47eccce7dc0 100644
---- a/drivers/pinctrl/pinctrl-max77620.c
-+++ b/drivers/pinctrl/pinctrl-max77620.c
-@@ -645,9 +645,9 @@ static const struct dev_pm_ops max77620_pinctrl_pm_ops = {
- };
- 
- static const struct platform_device_id max77620_pinctrl_devtype[] = {
--	{ .name = "max77620-pinctrl", },
--	{ .name = "max20024-pinctrl", },
--	{},
-+	{ .name = "max77620-pinctrl" },
-+	{ .name = "max20024-pinctrl" },
-+	{ }
- };
- MODULE_DEVICE_TABLE(platform, max77620_pinctrl_devtype);
- 
--- 
-2.47.3
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be> # renesas
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be> # renesas
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
