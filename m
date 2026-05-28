@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-37616-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37617-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aBrJLP35F2oWXwgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37616-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:17:01 +0200
+	id EAY+ARj6F2oWXwgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37617-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:17:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 256945EE666
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:17:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F5A5EE682
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:17:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 326F2302C0CF
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 08:05:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E5679328D5CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 08:05:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 980BC368294;
-	Thu, 28 May 2026 08:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF99A369D66;
+	Thu, 28 May 2026 08:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+fv2Zkl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDoPlLsx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B50367298;
-	Thu, 28 May 2026 08:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDFA367B81;
+	Thu, 28 May 2026 08:05:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779955502; cv=none; b=Nerr37J9DxRd/5vSIggFKsRONCHdhS64M95sbwfqYH5etfvneVyCRM0PD8nHQGSedc3ddT4bsu13d/24895rt35tMd15sqeetQWVitSm5QFP3tabk8RCeRiDgNbiorBmssbZ42znnbokzU4m3qaVdo0Sn3K9aoKWVf8dX/NZbjU=
+	t=1779955506; cv=none; b=VZfytPmjtWiOD1G+NmSd+Ct2foM4DRvQEfzZWWkJ9z5DpLmBm2SZpJTT/SHrEXMfIVaqig7ZJOTPkbNR93bxgYK20LHAHs2umutu5yaRH6eAJBuu/Gf958DDcLb2bUtkEdm8fk3rDpVXhVEsh47bo+L/TL2nYi2e3Yv/GAoU2V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779955502; c=relaxed/simple;
-	bh=d+9dPpoQT2mYvlFwzMY+LFDAB/OxOOLHqzr1Xd7eo5Q=;
+	s=arc-20240116; t=1779955506; c=relaxed/simple;
+	bh=A+jYPVD0GUndrlTynbeuAmrJJfgoYOtq14VG0REN8t8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WJBlns+Rj5PMROonivzIUMf5FCmK3TXgrVp9722crtbxGCYQVEn3pZnFQTTc3C3wXaTBNPIvhD9PgX0a3PPMoI0fsAVnfE89Vn2bIr4pVvjDPPwjk9ur4A5PNyGtItIMAd8wS9/5GzvKz4XHX5F8ZZ3SbeGDnI8OtwjjiCZAj8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+fv2Zkl; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711EB1F00A3A;
-	Thu, 28 May 2026 08:04:56 +0000 (UTC)
+	 MIME-Version; b=itzk7UPjusPIKA7nTfkV//biKGB0hMOsEi7UYf44qu2hcZyYYGAypKrLSVHotPxLir5yeQvnpCi4HQ3fR/VTgGHSxw00NjxTRbR8GFFJy2eQeh7zD8t0wb9GiOahHvxGjiatq1r2niejurU35l/C3xhJ9D3PLZVEJf2APDE8Pc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDoPlLsx; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1431F00A3C;
+	Thu, 28 May 2026 08:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779955500;
-	bh=ay6gDYre614iH/Ln6/W4oneHyqGUkuOe32mdQBoj+TY=;
+	s=k20260515; t=1779955505;
+	bh=eEzAmMzCpBQHbj7s6U/8LxCHRyiO5fN0Btf+dk43Ea8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=J+fv2ZklkYR7YxgIM2/yH6NcQb8ObC7ao9raqn0e51NVLXekv8eGlW7O2ndfmgaR9
-	 cDAsU3lSAVUaofFtq4r3yRrGJqYtiVMgDJtd7m9SVceTonyX9g42ryMsJUwQsq/eZb
-	 Q37Y0TXQBzFQBVL/Lng+0rNtxfXBzof8xsoMbL4MerJKCTdOgY95+fJkY3+uXJux1u
-	 NLNK7rM9UTKorZYOtXeVUEgL2n2S+Gr8UNE0ZdNuWyq80oTOssmXLmFwK9pJxvR9Pb
-	 2cUun1iMBUBa5rYyeHDR/bnZd8dd2WkcV3TqmkojXBnHQojtmBT9sFca2Z/ARW/shK
-	 iooeF3BWKMD9A==
+	b=nDoPlLsxQNwBKorAFUWeh4ncjpgu4UmPBqtQKnyIW6y7AVOnR0otanq0Am+C0uSOV
+	 edaVRyEoV9JNNdQwopnTFki5HyAUHgu8EgmM1IU1QzS6pwsIIUcqdfQrF+S+Ae7cmQ
+	 Is3IpUu6Kq3yFpPEm8ScNf+0SMLRRAXlJgppQgsjiFJjQmXdA7Ej4rHELRaJkJ4+y7
+	 Cxu9T1E1lN97xGX3rNmuFaD+m3V6iGmqpT4Sgkeu0A7LwqrWF07DXOXO9ecnNWSu16
+	 JDjpLkNQcJiB040GSfju57aUBPLvhqfPY03WrlHFPbaAse2cibSJiBtGbcGSr4lRt9
+	 J17gnqBQsl/6Q==
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
 To: geert+renesas@glider.be,
 	linusw@kernel.org,
@@ -59,9 +59,9 @@ Cc: claudiu.beznea@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 3/7] pinctrl: renesas: rzg2l: Keep member documentation aligned
-Date: Thu, 28 May 2026 11:04:35 +0300
-Message-ID: <20260528080439.615958-4-claudiu.beznea@kernel.org>
+Subject: [PATCH v2 4/7] pinctrl: renesas: rzg2l: Use tab instead of spaces
+Date: Thu, 28 May 2026 11:04:36 +0300
+Message-ID: <20260528080439.615958-5-claudiu.beznea@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260528080439.615958-1-claudiu.beznea@kernel.org>
 References: <20260528080439.615958-1-claudiu.beznea@kernel.org>
@@ -83,7 +83,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37616-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37617-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -100,48 +100,37 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 256945EE666
+X-Rspamd-Queue-Id: 57F5A5EE682
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Keep the documentation for struct rzg2l_pinctrl_reg_cache members aligned
-with the struct member order.
+Use tab instead of spaces to follow the same coding style.
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v2:
-- collected tags
+- collected tags 
 
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 77443cf1f431..b1ffdc133987 100644
+index b1ffdc133987..517001145bd0 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -380,16 +380,16 @@ struct rzg2l_pinctrl_pin_settings {
-  * @pmc: PMC registers cache
-  * @pfc: PFC registers cache
-  * @iolh: IOLH registers cache
-- * @pupd: PUPD registers cache
-  * @ien: IEN registers cache
-+ * @pupd: PUPD registers cache
-  * @smt: SMT registers cache
-  * @sr: SR registers cache
-  * @nod: NOD registers cache
-  * @clone: Clone register cache
-  * @sd_ch: SD_CH registers cache
-  * @eth_poc: ET_POC registers cache
-- * @other_poc: OTHER_POC register cache
-  * @oen: Output Enable register cache
-+ * @other_poc: OTHER_POC register cache
-  * @qspi: QSPI registers cache
-  */
- struct rzg2l_pinctrl_reg_cache {
+@@ -407,7 +407,7 @@ struct rzg2l_pinctrl_reg_cache {
+ 	u8	sd_ch[2];
+ 	u8	eth_poc[2];
+ 	u8	oen;
+-	u8      other_poc;
++	u8	other_poc;
+ 	u8	qspi;
+ };
+ 
 -- 
 2.43.0
 
