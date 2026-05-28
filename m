@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-37614-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37615-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KLn+EN/4F2qTXwgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37614-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:12:15 +0200
+	id 2PmEK0r3F2q5WAgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37615-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:05:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B55C35EE563
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:12:14 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 995BA5EE387
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 10:05:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E50D43215920
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 08:04:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 33B843066914
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2026 08:05:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417C13672B8;
-	Thu, 28 May 2026 08:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93128367F40;
+	Thu, 28 May 2026 08:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlE2Uvqe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQTLTsj2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A3F366072;
-	Thu, 28 May 2026 08:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4010D367B8C;
+	Thu, 28 May 2026 08:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779955493; cv=none; b=MhmqyrHA0cdyHg4Irj/NHvNfh7gI3kBEntuO8+Mg8Y3z5agBaxPnCXEa7ztZEx+LriFYI37q+Y1cjKwyz3F/Yr8jVO/cEXLs0WGOi77cm3r/GJ91J0SwXd1+Q7sH3ULnkezg4l4g5lTHpLBr6tgZmWF6veM1KAe09gMr8Rf2s7k=
+	t=1779955497; cv=none; b=ZnDb2CMJbtoux2ug5Ur0UMqX67I2EczIigTLgz3ieXVDYiEtuLo8ji41pkop+4aJTLQ5sJswBeexRGSLhQ0NKvT21VQx1O/kROwgzzbte/j+/EH68OM3mgMjAoOxK7dD2CdWDBK2hZhkXnY72u8AiWYPhEv80q4AnrWhN1YzE38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779955493; c=relaxed/simple;
-	bh=zolK2oG5xNFmuVZGOh6oVCzas8YjEVDSW701MpnAMKc=;
+	s=arc-20240116; t=1779955497; c=relaxed/simple;
+	bh=6MpYiUub0APMFI7uH+P2Fplw3Zl8ZQB1MvsBZY3p4QA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o+Q2P4mj1uQT/RKRZXtaWPI6OD2SkWsLAJebnbn4rQNh6FnKbptENcS5ZeQwYxWJgtKz3O8cs14QVZ0GEEaWvzYDaiY2Ku4yYb/e1gq96UnoXM9mePcDBvbwKxwhDO0qlh3RzEEbE4zV1H02iq+cHrxLnTUX6AnZArDQX9ElWIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlE2Uvqe; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBB61F00A3A;
-	Thu, 28 May 2026 08:04:46 +0000 (UTC)
+	 MIME-Version; b=tatimIa2AKL4/3HoLvc1Y8ebyARoOtu/yA32Cnp31a3X6oGgKS++UhlvdnUmjfU+9uDu5PaKMwHXWS1ncPKBtDgd6FqIYEyj/bd+w6mmfRAfasc3HjGI9Qm/RcRw5Cn8YK3UrFP0chFFLmXFFaIqKTfYy1vHZGvt9lGQ7gsV2Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQTLTsj2; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36A31F000E9;
+	Thu, 28 May 2026 08:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779955491;
-	bh=Vurpefvu+YHMOkHImZQPG2a13ySBXId/U1SSogn8GUs=;
+	s=k20260515; t=1779955496;
+	bh=IpNkcRyrbtHE0i7ymqh8hO4uiycSt7wtY+zaW32miTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jlE2Uvqe9J3edh7uCmN0GKa8UL4kpF+IY4XQQ1g/a7ItT01zP5l1ZlJ6nilIm4Q1A
-	 G7t2hruHSW88BoLCqh7dHPfsxAN/TtL83lug5Sdhc0kwrTcoO0mic5RG6uRqqKFcOG
-	 MvBVgX+v31d0402dx5StFKkrfM0fmayhiV3zXalJe01la/4sbSZtNkXwexnWTT/qlW
-	 Cy3HeCwmTVTxD2POO/2L9TP6LHe/LSZtI265CIIUUSn8ehSJDDwkb7cUmhTLDDm44W
-	 r/Q2XfLZOW8yN5tYcV7HL5MQKapvcytCvf352ZrfJux9H/JL/lhVb4g16sfIXPdKFh
-	 5xuKV8od2xT6w==
+	b=LQTLTsj2Gr5HXXOlVvV+0g983TAnosR3MjP9w5U+39QQ5A86bnRHsDV43h83oka10
+	 DzUFrpubRVIO1vV5H1h2JltEd2CjvahAz6xXQ9Fmm/kZLa/ltqaTiyCir/WJoTeca6
+	 R+SEM16W/MB/yAftZbkYRvpUagp+SpWYFualITrWr4GyxP9nvJSYG7LmsQ0/rvx/RA
+	 KknL78Z7KWh7WTqmSDb3UxJF9sQNznUO32Ucc3HPk7GwncyQY4CbncQW5Y5z9rtsOn
+	 mfr+sjHll/u3ra1vMrSK/1zOItLPT0UCX5VccnoU5E6bwVt0TvTpFlyh42Ovl/Ypnn
+	 rjMugpp7pOhOA==
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
 To: geert+renesas@glider.be,
 	linusw@kernel.org,
@@ -59,9 +59,9 @@ Cc: claudiu.beznea@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 1/7] pinctrl: renesas: rzg2l: Generalize the power source code
-Date: Thu, 28 May 2026 11:04:33 +0300
-Message-ID: <20260528080439.615958-2-claudiu.beznea@kernel.org>
+Subject: [PATCH v2 2/7] pinctrl: renesas: rzg2l: Drop defines present in struct rzg2l_hwcfg
+Date: Thu, 28 May 2026 11:04:34 +0300
+Message-ID: <20260528080439.615958-3-claudiu.beznea@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260528080439.615958-1-claudiu.beznea@kernel.org>
 References: <20260528080439.615958-1-claudiu.beznea@kernel.org>
@@ -77,13 +77,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37614-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37615-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -98,31 +98,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B55C35EE563
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,renesas.com:email]
+X-Rspamd-Queue-Id: 995BA5EE387
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The current functions used to get/set the pin power source check the
-OTHER_POC register, which is specific to the RZ/G3L SoC only. To allow the
-code to be extended for other power source functionalities (e.g. I3C on
-RZ/G3S), generalize the functions used to get/set the pin power source.
-
-For this, introduce the struct rzg2l_register_masks data structure whose
-purpose is to store SoC specific register bit masks. The members of this
-structure are then used in rzg2l_caps_to_pwr_reg() to retrieve the bitmask
-corresponding to a SoC specific power source capability.
-
-The conversion between HW specific power source values and SW specific
-power source values is now handled through rzg2l_pwr_reg_val_to_ps() and
-rzg2l_ps_to_pwr_reg_val().
-
-Finally, to keep the code generic, the register update in
-rzg2l_set_power_source() was changed to a read-modify-write approach to
-cover all cases.
+Drop the QSPI and OTHER_POC register defines, which are SoC specific and
+accessible through struct rzg2l_hwcfg::{qspi, other_poc}.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
@@ -130,265 +115,42 @@ Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Changes in v2:
 - none
 
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 177 +++++++++++++++---------
- 1 file changed, 112 insertions(+), 65 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index ac42093fc579..a648d75a2bd2 100644
+index a648d75a2bd2..77443cf1f431 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -186,6 +186,7 @@
+@@ -180,8 +180,6 @@
+ #define SMT(off)		(0x3400 + (off) * 8)
+ #define SD_CH(off, ch)		((off) + (ch) * 4)
+ #define ETH_POC(off, ch)	((off) + (ch) * 4)
+-#define QSPI			(0x3008) /* known on RZ/{G2L,G2LC,G2UL,Five} only */
+-#define OTHER_POC		(0x3028) /* known on RZ/G3L only */
+ 
  #define PVDD_2500		2	/* I/O domain voltage 2.5V */
  #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
- #define PVDD_3300		0	/* I/O domain voltage >= 3.3V */
-+#define PVDD_MASK		0x3
- 
- #define PWPR_B0WI		BIT(7)	/* Bit Write Disable */
- #define PWPR_PFCWE		BIT(6)	/* PFC Register Write Enable */
-@@ -268,6 +269,23 @@ struct rzg2l_register_offsets {
- 	u16 other_poc;
- };
- 
-+/**
-+ * struct rzg2l_register_masks - Masks for different RZ/G2L pinctrl functionalities
-+ * @other_poc_pvdd1833_oth_awo_poc: PVDD1833_OTH_AWO_POC mask
-+ * @other_poc_pvdd1833_oth_iso_poc: PVDD1833_OTH_ISO_POC mask
-+ * @other_poc_wdtovf_n_poc: WDTOVF_N_POC mask
-+ */
-+struct rzg2l_register_masks {
-+	union {
-+		/* RZ/G3L masks */
-+		struct {
-+			u8 other_poc_pvdd1833_oth_awo_poc;
-+			u8 other_poc_pvdd1833_oth_iso_poc;
-+			u8 other_poc_wdtovf_n_poc;
-+		};
-+	};
-+};
-+
- /**
-  * enum rzg2l_iolh_index - starting indices in IOLH specific arrays
-  * @RZG2L_IOLH_IDX_1V8: starting index for 1V8 power source
-@@ -288,6 +306,8 @@ enum rzg2l_iolh_index {
- /**
-  * struct rzg2l_hwcfg - hardware configuration data structure
-  * @regs: hardware specific register offsets
-+ * @masks: hardware specific masks for various functionalities available in
-+ * the registers described by regs
-  * @iolh_groupa_ua: IOLH group A uA specific values
-  * @iolh_groupb_ua: IOLH group B uA specific values
-  * @iolh_groupc_ua: IOLH group C uA specific values
-@@ -301,6 +321,7 @@ enum rzg2l_iolh_index {
-  */
- struct rzg2l_hwcfg {
- 	const struct rzg2l_register_offsets regs;
-+	const struct rzg2l_register_masks masks;
- 	u16 iolh_groupa_ua[RZG2L_IOLH_IDX_MAX];
- 	u16 iolh_groupb_ua[RZG2L_IOLH_IDX_MAX];
- 	u16 iolh_groupc_ua[RZG2L_IOLH_IDX_MAX];
-@@ -1047,27 +1068,73 @@ static void rzg2l_rmw_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
- }
- 
- static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs,
--				 u32 caps, u8 *mask)
-+				 const struct rzg2l_register_masks *masks,
-+				 u32 caps, u16 *offset, u8 *mask)
- {
--	if (caps & PIN_CFG_IO_VMC_SD0)
--		return SD_CH(regs->sd_ch, 0);
--	if (caps & PIN_CFG_IO_VMC_SD1)
--		return SD_CH(regs->sd_ch, 1);
--	if (caps & PIN_CFG_IO_VMC_ETH0)
--		return ETH_POC(regs->eth_poc, 0);
--	if (caps & PIN_CFG_IO_VMC_ETH1)
--		return ETH_POC(regs->eth_poc, 1);
--	if (caps & PIN_CFG_IO_VMC_QSPI)
--		return QSPI;
-+	*mask = PVDD_MASK;
-+
-+	if (caps & PIN_CFG_IO_VMC_SD0) {
-+		*offset = SD_CH(regs->sd_ch, 0);
-+		return 0;
-+	}
-+	if (caps & PIN_CFG_IO_VMC_SD1) {
-+		*offset = SD_CH(regs->sd_ch, 1);
-+		return 0;
-+	}
-+	if (caps & PIN_CFG_IO_VMC_ETH0) {
-+		*offset = ETH_POC(regs->eth_poc, 0);
-+		return 0;
-+	}
-+	if (caps & PIN_CFG_IO_VMC_ETH1) {
-+		*offset = ETH_POC(regs->eth_poc, 1);
-+		return 0;
-+	}
-+	if (caps & PIN_CFG_IO_VMC_QSPI) {
-+		*offset = regs->qspi;
-+		return 0;
-+	}
- 	if (caps & PIN_CFG_OTHER_POC_MASK) {
-+		*offset = regs->other_poc;
- 		if (caps & PIN_CFG_PVDD1833_OTH_AWO_POC)
--			*mask = BIT(0);
-+			*mask = masks->other_poc_pvdd1833_oth_awo_poc;
- 		else if (caps & PIN_CFG_PVDD1833_OTH_ISO_POC)
--			*mask = BIT(1);
-+			*mask = masks->other_poc_pvdd1833_oth_iso_poc;
- 		else
--			*mask = BIT(2);
-+			*mask = masks->other_poc_wdtovf_n_poc;
-+		return 0;
-+	}
- 
--		return OTHER_POC;
-+	return -EINVAL;
-+}
-+
-+static int rzg2l_pwr_reg_val_to_ps(u8 val, u32 caps)
-+{
-+	switch (val) {
-+	case PVDD_1800:
-+		return 1800;
-+	case PVDD_2500:
-+		return 2500;
-+	case PVDD_3300:
-+		return 3300;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int rzg2l_ps_to_pwr_reg_val(u8 *val, u32 ps, u32 caps)
-+{
-+	switch (ps) {
-+	case 1800:
-+		*val = PVDD_1800;
-+		return 0;
-+	case 2500:
-+		if (!(caps & (PIN_CFG_IO_VMC_ETH0 | PIN_CFG_IO_VMC_ETH1)))
-+			return -EINVAL;
-+		*val = PVDD_2500;
-+		return 0;
-+	case 3300:
-+		*val = PVDD_3300;
-+		return 0;
- 	}
- 
- 	return -EINVAL;
-@@ -1077,76 +1144,51 @@ static int rzg2l_get_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
- {
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
--	u8 val, mask;
--	int pwr_reg;
-+	const struct rzg2l_register_masks *masks = &hwcfg->masks;
-+	u8 mask, val;
-+	u16 offset;
-+	int ret;
- 
- 	if (caps & PIN_CFG_SOFT_PS)
- 		return pctrl->settings[pin].power_source;
- 
--	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
--	if (pwr_reg < 0)
--		return pwr_reg;
-+	ret = rzg2l_caps_to_pwr_reg(regs, masks, caps, &offset, &mask);
-+	if (ret)
-+		return ret;
- 
--	val = readb(pctrl->base + pwr_reg);
--	if (pwr_reg == OTHER_POC)
--		val = field_get(mask, val);
-+	val = readb(pctrl->base + offset);
- 
--	switch (val) {
--	case PVDD_1800:
--		return 1800;
--	case PVDD_2500:
--		return 2500;
--	case PVDD_3300:
--		return 3300;
--	default:
--		/* Should not happen. */
--		return -EINVAL;
--	}
-+	return rzg2l_pwr_reg_val_to_ps(field_get(mask, val), caps);
- }
- 
- static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps, u32 ps)
- {
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
--	u8 poc_val, val, mask;
--	int pwr_reg;
-+	const struct rzg2l_register_masks *masks = &hwcfg->masks;
-+	u8 mask, val;
-+	u16 offset;
-+	int ret;
- 
- 	if (caps & PIN_CFG_SOFT_PS) {
- 		pctrl->settings[pin].power_source = ps;
- 		return 0;
- 	}
- 
--	switch (ps) {
--	case 1800:
--		poc_val = PVDD_1800;
--		break;
--	case 2500:
--		if (!(caps & (PIN_CFG_IO_VMC_ETH0 | PIN_CFG_IO_VMC_ETH1)))
--			return -EINVAL;
--		poc_val = PVDD_2500;
--		break;
--	case 3300:
--		poc_val = PVDD_3300;
--		break;
--	default:
--		return -EINVAL;
--	}
-+	ret = rzg2l_ps_to_pwr_reg_val(&val, ps, caps);
-+	if (ret)
-+		return ret;
-+
-+	ret = rzg2l_caps_to_pwr_reg(regs, masks, caps, &offset, &mask);
-+	if (ret)
-+		return ret;
- 
--	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
--	if (pwr_reg < 0)
--		return pwr_reg;
-+	scoped_guard(raw_spinlock, &pctrl->lock) {
-+		u8 tmp = readb(pctrl->base + offset);
- 
--	if (pwr_reg == OTHER_POC) {
--		scoped_guard(raw_spinlock, &pctrl->lock) {
--			val = readb(pctrl->base + pwr_reg);
--			if (poc_val)
--				val |= mask;
--			else
--				val &= ~mask;
--			writeb(val, pctrl->base + pwr_reg);
--		}
--	} else {
--		writeb(poc_val, pctrl->base + pwr_reg);
-+		tmp &= ~mask;
-+		tmp |= field_prep(mask, val);
-+		writeb(tmp, pctrl->base + offset);
- 	}
- 
- 	pctrl->settings[pin].power_source = ps;
-@@ -3795,6 +3837,11 @@ static const struct rzg2l_hwcfg rzg3l_hwcfg = {
+@@ -3816,9 +3814,9 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
+ 	.regs = {
+ 		.pwpr = 0x3014,
+ 		.sd_ch = 0x3000,
++		.qspi = 0x3008,
+ 		.eth_poc = 0x300c,
  		.oen = 0x3018,
- 		.other_poc = OTHER_POC,
+-		.qspi = QSPI,
  	},
-+	.masks = {
-+		.other_poc_pvdd1833_oth_awo_poc = BIT(0),
-+		.other_poc_pvdd1833_oth_iso_poc = BIT(1),
-+		.other_poc_wdtovf_n_poc = BIT(2),
-+	},
  	.iolh_groupa_ua = {
- 		/* 1v8 power source */
- 		[RZG2L_IOLH_IDX_1V8] = 2200, 4400, 9000, 10000,
+ 		/* 3v3 power source */
+@@ -3835,7 +3833,7 @@ static const struct rzg2l_hwcfg rzg3l_hwcfg = {
+ 		.sd_ch = 0x3004,
+ 		.eth_poc = 0x3010,
+ 		.oen = 0x3018,
+-		.other_poc = OTHER_POC,
++		.other_poc = 0x3028,
+ 	},
+ 	.masks = {
+ 		.other_poc_pvdd1833_oth_awo_poc = BIT(0),
 -- 
 2.43.0
 
