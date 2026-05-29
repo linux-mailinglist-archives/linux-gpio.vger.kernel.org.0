@@ -1,255 +1,213 @@
-Return-Path: <linux-gpio+bounces-37656-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37657-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8EgPKyMpGWpXrQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37656-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 07:50:27 +0200
+	id AHZ/LS4vGWrmsAgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37657-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 08:16:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D7BE5FD9D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 07:50:26 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A52B5FDCFB
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 08:16:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5D29A3149CEC
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 05:43:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3A26C3047C9E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 06:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 593003A1E7E;
-	Fri, 29 May 2026 05:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFEB3A6B9A;
+	Fri, 29 May 2026 06:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b="I/pCpTKR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn/I7IHX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ultrarisc.com (unknown [218.76.62.146])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F257E792;
-	Fri, 29 May 2026 05:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.76.62.146
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780033423; cv=none; b=l2WBOQhPNBlqKKyLpg4bprdDmcbIDmWdvDnZrtzjvwPhBrItSZEtFoobM91m4dxUL9vkTdg6kubHvyPafStP911FC2R2l8ZG8EgSEXrgbwHP8h4ZpJjhkbhd5cAgznUwzmG35jIVIR5aAR1e1XCXYG8Js8Fk90gTgNSlELfIn/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780033423; c=relaxed/simple;
-	bh=SxjCdFHCCENmLkqPCEujysBRfd568bVtH/3FxfoaW/A=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=o0Q8YYKXLOKCLdrGhaQya6S5r+ZC879h5RdGQ988JUxbcwUhCz93qTpTuIi0QrxAiDWc6x/IVXbtY8+9OJz4KtYemyZq8M8AoteFnR1udouhzyRefinUMWqQ1x/2EOmc1I/Aayc4Swyw9UpL8HTl6cNDtYiHMkXp8NbqnlQXQGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=pass smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=I/pCpTKR; arc=none smtp.client-ip=218.76.62.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ultrarisc.com
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFB33A4F5F
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 06:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780035361; cv=pass; b=h90msGL/ehvEcCmOe5holqX8u6qw1zk9WoD71RW6XocsrSFDYoy7eNOXGj/uIZ2z9S6OjQv9E5d1j1hiaGzL2wzH4feXY6iB3JlvjzUsqK+4dsYO6K9lbSfYICPkopD4m3B16zhjpE9HbzIHHDsz1sQLCiGHRNalDPhasWi/thk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780035361; c=relaxed/simple;
+	bh=nVtJbvexaNJMFdME4ML9ReAWPpSNzObidFOqJ1kMjUw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9g0YBfnXeIjenOukXvg4xMP0xPce7F/D2KvBQzRzffsgflT7fHogO9pc+LWidzVwF8omNrN0B32fhhSE2QfUoy8bOnbBQ97COXgz3m5O0zqodi1nDTfenPDF7+8flnvmSd1PdDrJFs6KkbaemuTpCYw9q1E8YouJUtNTdxEvaA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jn/I7IHX; arc=pass smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1370417c01cso6176473c88.1
+        for <linux-gpio@vger.kernel.org>; Thu, 28 May 2026 23:15:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780035359; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Le5LodqTkwfIvK44osSPRts3vZ7Jqr5i2nerSsC3E8m1AIW05yGbmj59mHn+V48mpG
+         ENLj/6qfmV88V8dWKyK7yxTrd0C99gkZVTB8wP9co+oRiolYTErPp3ypt8KUbGCA4Tqf
+         fyquWKWl61sOoy5r7oa+kfeOBjX4mavbt0opGLRQBRIxFi/dI914zgXodwEsuBJWTomz
+         m45pDgmDbPItUVXUV8PoQMOW/LGgIs9AMQShd7cqFGp48bf8J7XkWltKzC0enWF5sLuv
+         HNfaKGa/XFBoORbMHKJWROgoHwD47MCFsuQvzYhjQH8JAotFBmSedE0EKNT6tMwthdYb
+         8AVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=kOQjI2j+Vie6aL7ugRBd46imNc3/KLfgc8m5NZycQNo=;
+        fh=qOjJ6gGtyfvgNu5VcRDP41JNixsaAPS2ov/D4ZSsuiQ=;
+        b=AUZ3D4qrftzH/0EWew0QLq78OGxY5Cgc1/NJ/QaphhlZemQZoCyeU2uWSxjm0a5IyH
+         evdmXPWoN0hYlr563VCkPYzFzr/hY2yycXIXPESGD5OWB5CkNfoCtOIXEVqfabX+Uqhq
+         6bELYYicwZBCBDkEIJgSmUKFxkK8/tZeyXlgpuFfvXwJgzk7osVS6e5RCgYkNV2Pzpb0
+         8eFrJCIF3jDsWw2iayfPXxaTlk8+tvCKpZKsKLw64goGhJkOiiqq+dLPc2He3tzaqYb2
+         h5sn3r02BawxMl2wzPjEnou6WWfDUg7fCku1/NHsuCRVjU2Atv6g5Bwgvb97oTvGRhVz
+         mDkA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
-	References:Date:Message-Id; bh=R8t6pLKg1TYJMljpG0LujE1NO9A7R1xIe
-	xX2vW0OUtM=; b=I/pCpTKRSB+xFjx/Ttr7KqB3gyxRLYcEgzdnYHHIJWWj+Q/mo
-	RM4DHWRKNwmltKTw5NqqEa2l7n/6rntVMZObhzu3qUVR+ThYJktHBuvbFe3XuU9h
-	Kk3pesEyzJXP5Pgqrx36/rDzW2z674tC91M8irLunO1M93hDIKLJcAorJQ=
-Received: from [127.0.0.1] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAfwAnYUKkJxlqAfYGAA--.8119S2;
-	Fri, 29 May 2026 13:44:04 +0800 (CST)
+        d=gmail.com; s=20251104; t=1780035359; x=1780640159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kOQjI2j+Vie6aL7ugRBd46imNc3/KLfgc8m5NZycQNo=;
+        b=Jn/I7IHXr+l+iFKKLtTmJX1Y0/xhi0aMyeHQk7sF2f/cFnVFH66nTL7kdcyCne8uEQ
+         WGdVTE2pRd/xAR1UYyVOQIZnYbU50W/waQYgH+QWNPtJJ+Fp7AL3rt90GtibcPetrNpi
+         VcqkXoDj3wXbiodYQlYXWk62sRfnT8ag87n6qYDEyOt4cu3Ix/A2csvq6TGANvjWlcK+
+         B47Gjgp8uady+YV1I1aLENZvDvJ+BH+QPkXX6kZv6eCILZTxkRGsqBS1NYLRAd2lSIY+
+         AJBiBx9dEdepArEsFzZ6O7QwaxZXfqXxjMUNnjwYOjFkfpHoYg/6hL0Hng2uDc9+wNBL
+         m9Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780035359; x=1780640159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kOQjI2j+Vie6aL7ugRBd46imNc3/KLfgc8m5NZycQNo=;
+        b=T+u0Eo6jPVayvsr2/pY1zjyurBgQdH8+r2gf1gwrzi9G/ntpaAUIYs6c4hoyso8+yD
+         5GkeFYQRE/PYGNyBj0VMtBXqnhwUyEukXXuhePcdndezLiLGVNIuMnuFHpUCLbmQU/vE
+         cn5rbRovqeR2TAirxaDVzGixjdWqPrxrgai1mFYLG4pCvEcZJLtJh9vZPaRnfsWgmxy0
+         dV+DsBLOYPs55OFtYnpiEh+fnFbODrJ3pqHMvvrQ9nDVaqZl2qZGKLBGQobrjZ5JODgd
+         ZyU//Eyma9pzjp8GD15wt6kFirZ7jQLTi6rRQ0FW1rtfZI/JK+6Fa+0sNwnUisN4Ro0f
+         sI1w==
+X-Forwarded-Encrypted: i=1; AFNElJ9s5+8ebmLLq3wKW535MLQuWJ4rtbx+92fvj41Np+rOPrjNPtwQdktHwchNf56+c7VDgcPGRmv2AtyP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5a7OHAfekz526+Q1uiP1RrJPkdVgOtBULi189CQoM4eMn9ma2
+	rXqGARphIhSReux1QxBi0q05oVAStmGlDku/uAhzY6QFzPKdLVyiK85+wSOYhB+6AOKNh359560
+	pkMy/4KeCe21imXbjq6sVjzFMnx2C36g=
+X-Gm-Gg: Acq92OEl1y1Qqtec3Xg6F+jJFjWVGZkVQKJkLa0vdrsXHmz5rDScej0Uc95RXin/qzZ
+	zt5o1dvYQhSjEEyLBBz5Q02cyq6rskKXMf1wCdyLPSOD4VYc6lz1zhUTL2/eheJRtxI1t78CeQu
+	81zKZhSqGfdwYKeNrSZjkNdQo7X4ty9lNiwJxazBjkp0lQ/DEvuWCmcgVYgApaNEPnN5hjZnqsT
+	eL5c9NqhiMwoP2ljNBgT9jKrd+It9ToiOBselTVejT5OKTkfHv37F4MfSJxf+As+Z6Uk6kS4kcj
+	rwddeUz6CPDER7Y8AKOkVKbbog==
+X-Received: by 2002:a05:7022:407:b0:136:7d65:4edc with SMTP id
+ a92af1059eb24-137aeb9217emr657397c88.8.1780035358982; Thu, 28 May 2026
+ 23:15:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 6/9] pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl
- driver
-From: Jia Wang <wangjia@ultrarisc.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Jia Wang <wangjia@ultrarisc.com>, Linus Walleij <linusw@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Bartosz Golaszewski <brgl@kernel.org>, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@sifive.com>, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org
-In-Reply-To: <20260528-broiling-naturist-78401ecbb870@spud>
-References: <20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com>
- <20260515-ultrarisc-pinctrl-v1-6-bf559589ea8a@ultrarisc.com>
- <CAD++jLn=RX2rZ33kD427wR1KBo=YPzCqFaaSot22nJL4Emn_=A@mail.gmail.com>
- <20260525-turbojet-theorize-3a7b49f41af0@spud>
- <177995438556.929162.1470247666821673655.b4-reply@b4>
- <20260528-broiling-naturist-78401ecbb870@spud>
-Date: Fri, 29 May 2026 13:43:25 +0800
-Message-Id: <178003340524.2187387.10656805779953719738.b4-reply@b4>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780033405; l=5681;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=SxjCdFHCCENmLkqPCEujysBRfd568bVtH/3FxfoaW/A=;
- b=YgD6CblDPtfxQr1la0TpURB+x6fZJggwnhJJfIa/JrOkRFLZ6zFqJ2u6L77kMBxsapzLrAlAN
- jUzkzIfL2OTB5ECnOdrC/k3ycfZrCINZy8Rk+CPxzuEMKuCMvNLVQ4r
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-CM-TRANSID:AQAAfwAnYUKkJxlqAfYGAA--.8119S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF43Zr1UAr4rJFWkKF13XFb_yoWrKr47pF
-	W8Ga1YkrWUJF4agryjv395uFy3Krs7Jr1YqryUKryUtFn0yr97GF48X3yfuF9YkrZ8Gr1U
-	ZayYyFya93s8ArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9l14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
-X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAAEWoWakYABgATsV
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
-	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+References: <20260526131243.2160348-1-sergio.paracuellos@gmail.com> <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc5bj05ThOMy7eguS9+tPHkevWc3ArYzcQqvB6SrXpO4w@mail.gmail.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Fri, 29 May 2026 08:15:50 +0200
+X-Gm-Features: AVHnY4INl8B5Huw6Y9j7xwxi0vhZc_R5n6PiaCVEDmV7v6475mKIlBxtqptUy2Y
+Message-ID: <CAMhs-H-YK=2CGDnfBUso1Zov4uV0DKso=HkgctosL4prDMDZbQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mt7621: fix interrupt banks mapping on gpio chips
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linusw@kernel.org, tglx@kernel.org, grant.likely@secretlab.ca, 
+	anna-maria@linutronix.de, vicencb@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-37657-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,secretlab.ca,linutronix.de,gmail.com,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[ultrarisc.com:+];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37656-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 0D7BE5FD9D4
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 5A52B5FDCFB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 2026-05-28 09:55 +0100, Conor Dooley wrote:
-> On Thu, May 28, 2026 at 03:46:25PM +0800, Jia Wang wrote:
-> > On 2026-05-25 11:10 +0100, Conor Dooley wrote:
-> > > On Mon, May 25, 2026 at 11:28:51AM +0200, Linus Walleij wrote:
-> > > > On Fri, May 15, 2026 at 3:18 AM Jia Wang via B4 Relay
-> > > > <devnull+wangjia.ultrarisc.com@kernel.org> wrote:
-> > > 
-> > > > > +static int ur_legacy_parse_prop(struct pinctrl_dev *pctldev,
-> > > > > +                               struct device_node *np,
-> > > > > +                               const char *propname,
-> > > > > +                               struct ur_legacy_prop_data *prop)
-> > > > > +static const char *ur_legacy_get_function_name(const struct ur_pinctrl_match_data *match_data,
-> > > > > +                                              u32 mode)
-> > > > > +static int ur_legacy_conf_to_configs(struct pinctrl_dev *pctldev, u32 conf,
-> > > > > +                                    unsigned long **configs,
-> > > > > +                                    unsigned int *num_configs)
-> > > > > +static int ur_legacy_add_pinconf_maps(struct pinctrl_dev *pctldev,
-> > > > > +                                     struct pinctrl_map **map,
-> > > > > +                                     unsigned int *reserved_maps,
-> > > > > +                                     unsigned int *num_maps,
-> > > > > +                                     const struct ur_legacy_prop_data *prop)
-> > > > > +static int ur_legacy_dt_node_to_map(struct pinctrl_dev *pctldev,
-> > > > > +                                   struct device_node *np,
-> > > > > +                                   struct pinctrl_map **map,
-> > > > > +                                   unsigned int *num_maps)
-> > > > 
-> > > > What's up with all this legacy stuff?
-> > > > 
-> > > > What is this a legacy of?
-> > > > 
-> > > > I thought this was a *new* driver so how can it be "legacy"?
-> > > 
-> > > Jia already agreed to drop this stuff :)
-> > > 
-> > > > 
-> > > > > +static int ur_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
-> > > > > +                                    struct device_node *np_config,
-> > > > > +                                    struct pinctrl_map **map,
-> > > > > +                                    unsigned int *num_maps)
-> > > > > +{
-> > > > > +       return pinconf_generic_dt_node_to_map(pctldev, np_config, map, num_maps,
-> > > > > +                                             PIN_MAP_TYPE_INVALID);
-> > > > > +}
-> > > > 
-> > > > Hm I think Conor has new helpers for this so you don't need to wrap
-> > > > it like this.
-> > > 
-> > > Yeah, although "more importantly" the new helpers mean that drivers
-> > > shouldn't need to do things like calling these home-rolled functions in
-> > > probe, just so that they can try to use pinconf_generic_dt_node_to_map():
-> > > | static int ur_add_pin_groups(struct ur_pinctrl *pctldata)
-> > > | {
-> > > | 	for (u32 i = 0; i < pctldata->match_data->npins; i++) {
-> > > | 		int ret;
-> > > | 
-> > > | 		pctldata->group_names[i] = pctldata->match_data->pins[i].name;
-> > > | 		pctldata->group_pins[i] = pctldata->match_data->pins[i].number;
-> > > | 
-> > > | 		ret = pinctrl_generic_add_group(pctldata->pctl_dev, pctldata->group_names[i],
-> > > | 						&pctldata->group_pins[i], 1, NULL);
-> > > | 		if (ret < 0)
-> > > | 			return dev_err_probe(pctldata->dev, ret,
-> > > | 					     "failed to add pin group %s\n",
-> > > | 					     pctldata->group_names[i]);
-> > > | 	}
-> > > | 
-> > > | 	return 0;
-> > > | }
-> > > | 
-> > > | static int ur_add_functions(struct ur_pinctrl *pctldata)
-> > > | {
-> > > | 	for (u32 i = 0; i < pctldata->match_data->num_functions; i++) {
-> > > | 		const struct ur_function_desc *desc = &pctldata->match_data->functions[i];
-> > > | 		struct pinfunction func = desc->gpio ?
-> > > | 			PINCTRL_GPIO_PINFUNCTION(desc->name, pctldata->group_names,
-> > > | 						 pctldata->match_data->npins) :
-> > > | 			PINCTRL_PINFUNCTION(desc->name, pctldata->group_names,
-> > > | 					    pctldata->match_data->npins);
-> > > | 		int ret;
-> > > | 
-> > > | 		ret = pinmux_generic_add_pinfunction(pctldata->pctl_dev, &func, (void *)desc);
-> > > | 		if (ret < 0)
-> > > | 			return dev_err_probe(pctldata->dev, ret,
-> > > | 					     "failed to add function %s\n",
-> > > | 					     desc->name);
-> > > | 	}
-> > > | 
-> > > | 	return 0;
-> > > | }
-> > > (If I had more time, I would probably go looking to see if there are
-> > > more candidates for conversion)
-> > > 
-> > > Jia, the helper in question is pinctrl_generic_pins_functions_dt_node_to_map().
-> > >
-> > 
-> > I found pinctrl_generic_pins_function_dt_node_to_map() in mainline, but
-> > there is no pinctrl_generic_pins_functions_dt_node_to_map() as mentioned.
-> > Did you mean the singular version, and is that the one I should use?
-> 
-> I did, the s was a typo.
+Hi Bartosz,
+
+Thanks for reviewing!
+
+On Wed, May 27, 2026 at 10:51=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
 >
+> On Tue, 26 May 2026 15:12:43 +0200, Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> said:
+> >
+> > Device tree is using two cells for this, so only the interrupt pin and =
+the
+> > interrupt type are described there. Changing to have three cells to set=
+up
+> > also the bank and implement 'of_node_instance_match()' would also work =
+but
+> > this would be an ABI breakage and also a bit incoherent since gpios its=
+elf
+> > are also using two cells and properly mapped in desired bank using thro=
+ugh
+> > its pin number on 'of_xlate()'.
+> >
+> > That said, the solution adopted here is registering register a linear I=
+RQ
+>
+> s/registering register/registering/ but better just use imperative tone:
+> "Register a linear IRQ..."
 
-Thanks for the suggestion. I tried reworking the driver around
-pinctrl_generic_pins_function_dt_node_to_map(), but for this driver it
-doesn’t appear to be a clear simplification.
+Understood.
 
-The driver relies on a static SoC function table for the hardware mux modes
-and valid pin masks, and the current model allows set_mux() to use that data
-directly. Switching to the generic DT-driven helper would remove the
-probe-time registration, but it would also require extra handling for GPIO
-classification and nudge the binding/DTS toward a different representation.
+>
+> ...
+>
+> >       for (i =3D 0; i < MTK_BANK_CNT; i++) {
+> > @@ -331,7 +466,17 @@ mediatek_gpio_probe(struct platform_device *pdev)
+> >                       return ret;
+> >       }
+> >
+> > +     if (mtk->gpio_irq > 0) {
+> > +             ret =3D mt7621_gpio_irq_setup(pdev, mtk);
+> > +             if (ret)
+> > +                     goto fail;
+> > +     }
+> > +
+> >       return 0;
+> > +
+> > +fail:
+> > +     mt7621_gpio_remove(pdev);
+>
+> Don't you need to undo this in remove path as well?
 
-So I would prefer to keep the current model in v2, and I can revisit a
-helper-based conversion in a later revision if it still seems beneficial.
- 
-> Sorry about that,
-> Conor.
+Yes, you are correct. I will add this for v2.
 
-Best regards,
-Jia Wang
+>
+> The approach looks sane to me. I'll give some time for tglx or linusw to
+> respond before queueing it for fixes.
 
+Thanks, I am going to wait until next week and if no more comments
+come I will send v2 with the commit message fixed and the remove stuff
+added so you can enqueue that for fixes.
 
+>
+> Bart
+
+Thanks,
+    Sergio Paracuellos
 
