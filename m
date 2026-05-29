@@ -1,123 +1,138 @@
-Return-Path: <linux-gpio+bounces-37699-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37700-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GLixAGjzGWp/0AgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37699-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:13:28 +0200
+	id cIzVN+jzGWp/0AgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37700-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:15:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 832C5608530
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:13:26 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BC266085AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:15:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 75C963104148
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:06:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C318D304910F
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8BB0425CF7;
-	Fri, 29 May 2026 20:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CE7B37FF63;
+	Fri, 29 May 2026 20:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlarIqBW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hr0FdYjp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C554C421A0E
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F5F343D8A
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780084963; cv=none; b=LMNYvN68JwJJuMxG+oYNmVr4ohXtk4fUrdkoZXAlHrVUoGUSadB6Fc5C/weFiS4l4n+Gq/R/FdOT03V3fw5ZffEIuRvUQ8CzShUU5LNyD6QseyhQv7cE97DdY0MKWa4wJL+uAce+D+6EMF8CvbmNtrdxKsHoRKvqxjwiKBYvdL8=
+	t=1780085431; cv=none; b=SZf1PzwNK8WB/SJKB1wIU4edqXynJ6OObsWPJrPrz0De3AwNHmFnkR8BTb/og+7iX2v5R3IVVwlo5i7Q8rdd2aus5QUYsK/WW/IyjAQdsrLbtkvDz5qzOWLMV2VwgP+fn5VWuourWbegY9O/AaQVfmxhgBi7RBuPScpWThPue70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780084963; c=relaxed/simple;
-	bh=3IoDhb3udmXxflS3dgrcLv1niGYnHXK5D0HgB/kdlyQ=;
+	s=arc-20240116; t=1780085431; c=relaxed/simple;
+	bh=oQDqTDRzNTPwZsPjGf6RDDjOef9CQeyvOpIJfJ3OCq0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mTy+fIY/hdycdxYfiiAWLlJjWFKbfieRP0RuRonRXa0xm2pIzVBa6draXvrSIz7zvm2EXXZ/uXNaSog8qTPnhG5UG3Uvy0lUzr4kdd5qLkLQt1R8UPlaMff7Mk8nalor+pwQfITtMBrBb14roCLu7VzajL4MPM6weASXqbdtTMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlarIqBW; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96FAD1F00898
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:02:42 +0000 (UTC)
+	 To:Cc:Content-Type; b=oLIdrxVKDKPTAlmSN5FX1hFsS+d+WcOBf7wwbw6/1Qjamk8Xth5vLR8wa6aiu3hYpptshvhAmhqc+J5HCCHHr+/GjOAFFDrRHGU0O8KPt4wNfEk/yqKnvH7XY4c8PwEKnzHAwFOynQvHq+vI0lmyNqS49uFLZYiLvj3BS07FeDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hr0FdYjp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8B41F0089C
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780084962;
-	bh=3IoDhb3udmXxflS3dgrcLv1niGYnHXK5D0HgB/kdlyQ=;
+	s=k20260515; t=1780085429;
+	bh=oQDqTDRzNTPwZsPjGf6RDDjOef9CQeyvOpIJfJ3OCq0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=ZlarIqBWtLGcGIdM2D5odT8h71DAweyXa2Y8k8pHd+US5FR+kmMo4PR1UpJNcqvFg
-	 VsgUHFWdn6XOxhXICNF2Xx14atl22crYlJdj5NRdZJV697Waap41kNM2wxjUwuCVoD
-	 cF9nHEh3l6C7hOV3bcoKpd3Phk/uMm9STgYb1lPP9CqsUIAu4Tz6swP2sZyeRkXpvr
-	 Wyswhck/JhJ6KMfL5aylsDFOQZR/rDcHZ0xNk6Sk9bFthDpNMBQ1fSMj24UmIyuIec
-	 IMFoJjRJKa8KSF3mxA1yAZB9XS+aLT4J+Q9uwgQrZ7cEkmToNsbDEnF++twcZDkQlD
-	 x8jvjunZ2l9Cw==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5aa612bf6efso266155e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 13:02:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+xSm10W3/+oPPX+3yY31E86C0yEOaJbuTZI5YD/LtndoZual7+zJD4h+yk2oxpje6g4zv4wVFLUePj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMXFnrZbNsWzgltiKkIrjXHSmDiRBINljpnmADTs3Ad7cQsdcr
-	mb5/3A5ahk3L9zyH4QeLdFC6Bp5V+ctGyY8fLb2FrTVNmoNxdzol8wvXOTene3Hl/gCioQz8Z6z
-	UIEQsAJrsFrdg3GRadZ7p0EmcXdtP0MY=
-X-Received: by 2002:a05:6512:110f:b0:5a4:19df:db1 with SMTP id
- 2adb3069b0e04-5aa607bdf2dmr472223e87.15.1780084961397; Fri, 29 May 2026
- 13:02:41 -0700 (PDT)
+	b=Hr0FdYjpscSqOgX6XAS7vi179k5c+4IiLv3XINZ5NYNN/JqEKjhv2gt4CMAt0IP8Q
+	 1X/TM5PJg1e4ZlShrD6O/HNgq8RKlNw3hIzreEPnWWMwyMh68ZyyB/5kmoaWrmhgtc
+	 yV/JISHYI4ywXs67aBR/X40iPXIoyp3nMJl/EkUleFdZ5b4KR79Eht1vk7R2ZZvetH
+	 zUodYB54OTRDYsPIuMQA/Bkq1/tWkH/X5ozy/+6EBkvt8RPGNKIP+mWQ2Z4Q+1kfFg
+	 8i4rV9h4ezta4qtUiDt/8t5CZABtjhOCs3y71fFeHjpgNVCdrvugNroW64BRNhU31f
+	 X4mSFsNnslgKA==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5aa612bf6efso272226e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 13:10:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ96iZaLLUDyaKTCnm/940v9r4OmKh5UYjP0Ke1ETNnMFXY/kNSZAqVXIN4a2/+yVPkn6fbKGCmVoKvN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzPbCVxFXRJtYiGq5W2SWU4RTkcPaOcHxYJx+HzD8VBRjQQxlM
+	lJHAjxYW30BzCuIexRkMza+tP81oRRXSueReFrYAh8i6G3/6d4nGGoM1VGSFBP5CZjdkhATfpzu
+	qUVO0hgt/04PkBK+aLy/vqU/9VzuACSw=
+X-Received: by 2002:a05:6512:3d8f:b0:5a3:e7df:2396 with SMTP id
+ 2adb3069b0e04-5aa607bc2admr441921e87.13.1780085428571; Fri, 29 May 2026
+ 13:10:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260527-samsung-pinctrl-maintainer-v1-1-bcebada27279@linaro.org>
-In-Reply-To: <20260527-samsung-pinctrl-maintainer-v1-1-bcebada27279@linaro.org>
+References: <20260525144629.498630-1-jerrysteve1101@gmail.com> <20260525144629.498630-4-jerrysteve1101@gmail.com>
+In-Reply-To: <20260525144629.498630-4-jerrysteve1101@gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 29 May 2026 22:02:29 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=ci76uJRi3miCeK=b_niFfpbjB596UvHhBVWLXPSvtXQ@mail.gmail.com>
-X-Gm-Features: AVHnY4II6mWwzs5HHtPCKUO6QCDuwfRP29kXe_FIpHNftdTxNbG5xf6Bwi9pi9A
-Message-ID: <CAD++jL=ci76uJRi3miCeK=b_niFfpbjB596UvHhBVWLXPSvtXQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add myself as co-maintainer for Samsung
- pinctrl drivers
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+Date: Fri, 29 May 2026 22:10:16 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=v0fPeOmyN=rW8dqNiExogf2V4GN5jjJFJuMxA=i1rPA@mail.gmail.com>
+X-Gm-Features: AVHnY4KYuAdI5WTslUv2iX3q4rH-Di7FQSijsq0vHVgdtoE9bbcWaq0tBRNjUrc
+Message-ID: <CAD++jL=v0fPeOmyN=rW8dqNiExogf2V4GN5jjJFJuMxA=i1rPA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] gpiolib: of: add quirk for IS31FL319X shutdown line
+To: Jun Yan <jerrysteve1101@gmail.com>
+Cc: dmitry.baryshkov@oss.qualcomm.com, Lee Jones <lee@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Vincent Knecht <vincent.knecht@mailoo.org>, Grant Feng <von81@163.com>, 
+	Andre Przywara <andre.przywara@arm.com>, Tony Lindgren <tony@atomide.com>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Romain Perier <romain.perier@gmail.com>, 
+	Jesper Nilsson <jesper.nilsson@axis.com>, Robert Marko <robert.marko@sartura.hr>, 
+	Pavel Machek <pavel@ucw.cz>, Krzysztof Kozlowski <krzk@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Peter Rosin <peda@axentia.se>, linux-leds@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37700-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37699-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,kernel.org,lunn.ch,bootlin.com,gmail.com,mailoo.org,163.com,arm.com,atomide.com,axis.com,sartura.hr,ucw.cz,hisilicon.com,glider.be,axentia.se,vger.kernel.org,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linaro.org:email]
-X-Rspamd-Queue-Id: 832C5608530
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,lumissil.com:url]
+X-Rspamd-Queue-Id: 8BC266085AC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 27, 2026 at 11:09=E2=80=AFPM Peter Griffin <peter.griffin@linar=
-o.org> wrote:
+On Mon, May 25, 2026 at 4:47=E2=80=AFPM Jun Yan <jerrysteve1101@gmail.com> =
+wrote:
 
-> As Google Tensor gs101 is based off a Samsung Exynos design I've been
-> working on the Samsung pinctrl drivers and have an interest in helping
-> maintain this code.
+> According to the IS31FL319x datasheet[1], the SDB pin is active=E2=80=91l=
+ow.
+> However, existing device tree incorrectly configure it as active=E2=80=91=
+high.
 >
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Add a fixup to force the consumer active low for legacy device trees.
+>
+> [1] https://lumissil.com/assets/pdf/core/IS31FL3196_DS.pdf
+>
+> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
 
-Patch applied!
-
-Will go into 7.2-rc1 in order to not annoy Linus (the big penguin).
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
 Linus Walleij
