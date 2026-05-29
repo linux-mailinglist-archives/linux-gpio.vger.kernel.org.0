@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-37698-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37699-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0FplGq3yGWp10AgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37698-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:10:21 +0200
+	id GLixAGjzGWp/0AgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37699-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:13:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06B6E608474
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:10:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 832C5608530
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:13:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 799B130C6B55
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:03:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 75C963104148
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:06:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D98B44D031;
-	Fri, 29 May 2026 20:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8BB0425CF7;
+	Fri, 29 May 2026 20:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8YuViiZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlarIqBW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59540337B99
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C554C421A0E
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780084876; cv=none; b=JpB4ePyd+h32JhT8DeU68cUNwMelDljS08AK9QXNdXdx9JmnVP2gXnLgt5qazppj1+1893PA+0lvlQJvVFu+gYczlFdIGSIqORkGK+inE0ExgqSy2kAKJyz8ET0FfNDl/LYX04rp2TgAZdUeecwbcFp3IhMlS+6CclSMQT7JtEk=
+	t=1780084963; cv=none; b=LMNYvN68JwJJuMxG+oYNmVr4ohXtk4fUrdkoZXAlHrVUoGUSadB6Fc5C/weFiS4l4n+Gq/R/FdOT03V3fw5ZffEIuRvUQ8CzShUU5LNyD6QseyhQv7cE97DdY0MKWa4wJL+uAce+D+6EMF8CvbmNtrdxKsHoRKvqxjwiKBYvdL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780084876; c=relaxed/simple;
-	bh=gpQUlKH5NGXNx4BW0dbm4YRXddq/maC4M14dxVlc6zI=;
+	s=arc-20240116; t=1780084963; c=relaxed/simple;
+	bh=3IoDhb3udmXxflS3dgrcLv1niGYnHXK5D0HgB/kdlyQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQvSRRnmXIaayPRQbMgKg0lzTFwOXCZJC2pTGUU0lGi64YwB9ffyRZI7VKueg54ejtPI7aTwgziV4wQY/RwSLiD4E2efz92ArgVNN39n5iLaR2eWU0IVSsS//sKpf6sh/nOE3Yy4AU4Lt+vVsF8eMHeuXbpj+DEoYrxUIZeSAJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8YuViiZ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F0491F00899
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:01:15 +0000 (UTC)
+	 To:Cc:Content-Type; b=mTy+fIY/hdycdxYfiiAWLlJjWFKbfieRP0RuRonRXa0xm2pIzVBa6draXvrSIz7zvm2EXXZ/uXNaSog8qTPnhG5UG3Uvy0lUzr4kdd5qLkLQt1R8UPlaMff7Mk8nalor+pwQfITtMBrBb14roCLu7VzajL4MPM6weASXqbdtTMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZlarIqBW; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96FAD1F00898
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780084875;
-	bh=gpQUlKH5NGXNx4BW0dbm4YRXddq/maC4M14dxVlc6zI=;
+	s=k20260515; t=1780084962;
+	bh=3IoDhb3udmXxflS3dgrcLv1niGYnHXK5D0HgB/kdlyQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=f8YuViiZM1UMzDAJAq1lo0WoEGF7KHuV4swKSDdmjUkqLe6rdRSf6jcLcu0HT2JBf
-	 XCeA1y8RrLdjDQEmLWvITnnf8jy51NYHxyRQARI9jnVrkfNWoojnRufmxYeuuIJPix
-	 bqzpnLfAT8Pb/w0qjdFhNg5ezIGs/24C1/dJ/qNWC+ko6x40oF0p5wNA0fyvNWLtSp
-	 +xSRnOq+jNRZZa5vvnsHNr8ddDvF2lw6GrH4MwVFRYHicvoySQR/svBmwffiHS6Zhi
-	 WcxZo6wzF41oz/KvUdFCJm88oFGQ8Og9uSpI8fUgwnPzNt8/9t9Jh6+EobMQdudF3l
-	 5wXsJlWOjW3yQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5aa5f06b16cso384805e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 13:01:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8Tszvum8i9kIthgaZJMDRwIzdMhHNixYkQXrqDsxlXxZ3sBEGdQc1YfvS1y6872PVWaQJBZWeeLHol@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoqU582CjXuicIeE1B/FByak4wQgvPdUGg5DKFXIWAw/JM7NUY
-	1fJ0tSsKyuSg5wu/vq8ZoKdyp16cfHzHbDO9ZKv9Mjne7RyrXTZnD2RV2qJ3hIe9I/yNnkm3Y07
-	NS71dIkDoqx7mPtmyiOPuPajfRpeiSxQ=
-X-Received: by 2002:a05:6512:3b9a:b0:5a8:778b:7df8 with SMTP id
- 2adb3069b0e04-5aa6092fb8dmr422996e87.40.1780084873900; Fri, 29 May 2026
- 13:01:13 -0700 (PDT)
+	b=ZlarIqBWtLGcGIdM2D5odT8h71DAweyXa2Y8k8pHd+US5FR+kmMo4PR1UpJNcqvFg
+	 VsgUHFWdn6XOxhXICNF2Xx14atl22crYlJdj5NRdZJV697Waap41kNM2wxjUwuCVoD
+	 cF9nHEh3l6C7hOV3bcoKpd3Phk/uMm9STgYb1lPP9CqsUIAu4Tz6swP2sZyeRkXpvr
+	 Wyswhck/JhJ6KMfL5aylsDFOQZR/rDcHZ0xNk6Sk9bFthDpNMBQ1fSMj24UmIyuIec
+	 IMFoJjRJKa8KSF3mxA1yAZB9XS+aLT4J+Q9uwgQrZ7cEkmToNsbDEnF++twcZDkQlD
+	 x8jvjunZ2l9Cw==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5aa612bf6efso266155e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 13:02:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+xSm10W3/+oPPX+3yY31E86C0yEOaJbuTZI5YD/LtndoZual7+zJD4h+yk2oxpje6g4zv4wVFLUePj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMXFnrZbNsWzgltiKkIrjXHSmDiRBINljpnmADTs3Ad7cQsdcr
+	mb5/3A5ahk3L9zyH4QeLdFC6Bp5V+ctGyY8fLb2FrTVNmoNxdzol8wvXOTene3Hl/gCioQz8Z6z
+	UIEQsAJrsFrdg3GRadZ7p0EmcXdtP0MY=
+X-Received: by 2002:a05:6512:110f:b0:5a4:19df:db1 with SMTP id
+ 2adb3069b0e04-5aa607bdf2dmr472223e87.15.1780084961397; Fri, 29 May 2026
+ 13:02:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,10 +62,10 @@ MIME-Version: 1.0
 References: <20260527-samsung-pinctrl-maintainer-v1-1-bcebada27279@linaro.org>
 In-Reply-To: <20260527-samsung-pinctrl-maintainer-v1-1-bcebada27279@linaro.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 29 May 2026 22:01:01 +0200
-X-Gmail-Original-Message-ID: <CAD++jLnAyHeDD5w0Wg2PmdFjjcSa5s3gN=du6edQhGtfsc185g@mail.gmail.com>
-X-Gm-Features: AVHnY4JOm0-WzW1G9MqJXGq-A3i7d7XKJ22NGKYBCGIPn2yAsSH6lKQkt7oHVSE
-Message-ID: <CAD++jLnAyHeDD5w0Wg2PmdFjjcSa5s3gN=du6edQhGtfsc185g@mail.gmail.com>
+Date: Fri, 29 May 2026 22:02:29 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=ci76uJRi3miCeK=b_niFfpbjB596UvHhBVWLXPSvtXQ@mail.gmail.com>
+X-Gm-Features: AVHnY4II6mWwzs5HHtPCKUO6QCDuwfRP29kXe_FIpHNftdTxNbG5xf6Bwi9pi9A
+Message-ID: <CAD++jL=ci76uJRi3miCeK=b_niFfpbjB596UvHhBVWLXPSvtXQ@mail.gmail.com>
 Subject: Re: [PATCH] MAINTAINERS: add myself as co-maintainer for Samsung
  pinctrl drivers
 To: Peter Griffin <peter.griffin@linaro.org>
@@ -88,7 +88,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37698-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37699-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -101,8 +101,8 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 06B6E608474
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linaro.org:email]
+X-Rspamd-Queue-Id: 832C5608530
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -115,8 +115,9 @@ o.org> wrote:
 >
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 
-As Krzysztof is in on it, I'm in on it.
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Patch applied!
+
+Will go into 7.2-rc1 in order to not annoy Linus (the big penguin).
 
 Yours,
 Linus Walleij
