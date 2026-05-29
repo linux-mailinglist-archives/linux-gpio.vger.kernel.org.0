@@ -1,123 +1,149 @@
-Return-Path: <linux-gpio+bounces-37706-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37707-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aC/bHrD7GWrB0QgAu9opvQ
-	(envelope-from <linux-gpio+bounces-37706-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:48:48 +0200
+	id GDQUCSP+GWr80QgAu9opvQ
+	(envelope-from <linux-gpio+bounces-37707-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:59:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD4CE608ACD
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:48:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AAAB608BC1
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 458A13011F4D
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:48:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7DE023011F17
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 20:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEFE33AD539;
-	Fri, 29 May 2026 20:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157774219FE;
+	Fri, 29 May 2026 20:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qg3STj7J"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="B3Hx7PkM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45DE2E7377
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFAD42188B
+	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780087717; cv=none; b=FZOJwvbRWpQeBUJBMqGkglygPiMaMQr4b2id0JLa7NzYMHl956Oa57U3UGyezpW9f9hNaC2NEHOY+T2fs1CUf9wPZHgVy0w0BR6gPO4hTDCjGI1+igi5vnGSfe1qph7WR4/Pj0zLX8MLWTAmERY2UdZ+7VC9LJxOI7LMFB1ufSY=
+	t=1780088135; cv=none; b=BBMnXaL4SYGtMPPoeJPC2oydxt6VfkAqhHrzOYEs4fkQYSxCvGV304nVWsJU5K8AyOFDt3AP2OCTUX1McD2zEq5RV54isx8FQSJYa0neNn09ulCHRhycgx8R55+jIRhMP1ifOB3OjL/T5I58kzexekTcZFnAcsRM/QEX7WWYfQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780087717; c=relaxed/simple;
-	bh=xYc9LAVWTOK0QKRc6fKihxk0QguYA7yyQkNW5fWBkNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SYtMy+CVf4dUBgq/V06KUZoMV7GE2tJGwLQ1ZXm6u7n0KVuhxT910MdQeR+fDcehOF9kg0hVp6i0E0elZ8a2jAli5f8LzQ5hfaGC1Lv90B3Y65mkz/9T/6OfgTcsnU95fkmriTqX1f++Aubzp+eAC6eOuGkHlONOEHgzeyOFYVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qg3STj7J; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A93911F008A1
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 20:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780087716;
-	bh=xYc9LAVWTOK0QKRc6fKihxk0QguYA7yyQkNW5fWBkNo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Qg3STj7J2z+JAmrN5ej68KKqpli7AJbvRS1gvVEJ7U6l388/4i3UQ4CrFAwTe1IDq
-	 rKycGyEzpTqskVJHRJVnFjKtoeJQgD/gSdHHBJMkWqLXxiRJp3pvVBYxEoJx0cURct
-	 WCFndU9SUSWPVIfQvxEjNCYmYhvQCHCjmYw+jgSXxLh5mL896TGEl6inF0a1nz2DpL
-	 xn8a62SnNU4Oai2qcMJ8EqNBzi56W/wg3AVGR23d2AYMh8YIXu79nem3k0t+nCLu3Y
-	 dTcIlKhw/HHXl/lL/jCmmUZHfWx2kO8dO6PlwVLRWjg+PgCvozyVMVyIbBwqnMBg2D
-	 QOkX+rqo+NfnA==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-39394e1e8f3so129398081fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 13:48:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/hJpj3reJ2WFjLNZ+HmZoNovV6Nd6k+2U/SjKCLy0Yoy5979pXqbYqJ8HJk1jaqGs4eelsn3DcKYde@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO9/9xxiqV4XJK6dBqa8YwdrXz0k1P+GkLFZRatqWs6Pwf7hPG
-	Ht60WgLhzL5CCPJJekMmFMxu4V1X7KBd5UeW9kwIMWc7Dldp9W91V96+5+BbpyoWAeiFPLgiDdv
-	wI/v0bdgRX3bTyyER0KE+BQ+pKGL2Hfk=
-X-Received: by 2002:a05:6512:1048:b0:5a3:6731:910a with SMTP id
- 2adb3069b0e04-5aa607be49dmr451085e87.11.1780087715443; Fri, 29 May 2026
- 13:48:35 -0700 (PDT)
+	s=arc-20240116; t=1780088135; c=relaxed/simple;
+	bh=22pROvyrbyauGEmWGtCEM7Z+ml7jfG0E3MthRLNx1z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d3Pz2B7Kj2QUqXhEFWLjAhCXICU3VbFUhCbMmuKrtC7NBjY/T3OgJbNRzSVxjdL2LVkyP4FphxHbHZ5uhpWybaYwsTjQNwpqPERjDEN17jft2z90mCFDawuIkxD9rsqRKF7PbH9z7gJHmlJZUpDndex3aYcTGKY2wpmSfvyr80U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=B3Hx7PkM; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=22pR
+	OvyrbyauGEmWGtCEM7Z+ml7jfG0E3MthRLNx1z8=; b=B3Hx7PkMcw5sBbSL11TI
+	T6QpFr2Qryt05JZmwSjHaV5bn6jpkIz7IL0XIozkR6q+8aUJHnbdf/itc6gBMKDw
+	DN6jYTIKch9TtfYG0UdR+9tuFk6NragCys+5cVrfZ89YWR2RloVsDziYRVFPyVOq
+	45wbuQUfhJ55wwK35BAw3n7TC++vw5Wk2Q5k5wu3oUhG7V8YRmZYThpp4x34pxvh
+	VlE5DHUbUpdJDEfRmUw6yw9a7tnveSQ2VeLuudpnajjT4I0zfInSN3+iZW7eUEX0
+	FpoMzJTbYAtV90BVGgncLQqWuRaGqvmIGxolOGgMstQNoRCH0sh2+SMAIgXv33yy
+	Xg==
+Received: (qmail 1539237 invoked from network); 29 May 2026 22:55:32 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 May 2026 22:55:32 +0200
+X-UD-Smtp-Session: l3s3148p1@XPXDEPtSSDhdnheM
+Date: Fri, 29 May 2026 22:55:31 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Hardik Prakash <hardikprakash.official@gmail.com>,
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+	wsa@kernel.org, andriy.shevchenko@intel.com,
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v8 2/2] i2c: designware: defer probe if child GpioInt
+ controllers are not bound
+Message-ID: <ahn9Q-9eHjBSj39h@shikoro>
+References: <20260529100838.8896-1-hardikprakash.official@gmail.com>
+ <20260529100838.8896-3-hardikprakash.official@gmail.com>
+ <ahml-rVa2PIA5DDC@shikoro>
+ <CAD++jLmWV9WizdqXfwvTUCbJDisurLBa7sAC6DH1BehDTHZDYA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1779896151.git.u.kleine-koenig@baylibre.com>
-In-Reply-To: <cover.1779896151.git.u.kleine-koenig@baylibre.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 29 May 2026 22:48:23 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmi48Vzg0MkpFys11aTEAofSbdoyosmq_fCRe6ZxZ0rQg@mail.gmail.com>
-X-Gm-Features: AVHnY4LSQW0p7WEVsPI_87eZk0RifHappy19Y6jZ6wxQZaYafcHFoEXTk66u3jY
-Message-ID: <CAD++jLmi48Vzg0MkpFys11aTEAofSbdoyosmq_fCRe6ZxZ0rQg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] pinctrl: Use named initializers for
- platform_device_id arrays
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l4ejUHi/YcaF17bG"
+Content-Disposition: inline
+In-Reply-To: <CAD++jLmWV9WizdqXfwvTUCbJDisurLBa7sAC6DH1BehDTHZDYA@mail.gmail.com>
+X-Spamd-Result: default: False [-1.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37706-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_NA(0.00)[sang-engineering.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37707-lists,linux-gpio=lfdr.de,renesas];
 	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl,oss.qualcomm.com];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: BD4CE608ACD
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sang-engineering.com:email,sang-engineering.com:dkim]
+X-Rspamd-Queue-Id: 6AAAB608BC1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 27, 2026 at 5:43=E2=80=AFPM Uwe Kleine-K=C3=B6nig (The Capable =
-Hub)
-<u.kleine-koenig@baylibre.com> wrote:
 
-> this series targets to use named initializers for platform_device_id
-> arrays. In general these are better readable for humans and more robust
-> to changes in the respective struct definition.
+--l4ejUHi/YcaF17bG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patches applied!
 
-Yours,
-Linus Walleij
+> > In case this goes in via some other tree:
+> >
+> > Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> I queued the revert in the pinctrl fixes, you can take this one (2/2).
+
+Is there really no dependency on patch 1? I'd feel safer if you'd take
+this as well...
+
+
+--l4ejUHi/YcaF17bG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmoZ/T8ACgkQFA3kzBSg
+KbbCHxAAqXRED5q+mH4glwASoYgXmAuP5Lw/+qaLUf0mWwPsu2HvhNbHWAatDZpX
+19KciZw3pwBTuRnQgrdaqxhiyLoLR9/Grg0t7nW1IuIKYwopHcr0mv4Vxsyce2eX
+oXs3TsA6gna5IM0AgLRJLc67GAm3rqedQScCA9DLPno27gWhJqFv8kaM3f/vDrBe
+DvmsFdySZp8jRgumB6qwy4eeeFU4G9B0kiosKo7/5aSn+YaT62aIVWPaoG4Vl833
+XhCCTdMTOjx3K2bcoem6GYBJ6T2IFOB1Clg3AtRg2+B97xmk4nNx3h89jm75yOW+
+mp/KRPiO5GPzsUoD2Is33g1OTLGYO0t++4gFQfYot+M20PX8XjHiMR0PQ7QF+gkx
+7e+MxG+edCrq570qGkt6KXi1QDCWKm3MLcjPD9Xp5WLkWUFV7t57MVj1vBYla//S
+RjQhFHUw+TR8AW2duLn5iq7VtUoOTNW07vU5urU+iILpMaapH+bgJwrAe646Mx9P
+X9Da3vDixRRXRE9tdHUmcK8tJiuYJwkypBbNkdPWVyOlmTTm2o9kqI5PSF3BJsc8
+WlLcUsqdRc6zyczlYotXWc3WyHrg+Ao2Zl6edJGHCYqxyqcSA0shL5JpPWLYzltF
+fD0FxNaMXf/Z8q0rDjcUTvz4jQpxjY2kRwXukakZbqc+1LK8MEk=
+=YeIw
+-----END PGP SIGNATURE-----
+
+--l4ejUHi/YcaF17bG--
 
