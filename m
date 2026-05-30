@@ -1,144 +1,145 @@
-Return-Path: <linux-gpio+bounces-37709-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37710-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8FktKdQXGmo+1ggAu9opvQ
-	(envelope-from <linux-gpio+bounces-37709-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2026 00:48:52 +0200
+	id 4GgBGsuwGmoH7ggAu9opvQ
+	(envelope-from <linux-gpio+bounces-37710-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2026 11:41:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48A4D609798
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2026 00:48:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE02460BEA1
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2026 11:41:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 620E9300AB1B
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2026 22:46:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DC5D302BA4E
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2026 09:40:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7E03BF677;
-	Fri, 29 May 2026 22:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BADD23630B2;
+	Sat, 30 May 2026 09:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="L2PA5IfK"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="dmGHJktd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24683AD53D
-	for <linux-gpio@vger.kernel.org>; Fri, 29 May 2026 22:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D3F2C3268;
+	Sat, 30 May 2026 09:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780094801; cv=none; b=PHv4lOV+9A5LKAdqCCktFYqTAtew2QOSYGZiDvTQl94DhJXLnXBWDKy9gTw3itSPEoSoR2nvETTfez9y9+1/Z/vpAGUjWp2VKl5O6n6jG4jkDnGNC2iMX4hVjvn1ra6WFWH3CpPuBNaY3O0USxGYo+KcvvmrUlKKhNKl+PHDTAg=
+	t=1780134031; cv=none; b=FnL1kRhm5wpwdoc/Sq3kXSIws0POv+fG48Uf8CGAkEOXwhKdf7mhOGRBWIWH55nPsbRPf0YLUHc0+5Q3nHRfh+nGNGY4IpDjN77TMLJ9cxbQwAoG8lLu8ZU2s89alLHmdp8j6tXaFE5O0EAsFRj6nQwOsOh8/lnKGmiCN+qTUqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780094801; c=relaxed/simple;
-	bh=w0njhfEjoMYqoCwBwryOtbyU7PzRminXNi+wp07AxVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHzhDr93lGQbJ0vKXrSxNsLNRQfd+Dn7FpI6hveqoVUznkLPZhkeGRaNj/UmIgOg46oRlzTVMZp8E8aTw7zdZmPGPgPeODY/8P8cQFCzQ64yqTpJpv52GN4krHzqFhCForZ6CUfeuI80B61GTUmQYICSYplApMk6Y1RJgtEOVH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=L2PA5IfK; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=w0nj
-	hfEjoMYqoCwBwryOtbyU7PzRminXNi+wp07AxVA=; b=L2PA5IfKz29NUFg4BWSt
-	/Z+M+o2+Fed7pOwYyW2xSFo8m86VhuwfVQfF8XHG2Yard38OCvPV/Mz7AL3TGmga
-	kQKsNlH9cQb7q/EBma1D5ecI0d/b2fiTKePJDc2pcV4CJBwl349hsdc4zQ5vVkg5
-	SnGSZV/q7zzgHnNte0+OVd6XLiT6pgR08G+JrLg0W5o3A5PRiInCxGtqQjz8hz1s
-	89uewSk8ZaqEXNyNymBeq+WQKzrQW6obbSBAbSG/JrvK0iwzSgUoCmx8/u4OKgBi
-	SzfRN8uE6uz1POggPbJzk3aS0HE0QjT449aYGIsGDCn4qGSlfa80c2XALD7YfGCR
-	OQ==
-Received: (qmail 1559671 invoked from network); 30 May 2026 00:46:35 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 May 2026 00:46:35 +0200
-X-UD-Smtp-Session: l3s3148p1@v0LknfxS9j5dnheM
-Date: Sat, 30 May 2026 00:46:34 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Hardik Prakash <hardikprakash.official@gmail.com>,
-	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-	wsa@kernel.org, andriy.shevchenko@intel.com,
-	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v8 2/2] i2c: designware: defer probe if child GpioInt
- controllers are not bound
-Message-ID: <ahoXSoaiZQbP74sm@shikoro>
-References: <20260529100838.8896-1-hardikprakash.official@gmail.com>
- <20260529100838.8896-3-hardikprakash.official@gmail.com>
- <ahml-rVa2PIA5DDC@shikoro>
- <CAD++jLmWV9WizdqXfwvTUCbJDisurLBa7sAC6DH1BehDTHZDYA@mail.gmail.com>
- <ahn9Q-9eHjBSj39h@shikoro>
- <CAD++jLk7L-XPTpThNbvxzYSuw=Gy-dDci1eTy8wLo9O0o4_uqQ@mail.gmail.com>
+	s=arc-20240116; t=1780134031; c=relaxed/simple;
+	bh=hbcu3T4OPsbIjWTBL8nVe9jRtvzIWg0hIdvGdWAlHLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VySHJsyotn7o/mzG5uiw1nDQ+rzeO7jHNvIwjOPrh748SKJ6tLl4KE3+EWukBMyKaCgBhkAT3YkldfDntQd9K2NvVSgPQdzFJ9qpgm+Ke1BM5COF3pIHptHEHuiBV0wI0trm7cPfMEwFXIsXIHw53z/a36C1+nu6136WrGJR2KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=dmGHJktd; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 3C92A27A67;
+	Sat, 30 May 2026 11:40:27 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id A1tfItejcOiy; Sat, 30 May 2026 11:40:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1780134026; bh=hbcu3T4OPsbIjWTBL8nVe9jRtvzIWg0hIdvGdWAlHLI=;
+	h=From:To:Cc:Subject:Date;
+	b=dmGHJktdzFpxXaoVsWZD9YRcbdXS8JTIWvPaUf+3iMBrHedIMiYzIPhr/UhhCqCY8
+	 gEg2rEeEAR+TIRImFCbgLtPcbSJc/LDDLetsf7JN6FEDp0WX6kEqGwa+Jnj3rLm+Gc
+	 lfhQBieWDZRh6ji2zpbn5Z36nxeSd/SosoKsLOyGQS67U5qax1dIt9tdkx1h1Ujh0/
+	 QhB5MOtjh8aCnaemo+DJQAeQsCuTK3woNzwMNdSLBGgM8o+N+ruojDbrO2oDQSIsvS
+	 noP4iGcwBQhUx0Kjo93Z9nGdYnUUo7fN5+BHgfKNTCI7jt+5qb9DUvS0BNGJy7yM0+
+	 eMDU9Zm/Vioww==
+From: Marco Scardovi <scardracs@disroot.org>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: [PATCH 0/2] gpiolib: acpi: fix bounds-checking bugs in GPIO ACPI core
+Date: Sat, 30 May 2026 11:40:10 +0200
+Message-ID: <20260530094012.184276-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RFwvvb11s9t6IQlo"
-Content-Disposition: inline
-In-Reply-To: <CAD++jLk7L-XPTpThNbvxzYSuw=Gy-dDci1eTy8wLo9O0o4_uqQ@mail.gmail.com>
-X-Spamd-Result: default: False [-1.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37709-lists,linux-gpio=lfdr.de,renesas];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37710-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[sang-engineering.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl,oss.qualcomm.com];
+	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[disroot.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[sang-engineering.com:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 48A4D609798
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[disroot.org:mid,disroot.org:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: BE02460BEA1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi all,
 
---RFwvvb11s9t6IQlo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+While reviewing drivers/gpio/gpiolib-acpi-core.c in linux-next,
+I noticed two bounds-checking issues in the ACPI GPIO handling paths.
 
+The first issue is in acpi_gpio_adr_space_handler(), where the
+64-bit ACPI OperationRegion address is truncated to u16 before
+validation against pin_table_length. This can cause out-of-range
+addresses to wrap around and access unintended GPIO entries.
 
-> OK then, you're right. Let's keep it together.
+Depending on platform firmware configuration, this could potentially
+affect GPIO lines associated with sensitive hardware controls.
 
-Thanks!
+The second issue is in acpi_gpio_package_count(), where malformed
+_DSD packages can cause pointer advancement past the package end
+during element parsing, potentially resulting in out-of-bounds reads.
 
+This series fixes both issues by:
 
---RFwvvb11s9t6IQlo
-Content-Type: application/pgp-signature; name="signature.asc"
+- Validating the full address range before truncation
+- Making the length calculation overflow-safe
+- Validating remaining package elements before pointer advancement
 
------BEGIN PGP SIGNATURE-----
+The fixes are intentionally minimal and preserve the existing
+behavior of capping ranges that extend past the end of the pin table.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmoaF0QACgkQFA3kzBSg
-KbZlAA//RFMaOLJ1fLTfaJ4QolLu0kfJefFQOguvSRrjs4gyD+F5HHSMw8QjJwwZ
-3N+MCbbwDWggs7a6qTXw/7qXRIqp1QHz1BOwUwtSuRqP6TvyCPWpZHt+X98t8Qy2
-oIAbnEC5Upw2GDfvp13vs3sykqvVJghij1RbEJeH0IAe1vy5Jc4i+bpYcqJ3TSAA
-wtrDBh5NKpUxYLIPHfz08gZEEm+DCMTtBhZnwSBYDkPhaJcSWk3fz30Ea53fdSOx
-Pq5qGOqd31EOvVs6tKGwcjhyery+KIGuHrMr1A8yhrx4cj/NpAfa42SIQzacNsER
-cSio7YqLYeaPuUw++VbEJvwhF9xzjEVdjX07xWrKeOVbD4JmnAseYq3+huzjI4vt
-Fm0052qr9N0lNVNHeVJPeXONflqFJutUscuyTVgJI2uYdSkKvwbUajUGDoSw1DXE
-01lqwO+CklrZtc01Pj2KJmUngMYkikpI2+U3+1XpJcWsGm5WJXyyV4rHJeXHtdqP
-SMXx0RCslvf+ubAes+22mkDxH7VRcvD+eCFKx7jwinlUd1/EX/AERPssYsQQjVjs
-aJ5ELKZkFdv5ty51ddUNRFv4HrPUeTddMoDCyPyFnhvHYxd1+s0UANZh077VEcCx
-ye9usEdTvCDdkN187iDA2+qseCF7afwOtGQYQZRjDAEuWs0zNxU=
-=KhET
------END PGP SIGNATURE-----
+Patch 1 also converts the related loop variables to unsigned types
+for consistency with the updated arithmetic.
 
---RFwvvb11s9t6IQlo--
+Thanks,
+Marco
+
+Marco Scardovi (2):
+gpiolib: acpi: prevent address truncation in OperationRegion handler
+gpiolib: acpi: fix out-of-bounds pointer arithmetic in
+acpi_gpio_package_count
+
+drivers/gpio/gpiolib-acpi-core.c | 19 +++++++++++++++----
+1 file changed, 15 insertions(+), 4 deletions(-)
+
+--
+2.54.0
+
 
