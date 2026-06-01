@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-37751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KEGNO+tAHWomXwkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37751-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:21:00 +0200
+	id 4I9QK9BBHWosXwkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37752-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:24:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 898AD61B65B
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:20:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AB1D61B6DE
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:24:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 65656301DC1F
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 08:20:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 56A743056370
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 08:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA60B389DF3;
-	Mon,  1 Jun 2026 08:20:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF550388E7A;
+	Mon,  1 Jun 2026 08:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR6pwctG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtedyBDM"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971C031A572;
-	Mon,  1 Jun 2026 08:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DCC2E7389;
+	Mon,  1 Jun 2026 08:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780302025; cv=none; b=I7NmxaFP7e4x6ViWL0KpJ9uxq8bYAYk+gECZc7wjkGOMaDRsE2gW1eJJ1N5voUFfzsumNRwePhNREiLw4c180ZlfczE5Ilry8B1c7hIyRI76mDc+FQWUZRZ1ptT82VNq/MlmiTnkf6z/5Lb1u8v/nZD5gF/ZDFt/u+JaF6AnPaQ=
+	t=1780302097; cv=none; b=qo0RBOSGVtoetTbptuBBFawNsbWSIEqb2k8iI4qZ+uC577VKA+I0nE2DKuNPZ4UmnstX89ylsX8HHYufnx4AuQXgeWwuueyYXaZpVOBKnVw06NtCR+mZZVp2EM8PigPnfPDKsz0LAXYj052iAZglHEz/U7RMpTRAQTZR8mlrrhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780302025; c=relaxed/simple;
-	bh=GeLoWk3E8TJ+EbOVSt/PLdVBxkncMw60ftT6OPoTyRs=;
+	s=arc-20240116; t=1780302097; c=relaxed/simple;
+	bh=4KfAqwKtaZHhUsFCk3UJX6+lY30pS4S+yrDt08amzmY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Exwok39FgV29WJVCL+MlfVfDlq7tD2dAdWchV4ujw0J9ENUqj8hANkD6xPR7P1fOeFrFL20q9H5yE2t7iZmXxX+1LmgS949rfav24pzdrPajup39WrpfdPaV/LoxFRml9GOetz/9W89M5DYrp1sEWZ+txzE/T6nRW6aKh1xzXQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR6pwctG; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33CB1F00893;
-	Mon,  1 Jun 2026 08:20:15 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=C+2xajt/A6p75kXM1Qx+BCzzspOUslo34M47a8ShCQf0UVd8O+WFGAq0cvH0xpe3ZaA/0FMt4NIxy5yhMLEOGRZsgqp+8qUp91CEpEN0rAr1Pm+OI713HPpRSArEOiHQhBm0ZgF/HmIR1jYCIBRgoJaYnpq3b1xCSHAWy5VdS0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtedyBDM; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047181F00893;
+	Mon,  1 Jun 2026 08:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780302024;
-	bh=Gx69hvLqO7Iq+reOjxvgeItjgoqp4W1U2TCI06K/nr0=;
+	s=k20260515; t=1780302096;
+	bh=gEwf6DK4DDpX8f464rLcR/JXh/kcLHGVx4z5emjwqdA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=lR6pwctGRKEPmciGTRkvsIh2kTaQLjsZIZuuM85DAdJxHg84XDMhysIKnHs/pnIUB
-	 pIoQ2VsbnfF/ia47yGAT9WHSxy6r8ITUGE+VXzYdWo6uAf8DCPrIThkIo77fveDX9f
-	 61GTuykUutfzCsLMzZR6vTOVgHwTgHtHTjIA0agjVVVSLs+3uTS0Ix3TtjwS9uS/IJ
-	 scANRSunH07mrnBOiw2bgNVmzAz+WKL1FwcDHncsVcSY0mHQ592paAk7cBoe9t72Gy
-	 fPDqNttvrsqYoS46BDdnkv0/3xCeMFPf9z6qsSQmRlFBASeUHL9nJxGTE/zWpSZ7+H
-	 cP1pKAgER5GOw==
-Message-ID: <6aa6061c-1b87-4322-9abe-ad5bd1c74a70@kernel.org>
-Date: Mon, 1 Jun 2026 10:20:13 +0200
+	b=KtedyBDM6J/O/Gy3NTFLGJ+TG24SqaG5sHk+lNAzjCPWB9L1qvbfN80sJW1ZvQmka
+	 SD1dzCu0ZyZr59ulFyq9BvoWciGmOaKhGemLOHIpK001SRR/K1D7LBwkoYf00NoO/F
+	 9aWMBSExCpN8caWTQWrXo06tokGQfPLkdCjmoSl4xKpUvWENct1INz+evxK0blu5hJ
+	 trsCusRZ0fwgMetKzLg1ytE80f4ZiifLMALf/AyAowHGn9NDwC0S7S+98rNEOiMNl5
+	 K2aOv7ecTy7pmCTArcg/3ilhkeZ1A5cG12oiETre2uerhzxxroRCCBFEVxnDao0Y1F
+	 5rWA3+5b+KUxg==
+Message-ID: <fb9f6959-f9d8-4e3c-a952-5338a375fe4b@kernel.org>
+Date: Mon, 1 Jun 2026 10:21:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,30 +53,30 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] leds: is31fl319x: Fix shutdown GPIO initial state
- and remove redundant startup pulse
-To: Jun Yan <jerrysteve1101@gmail.com>, linusw@kernel.org,
+Subject: Re: [PATCH v2 6/6] arm64: dts: marvell: armada-7040-mochabin: Fix
+ is31fl3199 shutdown GPIO polarity
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Jun Yan <jerrysteve1101@gmail.com>, linusw@kernel.org,
  dmitry.baryshkov@oss.qualcomm.com, Lee Jones <lee@kernel.org>,
  Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
  Konrad Dybcio <konradybcio@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Gregory Clement <gregory.clement@bootlin.com>,
  Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
  Bartosz Golaszewski <brgl@kernel.org>,
  Vincent Knecht <vincent.knecht@mailoo.org>, Grant Feng <von81@163.com>,
- Andre Przywara <andre.przywara@arm.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Florian Fainelli <f.fainelli@gmail.com>,
+ Andre Przywara <andre.przywara@arm.com>, Baruch Siach <baruch@tkos.co.il>,
+ Shawn Guo <shawnguo@kernel.org>, Paul Barker <paul.barker@sancloud.com>,
  Robert Marko <robert.marko@sartura.hr>
-Cc: Pavel Machek <pavel@ucw.cz>, Shawn Guo <shawnguo@kernel.org>,
- Michal Simek <michal.simek@amd.com>, Heiko Stuebner <heiko@sntech.de>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Cc: Pavel Machek <pavel@ucw.cz>, Wei Xu <xuwei5@hisilicon.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Patrice Chotard <patrice.chotard@foss.st.com>, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org
 References: <20260525144629.498630-1-jerrysteve1101@gmail.com>
- <20260525144629.498630-3-jerrysteve1101@gmail.com>
+ <20260525144629.498630-7-jerrysteve1101@gmail.com>
+ <8733z621cs.fsf@BLaptop.bootlin.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -122,7 +122,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260525144629.498630-3-jerrysteve1101@gmail.com>
+In-Reply-To: <8733z621cs.fsf@BLaptop.bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -130,13 +130,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37751-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,oss.qualcomm.com,lunn.ch,bootlin.com,mailoo.org,163.com,arm.com,glider.be,linaro.org,sartura.hr];
+	TAGGED_FROM(0.00)[bounces-37752-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[bootlin.com,gmail.com,kernel.org,oss.qualcomm.com,lunn.ch,mailoo.org,163.com,arm.com,tkos.co.il,sancloud.com,sartura.hr];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCPT_COUNT_TWELVE(0.00)[31];
@@ -151,53 +151,32 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lumissil.com:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 898AD61B65B
+X-Rspamd-Queue-Id: 6AB1D61B6DE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 25/05/2026 16:46, Jun Yan wrote:
-> 1. Per IS31FL319x datasheet [1], the hardware shutdown pin (SDB) is
-> active-low.
+On 01/06/2026 08:58, Gregory CLEMENT wrote:
+> Hello,
 > 
-> Fix incorrect initial GPIO level to properly release the chip from shutdown
-> state.
+>> The is31fl3199 shutdown pin is active-low [1]. Correct the GPIO flags
+>> from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW to match the hardware.
+>>
+>> [1] https://lumissil.com/assets/pdf/core/IS31FL3199_DS.pdf
+>>
+>> Fixes: 737929191283 ("arm64: dts: marvell: add Globalscale MOCHAbin")
+>> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
 > 
-> 2. According to datasheet [1] definition:
->   Shutdown mode can either be used as a means of
->   reducing power consumption or generating a flashing
->   display (repeatedly entering and leaving shutdown
->   mode). During shutdown mode all registers retain their
->   data.
-> shutdown mode does NOT perform chip reset.A dedicated software reset is
-> already implemented in driver by writing 0 to reset chip.
+> What happens if this patch is merged before the driver LED patch? Will
+> it break something?
 > 
-> Remove redundant unnecessary toggling of the shutdown GPIO.
-> 
-> [1] https://lumissil.com/assets/pdf/core/IS31FL3193_DS.pdf
-> 
-> Fixes: dddb4e38c6ba ("leds: is31fl319x: Add shutdown pin and generate a 5ms low pulse when startup")
-> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
-> ---
->  drivers/leds/leds-is31fl319x.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
-> index e411cee06dab..41087ed262cb 100644
-> --- a/drivers/leds/leds-is31fl319x.c
-> +++ b/drivers/leds/leds-is31fl319x.c
-> @@ -396,7 +396,10 @@ static int is31fl319x_parse_fw(struct device *dev, struct is31fl319x_chip *is31)
->  	int count;
->  	int ret;
->  
-> -	is31->shutdown_gpio = devm_gpiod_get_optional(dev, "shutdown", GPIOD_OUT_HIGH);
-> +	/* Driving this GPIO line low (in fact high) takes the chip out of shutdown,
-> +	 * as it is flagged as GPIO_ACTIVE_LOW in provider (such as the device tree).
-> +	 */
-> +	is31->shutdown_gpio = devm_gpiod_get_optional(dev, "shutdown", GPIOD_OUT_LOW);
 
-That's ABI break.
+What if this patch is merged by a different maintainer, not LED? What if
+this  patch is merged by the same LED maintainer (not allowed, but let's
+discuss) but is not squashed into LED driver?
+
+IOW, entire set like breaking users.
 
 Best regards,
 Krzysztof
