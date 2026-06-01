@@ -1,253 +1,204 @@
-Return-Path: <linux-gpio+bounces-37750-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8CqjKEA8HWoqWQkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37750-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:01:04 +0200
+	id KEGNO+tAHWomXwkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37751-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:21:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DE4361B38E
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:01:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 898AD61B65B
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 10:20:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0506C300C58B
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 07:54:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 65656301DC1F
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 08:20:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1F238838A;
-	Mon,  1 Jun 2026 07:54:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA60B389DF3;
+	Mon,  1 Jun 2026 08:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="awMPDWjo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR6pwctG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC02C38330A;
-	Mon,  1 Jun 2026 07:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971C031A572;
+	Mon,  1 Jun 2026 08:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780300458; cv=none; b=MQJoYxYYTq3q8xHeYnkCSvc5WHdtOPeTFFqMr25zzBYcjfgAfUjFylt6L0eq8LQO5a2pFyUz3amlxF/MQoVdD75AP9nnuKhutWJY0PHR3czg45/ArwigZV+xPiQqzWUvb2yYtLH7IbywSzvgSlQG/9AQF/iOB3HftuNJ/npUsYg=
+	t=1780302025; cv=none; b=I7NmxaFP7e4x6ViWL0KpJ9uxq8bYAYk+gECZc7wjkGOMaDRsE2gW1eJJ1N5voUFfzsumNRwePhNREiLw4c180ZlfczE5Ilry8B1c7hIyRI76mDc+FQWUZRZ1ptT82VNq/MlmiTnkf6z/5Lb1u8v/nZD5gF/ZDFt/u+JaF6AnPaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780300458; c=relaxed/simple;
-	bh=Ik6ainCX66BzJ2Qfs+GvgOivesqakYk67fQ8G/ADhF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SBDGwLc7g4K6LtZHPyBckSEz0VQoNhY55+8nmJnZtec8HnBrkE2kLuMav34jaZs14wg+fEypSTDemX+dViMKnX05UBSh5HvHJVfuslFglxsRG7eANTYpSou9iiyjnt4AwFVMqdOqoQ2wHXdpNEY69LGqHp/wzKrIRDuHu7ChNv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=awMPDWjo; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8D19426D73;
-	Mon,  1 Jun 2026 09:54:13 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 1ODjpnW_pSBb; Mon,  1 Jun 2026 09:54:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1780300453; bh=Ik6ainCX66BzJ2Qfs+GvgOivesqakYk67fQ8G/ADhF4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=awMPDWjoT4sXwQCokgHyMDtUb6KIgfR+wVCMN1soGgfzhMpC7QaLvNYHnH5BsTEtI
-	 pg3rV+xSTuixXNnkC0etfnbmHAHejoB0VOkH52REnlR4GsLHeQ9blfOTkrHAT0HvG/
-	 9TrKxJuDme1shdK3sMD0D8DrHSx4rq+O1wg1vcZQQAKu1EFQpw7mEbyZ2di/cmimd+
-	 aJdLk7dY8qAa8VHYhV5+wSvDyc4AiJDlh6mVtUmUTSyEOZNjf+5ijsiVyzKtmC3P5A
-	 bgG4eMxb4OqPQaCfuivfjp191sgiMhtazwLCXckvhEamrEGugtZD8sUaUQCxVIu9Uk
-	 iIqxcYl5WDR+Q==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 2/2] gpiolib: acpi: fix out-of-bounds pointer arithmetic in
- acpi_gpio_package_count
-Date: Mon, 01 Jun 2026 09:53:59 +0200
-Message-ID: <XIZQ_cBiSFe35zZxB6k2Jw@disroot.org>
-In-Reply-To: <20260601071703.GP3102@black.igk.intel.com>
-References:
- <20260530094012.184276-1-scardracs@disroot.org>
- <n2_NwWYBRGa8ixTcAQysQw@disroot.org>
- <20260601071703.GP3102@black.igk.intel.com>
+	s=arc-20240116; t=1780302025; c=relaxed/simple;
+	bh=GeLoWk3E8TJ+EbOVSt/PLdVBxkncMw60ftT6OPoTyRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Exwok39FgV29WJVCL+MlfVfDlq7tD2dAdWchV4ujw0J9ENUqj8hANkD6xPR7P1fOeFrFL20q9H5yE2t7iZmXxX+1LmgS949rfav24pzdrPajup39WrpfdPaV/LoxFRml9GOetz/9W89M5DYrp1sEWZ+txzE/T6nRW6aKh1xzXQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR6pwctG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33CB1F00893;
+	Mon,  1 Jun 2026 08:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780302024;
+	bh=Gx69hvLqO7Iq+reOjxvgeItjgoqp4W1U2TCI06K/nr0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lR6pwctGRKEPmciGTRkvsIh2kTaQLjsZIZuuM85DAdJxHg84XDMhysIKnHs/pnIUB
+	 pIoQ2VsbnfF/ia47yGAT9WHSxy6r8ITUGE+VXzYdWo6uAf8DCPrIThkIo77fveDX9f
+	 61GTuykUutfzCsLMzZR6vTOVgHwTgHtHTjIA0agjVVVSLs+3uTS0Ix3TtjwS9uS/IJ
+	 scANRSunH07mrnBOiw2bgNVmzAz+WKL1FwcDHncsVcSY0mHQ592paAk7cBoe9t72Gy
+	 fPDqNttvrsqYoS46BDdnkv0/3xCeMFPf9z6qsSQmRlFBASeUHL9nJxGTE/zWpSZ7+H
+	 cP1pKAgER5GOw==
+Message-ID: <6aa6061c-1b87-4322-9abe-ad5bd1c74a70@kernel.org>
+Date: Mon, 1 Jun 2026 10:20:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Spamd-Result: default: False [-2.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] leds: is31fl319x: Fix shutdown GPIO initial state
+ and remove redundant startup pulse
+To: Jun Yan <jerrysteve1101@gmail.com>, linusw@kernel.org,
+ dmitry.baryshkov@oss.qualcomm.com, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Bartosz Golaszewski <brgl@kernel.org>,
+ Vincent Knecht <vincent.knecht@mailoo.org>, Grant Feng <von81@163.com>,
+ Andre Przywara <andre.przywara@arm.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ Robert Marko <robert.marko@sartura.hr>
+Cc: Pavel Machek <pavel@ucw.cz>, Shawn Guo <shawnguo@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, Heiko Stuebner <heiko@sntech.de>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20260525144629.498630-1-jerrysteve1101@gmail.com>
+ <20260525144629.498630-3-jerrysteve1101@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20260525144629.498630-3-jerrysteve1101@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[disroot.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37750-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37751-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org,oss.qualcomm.com,lunn.ch,bootlin.com,mailoo.org,163.com,arm.com,glider.be,linaro.org,sartura.hr];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 3DE4361B38E
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lumissil.com:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 898AD61B65B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In data luned=C3=AC 1 giugno 2026 09:17:03 Ora legale dell=E2=80=99Europa c=
-entrale, Mika=20
-Westerberg ha scritto:
-> Hi,
->=20
-> On Mon, Jun 01, 2026 at 08:31:16AM +0200, Marco Scardovi wrote:
-> > In data luned=C3=AC 1 giugno 2026 07:17:35 Ora legale dell=E2=80=99Euro=
-pa centrale,
-> > Mika
-> >=20
-> > Westerberg ha scritto:
-> > > On Sat, May 30, 2026 at 11:40:12AM +0200, Marco Scardovi wrote:
-> > > > When counting GPIOs in an ACPI package, encountering a reference or
-> > > > string causes the element pointer to be advanced by 3 (element +=3D=
- 3)
-> > > > and then by 1 (element++).
-> > > >=20
-> > > > If a malformed ACPI package contains fewer than 4 remaining elements
-> > > > when a reference or string is processed, this pointer arithmetic
-> > > > advances the element pointer past the end of the package elements
-> > > > array. This results in undefined behavior and can cause out-of-boun=
-ds
-> > > > reads.
-> > >=20
-> > > How can it cause out-of-bounds reads? We increase "element" but the n=
-ext
-> > > iteration checks that it is still inside "end" and it's never
-> > > dereferenced.
-> > > Maybe I'm missing something?
-> >=20
-> > Hi Mika,
-> >=20
-> > I agree that `element` is not dereferenced after the loop exits.
-> >=20
-> > My main concern is the parser logic rather than the pointer arithmetic
-> > itself.
-> >=20
-> > A GPIO connection is defined to consist of 4 package elements
-> > (a reference/string followed by 3 integers), but the loop condition only
-> > checks whether at least one element remains:
-> >=20
-> > ```
-> > element < end
-> > ```
-> >=20
-> > As a result, a malformed package containing fewer than 4 remaining
-> > elements
-> > can still be processed as if it were a complete GPIO entry. This can le=
-ad
-> > to a GPIO connection being accounted for even though the descriptor is
-> > structurally incomplete.
->=20
-> Does it take into account that GPIOs are optional in some cases so this is
-> totally valid:
->=20
->   Package () {
->       "cs-gpios",
->       Package () {
->          ^GPIO, 19, 0, 0,
->          ^GPIO, 20, 0, 0,
->          0,
->          ^GPIO, 21, 0, 0,
->       }
->   }
->=20
-> I'm worried that this breaks things rather than improves. If your intent =
-is
-> to "harden" against malicios ACPI tables then there are much worse things
-> than this that can be done (e.g we run a full bytecode interpreter inside
-> the kernel with not much restrictions and all that bytecode comes from the
-> ACPI tables).
->=20
-> Have you verified this change against any system that actually calls this
-> function?
->
-Hi Mika,
+On 25/05/2026 16:46, Jun Yan wrote:
+> 1. Per IS31FL319x datasheet [1], the hardware shutdown pin (SDB) is
+> active-low.
+> 
+> Fix incorrect initial GPIO level to properly release the chip from shutdown
+> state.
+> 
+> 2. According to datasheet [1] definition:
+>   Shutdown mode can either be used as a means of
+>   reducing power consumption or generating a flashing
+>   display (repeatedly entering and leaving shutdown
+>   mode). During shutdown mode all registers retain their
+>   data.
+> shutdown mode does NOT perform chip reset.A dedicated software reset is
+> already implemented in driver by writing 0 to reset chip.
+> 
+> Remove redundant unnecessary toggling of the shutdown GPIO.
+> 
+> [1] https://lumissil.com/assets/pdf/core/IS31FL3193_DS.pdf
+> 
+> Fixes: dddb4e38c6ba ("leds: is31fl319x: Add shutdown pin and generate a 5ms low pulse when startup")
+> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
+> ---
+>  drivers/leds/leds-is31fl319x.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+> index e411cee06dab..41087ed262cb 100644
+> --- a/drivers/leds/leds-is31fl319x.c
+> +++ b/drivers/leds/leds-is31fl319x.c
+> @@ -396,7 +396,10 @@ static int is31fl319x_parse_fw(struct device *dev, struct is31fl319x_chip *is31)
+>  	int count;
+>  	int ret;
+>  
+> -	is31->shutdown_gpio = devm_gpiod_get_optional(dev, "shutdown", GPIOD_OUT_HIGH);
+> +	/* Driving this GPIO line low (in fact high) takes the chip out of shutdown,
+> +	 * as it is flagged as GPIO_ACTIVE_LOW in provider (such as the device tree).
+> +	 */
+> +	is31->shutdown_gpio = devm_gpiod_get_optional(dev, "shutdown", GPIOD_OUT_LOW);
 
-thanks for the detailed explanation =E2=80=94 I think your point is
-absolutely correct.
+That's ABI break.
 
-Looking again at the code and considering the valid ACPI cases you
-mentioned (including optional GPIO entries and non-strict packages),
-I realize my patch was too aggressive and based on an incorrect
-assumption about the parsing invariants.
-
-I was incorrectly assuming that each GPIO descriptor must always
-consist of a strict 4-element sequence, which led me to interpret
-partial or irregular packages as invalid.
-
-I also tested the change only with virtme-ng, as I do not have
-access to real hardware, but I agree this is not sufficient to
-validate the behavior in real systems.
-
-The check I proposed would likely reject valid real-world cases and
-effectively change the semantics of the parser rather than fixing a
-real issue.
-
-Given this, I agree the change is not appropriate and I will drop the
-patch.
-
-Sorry for the noise, and thanks for the clarification.
-Marco
->=20
-> > Such truncated descriptors should be rejected with `-EPROTO` rather than
-> > being accepted as valid input.
-> >=20
-> > Ensuring sufficient remaining elements before entering the loop also
-> > guarantees that pointer arithmetic stays within the defined bounds of t=
-he
-> > package, but the primary issue is the acceptance of incomplete GPIO
-> > entries.>=20
-> > > > Fix this by ensuring at least 4 elements remain in the package befo=
-re
-> > > > advancing the element pointer, returning -EPROTO if the package
-> > > > structure is invalid.
-> > > >=20
-> > > > Signed-off-by: Marco Scardovi <scardracs@disroot.org>
-> > > > ---
-> > > >=20
-> > > >  drivers/gpio/gpiolib-acpi-core.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/gpio/gpiolib-acpi-core.c
-> > > > b/drivers/gpio/gpiolib-acpi-core.c index 049e4cbc14ed..494dcd166aef
-> > > > 100644
-> > > > --- a/drivers/gpio/gpiolib-acpi-core.c
-> > > > +++ b/drivers/gpio/gpiolib-acpi-core.c
-> > > > @@ -1310,6 +1310,8 @@ static int acpi_gpio_package_count(const union
-> > > > acpi_object *obj)>
-> > > >=20
-> > > >  		switch (element->type) {
-> > > >  		case ACPI_TYPE_LOCAL_REFERENCE:
-> > > >=20
-> > > >  		case ACPI_TYPE_STRING:
-> > > > +			if (end - element < 4)
-> > > > +				return -EPROTO;
-> > > >=20
-> > > >  			element +=3D 3;
-> > > >  			fallthrough;
-> > > >  	=09
-> > > >  		case ACPI_TYPE_INTEGER:
-
-
-
-
+Best regards,
+Krzysztof
 
