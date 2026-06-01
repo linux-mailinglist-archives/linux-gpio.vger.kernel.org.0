@@ -1,97 +1,70 @@
-Return-Path: <linux-gpio+bounces-37766-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4PpDBIGlHWoqcwkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37766-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 17:30:09 +0200
+	id iNbVIOa6HWoidQkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37767-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 19:01:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79783621BBF
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 17:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D7504622F54
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 19:01:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 79784301485E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 15:27:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2F284300C249
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 16:57:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09F13DC852;
-	Mon,  1 Jun 2026 15:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C8923A7F40;
+	Mon,  1 Jun 2026 16:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZe1LB15"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4ylPAKx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3773DB31A
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jun 2026 15:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6DA36A023;
+	Mon,  1 Jun 2026 16:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780327656; cv=none; b=tjX1f9EK7NGjUFBzvsNGjYwK2CrUfsTYhr0OfMDC+WezduHv9ngb1QsFgbwItOGC0av72AQN3lkWRtcIbM9THOAHzLimdBh+X/XDNI1bc9WXuzdKlEXegNfCH0WoA7i212F3Y+pJTR/Ahhc/5tdQEMnn443s+C1L2Nfn/kvXrWw=
+	t=1780333045; cv=none; b=jh+FUFMRvZ4LSblAxoB2dF8Qtabi4AVk/J3xm/VewDwHEWiuw2+2oadt+qCAEmJ3CYWAr8unWM0OjAwJ9ogDDrSQsiQ5MlzuvYcxQxals84QpgzmWHEFip5G4Erc52H3FCEjRqTRjEZijLgNhFTXQ6Dg62lSn6vgJBi1ZUnHbnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780327656; c=relaxed/simple;
-	bh=RO9rUwD+0ipkd0JqnII+Jf2Yj+dHGhtTa3lOoj8yHvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F5qKjswW209zfBbOMoalCBIUZ3MMiTa7eE4Py6aKa9mTZwmPYm6IR71XeUjbBCprOA510R0TaVpk31WUWPxC2VGQG4SyIFzO9GCn3OvItOGPXFVUOKldsJKtRE1lZ4VIiTYJDBpNfOGURPZwCB0pFwoyDJ1/7LtAR5AjEMUW11o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZe1LB15; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490a765e68eso12909445e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jun 2026 08:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780327646; x=1780932446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGzIR3Ya12RsZQy65tkjnFhcSYwdslivQxR7gOO4emA=;
-        b=lZe1LB15zDOyCrIl9zZ8OJzr2ou9/4ics2Fh96N14JEMWYJGea+tBNlKtLBR/CeiiV
-         cBS3WHb5pMAzOz3ilFAzD0wFb1fSJnftNeUETRzKGmx805azvedYGmLCc/TZnDIdIizs
-         SArOIzl0HBVqdPunrOJkF96PkZhZZ7rjfaL3TCLlz2cTfRu8Zzq4OCF2CMddqw8q79Jb
-         ZcwOvI4r4Qw2pRt8C203Hza/dhl5OljOTcdQLenKpPacoMbI75Na8elrDb6eJCTd5G94
-         VqVWpHZWxRPqIW/NbmL/kUYg2FeH5ZU8jB7Qho0gogKYATazwAaX4j/6+KzH8/3kcwbD
-         GoRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780327646; x=1780932446;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gGzIR3Ya12RsZQy65tkjnFhcSYwdslivQxR7gOO4emA=;
-        b=em7RswWGsRIIJWSXJb05VEGqt/CWQH4Z7LqnaX9KR5ZhH+A/Y123jr88xWa+nGYNw7
-         3NpY2mbpc9ad3Pbr/0zwP+HFEG8LaK55ToXmfymS0ac37KZUiVH/0/mL0wYv3dVxLGTj
-         WjEtC/RBjahVx7gNo7DNsiuKvTqkJhyuefg6u2KNfQ2oKsWtxWIC0iUFFrXWjTyO4lB2
-         xxYOfjt51fT9t179TuUjDoR8EzwnCbOSECojyghN2W3S7oazILGKbL4VhYkPLLILn/uQ
-         wEzfTkTrbb48IsmARgangC5DZ8LTZEzFm1pGhgdpJs8ZC3+RwCvfAPUJfTTzlgga9CcQ
-         5fWw==
-X-Forwarded-Encrypted: i=1; AFNElJ9iQ7070RmtXjPP6AoPBrUkA5cSlbvIB9vXdi4jnn2bN8IJVrA8MLwLzY8algG8jsJQifsQOWK4jCYH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC4K4wb9N/J3mrDFbnhhRgaphUR8IsIdMOuQ4aZkKQyzHMP6qi
-	xC6oAfVPWCbz7uotlol5ZhwaJfXALLz38P7MoYkYjwT3Qt1X994uR7v/
-X-Gm-Gg: Acq92OEd91Pb2UuuUtZdP4nTFe+htDGzCx1TS5A3sueJABKM03i8gXjX/F6dooaY8vM
-	xtY7jAcncGbwoyILF58LhbjX2DlHmly0WFex2lUQHWDmNQ6vLFVSqh9gl85FX6mLjsocY4kKq4s
-	UFC+v7kZExdT1S/C27Pjj2BzCywhh3499okdC6EtuFW/wdvEZBNY7nyJhhNr88n1eSrS+nU8TO3
-	fS6DCVsUsGKMlqVRwoMkSF7fo9eDxFjG7b2S//iETamonH1yfX9Gv1TED0CUAEFbiZQMA8ZDfhR
-	UWAFVd+PQGwH8FXEg48swnAI+W8GaNEXX+TTJ44Ls4qBB4UTwC/B6M7wDNUvM6DAweFn6/GvMOs
-	FUWfDyMEO7WdeoCZNJ1fgw9XsQnGUsyZoHvjMsllSCspkn3LNlq6aAJGlVVw3aZvKhYvTnMyEGs
-	+V44q0DCuZq/ALrhYlhZn6ZgvrLgo=
-X-Received: by 2002:a05:600c:c285:b0:48e:5fb8:f80f with SMTP id 5b1f17b1804b1-490a2966ce7mr127746435e9.24.1780327646037;
-        Mon, 01 Jun 2026 08:27:26 -0700 (PDT)
-Received: from luca-vm.. ([81.56.18.151])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490ad63b34dsm14041635e9.27.2026.06.01.08.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 08:27:25 -0700 (PDT)
-From: Luca Leonardo Scorcia <l.scorcia@gmail.com>
-To: linux-mediatek@lists.infradead.org
-Cc: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
+	s=arc-20240116; t=1780333045; c=relaxed/simple;
+	bh=xyevwjMyr7vNl7ZzQrplOkY6U4utGgfVUdUraOPnOEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UMTarWnDxl1xCNj5Ic7acpJDI724z5eND9RJfimySUAJBFrtQHO3fpzx/13Lf/GspBDuXz5akNCUCFy+wXwz7q/9W3PT3XEj9fUjTIFg+IvxBNDpYeO8emnc9L3QK+T3qyc/lJJyBnvZM7s1CRG/G+/eWlRbEdkpPO3pLcv60uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4ylPAKx; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC6D1F00893;
+	Mon,  1 Jun 2026 16:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780333043;
+	bh=w290A9I5MP2KqxKWsP3Z4me4Ofs//TPogdWk1zGmNOU=;
+	h=From:To:Cc:Subject:Date;
+	b=e4ylPAKxe33GcwzjIzqBzb+z6N1ataV9FHjcSujTtJdg8vP64JGHFhYcX5VYiQ5Uh
+	 xRfMiMVatyJw/RueV5uoT9we3r6eMt1WOVYrmQhpLmfi78FebOOKWr/D3lxCkNqi5+
+	 VSQqfNFIiZMW0CjYZobD+iJ1x+mDvpsLreDbjvCrMcKrmVyIbyye3MhsmM7DsUCYI5
+	 spJCeerKj1UhgUoHz9F17wMz9wahG5Xkp/CT2bsG3s+MuYZsirDjk/QL2GPJu9p6zO
+	 kK5B95dWR+LRYuCYDm7XpClzxtRRo99XlHRJrocIUQOJl1c0VJ0b7qNyNB63mBJrKm
+	 1P9X7Jx8diMHA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jonas Gorski <jonas.gorski@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
 	Linus Walleij <linusw@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+	Kyle Hendry <kylehendrydev@gmail.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: pinctrl: mediatek: mt6795: document the slew-rate property
-Date: Mon,  1 Jun 2026 17:26:42 +0200
-Message-ID: <20260601152707.29039-1-l.scorcia@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] [v3] [net-next] net: dsa: b53: hide legacy gpiolib usage on non-mips
+Date: Mon,  1 Jun 2026 18:56:42 +0200
+Message-Id: <20260601165716.648230-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,67 +72,176 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37766-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37767-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,collabora.com,vger.kernel.org,lists.infradead.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[broadcom.com,gmail.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[arndb.de,kernel.org,oss.qualcomm.com,gmail.com,vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lscorcia@gmail.com,linux-gpio@vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 79783621BBF
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,qualcomm.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,broadcom.com:email]
+X-Rspamd-Queue-Id: D7504622F54
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The driver for MT6795 pinctrl already supports the slew-rate property.
-Add its description to the documentation.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Luca Leonardo Scorcia <l.scorcia@gmail.com>
+The MIPS bcm53xx platform still uses the legacy gpiolib interfaces based
+on gpio numbers, but other platforms do not.
+
+Hide these interfaces inside of the existing #ifdef block and use the
+modern interfaces in the common parts of the driver to allow building
+it when the gpio_set_value() is left out of the kernel.
+
+Reviewed-by: Jonas Gorski <jonas.gorski@gmail.com>
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../bindings/pinctrl/mediatek,mt6795-pinctrl.yaml         | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v3: add -EPROBE_DEFER check
+---
+ drivers/net/dsa/b53/b53_common.c | 20 ++++++++------------
+ drivers/net/dsa/b53/b53_priv.h   | 25 +++++++++++++++++++------
+ 2 files changed, 27 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6795-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6795-pinctrl.yaml
-index 68e91c05f122..9a937f414cc9 100644
---- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6795-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6795-pinctrl.yaml
-@@ -152,6 +152,14 @@ patternProperties:
-             $ref: /schemas/types.yaml#/definitions/uint32
-             enum: [0, 1, 2, 3]
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 2c4131ed7e30..06b8be8dc4db 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -19,7 +19,7 @@
  
-+          slew-rate:
-+            description: |
-+              Set the slew rate. Valid arguments are described as below:
-+              0: Normal slew rate
-+              1: Slower slew
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            enum: [0, 1]
+ #include <linux/delay.h>
+ #include <linux/export.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/math.h>
+ #include <linux/minmax.h>
+@@ -965,17 +965,17 @@ EXPORT_SYMBOL(b53_configure_vlan);
+ 
+ static void b53_switch_reset_gpio(struct b53_device *dev)
+ {
+-	int gpio = dev->reset_gpio;
++	struct gpio_desc *gpio = dev->reset_gpio;
+ 
+-	if (gpio < 0)
++	if (IS_ERR(gpio))
+ 		return;
+ 
+ 	/* Reset sequence: RESET low(50ms)->high(20ms)
+ 	 */
+-	gpio_set_value(gpio, 0);
++	gpiod_set_value(gpio, 0);
+ 	mdelay(50);
+ 
+-	gpio_set_value(gpio, 1);
++	gpiod_set_value(gpio, 1);
+ 	mdelay(20);
+ 
+ 	dev->current_page = 0xff;
+@@ -3092,7 +3092,6 @@ static int b53_switch_init(struct b53_device *dev)
+ {
+ 	u32 chip_id = dev->chip_id;
+ 	unsigned int i;
+-	int ret;
+ 
+ 	if (is63xx(dev))
+ 		chip_id = BCM63XX_DEVICE_ID;
+@@ -3173,12 +3172,9 @@ static int b53_switch_init(struct b53_device *dev)
+ 		return -ENOMEM;
+ 
+ 	dev->reset_gpio = b53_switch_get_reset_gpio(dev);
+-	if (dev->reset_gpio >= 0) {
+-		ret = devm_gpio_request_one(dev->dev, dev->reset_gpio,
+-					    GPIOF_OUT_INIT_HIGH, "robo_reset");
+-		if (ret)
+-			return ret;
+-	}
 +
-         required:
-           - pinmux
++	if (PTR_ERR(dev->reset_gpio) == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
+index bd6849e5bb93..cd27a7344e89 100644
+--- a/drivers/net/dsa/b53/b53_priv.h
++++ b/drivers/net/dsa/b53/b53_priv.h
+@@ -148,7 +148,7 @@ struct b53_device {
+ 	u8 duplex_reg;
+ 	u8 jumbo_pm_reg;
+ 	u8 jumbo_size_reg;
+-	int reset_gpio;
++	struct gpio_desc *reset_gpio;
+ 	u8 num_arl_bins;
+ 	u16 num_arl_buckets;
+ 	enum dsa_tag_protocol tag_protocol;
+@@ -467,23 +467,36 @@ static inline void b53_arl_search_read(struct b53_device *dev, u8 idx,
+ #ifdef CONFIG_BCM47XX
+ 
+ #include <linux/bcm47xx_nvram.h>
++#include <linux/gpio.h>
+ #include <bcm47xx_board.h>
+-static inline int b53_switch_get_reset_gpio(struct b53_device *dev)
++static inline struct gpio_desc *b53_switch_get_reset_gpio(struct b53_device *dev)
+ {
+ 	enum bcm47xx_board board = bcm47xx_board_get();
++	int gpio, ret;
+ 
+ 	switch (board) {
+ 	case BCM47XX_BOARD_LINKSYS_WRT300NV11:
+ 	case BCM47XX_BOARD_LINKSYS_WRT310NV1:
+-		return 8;
++		gpio = 8;
++		break;
+ 	default:
+-		return bcm47xx_nvram_gpio_pin("robo_reset");
++		gpio = bcm47xx_nvram_gpio_pin("robo_reset");
+ 	}
++
++	if (!gpio_is_valid(gpio))
++		return ERR_PTR(-EINVAL);
++
++	ret = devm_gpio_request_one(dev->dev, gpio,
++				    GPIOF_OUT_INIT_HIGH, "robo_reset");
++	if (ret)
++		return ERR_PTR(ret);
++
++	return gpio_to_desc(gpio);
+ }
+ #else
+-static inline int b53_switch_get_reset_gpio(struct b53_device *dev)
++static inline struct gpio_desc *b53_switch_get_reset_gpio(struct b53_device *dev)
+ {
+-	return -ENOENT;
++	return ERR_PTR(-ENODEV);
+ }
+ #endif
  
 -- 
-2.43.0
+2.39.5
 
 
