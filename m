@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-37747-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37748-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SFWrB78tHWo4WAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37747-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 08:59:11 +0200
+	id QLmkESk0HWoqWQkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37748-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 09:26:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A6B461A832
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 08:59:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 977A261AD3E
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 09:26:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E89843007ACF
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 06:59:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F281D301158A
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 07:17:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995603812DA;
-	Mon,  1 Jun 2026 06:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2A803438AA;
+	Mon,  1 Jun 2026 07:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HQBfHFbh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gMKOEo4J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4523806C2;
-	Mon,  1 Jun 2026 06:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAA5202997;
+	Mon,  1 Jun 2026 07:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780297140; cv=none; b=QiiO4BA1rsAVqwrmlROSyGcIg0DsHnAj9aXWu8dzebAltwGRr9DOtxFpJKKXbicp3ZDndrwiGWBPKGNyLbs6mrRQ96Nn5s758fSCvopnG3vCZ0KC8/EpefMqdj+uTdHgio9CS+RH1C/d35S6YVCD6UlfGUG1sgpp+an9Xk39jo0=
+	t=1780298229; cv=none; b=JBhbhY5uMkshhT0K9C3hmtY629YgYeU/63qRxag/O9XQ2qNUJNFiRsUSJPV12Y1nukw0mQCqb6QpoTJzZml1pDjcyUim2pnBcAlsZBh8wYlJWlbObbBBJSnD0kzmFMkVic14gNcJ9kSGLYcRWSrSvpuXRm632yBfWRsmP7fP9lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780297140; c=relaxed/simple;
-	bh=WBKKuhdxx/bAE1oVCnOlclgROzjpYuF6S3zJuCPlCuI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WH9asSGasYeqMLK0vu7EHkFEVe4Ry7KAgfT80GEceQzXZmyliX9gXC7KKnoV2a5gB+EecU7TRmFKRRw1cOHczhXFH1ekNErwtnEIVDzOQHhicVrmtX1DJ2WOOdwGzvgUBXlF3Js0vyoOhmqynozFXsQ7FIThM8zE1t3bHr7mdO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HQBfHFbh; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id B63B41A378F;
-	Mon,  1 Jun 2026 06:58:55 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 7D9CC602AB;
-	Mon,  1 Jun 2026 06:58:55 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 10E1110888CCD;
-	Mon,  1 Jun 2026 08:58:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1780297133; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=mIIouX9atwC8TO7vo2wcLgAJzq/cTaHoTN8DO5/T+0Q=;
-	b=HQBfHFbhqkjsF4pCV3oiBNQaeiPV0l/QdDp1DfBvD4+AlikHlQ0c1ENujAD7kqhbiXt15J
-	KM0NSuc3onfrGwhRq2qpaIY1OCeASQkJMl29QvQ8eJLCab4THNCEzm9I78Hs4LTONYY9Ai
-	440QtMOWoPVqQ7wOxY5TW0MIO+2RJ0NmUXhVKy8JSl17UmJGfWwmWx8VenwiCp5ESB915T
-	6Rysm7UilOxHXF38ffSIzePeikeaqumzH5jT2U2FEwVDiPuy99pq4ACd5uSHFsHDPC1b/7
-	C+jZQgL9Ry69ECOdwhNnAXHZIbJdVe8aeVsQiq6SlMDaNusrvR1gdQtmw7A4mA==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Jun Yan <jerrysteve1101@gmail.com>, linusw@kernel.org,
- dmitry.baryshkov@oss.qualcomm.com, Lee Jones <lee@kernel.org>, Pavel
- Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>,
- Vincent Knecht <vincent.knecht@mailoo.org>, Grant Feng <von81@163.com>,
- Andre Przywara <andre.przywara@arm.com>, Baruch Siach <baruch@tkos.co.il>,
- Shawn Guo <shawnguo@kernel.org>, Paul Barker <paul.barker@sancloud.com>,
- Robert Marko <robert.marko@sartura.hr>
-Cc: Jun Yan <jerrysteve1101@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Krzysztof Kozlowski <krzk@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Patrice Chotard
- <patrice.chotard@foss.st.com>, linux-leds@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] arm64: dts: marvell: armada-7040-mochabin: Fix
- is31fl3199 shutdown GPIO polarity
-In-Reply-To: <20260525144629.498630-7-jerrysteve1101@gmail.com>
-References: <20260525144629.498630-1-jerrysteve1101@gmail.com>
- <20260525144629.498630-7-jerrysteve1101@gmail.com>
-Date: Mon, 01 Jun 2026 08:58:43 +0200
-Message-ID: <8733z621cs.fsf@BLaptop.bootlin.com>
+	s=arc-20240116; t=1780298229; c=relaxed/simple;
+	bh=ZAXgC7URBLzuunr1Ywi0rvoumSzWXq3mIWgVvOELUUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nVJGL5dztYaBjr7teHYd7sTqwCBxU7Sv2o1WedmkgMiVqvqYrqbwakbjAP8o+lGl+CvdCrtAkeRT2eHNwnZnGBoCsc2WinVvDxmc7XtVzUemHwdBrFl3HJuCMEzHKLM36Vssygu319zkc6FVj4855yVIggSBjVMKh9Gcq01KvOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gMKOEo4J; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780298228; x=1811834228;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ZAXgC7URBLzuunr1Ywi0rvoumSzWXq3mIWgVvOELUUY=;
+  b=gMKOEo4JiUSe2r8mND5WUNBUVbtVoh1lh2SQB5p5Cpv2YgBFygBsyyfu
+   1zdZAWE4/RAbFsUWrTKo7UuCWNT04Bdbkcm2F0PBHzCh6xKbSLGi+7qid
+   pJmsDojj21nkc2YeF5jD7Bd16R5foG4N2LbFZPMX7cij+71xas84ogCxT
+   oD7xqpTIkASukqKylzXtqTzkz9RTdKJMePcRPbfMileERwgUC2djyoUp7
+   j65/kYYKCah9CwUyRGZW/WKavjfGtnqEA8yxrOxEYF3WsNv7XksdI50MC
+   9EplslY3AzcjPJPTaQ+hcJfarCqH85/7j3iG5jLPMvsul9kNOpBZ6E+0z
+   g==;
+X-CSE-ConnectionGUID: A3/PaexrQtKMp8qgjjGfkg==
+X-CSE-MsgGUID: yYBxEClOQUWqkgLhcP7p+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="92523222"
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="92523222"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 00:17:08 -0700
+X-CSE-ConnectionGUID: rwt1KavhQBWts/f3S6k8yQ==
+X-CSE-MsgGUID: 0mhM9AFdQjyhafgN6d0Hsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="239314297"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa010.fm.intel.com with ESMTP; 01 Jun 2026 00:17:04 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 851F495; Mon, 01 Jun 2026 09:17:03 +0200 (CEST)
+Date: Mon, 1 Jun 2026 09:17:03 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Marco Scardovi <scardracs@disroot.org>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpiolib: acpi: fix out-of-bounds pointer arithmetic
+ in acpi_gpio_package_count
+Message-ID: <20260601071703.GP3102@black.igk.intel.com>
+References: <20260530094012.184276-1-scardracs@disroot.org>
+ <20260530094012.184276-3-scardracs@disroot.org>
+ <20260601051735.GN3102@black.igk.intel.com>
+ <n2_NwWYBRGa8ixTcAQysQw@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,83 +85,137 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: TLSv1.3
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <n2_NwWYBRGa8ixTcAQysQw@disroot.org>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37747-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,ucw.cz,kernel.org,hisilicon.com,glider.be,foss.st.com,vger.kernel.org,lists.infradead.org];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,oss.qualcomm.com,lunn.ch,mailoo.org,163.com,arm.com,tkos.co.il,sancloud.com,sartura.hr];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[bootlin.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37748-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
-	DBL_PROHIBIT(0.00)[0.0.0.64:email];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gregory.clement@bootlin.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.1:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,bootlin.com:url,bootlin.com:dkim,BLaptop.bootlin.com:mid]
-X-Rspamd-Queue-Id: 1A6B461A832
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[black.igk.intel.com:mid,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,disroot.org:email]
+X-Rspamd-Queue-Id: 977A261AD3E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello,
+Hi,
 
-> The is31fl3199 shutdown pin is active-low [1]. Correct the GPIO flags
-> from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW to match the hardware.
->
-> [1] https://lumissil.com/assets/pdf/core/IS31FL3199_DS.pdf
->
-> Fixes: 737929191283 ("arm64: dts: marvell: add Globalscale MOCHAbin")
-> Signed-off-by: Jun Yan <jerrysteve1101@gmail.com>
+On Mon, Jun 01, 2026 at 08:31:16AM +0200, Marco Scardovi wrote:
+> In data lunedì 1 giugno 2026 07:17:35 Ora legale dell’Europa centrale, Mika 
+> Westerberg ha scritto:
+> > On Sat, May 30, 2026 at 11:40:12AM +0200, Marco Scardovi wrote:
+> > > When counting GPIOs in an ACPI package, encountering a reference or
+> > > string causes the element pointer to be advanced by 3 (element += 3)
+> > > and then by 1 (element++).
+> > > 
+> > > If a malformed ACPI package contains fewer than 4 remaining elements
+> > > when a reference or string is processed, this pointer arithmetic
+> > > advances the element pointer past the end of the package elements
+> > > array. This results in undefined behavior and can cause out-of-bounds
+> > > reads.
+> > 
+> > How can it cause out-of-bounds reads? We increase "element" but the next
+> > iteration checks that it is still inside "end" and it's never dereferenced.
+> > Maybe I'm missing something?
+> >
+> Hi Mika,
+> 
+> I agree that `element` is not dereferenced after the loop exits.
+> 
+> My main concern is the parser logic rather than the pointer arithmetic
+> itself.
+> 
+> A GPIO connection is defined to consist of 4 package elements
+> (a reference/string followed by 3 integers), but the loop condition only
+> checks whether at least one element remains:
+> 
+> ```
+> element < end
+> ```
+> 
+> As a result, a malformed package containing fewer than 4 remaining elements
+> can still be processed as if it were a complete GPIO entry. This can lead
+> to a GPIO connection being accounted for even though the descriptor is
+> structurally incomplete.
 
-What happens if this patch is merged before the driver LED patch? Will
-it break something?
+Does it take into account that GPIOs are optional in some cases so this is
+totally valid:
 
-Gregory
+  Package () {
+      "cs-gpios",
+      Package () {
+         ^GPIO, 19, 0, 0,
+         ^GPIO, 20, 0, 0,
+         0,
+         ^GPIO, 21, 0, 0,
+      }
+  }
 
-> ---
->  arch/arm64/boot/dts/marvell/armada-7040-mochabin.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-7040-mochabin.dts b/arch/=
-arm64/boot/dts/marvell/armada-7040-mochabin.dts
-> index 6bdc4f1e6939..cf690a85cc2a 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-7040-mochabin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-7040-mochabin.dts
-> @@ -236,7 +236,7 @@ leds@64 {
->  		#size-cells =3D <0>;
->  		pinctrl-names =3D "default";
->  		pinctrl-0 =3D <&is31_sdb_pins>;
-> -		shutdown-gpios =3D <&cp0_gpio1 30 GPIO_ACTIVE_HIGH>;
-> +		shutdown-gpios =3D <&cp0_gpio1 30 GPIO_ACTIVE_LOW>;
->  		reg =3D <0x64>;
->=20=20
->  		led1_red: led@1 {
-> --=20
-> 2.54.0
->
+I'm worried that this breaks things rather than improves. If your intent is
+to "harden" against malicios ACPI tables then there are much worse things
+than this that can be done (e.g we run a full bytecode interpreter inside
+the kernel with not much restrictions and all that bytecode comes from the
+ACPI tables).
 
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Have you verified this change against any system that actually calls this
+function?
+
+> Such truncated descriptors should be rejected with `-EPROTO` rather than
+> being accepted as valid input.
+> 
+> Ensuring sufficient remaining elements before entering the loop also
+> guarantees that pointer arithmetic stays within the defined bounds of the
+> package, but the primary issue is the acceptance of incomplete GPIO entries.
+> >
+> > > Fix this by ensuring at least 4 elements remain in the package before
+> > > advancing the element pointer, returning -EPROTO if the package
+> > > structure is invalid.
+> > > 
+> > > Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+> > > ---
+> > > 
+> > >  drivers/gpio/gpiolib-acpi-core.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/gpio/gpiolib-acpi-core.c
+> > > b/drivers/gpio/gpiolib-acpi-core.c index 049e4cbc14ed..494dcd166aef
+> > > 100644
+> > > --- a/drivers/gpio/gpiolib-acpi-core.c
+> > > +++ b/drivers/gpio/gpiolib-acpi-core.c
+> > > @@ -1310,6 +1310,8 @@ static int acpi_gpio_package_count(const union
+> > > acpi_object *obj)> 
+> > >  		switch (element->type) {
+> > >  		case ACPI_TYPE_LOCAL_REFERENCE:
+> > > 
+> > >  		case ACPI_TYPE_STRING:
+> > > +			if (end - element < 4)
+> > > +				return -EPROTO;
+> > > 
+> > >  			element += 3;
+> > >  			fallthrough;
+> > >  		
+> > >  		case ACPI_TYPE_INTEGER:
+> 
+> 
+> 
 
