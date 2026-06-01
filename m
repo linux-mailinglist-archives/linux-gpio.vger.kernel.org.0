@@ -1,215 +1,157 @@
-Return-Path: <linux-gpio+bounces-37741-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37742-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OMSQMfgVHWqIVgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37741-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 07:17:44 +0200
+	id 8PE/Bh4WHWqIVgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37742-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 07:18:22 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 678796199B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 07:17:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A4856199C9
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 07:18:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4311B301D311
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 05:17:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 60471301A3A6
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 05:17:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729B323392A;
-	Mon,  1 Jun 2026 05:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8DE330641;
+	Mon,  1 Jun 2026 05:17:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TfH4QDxN";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NMDp2Z2A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMk6MJVj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1792B1CEAC2
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jun 2026 05:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2678F4C92;
+	Mon,  1 Jun 2026 05:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780291039; cv=none; b=iMjTfU/a6RHzlwHPQNrRIzXxBY4rj9IqaVVgcXQujBknPgTAnpBMmSpWybxer7VFC47r/BsTDgkfmTYh7iK2XTaoryCa6mj1NAGHpvGtp0HuCU58OXLQHKMG8Hs4d+MeGwTzPZSmH/akmB99fmZhwFZPK2tZtGO7KTv/X74yDyQ=
+	t=1780291060; cv=none; b=rsMrqQie4DS4ko4wlesFrLexIuFuxoBas7h7weq29QBgHh3bA2IE5ItrVFu++8vmj74/oV0nr4KlMuaRV2RtDs5z80YRZ6tasKKtf3Ii+OcDYVMTQWL5lKCbWg/SDI51SaU91j3nD25gXZii7ug4TTpzgdHB8n7EtvuXxJcc/hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780291039; c=relaxed/simple;
-	bh=6gsGCN9fywOATamR24kEHpzEum26tdu1tLiSViwkxpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oiluk2vnGMq+KTCYYiUdULeT5hqEO4otVL4HJuPrn8B0APUllWdE5m4R/yVgrgRb5lcpoGN9d83w7QOKJ8tREAV6ux4CkEPAN+cFfGQUBPwFW80xKV+tCD8X1iumV+JJFkk9eg5pHdbvoW81bqVJMuC3gf6KwL64/T2loOnKu9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TfH4QDxN; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NMDp2Z2A; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64VJU1Hf1886235
-	for <linux-gpio@vger.kernel.org>; Mon, 1 Jun 2026 05:17:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mhDV9pl06TXs/rs3qAQNP2Kc91MF0S9ipRtDBoJkiVI=; b=TfH4QDxN1b645pWo
-	JhC33efiy8Mhk6eu/lAtEE9GPc7Txr07P07e/YmpdG9Jgi0PSqLxrqK8bS13NQdF
-	YAJSbTuOmAtsIQ2108+RfZ+RyK0ODulz/VuVHIlusJlkYAs5wdSGOV+3EmvnJ4vc
-	2WMaO0eYwhPMRA9E8hA5xt/0Xce2mi61UJNX6wuHFqB+9rF8UoEbbMZd7zVK4DAe
-	B9tiaFEsttDAqzx3cCsFVU4FvwaCr0WsoEWLiW3QgB/FMTSD8HBfxYbfHb3O9GAj
-	nT6jhF2Y2bJ8bJclZ1Ex++GmsC7MjeK1uxOcDE9TmQpUbhwxrAMZi5FfLAPHaVgT
-	oMdUnQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4efqfxwsrp-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 01 Jun 2026 05:17:15 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2c0c32faa62so18449475ad.2
-        for <linux-gpio@vger.kernel.org>; Sun, 31 May 2026 22:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780291035; x=1780895835; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mhDV9pl06TXs/rs3qAQNP2Kc91MF0S9ipRtDBoJkiVI=;
-        b=NMDp2Z2AxHfDMPV1xJMWIin79HhPd0kIrd91Z0WlqURfa9trm73dZm2zzvZWNkk9RA
-         3x280SXhf8S3DVs9HqEtBidpVtUpu1tGKYYo5WQaLhKb/shC3KoFVhq94K8+XoN0c9BH
-         11zSxLlUPcd5fOygLDRQpmDAH61rVyt7EPHcZe/CSR+V84W6vZP7hsikjKDYwxkE28eG
-         4vHu+drPa0O2YWKTyybwAZYlQCrRFH4HdTKSULVy2ZtYW13/kFd9Fn7Bt+9ApnE5LtOS
-         fgAamyEUZCx5gODuQZZTK/KtkrIFa7JABS15pEzB2/oI4jowBuTuCoYlxIfSTULJ+64E
-         9wJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780291035; x=1780895835;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mhDV9pl06TXs/rs3qAQNP2Kc91MF0S9ipRtDBoJkiVI=;
-        b=bvZs6Oa4jydQMQrlMMzFJqAFnXk22PZZxxVLZX97eZvnXLcO34aEELuRbOHl85vlqA
-         72rnX4kYz50P6vsHCe5pYlNECKThi+VofuIAaP5mgUkaRbN3SAZwvaubddXEeiHGYUDi
-         XvF33e6msDNOV5WpCrcPqWYk7gBbWu8V70zpd8S6dEH/PwlVhngdBCMGjWuq/G4b9u9/
-         oW1tc6yrqT7+2MjDgAhl3NT0vFLf9IKJOrcLzxG+b9D0FFb+OZahECMKvdTXO8/OzRYV
-         u7DfojQwfgOW4RfpjRX544GRtS+TV+5sQblTDvFRmAOymQp08sxMGPMXt3AKRe0a2Qzz
-         b2Gw==
-X-Forwarded-Encrypted: i=1; AFNElJ/MrKNUW5OPlI8tqEO1Zj3lj7A61llFD8wri1SywT8Ycui8VYRy5K0XqbdoFoHrJ2F1whxa+Xmh4LeA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAvVfIeQNLnZ9GRwGWxApmQSSAIpVTWGkG6uLUfuoIzUxKxSUD
-	RH/G/K2hfUwsHgp9G+3Hkhgfvkzadupp9cQz6Rf7Kd0l2dH7BeAUDOoUdWmf+zm/FObj/4RZUi8
-	Jc+DOWvVhIbnXUWisGhOqB+KOy+ClILowHZ5PAkGbx7V3aaBpGKap+zrC9Jc0lr5y
-X-Gm-Gg: Acq92OGHwfqI8PJ8X5Z1PVFS3CMqtpN35eK7bSTZeY1RJVfZtdzABn82mH7DQsSyApF
-	RrQ6qvmcaZCEYikVjZTuwOizD0iMCqM4XnQ0exRcGfCb3Vjse735Okp570wYTkf7vWuUgD7y10r
-	m+5WUOn28mArLJDb6beFsmmdy7V9odmWoMaOy8dFuXYh5weP7x0BDBJ4tloHrFpClUFosNGogGB
-	JFOufkXNFzv5Gy9hIOhqlm24QwimomiRCt+VTWn64TAxSHm1b72te1m4QRfYhGfol/W53ZuA0fL
-	edgwWVtSwpRuAyOCLqqGBJJGSLK0eHHSrFfND2xliHLu2KQY9fyyrp9fJ/kTUulTmFfKVmcVt7t
-	Yxn1SEBsndd0LCJZeF2jWCeEtkJF7n4N48xj3/CNHBf2NBtQPSqadAqqib0ZTjzn/ubZ10UdfZG
-	7kPJCdzd9LvQugpT/V0C1T1yG4
-X-Received: by 2002:a17:902:ea07:b0:2bf:2e06:2ebf with SMTP id d9443c01a7336-2bf3685df7dmr109697485ad.31.1780291034868;
-        Sun, 31 May 2026 22:17:14 -0700 (PDT)
-X-Received: by 2002:a17:902:ea07:b0:2bf:2e06:2ebf with SMTP id d9443c01a7336-2bf3685df7dmr109697055ad.31.1780291034415;
-        Sun, 31 May 2026 22:17:14 -0700 (PDT)
-Received: from [10.133.33.84] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23b01727sm96486175ad.53.2026.05.31.22.17.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 May 2026 22:17:13 -0700 (PDT)
-Message-ID: <155c7b48-6fa6-4f25-8b0f-4e9081d5fadf@oss.qualcomm.com>
-Date: Mon, 1 Jun 2026 13:17:06 +0800
+	s=arc-20240116; t=1780291060; c=relaxed/simple;
+	bh=+ukaA0+ja99isS38Kj0XPj94c6uwNUbuYhUg4aHZ12U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qpW43TsTQ2OkUrZQT04y35wMfGaDG9jqkyhLOd/hWdHHgE6sHXA70LAZTQaTugeKeZQ90dzog1jnRH2tQmQ1DLu7aE3Vt0yvZE1SZPElx57SpUuOOajfACJDzLugk7k6E0R/y66GgNC2t0z/MLQzfdIdZE7u0KJA0yj86++Ih0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMk6MJVj; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780291059; x=1811827059;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+ukaA0+ja99isS38Kj0XPj94c6uwNUbuYhUg4aHZ12U=;
+  b=nMk6MJVj0sTYjevtCXFHz0nwEelVefOLmNG7vhO5p+uh4YKIiJ/tixXc
+   cTgGUfqPrLpPIrU7yNpTM0fsfBLKrOuR2DHxMKIdWwKsXFB6STcwccg1U
+   74FyuNX4qgsy53rhVTyrBURE1crM6SdvU2GaHH1OBTi6MH348rUlB7XVC
+   1tXLuG2tBTopwSg9Q5Yd4vZZCYWapxN7PQ2H2EdfuB9jnlGYT0vrBG7t4
+   pZtkRhtdm4AfJoiqM/9t8q5MjGz3EQ/++palMiqPvC87PsUGVI7cdT5U2
+   uYT240lASofI4zKIcYrxejt7plm5gxtd9Hr+IyR5sIm6U9ycol2QeXWG2
+   w==;
+X-CSE-ConnectionGUID: IZzmcS4SQjmiqKY0P6OpXQ==
+X-CSE-MsgGUID: wJENuLP4Sdi6dXqbIfKTiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="98459948"
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="98459948"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 22:17:38 -0700
+X-CSE-ConnectionGUID: Kg8NYwp/RFi2MrBglq7yzg==
+X-CSE-MsgGUID: YCfCyRPFQ2aUP8np6RE0Cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="243308455"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 31 May 2026 22:17:37 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id B754E95; Mon, 01 Jun 2026 07:17:35 +0200 (CEST)
+Date: Mon, 1 Jun 2026 07:17:35 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Marco Scardovi <scardracs@disroot.org>
+Cc: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpiolib: acpi: fix out-of-bounds pointer arithmetic
+ in acpi_gpio_package_count
+Message-ID: <20260601051735.GN3102@black.igk.intel.com>
+References: <20260530094012.184276-1-scardracs@disroot.org>
+ <20260530094012.184276-3-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] pinctrl: qcom: spmi-gpio: Rearchitect for flexible
- group support
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
-        Maulik Shah <maulik.shah@oss.qualcomm.com>, kernel@oss.qualcomm.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20260528-pinctrl-level-shifter-v2-0-3a6a025392bf@oss.qualcomm.com>
- <20260528-pinctrl-level-shifter-v2-3-3a6a025392bf@oss.qualcomm.com>
- <20260530-fervent-snobbish-silkworm-24ddae@quoll>
-Content-Language: en-US
-From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-In-Reply-To: <20260530-fervent-snobbish-silkworm-24ddae@quoll>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: phOCBilX5vtKsQGnz_jSTf_1e_EAMfmE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAxMDA1MSBTYWx0ZWRfXyUGMHPik02Z9
- jjoN2YvUMkf9rPy7jP1cfr2ZcIm5i8NNf+0603tKXwmTi6ydPBdg69gQsvJcqY2hjOdsrivJYqm
- bHdgbzYj1znAEHWoWKtgSRv/MfgaM+hRSyW1CmQoVZQ0F67lr+RoasqYvhHLMton8NBXtBV1nng
- Bg4xtrFt1USZjCUmkMH6lzpxiMCV641JF7iUhDyC8G7sx57AQ5xW2xBR0jcblD6O4XbJtmR5FAw
- +hc4levF1FaB0aQfn9MdonsZJLcQHv9y7PsXhTbfsVNP8my0MUxqHsi3ms81rba/C6azE0Bs6ZW
- g9ZcVJ/TG/hIB1lZA4533J2KcwsE++YbvUD6jhPNUSFX0TPRFlBlWtdRVAHNlSNaBeQSxNkp0eE
- kVxqOGPCSCipopWnZX0iH3s/BCWYhVCcDr/ujN9OhFOvMayHuNSzYtGpDbk5w+ooyfXDHR2aUGp
- Z0y2O/v8/lTsVOZBnbA==
-X-Proofpoint-GUID: phOCBilX5vtKsQGnz_jSTf_1e_EAMfmE
-X-Authority-Analysis: v=2.4 cv=Zq/d7d7G c=1 sm=1 tr=0 ts=6a1d15db cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=EUspDBNiAAAA:8 a=43zHNb41aA7duc6R1F0A:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-01_01,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 spamscore=0 priorityscore=1501 clxscore=1015 malwarescore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606010051
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260530094012.184276-3-scardracs@disroot.org>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-37741-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	TAGGED_FROM(0.00)[bounces-37742-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,qualcomm.com:dkim];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[fenglin.wu@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 678796199B9
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[disroot.org:email,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,black.igk.intel.com:mid]
+X-Rspamd-Queue-Id: 9A4856199C9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Sat, May 30, 2026 at 11:40:12AM +0200, Marco Scardovi wrote:
+> When counting GPIOs in an ACPI package, encountering a reference or
+> string causes the element pointer to be advanced by 3 (element += 3)
+> and then by 1 (element++).
+> 
+> If a malformed ACPI package contains fewer than 4 remaining elements
+> when a reference or string is processed, this pointer arithmetic
+> advances the element pointer past the end of the package elements
+> array. This results in undefined behavior and can cause out-of-bounds
+> reads.
 
-On 5/30/2026 6:31 PM, Krzysztof Kozlowski wrote:
-> On Thu, May 28, 2026 at 06:05:37PM -0700, Fenglin Wu wrote:
->> Currently, the driver treats each pin as a group, and every pin or
->> group can function correctly in all existing functions. However,
->> this approach is no longer valid since some PMIC pins only operate
->> together in specific functions, which are limited to certain GPIO
->> groups. For example, in pmh0101, the level-shifter function is
->> supported only between GPIO pairs like GPIO11/12, GPIO13/14,
->> GPIO15/16, and GPIO17/18.
->>
->> To better accommodate these new functions and restrict GPIOs to
->> those that support them, rearchitect the driver to enable flexible
->> pinctrl group configurations by utilizing the generic pinctrl group
->> and function APIs.
->>
->> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
->> ---
->>   drivers/pinctrl/qcom/Kconfig             |   2 +
->>   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 377 +++++++++++++++++++++----------
-> And now make this built-in and RPMH as module, then build it. Does
-> it build?
-Thanks. I missed to add the dependency in patch4 which really adds the 
-rpmh control. I will update the Kconfig to make it depends on rpmh and 
-cmd-db drivers.
-> Best regards,
-> Krzysztof
->
+How can it cause out-of-bounds reads? We increase "element" but the next
+iteration checks that it is still inside "end" and it's never dereferenced.
+Maybe I'm missing something?
+
+> Fix this by ensuring at least 4 elements remain in the package before
+> advancing the element pointer, returning -EPROTO if the package
+> structure is invalid.
+> 
+> Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+> ---
+>  drivers/gpio/gpiolib-acpi-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+> index 049e4cbc14ed..494dcd166aef 100644
+> --- a/drivers/gpio/gpiolib-acpi-core.c
+> +++ b/drivers/gpio/gpiolib-acpi-core.c
+> @@ -1310,6 +1310,8 @@ static int acpi_gpio_package_count(const union acpi_object *obj)
+>  		switch (element->type) {
+>  		case ACPI_TYPE_LOCAL_REFERENCE:
+>  		case ACPI_TYPE_STRING:
+> +			if (end - element < 4)
+> +				return -EPROTO;
+>  			element += 3;
+>  			fallthrough;
+>  		case ACPI_TYPE_INTEGER:
+> -- 
+> 2.54.0
 
