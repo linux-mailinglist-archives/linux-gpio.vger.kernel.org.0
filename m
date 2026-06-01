@@ -1,134 +1,129 @@
-Return-Path: <linux-gpio+bounces-37761-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37762-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wOg5BEaEHWqjbQkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37761-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 15:08:22 +0200
+	id IAgVNi+HHWrObQkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37762-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 15:20:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67AA661FD5C
-	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 15:08:21 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A58C61FEF1
+	for <lists+linux-gpio@lfdr.de>; Mon, 01 Jun 2026 15:20:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6FEFF3056FF8
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 13:03:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A3FB43021CB0
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2026 13:20:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FDEA37DADD;
-	Mon,  1 Jun 2026 13:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="eWN/DXZt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0660D3A6EE4;
+	Mon,  1 Jun 2026 13:19:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FDC375AAB;
-	Mon,  1 Jun 2026 13:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69803A6B8A;
+	Mon,  1 Jun 2026 13:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780319007; cv=none; b=cJRZMlHL/6AqiD1TcCY5SbM/bAMCs7QnP4pC5fwwGHbN28avi5JHJT9e1cCrbgH/BWOHf/ET1ne68tw+LCAbHOWBKQVIhO/sKYCj39VXP9sy7z+rqoQ/IWZ92Ve8Zntzk0HuxNDxGH2JtbgfPVoOL62RAYLmrOGPyuPIIDqU/9k=
+	t=1780319983; cv=none; b=KxlKh06lUBl+bR7OUrr3aiwvP/wTu/h3aq2NJm4bCWapf8o/mz7niQ+rThWIeKrh58r4yF2A/xSCxSKtIqwwh9wRCTHNCKiEUk7tmcKvxr3FfR00f4V9Ii1wKb2c2xHCXm0n9ZApSfzmHx3Yp+gOvAiK6ukmliSUtpdxtPwIm4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780319007; c=relaxed/simple;
-	bh=bY2IR9oRsViHk7XO0FYniIw47+5KZ3MwdEqYYxKXnIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G6RTGzb07+SPT4oMxjV4jwjiwu/GYRONqSKU1kElIuULBC5VDrS2YQBwAv0WAZIKU83z8HAqFZaZUTDoOpG3iawpXIUWMe6sCoJhklCKJNEk3xtqB9irOkJqcMC/8uJtKCdP/A/JywrQDNKJ6rH5ZIcb+/rH+QnKOKGhgQ7WAv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=eWN/DXZt; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 7F9E026795;
-	Mon,  1 Jun 2026 15:03:17 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id z2417K_TdMw0; Mon,  1 Jun 2026 15:03:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1780318996; bh=bY2IR9oRsViHk7XO0FYniIw47+5KZ3MwdEqYYxKXnIk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eWN/DXZtPCmJfR6XyN9BO6erV7yXlA2zYhc5BdbZXU+8hZnieozwS1Y+wi/hVz/uv
-	 lRhFvCheB+qrw3cQ0Zyw+Na3k4wY4BW2ByP3ehB7GiBtDAg+GEbbVEn7TdZ7k4tYIm
-	 AyPbvaMZzufLQjjRnJigG6cW6JBD3twMpIDldUYZOHSun48LVcsUN9XaoY6Nd5iuIz
-	 cgn8ZkxngAGXue1e/MUo5d/DBEIm9oavrSLFevOfQGweUYsO9xxzbIvaaBIQtIRm8w
-	 /WiY3O4K7Vkn1EI8qYcoUB2NcTJ61rcbwq+KILyKVLFeiJABmcZGJCoDJEFdOLBtzg
-	 LEmgz6/rn8XUA==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] gpiolib: acpi: fix resource leak in OpRegion
-Date: Mon, 01 Jun 2026 15:03:02 +0200
-Message-ID: <Ycld69QSTaaxOgK8F11m2g@disroot.org>
-In-Reply-To: <20260601121815.GS3102@black.igk.intel.com>
-References:
- <20260531120816.17255-1-scardracs@disroot.org>
- <20260531120816.17255-3-scardracs@disroot.org>
- <20260601121815.GS3102@black.igk.intel.com>
+	s=arc-20240116; t=1780319983; c=relaxed/simple;
+	bh=3W+D3xZWOVgznnU57w3vHat8ECUEX96oxvliRrQaDjQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F+ki9l/3Vat03kZ+dG2blX1ZtISJT55du+mpzTYOjbjSuNnbUEi3A+FFu1D0pUghh73O2ZuL7WYEQKuqmszRPQhe+G68pTINBU9J8hifMoHzbvWHJ7bDrKTZ6aPtRNZiJtOyYnXH5tpqZ6PFUNKIdlEk0N1nSECa7iKef5KzhMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842941F00893;
+	Mon,  1 Jun 2026 13:19:41 +0000 (UTC)
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v7.2 (take two)
+Date: Mon,  1 Jun 2026 15:19:38 +0200
+Message-ID: <cover.1780319402.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[disroot.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-37762-lists,linux-gpio=lfdr.de,renesas];
+	DMARC_NA(0.00)[glider.be];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37761-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	FROM_NEQ_ENVFROM(0.00)[geert@glider.be,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.975];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,disroot.org:mid,disroot.org:dkim]
-X-Rspamd-Queue-Id: 67AA661FD5C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 7A58C61FEF1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In data luned=C3=AC 1 giugno 2026 14:18:15 Ora legale dell=E2=80=99Europa c=
-entrale, hai=20
-scritto:
-> Hi,
->=20
-> On Sun, May 31, 2026 at 02:03:09PM +0200, Marco Scardovi wrote:
-> > ...
->=20
-> If we fail to remove the OpRegion handler and continue to release the
-> structures does that mean any AML code that accesses the GPIOs now are
-> accessing already removed (below) objects? Here _REG is not called (we
-> failed to remove the OpRegion handler) so the AML does not know that it is
-> gone so it can happily still access the region. So IMHO it is safer to ke=
-ep
-> the connections instead of removing them.
->=20
-> Of course it is possible that I'm missing something. It has been a while
-> since I looked at any of this stuff.
->=20
-Hi Mika,
+	Hi Linus,
 
-no, I get your point: I was being overly cautious about something that may
-or may not happen. Consider these patches as void and sorry for the noise.
+The following changes since commit c7c8352fe569d17e3d379a83075a8ea12168526f:
 
-Marco
+  pinctrl: renesas: sh-pfc: Implement .pin_config_group_get() callback (2026-05-15 11:15:19 +0200)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v7.2-tag2
 
+for you to fetch changes up to 80538a53978bb9788080caea6e5ee3393dfb6a72:
+
+  pinctrl: renesas: rzg2l: Use tab instead of spaces (2026-05-28 15:07:29 +0200)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v7.2 (take two)
+
+  - Add GPIO config support on RZ/G2L,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Claudiu Beznea (5):
+      pinctrl: renesas: rzg2l: Use -ENOTSUPP instead of -EOPNOTSUPP
+      pinctrl: renesas: rzg2l: Populate struct gpio_chip::set_config
+      pinctrl: renesas: rzv2m: Use -ENOTSUPP instead of -EOPNOTSUPP
+      pinctrl: renesas: rzg2l: Keep member documentation aligned
+      pinctrl: renesas: rzg2l: Use tab instead of spaces
+
+Lad Prabhakar (2):
+      pinctrl: renesas: rzt2h: Remove unused variable in rzt2h_pinctrl_register()
+      pinctrl: renesas: rzt2h: Skip PFC mode configuration if already set
+
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 15 ++++++++-------
+ drivers/pinctrl/renesas/pinctrl-rzt2h.c | 13 ++++++++-----
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c |  4 ++--
+ 3 files changed, 18 insertions(+), 14 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
