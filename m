@@ -1,79 +1,81 @@
-Return-Path: <linux-gpio+bounces-37770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37771-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qIHyOEdkHmrCiwkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37770-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 07:04:07 +0200
+	id OMvhC8djHmrCiwkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37771-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 07:01:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 898AD628558
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 07:04:06 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF8926284C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 07:01:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 88065304636B
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 05:01:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6864C300C336
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 05:01:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B514280331;
-	Tue,  2 Jun 2026 05:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37752C0268;
+	Tue,  2 Jun 2026 05:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8QoYsFY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1BXafDc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45E825B2F4
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 05:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BDD24EAB1
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 05:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780376514; cv=none; b=bbp313eo0X+i9eWcqzPPlESIxyvSBLz1vUfzxChttNs+M5dvtQW3ISf1Gk8m08nTE9TCjmJwOdru7o+v8uBZ20fB+ZbLZ+uPuK4JOTjQo6kMJzhNKt6w3pZ8/M5suI8YcKcQWvkAgiWbCV+PnHb8EDGOAZRfPRgW3h78x3Mw8oc=
+	t=1780376516; cv=none; b=Tod01JZL8sZPwWdhfSR72bOGyEyAF+QiwrRVITzvXwTrzCP/t8cFwRWCunkuZcBiY9xnQJWgxxmLzIvVgocB/vJYGShSx8h9W/mDF5S+FmnysE0k2Ar1rp1q8Zeb0+6ykqb2YYZeRIQ5OkZAtYpixy9VmMDyI60kQ9GEQSWCQ6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780376514; c=relaxed/simple;
-	bh=fu0fHH8GEc/eY/dNnjeJ3WVSqYJqyom/Ku2BZeg7cwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=INTljMdtvzFWODnmClOPezgQ2Ri2RcJGbniK24TCvkXSZ6PGwsvr+F3o0RX+xPE767LNHUqi6lg7+sUK8pO3kzZh/4+uXbc3J+yLJYjSMCBx7i56DpKC50ExMoN0HRCmaP4T8IpgXWmrG2Axg/tp0mtv3OK4s1+IoqqadE9Fws0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8QoYsFY; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1780376516; c=relaxed/simple;
+	bh=Rt3qyAEsfIkqikUW7PnMXRyV+OkDzZSUzNZRyxUvaVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DDaVHIbQfce3nv90pfPq0eA/pgjl4PdMCVFpkXtfMHNfu0Oz2j1ijFhI6kZCTnO7wJwBiO95PrMAc3YvLrd67j4qSjRyp9c6pNNWEIUq85oIeEkNjdD0FMv6B15kDs25sSA7WNXWamwZ3acvYu5tSCa0fAD1XTroWzZ+aF/bVTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1BXafDc; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-c8532ba6c95so3182677a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jun 2026 22:01:52 -0700 (PDT)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c8585cd8400so941563a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jun 2026 22:01:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780376512; x=1780981312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9UBbJFTl4BJCNOtay024UeZbTsRkAab8z+DA8cu9aI=;
-        b=c8QoYsFY9Sut9YrShUiaPBBVj7d0MPG4ujhdUmeEccGCOpoRr1sFJb6yRWoAuX3qu4
-         nHCkwhFINEe2IoY9jZz3ZsYLk2X+mklQgjtXa2FSj197wBsVyGIhAr7pdgdTiYTZ0cP3
-         c8zNju5soV9fqe1dNdvpjuCxyAEc3LN+D0mm4fjFFuHkIp4s3WpmbHN0VEhP0IHuxG67
-         tcxCYHpkXLW+rMRzRujZbWb1RfOrXLSvFg9UB79hd7UNk9Uj5TC49iQ7GaiP5fpQWBtn
-         pBEJn/lgsjrVaUbSTRT9Vs+7HcS2DFjDYXK0GTUWG4nxnWTFOpZg8WFYUISL85RyF+OO
-         hYhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780376512; x=1780981312;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1780376513; x=1780981313; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l9UBbJFTl4BJCNOtay024UeZbTsRkAab8z+DA8cu9aI=;
-        b=FzIbfwWfFLp7XeUX/Lj2TBHcmHP/iO+MMmWvOjYNL7B+Nr9OhPczx0MUUGvyTKK6zN
-         l+iXdhUd0yegyIRK9HddXmQ8kNOsB0MiWiIBIa0PbtlRwVq69quMxO3vJE609TeeV4zF
-         wbDh/McaQpxP5wBphBcsL1ruRq/Ea6DfSNobd0oyPJ3IcLM39j7TwmFjUuRYpJTILLGc
-         QM/aKIokfwQD7pK90eKHCvu18aOWN+eeCkekN7GIQsbMYeXUCzLMK5GWdSiS5aGcpLzo
-         ywWSbfLZInQCutj3AE0sOR+Z7ya/l+a/XOBRuYkBSkJbpCGmvDAdDUhMFcx7cXVhjKEa
-         FvWg==
-X-Gm-Message-State: AOJu0YySqQsHYlHVvSZh0JZnJM9DIy3ZTov5Df+3EvSIKpQuw7EODTM7
-	3kx+EkIbLl/OffrN73DkRvGcn2HSpwj2Pd2UWpTVpOIc6wChoDdJtcj/nwhfD+FX
-X-Gm-Gg: Acq92OEmJJcsuI2K26nqRJwmCheIye6lQc6OpfVfwcVB7U+12c9kZK8gaob2S9FMkVF
-	OD+uLsib/IwjgkrxpadHRHmT2e2/oppBHNaeMVt4l6ZnAp9gTiag6vADiJ7HamBn+S4XCirrqHb
-	aWZAnFKdmTLpIRBcwCnP17nGHSv4TMlOUDPi2/3a6PfpzcOR0SFVGZ6oeqa0VhGmRaXqnyGo71/
-	KafoaXZpJIElFaeU4WRfGWG0GRh0nlUYUdhqgOJkghD1j9Bluc9pCw0zMwC4eG7/1hCZsaiXwi7
-	7hxuriJBBBo8XwYp96KGxKCDp3PW16XS4zF9DTbuJYa50Tay/wWCUnWwTw3k+SMNh2nTnLjPpqN
-	Dkh3MBrQLw9ZSvWYtpjJdZAwhzBaFhjR9pNmZA2Jv6bSgS/b9aNxRvNVwfOlPbeUpAUCaCL3D3r
-	Vc2dYwiaCn5UjSnRRYTHK9H6KXR4GWNeskRu24QD+3jujNFkIzjF/NeiZmM9n2LGR3mIZKP5xwB
-	qp4lJDhYb2M+JcNQPTv4IOJK185Zv3Hc+JfSAapWeLqCQ==
-X-Received: by 2002:a05:6a20:6f06:b0:39c:787:f197 with SMTP id adf61e73a8af0-3b427f33690mr14407222637.36.1780376511958;
-        Mon, 01 Jun 2026 22:01:51 -0700 (PDT)
+        bh=wGFxNfjzZNv84pjFOZFMUu5zdOh74zYkDbHbwTMiiog=;
+        b=b1BXafDc0fGK0hWa7kK4Chr1gfgsRTIG2XDPEs5KaFkfrQV6QXwI7vyqRa+UHZGK90
+         /OHk5oZIfj4mif57conuc+h9+VHC3IutRjgjdLA23ZamIlONvUKmGvTNlGF2dHeJlHHA
+         cx/gu8+jGjMTGYy0KJ4qlmU5EaVxFipU951IQqjt/sO7yonyJHQmeU4U26MX3GG2sFgC
+         WGdBBFYtNFGDv0FIO80kRsUoDfZEYm1kuzsAMdYISxbDfUm6q3W3HIQ7YNQcpBbFLaPg
+         w7U1FkXZIoywEjIEOaPczHpp9+nmkoUVu1gKPuUUTe5LrvBF33qfpu55w9H/8fZAkj8V
+         PVLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780376513; x=1780981313;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wGFxNfjzZNv84pjFOZFMUu5zdOh74zYkDbHbwTMiiog=;
+        b=dgRmQO1Xvdh3HDaxWSg7RoVbCwpDQGVw3BAX/uDINN0xE3d0GYob9hP1YIsNpHheE3
+         ZFIZl0aiYLlc5kohUJFyiifxwdSo3YGXU5E6tkNHuMs3Ch05c05Y7ctR16stSbPQasEz
+         dCuzrk3Ve3NciyzHhCgKf/ID8YO/PqmB3t3tu2KcA8B5WFileEXXLzYqMVQo4fgOYnfT
+         v9AwUPRRkSBywVP8/kpPnJtjF7IwumjRlduFgWZaJyYMyGeHNau8ML4UMA9/Dlxi1/KL
+         Uswe0ebX0Dlr6jAWOt90uyL1qXCjCnz35zoyxZICVIXpjMbo41sforv5fWqqAQDKaiDJ
+         HqGg==
+X-Gm-Message-State: AOJu0YzREFLUR7zptWMAfsjvlicz4IuUYaGOJxzHenS9ZHK4i/gDZbhj
+	LlnrQWUFKcH5bLpUe8wPCuzv6oCF81ELkOd4p0MruLCosA4r66l1ZYXmApUx+zRI
+X-Gm-Gg: Acq92OE8QflocMsUBWItPENmKsMP1qOBqe7HP99g4ZjN8CrYwRLm3Jy1o7DHonHOXFj
+	Ak5usXUJ6MxLeEF+eAYGaoHupyfzdcqQQsofkZqdXGb36vg/Vsior/BGO0+JHNsyvFAkmFk7sBF
+	bEXIqIUyOVsZCxT2lEC+AYT0+PmCwCxjorDlEAACDiP9AUrhDRyvQneoCF1WYGrm0wSJ4+2U7n1
+	qBde7AIagqSt9l5xYU8e8Olh1W6w70jaJmC9ykWwlP66eGZqfYimW8S9lBYBSd1ybmS3prp04fq
+	JByA2e7EXFukpGvTyENyWr8T589PdEKYS1bF7TlyAM1hCtk7Hip7RIdIdPDFU0crStR5L7rp77e
+	ZiXobUdnEVA0ukSIYllxU1GxIO3om6vlYY7GTD5eQck9TCOjwIitUT5wbgM1n03X3MJtDdSV3FB
+	XkpxSoN5+HJdbOOS6MITAk8NjNWplq1y89XRzY7EpQA6WZyNSlh8jngTsjQ0VJXQfUsDUC62P40
+	W6EyJPEXO/ykZeD/F7ZDj8N4kTd3bwssCyBuqdobfhbug==
+X-Received: by 2002:a05:6a20:da11:b0:3b2:9360:4598 with SMTP id adf61e73a8af0-3b427e62c76mr16236422637.7.1780376513384;
+        Mon, 01 Jun 2026 22:01:53 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8589d055c7sm8958467a12.9.2026.06.01.22.01.48
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8589d055c7sm8958467a12.9.2026.06.01.22.01.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 22:01:50 -0700 (PDT)
+        Mon, 01 Jun 2026 22:01:52 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
@@ -84,10 +86,12 @@ Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Bartosz Golaszewski <brgl@kernel.org>,
 	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 0/7] gpio: move ppc4xx driver to drivers/gpio and modernize
-Date: Mon,  1 Jun 2026 22:01:24 -0700
-Message-ID: <20260602050131.856789-1-rosenp@gmail.com>
+Subject: [PATCH 1/7] gpio: move ppc4xx gpio driver from arch/powerpc to drivers/gpio
+Date: Mon,  1 Jun 2026 22:01:25 -0700
+Message-ID: <20260602050131.856789-2-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260602050131.856789-1-rosenp@gmail.com>
+References: <20260602050131.856789-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -101,13 +105,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,ellerman.id.au,gmail.com,lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-37770-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37771-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -122,44 +126,124 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 898AD628558
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: BF8926284C5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This series moves the ppc4xx GPIO driver from arch/powerpc to
-drivers/gpio, converts it to be a proper platform driver using
-generic MMIO helpers, drops architecture-specific accessors, and
-prepares it for module build and COMPILE_TEST.
+Move the ppc4xx gpio driver out of arch/powerpc/platforms/44x/ into
+drivers/gpio/gpio-ppc44x.c. The driver has no architecture-specific
+dependencies and follows the same pattern as other PowerPC GPIO
+drivers already in drivers/gpio/ (e.g. gpio-mpc8xxx, gpio-mpc5200).
 
-Patches 1-4 move the driver and convert it to standard platform
-driver infrastructure. Patch 5 switches to generic MMIO helpers.
-Patch 6 drops PPC-specific IO accessors and enables COMPILE_TEST.
-Patch 7 adds the missing MODULE metadata so the driver can actually
-be built as a module.
+- Renamed Kconfig symbol from PPC4xx_GPIO to GPIO_PPC44X
+- Updated ppc44x_defconfig and warp_defconfig to use the new symbol
+- Marked the new option as tristate (was bool) since the driver
+  supports module build via module_platform_driver()
 
-Rosen Penev (7):
-  gpio: move ppc4xx gpio driver from arch/powerpc to drivers/gpio
-  gpio: ppc44x: Use module platform driver helper for GPIO
-  gpio: ppc44x: Set GPIO chip firmware node
-  gpio: ppc44x: Use platform resource helper for GPIO MMIO
-  gpio: ppc44x: Convert GPIO to generic MMIO
-  gpio: ppc44x: drop PPC-specific IO helpers and rename to ppc44x
-  gpio: ppc44x: add MODULE info
+Assisted-by: opencode:big-pickle
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ arch/powerpc/configs/44x/warp_defconfig                   | 2 +-
+ arch/powerpc/configs/ppc44x_defconfig                     | 2 +-
+ arch/powerpc/platforms/44x/Kconfig                        | 7 -------
+ arch/powerpc/platforms/44x/Makefile                       | 2 +-
+ drivers/gpio/Kconfig                                      | 8 ++++++++
+ drivers/gpio/Makefile                                     | 1 +
+ .../platforms/44x/gpio.c => drivers/gpio/gpio-ppc44x.c    | 0
+ 7 files changed, 12 insertions(+), 10 deletions(-)
+ rename arch/powerpc/platforms/44x/gpio.c => drivers/gpio/gpio-ppc44x.c (100%)
 
- arch/powerpc/configs/44x/warp_defconfig |   2 +-
- arch/powerpc/configs/ppc44x_defconfig   |   2 +-
- arch/powerpc/platforms/44x/Kconfig      |   7 -
- arch/powerpc/platforms/44x/Makefile     |   2 +-
- arch/powerpc/platforms/44x/gpio.c       | 210 -----------------------
- drivers/gpio/Kconfig                    |   7 +
- drivers/gpio/Makefile                   |   1 +
- drivers/gpio/gpio-ppc44x.c              | 217 ++++++++++++++++++++++++
- 8 files changed, 228 insertions(+), 220 deletions(-)
- delete mode 100644 arch/powerpc/platforms/44x/gpio.c
- create mode 100644 drivers/gpio/gpio-ppc44x.c
-
+diff --git a/arch/powerpc/configs/44x/warp_defconfig b/arch/powerpc/configs/44x/warp_defconfig
+index 5757625469c4..d6014b9c5708 100644
+--- a/arch/powerpc/configs/44x/warp_defconfig
++++ b/arch/powerpc/configs/44x/warp_defconfig
+@@ -12,7 +12,7 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_EBONY is not set
+ CONFIG_WARP=y
+-CONFIG_PPC4xx_GPIO=y
++CONFIG_GPIO_PPC44X=y
+ CONFIG_HZ_1000=y
+ CONFIG_CMDLINE="ip=on"
+ # CONFIG_PCI is not set
+diff --git a/arch/powerpc/configs/ppc44x_defconfig b/arch/powerpc/configs/ppc44x_defconfig
+index 41c930f74ed4..b0c7ad8c6d9b 100644
+--- a/arch/powerpc/configs/ppc44x_defconfig
++++ b/arch/powerpc/configs/ppc44x_defconfig
+@@ -22,7 +22,7 @@ CONFIG_GLACIER=y
+ CONFIG_REDWOOD=y
+ CONFIG_EIGER=y
+ CONFIG_YOSEMITE=y
+-CONFIG_PPC4xx_GPIO=y
++CONFIG_GPIO_PPC44X=y
+ CONFIG_MATH_EMULATION=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
+index fc79f8466933..150813cea945 100644
+--- a/arch/powerpc/platforms/44x/Kconfig
++++ b/arch/powerpc/platforms/44x/Kconfig
+@@ -227,13 +227,6 @@ config PPC44x_SIMPLE
+ 	help
+ 	  This option enables the simple PowerPC 44x platform support.
+ 
+-config PPC4xx_GPIO
+-	bool "PPC4xx GPIO support"
+-	depends on 44x
+-	select GPIOLIB
+-	help
+-	  Enable gpiolib support for ppc440 based boards
+-
+ # 44x specific CPU modules, selected based on the board above.
+ config 440EP
+ 	bool
+diff --git a/arch/powerpc/platforms/44x/Makefile b/arch/powerpc/platforms/44x/Makefile
+index ca7b1bb442d9..4598d8b89bf4 100644
+--- a/arch/powerpc/platforms/44x/Makefile
++++ b/arch/powerpc/platforms/44x/Makefile
+@@ -15,4 +15,4 @@ obj-$(CONFIG_FSP2)	+= fsp2.o
+ obj-$(CONFIG_PCI)		+= pci.o
+ obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
+ obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
+-obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
++
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 89c77ec6c205..77991da43ec1 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -593,6 +593,14 @@ config GPIO_POLARFIRE_SOC
+ 	help
+ 	  Say yes here to support the GPIO controllers on Microchip FPGAs.
+ 
++config GPIO_PPC44X
++	tristate "PPC44x GPIO support"
++	depends on 44x
++	select GPIO_GENERIC
++	select GPIOLIB
++	help
++	  Enable gpiolib support for ppc440 based boards.
++
+ config GPIO_PXA
+ 	bool "PXA GPIO support"
+ 	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 8ec03c9aec20..9e8c9ca1d3fb 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -146,6 +146,7 @@ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
+ obj-$(CONFIG_GPIO_PCI_IDIO_16)		+= gpio-pci-idio-16.o
+ obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
+ obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
++obj-$(CONFIG_GPIO_PPC44X)		+= gpio-ppc44x.o
+ obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
+ obj-$(CONFIG_GPIO_POLARFIRE_SOC)	+= gpio-mpfs.o
+ obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
+diff --git a/arch/powerpc/platforms/44x/gpio.c b/drivers/gpio/gpio-ppc44x.c
+similarity index 100%
+rename from arch/powerpc/platforms/44x/gpio.c
+rename to drivers/gpio/gpio-ppc44x.c
 -- 
 2.54.0
 
