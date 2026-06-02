@@ -1,144 +1,187 @@
-Return-Path: <linux-gpio+bounces-37809-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37810-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
-	by lfdr with LMTP
-	id aCyEN7ysHmq3IwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37809-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 12:13:16 +0200
+	by mail.lfdr.de with LMTP
+	id Lp0PJoTAHmquUgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37810-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:37:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4236F62C569
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 12:13:16 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A9C562D983
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:37:40 +0200 (CEST)
+Authentication-Results: mail.lfdr.de;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WFilqPPX;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37810-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37810-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 503CE305092F
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 10:04:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BFF2A301C919
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 11:31:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC6C3C8C70;
-	Tue,  2 Jun 2026 10:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RhRZ+sFo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5D63D301B;
+	Tue,  2 Jun 2026 11:31:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D53130EF89;
-	Tue,  2 Jun 2026 10:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7158353EF7;
+	Tue,  2 Jun 2026 11:31:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780394659; cv=none; b=QaHTtpY/2LZzFuaF2ASQRnVdvX1qGwwRPpY0e8QQVxzc5Em7I1Gcp8+CxGeePnLMd5PWtHzGnfdzvLeNG8xp5S28BL6TjXVDnnAY37b3Nw2qrRQpv0F+48NF6QRhkCy35VR/R1r9mMfnjvXoezg157TS0Dl+THydYIX5SCIFaEs=
+	t=1780399879; cv=none; b=SOcuNp2MSDcYMFuGcOL2wXAmoIwiqob8CeF25+46h5Z9ibbVkovyDgIt47Nn0402qnIsaB5uVdYeRll292A5g3Ha0Yi9PzjpWdPxr7NrVH1/eVjCMtzS58cDv1GQMQldYeJM01tpw6Pq3XSfPKxsWf2xTSMe+HCwDbaY4NUtHjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780394659; c=relaxed/simple;
-	bh=YdPwtikXRDaKpAOURi931IMQBXVu9ZmCKgykjG/ASVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M7IUYsZQtEheYzJONf+o/6gNcKkeQKi0Bd1fQKykL/ZA3hhl2sMjvUqoo9iiRc/Ajzn+z7fyKQl5LA0hrNQXM4mnCFVFpdvL8v7Kr9zUgoGPrA36xJB9KLy/fIy7D8nyIa5WWhZ0LIuK7CDM5fnKd5oDMlvqwlvlXh86YgkY3fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RhRZ+sFo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780394658; x=1811930658;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YdPwtikXRDaKpAOURi931IMQBXVu9ZmCKgykjG/ASVA=;
-  b=RhRZ+sFogQAhBasN5PvZxVe+Lirc0L3e4+Q3LykQx4JdhtdgCsUdGxIb
-   /Bby7jQwNQvNlENkKHbFHAOB98bN39u8p7MbhRy5cgp3l1fKbZEl1mv/6
-   h9PrpveFQBD9bwVNau4RVA7U1HP/tp7LwIGy9MFFN55V215E5EXTJjJ8G
-   qgULHzvR3tHNoXrjpUFW/OvwXJlMnya+3Sa5AqpeoXf2Jx3Y/OHYqitZY
-   3qHBPUp9/uIQ0kNDK66nuT/IuL6uP4y1fDxXb1CjFTIp5rEuITaV2jTmb
-   kYDMaXSNiZa53E+AZh52LqGy+6UwAgy2U3fg8o4bkiatRzh7blND2RrPe
-   w==;
-X-CSE-ConnectionGUID: Pv2dGPB9RLqskjoz6Oo+Vg==
-X-CSE-MsgGUID: F5FNRG7fSG2XhvGtRrSL7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="91860368"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="91860368"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 03:04:17 -0700
-X-CSE-ConnectionGUID: w/1ggkKISzKwlP6E1Ef5Wg==
-X-CSE-MsgGUID: dTroBSPuTpK9ONqmP5wXuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="267510766"
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 03:04:15 -0700
-Date: Tue, 2 Jun 2026 13:04:13 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Marco Scardovi <scardracs@disroot.org>,
-	Mika Westerberg <westeri@kernel.org>,
+	s=arc-20240116; t=1780399879; c=relaxed/simple;
+	bh=6+dWOqnd9c1BE5bGfb/wthkoPSDCs4oRcAmaXUeBPNo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KAMoO0DYeuiU5VjHkT1vNqm8XwFmFDsEm/FfZir5SSksal6dFK6AsFuz8NbGue4TJc7eJcKCYzde9bZDMgXVax7ag56cLjlmT++l/O1bYVdNjbNbIZgrF9cqoMcjjPtQc9zek08IBiRiSxE3KjI0ALBfcS5TCduMzZv6QXoomTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFilqPPX; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECE71F00893;
+	Tue,  2 Jun 2026 11:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780399875;
+	bh=ZB07DdKg3yuyLDzmzNSyPfVJ3JxJRqsXpsqIrEV4rXw=;
+	h=From:To:Cc:Subject:Date;
+	b=WFilqPPXSDNsQxfOiJielADezOD6iopvX1ADjfj6Rpxg0fTxlVKE5AUHi3acHue6T
+	 5ezvIXq7Z9jXfZB7ZrKXVhagZIo/uJ4yfedXc1dFZEicO7LAyO3sZmPnGRwFBycwoQ
+	 K4Ln2nArU5n2nFuYmACXZpnGTpoK7rxZHXgCs9U//g7rImpirVNe9mgXoqq17RdYiX
+	 q1bO6kqn8gYs9VlRO1Ezo1UuESpK2sP2vzTSGz2uVIhQ/5jlho4YLOYqqeOyCBiuKB
+	 JKtjys2U4dJbkZVCpmn03OeRP1lzPsjuebbkJx+pPAdjdhV+ufWV6+KwvvDJeIxhcT
+	 Gy05DKTE+vpjA==
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+To: PRAT Maximilien <maximilien.prat@cs-soprasteria.com>,
 	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
-Subject: Re: [PATCH v4 2/4] gpiolib: acpi: fix resource leak in OpRegion
-Message-ID: <ah6qnf9ij6Fu967D@ashevche-desk.local>
-References: <20260531120816.17255-1-scardracs@disroot.org>
- <20260531120816.17255-3-scardracs@disroot.org>
- <20260601121815.GS3102@black.igk.intel.com>
- <ah6M_vEIREG0w_mV@ashevche-desk.local>
- <20260602095346.GA2990@black.igk.intel.com>
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gpiolib: Remove big fat warning in gpiochip_get_direction()
+Date: Tue,  2 Jun 2026 13:30:16 +0200
+Message-ID: <63487206f6e5a93eaf9f41784317fe99d394312f.1780399750.git.chleroy@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260602095346.GA2990@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 4236F62C569
-X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3821; i=chleroy@kernel.org; h=from:subject:message-id; bh=6+dWOqnd9c1BE5bGfb/wthkoPSDCs4oRcAmaXUeBPNo=; b=owGbwMvMwCV2d0KB2p7V54MZT6slMWTJ7bv97xeXZ03LoV/aqv51bx0ezTmrIq8oIxuwbk7Sh bZi8fMyHaUsDGJcDLJiiizH/3PvmtH1JTV/6i59mDmsTCBDGLg4BWAixdMYGbYVSze+6d3yV57p MXOC4K5V92KTl24u3+cTPoftpt88LWOGf1bNnyoUj8wTVskV83ps0q2/3nSL4EOGw+ukuw5WOU1 15wMA
+X-Developer-Key: i=chleroy@kernel.org; a=openpgp; fpr=10FFE6F8B390DE17ACC2632368A92FEB01B8DD78
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37809-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[disroot.org,kernel.org,vger.kernel.org,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-37810-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_TO(0.00)[cs-soprasteria.com,kernel.org,gmail.com,oss.qualcomm.com];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[chleroy@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:maximilien.prat@cs-soprasteria.com,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:bartosz.golaszewski@oss.qualcomm.com,m:chleroy@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chleroy@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ashevche-desk.local:mid,intel.com:dkim]
-X-Rspamd-Action: no action
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
+X-Rspamd-Server: lfdr
+X-Rspamd-Queue-Id: 0A9C562D983
 
-On Tue, Jun 02, 2026 at 11:53:46AM +0200, Mika Westerberg wrote:
-> On Tue, Jun 02, 2026 at 10:57:50AM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 01, 2026 at 02:18:15PM +0200, Mika Westerberg wrote:
-> > > On Sun, May 31, 2026 at 02:03:09PM +0200, Marco Scardovi wrote:
+Since kernel v6.15 the following big fat warning is encountered when
+reading /sys/kernel/debug/gpio, leading to kernel latency while
+emiting the warning, and panicing on systems configured to panic on
+warnings.
 
-...
+  ------------[ cut here ]------------
+  WARNING: drivers/gpio/gpiolib.c:423 at gpiochip_get_direction+0x3c/0x48, CPU#0: cat/12531
+  CPU: 0 UID: 0 PID: 12531 Comm: cat Tainted: G        W           7.0.10-gitc72c39~-01802-g28c351659258 #27 PREEMPT
+  Tainted: [W]=WARN
+  Hardware name: MIAE 8xx 0x500000 CMPC885
+  NIP:  c043c2f8 LR: c043d740 CTR: 00000000
+  REGS: ca89bc20 TRAP: 0700   Tainted: G        W            (7.0.10-gitc72c39~-01802-g28c351659258)
+  MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 24004884  XER: 00000302
 
-> > > This is really complex solution to a problem I'm not sure that even exists.
-> > 
-> > The problem that potentially may have an attack vector is the malicious ACPI tables
-> > (via SSDT overlay, for example). So some of the validations (like pin index in the
-> > pin list) would be somewhat useful.
-> 
-> Yes but with SSDT overlay you can do much worse things than passing an
-> invalid pin index.
+  GPR00: c043f3f0 ca89bce0 c3278000 c20b5f20 0000000d 00000002 00000000 c0a76208
+  GPR08: 00000001 00000000 cccccccd c313d830 84004884 100d815e c0a76208 c0a761f8
+  GPR16: c0a761f4 c0a76278 1048834c 10488350 c21c0b04 c21c0d93 c0a5fb74 c313d848
+  GPR24: c20b5f20 c21c0d94 00000000 00000000 c21c0d94 00000000 c21c0c00 c21c0b04
+  NIP [c043c2f8] gpiochip_get_direction+0x3c/0x48
+  LR [c043d740] gpiod_get_direction+0xa0/0x170
+  Call Trace:
+  [ca89bce0] [c28157e8] 0xc28157e8 (unreliable)
+  [ca89bd10] [c043f3f0] gpiolib_seq_show+0x370/0x524
+  [ca89bd90] [c021dd1c] seq_read_iter+0x174/0x618
+  [ca89bdd0] [c021e260] seq_read+0xa0/0xd0
+  [ca89be40] [c031063c] full_proxy_read+0x80/0xc4
+  [ca89be70] [c01df3e0] vfs_read+0xb4/0x35c
+  [ca89bee0] [c01e0180] ksys_read+0x8c/0x15c
+  [ca89bf10] [c000dc94] system_call_exception+0x88/0x154
+  [ca89bf30] [c00110a8] ret_from_syscall+0x0/0x28
+  ---- interrupt: c00 at 0xfc629e8
+  NIP:  0fc629e8 LR: 0fc62a34 CTR: 00000000
+  REGS: ca89bf40 TRAP: 0c00   Tainted: G        W            (7.0.10-gitc72c39~-01802-g28c351659258)
+  MSR:  0000d032 <EE,PR,ME,IR,DR,RI>  CR: 28004884  XER: 00000302
 
-Still my point is valid :-)
+  GPR00: 00000003 7f8df6a0 77e37540 00000003 7f8df6e8 00001000 00000000 00000000
+  GPR08: 00000000 7f8e3efc 00000000 7f8e06f0 7f8e3efc 100d815e 7fe70e10 100d0000
+  GPR16: 100d0000 00000001 1048834c 10488350 22000882 77e3fe68 1000596c 77e40b28
+  GPR24: 00000000 28004884 01000000 00001000 7f8df6e8 00000003 0fde36a0 00000000
+  NIP [0fc629e8] 0xfc629e8
+  LR [0fc62a34] 0xfc62a34
+  ---- interrupt: c00
+  Code: 9421fff0 7c0802a6 90010014 7d2903a6 4e800421 2c030001 40810008 3860ffcc 80010014 38210010 7c0803a6 4e800020 <0fe00000> 3860ffa1 4e800020 81230020
+  ---[ end trace 0000000000000000 ]---
 
+This is due to a WARN_ON() added by commit ec2cceadfae7 ("gpiolib:
+normalize the return value of gc->get() on behalf of buggy drivers")
+when the gpiochip doesn't implement get_direction() function. But
+according to the documentation in <linux/gpio/driver.h> implementing
+get_direction() is only a recommendation, not a requirement. And
+regarless, WARN_ON() has no added value here, dumping all CPU
+registers doesn't give any useful information for that case.
+
+Lower it to a simple warn_on_once() message.
+
+Fixes: ec2cceadfae7 ("gpiolib: normalize the return value of gc->get() on behalf of buggy drivers")
+Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+---
+ drivers/gpio/gpiolib.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1e6dce430dca..6c0a5db443cb 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -426,8 +426,10 @@ static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 
+ 	lockdep_assert_held(&gc->gpiodev->srcu);
+ 
+-	if (WARN_ON(!gc->get_direction))
++	if (!gc->get_direction) {
++		pr_warn_once("%s: GPIO %s has no get_direction()\n", __func__, gc->label);
+ 		return -EOPNOTSUPP;
++	}
+ 
+ 	ret = gc->get_direction(gc, offset);
+ 	if (ret < 0)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.54.0
 
 
