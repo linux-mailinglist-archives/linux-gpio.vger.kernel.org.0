@@ -1,54 +1,55 @@
-Return-Path: <linux-gpio+bounces-37813-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37812-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kPrPCXfCHmoPUwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37813-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:45:59 +0200
+	id Nq9pJ4bCHmocUwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37812-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:46:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C4D562DAA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:45:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F39162DAB2
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 13:46:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=disroot.org header.s=mail header.b=XMzVwmgK;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37813-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37813-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=disroot.org header.s=mail header.b=C16qCLnj;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37812-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37812-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=disroot.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 12B3930A9B3D
+	by tor.lore.kernel.org (Postfix) with ESMTP id 81201312F8B6
 	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 11:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D9C93D9DC9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49F593DC877;
 	Tue,  2 Jun 2026 11:35:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AE03DB62A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BF43DCDAF;
 	Tue,  2 Jun 2026 11:35:44 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780400149; cv=none; b=bqXuGtiK2UeYPNo5rPOpkPuuHEOsENPcD5lb1smNei9R21U3Y9UU7fuE8jEXdDmB7qedEyRQQMvm5ck+8Era4JBAxv3h//bQE4Y6cC9opD2tUn5wgjnW/E61MR1VQk2euVHE2GBktDIB1mypji4BQTbMSLK0iPqwA9i8dJiOFr0=
+	t=1780400149; cv=none; b=KggtOpAlnO1XX+YNuXvUgMMJIMVhJW4LsIkmu14FJyExwshRIrYTEmMe5M1utVsznZR3wFLutGz36RQ8SavPlu/wE9EQwiR1Kb8WinJ4ecsBReuRIH6C4eiVpk0V2F7yU7i/tULSw/hZvKFB+sM/BKMHOtsVBfHIgpgwMPL0+G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780400149; c=relaxed/simple;
-	bh=TjwWVdwib0ZQBloSbHHqWYju7lPBY5ugZ3j4GxE6If4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YAeHDe8zGRO+TTed8MNviuScmhuMlF0S7C/eSUTFnYJwsttck1TfphzXS6JSb+iEltOZgDxbR81Mcgscnsr8xWXmhVDxghTUAKhCCcXEZbfRRy9tXiHcpvWRBzCLYxnf5JONGExCrhQL2HL3+VzkvrpTCdRdA51DCGte66/2VVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=XMzVwmgK; arc=none smtp.client-ip=178.21.23.139
+	bh=jMGpikZvigSMZHy2/FhknRaHo+GBSIlwPBVyjDFbtJA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GxkZguYWcg9tgKpMyN8qPwVv6ppBiLw9uzLmxY8vZhQ8aVcE+P18EOgfkhz7SrqpzULdtsvGfP8PzsmRQmZ9L9ZYm/ZSZohpPEwOk7MGM3onKQDuboQQLxdVp4G4rRcR89T+lY8NK1vCA5XECKrro3Wfrn2Gr+gCl9FEnLtlFrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=C16qCLnj; arc=none smtp.client-ip=178.21.23.139
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4AD18276E9;
+	by disroot.org (Postfix) with ESMTP id 8D5CB275FD;
 	Tue,  2 Jun 2026 13:35:43 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id AitEPwiF-lhp; Tue,  2 Jun 2026 13:35:42 +0200 (CEST)
+ id qou_dh2eKBy3; Tue,  2 Jun 2026 13:35:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1780400142; bh=TjwWVdwib0ZQBloSbHHqWYju7lPBY5ugZ3j4GxE6If4=;
-	h=From:To:Cc:Subject:Date;
-	b=XMzVwmgK4EDZItKjUMOkHJaipWVN3otcIrySfky3gJI/EM+rFHMKU/RTy8kCcthnv
-	 IHBFBqUOTC/BdvK7u4PRZQ28bUFHmVvhf+fpnrWhBNcH/QeYUQdhnMUDNLrXrY9beB
-	 E2DfICV3yxXkMdQEUb8FZ8NM7Opxe49Cx1Sq3csF1W3GQN62IiJrfkLVFkq2nP8cdi
-	 9j2FMSPbbSfdZREWlN38eGprgelDP3/SKcBzwB0CNAQ84bZmw/+nzB/0H++VReykm6
-	 zwWebq73l5mYDYAf2aDIIjYEbZ6zI9MVAp5npLev6VRjJ3EuRtpNRo1fOsTbddMPSI
-	 151fAtdHVK/Hg==
+	t=1780400143; bh=jMGpikZvigSMZHy2/FhknRaHo+GBSIlwPBVyjDFbtJA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=C16qCLnj77YQUu/0XzZDO/frjxj6AirFnq4vU9EfpT3Jy4uMHnysX4zt3BA13ZGxg
+	 dZE9luZuW9HEnZsVITkOeK+VQQqPA4oQRLGm/tAurn1/0lKVQfBuL3MtNe0/IXhiS4
+	 I3xQ/YNS0l5gI3+Me42ic7bVOozOOKg+LYENG1BpE0SxEFiVHJdfzXt6YAvLSemY7e
+	 iHeSmvpvRv+4kLE06ypjWFj+HyLJL79IATAudzHGc/UE0u4aOM824mwd4SZYzyu6W5
+	 AgxfL3vWHyB+csYjw8UDBi9vPWOfX4JWMZglqh1JQL/siHWHM0YggC1ec5bLGmDrR3
+	 //bDRttJC8b2g==
 From: Marco Scardovi <scardracs@disroot.org>
 To: andriy.shevchenko@linux.intel.com,
 	mika.westerberg@linux.intel.com
@@ -57,9 +58,11 @@ Cc: brgl@kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/2] gpiolib: acpi: Add bounds-checking and address validation
-Date: Tue,  2 Jun 2026 13:32:18 +0200
-Message-ID: <20260602113529.52570-1-scardracs@disroot.org>
+Subject: [PATCH v5 1/2] gpiolib: acpi: Add robust bounds-checking for GPIO pin resources
+Date: Tue,  2 Jun 2026 13:32:19 +0200
+Message-ID: <20260602113529.52570-2-scardracs@disroot.org>
+In-Reply-To: <20260602113529.52570-1-scardracs@disroot.org>
+References: <20260602113529.52570-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,13 +77,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37813-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37812-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:mika.westerberg@linux.intel.com,m:brgl@kernel.org,m:linusw@kernel.org,m:linux-acpi@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
@@ -97,66 +100,74 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,disroot.org:mid,disroot.org:dkim,disroot.org:from_mime,disroot.org:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8C4D562DAA5
+X-Rspamd-Queue-Id: 0F39162DAB2
 
-Hi all,
+Ensure that the GPIO pin resource arrays are safely bounded before
+accessing indices. Add bounds checking in acpi_request_own_gpiod(),
+acpi_gpio_irq_is_wake(), and acpi_gpiochip_alloc_event() to prevent
+out-of-bounds array reads if the ACPI namespace provides malformed or
+empty pin tables.
 
-after some thinking and following Mika and Andy's reviews I've come up with
-a new version of the series.
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
+ drivers/gpio/gpiolib-acpi-core.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-This series adds defensive hardening in the ACPI GPIO path, focusing on
-bounds checking and safe handling of GPIO resources and ACPI addresses.
-
-Drop the previously proposed GPIO connection handling changes in the ACPI
-OperationRegion path, following review feedback.
-
-This also closes the old threads completely and drop my @gmail account
-as it is not related to my linux stuffs.
-
-Changes in v5:
-
-* Add bounds checking for GPIO pin resource accesses in ACPI GPIO helpers
-  to prevent out-of-bounds access on malformed or empty pin tables.
-* Validate ACPI address in acpi_gpio_adr_space_handler() before converting
-  it to a GPIO index, preventing truncation-induced wraparound.
-* Improve type safety and overflow handling in length calculation and loop
-  bounds in the OperationRegion handler.
-
-Changes in v4:
-
-* Dropped connection resource leak fix to keep focus on validation.
-* See v4 series at:
-  https://lore.kernel.org/linux-gpio/20260531120816.17255-1-scardracs@disroot.org/
-
-Changes in v3:
-
-* Fixed global over-cleanup bug in OpRegion error path.
-* See v3 series at:
-  https://lore.kernel.org/linux-gpio/20260520074955.55443-1-mscardovi95@gmail.com/
-
-Changes in v2:
-
-* Dropped gpiolib-acpi-core.c modularization (out of scope).
-* Split series into bounds checking and address truncation fixes.
-* See v2 series at:
-  https://lore.kernel.org/linux-gpio/20260519070039.9280-1-mscardovi95@gmail.com/
-
-Changes in v1:
-
-* Initial ACPI GPIO hardening series.
-
-Marco Scardovi (2):
-gpiolib: acpi: Add robust bounds-checking for GPIO pin resources
-gpiolib: acpi: prevent address truncation in OperationRegion handler
-
-drivers/gpio/gpiolib-acpi-core.c | 40 +++++++++++++++++++++++++-------
-1 file changed, 32 insertions(+), 8 deletions(-)
-
---
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index eb8a40cfb7a9..1cb5f5884ff0 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -320,10 +320,17 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ 						unsigned int index,
+ 						const char *label)
+ {
+-	int polarity = GPIO_ACTIVE_HIGH;
+-	enum gpiod_flags flags = acpi_gpio_to_gpiod_flags(agpio, polarity);
+-	unsigned int pin = agpio->pin_table[index];
++	enum gpiod_flags flags;
+ 	struct gpio_desc *desc;
++	unsigned int pin;
++	int polarity;
++
++	if (index >= agpio->pin_table_length)
++		return ERR_PTR(-EINVAL);
++
++	pin = agpio->pin_table[index];
++	polarity = GPIO_ACTIVE_HIGH;
++	flags = acpi_gpio_to_gpiod_flags(agpio, polarity);
+ 
+ 	desc = gpiochip_request_own_desc(chip, pin, label, polarity, flags);
+ 	if (IS_ERR(desc))
+@@ -337,7 +344,12 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ static bool acpi_gpio_irq_is_wake(struct device *parent,
+ 				  const struct acpi_resource_gpio *agpio)
+ {
+-	unsigned int pin = agpio->pin_table[0];
++	unsigned int pin;
++
++	if (agpio->pin_table_length == 0)
++		return false;
++
++	pin = agpio->pin_table[0];
+ 
+ 	if (agpio->wake_capable != ACPI_WAKE_CAPABLE)
+ 		return false;
+@@ -367,6 +379,9 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	if (!acpi_gpio_get_irq_resource(ares, &agpio))
+ 		return AE_OK;
+ 
++	if (agpio->pin_table_length == 0)
++		return AE_OK;
++
+ 	handle = ACPI_HANDLE(chip->parent);
+ 	pin = agpio->pin_table[0];
+ 
+-- 
 2.54.0
 
 
