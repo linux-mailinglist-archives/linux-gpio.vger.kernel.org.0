@@ -1,144 +1,141 @@
-Return-Path: <linux-gpio+bounces-37792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0M5wDmWLHmr0kgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-37792-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 09:51:01 +0200
+	id oCgeHaeMHmoNlAkAu9opvQ
+	(envelope-from <linux-gpio+bounces-37793-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 09:56:23 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E54B1629EF2
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 09:51:00 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07866629F90
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 09:56:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 145A73040C42
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 07:47:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7EEC8304776A
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 07:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A8D3B5F48;
-	Tue,  2 Jun 2026 07:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54E073B636A;
+	Tue,  2 Jun 2026 07:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M2B6PcZR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLN2WanV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259863B38BA;
-	Tue,  2 Jun 2026 07:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CCA36AB7C
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 07:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780386441; cv=none; b=f+hPashQf0VovcuLcdgtJPBfVKI6G6XunFybdV3OAWT6bRC+GPM6TFERWWBIa7MhN9MKbrLNUh7aYgpUun/xBNYLUq81eBzhtyfv38jHhOZTI0kogGFEEJhrC+G6o85MlBmEPgj9aTZ9jMIGCCZl2Wm5HtEIH93VoWgj/L7U4l8=
+	t=1780386708; cv=none; b=MHVVDjItw8abKuHqua2rbq1aqhmeigLT/i4Pr4puX4/9pTRHGC4cZzXwZi7322gJxLMfEqUeZUKOm7oPU+Wh2EJ++zb2CozMJ0MHH2o5TAjLJzxCrRoDP0QCSocH9TGZ9V1/kLDlUgh2+aI/dwQhwZCe5TaDAihoklYZwIPz0fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780386441; c=relaxed/simple;
-	bh=P228OhwL8kyNtiEhBsWPAgaWG1MfkyfnDMrS1csxmL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UVdrJuJul1uHTs1wG5W00vZrz59poSJUoxT/F1/tyN/iwUNIV5ralMR9IO6vQ0GXko2jip6ywko2McHVNwGH4VAZfGre8d8w+bG9k3E2nAXqDyDj2Mq+ZvPCK/3xKBpM7/o4MAGI0JbADXTQ5XgcUwhK+3HaL90O7UCFa82DqG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M2B6PcZR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780386440; x=1811922440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P228OhwL8kyNtiEhBsWPAgaWG1MfkyfnDMrS1csxmL4=;
-  b=M2B6PcZRuC0zbJIy+CStT55BBjbkaIWcLUItixPPKV/TuvRfFhVcR/3b
-   i9ExdieMUG2MXySBGmQ8VUz5DM0PRZxQQ803EuA67exPK0d1K5sf4jwvB
-   +4yQFlmO3wcaLhnrZ5N7MShWbXKOWgMb6Vu2ne3pWtiLbN89Uau3ag7gu
-   q0seFXLLV3DhY2RI/Er9Uh6RmKN9/y+5OxVfzNKtFEktP9/DlaQtscjGY
-   UKktx4PmAkdlaK/UneftoIH7coEP0UpE47xxgg85NHTOGJ9Gs8Xy7CfUm
-   YWB6cClTfI7fGOL1/h9VejKvw+9qNGo43PSx1mzPSXRx25XS9sjE3GyqD
-   g==;
-X-CSE-ConnectionGUID: 7B+8A4CFSLC6sNkC0NWK9w==
-X-CSE-MsgGUID: ri2WqDNASLeSXApbQBdcNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="81157127"
-X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
-   d="scan'208";a="81157127"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:47:20 -0700
-X-CSE-ConnectionGUID: HBiuIkG1QG6avrxeb03FGA==
-X-CSE-MsgGUID: 3vM8DyoFSxKxzPM7p+i0TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
-   d="scan'208";a="248755769"
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.229])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:47:18 -0700
-Date: Tue, 2 Jun 2026 10:47:15 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Marco Scardovi (scardracs)" <mscardovi95@gmail.com>
-Cc: brgl@kernel.org, linusw@kernel.org, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mika.westerberg@linux.intel.com, westeri@kernel.org
-Subject: Re: [PATCH v3 0/2] gpiolib: acpi: Fix bounds-checking and connection
- leak
-Message-ID: <ah6Kgz8J0oJ7NSDX@ashevche-desk.local>
-References: <agwfEMtEctXYC1oc@ashevche-desk.local>
- <20260520074955.55443-1-mscardovi95@gmail.com>
+	s=arc-20240116; t=1780386708; c=relaxed/simple;
+	bh=wuVNg3gQE+mK+ag09+Bvsel0k7h5bILVwIIbusGLCDE=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NPJTAvelpwOM9G3mIKaXbmsRmnT8AAe3D2Fjhg6J66gXNR6nP0OPi3S8+KA7LOhgzQu5VrJpRdzoHPR+19e7kd2Qv/uazBSq7igQV7SiMI55wsBE6GWAuJx32AkxPdedBMdDyAgYXGstP+48K2aNN3Q5AotU90PkUAX8p5ZOOCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLN2WanV; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213071F008A0
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 07:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780386706;
+	bh=XM1cyr1vrg2HBK1U1khpsYAE4BrS8XU8+D6WO/ogaEg=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=cLN2WanV4w7DSAaxyuIl+hxPLF55Z2df+kpIab1MB4r0y4z1+joeDWUVxfWUBq+Tn
+	 FzYDr3Hu2+fS35+3aRDQktCuLqn3LFWeGwDaPM0qNWSgzHwr4VfpVCMl9xo+2mBXcX
+	 PY/Z+o2OgSyjCnOyomXhrIHRMFGoBWKhP8ANCG5pCDKnaXtCVAPG1LX23HkTpMHXok
+	 7Kl8qZow8+Rpja02/6Wi6Wto8VJn/IV+J4i+gSmgGTIoAxzh/RiRir3+5JZ/EDcrU3
+	 bSnL5BCYwazUz3liDr0Z/QFXmfMvoCt1EJcWa4cc5TIFwY1g1TApzT8CnuCYItrQTX
+	 pq4O31uFw2pPA==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-396669329fbso24501581fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Jun 2026 00:51:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8IyOiToqCIzN4zQFm5T75wMnCwu0YPvnkFQi08clqpzgiO8o9UvzF0Jgerh+e6XaVSiwPsXxvua5++@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp02OurFkcLiWTMGB6AhdtL5+02z7F/YtKd4dWfrnYaQ1gIFBA
+	/u3fxFliaBXmVFQ3gYASMlz3+lxgRtYZwfMjALExCyl3SzyqmD84gVEN0I/FoReSrbbajbRIh/H
+	kslUq5K8tUWobmnjXRHHbLTWOL2N/Yc1qxhpHzlC9ew==
+X-Received: by 2002:a05:651c:248:b0:396:7f13:99f3 with SMTP id
+ 38308e7fff4ca-3969ba86c5fmr8390851fa.12.1780386704787; Tue, 02 Jun 2026
+ 00:51:44 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 2 Jun 2026 07:51:42 +0000
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 2 Jun 2026 07:51:42 +0000
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260602050131.856789-6-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260520074955.55443-1-mscardovi95@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20260602050131.856789-1-rosenp@gmail.com> <20260602050131.856789-6-rosenp@gmail.com>
+Date: Tue, 2 Jun 2026 07:51:42 +0000
+X-Gmail-Original-Message-ID: <CAMRc=Me0rqs8nxrp95X-2Bjw059ahRxwKrg-NtmEt025w2m9bw@mail.gmail.com>
+X-Gm-Features: AVHnY4LkpB6dJhgbPXQCl-FD0u4U2hnvkB7wtmJ832CgKjY2LSe3im_-EB8j-9k
+Message-ID: <CAMRc=Me0rqs8nxrp95X-2Bjw059ahRxwKrg-NtmEt025w2m9bw@mail.gmail.com>
+Subject: Re: [PATCH 5/7] gpio: ppc44x: Convert GPIO to generic MMIO
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, chleroy@kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	"open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" <linuxppc-dev@lists.ozlabs.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37792-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.ibm.com,kernel.org,ellerman.id.au,gmail.com,lists.ozlabs.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-37793-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,ashevche-desk.local:mid]
-X-Rspamd-Queue-Id: E54B1629EF2
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 07866629F90
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, May 20, 2026 at 09:45:45AM +0200, Marco Scardovi (scardracs) wrote:
-> Hi Andy,
-> 
-> This new series addresses two issues in the ACPI GPIO library while trying
-> to address your feedbacks:
-> 1. Adds robust bounds checking for pin resource indexing when requesting
->    owned descriptors and querying wakeup/interrupt pin configurations.
-> 2. Fixes a connection/descriptor leak in the OpRegion address space
->    handler and handles connection rollback in a transaction-local list
->    to avoid wiping successfully established connections.
-> 
-> Please note that some of these changes were found during a personal follow up
-> analysis before submitting the patches to the community. They are reported
-> to explain why some of these fixes are made in that way instead of another.
+On Tue, 2 Jun 2026 07:01:29 +0200, Rosen Penev <rosenp@gmail.com> said:
+> Use gpio_generic_chip_init() to set up the PPC44x GPIO chip
+> instead of open-coding the basic get, set, locking and state handling.
+>
+> Keep the PPC44x-specific direction callbacks because they still need to
+> program ODR and the OSR/TSR registers around the generic data and
+> direction registers.
+>
+> Assisted-by: Codex:GPT-5.5
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
 
-Thanks for the update!
+...
 
-Please, split the second patch more to make it better to understand what the
-helpers are doing (without changing the behaviour) and then fix the problem.
+> @@ -124,10 +102,11 @@ static int
+>  ppc4xx_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+>  {
+>  	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
+> +	struct gpio_generic_chip *gen_gc = &chip->chip;
+>  	struct ppc4xx_gpio __iomem *regs = chip->regs;
+>  	unsigned long flags;
+>
+> -	spin_lock_irqsave(&chip->lock, flags);
+> +	gpio_generic_chip_lock_irqsave(gen_gc, flags);
 
-Otherwise it looks better than previous attempts.
+If you're already doing it, can you use lock guards too?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
