@@ -1,269 +1,167 @@
-Return-Path: <linux-gpio+bounces-37836-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37837-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OOTxDfM0H2rvigAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37836-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 21:54:27 +0200
+	id 5lv2HBJDH2pZjQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37837-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 22:54:42 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 881DC631917
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 21:54:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C16A2631EBA
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 22:54:41 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="QpK/VwTe";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37836-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37836-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=sang-engineering.com header.s=k1 header.b="D6c/sv2J";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37837-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37837-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 495FD3032677
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 19:50:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 852F6305EA8F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 20:48:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E702C08DC;
-	Tue,  2 Jun 2026 19:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4A4390235;
+	Tue,  2 Jun 2026 20:48:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7754634EF1F
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 19:50:37 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780429850; cv=pass; b=Qg7qMl0eWE1RE9ee/DcmUF5cEO3FfG6HlvYCqq9aqoiINPSOkfonC0LItSnfdP1NTlToyeFgqM21SVZ0m4TnE3AqbvxNFEs/x5IuQDSTFH7BjYoRYMz8phidgL7NcLXOsX5m6VG8jMHfljIWVoXk9VA/JJohmecYGtIEungr6r0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780429850; c=relaxed/simple;
-	bh=J45nwhea9f9olm16V+BBvXy/k/57kC760j+0uwbt4Pg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iW/WfyRJceqckGRYBAuD9vwiGWRDQp553D1KFKHlWUS/L9X7QDEnp0e7ce5zzsllaWWEoehHrRDgVFsVbR7Lp3Kzoi49Qii3ocNMCHER4+FkdBbEED9nLWzRm+Jve9ZP5vEnMpquumjcATwcquFAzLPf4We1/2Up+gSyOfHQ2G8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QpK/VwTe; arc=pass smtp.client-ip=209.85.128.175
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7dd7818ac2aso50792617b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jun 2026 12:50:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780429836; cv=none;
-        d=google.com; s=arc-20240605;
-        b=K5N9+wMcdc32LB1CXVhcRC/l6Zypz2mBvX/q34savNaPJAhQcVVQQtDb0J7JEojQHj
-         QzDAKTcBYRykbbTAJQt9th5ruppDl8bYyTnBSxFjD8JPBmeB10zYnDOf/1IkoFcUeJCa
-         1lF+7iAB7GuaB0A/oInn9+Zso9zbboz8qazvl71i3kTNTh+aD2AebmrauFfKoEucQkfH
-         w5HqF56TiOKleYsVxJcLhgduLcE0WNgyX9tJlRyat0NxP4F6aFLhgNZ/Z8/nR/Bkc3YF
-         p4kBmk7zJBzIvUQWAUx3yWLNcGe9F7G9HP6BkLW9o8urqyED0dW44J+u4s2RXiXG2jvo
-         gnaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=Al3rwWp3zUx80yaxoVbyfox6wzbYBQTtLuZ4Tpteh8I=;
-        fh=2mmof5eBAps1x8J+hX2fV377e4Zw03XnO2i+jrgigiQ=;
-        b=D8qKuBfqB3CR5b1Qw53eZy8V7JsS3ibUbiOf7NKNuzfVlsGW7cCaLwK7/fmMFrriPV
-         yYif9M6jAvsO4ufWorctzKbOmm//ex734gS/+tFCyxf15aLj84YxparZbRJyx6RfQgqo
-         AdhrcukBs89AZaQzOPrR9m1seed4imgGQAs0w5diooUt1ScqIGoLVhwAS8BRUt9PrhXR
-         wKKVnHzCbblaCfElqOgR9n3Il8Nzcnhd0XiBj+11iCSOMbdysbKsvImLvNlWVVg2Rbt9
-         D8sh1h0PM9wHQZYoS/TM3cuDcn9bx7vuk7BTpYpZUlGxmwPxKx2pW590qJT9ZC07ONJC
-         nO8w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780429836; x=1781034636; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Al3rwWp3zUx80yaxoVbyfox6wzbYBQTtLuZ4Tpteh8I=;
-        b=QpK/VwTe4T1KLhdQlJ7zrnzHRkIyl1maZJvfmFfJXkk6ztj6AtaimNVvW26ajzJcMn
-         Deo+UUUP0+2XfDmz1Ut/F1wqF1kZd46KF6rleMbfPWnc258/CMnMMznMKEXZa5rRQQj3
-         QpJZMsiq7QVFUNuQlS2nYwV0MOX7znMfjbMdP+l0yt/F52viVlMT7hR1QZ1WOezvvZrR
-         vZBGPRBhYuA04+2JbOBOhRXuBAiCy98FLRnL3b1YTcv1HphXNNabIVAYIg7doEaaAPvH
-         sUGOgqYHpRH+3VRnuiSOUNSlRgZ/6x/syG4is5ci38HBqXtjmF1Dwfwah2fpihbGIWsY
-         poHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780429836; x=1781034636;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Al3rwWp3zUx80yaxoVbyfox6wzbYBQTtLuZ4Tpteh8I=;
-        b=E21q3RgE74ChN8tJgnIPkYqygMrTXzTc/cMLN9eUWp8JLY+pE/QgsuWqrj2o/kBlD8
-         bOwTlwZ8l6zYUNi+Dxd1Qu4weE3dy7Pd69xUqMkyG8iMJ15YFMS5FI2OE4fS864qmKt5
-         Rc4IDlT3htcR1LL7mjmF3viNhtM6q74lRADqC5Hj7RLRNmWQNDPVsHUtIQVDghx+olgm
-         JUaGrCye42+KmOIIONfenWybh6uFBBMZD0L3Zm1mmy4rdbEQ3B7MhG/7dmorscf8lExg
-         f1fEsLzmsqI1aRIsMyXR1JwpydSu4lv8MezOWt0Ec9vSVxcJVg9z1eJwSfQaJxNr2Uep
-         sQmg==
-X-Forwarded-Encrypted: i=1; AFNElJ9fkL09QoBYEutopvwH5//zUo+040Sxfm0W//Yy9cVzlbYiLv6dWrW+0IspVH5c0i7RIHvqlLfbM1bX@vger.kernel.org
-X-Gm-Message-State: AOJu0YypYKhaT5yiG+hC0kkmFzDSay1dpKmuDYzVhoILRp8X5o8cH2xl
-	bB8uttPS99elWtnM3lxBAWha8RPoMfNoGVrjzgPIj1DpODWhglMUplv+kU6mZSeYdetAkwqWYkf
-	Rk+FtIJbqpzv6BoO30ZtS4qaJz4a+5kA=
-X-Gm-Gg: Acq92OEYg7/zYF1bP2EX++k4AvjmOthGtq5tx7TW6Zp65kpHPlp9zeflknP0o3V4jKH
-	L2N23o0kmvRLRSJ6PbnRwwbhIWwxSBeoGqwE27hpFm6Z28Cb29puGMvQ/4zhiOa/jwfyKkSTowm
-	J+mxDpxvdslbM3t95AbnbeIUwkzx3SauTlA0gip98E9fGx1QYdk7Ferr4AoA/8KRrdkLjRM83l9
-	MrM+9dU3MdjBTPDieQUNBjgi/OkL5b9YzQTBaIwMUF+oZvqBsctbRZKvBXSHd8FvpNDUGFN2taZ
-	4v/2nV8O+k+lLn+cSpgVckwY4liklgOH+PKnYxW3wHZCzWC6+sURHJyLqJmcCYqQ2RwtYKhiQjo
-	VAv0o9u7GzOid+8uU70cb5XRkeHZIdaGM3JBbrVsMYRV6frnpCLTP37hAaAq9JGCDkVUBDA==
-X-Received: by 2002:a05:690c:c:b0:7dc:a5a8:89d with SMTP id
- 00721157ae682-7ea49872db5mr3751757b3.10.1780429836496; Tue, 02 Jun 2026
- 12:50:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2429338657D
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 20:48:20 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780433304; cv=none; b=MupnuHTGlYLVBzsTJEWQ1VO9XPmcsoARmbZjJKzV4yUM1O9meZK/xmUbCsKwWqvUb21mMUd2WbCdF94urP5byBgasCC4VQNbhWY8YW7o0urV1cgaiVb9Eu1WRyeq0gK8AcbgpJFuHw0ab9wmd25WSNBLHIwK1xME+RsSZHmr6ec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780433304; c=relaxed/simple;
+	bh=0Jp/u04wLb/EkV+5IEz4PRnhNoUmsT2hwQB4k4ATSZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvb8J7uRunmJ3BwVoY1uz7r+3JkzDfCDTaVC5pS+y2oKvDRzHneGy8yfT7V72SjgQ/UNjMjk0B0KR0JFXRzS28Q2FrNryi80VEmv/ShAMeeZz8Y7UjwsOuWNEu/DwBKyD4m2x6rlu70ainW/peSG3QrNlIM/sgEqDMMo5hcikLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=D6c/sv2J; arc=none smtp.client-ip=194.117.254.33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=0Jp/
+	u04wLb/EkV+5IEz4PRnhNoUmsT2hwQB4k4ATSZs=; b=D6c/sv2J0+tkIun/HalB
+	cjuhVGmYsPktQtbIapMqQJXs5H20tYwronXnIGLPpxipgN8fUPdQpenYwmzkLewk
+	uJTFVRQOpLEOB4/yLw7AYUpUeSP602RKLIJwE+63pQi9Jn826nAT5n1nHP23a5kS
+	Ogw2XJcd29EbKM7UuCX5/rRM0T3JklvdFyRe67zHhon8ie2dO/SKGafeVKDS5gN9
+	uf5KspZdqEe4VVbrx2SQR/ZMlKz4wj6SblstDDopF7nhIQ/roKxiSG673zITwbfK
+	5vPWoPxQIHWNn80+tezSGT0VA6dDvQ4OzDgA5znU96c4B8NjIdHEOdZwovzUNnGH
+	gg==
+Received: (qmail 3019475 invoked from network); 2 Jun 2026 22:48:18 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2026 22:48:18 +0200
+X-UD-Smtp-Session: l3s3148p1@BnBFbktTuoUujnv7
+Date: Tue, 2 Jun 2026 22:48:17 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Claudiu Beznea <claudiu.beznea@kernel.org>
+Cc: geert+renesas@glider.be, linusw@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, claudiu.beznea@tuxon.dev,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 1/7] pinctrl: renesas: rzg2l: Generalize the power
+ source code
+Message-ID: <ah9BkQjUKwZ9KXMH@ninjato>
+References: <20260528080439.615958-1-claudiu.beznea@kernel.org>
+ <20260528080439.615958-2-claudiu.beznea@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260529100838.8896-1-hardikprakash.official@gmail.com>
- <20260529100838.8896-3-hardikprakash.official@gmail.com> <20260602185339.GA404948@ax162>
-In-Reply-To: <20260602185339.GA404948@ax162>
-From: Hardik Prakash <hardikprakash.official@gmail.com>
-Date: Wed, 3 Jun 2026 01:20:24 +0530
-X-Gm-Features: AVHnY4J4lsO4dRAVoHeZvlKwJpL15EtqjbgzcGJZ5ADm6FFAZWXDLWJU7PS7ofo
-Message-ID: <CANTFpSX0Ehpno7b=xrnqzmENn=sfKj1UcyRzXvMyy4Rcyr7NhA@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] i2c: designware: defer probe if child GpioInt
- controllers are not bound
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org, 
-	andriy.shevchenko@intel.com, mario.limonciello@amd.com, brgl@bgdev.pl, 
-	basavaraj.natikar@amd.com, linusw@kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	"Mario Limonciello (AMD)" <superm1@kernel.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XOKotagBt3w0FUI3"
+Content-Disposition: inline
+In-Reply-To: <20260528080439.615958-2-claudiu.beznea@kernel.org>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:claudiu.beznea@kernel.org,m:geert+renesas@glider.be,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:magnus.damm@gmail.com,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:claudiu.beznea@tuxon.dev,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:claudiu.beznea.uj@bp.renesas.com,m:geert@glider.be,m:krzk@kernel.org,m:conor@kernel.org,m:magnusdamm@gmail.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:nathan@kernel.org,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:andriy.shevchenko@intel.com,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:superm1@kernel.org,m:lkp@intel.com,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37836-lists,linux-gpio=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DMARC_NA(0.00)[sang-engineering.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37837-lists,linux-gpio=lfdr.de,renesas];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[glider.be,kernel.org,gmail.com,bp.renesas.com,tuxon.dev,vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	TO_DN_SOME(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,intel.com:email,vger.kernel.org:from_smtp,qualcomm.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,renesas.com:email,sang-engineering.com:dkim,sang-engineering.com:from_mime,sang-engineering.com:email,ninjato:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 881DC631917
+X-Rspamd-Queue-Id: C16A2631EBA
 
-On Wed, Jun 03, 2026 at 00:23, Nathan Chancellor wrote:
-> I bisected boot issues with a few of my test machines to this change
-> in -next as commit ef76a3a28c79. I seem to recall a crash in strcmp()
-> in one log but I cannot be too sure.
 
-Thank you for bisecting this.
+--XOKotagBt3w0FUI3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The strcmp() crash is likely the issue. In
-check_gpioint_resource(), we access agpio->resource_source.string_ptr
-without checking whether it is NULL first:
+On Thu, May 28, 2026 at 11:04:33AM +0300, Claudiu Beznea wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>=20
+> The current functions used to get/set the pin power source check the
+> OTHER_POC register, which is specific to the RZ/G3L SoC only. To allow the
+> code to be extended for other power source functionalities (e.g. I3C on
+> RZ/G3S), generalize the functions used to get/set the pin power source.
+>=20
+> For this, introduce the struct rzg2l_register_masks data structure whose
+> purpose is to store SoC specific register bit masks. The members of this
+> structure are then used in rzg2l_caps_to_pwr_reg() to retrieve the bitmask
+> corresponding to a SoC specific power source capability.
+>=20
+> The conversion between HW specific power source values and SW specific
+> power source values is now handled through rzg2l_pwr_reg_val_to_ps() and
+> rzg2l_ps_to_pwr_reg_val().
+>=20
+> Finally, to keep the code generic, the register update in
+> rzg2l_set_power_source() was changed to a read-modify-write approach to
+> cover all cases.
+>=20
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-    if (!strcmp(tmp->path, agpio->resource_source.string_ptr))
-    ref->path = kstrdup(agpio->resource_source.string_ptr, ...)
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-The acpi_resource_source struct has a string_length field -- when it is
-0, string_ptr will be NULL. On your machines, likely some GPIO resource
-apparently has no resource source string, which we did not account for.
+Have you seen the comment from Sashiko about this patch? Doesn't sound
+entirely wrong to me...
 
-I am preparing a fix that skips GPIO resources with no resource source
-string (string_length == 0 || string_ptr == NULL). I will test it on
-my hardware first and send a patch shortly.
 
-Sorry for the regression.
+--XOKotagBt3w0FUI3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Hardik
+-----BEGIN PGP SIGNATURE-----
 
-On Wed, 3 Jun 2026 at 00:23, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> Hi Hardik,
->
-> On Fri, May 29, 2026 at 03:38:37PM +0530, Hardik Prakash wrote:
-> > I2C controllers may have child devices with GpioInt resources that
-> > depend on GPIO controllers to be fully initialized. If the I2C
-> > controller probes and enumerates children before the referenced GPIO
-> > controller has completed probe, GPIO interrupts may not be properly
-> > configured, leading to device failures.
-> >
-> > On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
-> > AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
-> > pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
-> > AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
-> > occur before the GPIO IRQ quirk in amd_gpio_probe() has run, causing:
-> >
-> >   i2c_designware AMDI0010:02: i2c_dw_handle_tx_abort: lost arbitration
-> >
-> > Add a generic dependency check in i2c-designware that walks ACPI child
-> > devices, identifies any GpioInt resources, resolves the referenced GPIO
-> > controllers, and defers probe if those controllers are not yet bound.
-> >
-> > This ensures GPIO controllers complete initialization (including IRQ
-> > setup and quirks) before I2C child enumeration begins, fixing the race
-> > without device-specific quirks or DMI matching.
-> >
-> > The probe ordering race was confirmed via dynamic debug tracing:
-> >
-> >   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
-> >   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
-> >   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
-> >   2.348157  lost arbitration
-> >
-> > Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-> > Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
-> > Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> > Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> > Assisted-by: Claude:claude-sonnet-4-6
-> > Assisted-by: GPT-Codex:gpt-5.2-codex
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202605240959.Kcf1lIg4-lkp@intel.com/
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=221494
->
-> I bisected boot issues with a few of my test machines to this change in -next
-> as commit ef76a3a28c79 ("i2c: designware: defer probe if child GpioInt
-> controllers are not bound"). I consistently get no display output and I do not
-> have serial access to these machines, so I do not have much to go on here at
-> the moment. Occasionally, the network controller will be initialized so I can
-> remote in but I have not been able to do it recently to try and gather logs.
-> What information would be useful for trying to figure out what is going on
-> here? I seem to recall a crash in strcmp() in one log but I cannot be too sure
-> since it was late at night when I was doing my initial triage.
->
-> # bad: [08484c504b55a98bd100527fbe10a3caf55ff3ff] Add linux-next specific files for 20260601
-> # good: [e43ffb69e0438cddd72aaa30898b4dc446f664f8] Linux 7.1-rc6
-> git bisect start '08484c504b55a98bd100527fbe10a3caf55ff3ff' 'e43ffb69e0438cddd72aaa30898b4dc446f664f8'
-> # good: [57fb910db1b6051476b91a4d4ae18bc027a7f36d] Merge branch 'master' of https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-> git bisect good 57fb910db1b6051476b91a4d4ae18bc027a7f36d
-> # good: [18ea7e3ca91e7a9eb9e43c11154350cec160830b] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/jassibrar/mailbox.git
-> git bisect good 18ea7e3ca91e7a9eb9e43c11154350cec160830b
-> # good: [a5696dd9c080352e25b576acf24450cef255b6eb] Merge branch 'tty-next' of https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git
-> git bisect good a5696dd9c080352e25b576acf24450cef255b6eb
-> # good: [c158564f40f0d2a68833610ac136f9714fc51b16] Merge branch 'staging-next' of https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-> git bisect good c158564f40f0d2a68833610ac136f9714fc51b16
-> # bad: [4240c928a5edeb13fb3953248dfc45e5d9f42f00] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> git bisect bad 4240c928a5edeb13fb3953248dfc45e5d9f42f00
-> # good: [2e24f5964b72ef213ecdb959a0b0d60b2dc00a3b] Merge branch 'for-next' of https://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-> git bisect good 2e24f5964b72ef213ecdb959a0b0d60b2dc00a3b
-> # good: [6a350ccc4dc3f46ed2ee2592e3050956e415ef64] pinctrl: add new generic groups/function creation function for pinmux
-> git bisect good 6a350ccc4dc3f46ed2ee2592e3050956e415ef64
-> # good: [b12e12ee4138e30d786eda02223e87044c989bb1] gpiolib: Mark gpio_devt, gpiolib_initialized and gpio_stub_drv as __ro_after_init
-> git bisect good b12e12ee4138e30d786eda02223e87044c989bb1
-> # good: [446fa334d186316e76cbdc4e94e42af7d040a79c] pinctrl: qcom: Replace open coded eoi call with irq_chip_eoi_parent()
-> git bisect good 446fa334d186316e76cbdc4e94e42af7d040a79c
-> # good: [a8754838f83a9905af516f38dd2633744a94f71a] gpio: max77620: Unify usage of space and comma in platform_device_id array
-> git bisect good a8754838f83a9905af516f38dd2633744a94f71a
-> # bad: [ef76a3a28c79b628890431aa344af633e892035b] i2c: designware: defer probe if child GpioInt controllers are not bound
-> git bisect bad ef76a3a28c79b628890431aa344af633e892035b
-> # good: [b0c13ec17438577f90b379d448dfed1233e2c0a4] pinctrl: mcp23s08: Read spi-present-mask as u8 not u32
-> git bisect good b0c13ec17438577f90b379d448dfed1233e2c0a4
-> # good: [3f786abd23951f3f600a62fef42469d9200d5f52] Revert "pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7 14AGP11"
-> git bisect good 3f786abd23951f3f600a62fef42469d9200d5f52
-> # first bad commit: [ef76a3a28c79b628890431aa344af633e892035b] i2c: designware: defer probe if child GpioInt controllers are not bound
->
-> --
-> Cheers,
-> Nathan
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmofQYwACgkQFA3kzBSg
+Kbbs4Q/9FLqefrUtEteh3TK4DUV34HTTREgezCUOZEiekFfSZCtwf8+FBmZPb3pK
+UUg2xQilhurnQvktvWXUSiH0XEIAqkrNVDhjSXFCPa7l2EgKQg5wECAfopl4zmD2
+K1PtOeV3kxF+5sTPXj4HTOA6iLA7psdhEOKXO3Qsz0cO2J4keimKvaAHBlRw+qIl
+35V1XDtKQ5M+U5bQnJNqQnygMf13N07i5Y7KjLLHt9iCIPN8g5dwNrIi/v4jw4v8
+TTFqv+f3EwbGss0rFOyqVt41APEABmEDPZQt4whvLU2rqLMvMIoLR7hPJsd3qasy
+5YDcBVxDYeRw7gwTh3YTxDn62sfiHklcV5b1OMDhxFND/Sj720ApbMLKnyM6exFt
+JDCmRby325v2fH+98/617YXIU+CFMAWCL6hi+zV1tPVRhbyalj9ANmtftfQuxHee
+WznA2G6dCuo8PVQFQGPuNWyn10DVZ7SU15GHdd7OH+FsSn05U82Pi+hWBsW/1ROh
+K57qdx6E1F36z1kw4RP40jYbWkzmTQECCggIZsyNmFjfBIWDO5iQBNB9sKK2wSrV
+zmIEBxw8aOxZiPaLm5G42N04h3epT9I4TXGWsrD1J+DRJPcTV+tC3hKHsRBD7KwK
+8ZdQuEm1kT3SIdUtRByhxP0lKpeWFBWeHC4vKhQI2UktuSirf4A=
+=2Df1
+-----END PGP SIGNATURE-----
+
+--XOKotagBt3w0FUI3--
 
