@@ -1,140 +1,363 @@
-Return-Path: <linux-gpio+bounces-37829-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37830-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id S1KZBAADH2oddAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37829-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 18:21:20 +0200
+	id /GskOjUGH2oydgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37830-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 18:35:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EBFF630283
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 18:21:19 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89BF26303CB
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 18:35:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Dwtw1pne;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37829-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37829-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iDHlwG0b;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37830-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37830-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 89C0E3056DCF
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 16:19:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4E5EE30A1FE1
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 16:29:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C04336886;
-	Tue,  2 Jun 2026 16:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C57A3655C9;
+	Tue,  2 Jun 2026 16:29:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAD03033DE
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 16:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A555B36309B;
+	Tue,  2 Jun 2026 16:28:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780417144; cv=none; b=iaHSGFV+I7B5wzJKwqIAGaOb425WbTotdJdDKH1eYchu2P/4LTsXER1MRsAI5c2aLGqwb6nQ7J6rcEyfWymaQlkGWdSv7HqCIn4cV0X6XgUSt5EmevpZuD34hRaTI0UWtztT6XliZSrdRejV/yIQEMrxGK+wglsNzwui/WNWtFk=
+	t=1780417739; cv=none; b=Cw9A0ocBD8C6dKuW6E77Ke3a2gsVCDfb0NIq8xnvyCP9smtx8hK9Dlel7Z9r4GzReqgCn0Fn/59L61czdEOZuZxDwSZf+SPZHvkOKDSBQBk1U/evjYGF3nebXjwYXidKH7RWPD94gl4QJ5v5zo3uoPclVhi7z2B6ocrYKh+NeZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780417144; c=relaxed/simple;
-	bh=BPbTvHpkT/+atMHfAn83Ogy4KZjiKb1VCoyZTifM4YA=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bqRU/jvfXGNfxk4htHaSmJ2Llcyl+gxcFhzhVKGK42J4pnOkR8mErOJI4wiWrd5kUAE3gEur143gwZOgfjCfp6CMWOkTp0ZIZZqM2hvFYetHZMWerNcn3obMuWDG6dtAICPzhRCgUrUzIc1Ei4Gm8JH9QbBL8LjpDwxsH+MP+VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dwtw1pne; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 443B51F00898
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 16:19:02 +0000 (UTC)
+	s=arc-20240116; t=1780417739; c=relaxed/simple;
+	bh=dWBVNkaWH+cn7KtJoq3Qn1frM9TTm76BpGSXA/NleEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lGLrQU7l/NhH1ij24e/gUDaCBUZbgJiz8tQak9W7ro/lrXYtMVitCjHS9M71QrRy1CqyIKIjtYBFKa0XHxvglQ5ov8OqCQ99cTv3YE2wSDXU9+0R6net0N3kJ1vB/F9V6hTpRXGn5+DSusa/BoydwK7c06reCH/WBnFgEl9flSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDHlwG0b; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A461F00893;
+	Tue,  2 Jun 2026 16:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780417142;
-	bh=BPbTvHpkT/+atMHfAn83Ogy4KZjiKb1VCoyZTifM4YA=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=Dwtw1pneN91J12PMkaxGO1CMKagCvWg/EPs/mkBH7uGuLxN9b2QAMPXFDWIYZpGOd
-	 rdJc1SGshSGuGvO700BuGHmsTZyKJgKx67rSYJQmWV4tjXRzfNcBle6mDExJVGjB/C
-	 VPJ6GdESA1DRFgBwX0BvMGUvXeZlgY4l6BbY8ZtFJkNQ1seJrCW50XpfCDyyNNeOUp
-	 KY+sgfvNOuXg1O5a7GF7zghpQ7AGwV3cOF9xVw/sOK0KiN3f4Cp8PCJR8puC3HinKC
-	 aIyhqICjsIpnKHwEXbU83dqANndYcud9eLXK6c/v2m9tV2I9km0QDhHMJCSonzmO5S
-	 ZfbLY3Dzwk6vQ==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3965d76090bso37223081fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jun 2026 09:19:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/9XvxqIGunIPjuCqFarG6oV0/dBw24znf6bDwHiXMS/w8ISHcHks9J33abeLr/N5NqKnX5Dg7wSzrt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb3FUnqVXW/8UqF7Xbvo6mfwRlPFonWq9oXV2owvdThVtioGc9
-	j8Gp5urDvhk+n5F1yKk0fvJmvYQCYNnjA3RKhMjM9EA4hi0xhS57Z7Z0qwCOZeLgjnKYBYOAFH+
-	usl4Qn8pyucYvlqbbPn/qUoEzPCskOr2B/EZqEgL5rQ==
-X-Received: by 2002:a2e:a90d:0:b0:396:75ac:457a with SMTP id
- 38308e7fff4ca-396ac2bf8f1mr1234431fa.8.1780417141042; Tue, 02 Jun 2026
- 09:19:01 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 2 Jun 2026 11:18:59 -0500
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 2 Jun 2026 11:18:59 -0500
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260602-b4-serial-max310x-gpio-get-direction-v1-1-23bf84e8ee14@vaisala.com>
+	s=k20260515; t=1780417738;
+	bh=fX3mxaloZXVdfONlQnBRTNrtTT6d9pOvEBlD8qfbPpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iDHlwG0bzuh0CFILnENYRBJ3yxmdq0tICesnt1nNqQcdEFTN2Zc2JBchLvWI2WGKo
+	 m1EwYKqPw9GrWCg9PhftjYBVq45dMyHN/nk9ZOMtY7URwMiB5O3wWSWKgPHj/H2ov/
+	 izi+mBVaQgqh1uCAjurlLHnlodWdhUXd2HZtadgTzVqDsd0lH9XcOU1GOKM038fcHy
+	 5KIHFrh4HTQ/BI7bmQcs4DAGLke2MxdrqGALzbEWEB00p2aMJ5bXVNRFCLXImO1TXw
+	 Yxpvzqul5pR0R200cUcUjohjuSQZ0vK1za646xfMp+KiWe38EDRz7uSWptdYUWKPxM
+	 YzbbnPTU5Eozw==
+Date: Tue, 2 Jun 2026 17:28:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+	Larisa Grigore <larisa.grigore@nxp.com>, Lee Jones <lee@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Alberto Ruiz <aruizrui@redhat.com>,
+	Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org,
+	Enric Balletbo <eballetb@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v10 4/6] dt-bindings: pinctrl: s32g2-siul2: describe GPIO
+ and EIRQ resources
+Message-ID: <20260602-casualty-overstuff-b46f9c7d7d12@spud>
+References: <20260602080132.3256239-1-khristineandreea.barbulescu@oss.nxp.com>
+ <20260602080132.3256239-5-khristineandreea.barbulescu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260602-b4-serial-max310x-gpio-get-direction-v1-1-23bf84e8ee14@vaisala.com>
-Date: Tue, 2 Jun 2026 11:18:59 -0500
-X-Gmail-Original-Message-ID: <CAMRc=MePduXLREX+X6mLF5qusfjvp6=TZC6RJcQb7vm7=KAixQ@mail.gmail.com>
-X-Gm-Features: AVHnY4ISA-VZS8ud-UYiHr-qhu-EM_kTyWlK8MV1UlB9AJNiwyCX_g3JEU1YW-k
-Message-ID: <CAMRc=MePduXLREX+X6mLF5qusfjvp6=TZC6RJcQb7vm7=KAixQ@mail.gmail.com>
-Subject: Re: [PATCH] serial: max310x: implement gpio_chip::get_direction()
-To: Tapio Reijonen <tapio.reijonen@vaisala.com>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Alexander Shiyan <shc_work@mail.ru>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Lx2mHOuNnTOuI0LO"
+Content-Disposition: inline
+In-Reply-To: <20260602080132.3256239-5-khristineandreea.barbulescu@oss.nxp.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,linuxfoundation.org,kernel.org,mail.ru];
-	TAGGED_FROM(0.00)[bounces-37829-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37830-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid];
-	FORGED_RECIPIENTS(0.00)[m:tapio.reijonen@vaisala.com,m:linux-kernel@vger.kernel.org,m:linux-serial@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:gregkh@linuxfoundation.org,m:jirislaby@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:shc_work@mail.ru,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	FORGED_RECIPIENTS(0.00)[m:khristineandreea.barbulescu@oss.nxp.com,m:linusw@kernel.org,m:brgl@bgdev.pl,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:chester62515@gmail.com,m:mbrugger@suse.com,m:ghennadi.procopciuc@nxp.com,m:larisa.grigore@nxp.com,m:lee@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:festevam@gmail.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:srini@kernel.org,m:aruizrui@redhat.com,m:clizzi@redhat.com,m:devicetree@vger.kernel.org,m:eballetb@redhat.com,m:echanude@redhat.com,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:s32@nxp.com,m:kernel@pengutronix.de,m:vincent.guittot@linaro.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,bgdev.pl,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,linaro.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,nxp.com:email,spud:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8EBFF630283
+X-Rspamd-Queue-Id: 89BF26303CB
 
-On Tue, 2 Jun 2026 12:02:35 +0200, Tapio Reijonen
-<tapio.reijonen@vaisala.com> said:
-> It's strongly recommended for GPIO drivers to always implement the
-> .get_direction() callback - even when the direction is tracked in
-> software. The GPIO core emits a warning when the callback is missing
-> and a user reads the direction of a line, e.g. via
-> /sys/kernel/debug/gpio.
->
-> The MAX310X keeps the GPIO direction in the GPIOCFG register (a set bit
-> selects output), which the existing direction_input/output callbacks
-> already program, so the current direction can be read back directly.
->
-> Fixes: f65444187a66 ("serial: New serial driver MAX310X")
-> Signed-off-by: Tapio Reijonen <tapio.reijonen@vaisala.com>
-> ---
-> Found and HW-tested on an i.MX6 SoloX board with a MAX14830 over SPI:
-> without this, "cat /sys/kernel/debug/gpio" triggers the gpiolib.c:429
-> WARNING (tainting the kernel W) on each queried MAX14830 line; with it
-> applied the lines report their in/out direction and the WARNING is gone.
-> ---
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+--Lx2mHOuNnTOuI0LO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 02, 2026 at 10:01:30AM +0200, Khristine Andreea Barbulescu wrot=
+e:
+> Extend the S32G2 SIUL2 pinctrl binding to describe the GPIO data and
+> external interrupt resources present in the same SIUL2 hardware block.
+>=20
+> Besides the MSCR and IMCR registers used for pin multiplexing and pad
+> configuration, SIUL2 also contains PGPDO and PGPDI registers
+> for GPIO data and EIRQ registers for external interrupt control.
+>=20
+> Add GPIO controller properties because the SIUL2 block also provides
+> GPIO functionality, and gpio-ranges are needed to describe the
+> mapping between GPIO lines and pin controller pins.
+>=20
+> Document the interrupt controller properties. The SIUL2 block
+> contains EIRQ hardware as part of the same register space. IRQ support
+> itself will be added in a follow-up patch series.
+>=20
+> Update the example accordingly to show the complete SIUL2 register
+> layout, including the GPIO data and EIRQ register windows.
+>=20
+> Signed-off-by: Khristine Andreea Barbulescu <khristineandreea.barbulescu@=
+oss.nxp.com>
+> ---
+>  .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      | 83 +++++++++++++++++--
+>  1 file changed, 78 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pi=
+nctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinc=
+trl.yaml
+> index a24286e4def6..e4cc1a3a795c 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.y=
+aml
+> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.y=
+aml
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> -# Copyright 2022 NXP
+> +# Copyright 2022, 2026 NXP
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/pinctrl/nxp,s32g2-siul2-pinctrl.yaml#
+> @@ -17,8 +17,10 @@ description: |
+>      SIUL2_0 @ 0x4009c000
+>      SIUL2_1 @ 0x44010000
+> =20
+> -  Every SIUL2 region has multiple register types, and here only MSCR and
+> -  IMCR registers need to be revealed for kernel to configure pinmux.
+> +  Every SIUL2 region has multiple register types. MSCR and IMCR registers
+> +  need to be revealed for kernel to configure pinmux. PGPDO and PGPDI
+> +  registers are used for GPIO output/input operations. EIRQ registers
+> +  are used for external interrupt configuration.
+> =20
+>    Please note that some register indexes are reserved in S32G2, such as
+>    MSCR102-MSCR111, MSCR123-MSCR143, IMCR84-IMCR118 and IMCR398-IMCR429.
+> @@ -29,14 +31,22 @@ properties:
+>        - nxp,s32g2-siul2-pinctrl
+> =20
+>    reg:
+> +    minItems: 6
+>      description: |
+> -      A list of MSCR/IMCR register regions to be reserved.
+> +      A list of MSCR/IMCR/PGPDO/PGPDI/EIRQ register regions to be reserv=
+ed.
+>        - MSCR (Multiplexed Signal Configuration Register)
+>          An MSCR register can configure the associated pin as either a GP=
+IO pin
+>          or a function output pin depends on the selected signal source.
+>        - IMCR (Input Multiplexed Signal Configuration Register)
+>          An IMCR register can configure the associated pin as function in=
+put
+>          pin depends on the selected signal source.
+> +      - PGPDO (Parallel GPIO Pad Data Out Register)
+> +        A PGPDO register is used to set the output value of a GPIO pin.
+> +      - PGPDI (Parallel GPIO Pad Data In Register)
+> +        A PGPDI register is used to read the input value of a GPIO pin.
+> +      - EIRQ (External Interrupt Request)
+> +        EIRQ registers are used to configure and manage external interru=
+pts.
+> +
+>      items:
+>        - description: MSCR registers group 0 in SIUL2_0
+>        - description: MSCR registers group 1 in SIUL2_1
+> @@ -44,6 +54,28 @@ properties:
+>        - description: IMCR registers group 0 in SIUL2_0
+>        - description: IMCR registers group 1 in SIUL2_1
+>        - description: IMCR registers group 2 in SIUL2_1
+> +      - description: PGPDO registers in SIUL2_0
+> +      - description: PGPDI registers in SIUL2_0
+> +      - description: PGPDO registers in SIUL2_1
+> +      - description: PGPDI registers in SIUL2_1
+> +      - description: EIRQ registers in SIUL2_1
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> =20
+>  patternProperties:
+>    '-pins$':
+> @@ -86,10 +118,32 @@ required:
+>    - compatible
+>    - reg
+> =20
+> +oneOf:
+> +  - description: Legacy pinctrl-only node
+> +    properties:
+> +      reg:
+> +        minItems: 6
+
+drop minItems here, since it matches the outer minItems.
+
+> +        maxItems: 6
+
+You're missing having
+properties:
+   gpio-controller: false
+etc here, the condition you have doesn't prevent having them without the
+reg properties to support them. E.g. with a diff like this applied:
+diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinc=
+trl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctr=
+l.yaml
+index e4cc1a3a795c..f0fc6a771f32 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
+@@ -158,17 +158,7 @@ examples:
+               /* IMCR119-IMCR397 registers on siul2_1 */
+               <0x44010c1c 0x45c>,
+               /* IMCR430-IMCR495 registers on siul2_1 */
+-              <0x440110f8 0x108>,
+-              /* PGPDO registers on siul2_0 */
+-              <0x4009d700 0x10>,
+-              /* PGPDI registers on siul2_0 */
+-              <0x4009d740 0x10>,
+-              /* PGPDO registers on siul2_1 */
+-              <0x44011700 0x18>,
+-              /* PGPDI registers on siul2_1 */
+-              <0x44011740 0x18>,
+-              /* EIRQ registers on siul2_1 */
+-              <0x44010010 0x34>;
++              <0x440110f8 0x108>;
+
+> +
+> +  - description: Pinctrl node with GPIO and external interrupt support
+> +    required:
+> +      - gpio-controller
+> +      - "#gpio-cells"
+> +      - gpio-ranges
+> +      - interrupt-controller
+> +      - "#interrupt-cells"
+> +      - interrupts
+> +    properties:
+> +      reg:
+> +        minItems: 11
+> +        maxItems: 11
+
+And the same here for maxItems.
+
+Cheers,
+Conor.
+
+> +
+>  additionalProperties: false
+> =20
+>  examples:
+>    - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+>      pinctrl@4009c240 {
+>          compatible =3D "nxp,s32g2-siul2-pinctrl";
+> =20
+> @@ -104,7 +158,26 @@ examples:
+>                /* IMCR119-IMCR397 registers on siul2_1 */
+>                <0x44010c1c 0x45c>,
+>                /* IMCR430-IMCR495 registers on siul2_1 */
+> -              <0x440110f8 0x108>;
+> +              <0x440110f8 0x108>,
+> +              /* PGPDO registers on siul2_0 */
+> +              <0x4009d700 0x10>,
+> +              /* PGPDI registers on siul2_0 */
+> +              <0x4009d740 0x10>,
+> +              /* PGPDO registers on siul2_1 */
+> +              <0x44011700 0x18>,
+> +              /* PGPDI registers on siul2_1 */
+> +              <0x44011740 0x18>,
+> +              /* EIRQ registers on siul2_1 */
+> +              <0x44010010 0x34>;
+> +
+> +        gpio-controller;
+> +        #gpio-cells =3D <2>;
+> +        gpio-ranges =3D <&pinctrl 0 0 102>,
+> +                      <&pinctrl 112 112 79>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells =3D <2>;
+> +        interrupts =3D <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
+> =20
+>          llce-can0-pins {
+>              llce-can0-grp0 {
+> --=20
+> 2.34.1
+>=20
+--
+pw-bot: changes-requested
+
+--Lx2mHOuNnTOuI0LO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCah8EwgAKCRB4tDGHoIJi
+0rDoAQDdONXb61PReEftXDCleOh95uWQWsiptxxVevCmx/K4vwEAgTlvIEH7BXpy
+jTnkORdiRCEP/mgQ7e3y9iz6VwD/Dwg=
+=2hLs
+-----END PGP SIGNATURE-----
+
+--Lx2mHOuNnTOuI0LO--
 
