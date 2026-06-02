@@ -1,194 +1,255 @@
-Return-Path: <linux-gpio+bounces-37843-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37844-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XBboEHJHH2oojgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37843-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 23:13:22 +0200
+	id Gl0nGilOH2rKjwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37844-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 23:42:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4318B63207E
-	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 23:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D7D7632232
+	for <lists+linux-gpio@lfdr.de>; Tue, 02 Jun 2026 23:42:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=Nvidia.com header.s=selector2 header.b=kie360nq;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37843-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37843-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=nvidia.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=U1ncUK8J;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37844-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37844-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 77010300E308
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 21:11:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 503D6301B018
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2026 21:40:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDED34BA20;
-	Tue,  2 Jun 2026 21:11:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909693939B2;
+	Tue,  2 Jun 2026 21:40:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013007.outbound.protection.outlook.com [40.93.196.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328DA30C148
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jun 2026 21:11:52 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780434714; cv=fail; b=ewWQeceXvIIsNSU/FT6Q2TsV8UOiM0m0hxQSAmesCbJjXBj1moTfxUpy9oxVqRusySXJYUa7c808SkQ6Qgig8MVpG7mCvMI1S6Gxppb1XHvOmyzf80+VY/lDtUCVYhNS2PIJmL0QKX3AK7cZ9pom5oMFdjgm9qQbNpAFbShSypc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780434714; c=relaxed/simple;
-	bh=g5WOvaX5wjx65GJKJMrM9hdmIqifKJSrVPwTnUAyMSE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/WZmPSki9gRcZpeoPMXKPP4kKgUFQzk4G0bPKSTX051Uz45rUtv+LzaLrVH940e3cYb/1VaxJaLySvSAN7hOENgQLrNP+v8IGWPcSV+7Q64AQO/vEXXNj0yWKoXze5rP/teGW7pHq74PNSjFhfB+Du5/C0Ua+IVRMOtIxw7k4g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kie360nq; arc=fail smtp.client-ip=40.93.196.7
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YRMPI4oVtPVyjwq4FoB3g3OM4IUfGoq1HwN4v3eqViY7HM6bbrn5wjrelmkfezs9hn8DCnk9Hk8VaowYpw4ObcXDDL6Z74CLDAGmlYzA6Lcwwy6VJGSibNZ/gdmFHNqUMSPTVrwExojSIIzW/VLyqfqI5FcA3AByhdpj1SeCSKmGS+05fLffWHV451IajGeZIeakgvStWEwGiVzl8jvrjI0v1tmK2FASHE9TPm1LsfcOAOLZK4ehDQf6QDaYgzrZbm5fhT1+fzQRjr+Zx4yoQQOGTCdV8t4054gUpk7SWmVPOVv0U3MD5ZKIl0v7qxZEHBgXMnJColHO9oltKl3mDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3hl/cajwRaAUEltlzvq8loFIjDjz7Z49nY3rCfB0mtU=;
- b=DSqoJbG8aSln1AFQj4qPghF+/yYEHVcjXW7xhPJnsklZ1zOBH+uvYQNp9KAYzcG8bcThzjeIHTTUnQxX97wbWjefbyEaAR/xQM7QIhpBLJRdCFaLHyfvF/n+EN3aljOc2Jp7skywqnm5n2sH1tfmTuwPfQ0JHF1NSpiqio4+dZAhqP+hO8Labl0MzG6nZmsbOExpAvpOgP+E7M4/kfGh7VA2xZWdibD7X6ZzuPrfiem7nWOhrxv9ojy8p5vPr5UvPs/yMiIYbrKMhmhDqLIZTuxqTMINdqyN+IkjWvNXgi2aXvtd+qrcFhaIg5RKJMW94tr27GTLhcjBkFTZCmCA+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3hl/cajwRaAUEltlzvq8loFIjDjz7Z49nY3rCfB0mtU=;
- b=kie360nqdkuDoAJd2RA6Uocp+FZ8PAYTjS2pGGM75IgQCYjQLGSkdXThq4SLAS2ofsCnXcTX94yyJo+LXLEfxPfCPGGKDiQFC2ujyht2xh0h7GoNqa7d5fDc736cDKjHLW/EipwIwTSpXgI+iIOie10eiHCnTt7aogz+/37YtGrJwwQqDed2HHETTkVf6hoMdFGfbrSU0Lac8d2I4Pj+f2dngELExRbYQbn2wAHzHFEfInrNLEmkYXOZZxdTnWHd79jaqSWH/32ZyIQuRQjpi6lTZ3PT9YsWZvtX3RPyOzJqnfJRdDqPuZEzsG67MA0iaIfTnF2y9LC62MKszlF4eg==
-Received: from SJ0PR05CA0177.namprd05.prod.outlook.com (2603:10b6:a03:339::32)
- by BY1PR12MB8446.namprd12.prod.outlook.com (2603:10b6:a03:52d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.17; Tue, 2 Jun 2026
- 21:11:48 +0000
-Received: from SJ5PEPF000001F7.namprd05.prod.outlook.com
- (2603:10b6:a03:339:cafe::aa) by SJ0PR05CA0177.outlook.office365.com
- (2603:10b6:a03:339::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.6 via Frontend Transport; Tue, 2
- Jun 2026 21:11:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001F7.mail.protection.outlook.com (10.167.242.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.5 via Frontend Transport; Tue, 2 Jun 2026 21:11:48 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 2 Jun
- 2026 14:11:26 -0700
-Received: from ttabi.nvidia.com (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 2 Jun
- 2026 14:11:24 -0700
-From: Timur Tabi <ttabi@nvidia.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski
-	<bartosz.golaszewski@oss.qualcomm.com>, <linux-gpio@vger.kernel.org>,
-	<amelie.delaunay@st.com>
-Subject: [PATCH] pinctrl: PINCTRL_STMFX should depend on CONFIG_OF
-Date: Tue, 2 Jun 2026 16:11:16 -0500
-Message-ID: <20260602211116.2033792-1-ttabi@nvidia.com>
-X-Mailer: git-send-email 2.54.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96543AA1B8;
+	Tue,  2 Jun 2026 21:40:28 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780436430; cv=none; b=Jt4jLlZzQI+TnfepUfUSOYg00eUHsK2fsWDSSxu4fOZGwgVcUsaZOjf4HoRsfiacgayqsvSUxx75EJtwH0GokgnfNOpEDbqKfevbYAcbS9LnoBwzL+b6fL353ep086JhLQYjRHRF2KVgDq6kpMxqx/uASnpUsVfkVW+2n6C+dsU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780436430; c=relaxed/simple;
+	bh=sb6dyPrNX2KAOZ/DxRt20MWlPqFpC3NS9PkPVODZ1Kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLeRpHyH3msTjD4/ok6gqcTBFa/IkkFUia1HtKyTAWGJnNnGLNuVWKLVy2hOMSkcdGTthlGfuV/WKawuyKbJlxrV1s0BH5oPDKfR4y+4Xyw7c/nefdfsc7cPTyg14cd7r60MBTUNbh0UWlmEVOgp315lozlg79Vnjt1z738CrS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1ncUK8J; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26E451F00893;
+	Tue,  2 Jun 2026 21:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780436428;
+	bh=WsQRH3edwKKbSqJwlTIDdPj9pX96mTLjCBhiQVIVfxg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=U1ncUK8JsGLJR6x57+iKcFbS6DRAsyHhkoj+dgq9LLPX23+vGZP3/ByKdRWLCFHfe
+	 O9cmarz2TsMxz8SVp2+u7yEjv0Y8eSsxh3WubbPkkxYNAdN8lI59VN0NaQbnlriTvY
+	 gAkWbRtfMlqsYlTDRIB8RRp3bNmF2mGAl09OE2aCJwKt/t38nmVVxFyYCcMEr66Kma
+	 neKGE7MUgpqIU8n36sU/NmNpFBFcXV7Xh/FRMpwSin3vK4dvVdMyPaXg59j1DKWhMN
+	 y0tnwcfF/FLDFoAMLAP86SHgkDRTmpBivsHxKDbX2Mtc/sMPeTczOh0eQ4nH6aIyPg
+	 VuaQizlYeHhaQ==
+Message-ID: <24500088-9849-46e9-b32f-3f08c2ae6261@kernel.org>
+Date: Tue, 2 Jun 2026 23:40:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: Remove big fat warning in
+ gpiochip_get_direction()
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: PRAT Maximilien <maximilien.prat@cs-soprasteria.com>,
+ Linus Walleij <linusw@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <63487206f6e5a93eaf9f41784317fe99d394312f.1780399750.git.chleroy@kernel.org>
+ <CAMRc=MdngQbJVQTZXvPKzFjcLOPs4=-6Jtf4Ua4AU0D+sUb9bw@mail.gmail.com>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <CAMRc=MdngQbJVQTZXvPKzFjcLOPs4=-6Jtf4Ua4AU0D+sUb9bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F7:EE_|BY1PR12MB8446:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68e651b2-5893-4da2-9d05-08dec0eb8eff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700016|6133799003|56012099006|11063799006|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	wXj5rdmKunTWBmP8hqwV7vVrWV1IFBJ3YT7D4kHaCWgTi8EhdoR9iHtawx7YpwFKsNTvqmHi5rB9EFjyYWhgKRhB8+41LamcZhaFk+yPIQnAIlN27iwzYrCC0N6zxTzFhnxjY9KGp7ORyslIQhCWIJvbNNgmNB+iGh9Gb50mdPg7rVfDe/6XEnVUcx0K8VPDe4zq3O7JmfiVahVnyPju+a9vt2B3uk5NDA7U/KpyoPP11WIoeMdufF8jazHAkNPENzqXaNRpcV9vbsvToWcPnRg/HMzfHHL9GS0Md3JAC+mOKumwZ9UXr9J9F45OFp1Mx4I7kXyHtk9zpHH5Ahk9SqSlcfc3X3Ai6nP5778Oal5Xy5NK5qlap4V6SBQ+QhIH/pQzHE148j29R1pt7Mvq4/6jXmi2MyZ7pmgdYrAmHqIsLMxYYiamnS7gdJfGJb5Hm/FyXYsuAU8OxRXQ3XILSctOjbllKNbbR6wedyJpN/AES89eNOhD6gIXY2WavoKJkJapXitHe/G8KgDgcd1+rSFT+3HqG9EmvJidZ8CHBqLBcdTRmsRw230Y/6Qfx62eiVBGFLK+fxltJmzS7WHew+9IiEE5X+3FZuMU2aUcdPlucjlAqoIgSObqKInLxReg0Ar1xbmqbup28klv2dKtfTPUwJmSqC3AezmS3plGtzXvlAT0+Mnt7hcyUTZVPgG/QsjmCXEaFytUITHBiJoanphIwkj/2Qir+yd7kp2EO9A=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700016)(6133799003)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	70JDrujjaKfDcf7NzcTqAmT/gAdNKPfxg9+Xjy1T+ef2dz7f3/gMK1Ob/V/PHB3PxbOgRFUXwTuPdAjukhRQcoqAfDI8EU4U7HrzbjEIvJOUJL/hnsdenAwd5nn2aFCivji7+ZUSHILJS5tFAg8h/crb0KsYhzsFHxCRwOeN/TJAfifPtJX4guL9LhcbisaBYcY6VKo1h3pWdK0x1I7G1IdqmSEvEwOHZX02nqvVD7UY62q2ywuntfQbu6JPUdtFvdxDJ1uS2Rl9RObJepBurl/Dt1Rm81g0hmITsm23LSYt2tK45OdP5GnRsj4xX6h04pB8ibeTgWO2bq9SoaDYvHJUxK/vkxB5wxI65b2gyDh49sVEI7JujFGQ8rk4HfQ81zBIBVHe2MLNxT4efV1eij6SfRjf9nAZ00mV/BS9UkIAUeSQ9gI17hjc87/D84y9
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 21:11:48.0671
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68e651b2-5893-4da2-9d05-08dec0eb8eff
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR12MB8446
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37843-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37844-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[cs-soprasteria.com,kernel.org,gmail.com,oss.qualcomm.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:maximilien.prat@cs-soprasteria.com,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:bartosz.golaszewski@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[chleroy@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:amelie.delaunay@st.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[ttabi@nvidia.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ttabi@nvidia.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,Nvidia.com:dkim,nvidia.com:mid,nvidia.com:from_mime,nvidia.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chleroy@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4318B63207E
+X-Rspamd-Queue-Id: 5D7D7632232
 
-Commit e785c990adcc ("pinctrl: Kconfig: drop unneeded dependencies
-on OF_GPIO") removed a redundant dependecy on CONFIG_OF_GPIO for
-several pinctrl drivers, but this change also removed a dependency
-on CONFIG_OF for some of those drivers.
 
-Normally, this wouldn't be a problem, but PINCTRL_STMFX also selected
-MFD_STMFX, which does depend on CONFIG_OF.  This conflict allows
-MFD_STMFX to be enabled even if CONFIG_OF is disabled.
 
-Fix this by also having PINCTRL_STMFX depend on CONFIG_OF.  This is
-okay because the pinctrl-stmfx driver actually does depend on CONFIG_OF
-functions.
+Le 02/06/2026 à 18:13, Bartosz Golaszewski a écrit :
+> On Tue, Jun 2, 2026 at 1:31 PM Christophe Leroy (CS GROUP)
+> <chleroy@kernel.org> wrote:
+>>
+>> Since kernel v6.15 the following big fat warning is encountered when
+>> reading /sys/kernel/debug/gpio, leading to kernel latency while
+>> emiting the warning, and panicing on systems configured to panic on
+>> warnings.
+>>
+>>    ------------[ cut here ]------------
+>>    WARNING: drivers/gpio/gpiolib.c:423 at gpiochip_get_direction+0x3c/0x48, CPU#0: cat/12531
+>>    CPU: 0 UID: 0 PID: 12531 Comm: cat Tainted: G        W           7.0.10-gitc72c39~-01802-g28c351659258 #27 PREEMPT
+>>    Tainted: [W]=WARN
+>>    Hardware name: MIAE 8xx 0x500000 CMPC885
+>>    NIP:  c043c2f8 LR: c043d740 CTR: 00000000
+>>    REGS: ca89bc20 TRAP: 0700   Tainted: G        W            (7.0.10-gitc72c39~-01802-g28c351659258)
+>>    MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 24004884  XER: 00000302
+>>
+>>    GPR00: c043f3f0 ca89bce0 c3278000 c20b5f20 0000000d 00000002 00000000 c0a76208
+>>    GPR08: 00000001 00000000 cccccccd c313d830 84004884 100d815e c0a76208 c0a761f8
+>>    GPR16: c0a761f4 c0a76278 1048834c 10488350 c21c0b04 c21c0d93 c0a5fb74 c313d848
+>>    GPR24: c20b5f20 c21c0d94 00000000 00000000 c21c0d94 00000000 c21c0c00 c21c0b04
+>>    NIP [c043c2f8] gpiochip_get_direction+0x3c/0x48
+>>    LR [c043d740] gpiod_get_direction+0xa0/0x170
+>>    Call Trace:
+>>    [ca89bce0] [c28157e8] 0xc28157e8 (unreliable)
+>>    [ca89bd10] [c043f3f0] gpiolib_seq_show+0x370/0x524
+>>    [ca89bd90] [c021dd1c] seq_read_iter+0x174/0x618
+>>    [ca89bdd0] [c021e260] seq_read+0xa0/0xd0
+>>    [ca89be40] [c031063c] full_proxy_read+0x80/0xc4
+>>    [ca89be70] [c01df3e0] vfs_read+0xb4/0x35c
+>>    [ca89bee0] [c01e0180] ksys_read+0x8c/0x15c
+>>    [ca89bf10] [c000dc94] system_call_exception+0x88/0x154
+>>    [ca89bf30] [c00110a8] ret_from_syscall+0x0/0x28
+>>    ---- interrupt: c00 at 0xfc629e8
+>>    NIP:  0fc629e8 LR: 0fc62a34 CTR: 00000000
+>>    REGS: ca89bf40 TRAP: 0c00   Tainted: G        W            (7.0.10-gitc72c39~-01802-g28c351659258)
+>>    MSR:  0000d032 <EE,PR,ME,IR,DR,RI>  CR: 28004884  XER: 00000302
+>>
+>>    GPR00: 00000003 7f8df6a0 77e37540 00000003 7f8df6e8 00001000 00000000 00000000
+>>    GPR08: 00000000 7f8e3efc 00000000 7f8e06f0 7f8e3efc 100d815e 7fe70e10 100d0000
+>>    GPR16: 100d0000 00000001 1048834c 10488350 22000882 77e3fe68 1000596c 77e40b28
+>>    GPR24: 00000000 28004884 01000000 00001000 7f8df6e8 00000003 0fde36a0 00000000
+>>    NIP [0fc629e8] 0xfc629e8
+>>    LR [0fc62a34] 0xfc62a34
+>>    ---- interrupt: c00
+>>    Code: 9421fff0 7c0802a6 90010014 7d2903a6 4e800421 2c030001 40810008 3860ffcc 80010014 38210010 7c0803a6 4e800020 <0fe00000> 3860ffa1 4e800020 81230020
+>>    ---[ end trace 0000000000000000 ]---
+>>
+>> This is due to a WARN_ON() added by commit ec2cceadfae7 ("gpiolib:
+>> normalize the return value of gc->get() on behalf of buggy drivers")
+>> when the gpiochip doesn't implement get_direction() function. But
+>> according to the documentation in <linux/gpio/driver.h> implementing
+>> get_direction() is only a recommendation, not a requirement. And
+>> regarless, WARN_ON() has no added value here, dumping all CPU
+>> registers doesn't give any useful information for that case.
+>>
+>> Lower it to a simple warn_on_once() message.
+>>
+>> Fixes: ec2cceadfae7 ("gpiolib: normalize the return value of gc->get() on behalf of buggy drivers")
+>> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+>> ---
+> 
+> Please use scripts/get_maintainers.pl.
 
-Fixes: e785c990adcc ("pinctrl: Kconfig: drop unneeded dependencies on OF_GPIO")
-Signed-off-by: Timur Tabi <ttabi@nvidia.com>
----
- drivers/pinctrl/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+That's what I did, what is the problem ?
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 03f2e3ee065f..75131b6e6eea 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -548,6 +548,7 @@ config PINCTRL_ST
- 
- config PINCTRL_STMFX
- 	tristate "STMicroelectronics STMFX GPIO expander pinctrl driver"
-+	depends on OF
- 	depends on I2C
- 	depends on HAS_IOMEM
- 	select GENERIC_PINCONF
--- 
-2.54.0
+$ ./scripts/get_maintainer.pl --nom --nor --nomultiline --norolestats 
+--nogit --nogit-fallback 
+tmp/0001-gpiolib-Remove-big-fat-warning-in-gpiochip_get_direc.patch
+Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij 
+<linusw@kernel.org>, Bartosz Golaszewski 
+<bartosz.golaszewski@oss.qualcomm.com>, linux-gpio@vger.kernel.org, 
+linux-kernel@vger.kernel.org
 
+> 
+> What driver are you using?
+
+I have the following ones declared in the device tree:
+
+			CPM1_PIO_A: gpio-controller@950 {
+				#gpio-cells = <2>;
+				compatible = "fsl,cpm1-pario-bank-a";
+				reg = <0x950 0x10>;
+				gpio-controller;
+			};
+
+			CPM1_PIO_B: gpio-controller@ab8 {
+				#gpio-cells = <2>;
+				compatible = "fsl,cpm1-pario-bank-b";
+				reg = <0xab8 0x10>;
+				gpio-controller;
+			};
+
+			CPM1_PIO_C: gpio-controller@960 {
+				#gpio-cells = <2>;
+				compatible = "fsl,cpm1-pario-bank-c";
+				reg = <0x960 0x10>;
+				interrupts = <1 2 6 9 10 11 14 15 23 24 26 31>;
+				fsl,cpm1-gpio-irq-mask = <0x0fff>;
+				interrupt-parent = <&CPM_PIC>;
+				gpio-controller;
+			};
+
+			CPM1_PIO_D: gpio-controller@970 {
+				#gpio-cells = <2>;
+				compatible = "fsl,cpm1-pario-bank-d";
+				reg = <0x970 0x10>;
+				gpio-controller;
+			};
+
+
+				codec_fav: peb2466@3 {
+					compatible = "infineon,peb2466";
+					reg = <3>;
+					clocks = <&clk_mclk>;
+					clock-names = "mclk";
+					spi-max-frequency = <1000000>;
+					spi-cs-high;
+					reset-gpios = <&rst 6 GPIO_ACTIVE_LOW>;
+					#sound-dai-cells = <0>;
+					sound-name-prefix = "C2";
+					#gpio-cells = <2>;
+					gpio-controller;
+					firmware-name = "mcr-peb2466-coeffs.bin";
+				};
+				codec_radio: peb2466@7 {
+					compatible = "infineon,peb2466";
+					reg = <7>;
+					clocks = <&clk_mclk>;
+					clock-names = "mclk";
+					spi-max-frequency = <1000000>;
+					spi-cs-high;
+					reset-gpios = <&rst 5 GPIO_ACTIVE_LOW>;
+					#sound-dai-cells = <0>;
+					sound-name-prefix = "C1";
+					#gpio-cells = <2>;
+					gpio-controller;
+					firmware-name = "mcr-peb2466-coeffs.bin";
+				};
+
+
+Christophe
 
