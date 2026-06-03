@@ -1,236 +1,294 @@
-Return-Path: <linux-gpio+bounces-37855-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37856-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id I8TcHLJ2H2rdmAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37855-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 02:34:58 +0200
+	id t2RJMGTDH2pqpgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37856-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 08:02:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD37D63337C
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 02:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 175E66347B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 08:02:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=j5z06nNg;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37855-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37855-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=none;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37856-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37856-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=starfivetech.com (policy=quarantine);
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B40E73013A90
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 00:34:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 10E6330D19FD
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 05:54:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FCD223EAB3;
-	Wed,  3 Jun 2026 00:34:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8FC43E5587;
+	Wed,  3 Jun 2026 05:54:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2104.outbound.protection.partner.outlook.cn [139.219.146.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8963863B9;
-	Wed,  3 Jun 2026 00:34:49 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780446892; cv=none; b=m/vX9s0C+rlJ938MczTM2C0/4MGcdhXqYZbmTreSFnPy3azenwBmC8QxUDNvzSr4LCKx31ksi0Q3mqf68kK3fBFaDv6C8h0uMNeKTgM7dZDNu3wCFcEi3SPP43SjnGGL1cn/dVp4lnfWM/h7Ww5R1yZGNQREsHP1dy/zDk+Mcv4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780446892; c=relaxed/simple;
-	bh=6CR/rYWpbekN6oqzrZ6DgconT/RJAzmKq8Nf7HR3UU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c9gsamQNDOz40kRnxL2D3nqVYTuhCxB8WkAbYxf25agq1LS7WyM8nz2416B4AIN8bS8TeqzIn/ljqlAgUlqesCfpJIAz/1sCO5MecQtztyVUyQyxPdrVXYpgJ3v0AYa/InxsF00y6aWW04SSxWQ78C9njFaRXZkKm8FptAEpDAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j5z06nNg; arc=none smtp.client-ip=198.175.65.14
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780446890; x=1811982890;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=6CR/rYWpbekN6oqzrZ6DgconT/RJAzmKq8Nf7HR3UU4=;
-  b=j5z06nNgO1u0oZ+2KEpENoVpZBCJhVHjdW+KsL4raVTBDJTaCmvBy2xz
-   Ta2Bd2y74bT+6qx0YCSO2f+YuCx0Q9jbEppn4qPSnbNJQFZyDMqvSjRoG
-   rE+4qIlDz6pY/NnPB+i++rG9kdIz2ti+Qrd0RUiyvmiAhI799TtYyb4n+
-   wWMwjh/slGjAhDwYm7YYgy3iMXuZYlI8y2rLdbWfvUjV9wuqDgChZDWLd
-   2OODjjfL83P8imyFimpAEYqI1wd0kbGvDbaRi8GKeKoBsyrTMm4g7qgiL
-   zS+WOSe8iOPdIo/n8u9oD/EXa++fK0l0pAAJAbTKt5ad+GQqF7B7GQyPQ
-   Q==;
-X-CSE-ConnectionGUID: fhMjlcGaRjGoPFMZ+m2QVA==
-X-CSE-MsgGUID: +oso91iKTuW/GUUq7Grs4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="85131701"
-X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
-   d="scan'208";a="85131701"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 17:34:49 -0700
-X-CSE-ConnectionGUID: UL9swsBaS4GHr8Zz1+JY7A==
-X-CSE-MsgGUID: 3lmg5tijRHmPL3vZdZQSDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
-   d="scan'208";a="244170860"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 17:34:42 -0700
-Date: Wed, 3 Jun 2026 03:34:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Yu-Chun Lin =?utf-8?B?W+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-Cc: "linusw@kernel.org" <linusw@kernel.org>,
-	"mwalle@kernel.org" <mwalle@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"afaerber@suse.com" <afaerber@suse.com>,
-	"wbg@kernel.org" <wbg@kernel.org>,
-	"mathieu.dubois-briand@bootlin.com" <mathieu.dubois-briand@bootlin.com>,
-	"lars@metafoo.de" <lars@metafoo.de>,
-	"Michael.Hennerich@analog.com" <Michael.Hennerich@analog.com>,
-	"jic23@kernel.org" <jic23@kernel.org>,
-	"nuno.sa@analog.com" <nuno.sa@analog.com>,
-	"andy@kernel.org" <andy@kernel.org>,
-	"dlechner@baylibre.com" <dlechner@baylibre.com>,
-	=?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-realtek-soc@lists.infradead.org" <linux-realtek-soc@lists.infradead.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	=?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-	Stanley =?utf-8?B?Q2hhbmdb5piM6IKy5b63XQ==?= <stanley_chang@realtek.com>,
-	James Tai =?utf-8?B?W+aItOW/l+WzsF0=?= <james.tai@realtek.com>,
-	"brgl@kernel.org" <brgl@kernel.org>
-Subject: Re: [PATCH v3 2/7] gpio: regmap: add gpio_regmap_get_gpiochip()
- accessor
-Message-ID: <ah92oEavMu4QRn8y@ashevche-desk.local>
-References: <20260512033317.1602537-1-eleanor.lin@realtek.com>
- <20260512033317.1602537-3-eleanor.lin@realtek.com>
- <agMM9soiqpG-TRSb@ashevche-desk.local>
- <adff3a2d21a64d3ea3b408d62157ee1e@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92559314B8F;
+	Wed,  3 Jun 2026 05:54:11 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780466055; cv=fail; b=PA2DLz0tIxPuHh6oDEYFlNpBb5E5vEL1ifrCv/WbvZBarj4jESX0F2BiB2HBSJqaDNQfnIRjgB7LwvZVy2MGs5H/iYQzG46EF/8viV7ak5KE60JDiW8jDbSfldsMWUC2FgWHV2ylmZXftJ0PLo5FTvaC+UouAEfpYlzfG6j/Dvo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780466055; c=relaxed/simple;
+	bh=qSjJSxill+aYC4YMXbLjCdApuf1+w8D9rhKHcgG4cE0=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ByYdaM0ObEMHRuFKNYF4TeYDKWg2hj6NOBj2xa1xT8TrHuodKdUKXheTZUGeQajycXbt9Mfdg2qBJUstlqNrQZoTwRu+fiiWqq0RcvsfHMzqgLVnaqHYD8BIDFax7dhEnY/+Sr251mz0bZTkq74Qr3v7mFTiBVLuTM97awDE4K4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.104
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H7dkn23T3NYoNaq26jteqC2IRJUnAeUfTQjpz8UkcZSkjO4Xt3Vcdzvlnpdt+GEJEkmPN4FOLjEaTyQWM3LFsqAtKOgNEz4dyDtYCpiM3OJqUsELdYRdrQqbaMo7kXmWEwhrJ+S4GYBs6APetgQ2gDpFkua5gvB7LLLljSGmnJSXLwbeypQ1w3KJKIuXCkE2ebzqjpb0ZLXh8iPOzAIWTv93Xm+CP87GuE8EMZ1+NpQJnSVtpltUJGainipLqG29AaNuEY+b5v50Ch857d+xlkq3+7kYxbMbY9IuEEL8xtvgpCF5XM3FEjWmcDcwlOJExC/LuLDaJTQXrV7S/5vcYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TUAyJOi2cZKOPkHkQuAc18TOTRAIwCYzYcY0flwtofA=;
+ b=alpq1Zru0kT8Nb/8nOB7zOZrEjHZnH8842rK4DJ3VRtm/rdatBBpATnG3NGQtlKDMiTVo86GsqB6IMK0XSjDnlfOjQC+LjTu1SL6AeKcg1vzU4dR1AisCHucWhT4disSHmyEpUuWwFSewSzJ1Xyt68PVEj/VherF2/+fVqGogcIpOjXJkejD7d83f3NyNBFOlSXSZyaIi2IP9+SvWsVnXKoGXBuFLtPgiZzkT4mh5msOuBpg55NDuADPdDJhhaChsbTBW7JGk7Bx1n7SrNs5NsJxHP3zrjhPGgpZtQ7VVjq3enE+mgC6YUKL0c+CKGljrKUflU/Rd691pea4r9nXCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1171.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:15::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
+ 05:54:00 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
+ with mapi id 15.21.0092.006; Wed, 3 Jun 2026 05:54:00 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <pjw@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>
+Subject: [PATCH v3 00/21] Add basic pinctrl drivers for JHB100 SoC
+Date: Tue,  2 Jun 2026 22:53:26 -0700
+Message-Id: <20260603055347.66845-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SH0PR01CA0002.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:5::14) To ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <adff3a2d21a64d3ea3b408d62157ee1e@realtek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1171:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32150fa4-fe10-4609-8552-08dec134823a
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|56012099006|5023799004|6133799003|18002099003|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	VuZrJ18/9ckBneAlTMh6FwaaOq0qxYS5WU7SYu+KdTVhGMQcqP7QfzRtBM31PfQanlAiRHwznnyZvS8/5zy6/kajFyU/UrpSCGpbQDMzgdP4JNFn4R+MBjfR52PxiKo2QKM0WHlx3X71zDcT6OvKI91fEz0pdPV389FPJ05Cy68Q+zP1JE8Aw9qkoc6uIRYAzw4YHSGI8lO1MrHgSYu0BHBrtWUPM2sukZLXkz1k+tvqXJldwWNO0Omq1MqLD2aD93osow4M8UieurtqrzRClOdzzmjK2sMW2E8Z/OqfbhQ0ihKGgJHcjSZgyrm1+UqHYeaH8dvc/lGXkIXcWpixn0vXTonwsosUDZzd5VXrXY57kcuGdQXtrEYtASsEPD7ihYziehYgT4tWhUKzUtoaYPrqDRvNNTk09FXhLyLD6KnqFqz0w3Wcq2YXY6OXnRthCPUPpHKNBN/QC53y8Cazc+Ktec3ooNjjNrbgFnGsKm+Y2Bo2Ul9RAArikDU1gGmv5fGog61X49M+3g9DijEhs9Aa7mziq1cm10SHnuPDBJR1UekLPRq+g2svLfhS9ZFKApt61uyTAYOLnhPX0MiKvg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(56012099006)(5023799004)(6133799003)(18002099003)(921020)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yf/rW2QpW5b1nwk+zBTktFO7O/3kCmVKRM6f/45VZPuxTVtw0MgfrSDn4Krc?=
+ =?us-ascii?Q?CpF2mFo5aOwiGs7676zr+teZPJGX6yuY4FTpO9Y2Ss765FaOgNjtdZ3SCFnZ?=
+ =?us-ascii?Q?WfZrwzfhiYV8YBlmxXn9flTf82cfChInwrTcDitFQNWsu2/+10ObpFPhYEXP?=
+ =?us-ascii?Q?yp6MNWvo2hzGiLzRpzwkOLfrL1/dsFAegYR75lzHU8dK+cXh/mt4QMzY8lo0?=
+ =?us-ascii?Q?hNWNNQrb/17nZz1lAexVtYPRIrVnVHvAmWD9zq3SsBFdTsj1oMyi2YOw4fkm?=
+ =?us-ascii?Q?nGTaWfwXhRJK5sGn5mgKDlX/Hm/2o79ggCPRKNDblbdi1ZbJbDoi1Do7S9B4?=
+ =?us-ascii?Q?lA49P95Rzt1Yif+gMiAggWomhQMj5SkM3QjQarhHP+4A++NgHbZ6KcbGPf7u?=
+ =?us-ascii?Q?QxortM8RtVgSVfEh5ehRl2cNq8J9b/osY4FCMiyqny00snBZM8budugPHOkj?=
+ =?us-ascii?Q?2Qs3eF/z6aR2bWO81oMZ2i2ETx7RHRuSZYoDCsFgwCsTdqvRFhfesEcHmeQ0?=
+ =?us-ascii?Q?ITerY1N1Mqze0Vg/dwMAZjLvf1amUuM7fiyWy+OW6EwLLy2wkoE1lsM5oyci?=
+ =?us-ascii?Q?DY8aIQ/kdSyFMXl+cf64s/CJXFVNkBiQzjb8mO72LhF9lKcDLU8FhDO5iCrL?=
+ =?us-ascii?Q?DEdeGMqQJWXIHd39p+DNOvMlNBTTKEckTIpWpo5AhqM5NLelBFcmtUQMzTcr?=
+ =?us-ascii?Q?SPmlKwyrsUrd8ld/Yb4f6Hx+vJ3s3l3qDggat0+eCblTB2820jdnuP0ZSqb/?=
+ =?us-ascii?Q?JUV9QE8K/i5atwCSQtxIvzAEDQnuCI+br7O6IYslAOgKhDKJ4I0tuP6pdO62?=
+ =?us-ascii?Q?YUqPjbvYnRL1ujWRsEM6YJb4Bq23j+HpVpI4xKmF5kghf7zMnrpq0qWyO3vI?=
+ =?us-ascii?Q?s74WmSZUEbx671/rM7xipJuK866FWapOp07q53719nJOyYismo7Q1jjYPYva?=
+ =?us-ascii?Q?UWq+RrhqtRJyMegR2T3/ZaN2CfDwQcSzHzyez8argCNflRWEFt+ZJq0XUmeg?=
+ =?us-ascii?Q?EXlhu51GKkoKO+WKHomN/jW0eUuFLQ3jAMqN0F6TD4MCcgakxQvaJvyYlxxv?=
+ =?us-ascii?Q?S4yBqY71+zh5Frtn5Ajbb5mmsj20poVc4+y41HEDaSYoyM2lZinLKe6+Rsbp?=
+ =?us-ascii?Q?T/TGjDOJiW/px5nbwRHGTbr6KPynJUYBASLNXlIyIMBPUUphwJ7Z5gbIspE/?=
+ =?us-ascii?Q?qBJsDtT/XaQIYL6FNSVMexpxyXcE/mOW/yVNL8LhPqSSLUv4ijmifou6T54n?=
+ =?us-ascii?Q?8/+ugAFxZe4egvGxUEPpHMVOOug1mr/uKqZWu630Vy6/X4JMqViLSzBzGYc9?=
+ =?us-ascii?Q?1iWBPlRjQ2b9IasvOy33vr9ysxBWc7YGnQfv09vwp19ucqXbplu4t5FY0lmm?=
+ =?us-ascii?Q?njaw3E0niUQ33+iPxzON97zmBWpNsMTuZlW2rMRyZ0efYFiA5QDcPxwe+Id6?=
+ =?us-ascii?Q?UiblzBp7EJhpYpD8zH/8aN0WZa1D7ROWDYT6/CbMtc7JoDg1WSA9LXpiOBrr?=
+ =?us-ascii?Q?cZ0mNMadopxIxnHJTwy481JQASXBIMUQyHnTIcH8aN7Z4bILgHTKFa5PcLOt?=
+ =?us-ascii?Q?nUqbABD3d3L8wFB+p/TlkFIrO6bQphyr5BVwAWskaW9hJZclCfnB1fQa+70i?=
+ =?us-ascii?Q?9h1AxVx3ER2qrrLCvQdkPVJC/OmF93dOGuGzb1hXuPUrr56v2V3WbsrXi3dP?=
+ =?us-ascii?Q?jguYjtX16qbg/MnlrCGlxvulyEHLyjpQgNw74df8+VZ26eZNhcTXpVgkmB9r?=
+ =?us-ascii?Q?uNDXrHac2wxbXCCPmJwT45d6L5JmvgMmGrQ9YzJ7UVDQeWy18KI9?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32150fa4-fe10-4609-8552-08dec134823a
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 05:54:00.1841
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TuM8gzkLw5qiaPQlz2B1UZYfxHAsbLGRx1W8XM61v5IroOzPab+mEnmWaJrlRFSrjjE+gSR8LDnW/1KVjO7T7aVIiZs6jsCrjUSZTwdpNPBXw5kBhC55UUBjR2OOY39g
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1171
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [5.04 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	GREYLIST(0.00)[pass,body];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:kernel@esmil.dk,m:pjw@kernel.org,m:aou@eecs.berkeley.edu,m:palmer@dabbelt.com,m:alex@ghiti.fr,m:p.zabel@pengutronix.de,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:lianfeng.ouyang@starfivetech.com,m:changhuang.liang@starfivetech.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-37855-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:eleanor.lin@realtek.com,m:linusw@kernel.org,m:mwalle@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:afaerber@suse.com,m:wbg@kernel.org,m:mathieu.dubois-briand@bootlin.com,m:lars@metafoo.de,m:Michael.Hennerich@analog.com,m:jic23@kernel.org,m:nuno.sa@analog.com,m:andy@kernel.org,m:dlechner@baylibre.com,m:tychang@realtek.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-realtek-soc@lists.infradead.org,m:linux-iio@vger.kernel.org,m:cy.huang@realtek.com,m:stanley_chang@realtek.com,m:james.tai@realtek.com,m:brgl@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-37856-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[irq_domain_ops.map:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,ashevche-desk.local:mid,intel.com:from_mime,intel.com:dkim]
+	R_DKIM_NA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,starfivetech.com:from_mime,starfivetech.com:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CD37D63337C
+X-Rspamd-Queue-Id: 175E66347B3
 
-On Mon, May 25, 2026 at 12:04:09PM +0000, Yu-Chun Lin [林祐君] wrote:
-> > On Tue, May 12, 2026 at 11:33:12AM +0800, Yu-Chun Lin wrote:
-> > > Expose an accessor function to retrieve the gpio_chip pointer from a
-> > > gpio_regmap instance.
-> > >
-> > > This is needed by drivers that use gpio_regmap but also manage their
-> > > own irq_chip, where gpiochip_enable_irq()/gpiochip_disable_irq() must
-> > > be called with the gpio_chip pointer.
-> > >
-> > > Add gpio_regmap_get_gpiochip() to allow drivers with complex custom
-> > > IRQ implementations.
-> > 
-> > Hmm... Can't we rather add
-> > gpio_regmap_enable_irq()/gpio_regmap_disable_irq()
-> > that take regmap or GPIO regmap (whatever suits better for the purpose) and
-> > do the magic inside GPIO regmap library code?
+The JHB100 SoC has 13 pinctrl domains - sys0, sys0h, sys1, sys2, per0, per1,
+per2, per2pok, per3, adc0, adc1, emmc, and vga.
 
-> Thanks for the review! I apologize for the misleading commit message.
-> The real reason I need the struct gpio_chip pointer is to properly set up a custom
-> IRQ domain. Our SoC GPIO controller is quite complex. It routes different trigger
-> types to multiple parent IRQs, which doesn't fit the generic regmap_irq framework.
-> Therefore, we have to create our own irq_domain and pass it to
-> gpio_regmap_config.irq_domain.
-> 
-> The core problem occurs inside our custom irq_domain_ops.map() callback:
-> 
-> static int rtd1625_gpio_irq_map(struct irq_domain *domain, unsigned int irq,
->                                 irq_hw_number_t hwirq)
-> {
-> 	struct rtd1625_gpio *data = domain->host_data;
-> 	struct gpio_chip *gc = data->gpio_chip;
-> 
-> 	/* 
-> 	 * The second argument MUST be struct gpio_chip *.
-> 	 * If we pass our custom data structure here, the kernel will panic later 
-> 	 * in gpiochip_irq_reqres() when it calls irq_data_get_irq_chip_data()
-> 	 * and strictly expects it to be a gpio_chip.
-> 	 */
-> 	irq_set_chip_data(irq, gc);
-> 
-> 	irq_set_lockdep_class(irq, &rtd1625_gpio_irq_lock_class,
-> 				&rtd1625_gpio_irq_request_class);
-> 
-> 	irq_set_chip_and_handler(irq, &rtd1625_iso_gpio_irq_chip, handle_bad_irq);
-> 	irq_set_noprobe(irq);
-> 
-> 	return 0;
-> }
-> 
-> Without an accessor like gpio_regmap_get_gpiochip(), we cannot retrieve the
-> gpio_chip instantiated inside gpio-regmap.c to fulfill these requirements in our
-> map() function.
+In the current series, we will only add the following pinctrl:
+ - sys0, sys0h, sys1, sys2
+ - per0, per1, per2, per2pok, per3
 
-This is all good and needs to be depicted in the cover-letter and/or commit message.
+The remaining pinctrl will be implemented in future series.
 
-> Before I send a v4, I see 3 possible paths:
-> 
-> Option 1: Keep the accessor (Current v3 approach)
-> We keep gpio_regmap_get_gpiochip() but I will completely rewrite the commit message
-> to explain the custom irq_domain_ops.map and lockdep requirements.
-> 
-> Option 2: Let gpiolib create the irq_domain via gpio_regmap_config
-> Instead of creating the irq_domain in our driver, we add all necessary IRQ fields
-> (irq_chip, irq_handler, irq_parents, etc.) into struct gpio_regmap_config. Then
-> gpio-regmap.c populates the gpio_irq_chip structure before calling 
-> gpiochip_add_data(). This prevents an early return and allows the core gpiolib
-> (gpiochip_add_irqchip()) to automatically create the irq_domain for us.
-> Drawback: This adds a lot of fields to gpio_regmap_config and might violate the
-> original design philosophy of gpio-regmap.c (commit ebe363197e52), which explicitly
-> states that it does not implement its own IRQ chip and delegates it to the parent
-> driver.
-> 
-> Option 3: Drop gpio-regmap entirely (Revert to v2 approach)
-> Currently, all drivers using gpio-regmap (mostly simple CPLDs and external I/O cards)
-> use regmap-irq to get their domain. Since our SoC has a complex IRQ routing scheme
-> with multiple parents, maybe gpio-regmap is simply not the right tool for this
-> hardware, and we should just implement a standard GPIO driver directly using gpiolib.
-> 
-> Which approach would you prefer upstream?
+This series depends on the series:
+https://lore.kernel.org/all/20260508053632.818548-1-changhuang.liang@starfivetech.com/
 
-This question to Bart, Linus, and poissibly gpio-regmap stakeholders. I'm not sure
-that my personal opinion will be the best fit here.
+Change since v2:
+- Remove v2 PATCH 3
 
--- 
-With Best Regards,
-Andy Shevchenko
+PATCH 1/2:
+- Replace input-debounce-nanoseconds with input-debounce-ns.
 
+PATCH 4/6/8/10/12/14/16/18/20:
+- Replace unevaluatedProperties with additionalProperties.
+- Add the description for power-source.
 
+PATCH 5:
+- `jhb100_pinconf_group_set()` invokes `jhb100_pinconf_set()` to
+  reduce redundant code.
+- Add `jhb100_pincfg_pin_vref_set()` to handle pin voltage configuration.
+
+PATCH 7/9/11/13/15/17/19/21:
+- Add `numpv` to record the number of elements in the `struct pinvref_desc` array.
+- Remove the `name` member of `struct pinvref_desc`.
+
+PATCH 22:
+- Replace the pin group voltage configuration with individual
+  pin power-source configurations.
+
+v2: https://lore.kernel.org/all/20260514111218.94519-1-changhuang.liang@starfivetech.com/
+v1: https://lore.kernel.org/all/20260424111330.702272-1-changhuang.liang@starfivetech.com/
+
+Changhuang Liang (21):
+  dt-bindings: pincfg-node: Add property 'input-debounce-ns'
+  pinctrl: pinconf-generic: Add property 'input-debounce-ns'
+  dt-bindings: pinctrl: Add starfive,jhb100-sys0-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 sys0 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-sys0h-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 sys0h controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-sys1-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 sys1 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-sys2-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 sys2 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-per0-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 per0 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-per1-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 per1 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-per2-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 per2 controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-per2pok-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 per2pok controller driver
+  dt-bindings: pinctrl: Add starfive,jhb100-per3-pinctrl
+  pinctrl: starfive: Add StarFive JHB100 per3 controller driver
+  riscv: dts: starfive: jhb100: Add pinctrl nodes
+
+ .../bindings/pinctrl/pincfg-node.yaml         |   11 +
+ .../pinctrl/starfive,jhb100-per0-pinctrl.yaml |  179 ++
+ .../pinctrl/starfive,jhb100-per1-pinctrl.yaml |  178 ++
+ .../pinctrl/starfive,jhb100-per2-pinctrl.yaml |  168 ++
+ .../starfive,jhb100-per2pok-pinctrl.yaml      |  159 ++
+ .../pinctrl/starfive,jhb100-per3-pinctrl.yaml |  165 ++
+ .../pinctrl/starfive,jhb100-sys0-pinctrl.yaml |  161 ++
+ .../starfive,jhb100-sys0h-pinctrl.yaml        |  160 ++
+ .../pinctrl/starfive,jhb100-sys1-pinctrl.yaml |  161 ++
+ .../pinctrl/starfive,jhb100-sys2-pinctrl.yaml |  169 ++
+ MAINTAINERS                                   |    9 +
+ arch/riscv/boot/dts/starfive/jhb100-evb1.dts  |    3 +
+ .../boot/dts/starfive/jhb100-pinctrl.dtsi     |   23 +
+ arch/riscv/boot/dts/starfive/jhb100.dtsi      |  110 ++
+ drivers/pinctrl/pinconf-generic.c             |    2 +
+ drivers/pinctrl/starfive/Kconfig              |  115 ++
+ drivers/pinctrl/starfive/Makefile             |   11 +
+ .../starfive/pinctrl-starfive-jhb100-per0.c   |  154 ++
+ .../starfive/pinctrl-starfive-jhb100-per1.c   |  165 ++
+ .../starfive/pinctrl-starfive-jhb100-per2.c   |  126 ++
+ .../pinctrl-starfive-jhb100-per2pok.c         |   97 +
+ .../starfive/pinctrl-starfive-jhb100-per3.c   |  119 ++
+ .../starfive/pinctrl-starfive-jhb100-sys0.c   |  123 ++
+ .../starfive/pinctrl-starfive-jhb100-sys0h.c  |   97 +
+ .../starfive/pinctrl-starfive-jhb100-sys1.c   |   93 +
+ .../starfive/pinctrl-starfive-jhb100-sys2.c   |  134 ++
+ .../starfive/pinctrl-starfive-jhb100.c        | 1607 +++++++++++++++++
+ .../starfive/pinctrl-starfive-jhb100.h        |  152 ++
+ .../pinctrl/starfive,jhb100-pinctrl.h         |  252 +++
+ include/linux/pinctrl/pinconf-generic.h       |    5 +
+ 30 files changed, 4908 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per0-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per1-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per2-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per2pok-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-per3-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys0-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys0h-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys1-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jhb100-sys2-pinctrl.yaml
+ create mode 100644 arch/riscv/boot/dts/starfive/jhb100-pinctrl.dtsi
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-per0.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-per1.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-per2.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-per2pok.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-per3.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-sys0.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-sys0h.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-sys1.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100-sys2.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jhb100.h
+ create mode 100644 include/dt-bindings/pinctrl/starfive,jhb100-pinctrl.h
+
+--
+2.25.1
 
