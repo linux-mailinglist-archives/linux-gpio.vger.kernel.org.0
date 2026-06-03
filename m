@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-37909-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37910-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5zmwBcdJIGoW0QAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37909-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 17:35:35 +0200
+	id I8gAHetLIGot0gAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37910-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 17:44:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C81FB639405
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 17:35:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFAFA6395C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 17:44:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fRFAzz31;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37909-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37909-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OAOVUiJu;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37910-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37910-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 20F7730B0759
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 15:29:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2775131EBAE7
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 15:30:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8A03D647A;
-	Wed,  3 Jun 2026 15:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69E7F3D666F;
+	Wed,  3 Jun 2026 15:27:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22903CF67A;
-	Wed,  3 Jun 2026 15:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506743C768B;
+	Wed,  3 Jun 2026 15:27:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780500335; cv=none; b=WHn53n/+YyIMMB44BJ5peO+/VhJdiWIp9SuRr1Wcqvhb+YSLHgpRg+cV1OLS3KWOPH4D32LKVVoaSjQmThA+FMfkJNq1D2HMyv7q9ntjpktw7a29Rx2Qc0cBe4BJpg8XocjNfkiS35J9dqHTeQ/z3sueHRAfK7hqjcaMup+5uq4=
+	t=1780500425; cv=none; b=FIPWcqTqRGk4dCRkVTYe2rDps39055guHBDBFrKLHIeNQmTZowSFKnRoSxL+Qjfuryn5Ychvxonug1V5q3dV/aCtV2575Bm8wCvKG4bXZgzsLJXQMPAD3KjtGVG5eezrjzBRxr6RDzo1qFHmXLndKcYXohM1hwyGfkr1Tm87HYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780500335; c=relaxed/simple;
-	bh=3T9XLXoNnQY5DKXl9mg8JORPuTpniOa8MzjuOk0JoTQ=;
+	s=arc-20240116; t=1780500425; c=relaxed/simple;
+	bh=cpn4yTiiAFRkkaUNW5AykQVAabdFWHsRgND/Y/Ah4ng=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Tx0aXDygbKvLDY+2LZSTQKOdeGSsjwlZek+xkGMSjXLyprlrp93uXVXKChC4wOpcuP+f3qQMVTmmAYCCrPk6SQDGnN6n6ZO+y56mJreKbtA8vQoZvo5sxa5OhcqYFfv7/y+cAKleC7XsNobwFtdRPVfjGRuadox4jIM3+WPD5KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRFAzz31; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2EF1F00893;
-	Wed,  3 Jun 2026 15:25:33 +0000 (UTC)
+	 MIME-Version:Content-Type; b=uOqUiA2YgDovQtBhH9myBpShWT2Vh557TMnC+wIIuOigX+7NyPkxPBGDzB0Svg5DIbpkQ/DRrWTXqAri03oTiGQA00WDGWB8Ttt6lvTGSiRUpQFF30Z1JzynBihQnzZzNlkwv6gfYjuI6FeHGR4Gdk3BNsHlHJwY38xUruhZ0M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAOVUiJu; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CF41F00893;
+	Wed,  3 Jun 2026 15:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780500334;
-	bh=9z/91wdszmHSOY/XimjV6/xEynDtvQK2rKYHHDh8JsE=;
+	s=k20260515; t=1780500423;
+	bh=pvh7WBcpCvjV07cjJwkDV/jigGYo8N5l/XgPWfRuj38=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=fRFAzz3157zLlLdTXvtinX/acXVmpkbkkG7EoWHxDK3/BzeshPFgeFnGMXSjA1lq7
-	 +xGiwcsERiOx77n7KVJtvKxvp+CwxYuk/ip4PpxDwJPa6hBb7QGcAVoJJJgBRsMFWN
-	 EiX1+lwIxND5rWpJ0FTEzG5t4eQl9kaCsrL02FkW8tCt1kUzpUTQsfId2evzA0LQFM
-	 UcmLaIiH5xKcNZEEhFJba++abdXmE2fa4TSGzQRKJtujbsf07xYf8xi7vGYjEXVP3P
-	 z2wDR+MBfVcIF52UbdrM3pLAPMa2YBs3YhOCbaXHggc3MYo+C/K4fM+L2x9R3F0QpQ
-	 MgySOF9o4xSlg==
+	b=OAOVUiJuQXRzYuxKCuZRwqjJEuQcg4H7nvtvnyFQHEubfZtjMHF6kjKcKzb3TueIV
+	 ZUPljkvrBfJWRynZNImFHR+R1lz1e/yEp1gH+E7vW2qVgljFLClptf+z4u0NLjtdBF
+	 6C1ED51CJ6gy6ICGe0Qg7v7l3Z4Du4UHZnTE669gK5J1D9MO+xafxDwKTC/6qgZ6qN
+	 ZMHPfOE925OfI/H7wSlAi5vY9c53DWh4oSSrQsrm2eIOUFfZ7TqQ/GsQGuJ3SaU6py
+	 j0kAXF3mJyfTYBvn1n2b+R6SfZZYf8VwHPSb/fDSxJCZWXO7VoiHIbEnULm0Dv9TBl
+	 nGANlH8vaIQqA==
 From: Thomas Gleixner <tglx@kernel.org>
 To: Maulik Shah <maulik.shah@oss.qualcomm.com>, Bjorn Andersson
  <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob
@@ -54,12 +54,13 @@ To: Maulik Shah <maulik.shah@oss.qualcomm.com>, Bjorn Andersson
 Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Sneh Mankad
  <sneh.mankad@oss.qualcomm.com>, Maulik Shah <maulik.shah@oss.qualcomm.com>
-Subject: Re: [PATCH v2 3/8] irqchip/qcom-pdc: Remove pdc_enable_intr() wrapper
-In-Reply-To: <20260526-hamoa_pdc-v2-3-f6857af1ce91@oss.qualcomm.com>
+Subject: Re: [PATCH v2 4/8] irqchip/qcom-pdc: Differentiate between direct
+ SPI and GPIO as SPI
+In-Reply-To: <20260526-hamoa_pdc-v2-4-f6857af1ce91@oss.qualcomm.com>
 References: <20260526-hamoa_pdc-v2-0-f6857af1ce91@oss.qualcomm.com>
- <20260526-hamoa_pdc-v2-3-f6857af1ce91@oss.qualcomm.com>
-Date: Wed, 03 Jun 2026 17:25:31 +0200
-Message-ID: <878q8v7ij8.ffs@fw13>
+ <20260526-hamoa_pdc-v2-4-f6857af1ce91@oss.qualcomm.com>
+Date: Wed, 03 Jun 2026 17:27:00 +0200
+Message-ID: <875x3z7igr.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,7 +74,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -85,7 +86,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[tglx@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37909-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37910-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -98,44 +99,30 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,fw13:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[fw13:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C81FB639405
+X-Rspamd-Queue-Id: EFAFA6395C8
 
 On Tue, May 26 2026 at 16:24, Maulik Shah wrote:
+>  /**
+> @@ -92,6 +99,8 @@ struct pdc_cfg {
+>   * @base:           PDC base register for DRV2 / HLOS
+>   * @prev_base:      PDC DRV1 base, applicable only for x1e RTL bug.
+>   * @version:        PDC version
+> + * @num_spis:       Total number of direct SPI interrupts
+> + * @num_gpios:      Total number of GPIOs forwarded as SPI interrupts
+>   * @region:         PDC interrupt continuous range
+>   * @region_cnt:     Total PDC ranges
+>   * @x1e_quirk:      x1e H/W Bug handling
+> @@ -104,6 +113,8 @@ struct pdc_desc {
+>  	void __iomem *base;
+>  	void __iomem *prev_base;
+>  	u32 version;
+> +	u32 num_spis;
+> +	u32 num_gpios;
 
-> pdc->enable_intr() function already points to respective version
-> specific enable function. pdc_enable_intr() now only kept as wrapper.
-> Remove the wrapper and invoke pdc->enable_intr() from caller.
->
-> Locking in pdc_enable_intr() applies lock to all pdc->enable_intr()
-> however its only required for pdc_enable_intr_bank() which uses
-> a shared bank across all interrupts. pdc_enable_intr_cfg() do not
-> required locking as IRQ_CFG registers are one per interrupt. Move
-> locking accordingly.
->
-> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> ---
->  drivers/irqchip/qcom-pdc.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 8f7802139e4e..db76737646e1 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -201,11 +201,14 @@ static void pdc_x1e_irq_enable_write(u32 bank, u32 enable)
->  static void pdc_enable_intr_bank(int pin_out, bool on)
->  {
->  	unsigned long enable;
-> +	unsigned long flags;
->  	u32 index, mask;
->  
->  	index = FIELD_GET(GENMASK(31, 5), pin_out);
->  	mask = FIELD_GET(GENMASK(4, 0), pin_out);
->  
-> +	raw_spin_lock_irqsave(&pdc->lock, flags);
-
-guard()
+Please fix up the struct definition coding style.
+  
 
