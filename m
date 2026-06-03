@@ -1,274 +1,205 @@
-Return-Path: <linux-gpio+bounces-37886-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37887-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gkkCND3oH2rXsAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37886-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 10:39:25 +0200
+	id FqisB7npH2o/sQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37887-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 10:45:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26E9F635C75
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 10:39:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56492635D48
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 10:45:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fjeGGkgq;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37886-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37886-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=alex-min.fr header.s=fm3 header.b=NUhbtQtX;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="H gJyHdR";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37887-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37887-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0514B300C91A
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 08:33:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 46F1130479D9
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 08:40:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D92423164;
-	Wed,  3 Jun 2026 08:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D22346782;
+	Wed,  3 Jun 2026 08:40:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553024219F8
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2026 08:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9D539DBFC;
+	Wed,  3 Jun 2026 08:40:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780475597; cv=none; b=M7qdvZFLH3dN1hPY+oPm84C+rtePUdA/IN2Ih4zjfvX5cEsZ65EwTlBbqd2qrVCSueqReM4lLfA1pVqUfG2KDxBpJEmuk1JcAdu3jCuUYX0NNudNN5wP/klCd3H/Qahkif9mlC/F6jTroPlsc4wgTiL6EFf8EXAJluars7r0d9g=
+	t=1780476021; cv=none; b=t5cXDH//6Ksq3Sq/NnCsX0P7MeNCUMyiaVDWB6ejob7AAtfh+K9yovUySnURhwnrs8KahhWmbcFHkTjMWDPhm6c6YNhAskW5O3F+GKTNOipACCXdltk294qMRyidR1EOgJIIsAIgFum4IQkFKqV5gfw2Yv57lpOiZcobmiAonhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780475597; c=relaxed/simple;
-	bh=NwTppdAGYRjoC9/WHvwJXBjLYl8jO88U2UbbCRMCkiQ=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u9oN1mF2Bgm3LcjXrUrqm8FLXUxN6f8/evTeHZKB7Wa16IJfKeBl47Un6JPb+I3VFcbhn3Ls1cvWeTK2Bf8/Nl2e0QADUMpQjyuU5h2w4imielRH4O9gJP56+54IcgUSWliJpedLWRIhx6yQ6FwCL9nfq4s8TpA6eY1xxU2dOpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjeGGkgq; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2CE1F008A2
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2026 08:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780475596;
-	bh=BKhM1csh9z5+JjmymN13fAvadRkNyF2IwhaSGVkFPUw=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=fjeGGkgqTaDdFlgp7F2aUb3RuuFg6lYP9HF8Gtqqo1PuNp6E/vTgJMtd8rTxiipee
-	 ixr4QZeBeV4IlQQvXsocgWZuThIX2GpohS+WYBm3GGFv/hoQWodtXDgeGzEhiAilL5
-	 7/JiHfwG0t6JgH/L2E7tXIOcUi2gVTWHzqSgPyU/4b9wkOzLzcY3jYlhkeay/5h59v
-	 JBGSmAwlyVDOxL9HirY+3K0WzUHivQ00s7oU7jDiZHzAyx6Jn9oELT7GMxcBpVQ2Q8
-	 ut2kcOS3AuxCG2tFh2p32wcMM6a0uaK9qqVKCOU3bAO2u82DcrM+1mCUdWcuyCWcVB
-	 0n7/AmhC49RWA==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-396775c2720so30267841fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2026 01:33:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+mVe/MjK0HLfeF4fLEJ76A6BCTzrjXdVVy5E5j21Or50XN6UBuY5/RJ2/cBgBv1AyEZ3ZDoPCeFBg+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6yENmDnKAoGXZRTVYzedMuLEm8Eg0xtA8hiOJzoZjKbrBfLi6
-	yUTh7TgR9VZLP0HRTj7XWpuh+tzkZc8/6EeYZ0Ju0IaZjp3zmX35tx4lF96p5TK+YCENiHL70nR
-	B77nFFBDsb81h6GDezkLJWLplbaEdPivuo0dc+Ut67g==
-X-Received: by 2002:a2e:bc84:0:b0:38e:36c2:9bd1 with SMTP id
- 38308e7fff4ca-396af152f48mr7646611fa.11.1780475594724; Wed, 03 Jun 2026
- 01:33:14 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 01:33:12 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 01:33:12 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <5ce415f7-5a21-44b2-bdfe-a6040f5392a5@kernel.org>
+	s=arc-20240116; t=1780476021; c=relaxed/simple;
+	bh=K/rKz6b4F77j0xHWzIXpJgeNDf7V610k4bC4qX6dHXs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CAjnkncX2WHqKbj2AXXxQArdawp+bjePU5J1KjLqSWsYKvP0dFKrTaOL7vrcYsx+gqKbMltIsiRB+5ZiEsNgxYsNJClRvR90mj6HY+7C5ZNnB3ZGeaxRJM8AOUnN0A8jeLBML60N2Y+Z+SZCW/14w6rc65DSHhhiCeOI8Awz/3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alex-min.fr; spf=pass smtp.mailfrom=alex-min.fr; dkim=pass (2048-bit key) header.d=alex-min.fr header.i=@alex-min.fr header.b=NUhbtQtX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HgJyHdRS; arc=none smtp.client-ip=103.168.172.148
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 16D21EC013A;
+	Wed,  3 Jun 2026 04:40:19 -0400 (EDT)
+Received: from phl-imap-03 ([10.202.2.93])
+  by phl-compute-04.internal (MEProxy); Wed, 03 Jun 2026 04:40:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alex-min.fr; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1780476019;
+	 x=1780562419; bh=u0muCYJkeE3pAYE8lO+AAxGI4J4BhmqEcwm6uUfo5uE=; b=
+	NUhbtQtXq9p/nvFoC74C/PrIAJqC6bllujDUVKiqxWWnA84ocxtk6uRXfbIl/0cO
+	i+hsW7ELyy2qYZD2v/NxN1RMlqzwe1lDNKCdu2NlTJgw+WAjLh7kNLcNUvHFF1IL
+	iS0C1chljLts+6KV5h3fW2cToPiEtY+E7HpzNCFTtjuVEXmMLr8hF5aFYnz5qPPu
+	5jpwp/wj/+L2ld7X9mG1jvtQ4xDneF+2XBPdk79P3Ql56K9E9vcu4TZUyQY5/AaD
+	5r3MLSfKiI0YGatPMgpPtI4ij8NwkFxqsMoK2JjN0uyACz4x/yDaEJVzW1TrmEye
+	WczvN6GhHr14LUGUgL4gOw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780476019; x=
+	1780562419; bh=u0muCYJkeE3pAYE8lO+AAxGI4J4BhmqEcwm6uUfo5uE=; b=H
+	gJyHdRSTRsWoDpuJsf7SJWxzVfm1dIVxuZktRPwJpnCUOzGt+eynSj4QNtK9VBt+
+	S0jm6E5WhzgLn1SyDpVYUBSPAyx3cEpzi+K9ebItz+nFl6CiEwGs7Xbqf9ufdJ0F
+	qa/urCO67q/hxfjF2KgfogPWFBJBinLYWw+0JH1FT0aLaZa03sYZ0VX349TGDovy
+	oOlFMR1WDmZ7SrE8yYYN3yPPSfYIfwboNX/K3NeY2ciIrkBrKv6s6JXSRk3xYbNw
+	hj6kGHKzTJ0aSoWPQ2EgmZS3TH8LXrOFmGYto7mmloQbPXrzOUc5FMQNpVxRJ/uO
+	w6gwWCx4qVXzbD948xo1A==
+X-ME-Sender: <xms:cugfalkrtFRJoZEYipjnGJLLK79ssZzaBQRS3TZRTQSDuOKjgz22sw>
+    <xme:cugfaro-Q--4yh0osdZvzxv0hW7y5fXjZZsBFqn6EK_9MbAhq0cmAWn5pv9BvklDV
+    DuUbHK9IKnjTvfYwrB8FjKhhzqrLTyO3gPhI104YnODxkuadkDtEQ>
+X-ME-Proxy-Cause: dmFkZTEjqkwl1pkbDArUnxuEE9GIScT8QO+8RvSWozOv35+sUiTP6ILEcbWB6RLnpvoP3a
+    Ba61CieoqCG+XP2aXBG06Q49zacl1TWZDij9mZ5F82zfTe0jpnrLGMRNbdJvC0FPseuIsm
+    0bTvDzAJDmxhsFLm1cIDD7h68Tco7NgQlFArcyK+9QG8qy/n3pGwgDvY5ukcuRNs+0M9Es
+    CkDowBjDl0Z7YoMuJbADt1w+VnwwQpS8eG6cRxSftCj6tJJ3THuMsY3pr6Lx6fWTZ1EpjI
+    xJvy7fGjVZ/qLMZ7wJa+egFrb1Phw9ygMsklLoOz7gzYuZSTsHb8OctXMhBoqT3RZDHmgx
+    L2BxiLdoF2oa4ypW459jUGwxzF66/Jzr+vCRHuIgIlZUuJZcwvn0f1gibdnq1sRwk6uPJi
+    568djrU1KhUo8av09KNlw3EsHTbJOkngAG+4TtOWgMOiWV9+nfNK5FBg1RLW17c3nXSyzP
+    wAtOx3pWkzFQAyyYKnPlMPfz+eFWVFsDs2z/aWRf9GhXdKFGu9r7CudNWQO0Dl+CpIZfIi
+    ASP+fYv1QfWjokvSqf6xIOP4CayS/+SjmH0wfKidhsSKCZjNVzWIjtj6QL0xlcAp6frGEb
+    I+etpvMfP7exP71LFKgjYtw3I9VIbYnQdH/I88cL0oi3r60YQmb0pXuVXW4A
+X-ME-Proxy: <xmx:cugfajihGlrX1kAJ-qiBxOhBd6SoT11j81dCPcitNeQOHm3I40ydkg>
+    <xmx:cugfarAFq-uIuJD1OXMgI1b5z3zRJseXAfN79wfjPDKdzqCpeRM7sA>
+    <xmx:cugfapve9avYfSV3IYPTPCKmiab9e2uk2aroJolroF4YFoy1nwdoqw>
+    <xmx:cugfat4b3L2DC-G2_6QuNaEqhcEOJLKzCKayrLi7ZD_PVZaeeu5q9Q>
+    <xmx:c-gfanApLeFI2REDd8kclC9auE-RF1W7wpIXdJ4H7oN0pt4tTUxk6jGP>
+Feedback-ID: i72694427:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3B73B18E006C; Wed,  3 Jun 2026 04:40:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <63487206f6e5a93eaf9f41784317fe99d394312f.1780399750.git.chleroy@kernel.org>
- <CAMRc=MdngQbJVQTZXvPKzFjcLOPs4=-6Jtf4Ua4AU0D+sUb9bw@mail.gmail.com>
- <24500088-9849-46e9-b32f-3f08c2ae6261@kernel.org> <CAMRc=Mf9-+MCWANv5hS5g7U7jPBYzS=uQpWXSCKS1JO56uSPqA@mail.gmail.com>
- <5ce415f7-5a21-44b2-bdfe-a6040f5392a5@kernel.org>
-Date: Wed, 3 Jun 2026 01:33:12 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Mf4Z+pikyf3N_vXs9NgtVKUsHO7aELgdEZGmCZxJ9FYAw@mail.gmail.com>
-X-Gm-Features: AVHnY4JFnIKFdFPWT7M0J8gVsHAOiSH2plDnqhUIMhQ0QqmJLSoz-vxxosltGUo
-Message-ID: <CAMRc=Mf4Z+pikyf3N_vXs9NgtVKUsHO7aELgdEZGmCZxJ9FYAw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Remove big fat warning in gpiochip_get_direction()
-To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: PRAT Maximilien <maximilien.prat@cs-soprasteria.com>, Linus Walleij <linusw@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: ABg7bcuugZBJ
+Date: Wed, 03 Jun 2026 10:39:24 +0200
+From: "MINETTE Alexandre" <contact@alex-min.fr>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: "Bjorn Andersson" <andersson@kernel.org>,
+ "Konrad Dybcio" <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "MyungJoo Ham" <myungjoo.ham@samsung.com>,
+ "Chanwoo Choi" <cw00.choi@samsung.com>,
+ "Guru Das Srinagesh" <linux@gurudas.dev>,
+ "Linus Walleij" <linusw@kernel.org>,
+ "Rob Clark" <robin.clark@oss.qualcomm.com>, "Joerg Roedel" <joro@8bytes.org>,
+ "Will Deacon" <will@kernel.org>, "Robin Murphy" <robin.murphy@arm.com>,
+ "Kees Cook" <kees@kernel.org>, "Tony Luck" <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, iommu@lists.linux.dev,
+ phone-devel@vger.kernel.org
+Message-Id: <50c433df-d737-45da-93dc-76d365052a6c@app.fastmail.com>
+In-Reply-To: <20260428-jumping-discerning-oarfish-d2caf1@quoll>
+References: <20260427-mainline-send-v1-sending-v2-0-dcaa9178007b@alex-min.fr>
+ <20260427-mainline-send-v1-sending-v2-7-dcaa9178007b@alex-min.fr>
+ <20260428-jumping-discerning-oarfish-d2caf1@quoll>
+Subject: Re: [PATCH v2 7/8] ARM: dts: qcom: pm8921: Add USB ID extcon
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.15 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[alex-min.fr:s=fm3,messagingengine.com:s=fm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[cs-soprasteria.com,kernel.org,gmail.com,oss.qualcomm.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-37886-lists,linux-gpio=lfdr.de];
+	XM_UA_NO_VERSION(0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,qualcomm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:chleroy@kernel.org,m:maximilien.prat@cs-soprasteria.com,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:bartosz.golaszewski@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:brgl@kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	DMARC_NA(0.00)[alex-min.fr];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[contact@alex-min.fr,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:myungjoo.ham@samsung.com,m:cw00.choi@samsung.com,m:linux@gurudas.dev,m:linusw@kernel.org,m:robin.clark@oss.qualcomm.com,m:joro@8bytes.org,m:will@kernel.org,m:robin.murphy@arm.com,m:kees@kernel.org,m:tony.luck@intel.com,m:gpiccoli@igalia.com,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:iommu@lists.linux.dev,m:phone-devel@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-37887-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[contact@alex-min.fr,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[alex-min.fr:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alex-min.fr:dkim,alex-min.fr:from_mime,alex-min.fr:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 26E9F635C75
+X-Rspamd-Queue-Id: 56492635D48
 
-On Wed, 3 Jun 2026 10:23:08 +0200, "Christophe Leroy (CS GROUP)"
-<chleroy@kernel.org> said:
->
->
-> Le 03/06/2026 =C3=A0 10:11, Bartosz Golaszewski a =C3=A9crit=C2=A0:
->> On Tue, 2 Jun 2026 23:40:22 +0200, "Christophe Leroy (CS GROUP)"
->> <chleroy@kernel.org> said:
->>>
->>>
->>> Le 02/06/2026 =C3=A0 18:13, Bartosz Golaszewski a =C3=A9crit=C2=A0:
->>>> On Tue, Jun 2, 2026 at 1:31=E2=80=AFPM Christophe Leroy (CS GROUP)
->>>> <chleroy@kernel.org> wrote:
->>>>>
->>>>> Since kernel v6.15 the following big fat warning is encountered when
->>>>> reading /sys/kernel/debug/gpio, leading to kernel latency while
->>>>> emiting the warning, and panicing on systems configured to panic on
->>>>> warnings.
->>>>>
->>>>>     ------------[ cut here ]------------
->>>>>     WARNING: drivers/gpio/gpiolib.c:423 at gpiochip_get_direction+0x3=
-c/0x48, CPU#0: cat/12531
->>>>>     CPU: 0 UID: 0 PID: 12531 Comm: cat Tainted: G        W           =
-7.0.10-gitc72c39~-01802-g28c351659258 #27 PREEMPT
->>>>>     Tainted: [W]=3DWARN
->>>>>     Hardware name: MIAE 8xx 0x500000 CMPC885
->>>>>     NIP:  c043c2f8 LR: c043d740 CTR: 00000000
->>>>>     REGS: ca89bc20 TRAP: 0700   Tainted: G        W            (7.0.1=
-0-gitc72c39~-01802-g28c351659258)
->>>>>     MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 24004884  XER: 00000302
->>>>>
->>>>>     GPR00: c043f3f0 ca89bce0 c3278000 c20b5f20 0000000d 00000002 0000=
-0000 c0a76208
->>>>>     GPR08: 00000001 00000000 cccccccd c313d830 84004884 100d815e c0a7=
-6208 c0a761f8
->>>>>     GPR16: c0a761f4 c0a76278 1048834c 10488350 c21c0b04 c21c0d93 c0a5=
-fb74 c313d848
->>>>>     GPR24: c20b5f20 c21c0d94 00000000 00000000 c21c0d94 00000000 c21c=
-0c00 c21c0b04
->>>>>     NIP [c043c2f8] gpiochip_get_direction+0x3c/0x48
->>>>>     LR [c043d740] gpiod_get_direction+0xa0/0x170
->>>>>     Call Trace:
->>>>>     [ca89bce0] [c28157e8] 0xc28157e8 (unreliable)
->>>>>     [ca89bd10] [c043f3f0] gpiolib_seq_show+0x370/0x524
->>>>>     [ca89bd90] [c021dd1c] seq_read_iter+0x174/0x618
->>>>>     [ca89bdd0] [c021e260] seq_read+0xa0/0xd0
->>>>>     [ca89be40] [c031063c] full_proxy_read+0x80/0xc4
->>>>>     [ca89be70] [c01df3e0] vfs_read+0xb4/0x35c
->>>>>     [ca89bee0] [c01e0180] ksys_read+0x8c/0x15c
->>>>>     [ca89bf10] [c000dc94] system_call_exception+0x88/0x154
->>>>>     [ca89bf30] [c00110a8] ret_from_syscall+0x0/0x28
->>>>>     ---- interrupt: c00 at 0xfc629e8
->>>>>     NIP:  0fc629e8 LR: 0fc62a34 CTR: 00000000
->>>>>     REGS: ca89bf40 TRAP: 0c00   Tainted: G        W            (7.0.1=
-0-gitc72c39~-01802-g28c351659258)
->>>>>     MSR:  0000d032 <EE,PR,ME,IR,DR,RI>  CR: 28004884  XER: 00000302
->>>>>
->>>>>     GPR00: 00000003 7f8df6a0 77e37540 00000003 7f8df6e8 00001000 0000=
-0000 00000000
->>>>>     GPR08: 00000000 7f8e3efc 00000000 7f8e06f0 7f8e3efc 100d815e 7fe7=
-0e10 100d0000
->>>>>     GPR16: 100d0000 00000001 1048834c 10488350 22000882 77e3fe68 1000=
-596c 77e40b28
->>>>>     GPR24: 00000000 28004884 01000000 00001000 7f8df6e8 00000003 0fde=
-36a0 00000000
->>>>>     NIP [0fc629e8] 0xfc629e8
->>>>>     LR [0fc62a34] 0xfc62a34
->>>>>     ---- interrupt: c00
->>>>>     Code: 9421fff0 7c0802a6 90010014 7d2903a6 4e800421 2c030001 40810=
-008 3860ffcc 80010014 38210010 7c0803a6 4e800020 <0fe00000> 3860ffa1 4e8000=
-20 81230020
->>>>>     ---[ end trace 0000000000000000 ]---
->>>>>
->>>>> This is due to a WARN_ON() added by commit ec2cceadfae7 ("gpiolib:
->>>>> normalize the return value of gc->get() on behalf of buggy drivers")
->>>>> when the gpiochip doesn't implement get_direction() function. But
->>>>> according to the documentation in <linux/gpio/driver.h> implementing
->>>>> get_direction() is only a recommendation, not a requirement. And
->>>>> regarless, WARN_ON() has no added value here, dumping all CPU
->>>>> registers doesn't give any useful information for that case.
->>>>>
->>>>> Lower it to a simple warn_on_once() message.
->>>>>
->>>>> Fixes: ec2cceadfae7 ("gpiolib: normalize the return value of gc->get(=
-) on behalf of buggy drivers")
->>>>> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
->>>>> ---
->>>>
->>>> Please use scripts/get_maintainers.pl.
->>>
->>> That's what I did, what is the problem ?
->>>
->>> $ ./scripts/get_maintainer.pl --nom --nor --nomultiline --norolestats
->>> --nogit --nogit-fallback
->>> tmp/0001-gpiolib-Remove-big-fat-warning-in-gpiochip_get_direc.patch
->>> Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij
->>> <linusw@kernel.org>, Bartosz Golaszewski
->>> <bartosz.golaszewski@oss.qualcomm.com>, linux-gpio@vger.kernel.org,
->>> linux-kernel@vger.kernel.org
->>>
->>
->> I would expect my brgl@kernel.org address to show up, the -nom option re=
-moves
->> it.
->
-> Ah .. I see. Thanks for the notice.
->
-> Indeed I use two calls, first one to populate the To:
->
-> ./scripts/get_maintainer.pl --nol --nomultiline --norolestats --nogit
-> --nogit-fallback
->
-> then second one to populate the Cc:
->
-> ./scripts/get_maintainer.pl --nom --nor --nomultiline --norolestats
-> --nogit --nogit-fallback
->
-> Then I saw same names appearing in second result in addition to mailing
-> lists so I took only the second result, overlooking that your adress was
-> different between the two results.
->
-> Indeed the second result was initially supposed to only provide the
-> mailing lists, but since some time now it also provides names and I have
-> to manually compare the two results to avoid duplicates. I need to look
-> into that more deeply.
->
+Thanks for the feedback, Krzysztof.
 
-May I interest you in b4 - the de-facto standard tool for managing kernel
-patches? :)
+Do you mean that the PM8921 USB ID handling should be exposed by the
+PM8921 parent node itself, so USB consumers would reference the PMIC
+directly, e.g.:
 
-Bart
+  	extcon =3D <&muic>, <&pm8921>;
 
+I am fine with that model, but it would require more driver changes: the
+current extcon driver binds to a separate platform device, while the
+PM8921 parent node is already handled by the PM8xxx MFD driver.
+
+Is that the direction you would prefer for v4?
+--=20
+  MINETTE Alexandre
+  contact@alex-min.fr
+
+Mar 28 avr 2026, =C3=A0 08:56, Krzysztof Kozlowski a =C3=A9crit=E2=80=AF:
+> On Mon, Apr 27, 2026 at 09:34:53PM +0200, Alexandre MINETTE wrote:
+>> Add the PM8921 USB ID interrupt as a disabled extcon provider. Boards
+>> can enable it when their USB controller consumes the PMIC USB ID state
+>> for OTG role detection.
+>>=20
+>> The interrupt corresponds to PM8921 USB_ID_IN, block 6 bit 1.
+>>=20
+>> Signed-off-by: Alexandre MINETTE <contact@alex-min.fr>
+>> ---
+>>  arch/arm/boot/dts/qcom/pm8921.dtsi | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/qcom/pm8921.dtsi b/arch/arm/boot/dts/q=
+com/pm8921.dtsi
+>> index 535cb6a2543f..30366536f580 100644
+>> --- a/arch/arm/boot/dts/qcom/pm8921.dtsi
+>> +++ b/arch/arm/boot/dts/qcom/pm8921.dtsi
+>> @@ -121,6 +121,13 @@ ref_muxoff: adc-channel@f {
+>>  				reg =3D <0x00 0x0f>;
+>>  			};
+>>  		};
+>> +
+>> +		usb_id: usb-detect {
 >
->>
->>>>
->>>> What driver are you using?
->>>
->>> I have the following ones declared in the device tree:
->>>
->>> 			CPM1_PIO_A: gpio-controller@950 {
->>> 				#gpio-cells =3D <2>;
->>> 				compatible =3D "fsl,cpm1-pario-bank-a";
->>> 				reg =3D <0x950 0x10>;
->>> 				gpio-controller;
->>> 			};
->>
->> I'll send a patch shortly implementing get_direction() for it.
+> You should not mix non-addressable children with addressable. If you
+> really do not have address, but other children have, then probably this
+> is part of the main device, so should be folded into the parent node.
 >
-> Thanks
->
-> Christophe
->
+> Best regards,
+> Krzysztof
 
