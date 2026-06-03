@@ -1,338 +1,237 @@
-Return-Path: <linux-gpio+bounces-37877-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37878-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id qiACFdPRH2qYqQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-37877-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 09:03:47 +0200
+	id xQueFjvUH2pAqgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-37878-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 09:14:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D39AE634F4F
-	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 09:03:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B20446350C1
+	for <lists+linux-gpio@lfdr.de>; Wed, 03 Jun 2026 09:14:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=AKqH74tA;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37877-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37877-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=V5IRhwVo;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37878-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37878-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98EF230FECA9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 06:58:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72E79312BD5A
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2026 07:05:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010E53FC5C1;
-	Wed,  3 Jun 2026 06:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E3839902D;
+	Wed,  3 Jun 2026 07:04:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740EF3F8ED2
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2026 06:57:40 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780469865; cv=none; b=C0b02hg7CJt1TmAtdnDuxxstPyeMNkQpSJ0qXjSiqbQdEbv3V0R5AZVBPEWw5Dl8pL8M3QjCHayhm3L/HmT4iiEkCEBHWrs+5j6tuVvc+6d24t05/atBhPdGVKmKsGmThWc+sp0TpCcobexDlb5z0mA8NOtHnpUHMwnHc3Z6izc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780469865; c=relaxed/simple;
-	bh=ArdiZoAGQwpoWZVY4IF7DJ2u/oPUbMOICOHzmdTTGZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FS6AGED660pO9WTXeKFgK8KLYJspGzlZXlmAwyKqbdwLtcCNS01TQmDKUh2848ZyhIX2zgWpPUzfnFzl8zK4j4M/41oXhyO9sigsc6jgiC3NEMm8SKd0LDxfsttYmncnR8p5nypaZIJdHbafuosK/60y0I1lVSzEF1PCPQjQ5PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AKqH74tA; arc=none smtp.client-ip=209.85.128.51
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49068493267so71717935e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jun 2026 23:57:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E76B346AD5
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2026 07:04:27 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780470269; cv=pass; b=QArDxpwTEArx8qWEBZVVUk9IRm3NO+n6/2+4wEKNZoBdDI6+P4FGaoas8lOOhhmZ2hrvncvPDMKjV0YjD8616onc2D18BIQoyjOrFAk9GlemHp6hEOmQRxjqbBPZVYGI4f/O8fCWCkXxBMJdIPoP1CRgib2ftqwyduaoQ769bRU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780470269; c=relaxed/simple;
+	bh=o8pvyt194UnZGpP/NNEXkeam+tkA+4rAxFe6pRuyOl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=porFjYt38HnJaL+RATbfQg37fbTgl9CS06xEoMDWkMhXCxW+wfMBv8o7vZ0XLJ+aGpH9qcwwxuFDKregd5m5wVgcPdWCtEzmQJfFXPIJsUDnZC0k8bH16VWVSzq989i/693M9Gr3ZcBw6lEVFu+oXZoFu6//P4USp753HvHk/2Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5IRhwVo; arc=pass smtp.client-ip=209.85.128.172
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7dc6fbf3e86so76326597b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2026 00:04:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780470267; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RWzv7aCpkVnjKOXO8GIK7uoSV6O1hrEcNnMa6XPeqYG0cMnwQmOR6kG0oNx1UYMT8v
+         eYQbsx9xdzrH5vd3D38vGgcv4FdJlIZ5agggdWCU+5pvTbQENBzERReR9WBQ6uAvE590
+         w1nk5SdB2oxdWpsWZTJLGHIfAAk1mrQFFyLFVJjcM5sFNfCrqR/mTrOEb1FhpRMThRrx
+         6NBusZE6j7MuQRzzfp7wxINaAxryU97uHft9rxfW6fRyL8kIyQFS4YQgXoCf2RwHJbH3
+         U6jGB05U5/JdBoV+04j3q8yODyerbO8kNTj7BYvd3UbeJxRTXLUPHUhxVW2TYu83f+x3
+         iqDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=YFjfWS4vOB8ZIsi+lcNJimBrXZON8uJh/eIp35B9+MA=;
+        fh=VrgWGGS1JRXMXCFok33pc5POfSCcykz6aBk1Ix2Ah6k=;
+        b=MKvDAAyUXLKaRdUjX/hoXyRoJTffNHVUSsTL85I5PyXaJ86XrqXmB69iFkfRfW3G1Q
+         2+fSoS7ppjZFOWXg2aMczWdDf1xV5PNw4GE93V28ZA+8+MVSIUysYGacQ36fDKZ2x+9c
+         jX9jMmQb+J7tqGG4t+CJ6JmQ9NbFaFqSEGghHLlJtXPboSJO5fOHqa/xn5DH8HAAJdmQ
+         LPr9cIjfRc3XnYSUa0NsiJ9aoH+ySqXRBMBlXWhybaFpd5E23h2vF8SEZG269qWe83On
+         HJXYRXgRYD7vTgxbWC0uD+NT4H6d/cv/MYysFVykZQ+g0DUALbDgghA0m0KGcA4Nro1O
+         PpaA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780469859; x=1781074659; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fFGZrHmncLri6kV222EUMVc1OpR6lKxmRgI9L0qpQa0=;
-        b=AKqH74tAaDlLHLL6DnrHvqODLOEXjer2nKJ/UGh+lq3pAF9ElGuZQDwbToFF2aGwAC
-         krKekBKuUclEAKSs4nQemXE9MZSE43QR2IAD5refiJCbpoOn8vEuXVCDueOydBpybANd
-         fLOg2RjWBVLiiKpF9P17KxM/YLAWmz7jv1Y6yDiARgymCUOXKVhygYqPGOnzFkIPOU5S
-         iQR+4qmRpyB4k3bZ9mihBGySFQXw+VmcyI51gYwKjrufhMfiokBKwn5Uwm7sn48O7JzV
-         DQN+GQpc83xJRUNzNBujj9tU+UmtSI8KDKUPx/vszfwFmUGXCuE3TqL5apNXFkQtKJq5
-         wZSA==
+        d=gmail.com; s=20251104; t=1780470267; x=1781075067; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YFjfWS4vOB8ZIsi+lcNJimBrXZON8uJh/eIp35B9+MA=;
+        b=V5IRhwVoCswMHeLCwBXIHqpdxmhCTuSdifKUN1Apt5FCtFjwykZJWvzGcCvvJnTAhw
+         hIoErGeM8wNaNQ97mIn+l5OJzGKWmFTWki9dfotZr6wI+g2ifX+pPJpPIHiXD9NgRGoX
+         TRsiFrFgXYJIyDYbqzDuaXeM6NA6+T72JQ5ojoI7wUY+nztlyhn/H5W9MqPR9vn9Rd59
+         RUuRuA+LC4Uo/P2sEdSDfyiXY2SJrJ4fuNPyMc9F4N+q2yGPQ59jiy6Kb+CNIIptWJMV
+         xcg1+yXg5gUVsKkIcV2ifmydnqUGk28uZBo5ole1wKjTl5b0M8FXkz2AGK26q9eVpd9U
+         8hMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780469859; x=1781074659;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fFGZrHmncLri6kV222EUMVc1OpR6lKxmRgI9L0qpQa0=;
-        b=qh3ZCglRkeOW3BCFxIkjwNqokkS3IOsj4MB54zNdHm1FgZKfxARmc0SdZoBGAQykYQ
-         j/0yEWkZlIoGy+nDJE+sn/xqIANI/k79x7O7LNJqCtHdXyB2bKpgBZrdhHEOQjlJENzZ
-         SmFaPWZKq+tapSaBG2vXIHPvWj9FuWP3a9BPOO5yWe7kN5LuNRngnUgf2P9a/jtges29
-         LdaH1tYtaOcoxQRCF3QCg8uSN1PA2NBGvSGlEEDRXT/ivk8tcVkauzVunlrz8KMk3gzx
-         hd4WFf46aAzd+Zj7QTZSP+fI4BLWV/u4BvxUBTOuomcTZ0NtbEIbHswR9pOiJmZl+zNk
-         OXJw==
-X-Forwarded-Encrypted: i=1; AFNElJ+D9FCYKaeK7vvjWgPuivyzwWQ6pDmEflJVLjqbNVDCAqtw3Jhw0vig8RNR0Ezl07+QkmvIzE7TztY4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF4SBSgnbgKgNXAbWPQl0DI9q0fs6VXKT+IF4o0OvtfGYwzmio
-	lwEDa8VGmVJGPbSSa9NBJbZpATFxh9s53wNnWW7qwFDf5+aqQvwJo/sI
-X-Gm-Gg: Acq92OFDYqySaEFfS/dBuFoY19XKPnehwbhkUXOLgjW9CGlRv5ALsqTVFoBahUbkbVC
-	YlNYg8h0iRw/sDvs36h5WoPshPAqhFgiuJsLTYe2f33W5jboDztVxdAWZKIiUJnaEq1LSvrpmnZ
-	5kARvlN3VfcK2H7rTzgzuO26l1Cfq7qm2LKAVeiDd9n6roBjAsxVZZYM0+3euogmViUqImQqWio
-	FkvvjY6fdEx5gYKi/FCmDlot9tb9hfNcY/MNUhol7zPmyxxLsDS3dzhO5tAkvSPRv78RBGWfoOc
-	zJpjOGeFB49E/frcrlRyeRnr8awt3IsWEixm5/jFKzSSsmbBdxQwIVMU+NK2IRfkLLV0+aRDdmP
-	5bCz4I9zZb4r5LhVmskOF93vj9To8P08danTbwrNDMHjGD3zNzc7hk5FRYmy5m3swV3Pts48IWb
-	cEtwS6tEFXlaGyjJPCK0Ht0p4TbM1ZOf7MbWlOOfIE98Ob2lA9+LNXEpYZFeA=
-X-Received: by 2002:a05:600c:1e0f:b0:490:3ff5:737f with SMTP id 5b1f17b1804b1-490b5ed6353mr27425655e9.18.1780469858808;
-        Tue, 02 Jun 2026 23:57:38 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:23c4:a700:7301:179c:89ab:19f6:9ba4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b79d90bdsm9001855e9.0.2026.06.02.23.57.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 23:57:38 -0700 (PDT)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v17 03/17] pinctrl: renesas: rzg2l: Add SD channel POC support for RZ/G3L
-Date: Wed,  3 Jun 2026 07:57:03 +0100
-Message-ID: <20260603065731.93243-4-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260603065731.93243-1-biju.das.jz@bp.renesas.com>
-References: <20260603065731.93243-1-biju.das.jz@bp.renesas.com>
+        d=1e100.net; s=20251104; t=1780470267; x=1781075067;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YFjfWS4vOB8ZIsi+lcNJimBrXZON8uJh/eIp35B9+MA=;
+        b=Uo++Ded5ypIITuuPfSumGRg2zvfjQTVxgWOF6SXGdf5PkBamLJfP5AZ33mezUVu3FQ
+         wy6OxrQcvQR3H05u4JLjRJIumyPbHOc+t3ZuyIJhFGlVGuApvTa5Sip87/ksihdCFAvH
+         wKMmnfpl/tSKd7X3YQL7sys+k4eE/bD4U8maTWYSaWZfivU+cyZPdGp7u3Dnd5vV9F0x
+         etML2iCjg6YFSrWMsPy6/6tLCCHvkIVVKCTFtm6XDHedUij2P4892QhYoKsISf/LeyYW
+         AycUkAW1qLCozB05Eliqz/dRlkeNJFRGFMBAbcFGZjMxiDL4UGB5lgCfrx8Q7tvLTOD/
+         RcCg==
+X-Forwarded-Encrypted: i=1; AFNElJ9hkzo0tAME9yDrnCD8+k5B2AK5dN2C3tDtU0iimYkb4sU8XM3AGZyarmFmB9WDfieeYCoF+eW2oQmX@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKYulYXcDyOvq5mbc3JR88B8hI+ZrNNHv1q+kkvGtU2unEqO5B
+	3qLZiR5/41/W4VBqXM7Hn9Dtb5H2SyeNugy/CZ+lxbjrKxSGsrz+3LgMzKr8y4n/sv+P5uQXOqz
+	rt/YI1gkPAkfalQ6/z83/E+gYf9bHLzQ=
+X-Gm-Gg: Acq92OHu9ssz1xG8tjB9pwoshJuhXPSQ27a4eLsybjtwoXYKmG4GJwMyoR739FDzz3O
+	uU+Fa+/dRsDPd9awCyJQXaj+vnCiN6ON6iRJKTYoXuhkVocu4BYREg4XpbUD1LLs6W/6LuHOXGP
+	B+4or6vCXJuxaWJdlzL+4B56c91QVudeyliSnaxUab5G+a++TxeQDL/KSHBenyBIO64uALvyVJr
+	nGDK+hGb2Ak/b5nJ/WUJrYpJA2Hu8R84Ln6SV0hWo1duTwP8jZs5cacFoSYJieAZtzYZAp9Io5g
+	N2k3X+XAvYr8Pk7p9lTL4f85t4I/3xUlT5QcrcTCfzF+VTwoGG3r/ncXS8jMTcReV8Lh7spH405
+	YeSfQh6s1wAcrF5KBzBCUyiShtOamtfI1HcVXVCXfcJRKc7c6CyLqMla04k8jZjv0cwbNCA==
+X-Received: by 2002:a05:690c:3707:b0:7c0:56f:5b7f with SMTP id
+ 00721157ae682-7ea483d5565mr19903837b3.20.1780470266693; Wed, 03 Jun 2026
+ 00:04:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260529100838.8896-1-hardikprakash.official@gmail.com>
+ <20260529100838.8896-3-hardikprakash.official@gmail.com> <20260602185339.GA404948@ax162>
+ <CANTFpSX0Ehpno7b=xrnqzmENn=sfKj1UcyRzXvMyy4Rcyr7NhA@mail.gmail.com> <ah9frnHDuIjF_1Su@ashevche-desk.local>
+In-Reply-To: <ah9frnHDuIjF_1Su@ashevche-desk.local>
+From: Hardik Prakash <hardikprakash.official@gmail.com>
+Date: Wed, 3 Jun 2026 12:34:14 +0530
+X-Gm-Features: AVHnY4IfePfp2mgJ42-3WHNo5a1Y9C179aCngSkASewMVW3OugcwPO9DdVH0LC8
+Message-ID: <CANTFpSXAXP16TUK7n+pTBgZOYRqCyF4kqkf9X-TK9O_rKWY1VQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] i2c: designware: defer probe if child GpioInt
+ controllers are not bound
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-i2c@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, wsa@kernel.org, mario.limonciello@amd.com, 
+	brgl@bgdev.pl, basavaraj.natikar@amd.com, linusw@kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	"Mario Limonciello (AMD)" <superm1@kernel.org>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37877-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:nathan@kernel.org,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:superm1@kernel.org,m:lkp@intel.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:geert+renesas@glider.be,m:linusw@kernel.org,m:biju.das.jz@bp.renesas.com,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:biju.das.au@gmail.com,m:geert@glider.be,m:bijudasau@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-37878-lists,linux-gpio=lfdr.de];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,bp.renesas.com:mid,renesas.com:email]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D39AE634F4F
+X-Rspamd-Queue-Id: B20446350C1
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+On Wed, Jun 03, 2026 at 04:26, Andy Shevchenko wrote:
+> Linus, if you applied this patch, please drop it. There are problems
+> with patch code wise and functional wise. It needs more love and work.
 
-Add power-on control (POC) support for SD channels 1 and 2 on the RZ/G3L
-SoC (r9a08g046).
+Understood. I agree that the patch should be dropped. The NULL pointer
+dereference reported by Nathan and the code issues you've identified
+both need to be addressed properly before resubmission.
 
-Introduce PIN_CFG_IO_VMC_SD2 capability flag (bit 22) and SD_CH2_POC
-register offset (0x3024). Extend rzg2l_caps_to_pwr_reg() to return
-SD_CH2_POC when PIN_CFG_IO_VMC_SD2 is set.
+I will rework the patch addressing all your feedback and the NULL check
+for resource_source.string_ptr. I will send a new version once all of the
+issues are rectified.
 
-Replace RZG3L_MPXED_PIN_FUNCS() with RZG2L_MPXED_COMMON_PIN_FUNCS() for
-port PG and PH pins, dropping PIN_CFG_SOFT_PS which is inappropriate for
-SD pins, and annotate them with PIN_CFG_IO_VMC_SD1 and PIN_CFG_IO_VMC_SD2
-respectively.
+Thanks,
+Hardik
 
-Annotate all RZ/G3L SD0 dedicated pins (CLK, CMD, RST#, DS, DAT0–DAT7)
-with PIN_CFG_IO_VMC_SD0 so that power-source register lookups work
-correctly for those pins.
-
-Add sd_ch2 field to rzg2l_register_offsets and rzg2l_pinctrl_reg_cache to
-save and restore the SD_CH2_POC register across suspend/resume cycles.
-
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v1->v2:
- * No change.
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 74 +++++++++++++++++--------
- 1 file changed, 50 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 83c61dcb24b1..b1d4b2b9e176 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -69,6 +69,7 @@
- #define PIN_CFG_PVDD1833_OTH_AWO_POC	BIT(19) /* known on RZ/G3L only */
- #define PIN_CFG_PVDD1833_OTH_ISO_POC	BIT(20) /* known on RZ/G3L only */
- #define PIN_CFG_WDTOVF_N_POC		BIT(21) /* known on RZ/G3L only */
-+#define PIN_CFG_IO_VMC_SD2		BIT(22) /* known on RZ/G3L only */
- 
- #define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
- #define RZG2L_VARIABLE_CFG		BIT_ULL(62)	/* Variable cfg for port pins */
-@@ -258,6 +259,7 @@ static const struct pin_config_item renesas_rzv2h_conf_items[] = {
-  * @oen: OEN register offset
-  * @qspi: QSPI register offset
-  * @other_poc: OTHER_POC register offset
-+ * @sd_ch2: SD_CH2_POC register offset
-  */
- struct rzg2l_register_offsets {
- 	u16 pwpr;
-@@ -266,6 +268,7 @@ struct rzg2l_register_offsets {
- 	u16 oen;
- 	u16 qspi;
- 	u16 other_poc;
-+	u16 sd_ch2;
- };
- 
- /**
-@@ -372,6 +375,7 @@ struct rzg2l_pinctrl_pin_settings {
-  * @oen: Output Enable register cache
-  * @other_poc: OTHER_POC register cache
-  * @qspi: QSPI registers cache
-+ * @sd_ch2: SD_CH2_POC registers cache
-  */
- struct rzg2l_pinctrl_reg_cache {
- 	u8	*p;
-@@ -390,6 +394,7 @@ struct rzg2l_pinctrl_reg_cache {
- 	u8	oen;
- 	u8	other_poc;
- 	u8	qspi;
-+	u8	sd_ch2;
- };
- 
- struct rzg2l_pinctrl {
-@@ -474,20 +479,32 @@ static const u64 r9a08g046_variable_pin_cfg[] = {
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 5, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 6, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 7, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 0, RZG3L_MPXED_PIN_FUNCS(B)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 1, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 2, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 3, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 4, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 5, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 0, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 1, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 2, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 3, RZG2L_MPXED_COMMON_PIN_FUNCS(B) | PIN_CFG_IEN |
-+				    PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 4, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 5, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 6, RZG3L_MPXED_PIN_FUNCS_POC(B, ISO)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 7, RZG3L_MPXED_PIN_FUNCS_POC(B, ISO)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 0, RZG3L_MPXED_PIN_FUNCS(B)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 1, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 2, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 3, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 4, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 5, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 0, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 1, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 2, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 3, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 4, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 5, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 0, RZG3L_MPXED_PIN_FUNCS(A) | PIN_CFG_IEN),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 1, RZG3L_MPXED_PIN_FUNCS(A)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 2, RZG3L_MPXED_PIN_FUNCS(A)),
-@@ -1053,6 +1070,8 @@ static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs,
- 		return SD_CH(regs->sd_ch, 0);
- 	if (caps & PIN_CFG_IO_VMC_SD1)
- 		return SD_CH(regs->sd_ch, 1);
-+	if (caps & PIN_CFG_IO_VMC_SD2)
-+		return regs->sd_ch2;
- 	if (caps & PIN_CFG_IO_VMC_ETH0)
- 		return ETH_POC(regs->eth_poc, 0);
- 	if (caps & PIN_CFG_IO_VMC_ETH1)
-@@ -2677,28 +2696,28 @@ static const struct rzg2l_dedicated_configs rzg3l_dedicated_pins[] = {
- 	  (PIN_CFG_IOLH_A | PIN_CFG_PUPD | PIN_CFG_PVDD1833_OTH_AWO_POC)) },
- 	{ "SCIF0_TXD", RZG2L_SINGLE_PIN_PACK(0x6, 1,
- 	  (PIN_CFG_IOLH_A | PIN_CFG_PUPD | PIN_CFG_PVDD1833_OTH_AWO_POC)) },
--	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0, PIN_CFG_IOLH_B) },
-+	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0, PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0) },
- 	{ "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x9, 1,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
--	{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x9, 2, PIN_CFG_IOLH_B) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
-+	{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x9, 2, PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0) },
- 	{ "SD0_DS", RZG2L_SINGLE_PIN_PACK(0x9, 5,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT0", RZG2L_SINGLE_PIN_PACK(0x0a, 0,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT1", RZG2L_SINGLE_PIN_PACK(0x0a, 1,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT2", RZG2L_SINGLE_PIN_PACK(0x0a, 2,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT3", RZG2L_SINGLE_PIN_PACK(0x0a, 3,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT4", RZG2L_SINGLE_PIN_PACK(0x0a, 4,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT5", RZG2L_SINGLE_PIN_PACK(0x0a, 5,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT6", RZG2L_SINGLE_PIN_PACK(0x0a, 6,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT7", RZG2L_SINGLE_PIN_PACK(0x0a, 7,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- };
- 
- static const u32 r9a08g046_clone_channel_data[] = {
-@@ -3672,6 +3691,9 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
- 			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
- 	}
- 
-+	if (regs->sd_ch2)
-+		cache->sd_ch2 = readb(pctrl->base + regs->sd_ch2);
-+
- 	if (regs->qspi)
- 		cache->qspi = readb(pctrl->base + regs->qspi);
- 	cache->oen = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
-@@ -3724,6 +3746,9 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
- 	rzg2l_oen_write_with_pwpr(pctrl, cache->oen);
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-+	if (regs->sd_ch2)
-+		writeb(cache->sd_ch2, pctrl->base + regs->sd_ch2);
-+
- 	for (u8 i = 0; i < 2; i++) {
- 		if (regs->sd_ch)
- 			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
-@@ -3794,6 +3819,7 @@ static const struct rzg2l_hwcfg rzg3l_hwcfg = {
- 		.eth_poc = 0x3010,
- 		.oen = 0x3018,
- 		.other_poc = OTHER_POC,
-+		.sd_ch2 = 0x3024,
- 	},
- 	.iolh_groupa_ua = {
- 		/* 1v8 power source */
--- 
-2.43.0
-
+On Wed, 3 Jun 2026 at 04:26, Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Wed, Jun 03, 2026 at 01:20:24AM +0530, Hardik Prakash wrote:
+> > On Wed, Jun 03, 2026 at 00:23, Nathan Chancellor wrote:
+> > > I bisected boot issues with a few of my test machines to this change
+> > > in -next as commit ef76a3a28c79. I seem to recall a crash in strcmp()
+> > > in one log but I cannot be too sure.
+> >
+> > Thank you for bisecting this.
+> >
+> > The strcmp() crash is likely the issue. In
+> > check_gpioint_resource(), we access agpio->resource_source.string_ptr
+> > without checking whether it is NULL first:
+> >
+> >     if (!strcmp(tmp->path, agpio->resource_source.string_ptr))
+> >     ref->path = kstrdup(agpio->resource_source.string_ptr, ...)
+> >
+> > The acpi_resource_source struct has a string_length field -- when it is
+> > 0, string_ptr will be NULL. On your machines, likely some GPIO resource
+> > apparently has no resource source string, which we did not account for.
+> >
+> > I am preparing a fix that skips GPIO resources with no resource source
+> > string (string_length == 0 || string_ptr == NULL). I will test it on
+> > my hardware first and send a patch shortly.
+> >
+> > Sorry for the regression.
+>
+> Linus, if you applied this patch, please drop it. There are problems with patch
+> code wise and functional wise. It needs more love and work.
+>
+> > On Wed, 3 Jun 2026 at 00:23, Nathan Chancellor <nathan@kernel.org> wrote:
+> > > On Fri, May 29, 2026 at 03:38:37PM +0530, Hardik Prakash wrote:
+> > > > I2C controllers may have child devices with GpioInt resources that
+> > > > depend on GPIO controllers to be fully initialized. If the I2C
+> > > > controller probes and enumerates children before the referenced GPIO
+> > > > controller has completed probe, GPIO interrupts may not be properly
+> > > > configured, leading to device failures.
+> > > >
+> > > > On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
+> > > > AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
+> > > > pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
+> > > > AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
+> > > > occur before the GPIO IRQ quirk in amd_gpio_probe() has run, causing:
+> > > >
+> > > >   i2c_designware AMDI0010:02: i2c_dw_handle_tx_abort: lost arbitration
+> > > >
+> > > > Add a generic dependency check in i2c-designware that walks ACPI child
+> > > > devices, identifies any GpioInt resources, resolves the referenced GPIO
+> > > > controllers, and defers probe if those controllers are not yet bound.
+> > > >
+> > > > This ensures GPIO controllers complete initialization (including IRQ
+> > > > setup and quirks) before I2C child enumeration begins, fixing the race
+> > > > without device-specific quirks or DMI matching.
+> > > >
+> > > > The probe ordering race was confirmed via dynamic debug tracing:
+> > > >
+> > > >   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
+> > > >   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
+> > > >   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
+> > > >   2.348157  lost arbitration
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
