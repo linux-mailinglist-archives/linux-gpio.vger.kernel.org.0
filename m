@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37956-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UUzgC4CLIWpfIgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:16 +0200
+	id MaEOI4iLIWpmIgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-37956-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0ABC640DF6
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D2F0640E06
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=dUvTpz51;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=bcKKaZv1;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37956-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37956-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 782D031BCBB6
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:17:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1658631BEC0E
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6834448B399;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02ECC48BD52;
 	Thu,  4 Jun 2026 14:14:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF3E481A8E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ED0472772;
 	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780582444; cv=none; b=Tfg+qpvR2QW/WimfiDllI9pvkCS8cc3o0mPMUSIKPXNxQXp5ADVW03VD0GUgGuhgPzImG8H7f4WuMFmxMPuV/ewFXqlAVCLsWGm3vRoXT+lJqLASHMJnseYxXe5b705XASHt1H9aqt+sbpnDlMD6vYoNiN5v1Y6LJmHIEX4z0rU=
+	t=1780582444; cv=none; b=I9B+ii50Iujg6mSu0hlRr3bP3EC0yF4je2hw7qQ4NGVlwOqXPivotRX5Fsxw/iPYal6VRRG2sVJ1s0Y2fvkVi3zZb7M8uXC/NphWe8D9pLzLnFRYYoiBUYHE+rGVC1+6VRrb8c1PUCj2Wt91W7a9XseIeJqyzm5wlWRb1Gk9ous=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780582444; c=relaxed/simple;
-	bh=tWwbEs8FGaSWXCHu7fkyMkarjjIYlQ6rEDB4ChST04E=;
+	bh=P5T0QdiUtUUc3yfg+4YRcekBidFP3FtN9qvlxhJwdCA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DJMOMkmzSPRKuYRqR5byQYyLM8JGwsUZ83vF6DG0ZbjIEWpvkuKvniUTfcOOD1Wcq3VOvtjU6bji8infTZHacUjeZkKrKVzysIVbO+9LlsNC3AJQSpQL9SImv4OhoeJbf+cuMi7s/0KmtNuWvVyrF49ktVDj/Y0Q3MKmCIeHIHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUvTpz51; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 00AA6C4AF0B;
+	 In-Reply-To:To:Cc; b=uc7Z3NeWwlOXxm0gVwHJGp4Aa/XLubDtN44IETCVJzsA2E8fxva2vcR4231YlYCCYJdvbWP7NIyVDFyfLOHVmv9pPxZF86SHoa6a8xSeoszXlAp97U+c8tezGzYCshu3EamY9GBXdSTKkyF0PRfhmoqVKfsvmcv+9g+C2Tyz2xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcKKaZv1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0EDA0C2BD04;
 	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780582444;
-	bh=tWwbEs8FGaSWXCHu7fkyMkarjjIYlQ6rEDB4ChST04E=;
+	bh=P5T0QdiUtUUc3yfg+4YRcekBidFP3FtN9qvlxhJwdCA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dUvTpz514Bmg07LmdHc/lPR18sbkC39IMHYNqvxbnoqT/HOpLnBDHnaCvxz6k/eaI
-	 WtTzhywoDi4KxIjv1AmPxQsOEZhbie1lvp7fcGSoeTq+SA+712by9DJFC9qJeEwwFu
-	 h2mgjuiA9l1Z2JCa0BBgHqgry26/i7m/NAw6szOlKyC5p4RUhAH07URS21GlZt5T0i
-	 R+qYDCW8IcsH8gnnp41Lcqu3WdFWD9v2eGy2x2ArqaV3rbcxUOWTNgSGAnfpF89P31
-	 rvYLcyNzU4GHP4XUW3rct6pwNxhoW5q0RaR0FbwlcH7MVWNnSErvSCLDaSGQA2wx7h
-	 e5ha+Zww0TYag==
+	b=bcKKaZv1KObzqHyCEeK0riyBqkxQbI1VSxONgYeXsh+/JAAizmFQ3SaM93w+LVFFt
+	 3+gv8N9Y6vZ1Y1yFWyjiss6JTVBQeIs7zP3oebdiqWFMeSyHVDKNc5Rz5Np1Nt9saY
+	 WzwCnBLGI2g1DsZJzBijbGoB3q+R8JfAeD46mwq1OBWXd91nUwqbc3Xb/Cu/khQvoP
+	 saV7LhRoFB4Zm+Bh4PYtZYZvr1B/rf8diIDYCI8gbjcvdDIv3y2WpciCJEKUHUroFG
+	 m4ate2utGn4M2RX/cSAjPs65ijarnlNZ2nrNubRg2KERvdRVXt0HWr26DeODweD57B
+	 dLAu/R1W1Xifw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1B9CD6E76;
-	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08363CD6E6D;
+	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 04 Jun 2026 17:13:57 +0300
-Subject: [PATCH v13 10/22] dt-bindings: media: i2c: max96712: add
- control-channel-port property
+Date: Thu, 04 Jun 2026 17:13:58 +0300
+Subject: [PATCH v13 11/22] dt-bindings: media: i2c: max96714: add support
+ for MAX96714R
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260604-gmsl2-3_serdes-v13-10-9d8a4919983b@analog.com>
+Message-Id: <20260604-gmsl2-3_serdes-v13-11-9d8a4919983b@analog.com>
 References: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 In-Reply-To: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -76,14 +76,13 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org, 
  =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
  Martin Hecht <Martin.Hecht@avnet.eu>, 
- Vivekananda Dayananda <vivekana@amd.com>, 
- Dumitru Ceclan <dumitru.ceclan@analog.com>
+ Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1192;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1267;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=WKlYD0eiVlHNx0Fb7+p6Th7PFjpFBfxW7UWVkEB+CEM=;
- b=PH74URc8vjK0bjnUYD1jz3n7W2OvNb60jYWRpDpqkp5z6OMduyjPbES9pJDt4YN778U6HxUDJ
- gu+Vy4Z2iBrAzpXeQO8wnYpWvD2jgaWDuxtVgBgW3AMsuP7oeziR+TS
+ bh=zOCbIvONkBm9sImxMI6AYdByC42n/O8SZsebFGXPD4g=;
+ b=16sCY6sHQnRhXadi3AcXe+iNK6yhB7Z4nyqNiRQLTVLu9CpfLf8gGcfvGDEBUHmtKeuEufOhB
+ CSCvLV+RjdJAKT+98AF2/D/6W8HKs/eM7zJOscf5jAdaVn0eVBzN2Uj
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -100,17 +99,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37950-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-37956-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:vivekana@amd.com,m:dumitru.ceclan@analog.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:demonsingur@gmail.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu,amd.com,analog.com];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -124,41 +123,44 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:email,analog.com:replyto]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D0ABC640DF6
+X-Rspamd-Queue-Id: 3D2F0640E06
 
-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 
-Add maxim,control-channel-port property to allow platforms choose which
-control-channel port MAX96724 exposes to the upstream I2C host.
+MAX96714R is a lower capability variant of the MAX96714 which only
+supports a fixed rate of 3Gbps in the forward direction.
 
-Suggested-by: Vivekananda Dayananda <vivekana@amd.com>
-Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index 161d40acdd28..538b639d4f54 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -41,6 +41,14 @@ properties:
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+index 3ace50e11921..ec6a91c4a51c 100644
+--- a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+@@ -22,7 +22,9 @@ description:
  
-   enable-gpios: true
- 
-+  maxim,control-channel-port:
-+    description:
-+      Selects which deserializer control-channel port is connected to the
-+      upstream I2C segment when the device resets. 0 selects port 0, 1 selects
-+      port 1. Defaults to 0 when omitted.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1]
+   The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
+   forward direction and 187.5Mbps in the reverse direction.
+-  MAX96714F only supports a fixed rate of 3Gbps in the forward direction.
 +
-   i2c-alias-pool:
-     maxItems: 4
++  MAX96714F and MAX96714R only support a fixed rate of 3Gbps in the forward
++  direction.
  
+ properties:
+   compatible:
+@@ -31,6 +33,7 @@ properties:
+       - items:
+           - enum:
+               - maxim,max96714
++              - maxim,max96714r
+           - const: maxim,max96714f
+ 
+   reg:
 
 -- 
 2.53.0
