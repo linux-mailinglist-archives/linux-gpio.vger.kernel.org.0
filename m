@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DuLNCWSLIWpRIgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:27:48 +0200
+	id UUzgC4CLIWpfIgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:16 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6ED3640DCE
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:27:47 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0ABC640DF6
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:28:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=CNx4zx59;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=dUvTpz51;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37950-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 20C1C31169DB
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:16:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 782D031BCBB6
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:17:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06D548AE10;
-	Thu,  4 Jun 2026 14:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6834448B399;
+	Thu,  4 Jun 2026 14:14:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F86D48125F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF3E481A8E;
 	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780582444; cv=none; b=B8Cyem6wWVGFcjRUFJxYbpIgeYbjVJXiK9TlECKCfiClgHzI9UiscpXw5+y3IjPefAgk8W2mnrZ/aDSql6PKHctuCEWX+gBcA28Dw1DlJ6zlNa1uFHBbGw2ob3tHnIkHCp3g3q9kcL3Hq7DUUh7kUztSC91GbdYDa5pY/bddkJ4=
+	t=1780582444; cv=none; b=Tfg+qpvR2QW/WimfiDllI9pvkCS8cc3o0mPMUSIKPXNxQXp5ADVW03VD0GUgGuhgPzImG8H7f4WuMFmxMPuV/ewFXqlAVCLsWGm3vRoXT+lJqLASHMJnseYxXe5b705XASHt1H9aqt+sbpnDlMD6vYoNiN5v1Y6LJmHIEX4z0rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780582444; c=relaxed/simple;
-	bh=IVMjQPi6cuXsnNOAOBqZV5+FmGTZcU/k97taVGCOIoE=;
+	bh=tWwbEs8FGaSWXCHu7fkyMkarjjIYlQ6rEDB4ChST04E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NBfEv4l0a6CjyuirhbbgptX0AbOMmsqEEIYtBw9fd7kiekpjdSeQ40ACWFHi1+SBxH0aHhRLN+wuWjxsRUIPhEgX+3o/GxK+yn+BbRHv7NSLFL12RsQY78Jn6qYzn3ZrvywwINUHH0Cl1+7zT94CwqZMYvsPa89XTztdSW9Ya5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNx4zx59; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E65E4C2BCF4;
-	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=DJMOMkmzSPRKuYRqR5byQYyLM8JGwsUZ83vF6DG0ZbjIEWpvkuKvniUTfcOOD1Wcq3VOvtjU6bji8infTZHacUjeZkKrKVzysIVbO+9LlsNC3AJQSpQL9SImv4OhoeJbf+cuMi7s/0KmtNuWvVyrF49ktVDj/Y0Q3MKmCIeHIHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dUvTpz51; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 00AA6C4AF0B;
+	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780582444;
-	bh=IVMjQPi6cuXsnNOAOBqZV5+FmGTZcU/k97taVGCOIoE=;
+	bh=tWwbEs8FGaSWXCHu7fkyMkarjjIYlQ6rEDB4ChST04E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CNx4zx59FUXsnC2yPN7SVwMk12nYD+30fxFW2ZjEVhEcv8gE+i/0mP+9kRZ1wdmI0
-	 0ipcQQbAw008XoAUhGDEVpGeX0EHIWxQjlmzFGxbQdXZV6anfpQtOEa3mfnmNgRUJ1
-	 Vm3AGXPw0/bBX0HshVdLbBcOaSgjt70P/K4S0A4GHfDrqTBfQI6VNFBHYU6Gt4tw6E
-	 ZcvJ6sppHll2t3gg8m4Jy0Axa2Yzlp3cQsjWvMP3JE4gG/Pep2Ug0yh0rESYVBKqfK
-	 aJCRcDD3eiD4rKNujRwAG8mHs6u5tXJDF/M26ncjrgACjU++gmGRXlnXsdWQCXsBNL
-	 v4n6st6oVDitg==
+	b=dUvTpz514Bmg07LmdHc/lPR18sbkC39IMHYNqvxbnoqT/HOpLnBDHnaCvxz6k/eaI
+	 WtTzhywoDi4KxIjv1AmPxQsOEZhbie1lvp7fcGSoeTq+SA+712by9DJFC9qJeEwwFu
+	 h2mgjuiA9l1Z2JCa0BBgHqgry26/i7m/NAw6szOlKyC5p4RUhAH07URS21GlZt5T0i
+	 R+qYDCW8IcsH8gnnp41Lcqu3WdFWD9v2eGy2x2ArqaV3rbcxUOWTNgSGAnfpF89P31
+	 rvYLcyNzU4GHP4XUW3rct6pwNxhoW5q0RaR0FbwlcH7MVWNnSErvSCLDaSGQA2wx7h
+	 e5ha+Zww0TYag==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D7CD6E75;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1B9CD6E76;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 04 Jun 2026 17:13:56 +0300
-Subject: [PATCH v13 09/22] dt-bindings: media: i2c: max96712: add support
- for MAX96724F/R
+Date: Thu, 04 Jun 2026 17:13:57 +0300
+Subject: [PATCH v13 10/22] dt-bindings: media: i2c: max96712: add
+ control-channel-port property
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,8 +60,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260604-gmsl2-3_serdes-v13-9-9d8a4919983b@analog.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260604-gmsl2-3_serdes-v13-10-9d8a4919983b@analog.com>
 References: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 In-Reply-To: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -76,13 +76,14 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org, 
  =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
  Martin Hecht <Martin.Hecht@avnet.eu>, 
- Cosmin Tanislav <demonsingur@gmail.com>
+ Vivekananda Dayananda <vivekana@amd.com>, 
+ Dumitru Ceclan <dumitru.ceclan@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1289;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1192;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=ZSTakNbBz4Qus1NiPPbe76vFnVEQ3NLtF7fl+Vgxvf8=;
- b=O4bJ0upT6OS+Y+B76GAjepaPSnDWnCJxgcrQBDyL/A2b/+pFRflWgAZQpA7cGe+cWMFsgg2ZE
- I3jGjEEXSHLAfCr5/9Lq4lZeg3ASL3vqMqlHmdDLBUvJ9gbBn3e4RtN
+ bh=WKlYD0eiVlHNx0Fb7+p6Th7PFjpFBfxW7UWVkEB+CEM=;
+ b=PH74URc8vjK0bjnUYD1jz3n7W2OvNb60jYWRpDpqkp5z6OMduyjPbES9pJDt4YN778U6HxUDJ
+ gu+Vy4Z2iBrAzpXeQO8wnYpWvD2jgaWDuxtVgBgW3AMsuP7oeziR+TS
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -95,21 +96,21 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37949-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-37950-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:demonsingur@gmail.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:vivekana@amd.com,m:dumitru.ceclan@analog.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu,amd.com,analog.com];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -122,45 +123,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,analog.com:mid,analog.com:replyto,ragnatech.se:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:email,analog.com:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B6ED3640DCE
+X-Rspamd-Queue-Id: D0ABC640DF6
 
-From: Cosmin Tanislav <demonsingur@gmail.com>
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-MAX96724F/MAX96724R are a lower capability variant of the MAX96724 which
-only support a fixed rate of 3Gbps in the forward direction.
+Add maxim,control-channel-port property to allow platforms choose which
+control-channel port MAX96724 exposes to the upstream I2C host.
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+Suggested-by: Vivekananda Dayananda <vivekana@amd.com>
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index d2dd72f2e924..161d40acdd28 100644
+index 161d40acdd28..538b639d4f54 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -23,12 +23,17 @@ description: |
-   MAX96712 can be paired with first-generation 3.12Gbps or 1.5Gbps GMSL1
-   serializers or operate up to 3.12Gbps with GMSL2 serializers in GMSL1 mode.
+@@ -41,6 +41,14 @@ properties:
  
-+  MAX96724F and MAX96724R only support a fixed rate of 3Gbps in the forward
-+  direction.
+   enable-gpios: true
+ 
++  maxim,control-channel-port:
++    description:
++      Selects which deserializer control-channel port is connected to the
++      upstream I2C segment when the device resets. 0 selects port 0, 1 selects
++      port 1. Defaults to 0 when omitted.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1]
 +
- properties:
-   compatible:
-     items:
-       - enum:
-           - maxim,max96712
-           - maxim,max96724
-+          - maxim,max96724f
-+          - maxim,max96724r
+   i2c-alias-pool:
+     maxItems: 4
  
-   reg:
-     description: I2C device address
 
 -- 
 2.53.0
