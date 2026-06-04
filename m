@@ -1,57 +1,58 @@
-Return-Path: <linux-gpio+bounces-37947-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37944-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id jCw3KJSMIWrUIgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-37947-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:32:52 +0200
+	id PfxkD5OKIWoFIgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-37944-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:24:19 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B90D7640E8F
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:32:51 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A605B640D62
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:24:18 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=PcA0FNTS;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37947-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37947-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=uA+1b37N;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37944-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37944-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 635593088B2F
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:17:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B16A5314D56D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:15:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CB548A2DB;
-	Thu,  4 Jun 2026 14:14:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90F6480DE9;
+	Thu,  4 Jun 2026 14:14:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEC5481670;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3BD48166B;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780582444; cv=none; b=cQg3wZc7Q2jgboRMCnKAUTb3OqfiSW/7LJrFumyUE2EdXefOohU/dSq4l6VMqyzAPhELPmRJvuo8nt0avN7iFWl2lGLntkHunQNat0s6QLjkI3MWsi8ZRWhXKUAoW8Ru7xB78Fe0mY8LCUl2xXk957fF0XZyYMlyC+uPuVtodms=
+	t=1780582444; cv=none; b=etZM0p3i3h4ZB3CV6HNCkJ0zPCnNh5R7pK0qNeRcMJYbJisDl/lrEMVL5GrG9lOAXSSgdzpwL9865yCmVdSthlYXGHfVEk9sWVf4WN8enEF+yTT7iOvpJxKcdxHLWLSTORoJcAj6xrFKmUzsPzU/BVdzc3WXtWn+xeL4oKCj8PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780582444; c=relaxed/simple;
-	bh=cpDukcPxVJzXko/L0eFDwxYderoS/dpMlVO2IjtjjHE=;
+	bh=m/Lw3D9Sn7b/iEdL6eTGT3K2tR/KZoA6l9gCS1mqNBI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=blXkRFYnB8WVD4aGyhi5RGYTB4KYoKCeTd0oykwyDraE/Sl2rfQX4qmSkp1WspYgV5varP7zzWcjsm++HGwAS79fqdp/dm86fRlf6IpiAlqLKLwKkv52TOikuRhGptSZQIV/UWdA1CvcZSHEtt+7xWx7xrMOAj3+1C/vVd+fEWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcA0FNTS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 75C63C2BCC9;
+	 In-Reply-To:To:Cc; b=QmKyB2ECV6CF1mcwtF4k2cSn63JC4ocptEIGAi1fx4CJ8vJJXTwkei22/OWqfOi1K7A4sIi0OGZYjV5Pz53NJLHgcejs4QbtVvoc3toMXZR4cFLf/4QdiSOf1E0oI+dk5oM+h5PY5NhPAOyIcR3WPbeH3lYQCQOLsdLQBAMd6yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uA+1b37N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81BC9C2BCF5;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780582443;
-	bh=cpDukcPxVJzXko/L0eFDwxYderoS/dpMlVO2IjtjjHE=;
+	bh=m/Lw3D9Sn7b/iEdL6eTGT3K2tR/KZoA6l9gCS1mqNBI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PcA0FNTS55gW/GvdS0EBZKGGtu+e3TcmNnI+d+hDlAqEeGHhyD7vuOsZbvjNZJ9RK
-	 WQ/WkYRfiA+xB+QEqUdDxcseVcT4WF0BbIKWmUg8ar8WuuHinahCtilwSMm1XyXADf
-	 3t7vxUxd+WjnOIMu+e8ULoB3lLq3W9BhKlVkLgRn+9EBSJa+I9XmKx0pTpZPPDmGi3
-	 IkxGsUCgDu5Lw5DeuVpst9ETO9sRGKBZwd+/1JB+L/hcZrPvJp3YQ8SXvCuq12/Ha0
-	 zteTEf5XEqMDbvj7VD2L51+9O3ao30YUhqzxBDN6OWNIS5Eq9TcHtiqgiZe48L/lCi
-	 bIClLDvThP3ng==
+	b=uA+1b37NQSmArtACLB2NbG399sY551NDvZPqU+G5d24GwYMzoT1TZvYjGKmYjTBar
+	 A5nwm0CveDwTbK5FO6cERlkJpprDwPyoflWJj2rWgLX0Wbzoo2PtR+xMgn5y83uPnW
+	 zfB6t/AjBoIs9019bOkIdqAQFjcfOfMaDO3yMQt4ziCr+aWwpcalgEpBI752KKa+xd
+	 hlH+NjeD0YNqTWcUw+Jp8ql86kitCp3qA8Dp2iAJU3+fe0Z0yJjNMk78gXR6jSGCkk
+	 /lTHrUSa9h7FNmjda0Br2t+AN808zjBqWFLOjgfxnAl/TzjRpNWzTaALx8Q7XdRtj+
+	 Amyqv6wzQ7J5g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62850CD6E4A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7700FCD6E6D;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 04 Jun 2026 17:13:48 +0300
-Subject: [PATCH v13 01/22] media: mc: Add INTERNAL pad flag
+Date: Thu, 04 Jun 2026 17:13:49 +0300
+Subject: [PATCH v13 02/22] dt-bindings: media: i2c: max96717: add support
+ for I2C ATR
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260604-gmsl2-3_serdes-v13-1-9d8a4919983b@analog.com>
+Message-Id: <20260604-gmsl2-3_serdes-v13-2-9d8a4919983b@analog.com>
 References: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 In-Reply-To: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -75,13 +76,13 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org, 
  =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
  Martin Hecht <Martin.Hecht@avnet.eu>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+ Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=4211;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1814;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=j75z8BDeqCgnWrq6GF1INTACeRkTAkS70gXnWGmC/2E=;
- b=0H5gnxjMk+pL86WmvkDK+iQkEcyObv91msCSUtMusyTDYQFatVHOLqWYi3VA/doxN0aTH7Yc5
- nMEH+D3VVDsCFRoKe3uAO2TUfj9wYNr4uGYsoptkNgwHw72BGDcrx+N
+ bh=OiYJqgg6XnogVXqu3cCeY60g1Qzx0eB+PgiVHCOJen4=;
+ b=b/8iO1IKwIbm4AvBCUVd+sxz3X81kSbSKscEm+RoTqDmaAd00gbZcstxyREnV89JWUyBuW1/W
+ Lw4A/5IUgT9AwSeq9T4i7Gu7nIfyRF40ITR3Ze6xoT9qZzl0GTAbaog
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -94,21 +95,21 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37947-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-37944-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:niklas.soderlund@ragnatech.se,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:niklas.soderlund+renesas@ragnatech.se,m:Martin.Hecht@avnet.eu,m:demonsingur@gmail.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu,ideasonboard.com];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -121,111 +122,81 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ideasonboard.com:email,intel.com:email,vger.kernel.org:from_smtp,analog.com:mid,analog.com:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,analog.com:mid,analog.com:replyto,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B90D7640E8F
+X-Rspamd-Queue-Id: A605B640D62
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 
-Internal sink pads will be used as routing endpoints in V4L2 [GS]_ROUTING
-IOCTLs, to indicate that the stream begins in the entity. Internal sink
-pads are pads that have both SINK and INTERNAL flags set.
+MAX96717 is capable of address translation for the connected I2C slaves.
 
-Also prevent creating links to pads that have been flagged as internal and
-initialising SOURCE pads with INTERNAL flag set.
+Add support for I2C ATR while keeping I2C gate for compatibility to
+support this usecase.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../userspace-api/media/mediactl/media-types.rst          |  9 +++++++++
- drivers/media/mc/mc-entity.c                              | 15 ++++++++++++---
- include/uapi/linux/media.h                                |  1 +
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ .../bindings/media/i2c/maxim,max96717.yaml         | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/userspace-api/media/mediactl/media-types.rst b/Documentation/userspace-api/media/mediactl/media-types.rst
-index 6332e8395263..200c37a1da26 100644
---- a/Documentation/userspace-api/media/mediactl/media-types.rst
-+++ b/Documentation/userspace-api/media/mediactl/media-types.rst
-@@ -361,6 +361,7 @@ Types and flags used to represent the media graph elements
- .. _MEDIA-PAD-FL-SINK:
- .. _MEDIA-PAD-FL-SOURCE:
- .. _MEDIA-PAD-FL-MUST-CONNECT:
-+.. _MEDIA-PAD-FL-INTERNAL:
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+index d1e8ba6e368e..976f6dd2c164 100644
+--- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+@@ -91,6 +91,30 @@ properties:
+       incoming GMSL2 link. Therefore, it supports an i2c-gate
+       subnode to configure a sensor.
  
- .. flat-table:: Media pad flags
-     :header-rows:  0
-@@ -381,6 +382,14 @@ Types and flags used to represent the media graph elements
- 	  enabled links even when this flag isn't set; the absence of the flag
- 	  doesn't imply there is none.
- 
-+    *  -  ``MEDIA_PAD_FL_INTERNAL``
-+       -  The internal flag indicates an internal pad that has no external
-+	  connections. As they are internal to entities, internal pads shall not
-+	  be connected with links.
++  i2c-alias-pool:
++    maxItems: 2
 +
-+	  The internal flag may currently be present only in a sink pad where it
-+	  indicates that the :ref:``stream <media-glossary-stream>`` originates
-+	  from within the entity.
- 
- One and only one of ``MEDIA_PAD_FL_SINK`` and ``MEDIA_PAD_FL_SOURCE``
- must be set for every pad.
-diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
-index 3fa0bc687851..7938f785e2e3 100644
---- a/drivers/media/mc/mc-entity.c
-+++ b/drivers/media/mc/mc-entity.c
-@@ -209,11 +209,16 @@ int media_entity_pads_init(struct media_entity *entity, u16 num_pads,
- 		mutex_lock(&mdev->graph_mutex);
- 
- 	media_entity_for_each_pad(entity, iter) {
-+		const u32 pad_flags = iter->flags & (MEDIA_PAD_FL_SINK |
-+						     MEDIA_PAD_FL_SOURCE |
-+						     MEDIA_PAD_FL_INTERNAL);
++  i2c-atr:
++    type: object
++    additionalProperties: false
 +
- 		iter->entity = entity;
- 		iter->index = i++;
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      '^i2c@[01]$':
++        $ref: /schemas/i2c/i2c-controller.yaml#
++        unevaluatedProperties: false
++        properties:
++          reg:
++            items:
++              minimum: 0
++              maximum: 1
++
+ required:
+   - compatible
+   - reg
+@@ -98,6 +122,21 @@ required:
  
--		if (hweight32(iter->flags & (MEDIA_PAD_FL_SINK |
--					     MEDIA_PAD_FL_SOURCE)) != 1) {
-+		if (pad_flags != MEDIA_PAD_FL_SINK &&
-+		    pad_flags != (MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_INTERNAL) &&
-+		    pad_flags != MEDIA_PAD_FL_SOURCE) {
- 			ret = -EINVAL;
- 			break;
- 		}
-@@ -1118,7 +1123,8 @@ int media_get_pad_index(struct media_entity *entity, u32 pad_type,
+ additionalProperties: false
  
- 	for (i = 0; i < entity->num_pads; i++) {
- 		if ((entity->pads[i].flags &
--		     (MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_SOURCE)) != pad_type)
-+		     (MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_SOURCE |
-+		      MEDIA_PAD_FL_INTERNAL)) != pad_type)
- 			continue;
- 
- 		if (entity->pads[i].sig_type == sig_type)
-@@ -1148,6 +1154,9 @@ media_create_pad_link(struct media_entity *source, u16 source_pad,
- 		return -EINVAL;
- 	if (WARN_ON(!(sink->pads[sink_pad].flags & MEDIA_PAD_FL_SINK)))
- 		return -EINVAL;
-+	if (WARN_ON(source->pads[source_pad].flags & MEDIA_PAD_FL_INTERNAL) ||
-+	    WARN_ON(sink->pads[sink_pad].flags & MEDIA_PAD_FL_INTERNAL))
-+		return -EINVAL;
- 
- 	link = media_add_link(&source->links);
- 	if (link == NULL)
-diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-index 1c80b1d6bbaf..80cfd12a43fc 100644
---- a/include/uapi/linux/media.h
-+++ b/include/uapi/linux/media.h
-@@ -208,6 +208,7 @@ struct media_entity_desc {
- #define MEDIA_PAD_FL_SINK			(1U << 0)
- #define MEDIA_PAD_FL_SOURCE			(1U << 1)
- #define MEDIA_PAD_FL_MUST_CONNECT		(1U << 2)
-+#define MEDIA_PAD_FL_INTERNAL			(1U << 3)
- 
- struct media_pad_desc {
- 	__u32 entity;		/* entity ID */
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
++
++  - anyOf:
++      - oneOf:
++          - required: [i2c-atr]
++          - required: [i2c-gate]
++
++      - not:
++          required: [i2c-atr, i2c-gate]
++
++dependentRequired:
++  i2c-atr: [i2c-alias-pool]
++  i2c-alias-pool: [i2c-atr]
++
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
 
 -- 
 2.53.0
