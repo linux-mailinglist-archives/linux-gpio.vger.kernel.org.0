@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-37952-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 6cKFA6GKIWoOIgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-37952-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:24:33 +0200
+	id DuLNCWSLIWpRIgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:27:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 790EA640D6E
-	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:24:32 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6ED3640DCE
+	for <lists+linux-gpio@lfdr.de>; Thu, 04 Jun 2026 16:27:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=tweW4p1y;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37952-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37952-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=CNx4zx59;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-37949-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 443153159A8A
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:15:28 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 20C1C31169DB
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2026 14:16:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3DC348BD46;
-	Thu,  4 Jun 2026 14:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06D548AE10;
+	Thu,  4 Jun 2026 14:14:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CB8481A96;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F86D48125F;
 	Thu,  4 Jun 2026 14:14:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780582444; cv=none; b=HY0DCdIVN9A8rI1x+LZo8abJwK/dFoOheTSwTi6lh+neqap+zDGhwVflarEWDKKJi++VWPczWbVcsM08IbsMcu0eePMh8llKsTWTxZrWRGJBe6O+pTNVwnl2K+MYGL9/n2ocjw8w8sGcS5Go/ftc69H/GfBnEm5tGl/C/PTCfQI=
+	t=1780582444; cv=none; b=B8Cyem6wWVGFcjRUFJxYbpIgeYbjVJXiK9TlECKCfiClgHzI9UiscpXw5+y3IjPefAgk8W2mnrZ/aDSql6PKHctuCEWX+gBcA28Dw1DlJ6zlNa1uFHBbGw2ob3tHnIkHCp3g3q9kcL3Hq7DUUh7kUztSC91GbdYDa5pY/bddkJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780582444; c=relaxed/simple;
-	bh=uqnWPcYuomOdK+CZnQbIn/W5p1Thhpmu4YbDCuYmLeQ=;
+	bh=IVMjQPi6cuXsnNOAOBqZV5+FmGTZcU/k97taVGCOIoE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iNfgOyVfvc7s1sqvshzZ2+DVaBM1jEcRC4UlPiQbKMtGHUJAn5hdy+SxcH3Nwn8CLZ7lqlu1JV6ABZHrcbPlCOPYsB+jT059l5/vwHO0+YW50UfUX/A9oA+pEflj1dRI3xFGn6lTGYHXoJlCSmrzFwGI0lxGP4hqbZhmDNP9CJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tweW4p1y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DACBEC2BCFF;
+	 In-Reply-To:To:Cc; b=NBfEv4l0a6CjyuirhbbgptX0AbOMmsqEEIYtBw9fd7kiekpjdSeQ40ACWFHi1+SBxH0aHhRLN+wuWjxsRUIPhEgX+3o/GxK+yn+BbRHv7NSLFL12RsQY78Jn6qYzn3ZrvywwINUHH0Cl1+7zT94CwqZMYvsPa89XTztdSW9Ya5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNx4zx59; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E65E4C2BCF4;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780582443;
-	bh=uqnWPcYuomOdK+CZnQbIn/W5p1Thhpmu4YbDCuYmLeQ=;
+	s=k20201202; t=1780582444;
+	bh=IVMjQPi6cuXsnNOAOBqZV5+FmGTZcU/k97taVGCOIoE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tweW4p1yrZ0gRVEyTtW9HGBe0tFdFoGCYTB247f2ub7tHdXcciuDZX0Eih6hglZ2b
-	 yCaP3zJ781es/gtYzW3nMIUq0vbT//X4beiyZ0HCgAOHGd+KiG64KPtAX/tUf0IrpX
-	 a3X5FDwidfwNP4KQHuhbm55K8cbRUW3kneuoan+ZFKi+TgV9WlgG3Cr8aQBrHOcv9C
-	 H1Dk+s8RKziHyUnDtDQCITApIz4907luXpBkbBabdQsFRLy1a41ZtURCy71z/yUHLB
-	 TPeRrd3Zg8YBcm7T7Y4KltitDE8RQ/nvImcZUiohxSiiaLugA+/0i0LpCHX/RzM6yk
-	 e5N2mp/4WJXIQ==
+	b=CNx4zx59FUXsnC2yPN7SVwMk12nYD+30fxFW2ZjEVhEcv8gE+i/0mP+9kRZ1wdmI0
+	 0ipcQQbAw008XoAUhGDEVpGeX0EHIWxQjlmzFGxbQdXZV6anfpQtOEa3mfnmNgRUJ1
+	 Vm3AGXPw0/bBX0HshVdLbBcOaSgjt70P/K4S0A4GHfDrqTBfQI6VNFBHYU6Gt4tw6E
+	 ZcvJ6sppHll2t3gg8m4Jy0Axa2Yzlp3cQsjWvMP3JE4gG/Pep2Ug0yh0rESYVBKqfK
+	 aJCRcDD3eiD4rKNujRwAG8mHs6u5tXJDF/M26ncjrgACjU++gmGRXlnXsdWQCXsBNL
+	 v4n6st6oVDitg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E50CD6E4A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D7CD6E75;
 	Thu,  4 Jun 2026 14:14:03 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 04 Jun 2026 17:13:55 +0300
-Subject: [PATCH v13 08/22] dt-bindings: media: i2c: max96712: add support
- for POC supplies
+Date: Thu, 04 Jun 2026 17:13:56 +0300
+Subject: [PATCH v13 09/22] dt-bindings: media: i2c: max96712: add support
+ for MAX96724F/R
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260604-gmsl2-3_serdes-v13-8-9d8a4919983b@analog.com>
+Message-Id: <20260604-gmsl2-3_serdes-v13-9-9d8a4919983b@analog.com>
 References: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 In-Reply-To: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -78,11 +78,11 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  Martin Hecht <Martin.Hecht@avnet.eu>, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=998;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780582440; l=1289;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=4ZvMQ1EkeJ2w8dRWwF+03VM9oahvM+Q5lLU48mndSLo=;
- b=DQdpc2xvtfbqDM90Tr1iTV9vBbwdnhE0Re1os6EPDvq5HfjMgS6AHltjHJXuR+tA+zHbgFnJV
- Rd405O7NCrKCBvDKQTORwTTaPWS3JmHD3JouVPGLwKMVn21PYj7V0pv
+ bh=ZSTakNbBz4Qus1NiPPbe76vFnVEQ3NLtF7fl+Vgxvf8=;
+ b=O4bJ0upT6OS+Y+B76GAjepaPSnDWnCJxgcrQBDyL/A2b/+pFRflWgAZQpA7cGe+cWMFsgg2ZE
+ I3jGjEEXSHLAfCr5/9Lq4lZeg3ASL3vqMqlHmdDLBUvJ9gbBn3e4RtN
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -95,11 +95,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-37952-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-37949-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -119,43 +119,48 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:mid,analog.com:replyto,ragnatech.se:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,analog.com:mid,analog.com:replyto,ragnatech.se:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 790EA640D6E
+X-Rspamd-Queue-Id: B6ED3640DCE
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-The GMSL links can carry power to the serializer when using coaxial
-cables.
-
-Document this capability.
+MAX96724F/MAX96724R are a lower capability variant of the MAX96724 which
+only support a fixed rate of 3Gbps in the forward direction.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index abacc3c874a9..d2dd72f2e924 100644
+index d2dd72f2e924..161d40acdd28 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -95,6 +95,10 @@ properties:
-       - required: [port@6]
-       - required: [port@7]
+@@ -23,12 +23,17 @@ description: |
+   MAX96712 can be paired with first-generation 3.12Gbps or 1.5Gbps GMSL1
+   serializers or operate up to 3.12Gbps with GMSL2 serializers in GMSL1 mode.
  
-+patternProperties:
-+  '^port[0-3]-poc-supply$':
-+    description: Regulator providing Power over Coax for GMSL ports
++  MAX96724F and MAX96724R only support a fixed rate of 3Gbps in the forward
++  direction.
 +
- required:
-   - compatible
-   - reg
+ properties:
+   compatible:
+     items:
+       - enum:
+           - maxim,max96712
+           - maxim,max96724
++          - maxim,max96724f
++          - maxim,max96724r
+ 
+   reg:
+     description: I2C device address
 
 -- 
 2.53.0
