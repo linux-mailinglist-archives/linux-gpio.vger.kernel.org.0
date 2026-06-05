@@ -1,175 +1,157 @@
-Return-Path: <linux-gpio+bounces-38002-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38003-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rlAhKM9uImqiXAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-38002-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Jun 2026 08:38:07 +0200
+	id /82oCcdwImpDXQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-38003-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Jun 2026 08:46:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15442645917
-	for <lists+linux-gpio@lfdr.de>; Fri, 05 Jun 2026 08:38:07 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6201645A1B
+	for <lists+linux-gpio@lfdr.de>; Fri, 05 Jun 2026 08:46:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=A8S9ZnVm;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38002-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38002-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=bootlin.com;
+	dkim=none;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38003-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38003-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=aspeedtech.com (policy=quarantine);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CF371301EC70
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2026 06:37:50 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 92CA530041D5
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2026 06:38:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83025407CE0;
-	Fri,  5 Jun 2026 06:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD791406299;
+	Fri,  5 Jun 2026 06:38:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from twmbx01.aspeedtech.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6D7134CF;
-	Fri,  5 Jun 2026 06:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5797C40149E;
+	Fri,  5 Jun 2026 06:38:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780641468; cv=none; b=bBRUcbdeMFWiZEY1oE1b1J2bIel++PcWhIm4i915nBAZe4mOq8xefk1hdH29VQoMz9NGqR+hwmkYGkFIr5BFJT1QxfpiAU+IxG76IOVLOhj9G4U/etkgs7zYNSLo63WlkmUdGJ3eNv/BIrBmx0+bhpw11M1O10y/SJX2bZLJTfc=
+	t=1780641504; cv=none; b=mQ5sqAUaeY2XmlW3rHJ5aVtdDHWWMcGlIj2hxDY02GXafLJHDj2Seg4hrNz/ljBLbEGoWiKJr3mPdKqTtnMkltS/xbW2Vezb3AF2cLnsqfum4LpisRK3p8DvpFSH8odIhegHpI5Z/VvYV7DTKfSQIlTow8+0e8YDVSHhmFexO4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780641468; c=relaxed/simple;
-	bh=2W2Z0yEsfvPID3nJ676bCZmV1HGOlnk9mb1VgflAgHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a+9GqostZBGP5cGkW2lrZR96QpkQ7R8gV5Ojp1YYAHacsuBTH9hJ9UJNQIJQHFH0BDhLS3v2mlnHRSavijwGkh1sxufDno3v0rz6+qEJZtclOGZpSJZVamn6OM06fI8e9kfm83DLZfjuhEVwAAF2r+OXa72G6bdQ0Li8Jofgf2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A8S9ZnVm; arc=none smtp.client-ip=185.171.202.116
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 680DDC5846E;
-	Fri,  5 Jun 2026 06:37:43 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A96FA5FED1;
-	Fri,  5 Jun 2026 06:37:43 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BF958106A1F0D;
-	Fri,  5 Jun 2026 08:37:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1780641461; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=3IyHXE5kz/n0P8iPF96woiuOqliDOrQHxVfM4rBmin0=;
-	b=A8S9ZnVmLHc2TeOD20ueswPQ2h9AH/Lrz65bcGqIXbWyNwoKK7UujEAsSt2UTcLUGo8PNU
-	tMOy5+eoUJjOIgVsSo6uyjRAZRe0aSPu/mt9TSP/HuMLyvduncihLhub3KzDorbHAujJYb
-	v8sdJGvdGucSBpMksUVdyjYe0TqG/IiyEQvzNurEKHor+U+yZue40FJ4FvMoEW3azUZvX7
-	J14BjNow2/zRXmDln4ZOCxtaDhArmh5vJsFi3OaIAh3lg3jx7Qjy7hYIRiLikFr1JqiqdO
-	vsYdhkhnBClMTF+v8u36hnu2bfhyFyZ0pvdOUq0MEg4wsY8rseJvmjgtv88rnw==
-Date: Fri, 5 Jun 2026 08:37:31 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Charles Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linusw@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
- <djbw@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>, Herve Codina
- <herve.codina@bootlin.com>
-Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 0/8] lan966x pci device: Add support for SFPs, PCI
- part
-Message-ID: <20260605083731.1921f388@bootlin.com>
-In-Reply-To: <20260511155930.34604-1-herve.codina@bootlin.com>
-References: <20260511155930.34604-1-herve.codina@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1780641504; c=relaxed/simple;
+	bh=xAY5hWssBNCtFpjMIDeqYTF6QWlBQlC7/Ebm8kSZ1yc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MQ6l3yHm35Ly0GQq/APSHCTHMhqqxQaltrLU/UcpoJ6FM/desjoMPCi5WAi1F0Cmbau+sHunn9GvwSOpx2fmKkSsRfrkOYX05g8E7o+e9W6O/u9ov/pZe1oYTEBrsAoQJClQGwirOuf0XZOf9CilDGiJ0Cv/ianO8c6s8qcJSao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Fri, 5 Jun
+ 2026 14:38:14 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Fri, 5 Jun 2026 14:38:14 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+Date: Fri, 5 Jun 2026 14:38:09 +0800
+Subject: [PATCH] pinctrl: aspeed: Fix GPIO mux value for ADC-capable balls
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20260605-pinctrl-fix-v1-1-3d8cf7a6c348@aspeedtech.com>
+X-B4-Tracking: v=1; b=H4sIANBuImoC/x2MQQqAMAzAviI9W+hEO/Ar4kG0akGmbCLC2N8tH
+ hNIMiSJKgn6KkOUR5OewcDVFcz7FDZBXYyhoYaJqcNLw3zHA1d90TO3rXhamRxYcUUx/d+GsZQ
+ P58mYBl0AAAA=
+X-Change-ID: 20260605-pinctrl-fix-76644e70f601
+To: Andrew Jeffery <andrew@codeconstruct.com.au>, Linus Walleij
+	<linusw@kernel.org>, Joel Stanley <joel@jms.id.au>, Bartosz Golaszewski
+	<brgl@kernel.org>
+CC: <linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Billy Tsai <billy_tsai@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780641494; l=1866;
+ i=billy_tsai@aspeedtech.com; s=20251118; h=from:subject:message-id;
+ bh=xAY5hWssBNCtFpjMIDeqYTF6QWlBQlC7/Ebm8kSZ1yc=;
+ b=mxo5eczYf2oAK1TjLECaN853onZlWHApLvxA+tAckQEh7Sqd68Q2RI0IgpUItFJDSeZ/1tVPB
+ d8SQ5ruU3AJD7i8VCiIgymYG9bjKmhGFfVmrQnZfiLchmDzw7IPzX0S
+X-Developer-Key: i=billy_tsai@aspeedtech.com; a=ed25519;
+ pk=/A8qvgZ6CPfnwKgT6/+k+nvXOkN477MshEGJvVdzeeQ=
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[aspeedtech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38002-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:andrew@lunn.ch,m:robh@kernel.org,m:saravanak@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:bhelgaas@google.com,m:ckeepax@opensource.cirrus.com,m:rf@opensource.cirrus.com,m:david.rhodes@cirrus.com,m:linusw@kernel.org,m:lenb@kernel.org,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:dave@stgolabs.net,m:jic23@kernel.org,m:dave.jiang@intel.com,m:alison.schofield@intel.com,m:vishal.l.verma@intel.com,m:ira.weiny@intel.com,m:djbw@kernel.org,m:lizhi.hou@amd.com,m:herve.codina@bootlin.com,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-sound@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-cxl@vger.kernel.org,m:allan.nielsen@microchip.com,m:horatiu.vultur@microchip.com,m:daniel.machon@microchip.com,m:steen.hegelund@microchip.com,m:luca.ceresoli@
- bootlin.com,m:thomas.petazzoni@bootlin.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[39];
-	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,linuxfoundation.org,google.com,opensource.cirrus.com,cirrus.com,linux.intel.com,gmail.com,stgolabs.net,intel.com,amd.com,bootlin.com];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38003-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:andrew@codeconstruct.com.au,m:linusw@kernel.org,m:joel@jms.id.au,m:brgl@kernel.org,m:linux-aspeed@lists.ozlabs.org,m:openbmc@lists.ozlabs.org,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:billy_tsai@aspeedtech.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[billy_tsai@aspeedtech.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_HAS_DN(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[billy_tsai@aspeedtech.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,bootlin.com:from_mime,bootlin.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,aspeedtech.com:mid,aspeedtech.com:from_mime,aspeedtech.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 15442645917
+X-Rspamd-Queue-Id: A6201645A1B
 
-Hi Bjorn, all,
+aspeed_g7_soc1_gpio_request_enable() unconditionally writes mux
+function 0 to route the requested pin to GPIO. This is wrong for the
+ADC-capable balls W17 through AB19 (ADC0-ADC15), where function 0
+selects the ADC input and function 1 selects GPIO. Requesting one of
+those GPIOs therefore muxed the ball to ADC instead.
 
-On Mon, 11 May 2026 17:59:20 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+Write mux value 1 for balls W17 through AB19 so the GPIO function is
+actually selected.
 
-> Hi,
-> 
-> Previously, I sent a big picture series adding support for SFP ports
-> available on the LAN966x PCI device [0].
-> 
-> In this series patches touch several parts and sub-system in the kernel.
-> Reviews have be done and it makes sense to split the series and send
-> parts separately.
-> 
-> This current series is the extraction of patches related to issues in
-> the PCI subsystem. It has to be seen as a continuation of the big
-> picture series but related to this specific core part.
-> 
-> Patches 1 to 6 introduce and use fw_devlink_set_device() in already
-> existing code. No functional change but the introduction of the
-> fw_devlink_set_device() wrapper.
-> 
-> Patches 7 and 8 fix fw_devlink issues specific to PCI and the
-> device-tree nodes created during enumeration.
-> 
-> [0] https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
-> 
-> Best regards,
-> Hervé
-> 
+Fixes: 4af4eb66aac3 ("pinctrl: aspeed: Add AST2700 SoC1 support")
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-I haven't received any feedback on this series other than the
-"Reviewed-by: Andy Shevchenko" tags.
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c
+index a1ef52ad5c75..50027d69c342 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc1.c
+@@ -691,12 +691,21 @@ static int aspeed_g7_soc1_gpio_request_enable(struct pinctrl_dev *pctldev,
+ {
+ 	struct aspeed_g7_soc1_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+ 	struct aspeed_g7_field field;
++	unsigned int val = 0;
+ 	int ret = -ENOTSUPP;
+ 
+ 	if (pin <= AC24) {
++		/*
++		 * Balls W17 through AB19 are the ADC-capable pins: mux
++		 * function 0 selects the ADC input and function 1 selects
++		 * GPIO, unlike all other pins where function 0 is GPIO.
++		 */
++		if (pin >= W17 && pin <= AB19)
++			val = 1;
+ 		field = aspeed_g7_soc1_pinmux_field_from_pin(pin);
+ 		ret = regmap_update_bits(pctl->regmap, field.reg,
+-					 field.mask << field.shift, 0);
++					 field.mask << field.shift,
++					 val << field.shift);
+ 	}
+ 
+ 	return ret;
 
-IHMO, the series is ready to be applied. Do you have any comments ?
+---
+base-commit: 57ae58c5506ade17df728d676a0c73c705f21f57
+change-id: 20260605-pinctrl-fix-76644e70f601
 
 Best regards,
-Hervé
-
+-- 
+Billy Tsai <billy_tsai@aspeedtech.com>
 
 
