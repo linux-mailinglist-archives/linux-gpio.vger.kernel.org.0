@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-38021-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38022-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gAM3L3qAI2q0ugEAu9opvQ
-	(envelope-from <linux-gpio+bounces-38021-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 06 Jun 2026 04:05:46 +0200
+	id L0MNAaCAI2q8ugEAu9opvQ
+	(envelope-from <linux-gpio+bounces-38022-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Jun 2026 04:06:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B2D64C2BC
-	for <lists+linux-gpio@lfdr.de>; Sat, 06 Jun 2026 04:05:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A65B64C2D3
+	for <lists+linux-gpio@lfdr.de>; Sat, 06 Jun 2026 04:06:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=iopsys.eu header.s=selector1 header.b=r2x6djSu;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38021-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38021-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=iopsys.eu header.s=selector1 header.b=toKPpTzR;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38022-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38022-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=iopsys.eu;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B6748305FB1E
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2026 02:04:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EF74630387B5
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2026 02:04:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4928C2765D7;
-	Sat,  6 Jun 2026 02:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B04262FD0;
+	Sat,  6 Jun 2026 02:04:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11021103.outbound.protection.outlook.com [52.101.70.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922EA26F289;
-	Sat,  6 Jun 2026 02:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563662765FF;
+	Sat,  6 Jun 2026 02:04:09 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780711449; cv=fail; b=FJZrfA4WYC9j6CLKryTMSrRP3M2cqMv4AizuOpwLhKqfcSZhOlcbeWXjYHLIWXFVE0op7Zf7xg4vWpSsZL/ivWH4f2OZugxHYMrQWXUF8gJ6Zt7l7dYL5962tpX8Ie8TpBJKiVkURbZrS1jmx9W5nsiZl8ijPt/w8KUMiHXIx5g=
+	t=1780711450; cv=fail; b=Y+wowb7wUItrndpktuiYs35WxJvCz625gdnEDYT670bXBbk14VIeGrXG0lAzoO2S8kfwpcq0VPW1GJ4YCNlOUYwNsnvL9KUizMYZjkONPSbvHBW7tvA/1827XsD+g0HkBK4thxJObD50oiuNistPOTxKwCmMow8r0bjbl230NkI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780711449; c=relaxed/simple;
-	bh=XgK8My/H9pK1DZeMWlQajEq+1uo9zvddyK4iP/ryRBA=;
+	s=arc-20240116; t=1780711450; c=relaxed/simple;
+	bh=qPjnGdFWzJltqEPlJrVHe112XPYlWJQ0b/t1sEkAiGI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MAyp0z3AVutzKglIJivry70st3vzrqzZ2zb9ki/xcbtrBZhZYA41nwUI/rSM26LzSI4/SMkjlhAENuwwfnaIDnLk/99WKN050kVf8LaUv2VQjmeCe9uazCfk5DAuLjJZW/iiXLsDY9B14vdfex118p+CpdRYN4vIqnHw7KFC56Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b=r2x6djSu; arc=fail smtp.client-ip=52.101.70.103
+	 Content-Type:MIME-Version; b=oEO6LWWJkhBMB445UxAWt+Uy63ZFCpL3UVHR5JEHnYOwEQA5SQXmEuqsy11GwfGTqUdT00dToiNYVhw2+bFWPvIqfo1SKgM915Ro306Iyy5+RfAUfJDWmLGPwUd4/gBK2ccerbhKdhD8ulIVpFeGgLUpnHkaHqkISi9rThWbffE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b=toKPpTzR; arc=fail smtp.client-ip=52.101.70.103
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A2BtaNPIhmhJGKEvV2lY/5XOKV88d0o+0vKIaFBID22VKFbJ2EeJAqc+lcJj/3vfAGRzZkWd8HwtVakecimwc5/YGCQSX7uxULLbw0aoCUgGn6HXtP76Iucdhh60aGHmxhvGV3YJsfZyqTrt8YubK87PkF15AFdNaekmyONKbu9pmtK3ILee19DlG3cKVPc1e/Iv7ZhU1rm3T1Qa8z/XiQXzb604EhtetVxsd6Lj6KhqoP5ScV+EHRMgA3XsdeBr1xMgH6RSMUBpwtJmvdpVDVcuQlDd/q2ImLr9tGM1PrIB2rskpIUkjUvrtW17C1pnBeM2QaPp/t3XUePnN+EYLQ==
+ b=VYfvqQFdFJ73e5rHcAaGYp8JpaLla5VdIB88Y4gDqkfnFRRR53MvWfQrKUwpal6VMHSvlP8O9g9k6x+PXDOAaygK0bul3KPcejKU+Q+6dIBFAy+c+cKVGx9dJwnf9bTiyIzsGpnkV+5J3LqPFd60ONaDezq3n9vquQ+rOm7YTmBTwk4lXYsO9uDsqL/RRjBBym6Y9Nsadir7cOtvROkzOttxTAIGQUljtsLEq3y0sewgo6mFwCGzBWFr/HIpn8ISCAiTsHMjBnWclJkuRJFAwFaCwMhzqX2ZFRONB7gRTscL1RixSHcGmhoDA1sxFATAlQJPmN5blhhrai7XnMeGag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J1SindAhp+XmYFFoCsHoEZJEhj8mwp0oObOYHELj6D0=;
- b=xBtwCBW8LH1b57ISxzDXHovUvewmZw8n7nd5k4B3rpN8NM3gROEohJDVQJucFK51uGtoWHSsILryj6aHfR2Jm9Y6Ee44yicdhUncpSOlmj5Wy8IdiwfOTCzI7HcdLat/ns4uZoH55cWap7I0aeSs68WloLg+r1vv1IUYT0wVBDmgMwpoQkBvU7pLpVK3B2ubTxwvWMLDJQRViMlNuXh/mh94hqkxiWEvBQIqTAwBF5SVecpgdnRYJjnbAY0lTbJrLAP/ItAfGiN/2D7IDPsDNxVWA9aHbD4XBDtKRsvvLLaxKBsm2GHuvPRV0xmy2zqVlK/3MRbZVzE+/LLsPRD1ag==
+ bh=JVl7qtt/yqlCvitZM8hlPGBCH6582+BTLitnDe3e1z4=;
+ b=eXM8aQ0CsCWBrfivM+Q6gPyP6o9KB7RF2rx463VqMiAQF2IIv4bHSHBj/QGeJ1HcM3megJPeB4to2ZwujiWmdh5Haf8eyamqFiI1sw0xc+TSh2UWhqUXtBa5dCFWRN4WuhoprJI302BosEBZqfesw2dyL7V9sh7XJEaCZLsREuL9TvZOElbbEV5u+/n/gp5oVnY3VIQvCRyu+rKK9cIPkGiMqZ7ETR5iZkEsRT9pQkS0TOEhfayrU/7HwsC8e+7E5RfneA2+8w99iIHGxtZzivoKtd3kXIpXu0OIUxgJfOgU7qDLBrJtk3UkQszD7ViB8CiTOFeRRlXIS2x3jtADfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=genexis.eu; dmarc=pass action=none header.from=iopsys.eu;
  dkim=pass header.d=iopsys.eu; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iopsys.eu;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J1SindAhp+XmYFFoCsHoEZJEhj8mwp0oObOYHELj6D0=;
- b=r2x6djSu5hRtCpn+DciK2QNr4cUEgZKLcgGTF7/wkdiDMYCzs5gBo96cytEIbfI6WY5MwUUOjEXILVUtr+2leA0Jh3ilolnGJ4ed9M+juaK1GZVUHm+Cd/CftuJR/r5Eb5yHuvZaz3w44s5Iw0ekJPWuTfVZPXOkOnEr0TYST7p/gOjQ47nbXCD42LOKcPZAlcqyiHQxItckQmRjMzatZDWSriXQZfSTzaaxa2pTxQKkDVAphJCoKrw+MaUuEutQ2gnH9ly1H3+46Gtg+yr+8rNjBg6Xfu3prWq7iCOm1qbh5H7XjH/kFQjiu4EZxH4m88hLmhefxuEVH4kYcyU/Hw==
+ bh=JVl7qtt/yqlCvitZM8hlPGBCH6582+BTLitnDe3e1z4=;
+ b=toKPpTzREYFuEC1iLi/y7t+ifak51klA/9Df1pbnWSnCj5zgXoEjJgLZHYQq+MWWZSNuC/Hi3yEBYARJr/dIjV0Qi16vKo4LPiW6gVVmRq90cP+W9bCVQriA5llwrRBeAKolaROX6lTwVp9AiFFS8qfoDxlBoz7+r//wJw4lejYPLVA4vwBLGbBDbDB7B12KlKPovLJmrua2/pq3ClupnL0q2VmnPwCBmq0LbKyLd/OpXjLUArbvh/m9THbr3BwyWjtsJJZaN/EU/VCTGZoqt4Cm6tog60l2GLSOJtN3/YdaYuSh1ehok/p6n3Ybze3bbnwJkYQFmeHSfr/6PxGi4g==
 Received: from DU2PR08MB10037.eurprd08.prod.outlook.com (2603:10a6:10:49a::20)
  by DU0PR08MB9558.eurprd08.prod.outlook.com (2603:10a6:10:44d::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.10; Sat, 6 Jun 2026
- 02:04:02 +0000
+ 02:04:04 +0000
 Received: from DU2PR08MB10037.eurprd08.prod.outlook.com
  ([fe80::3c7:6d2e:8afe:e4dc]) by DU2PR08MB10037.eurprd08.prod.outlook.com
  ([fe80::3c7:6d2e:8afe:e4dc%5]) with mapi id 15.21.0092.006; Sat, 6 Jun 2026
- 02:04:02 +0000
+ 02:04:04 +0000
 From: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
 To: Lorenzo Bianconi <lorenzo@kernel.org>,
 	Sean Wang <sean.wang@kernel.org>,
@@ -73,9 +73,9 @@ To: Lorenzo Bianconi <lorenzo@kernel.org>,
 	Markus Gothe <markus.gothe@genexis.eu>,
 	Matheus Sampaio Queiroga <srherobrine20@gmail.com>
 Cc: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-Subject: [PATCH 04/11] pinctrl: airoha: an7583: fix misprint in gpio19 pinconf
-Date: Sat,  6 Jun 2026 05:03:35 +0300
-Message-ID: <20260606020342.1256509-5-mikhail.kshevetskiy@iopsys.eu>
+Subject: [PATCH 05/11] pinctrl: airoha: an7581: fix incorrect led mapping in phy4_led1 pin function
+Date: Sat,  6 Jun 2026 05:03:36 +0300
+Message-ID: <20260606020342.1256509-6-mikhail.kshevetskiy@iopsys.eu>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260606020342.1256509-1-mikhail.kshevetskiy@iopsys.eu>
 References: <20260606020342.1256509-1-mikhail.kshevetskiy@iopsys.eu>
@@ -92,57 +92,57 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU2PR08MB10037:EE_|DU0PR08MB9558:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8702552-17b4-4112-8c75-08dec36fe182
+X-MS-Office365-Filtering-Correlation-Id: 3224cdc2-28d1-45d8-0f40-08dec36fe27b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|11063799006|56012099006|6133799003|22082099003|18002099003|38350700014|921020;
+	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|11063799006|56012099006|22082099003|18002099003|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	pwGxREQtAVOvVrqPhmqDLv/MfxgWEzGzSomqLwtj8k/+CiCuFnw/UkB428k9ZqHvhXX0vmzUrGRbnIPY3X7bcIDycNeqF/ho7zIzhdwDaD1hCop0ByaySsjegYcEOpjTKhTCdk/dl/2OXuTf9hOACl26vMQM8ynQ7MU5nN3JFxhj27hQI/1mdVLKYqp2hirnLFKaOEr2xrLJ/sJdb8QpPtQKYnOppLtkqniPCHuc4F9/JMmMUvqf+UqVTqmMwyJ0WRmO0IkWfNxIqWvetZhJ8AJ8K6BVSb0t8Wb59/UT3nezjCztHu1RzB5XyrtNJLqtCKJAVERyEnH0e0tYWWcFUZmNImBXTNwLJnI5t6xdPiVzbzi5x5tLnpCYpHHm+N96vyYApRqgjOxQ+XAgvekG1DKJsLg+xJ76vM9Kj+7o/s24eWs7MniPWArSRPrk8aj2hrmVHXqsXhyMwtasBVD6mTT2dsm5UdG4eIsQcAzdkf9rYLjFLsvhOrMqutHf8lZVUOcOkDb65m9tdVBOuer//Hi68kYU2hIGzQaBEs2Rrg5iwRZxHcBkJF4guNN0NS4w3HQeIrUUF7jsjHqcp+kkXujaVJhbQQrLJIRVcVoTvIjQlL4VhhSrSCtuBVE/zhgViY3WvBZVy46/v31/dilaPw4A2gN+uqGAVnTwwPxxJEOFVsE3iX75kO5Oo/RhfeTE/Zwhoh3pKu1u6IEY4XmSJmeCpT3F8zscfxgqRHQUiRsN0f+W9ihgCa5f73Yj1xHp+NcpfwGVzCnI6aReYHm+nw==
+	6iFIWeBg+MWIHQd7EUOp7IvnRp5C/CCdkfoPnqdCRMVyJtpmhi2yWTC1l+c4rHW9IKPkZlB2S+a8e6HzUh6uBVUCAaZNAuujIxGjTfYTIrz4zp+xVb7RU0gvN8DvwFxoFdt+iaKvbEtM9P/nIrBO98yZUL0AEkbbxDSvQllZGlYFCQ2XdfwhqVOXEhAW9S2e/fuzkvZ7iDOno/nHDO5U8VA3w3eeHzmk1DAAZcMSun/2nP7sfvQSTX86L29XVaZcOtIeWayYwJX6YByCpuaeQV28NrOQm4Y2J/JstFhgPmhkESAINu4htQaHJHyJYw1RTRnDDrS0i6OoCk8txTULGXaPpe/vp1BS8PSy3OLeaf+aox7n5ZuSNgkzxuNcBlESb2jKvGS+hMkPoRmYIxKq5LLmPLdnHLV/zmArNbF40sLqfL0Ip4FUWlePx72gaHJk0tYxbw/sKR/czo7Beu+4GEcRFdxvBmG890NDe4hrMXbgXwPIqmxIgA12UoAhlirja78L4l4WddQT9bhGaF002JVi8SUk41Cz9CDHRyicnBRfeTRLAcr9VJ8c9ROS0UWzUeJ6TGJdQ5ZSrsOPTevgDYWFlqJ73AboYsGGTeM+GmktRmvUJ+E28l6Tb0vH6kL1BB7J8jWJFtMHESLpaZqT8MIK8g6hekb/gIPldsoCKncDcaGN0ajxIx6+2dR1NbawvNePWx5BdV4BzWJubwrl0gczt8Mx9HCwHOkMVmyqXsM6C4LRDFnrEz9oy/aX+WKpYDQ9zKrnEN3+rDLtYl20Yg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR08MB10037.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(11063799006)(56012099006)(6133799003)(22082099003)(18002099003)(38350700014)(921020);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR08MB10037.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(11063799006)(56012099006)(22082099003)(18002099003)(38350700014)(921020);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IjSUkQVRNklNjlOKlhwq3E3a1PQU+G+DYZzx0kVWO4t1zpy5pXyZj2p3absv?=
- =?us-ascii?Q?/1w+YSL5PipdXHWke8Z2FQ97WNjSJwi/7WnKZwRbCDafUbRIUtfDLEAQ70Ys?=
- =?us-ascii?Q?uXoJdiXShYjOMiqBENNA6hsNcF19IWXwQs3JmxUWnIexTflpiQskc0Rp6DaU?=
- =?us-ascii?Q?rLxuTLkcfWszD5PdItRy1Kqgjn7oeCuyUqhs34NFRt/4sNtswiYseO4SCuH8?=
- =?us-ascii?Q?Xhez4uP1GmtsN9YeDurap+aEZ32CSe0c4YGeg4f3nSLe6g/7o8Vqsxu9GvA1?=
- =?us-ascii?Q?szBAsYNk9jAezY5Fu0tkypJ2+zH2Hc5XJqxM13f+SJO5MAAPggpxN4HSDT32?=
- =?us-ascii?Q?zgm7d0hS5kEFlcDwFeHJw0tB/OBTJrt7LGH92TkaaHeralneWyKeOg3yqC1M?=
- =?us-ascii?Q?qkvoDdMSdT9BG83fwC6dSfb2u6W5N3/E0gzkamTcU7j/rUIbojDQVRNeh5VA?=
- =?us-ascii?Q?0s/ly8uBPcom5zVCGSiakL25E97F/UP/5ZHknzRBYecM94kyr7Xjwgoc6WAQ?=
- =?us-ascii?Q?aH5QquinY0/dhFVqbNmvA4Nz/CX+zHyFxbXu8UUaIUWB29bO8Gpi1Www7S0V?=
- =?us-ascii?Q?9PszOpBPfGQvELquD5/oGmzhs+hKX5r+uyv9hCL4O3kVF/TvuM8lBJhJaqHd?=
- =?us-ascii?Q?9cDwgeGHSRQp4UCeNH5pr5afg3SDn2TofiaHC74zk/CNtOStVHRQ3zRYIhKf?=
- =?us-ascii?Q?9ibmHCcvGre29l3QH8Ukz5ydjlysIGX67EOGDOaX6H9Wf/wqPyxxdUytr2YZ?=
- =?us-ascii?Q?tdbdg84AytM122omva1q4eq4vqJ4Y4Zd6fYvhwuUAzLAa6P3UAFmdEwE6dIV?=
- =?us-ascii?Q?vjipny3xbb+cJhPWTCFBl1T2vy6DWtSwfyrf5+i9SeZcm88EwWFQppy49UeK?=
- =?us-ascii?Q?DQd3FX0eUJQB2UG04U1zC8GVkUsG1ilyagGlReptTlkkT2GOjyIPPUqJAWh0?=
- =?us-ascii?Q?K4YiST3VEkOla1T252GElR3x3HX5OI1lx+qUhlMAS/iOtaDh5DnfR0VuQIKF?=
- =?us-ascii?Q?5eBzDuPCl+OGgdD0t+s7tYgtlnzdcW7v0FQugePPJO3/uYuy1mHygA08BnYg?=
- =?us-ascii?Q?EygXasVJN8+Z9aul1qOYffQs0MAczkoxfTbIhcKlBssZOFA0So7HYan6ZJVc?=
- =?us-ascii?Q?Sy+JL5Nsbj+Kg2gFsNRbz+/XuvLBsWua+2jrJ06H5+sgoKEAXnvXQi6pAxxS?=
- =?us-ascii?Q?K5osX+Czj17LlEgt7veJU89sr872Ck7ETqOawKRJvlX5h6ZsAJ+HvYte0muk?=
- =?us-ascii?Q?2wxBQDU3OCpBz0yBo1O/LMbcX9XBS9Y8D/HvHXAEiQ280h9lP6Nrqn7BGcdZ?=
- =?us-ascii?Q?U3OsMrxbeSCch2iYwscVPeFvyLrcBiWigMXPV9t3WMwiXnVlyf4el4owjn2v?=
- =?us-ascii?Q?YRRhivDoQ5cvzxHQ5GMiENHU4FBNlSnFvZjhTJO7R97vCycaDXTrt2wHQY/I?=
- =?us-ascii?Q?nu7YRvYOnlrsiOIGe2mhZiaRWC2MJeF5v22SCSeYswNXWV2s5ZQBQH9dbOqr?=
- =?us-ascii?Q?0qVMTU2PM6FQzbRo7GxVXN2TIBcgyipLl4Zp2aa784vLCURkEPRQxxXZGsKm?=
- =?us-ascii?Q?GMDFeXCwsLkC9hoqZRVC0lSNSqn3EiTOuvF6NIT3546SrhtNk0gIIyKWz6GD?=
- =?us-ascii?Q?NzeZLOxTwuSvZ2EkFDe8PxJkK1Wn8NGShnwBXflv+9SsapJ3Cp8u4XV7jOBy?=
- =?us-ascii?Q?7jxAh+izQ0yALnUnFgNLVQH83BDzA7Jm4BiuZJL4+G8uXevYjYzHuy9U0DAo?=
- =?us-ascii?Q?5sxrq8C0TFntuAxIG2tyUKoFWDG2HqE=3D?=
+	=?us-ascii?Q?cjYYS6ujjMZFcaUWFUL6qBJlqMXGrQaRfAkSKhf/J/jrfyISHm1Z1oxGrFMm?=
+ =?us-ascii?Q?wXlAnjU8FgepaNGx7KvDqysBI8kHQxMm4U+c0PfV7LCfmxoWHFovVGOH6Gju?=
+ =?us-ascii?Q?CUwb8fto4+tCJTCHLhRKnmhkBwIXjh6sy2zxqXKbhQe5uUUfA+6r/9cBvTJ4?=
+ =?us-ascii?Q?tEv+XUHVqD7aTWabnjN63mm/gjiNz1zDWEXP4OcH3Q9LM2pqRNmwFa8OFPLv?=
+ =?us-ascii?Q?PBjWHRPkXU8O9yNGP4FHmI9iTekvbOQTRDbIUWbVi7nJeceG5dBsBjCQT5xE?=
+ =?us-ascii?Q?zPD2y9zWsAVR0v1XMoG9sOjIbfUuJw80uyrXIziawqH+8Jcu8cm1jDaR8tVk?=
+ =?us-ascii?Q?oFAN5WjWlOes8vpmZOUUecX9eOJqWU133r7UPoDFJVJSAvEKdGbMUS+WBc67?=
+ =?us-ascii?Q?snLNNuj24FyE+dAv3kGZVVW5v8i6TXJBPXktKMsYhL9qSXQL7EC1ri2ZjNOW?=
+ =?us-ascii?Q?BpAYraNgVP7508YnFnrfloQmtd/kL2hr7pkvn8qRrRCwwoz1WvQ3eTDCmaZT?=
+ =?us-ascii?Q?bT3GYSzx6ianQRD9UxTdvKAoP/5i6Deau/ip0KC3Y10/4Lu+izFmI2xXSsI6?=
+ =?us-ascii?Q?2tbbmSmJMkNzxfM1ddj/VemMwsQQmH544/YQuJ6AiqteA1ggfvb0YCNEOX9R?=
+ =?us-ascii?Q?3f3rTYHefqvLANFWJ3+F1uooQB6lFkaa7yC2jNfUh2pFE8IOUW0CcdCJslJ8?=
+ =?us-ascii?Q?TF2b6Vrdj3uLYrYEDjjQ3CLSP24bjeAQEneug6S9bNL4LmRfDaAYa6gSGVTc?=
+ =?us-ascii?Q?/TTOL5LZzDnhwaDjgl3elfwBkxOVG4M2yRnyqo78PtL5wvfvuK5spRO4E+5N?=
+ =?us-ascii?Q?ydzLG/Alqbmiiwm1XHfeWlYmHEzMi/iQUJka546BPrBP5WrHdQSZ8Fxc89qT?=
+ =?us-ascii?Q?jk/OgvGcT1jEQru2YbJ+fra5Hehzp0BC5vlGZ/f73LgDXzVQCNQl8q+a2Wku?=
+ =?us-ascii?Q?1tJXpBGoXrP9tbeHfqIOf3JNEpjYZelOmznJhpYLIpnuiker9zj0Ai71tVyj?=
+ =?us-ascii?Q?o9SmwvU/ANmPeC5J1Ys4fa8ma0DDPILKGbV1X9A4+6OUBoycrPoxVq578JbY?=
+ =?us-ascii?Q?bCJnjCz1KQfqHjoGGFfuHCDlSlX2Q1MH1u1TMhA9HdlWuC6IAyw2AGBYsD7R?=
+ =?us-ascii?Q?MEzcDqpFyfsTgzxPaAKj1Ryjy479jnLbkhW1ZGm4U2ktfgD47mu1lGiZk2uY?=
+ =?us-ascii?Q?NpmQ4oz8zW/KzvVB3KxHA8xDCMJ/981Sr5mOr0+VN4cY/Rmm5AKdD4pJsO7z?=
+ =?us-ascii?Q?L++4uP0AIE4l/X19+xKJVrFPlTbzyL3DkOOsZbSH3/bzX9kNSgNx5PgKTkrm?=
+ =?us-ascii?Q?WHTJ4lo9X7MBdGntZ6K/TMQf70UwaNZZ09aOQ+SA42WXxLcDDLo1xbIACDvC?=
+ =?us-ascii?Q?tUiU+1XADCdrcooEAxQcJu2aanW8YL/Sx0XYs+nXgjMNGCkCJ2B/HiPcTNSU?=
+ =?us-ascii?Q?19+KM47UualRxI+vkrfF3DH236l+7REN42SfpVi7w2vLiMDpeUZhPERUbF45?=
+ =?us-ascii?Q?O72iHIkHw59zg5yVPasG0437J5rDpiMH+zK8Ll72VQ/xadt53Sz33fSyGNpH?=
+ =?us-ascii?Q?Bex1frXE5boGYr5kV+RFbl02PsELV6C67nw1xPbEYRMSF5XZ90qUcwrX3gMA?=
+ =?us-ascii?Q?jHOoFLiAHrNYypmxoq0jmWSvL7j5NCLl5ncKItMaiQGfqWvYnpIFn2K8nmJA?=
+ =?us-ascii?Q?Di0kZDmp6UD0/2LZPPWdsyb1CC1rbmJ+Bl6fBxucNsyQ5gOUI3hcTsdwbiT+?=
+ =?us-ascii?Q?FQT/tghSP0e6/epOlH4o5+9ndbzTH4c=3D?=
 X-OriginatorOrg: iopsys.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8702552-17b4-4112-8c75-08dec36fe182
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3224cdc2-28d1-45d8-0f40-08dec36fe27b
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR08MB10037.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2026 02:04:02.6905
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2026 02:04:04.3173
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8d891be1-7bce-4216-9a99-bee9de02ba58
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yDtqC1RVfLfHXFMaTXKwCEcJ13iMdftFyw1e1xGGhl8x0d7oaCoxIGizJZTGivmvL/a9Cxp3JVvGVrohEZN7/MtVOBu1txkKHzx0jZSEAG8=
+X-MS-Exchange-CrossTenant-UserPrincipalName: AEvifrlAFK6eAhYaUhkDtlbvdn1KAQWQHpTYQpXC7DgYt9FtJWVTMUv88JHL8ohoD1uSYXCS+Ab0xWzvK1XzJTiPdYArR64pY4uohDYPUvY=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9558
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [2.84 / 15.00];
@@ -156,7 +156,7 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38021-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38022-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com,genexis.eu,lists.infradead.org,vger.kernel.org];
@@ -177,59 +177,41 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[iopsys.eu:mid,iopsys.eu:dkim,iopsys.eu:from_mime,iopsys.eu:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[iopsys.eu:mid,iopsys.eu:dkim,iopsys.eu:from_mime,iopsys.eu:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 42B2D64C2BC
+X-Rspamd-Queue-Id: 6A65B64C2D3
 
-Pin 21 (gpio19) duplicate pinconf settings of pin 20. Fix it using
-a proper bit number in the configuration register.
+phy4_led1 pin function maps led incorrectly. It uses the same map as
+phy3_led1. PHY{X} should map to LAN{N}_PHY_LED_MAP(X-1).
 
-Fixes: 3ffeb17a9a27 ("pinctrl: airoha: add support for Airoha AN7583 PINs")
+Fixes: 579839c9548c ("pinctrl: airoha: convert PHY LED GPIO to macro")
 Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
 ---
  drivers/pinctrl/mediatek/pinctrl-airoha.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 14b235727736..34eef79d058f 100644
+index 34eef79d058f..9497f5110f61 100644
 --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
 +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -1851,7 +1851,7 @@ static const struct airoha_pinctrl_conf an7583_pinctrl_pullup_conf[] = {
- 	PINCTRL_CONF_DESC(18, REG_GPIO_L_PU, BIT(16)),
- 	PINCTRL_CONF_DESC(19, REG_GPIO_L_PU, BIT(17)),
- 	PINCTRL_CONF_DESC(20, REG_GPIO_L_PU, BIT(18)),
--	PINCTRL_CONF_DESC(21, REG_GPIO_L_PU, BIT(18)),
-+	PINCTRL_CONF_DESC(21, REG_GPIO_L_PU, BIT(19)),
- 	PINCTRL_CONF_DESC(22, REG_GPIO_L_PU, BIT(20)),
- 	PINCTRL_CONF_DESC(23, REG_GPIO_L_PU, BIT(21)),
- 	PINCTRL_CONF_DESC(24, REG_GPIO_L_PU, BIT(22)),
-@@ -1968,7 +1968,7 @@ static const struct airoha_pinctrl_conf an7583_pinctrl_pulldown_conf[] = {
- 	PINCTRL_CONF_DESC(18, REG_GPIO_L_PD, BIT(16)),
- 	PINCTRL_CONF_DESC(19, REG_GPIO_L_PD, BIT(17)),
- 	PINCTRL_CONF_DESC(20, REG_GPIO_L_PD, BIT(18)),
--	PINCTRL_CONF_DESC(21, REG_GPIO_L_PD, BIT(18)),
-+	PINCTRL_CONF_DESC(21, REG_GPIO_L_PD, BIT(19)),
- 	PINCTRL_CONF_DESC(22, REG_GPIO_L_PD, BIT(20)),
- 	PINCTRL_CONF_DESC(23, REG_GPIO_L_PD, BIT(21)),
- 	PINCTRL_CONF_DESC(24, REG_GPIO_L_PD, BIT(22)),
-@@ -2085,7 +2085,7 @@ static const struct airoha_pinctrl_conf an7583_pinctrl_drive_e2_conf[] = {
- 	PINCTRL_CONF_DESC(18, REG_GPIO_L_E2, BIT(16)),
- 	PINCTRL_CONF_DESC(19, REG_GPIO_L_E2, BIT(17)),
- 	PINCTRL_CONF_DESC(20, REG_GPIO_L_E2, BIT(18)),
--	PINCTRL_CONF_DESC(21, REG_GPIO_L_E2, BIT(18)),
-+	PINCTRL_CONF_DESC(21, REG_GPIO_L_E2, BIT(19)),
- 	PINCTRL_CONF_DESC(22, REG_GPIO_L_E2, BIT(20)),
- 	PINCTRL_CONF_DESC(23, REG_GPIO_L_E2, BIT(21)),
- 	PINCTRL_CONF_DESC(24, REG_GPIO_L_E2, BIT(22)),
-@@ -2202,7 +2202,7 @@ static const struct airoha_pinctrl_conf an7583_pinctrl_drive_e4_conf[] = {
- 	PINCTRL_CONF_DESC(18, REG_GPIO_L_E4, BIT(16)),
- 	PINCTRL_CONF_DESC(19, REG_GPIO_L_E4, BIT(17)),
- 	PINCTRL_CONF_DESC(20, REG_GPIO_L_E4, BIT(18)),
--	PINCTRL_CONF_DESC(21, REG_GPIO_L_E4, BIT(18)),
-+	PINCTRL_CONF_DESC(21, REG_GPIO_L_E4, BIT(19)),
- 	PINCTRL_CONF_DESC(22, REG_GPIO_L_E4, BIT(20)),
- 	PINCTRL_CONF_DESC(23, REG_GPIO_L_E4, BIT(21)),
- 	PINCTRL_CONF_DESC(24, REG_GPIO_L_E4, BIT(22)),
+@@ -1622,13 +1622,13 @@ static const struct airoha_pinctrl_func_group phy3_led1_func_group[] = {
+ 
+ static const struct airoha_pinctrl_func_group phy4_led1_func_group[] = {
+ 	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
+-				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
++				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(3)),
+ 	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
+-				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
++				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(3)),
+ 	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
+-				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
++				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(3)),
+ 	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
+-				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
++				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(3)),
+ };
+ 
+ static const struct airoha_pinctrl_func_group an7583_phy1_led0_func_group[] = {
 -- 
 2.53.0
 
