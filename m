@@ -1,247 +1,201 @@
-Return-Path: <linux-gpio+bounces-38054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id WUjbCw/hJWpHNAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38054-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 23:22:23 +0200
+	id zUKPCn73JWq0PwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 00:58:06 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B1196519EF
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 23:22:22 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0FFD651DB9
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 00:58:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=PoBYGD2+;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=gHZ4fN9J;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38054-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38054-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=fail ("headers rsa verify failed") header.d=reactivated.net header.s=default header.b=0qp+GHP0;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D8E69300E70A
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 21:21:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E914C3001FC2
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 22:58:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF67F3264D0;
-	Sun,  7 Jun 2026 21:21:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB373254A2;
+	Sun,  7 Jun 2026 22:58:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out16-31.antispamcloud.com (out16-31.antispamcloud.com [185.201.18.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E398316905
-	for <linux-gpio@vger.kernel.org>; Sun,  7 Jun 2026 21:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA5B26E165
+	for <linux-gpio@vger.kernel.org>; Sun,  7 Jun 2026 22:57:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780867278; cv=none; b=Vy5feb0vaC+7UUiiMN+uf7DY/zK4WJV9UKczLqXuDa1U66qZ+zJ2I0/4L6MmdjXwmL3qshw+2U6H90REwxTenhBSaSSQuDy5y8DWBvys2kJfqLqZZFBBv89v2XO6l2ykYTxqn1qF1189wmbLOjsHoQwoeQRACAUP2yyRAzaOOEY=
+	t=1780873081; cv=none; b=pn5LsZq1ET8aEfejcJd1zcQQRodt5GohxmkCgG0GOZj76O9GVAhjBbMpTEcvqNAoejw238OM4Hr0s9RPRN0SeaBqpWdoXBeM89WUcoG7sPhZ+EY6YL1Gjzpm74TQRqCc2jRrst4/slM0dMtZBxXxSxGnelIobMpeq1/8qFVmVlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780867278; c=relaxed/simple;
-	bh=fVzbXV1sJy1UmP1P9U7A4Ziv9bNeyp5SHeVOnyh3NSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMfDXoOgN8LU1s5THri6cxeAru94xH8WYtnI1MRYaCr0QWp0XgvUmrjRoQKiVjnYR5E729U+HTXkCJ9N6rW+l81A7gBagjsYUk9p3nxs5Fycx43itslfQCxxwbzqcXLAz4KfOL7KNMu8G8lauY24K+Ng7kXflx+4U138CNGk3aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PoBYGD2+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=gHZ4fN9J; arc=none smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657EkGmr336452
-	for <linux-gpio@vger.kernel.org>; Sun, 7 Jun 2026 21:21:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6RjXOnittLSMDSz2P7pBPezWxIO+sHJ7OAZbuYVjtW0=; b=PoBYGD2+IlZ3hjS4
-	+rnDZ9vnHL5KSAKs4bqQG16TfJvxSqp9dGqUGrHXGVHbLn4nmTjXoeLUaMh7Qdyb
-	m57i2FVDuGS4ZdzfW6OHUf62aqoJqVke8iWPNA4S29imjAJEgFb4qQTnNTKU5LIl
-	xOU21xBOIPjR3SnR6dVJr+ULMwQOBMbQVQbtGtq1/L8mb0FWdSJzlSO79wQrOR4Q
-	+EZ81WXeSPqJNW0ykmg/aFbuHmjMPQP+gYldOoKAngvet5cJkacemy5s6wZmBGsb
-	m1o/CTJVLL3iwZCo/hLjW4TldesTcWjB3kPLthnrF0X5dRHbWCGnJFNWvtvwc3xs
-	c5wwOg==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4emcqgvgkn-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Sun, 07 Jun 2026 21:21:16 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-5177bddf6e0so92426471cf.1
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Jun 2026 14:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780867275; x=1781472075; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6RjXOnittLSMDSz2P7pBPezWxIO+sHJ7OAZbuYVjtW0=;
-        b=gHZ4fN9J8Ymc+exGy3ilOsanOl37BCTko5baNJf6kR1sE6dEK15KG/A5r9eDJWcp4N
-         oVR9LBtJE54h4W1R6LXyuLwcSW/Nv6dXucZAh4cvvjXeTsxbxygc/Je0EKDWOkFr0pBG
-         by7cXaOVCx8hrJ0PSSwsU7MU7EiEAFoMNKKVFdK7GxdnUXoL/UtdCNozZ/xDRj668yLw
-         iGN1utajEsQi5Jty7KYUlp3cX2frWpv69H0irgsKrYd2cUfgad7RCxQAv077qZml8iOu
-         Eud5VdJAc37Ezgk+jnJCNajncmqrbn+QRTd7csyU+daE9XpAzIrHLEAT3TiaO5ttxyBG
-         pThw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780867275; x=1781472075;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6RjXOnittLSMDSz2P7pBPezWxIO+sHJ7OAZbuYVjtW0=;
-        b=Reqr/5GncuXwC6aNSITgGWHRlU1j4XqFDBkCAXuJ0SM4Om1UB7JVuh7N27vzryA0ur
-         kCqHVrffbm+EYhc+//lXzEswp/LJVD2qS2KjV/TMOM7TKKdbLd4Q/fLeOjqb/hqBQ/Mv
-         M+zHv1W3J8h/z/CfDARtATpeZxsHUfbdjY7lm2GhGEyHWWNrGS7nym/SWL2ks8HSI7YM
-         2cCXsw+7Djo72Azqa+Lc0lnjU/uLVPLlpuml4IRJnP3jkfykgPYA0PrMHqSCLQrTNEDz
-         XVD5iIDKSXv/fJ1x03H4w968+R3v3dhJKpoe7JFshBvH6yPKVmAxVE4wqIm2wAyZwVFh
-         ltLA==
-X-Forwarded-Encrypted: i=1; AFNElJ9F81XOdIQueo9/Qvd2b+rfBE9nNmev+FgtGofIZ1T6jXXHx9a+NFA9j8mlTAfH4qUEsaPW8eiTct5f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRPsA5MCLDMG5T/h68+BNcxu7JLn3cyoSJQOkSDzC2hq30QHci
-	KUY6qpL2WGrA8deXD979j/4TmwDc7B9H+RVrdwF31/vwHNpMKl6U4HUZP2OoY3Zpx01uf5I+B+t
-	HIHohLmXXGGdODSo9ixQZ/ENA1r7gbt/sqOFx4Sxm0ZZgwH27baP1ioqTlx1G3GLp
-X-Gm-Gg: Acq92OH/R0HQC+qjzQTohtl7Ea/DsTYiSU4kjN655dDR3t2AH4lapc7NlYGP7iVxJsJ
-	E0rNLpEXx2mdAYMP0OULiFs0mqhH1KxlDte8qOqWkfSL8TN0Ri9W92NKVgvd6S7qYXC4VlKH1Gy
-	8ybE1e/38thtMO+qGjbvc/anLHT74SGY64grhzgJ+t3vK8RUyGr0emmFv0rt3fCg/YW0xr6Ses7
-	3elw7SFPpK710USHI2p54P076jVHJs5vvfoL+7bZV0oEsJoFUu36C0zLDP4Jk2PmPOxfathxIYP
-	/fBbyty6uyLWUpUF+R/T6WG0eJl/F75Hk6mNTkRs/Ul3umanVJmPmmC3HNSGCCgSsIuuFFdzZWk
-	9Z93+QJKEzovvCdq1pUAtbuE6p2+6c8HXIDN4g4ohBF2jqRUa/2gibsbvVbEWKJFRSFA1DTVmtg
-	y+FdP35nqK8nIx6hoj+YSqvAqeObwyqA5ZJF7YzsGFJxhKIg==
-X-Received: by 2002:a05:622a:4d88:b0:516:ed2c:9c75 with SMTP id d75a77b69052e-51798708bd9mr128205131cf.16.1780867275478;
-        Sun, 07 Jun 2026 14:21:15 -0700 (PDT)
-X-Received: by 2002:a05:622a:4d88:b0:516:ed2c:9c75 with SMTP id d75a77b69052e-51798708bd9mr128204941cf.16.1780867275013;
-        Sun, 07 Jun 2026 14:21:15 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-396ac091b23sm41529891fa.17.2026.06.07.14.21.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 14:21:12 -0700 (PDT)
-Date: Mon, 8 Jun 2026 00:21:09 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>,
-        Maulik Shah <maulik.shah@oss.qualcomm.com>, kernel@oss.qualcomm.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] soc: qcom: rpmh: Allow non-child devices to issue
- write commands
-Message-ID: <vmk6b6cd4jolhisfphgai35eznr5d5uwrhx2qktdwd2qayxwm5@fb2js7bw4dca>
-References: <20260528-pinctrl-level-shifter-v2-0-3a6a025392bf@oss.qualcomm.com>
- <20260528-pinctrl-level-shifter-v2-1-3a6a025392bf@oss.qualcomm.com>
- <4ac5hjmr6divqs4myhcw5sveuboj265sw2jwslbivrfwh5e7ce@6d7ajvgikkgt>
- <18235340-cd42-4d88-bfdb-19aecdd63d68@oss.qualcomm.com>
- <9927f5d7-1eca-4936-b38c-678e76ac11cb@oss.qualcomm.com>
+	s=arc-20240116; t=1780873081; c=relaxed/simple;
+	bh=uz3FXJ9DomsPbEFD6JPD5S8Gjeg0Hr1cb/v2CpjyB0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KRXZZYoC/aU3uScJ548XQEH+8WOsCYDY/mBTi+pqZhZDOssB6m/7E+i3ciyyXQJgvO3DP/PExEoYok+9z+cG5nBc6F7KyAiGExGCXB1E7T6z5AXu0/vlDM69QdVGykz44N451ewFQloP1Oi06nVPdemFqPRnpv5VE5Ke1S8VQt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=reactivated.net; spf=pass smtp.mailfrom=reactivated.net; dkim=pass (2048-bit key) header.d=reactivated.net header.i=@reactivated.net header.b=0qp+GHP0; arc=none smtp.client-ip=185.201.18.31
+Received: from s1041.use1.mysecurecloudhost.com ([192.250.231.249])
+	by mx207.antispamcloud.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <dan@reactivated.net>)
+	id 1wWLUo-007FOl-QO; Sun, 07 Jun 2026 23:57:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=reactivated.net; s=default; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tdMeoOld4FcgA8FppLQz+Ntxpynqqdfhs7oz1KaTiq4=; b=0qp+GHP0eA9XT3azcraOimorzL
+	WIBUZUwgyiosJW/rCM74G0Arze8Kw3E+L300TcPwsOPjZ2UwfS8dNAMczdb96wzTbGmLWh9UUJFj/
+	s5YbS/Lkj1DnhJjcOc1wZwbZjBQI1XeoaE/CpRHGgOGaSTXgHlabeD1rUGRRqR5A5vfROydFiIKGz
+	rumvDg/bjMWZO3zy5pgOGi8rwCm8oqamC5njPiOuikplMxjv8srdCbEQ0+c0+grlkgnU8O96RBR7m
+	obQQjJzZDZ+7D+cEV4MiCshzQBMRK32zwk7NfqZSZQP1oA1oExQumEyIx8eLICfJJgndFfnWwZw6w
+	EyQu0q4Q==;
+Received: from [188.251.249.2] (port=34882 helo=numbers)
+	by s1041.use1.mysecurecloudhost.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.99.4)
+	(envelope-from <dan@reactivated.net>)
+	id 1wWLUj-00000001qw4-173O;
+	Sun, 07 Jun 2026 21:57:25 +0000
+From: Daniel Drake <dan@reactivated.net>
+To: linusw@kernel.org,
+	brgl@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Daniel Drake <dan@reactivated.net>
+Subject: [PATCH] gpiolib: handle gpio-hogs only once
+Date: Sun,  7 Jun 2026 22:56:47 +0100
+Message-ID: <20260607215647.112488-1-dan@reactivated.net>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9927f5d7-1eca-4936-b38c-678e76ac11cb@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=dJGWXuZb c=1 sm=1 tr=0 ts=6a25e0cc cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=I5036ZPCcDZR90z1f1kA:9
- a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10 a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-GUID: 6tbcMiLh7Kw8nyedm37Kr18gpFXE6g4n
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA3MDIxNSBTYWx0ZWRfX7s+eSwgCKHbr
- yRQYO5+24sQ/YYB29mMfldJUkHn5078hzZHUHn8XiEq5XMds9yUghrmWrL2oNdzFly84LYilUas
- rVB8lolgjW55BM0jeCwnwvqFIwuJRrRhMXQj29CCEX8w3rtltxpl3Y3IdGEFzYzPwMdqB6g1RF5
- QYlxkFcPi7w8Vxmua5BWJIVgB9JoYb+0e5naYOCwt31qYl8H/Z2Bqn3dshAkAI33k99NWsCTGb+
- xHwybn8vlfyZJjXTv+LbHbsyg3JtCGLz+pukNKpTGV8O2xxZ72otzpPVI2AsAdcNvr3XyUIhP7F
- ZNZ8hRrcpgHZZ4v+MsQKedC7XMiSiCyXJBmgGMY1Zd62856spM0F9v2qduvoFqfuD0UtLSYjqfJ
- bOKXYN+MFO7S/9Bvto1BI9+RFv8bhTFM2V1mqQU6MeRQHhHjgZ1kEfEi//rqkQjfjw8H1wcORga
- TYOZmLfY8vFFR4vFN0w==
-X-Proofpoint-ORIG-GUID: 6tbcMiLh7Kw8nyedm37Kr18gpFXE6g4n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-07_04,2026-06-05_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606070215
+X-Get-Message-Sender-Via: s1041.use1.mysecurecloudhost.com: authenticated_id: dan@reactivated.net
+X-Authenticated-Sender: s1041.use1.mysecurecloudhost.com: dan@reactivated.net
+X-Spampanel-Domain: s1041.use1.mysecurecloudhost.com
+X-Spampanel-Username: 192.250.231.249
+X-Spampanel-Outgoing-Class: ham
+X-Spampanel-Outgoing-Evidence: Combined (0.06)
+X-Recommended-Action: accept
+X-Filter-ID: 9kzQTOBWQUFZTohSKvQbgI7ZDo5ubYELi59AwcWUnuXsLW0z+VlcfY/wMv3CJzW0CkmwZvl1sHm1
+ KmFO1CRnJCu2SmbhJN1U9FKs8X3+Nt06bFpPrNOlRAlE9AVLwR4uGVjKNnzF3nQoDoQtBifM84JL
+ M0i5ZAms0EHrvcCaVIPSJ5FdNqHijoQ+Lk8NzN8YGnT3EFAinyrilm9zau/FuzkQt9Nb4Ml7QXdk
+ EetczWAg1NJkF77+oGQ+lxJlCrsUeB7itP8hgjDRserKv4bhb5a9CD46iTOjXEpJEwP3fd9WBb39
+ uS1TjWG2Inx+Ts2QrtVmombMJ4e2pn5C0yBMHZ0fE47nEjvubMSTLAkKCKclZzoe+TZdeH39wA4E
+ grA4pE2PuLHIFQdBY9qb1rRWgyz0f29FZkQs6Ir87R/YNAvW7iH+6DoE8NeDBUxImZIxHxsBXq5d
+ 3sVlH8/8/BVjaCxdqoPv0tTPBZ82RqaKH6ZJMkXL9fD6+WIpcQ2t8oQM/WEMAHr5BYwqeYfWeqTu
+ 1YC/tOVjI4dWyTvfTQXGjT+aEfC5mTBtCltny75g3MKubALAOajlmHbHzeutXs2uHosTaX/E9TB8
+ 42c3huE/T1c93SsS4aMXJmiJ2G0eb5ahq2kqyMRk6DLUUjpi54Q90umYmC9jerRVX9sTO+FXU2n4
+ L0nk+TooPV1h2BXu3/c8Dfd/7JO6UaIAUVkvSizih0TzynhIhk347ucixeDFxznIHYi/jghIJpVk
+ vIZQze0Bc4OP9WjPZ/cr5H8qZypgvgrWxILsnce/vzk7Sg5HsMU105o7Arb8LdgQkbIszV2rqXUJ
+ pkwwvtJ3eaqr64J65gYh+EkDZ7F844A3amCNzUUxeOUmb7f2sSZgwwfArL3kN4znUXS+aQ2Zqid5
+ ZhuDgwCeIZyBg7HvH2nIa17LbgjKuFO+2mEj3Ei2hTvWconvzZPs/pnfZDHCBKz5ZsfM43T5M7YL
+ w6LVwB8ESiQZrfYccBIk1Sag4dKiqCrF8eZZNLgqwwzqzRhdGeE82QeHCPMhVWUJ6Lbki9dM28Lo
+ JGcCCe5x6ntEzvieEb+fqTMfTu3UcMCRWk93tDX2xq0IRHaigWR4GmnmvyoQF7RljOE5Dy0kIn1S
+ +xE6dEa4ITSORxoHJPO7jtECLiprxnxXDQkNiSsY2JE82yoZXENc5iBe5UBNo8b5j5EtxVNpEcGW
+ Tu3UcMCRWk93tDX2xq0IRHaigWR4GmnmvyoQF7RljOF2PyW5cLuSbbpC1c/2zTYs
+X-Report-Abuse-To: spam@quarantine16.antispamcloud.com
+X-Complaints-To: abuse@master.antispamcloud.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [1.04 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_DKIM_REJECT(1.00)[reactivated.net:s=default];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-38055-lists,linux-gpio=lfdr.de];
+	DMARC_NA(0.00)[reactivated.net];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38054-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,qualcomm.com:dkim,vger.kernel.org:from_smtp,fb2js7bw4dca:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FORGED_SENDER(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_RECIPIENTS(0.00)[m:fenglin.wu@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:andersson@kernel.org,m:konradybcio@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:brgl@kernel.org,m:david.collins@oss.qualcomm.com,m:subbaraman.narayanamurthy@oss.qualcomm.com,m:kamal.wadhwa@oss.qualcomm.com,m:maulik.shah@oss.qualcomm.com,m:kernel@oss.qualcomm.com,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:dan@reactivated.net,s:lists@lfdr.de];
+	HAS_X_AS(0.00)[dan@reactivated.net];
+	FORGED_SENDER(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	HAS_X_GMSV(0.00)[dan@reactivated.net];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DKIM_TRACE(0.00)[reactivated.net:-];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7B1196519EF
+X-Rspamd-Queue-Id: B0FFD651DB9
 
-On Thu, Jun 04, 2026 at 10:02:43AM +0800, Fenglin Wu wrote:
-> 
-> On 6/2/2026 3:29 PM, Fenglin Wu wrote:
-> > 
-> > On 6/1/2026 9:37 PM, Dmitry Baryshkov wrote:
-> > > On Thu, May 28, 2026 at 06:05:35PM -0700, Fenglin Wu wrote:
-> > > > Currently, the RPMH driver only allows child devices of the RPMH
-> > > > controller to issue commands, as it assumes dev->parent points to the
-> > > > RSC device.
-> > > > 
-> > > > There is a possibility that certain devices which are not children of
-> > > > the RPMH controller want to send commands for special control at the
-> > > > RPMH side. For example, in PMH0101 PMICs, there are bidirectional
-> > > > level shifter (LS) peripherals, and each LS works with a pair of PMIC
-> > > > GPIOs. The control of the LS, which is combined with the GPIO
-> > > > configuration, is handled by RPMH firmware for sharing the resource
-> > > > between different subsystems. From a hardware point of view, the LS
-> > > > functionality is tied to a pair of PMIC GPIOs, so its control is more
-> > > > suitable to be added in the pinctrl-spmi-gpio driver by adding the
-> > > > level-shifter function. However, the pinctrl-spmi-gpio device is a
-> > > > child device of the SPMI controller, not the RPMH controller.
-> > > This replicates the story of the PMIC regulators. There are two drivers,
-> > > one SPMI and one RPMh. Why don't we add a separate, RPMh-based GPIO
-> > > driver targeting only those paired GPIOs (and we don't even need to
-> > > represent them as a pair, it might be just one pin).
-> > 
-> > Thanks for the suggestion.
-> > 
-> > I agree that adding a separate, RPMh-based GPIO driver would be more
-> > straightforward from RPMh control perspective. It makes the new device
-> > as a child of the RSC device then it can naturally use the APIs for RPMh
-> > commands. The main challenge here is, we need to make the level-shifter
-> > mutually exclusive with other GPIO functions when the GPIO pairs are
-> > used in level-shifter function, which means we need to write SPMI
-> > commands to disable the associated GPIO modules. I am not sure if AOP
-> > already handles this; as far as I know, AOP only manages the
-> > BIDIR_LVL_SHIFTER module registers. Let me double check on this
-> > internally, if the GPIO modules could be controlled along
-> > with BIDIR_LVL_SHIFTER module registers at AOP side, and get back.
-> > 
-> I checked on this internally, AOP only handles BIDIR_LVL_SHIFTER module
-> registers, it doesn't disable the associated GPIO modules. Also, I still
-> have no idea how could we make the "level-shifter" function to be mutually
-> exclusive with other GPIO functions after moved it into a separate driver.
-> Do you have further suggestions?
+Commit d1d564ec49929 ("gpio: move hogs into GPIO core") introduced a
+behaviour change that breaks boot on Raspberry Pi 5 when using the
+firmware-supplied device tree:
 
-So, for my understanding, we still need to write SPMI registers to
-configure the pins and only then AOP can handle the level shifter?
+  gpiochip_add_data_with_key: GPIOs 544..575
+    (/soc@107c000000/gpio@7d517c00) failed to register, -22
+  brcmstb-gpio 107d517c00.gpio: Could not add gpiochip for bank 1
+  brcmstb-gpio 107d517c00.gpio: probe with driver brcmstb-gpio failed
+    with error -22
 
-I was thinking of using gpio-reserved-ranges to prevent those GPIOs from
-being used by the normal SPMI driver.
+gpio-brcmstb registers two gpio_chips against the device tree
+node gpio@7d517c00, one for each bank. The firmware-supplied DT includes
+a gpio-hog on RP1 RUN, and this gpio-hog is attempted to be applied to
+*both* gpio_chips. This succeeds against bank 0 (which hosts the GPIO)
+and fails for bank 1 (which does not).
 
+In the previous implementation, failures to apply gpio-hogs were
+quietly ignored. In the new code, the error code propagates and causes
+probe to fail.
+
+Closely approximate the previous behaviour by ensuring that each
+gpio-hog is processed only once. The handling of gpio-hogs on a DT node
+with multiple gpio_chips remains a bit incomplete/unclear, but this at
+least retains the ability to apply hogs to the first gpio_chip per node.
+
+Signed-off-by: Daniel Drake <dan@reactivated.net>
+---
+ drivers/gpio/gpiolib.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+This bug is only exposed by the firmware-provided DT that has the
+gpio-hog. The DT shipped in the mainline kernel does not have the hog
+here. I'm not sure to what extent Linux cares about supporting the
+RPi-downstream firmware DT.
+
+I'm also happy to consider other approaches. This multi-gpiochip setup is
+a bit weird and gpio-brcmstb could perhaps be converted to register only a
+single gpio_chip covering all banks. I verified that the other drivers
+that obviously follow this same multiple-gpiochip pattern
+(pinctrl-amlogic-a4, pinctrl-st and pinctrl-stm32) do not seem to be used by
+any board DTs that include gpio-hogs.
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1e6dce430dca..fc4dacee0a84 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1031,6 +1031,11 @@ static int gpiochip_hog_lines(struct gpio_chip *gc)
+ 		if (!fwnode_property_present(fwnode, "gpio-hog"))
+ 			continue;
+ 
++		/* The hog may have been handled by another gpio_chip on the same fwnode */
++		if (is_of_node(fwnode) &&
++		    of_node_check_flag(to_of_node(fwnode), OF_POPULATED))
++			continue;
++
+ 		ret = gpiochip_add_hog(gc, fwnode);
+ 		if (ret)
+ 			return ret;
 -- 
-With best wishes
-Dmitry
+2.54.0
+
 
