@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-38039-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38040-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CJOsFOG4JGrQ+gEAu9opvQ
-	(envelope-from <linux-gpio+bounces-38039-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 02:18:41 +0200
+	id UNqNOfS4JGrT+gEAu9opvQ
+	(envelope-from <linux-gpio+bounces-38040-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 02:19:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5444864E90B
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 02:18:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CDCA64E916
+	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 02:19:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=iopsys.eu header.s=selector1 header.b="zsPMUI/Y";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38039-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38039-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=iopsys.eu header.s=selector1 header.b=PlmOl2po;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38040-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38040-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=iopsys.eu;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 249223013D7C
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 00:17:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6D5503016B29
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 00:17:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B93F71F91E3;
-	Sun,  7 Jun 2026 00:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75A4D2701B8;
+	Sun,  7 Jun 2026 00:17:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11021083.outbound.protection.outlook.com [52.101.70.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED041EEA54;
-	Sun,  7 Jun 2026 00:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C679E1F09AD;
+	Sun,  7 Jun 2026 00:17:19 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780791439; cv=fail; b=QjC85eiRCysGrt/z5h42ru+rrT6Q/MKSz9VAOBYS6Edk6nESdGkukNCx/VNG4fBWaY5oFH6/aWdRVVCLzwLqVykwp5IIZHASOXvJCEqB2q/doLLc3CiWBf9QV+bADDbcmrBnhqchMdqNVnzedgEVzoTLBRLiXUPVb6bOESqNBBI=
+	t=1780791441; cv=fail; b=EB8GOYXnPtRJUlVA1cQwiRBYY5rwqRHT3mdGsRFSoIzpF9aTBTjybcp/CFfoG6rVTytNI8RGkBTS4mvjyQHgQXl8ZHjkuNs8gWa1Zjb7SSmEtom7UcWEEobjnIlOvCdaa8KGHgpGNmS4l78mdTJ1kkbT4CCEupoGKUdYCVlrLTU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780791439; c=relaxed/simple;
-	bh=MrM+W6eOcFSxDl2GL5tt5/kZw26kZPAu//fX52Jv07Y=;
+	s=arc-20240116; t=1780791441; c=relaxed/simple;
+	bh=2ZCEFQn5vaI6e72r+w18X4kHVmEm5cr8VYVluMymmGo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QPscSZz41mAKlZ15cXdFndAXEriWniFzUYNYbSNZ6of0ywNVCIcHAPFQKYW2dqaY3kVWzJQ5dGUVDEzRXwuFjGaWSgdddVxuYRiZA/ivZChiF0/g5Pzp3GxT6vk95xjRp9hLa4O+398/k4lBChBwaS2SeXBSSpVYk6NXAKIYXrE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b=zsPMUI/Y; arc=fail smtp.client-ip=52.101.70.83
+	 Content-Type:MIME-Version; b=Fmy1hA9Iy0atZipVbOUf0RsKAUen+aciyEnpeIbXJj5dWSqOBYgHsSPgrdwVg1MCYHWHsuSA1sspeHY5vtKan6dkTDi1zKMQO6uh7SV1C1Y0bEoJDJxMD68M8p2Pio94KJ92hQVeLkBF812/ymji4jaXgVyCbTD84pay06BnGpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iopsys.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=iopsys.eu header.i=@iopsys.eu header.b=PlmOl2po; arc=fail smtp.client-ip=52.101.70.83
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MmsXUwNpJXG8Ypeiv9NKZHvFXmH2hjTiSTnYX0VCjZ8J8312tAJ9n3i1kS6VNCspNEF+0MJCFSbKu7PqV0oj9/qPm/Wr2kxVeUgiyVeIiuLOjrhT2hbk0mezy99g0f9U3mYYJ0aVhLyUTAZr8X1JwaaywQ8pGp08VVpSAtSVo99yZbfH6ZYoR0KiD7uy/WQpx1mJm3pV7Sujk1Lj8QbB1tZWE6tBdGAKU3yHEgJet8oz6EFu7MEEspPZzjunvteHfZNqswGmZSkEa/kr/neq+kDY+0aOypzTNxtIsT4AlVTcDqyOGQP163Ijhjq6I2k6zpWqN/rrR6tcY519azOSqg==
+ b=eBz0etwigVsfvBLff8tJqi6BBao+a/Xc/WqeknIIw6RTb2ggHVxLAprjpxIvgUaw+NgQT+EfOnbRJeCYzsZfShCs4ZWHAdJNhbPJrck+jeITIvNvXcU31fRYCqvtzdEF2sOql/4yimiFFsOe2nNCOhgaZE7hIQYPWCY7oGvoZwWbAMVnfgR+x14a+YtlMJ4PFeWrtljKHHadJ3U7snqBnOEL6e2xLeSZ0OH+xeRH5aVhIAwXkaOrFl0dzpkVVRPP41EJnctJ8wmJ7VV4zlEoFvu/QUeuhkIn10Unv88hHDTmiv0UGz3x4f/HbjMqGtplXmzslIv3ntDfRNPYeTF0Jw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vmv5FDc3RzrOokFUxRHlDIsh4sYkP4dtEiig56W4r38=;
- b=h61uSEISHOk1ekGk91/JxuGE8lCklTz/Z569CdEMUVNKam/SHUvu9dqsdrW9+AB2DU2Ok5+HH5waKEhStU+NcCIAHoGtI9OljsmQyETTJegmACm8mgwF+zscO8NmURVlcv/Nz5og5ar/36ht9aVPAl72nYAqdIGWggfufUzy6Q4zJ5XHi360bUidV72iMzMY3RVfJYdGqwgvZVtF385yJ0sdmdMsquElEFu4pIVsy3E/DhHiEw/eqyBoX6T9xu5lUsbg6g6ZZ6+/S+3xS4vJEAcSb9jTLz/M/ka8b0HBmnuwrtdf1k1xcVjYtyYEZamSSG9J0bmeEsWx1OgaiSXvqw==
+ bh=Zb7ojVHnkxz3fIluPxK2N+Qoq/vHLe3lP2XJV5+sYDA=;
+ b=GJYSZ/X2q+lu4BVPN2o1gwU6/aRk+EBnjBoIILqHgjJHVd01b3GS6FjFsPvs99POLi5DFNGT/E3Ub2pK4TLRS7R0GHU/sqntF1jae5YbfVhlRd3l6fK7eMmuEJCn9L/jx4yxv4OXF6NxoNuIcOFhfN0KwSeuTkX0Oxy5Hcc5Era6+a017bFlQKpoGK9yhPyQ+So/WLhdJTzL3fxLeG8IzL+kIhVaxcwoR9p2xChuEWVvNhr/At9otbx4UyetHCk+3eCgigyxVmPSCfHIonYcz9kZ1sA02ZiZp7YsQ78AdLKNjQmHCZxQ4vkb3M3TQZnQ0aIb8Y+Qg4vJHOHCt+DzHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=genexis.eu; dmarc=pass action=none header.from=iopsys.eu;
  dkim=pass header.d=iopsys.eu; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iopsys.eu;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vmv5FDc3RzrOokFUxRHlDIsh4sYkP4dtEiig56W4r38=;
- b=zsPMUI/YzoDq9RtvuGjcoA+j+NFXDewuknBDTaN69eNXX7iZlT1yNpEzBxijQJCVMB7Jv2+3J3JLFaxuQKekp6Gel8S8yFEjoopfDS/HatHgQ3IxOuwd6ZqHKM83VoaGS2ia+S5TVgmMmtz41l9FTEchSKTCJam/3WswFXmCIF45IFHquAs1Jl3dG0nqPY2Kycnba039awohCVc3X9DASiD+1Ikdowiokua4ierhtzhafVqjSrm9vAXZ+rLY8jjxzo+a++3vrgu3pvSffxceE/9AUJRzLcsIa8GcDS/39gYOleEVzVhNlVzui4SI58Hq2EaJwkaGGTlOP2M1Tf4nqg==
+ bh=Zb7ojVHnkxz3fIluPxK2N+Qoq/vHLe3lP2XJV5+sYDA=;
+ b=PlmOl2poO2a0UB7hCvy4UQXWrRIIHV7cKVctoikmCzXj0Mwh44xhhYzSF6//DPKt35TGZL00DzJOB3YbVnTKQgkpU0M3NsUvjTJKJmK8welm5cQ2Vp5JaJCJv0xfXNmOT1BcTE+9CBxZjkgZgkEY+e9uZcZY13275g2oWiA/fXwbAXJyqmIRPQsIrBp5ZWpJZuqWzLtKN7g2yntaYcO4ulNUjcRbHzwOMl/dVHPkPG8ON5JmRKtzMQvCQQhdC2S6tIxUjGL2Voz3JwLGRuWyVPfjJ4XmyoscSZRbBBxjCFvN1nXTMGIifsvKWjZljGbJRyz97Qwp8xwpHXYdl8hBgA==
 Received: from DU2PR08MB10037.eurprd08.prod.outlook.com (2603:10a6:10:49a::20)
  by MRWPR08MB11707.eurprd08.prod.outlook.com (2603:10a6:501:9b::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.11; Sun, 7 Jun 2026
- 00:17:11 +0000
+ 00:17:12 +0000
 Received: from DU2PR08MB10037.eurprd08.prod.outlook.com
  ([fe80::3c7:6d2e:8afe:e4dc]) by DU2PR08MB10037.eurprd08.prod.outlook.com
  ([fe80::3c7:6d2e:8afe:e4dc%5]) with mapi id 15.21.0092.007; Sun, 7 Jun 2026
- 00:17:11 +0000
+ 00:17:12 +0000
 From: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
 To: Linus Walleij <linusw@kernel.org>,
 	Sean Wang <sean.wang@kernel.org>,
@@ -74,9 +74,9 @@ To: Linus Walleij <linusw@kernel.org>,
 	Matheus Sampaio Queiroga <srherobrine20@gmail.com>,
 	Markus Gothe <markus.gothe@genexis.eu>
 Cc: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-Subject: [PATCH 06/18] pinctrl: airoha: an7583: fix incorrect led mapping in phy4_led1 pin function
-Date: Sun,  7 Jun 2026 03:16:42 +0300
-Message-ID: <20260607001654.1439480-7-mikhail.kshevetskiy@iopsys.eu>
+Subject: [PATCH 07/18] pinctrl: airoha: fix pwm pin function for an7581 and an7583
+Date: Sun,  7 Jun 2026 03:16:43 +0300
+Message-ID: <20260607001654.1439480-8-mikhail.kshevetskiy@iopsys.eu>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260607001654.1439480-1-mikhail.kshevetskiy@iopsys.eu>
 References: <20260607001654.1439480-1-mikhail.kshevetskiy@iopsys.eu>
@@ -93,57 +93,57 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU2PR08MB10037:EE_|MRWPR08MB11707:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac338b7e-08dc-4655-23fa-08dec42a1e61
+X-MS-Office365-Filtering-Correlation-Id: b1849d81-4116-408a-73a3-08dec42a1f3a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|22082099003|18002099003|38350700014|921020|56012099006|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	GaSzfdL/a5mrCC6cepGYc1qN/PzbRziGfzxMk/kOJ6gWNZaePtJ9X+wCiyD3mx+rjWcNBypL6AAeOldf4wjJkq4lJp+2FOs1ddyZMEWeNJ30Q3xeLULr4KnYdONhr3Xo3z1hmnlY2A/alfTtNimzh8eHeTq52IZx2MZrdRylkK3TYDwKtOX0jSqb0PrONe9K8OOHtxKAGnOTA+365Ra5Rc2VpulMlSPMV78oeYwAy4Zukv9ncVXf07JANuzhhjk/3eV4wpwyf1Q3oSyn8RcGMs+T79Z4soH1HlkixbBQ7aLin3GOGoMrK+yUW8IOAL011i9CQCvQ5CMjQdGtyme0BEVhYy8a7EiLWXp4qiv6j/SdgS7CDiMqj/etyLgqVaC37PmwqKg+IbaqKySZEi66RkPVDWomntPkpQ7g2xv2RMjAGKOT7GiHyMOYN3vI9GZqNDEhDOCGcWWmCjmPG1Ug9LVA5C43dlv89fzVVUtZBmRQ9LQKVJ4NJkfqGMYMFOmFnwM6x+/cmu+0ze5a8Bu34rhcoy1IxrifaffFoakDMyNyoHLPi3nZBblIr9Jm1N0Le8f3rePK9gdUFb/MMPZ7ZarEgUJ8thPv3Uwaf4zJ5w8Dv7FWxAKqhTIBe0tL3EcHF+78PnIqkP8QT40SqR1XokvHBEDVYispAwENfY36/J6O0DFqmtW8A+Zw/0ZyxeX8OVnvSZ/aBKdTx5qnAcptOXEaFyZvO5cLMfJNWBXOpr2yfeEEmdcFLMgu6sCf7c/nnBPq4/OnHidTYb44olAyvQ==
+	s/zFzETWLoh7UxRx46UQlBXgWk1q/XaswhTtBTajuixAEivi0WGa2TmShAGnZOKaL2GYtYgkmpwUC4+7cOlYugb79Rn4iyzB0ek3MS7Ypp/800p+82ikbe15/rJ8BxCadIDxkhymas9yNyd8b9O0PUB5C5Ck91jT7EsW1jlspeNOCt7ahUzxaJ+s2sn83Wk6NpORoTFu/HxN23Q0p4D4XX1BebXhg7Hhjg4rmFV8a68Ka5EBptpyUkgw6tes4D9oIJAYRcGGt5S/bsmzHXtCQRx+wRrufrs08oVOZDOjyq9pkX7oojw2n6oXDFevcxX9OPUZfhISa8qeyqSDWgqat+rAGsE2rX88WymCdaWS4kJKQPr9GKOkszaKJM+esmRkiGUgO2fiQQfUz9UdVQlacs9hgk3S2WtNVOGQCVZP6DcJ4B5PdMUFAkAWOWhFHmk7BeXS2jojV8yYLrgpy+B2yt9K5dlMmcq9/rNcOuIvmIXzpKVN34kNHDSClScN5xpX7X37hJDJkacx824jeoDnLsxqF9B1wMH0Nop32qrp4xa7eJjHSmlR7zdRvAebuhYve6YqzNrizxfeJ1ONpbE6Ydo85PosILargiw6pkbwDCqh4KYH2pRDPQSpr7eRqTeoAwilRtQiT4JCVdMIwm2YOuUyDtngnhcZyQCy00Cjt4z6SdzRGgqPNa94kzsGbT/fOwa8Ph4nLFmjRw01N3yK54J7VKNLq26nIQrQATXkBgZL2ZFQioVCmYiTE7m0Q0Ybq41Bw8kTizlbEKJ6oHslgQ==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR08MB10037.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(22082099003)(18002099003)(38350700014)(921020)(56012099006)(11063799006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H11NBRfBNeozG3uFnmTstc0paNs8JEJaG6ycRv7c41GQt/sN5ccxVT2hZulJ?=
- =?us-ascii?Q?s0A8GMSKnfSMDwsxBZpfAB9gDm7pzFz0OyAkHxAr94H0lsBrqmLTcCZyrL5V?=
- =?us-ascii?Q?hVFhG4Fw99UxOnMVFVuYz59Wl36Yw92WbCW3ISIV8p1t1mgHlsobUpaYO2BF?=
- =?us-ascii?Q?KZahGYO0lMQuEt2eKBRUOswb65jQtgf5CDzVYUjjGMEc66A5he0WJDjVxO/t?=
- =?us-ascii?Q?ATjoZ1dGo/ygM/dFpPGtfUvVUsqG16rnsuspZ9l85cj/1vzEiFLF3mCCTMvm?=
- =?us-ascii?Q?6IlCiJP9Vk42FRhCyEjWrBcyR+wzyLOxXO8OBYLCsB2IJenNdkPKY1hax9lT?=
- =?us-ascii?Q?MYa8/7LTHIHOFZ5Lv1fhveIVEnpIAHAZ+s5lk+xkoyDr6SxfsuKompHJ6FUa?=
- =?us-ascii?Q?cTG1YmK9XgMgtwT2oHGiptEFW9cHRWFjWk/39W6cqfBwwOw5F6yNeG0gy6uV?=
- =?us-ascii?Q?sb14K588+JTBpFXRDcslsYikFt2++YV4HUI99LPPvnwAoMNoDQDlVg+xfITn?=
- =?us-ascii?Q?xY4ugDh5c7z1e5XtQzN6QT519mn+L+pYeI/DIUYc3BV8ER9Ae/Q5jQMGPzN4?=
- =?us-ascii?Q?l8WTolfBaiYTraGCIsVNAqs8ZxBYAL9PZOdX1XVllhQsHgco/o3pnrTfWEeT?=
- =?us-ascii?Q?i7UYhkkQWuhtz2sKppooujqFHEdGWVkJPIIxy1De931kSVzQf8L10QFtgkOo?=
- =?us-ascii?Q?i/v547tidRu93514WaG3NX0D4F62dNeUah/U/pu80+PSza8yL3O43+3IKTOv?=
- =?us-ascii?Q?CFD8GchAYm+HuWWoj99wSkj5GSLNUABC9Us9CXTh3g+0CpZZ7y82V9kb5Cnl?=
- =?us-ascii?Q?2DGykJoUi28mxI71LHpSfvev/uK3hQTSsuxZPS8PY3xw+0poapzOJCFHqrrt?=
- =?us-ascii?Q?yDdZlOL3YWwe0F0oIuxbe/GO3VbZr3g7aFTiG4Ke2JGmOj0KQscykzkr6z4k?=
- =?us-ascii?Q?C+1njvwI7ZVF7qwflcIGvHs6gf0cl3Z9a1Lff5rtivhohEA2OddK0iIbnCQs?=
- =?us-ascii?Q?LENvwsCc6zUJJLbb4LfrYV+gtL9uiF8tIuec++t1+/sZLzsCmq5+xiR0Pq9/?=
- =?us-ascii?Q?TdlnrT9YsFpxx10dJ8G4ZEkpeDC4kGj8WjlpGzGzfq91Uyfb8t1R3eHxNcLx?=
- =?us-ascii?Q?l8qSfQlsjHLv4hVmTpFDpYg0rRSIrlzJprLc4PGm1+/E8b1IBwwF4bjphtCi?=
- =?us-ascii?Q?UDvl38FiV8kw7PULVwI8f2AeJA5FfwL8l+1i024JZ+gl649a0vXWBYuwV3in?=
- =?us-ascii?Q?qYd41a16rQ2YhK1jK9TlyoKzvzS8aKtCYzhKnyt29WxQsYOYupWCJ7mN4qD+?=
- =?us-ascii?Q?fEz+nKPhIPljI8/iviIpjCPGTV9bEOungVx/W+uBGn6mWLdYx7X4lOiLN+Ke?=
- =?us-ascii?Q?NfrG3BAYykt0Nu8VwAeJt1Kh2FWZqxMUGhSJsFb/+q56Xwkjm5cKxG98Ep9t?=
- =?us-ascii?Q?6q1w/I/Mek3zcnFbhpIHOn4G8N2piDgNoHrMJApFs6JEiE1nji9U5puWxEFd?=
- =?us-ascii?Q?vxMn+aDSK94qjo9DIqNrVBw+VW0BYuJuacQACctzckh20tyFn4SEUajIt5/R?=
- =?us-ascii?Q?120HsKRr2VqszJhtwj8rl+9WIZpycuKq68cglNpkmbmjRgGaOZqddAOcXeuX?=
- =?us-ascii?Q?Q+JGvNCo3AY6UBxnf5jKeFD9Cd6SS80wvLV3R+Z+BMQByuyNJF3GdUskEGSd?=
- =?us-ascii?Q?K/eTU7NCIY6vA5SoffOYfiT7iQGc8qQBDAnLeMOaFw5lclgFwKBHQBvdGBpf?=
- =?us-ascii?Q?rL89tRalxNlMUjodobjoh1BCjAOBOI4=3D?=
+	=?us-ascii?Q?YMFY+IZafEfjenRTvCUF7us2yqqiqf7uwUQlxzTDjwKyCOWtsOHipf8wqErg?=
+ =?us-ascii?Q?E/wVtUB72p5gez6OHjk6sCaiPLP6KpcEcRRSHgOHtBovpPLv6p9yFom1KbZD?=
+ =?us-ascii?Q?d/lugxbJ/ZtIaxs50t6Qj61YcFLALEskN+vdCb6aIcHRSK+v5SopShRylND+?=
+ =?us-ascii?Q?XTgwNGd8rKaLD2xH0VBiOIO/M6vlvp6ZNBWcKgiyFA29TABcwZ+yGglHNeeG?=
+ =?us-ascii?Q?OTmws5LpseiB+U653LYqzY8KcT6nak0rCXniz/1pRG2fzBSKIllKF2kue6rf?=
+ =?us-ascii?Q?HNq+kXB2UVwxY1bPU4dasrE1QkN48gBAGM3QQbUbi9lgu8hzB3f9Zu/C2Dna?=
+ =?us-ascii?Q?7JjYtFB4IWDqEq0cUa7riPmNiZCW57/HU5zY5O59auBgx6xUOjJ/3/iTqGRX?=
+ =?us-ascii?Q?0w8tyUzZ2aI6VHlev2Aq2viuxKAO9ZKzMEVAQM/8EdFNrwv7WPS8W5V9NJ/2?=
+ =?us-ascii?Q?TYsPqpOwCJb3mQtnDc++Cu3T/VL8j5NkOfn0PdmktRbsHfaT1FoaJbpZQIQq?=
+ =?us-ascii?Q?6rnPXzxgDVtJreSfyCZi40iwX92NmPrEB6Vq4YaYyfOmAcIcpM/Y4Eu2k+gL?=
+ =?us-ascii?Q?XAvBdJ8Mu/DHYmBDCQKwoAHeu8fl/27tYq+uEmDR+dA25j0BqKMacZb2WWYk?=
+ =?us-ascii?Q?GJRfQ5cvv3k/w8wM81vP08qj9A1hR2Q1Y56d6jvM7fAx0ZAc9UYu422+oXkH?=
+ =?us-ascii?Q?tc5XA5WjV06t8dQkGzkT12o+WzqHXLpPV8ZUOVHgfhDAsbC3DGgFKtyKNQsa?=
+ =?us-ascii?Q?EeU7cRkBbm0SKUIgPgZyxjWNQWvk+PWUUKxeZe/W//Zfwq41Y96VLIWzT8DY?=
+ =?us-ascii?Q?RaZZzUfB+QtJu3v6KR/bYcMFThRkFCgddr+BW4IKTdvzmWQweQ/SN2K20sI0?=
+ =?us-ascii?Q?e/b3c4Ko6uJxy/IUXyTdj5tg9wQxn/iS8c9fJYnHv9ueBNg8n6g1t+Nrmbo+?=
+ =?us-ascii?Q?hnXG+wOGrM8bF/w9++v9exsE80jV7G5tt+FFXdKn7cAPK2pkdQVTl3xqqGP6?=
+ =?us-ascii?Q?JaW0rIqbojs48sRfXKBcZkdZ5K8FQ1ldVuGPfSIKTMmujr8flmJfCkW1g5zt?=
+ =?us-ascii?Q?ajl9/CViIN5sDK/GN/yMjbS2GUI/sJDFze9VFL7cmXDQnZWl1Xso1iQW1Kil?=
+ =?us-ascii?Q?EyqspRxzmXAur7EwfeD6igdOk6uFmCgkohZv1mwaUxO0TNxds0f4Rbj2ePgu?=
+ =?us-ascii?Q?haD62ehooMwTDT4aXmiIHv5dqSS6azyPmYuDq7hnlTnCmYKceVuV6VyrIwQP?=
+ =?us-ascii?Q?AjW800BzoGrGVHFc06r1r1nnI/lOVa6wzuZKHkO8Ck15iWruAbcBZTPNAnIX?=
+ =?us-ascii?Q?AfV7ggkrKnwdp7js5qvdtoII6bMkPsukntBv5R+NbkUTflikt3yFw2689FTk?=
+ =?us-ascii?Q?Ijx+J7GlEKg+XJbPEzOTTfUKt0TlFjHmmhtvkElIfXY9dqMLqbtbLO4CO0VO?=
+ =?us-ascii?Q?JjR+wJTKWYZuQB85PCpwICFPyV7LQe5RUw02W1bCq1NQ07WT13/ubcMbSNV+?=
+ =?us-ascii?Q?po3d7TiseR5oh/LpFXh26c7tEeWALGaUz6hZB3a4cpaHpWa2UDjDwisf/t9q?=
+ =?us-ascii?Q?3FtCfKnPnrtbeZGLGYZrvwlmy43QvzAaAyoJWvd1EqHkmz3YQRU2oEkrv6WD?=
+ =?us-ascii?Q?LPN/SRD9V0IRiu0S5cHD+BGZ8VJq/bw3HMkGlNhxWhEzpdQhoeybuuAu+7jf?=
+ =?us-ascii?Q?KuDyseSk2/eeuHEQyjzSUAQDEZHxQ7DV2XCFs1aYGJqdcUxdAz14dXVtqq2x?=
+ =?us-ascii?Q?PuE9tH3I5vRE1RHys+zQ5gkxnRuLWTA=3D?=
 X-OriginatorOrg: iopsys.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac338b7e-08dc-4655-23fa-08dec42a1e61
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1849d81-4116-408a-73a3-08dec42a1f3a
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR08MB10037.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2026 00:17:11.1854
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2026 00:17:12.6241
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8d891be1-7bce-4216-9a99-bee9de02ba58
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1iaV7v4LzTf29viX74gxRTLUsotV2NTRSR7BwjccnmLHui+Uj6dCSqGulJdyBrHVOdGy6frlX/KOmEJpPPpDLmd59XbZZ5N00Si30aNVB/8=
+X-MS-Exchange-CrossTenant-UserPrincipalName: MMOPNkXULcwP5HnOBMYBfYwDPcWcw4gjNaughF4N0kPfN+czD0Wd6YT+MjkDJXDC9hNw6YhTne4TIQ+69B50wfJuHVHCPZos7MyhawKRYVw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRWPR08MB11707
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [2.84 / 15.00];
@@ -157,7 +157,7 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38039-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38040-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com,genexis.eu,vger.kernel.org,lists.infradead.org];
@@ -180,39 +180,121 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,iopsys.eu:mid,iopsys.eu:dkim,iopsys.eu:from_mime,iopsys.eu:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5444864E90B
+X-Rspamd-Queue-Id: 1CDCA64E916
 
-phy4_led1 pin function maps led incorrectly. It uses the same map as
-phy3_led1. PHY{X} should map to LAN{N}_PHY_LED_MAP(X-1).
+AN7581 have 47 valid GPIOs only (gpio0-gpio46), so gpio47 is a fiction.
+AN7583 have 49 valid GPIOs (gpio0-gpio48), so gpio48 is missed
+
+To fix an issue
+ * create AN7583 specific pwm pin function,
+ * remove gpio47 from AN7581 pwm pin function.
 
 Fixes: 3ffeb17a9a27 ("pinctrl: airoha: add support for Airoha AN7583 PINs")
 Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
 ---
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-airoha.c | 74 ++++++++++++++++++++++-
+ 1 file changed, 72 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 9497f5110f61..9be759f08b18 100644
+index 9be759f08b18..15a541724349 100644
 --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
 +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -1710,13 +1710,13 @@ static const struct airoha_pinctrl_func_group an7583_phy3_led1_func_group[] = {
- 
- static const struct airoha_pinctrl_func_group an7583_phy4_led1_func_group[] = {
- 	AIROHA_PINCTRL_PHY_LED1("gpio8", GPIO_LAN0_LED1_MODE_MASK,
--				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio9", GPIO_LAN1_LED1_MODE_MASK,
--				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio10", GPIO_LAN2_LED1_MODE_MASK,
--				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio11", GPIO_LAN3_LED1_MODE_MASK,
--				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(3)),
+@@ -906,7 +906,30 @@ static const char *const pwm_groups[] = { "gpio0", "gpio1",
+ 					  "gpio40", "gpio41",
+ 					  "gpio42", "gpio43",
+ 					  "gpio44", "gpio45",
+-					  "gpio46", "gpio47" };
++					  "gpio46" };
++static const char *const an7583_pwm_groups[] = { "gpio0", "gpio1",
++						 "gpio2", "gpio3",
++						 "gpio4", "gpio5",
++						 "gpio6", "gpio7",
++						 "gpio8", "gpio9",
++						 "gpio10", "gpio11",
++						 "gpio12", "gpio13",
++						 "gpio14", "gpio15",
++						 "gpio16", "gpio17",
++						 "gpio18", "gpio19",
++						 "gpio20", "gpio21",
++						 "gpio22", "gpio23",
++						 "gpio24", "gpio25",
++						 "gpio26", "gpio27",
++						 "gpio28", "gpio29",
++						 "gpio30", "gpio31",
++						 "gpio36", "gpio37",
++						 "gpio38", "gpio39",
++						 "gpio40", "gpio41",
++						 "gpio42", "gpio43",
++						 "gpio44", "gpio45",
++						 "gpio46", "gpio47",
++						 "gpio48" };
+ static const char *const phy1_led0_groups[] = { "gpio33", "gpio34",
+ 						"gpio35", "gpio42" };
+ static const char *const phy2_led0_groups[] = { "gpio33", "gpio34",
+@@ -1504,7 +1527,54 @@ static const struct airoha_pinctrl_func_group pwm_func_group[] = {
+ 	AIROHA_PINCTRL_PWM_EXT("gpio44", GPIO44_FLASH_MODE_CFG),
+ 	AIROHA_PINCTRL_PWM_EXT("gpio45", GPIO45_FLASH_MODE_CFG),
+ 	AIROHA_PINCTRL_PWM_EXT("gpio46", GPIO46_FLASH_MODE_CFG),
++};
++
++static const struct airoha_pinctrl_func_group an7583_pwm_func_group[] = {
++	AIROHA_PINCTRL_PWM("gpio0", GPIO0_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio1", GPIO1_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio2", GPIO2_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio3", GPIO3_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio4", GPIO4_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio5", GPIO5_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio6", GPIO6_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio7", GPIO7_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio8", GPIO8_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio9", GPIO9_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio10", GPIO10_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio11", GPIO11_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio12", GPIO12_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio13", GPIO13_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio14", GPIO14_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM("gpio15", GPIO15_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio16", GPIO16_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio17", GPIO17_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio18", GPIO18_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio19", GPIO19_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio20", GPIO20_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio21", GPIO21_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio22", GPIO22_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio23", GPIO23_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio24", GPIO24_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio25", GPIO25_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio26", GPIO26_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio27", GPIO27_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio28", GPIO28_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio29", GPIO29_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio30", GPIO30_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio31", GPIO31_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio36", GPIO36_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio37", GPIO37_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio38", GPIO38_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio39", GPIO39_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio40", GPIO40_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio41", GPIO41_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio42", GPIO42_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio43", GPIO43_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio44", GPIO44_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio45", GPIO45_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio46", GPIO46_FLASH_MODE_CFG),
+ 	AIROHA_PINCTRL_PWM_EXT("gpio47", GPIO47_FLASH_MODE_CFG),
++	AIROHA_PINCTRL_PWM_EXT("gpio48", GPIO48_FLASH_MODE_CFG),
  };
  
- static const struct airoha_pinctrl_func en7581_pinctrl_funcs[] = {
+ #define AIROHA_PINCTRL_PHY_LED0(gpio, mux_val, map_mask, map_val)	\
+@@ -1759,7 +1829,7 @@ static const struct airoha_pinctrl_func an7583_pinctrl_funcs[] = {
+ 	PINCTRL_FUNC_DESC("emmc", emmc),
+ 	PINCTRL_FUNC_DESC("pnand", pnand),
+ 	PINCTRL_FUNC_DESC("pcie_reset", an7583_pcie_reset),
+-	PINCTRL_FUNC_DESC("pwm", pwm),
++	PINCTRL_FUNC_DESC("pwm", an7583_pwm),
+ 	PINCTRL_FUNC_DESC("phy1_led0", an7583_phy1_led0),
+ 	PINCTRL_FUNC_DESC("phy2_led0", an7583_phy2_led0),
+ 	PINCTRL_FUNC_DESC("phy3_led0", an7583_phy3_led0),
 -- 
 2.53.0
 
