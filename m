@@ -1,71 +1,66 @@
-Return-Path: <linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zUKPCn73JWq0PwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 00:58:06 +0200
+	id xO7eEzv5JWotQAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38056-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 01:05:31 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0FFD651DB9
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 00:58:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C8B4651DEE
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 01:05:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=fail ("headers rsa verify failed") header.d=reactivated.net header.s=default header.b=0qp+GHP0;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38055-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=disroot.org header.s=mail header.b=EJjtLYkw;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38056-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38056-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=disroot.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E914C3001FC2
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 22:58:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 701C1300D179
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 23:05:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB373254A2;
-	Sun,  7 Jun 2026 22:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890FA32B12E;
+	Sun,  7 Jun 2026 23:05:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out16-31.antispamcloud.com (out16-31.antispamcloud.com [185.201.18.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA5B26E165
-	for <linux-gpio@vger.kernel.org>; Sun,  7 Jun 2026 22:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4F3329C57;
+	Sun,  7 Jun 2026 23:05:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780873081; cv=none; b=pn5LsZq1ET8aEfejcJd1zcQQRodt5GohxmkCgG0GOZj76O9GVAhjBbMpTEcvqNAoejw238OM4Hr0s9RPRN0SeaBqpWdoXBeM89WUcoG7sPhZ+EY6YL1Gjzpm74TQRqCc2jRrst4/slM0dMtZBxXxSxGnelIobMpeq1/8qFVmVlc=
+	t=1780873528; cv=none; b=pMDdIiX24Q4g2af9mSCyl2tebPzHCYRvDpTXDqARcwiHrZpj40de2ECRByahCM7fjujcs46cjB7VEvksMzcajd92glozO9PxtuCNP7ODUhP+HPBeZl+Ul1ebd540lx31QcJA8XQrvxRUhjhlOkBDaDPUODdwmWKmGbO/HBCc/7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780873081; c=relaxed/simple;
-	bh=uz3FXJ9DomsPbEFD6JPD5S8Gjeg0Hr1cb/v2CpjyB0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KRXZZYoC/aU3uScJ548XQEH+8WOsCYDY/mBTi+pqZhZDOssB6m/7E+i3ciyyXQJgvO3DP/PExEoYok+9z+cG5nBc6F7KyAiGExGCXB1E7T6z5AXu0/vlDM69QdVGykz44N451ewFQloP1Oi06nVPdemFqPRnpv5VE5Ke1S8VQt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=reactivated.net; spf=pass smtp.mailfrom=reactivated.net; dkim=pass (2048-bit key) header.d=reactivated.net header.i=@reactivated.net header.b=0qp+GHP0; arc=none smtp.client-ip=185.201.18.31
-Received: from s1041.use1.mysecurecloudhost.com ([192.250.231.249])
-	by mx207.antispamcloud.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <dan@reactivated.net>)
-	id 1wWLUo-007FOl-QO; Sun, 07 Jun 2026 23:57:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=reactivated.net; s=default; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tdMeoOld4FcgA8FppLQz+Ntxpynqqdfhs7oz1KaTiq4=; b=0qp+GHP0eA9XT3azcraOimorzL
-	WIBUZUwgyiosJW/rCM74G0Arze8Kw3E+L300TcPwsOPjZ2UwfS8dNAMczdb96wzTbGmLWh9UUJFj/
-	s5YbS/Lkj1DnhJjcOc1wZwbZjBQI1XeoaE/CpRHGgOGaSTXgHlabeD1rUGRRqR5A5vfROydFiIKGz
-	rumvDg/bjMWZO3zy5pgOGi8rwCm8oqamC5njPiOuikplMxjv8srdCbEQ0+c0+grlkgnU8O96RBR7m
-	obQQjJzZDZ+7D+cEV4MiCshzQBMRK32zwk7NfqZSZQP1oA1oExQumEyIx8eLICfJJgndFfnWwZw6w
-	EyQu0q4Q==;
-Received: from [188.251.249.2] (port=34882 helo=numbers)
-	by s1041.use1.mysecurecloudhost.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.4)
-	(envelope-from <dan@reactivated.net>)
-	id 1wWLUj-00000001qw4-173O;
-	Sun, 07 Jun 2026 21:57:25 +0000
-From: Daniel Drake <dan@reactivated.net>
-To: linusw@kernel.org,
-	brgl@kernel.org
-Cc: linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1780873528; c=relaxed/simple;
+	bh=Y6ZqthY0/KmfwbT+mbcPRxThag2E4h/avLxT8wpSRmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IB+Vk5HOeGAFEx8ZRNs2T5yJhnHLI3iIlJD9F2thXN5LjtE2+vryT/6A0AOs2G6AlZcA22c452lmx1lKx6o7sBfkVwREQgPNG2HwI3ybj7zREUY3jxtoonXZEHqjh14gKWFIvJm9bQgQpNsQFkBEBvmlI8Xiagfi2q22k+96QDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=EJjtLYkw; arc=none smtp.client-ip=178.21.23.139
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 5998427740;
+	Mon,  8 Jun 2026 01:05:18 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id OapcbgyAuZT4; Mon,  8 Jun 2026 01:05:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1780873517; bh=Y6ZqthY0/KmfwbT+mbcPRxThag2E4h/avLxT8wpSRmE=;
+	h=From:To:Cc:Subject:Date;
+	b=EJjtLYkwO+t6DDJH7escbwwh0r1yL3RwRmB269vydRugTEsH7/hhpUWgvwY/xXNeA
+	 MEdwG3EP8zMcv2TyjqoEsVa4Igr5iwmnZOQvUMik4Omt9CWj/Oi58+QdcYuLdWUyce
+	 1MVWyfvRUlKGYc+wyZnEKZa/pWBiEwkDFSqCjW7ZhbowI5vhFwHc/bJmAORqmNihwj
+	 ecjF4p68zB87E3RhlMSJGzQb1T5+9w7qG2F8MNYvGYqVzJANUrzR/DaOwTJlK2eBb1
+	 9xdhzwtHz5GH80ReQPAPMFsIb65yV4VsPbFwYhNnpqzAo4Yad96JbTPCvpsG77Wubu
+	 KveugGp5d7IGA==
+From: Marco Scardovi <scardracs@disroot.org>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Jianqun Xu <jay.xu@rock-chips.com>,
+	linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	Daniel Drake <dan@reactivated.net>
-Subject: [PATCH] gpiolib: handle gpio-hogs only once
-Date: Sun,  7 Jun 2026 22:56:47 +0100
-Message-ID: <20260607215647.112488-1-dan@reactivated.net>
-X-Mailer: git-send-email 2.54.0
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] gpio: rockchip: Fix generic IRQ chip leak and modernize resource mapping
+Date: Mon,  8 Jun 2026 01:05:01 +0200
+Message-ID: <20260607230504.35392-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,128 +68,62 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Get-Message-Sender-Via: s1041.use1.mysecurecloudhost.com: authenticated_id: dan@reactivated.net
-X-Authenticated-Sender: s1041.use1.mysecurecloudhost.com: dan@reactivated.net
-X-Spampanel-Domain: s1041.use1.mysecurecloudhost.com
-X-Spampanel-Username: 192.250.231.249
-X-Spampanel-Outgoing-Class: ham
-X-Spampanel-Outgoing-Evidence: Combined (0.06)
-X-Recommended-Action: accept
-X-Filter-ID: 9kzQTOBWQUFZTohSKvQbgI7ZDo5ubYELi59AwcWUnuXsLW0z+VlcfY/wMv3CJzW0CkmwZvl1sHm1
- KmFO1CRnJCu2SmbhJN1U9FKs8X3+Nt06bFpPrNOlRAlE9AVLwR4uGVjKNnzF3nQoDoQtBifM84JL
- M0i5ZAms0EHrvcCaVIPSJ5FdNqHijoQ+Lk8NzN8YGnT3EFAinyrilm9zau/FuzkQt9Nb4Ml7QXdk
- EetczWAg1NJkF77+oGQ+lxJlCrsUeB7itP8hgjDRserKv4bhb5a9CD46iTOjXEpJEwP3fd9WBb39
- uS1TjWG2Inx+Ts2QrtVmombMJ4e2pn5C0yBMHZ0fE47nEjvubMSTLAkKCKclZzoe+TZdeH39wA4E
- grA4pE2PuLHIFQdBY9qb1rRWgyz0f29FZkQs6Ir87R/YNAvW7iH+6DoE8NeDBUxImZIxHxsBXq5d
- 3sVlH8/8/BVjaCxdqoPv0tTPBZ82RqaKH6ZJMkXL9fD6+WIpcQ2t8oQM/WEMAHr5BYwqeYfWeqTu
- 1YC/tOVjI4dWyTvfTQXGjT+aEfC5mTBtCltny75g3MKubALAOajlmHbHzeutXs2uHosTaX/E9TB8
- 42c3huE/T1c93SsS4aMXJmiJ2G0eb5ahq2kqyMRk6DLUUjpi54Q90umYmC9jerRVX9sTO+FXU2n4
- L0nk+TooPV1h2BXu3/c8Dfd/7JO6UaIAUVkvSizih0TzynhIhk347ucixeDFxznIHYi/jghIJpVk
- vIZQze0Bc4OP9WjPZ/cr5H8qZypgvgrWxILsnce/vzk7Sg5HsMU105o7Arb8LdgQkbIszV2rqXUJ
- pkwwvtJ3eaqr64J65gYh+EkDZ7F844A3amCNzUUxeOUmb7f2sSZgwwfArL3kN4znUXS+aQ2Zqid5
- ZhuDgwCeIZyBg7HvH2nIa17LbgjKuFO+2mEj3Ei2hTvWconvzZPs/pnfZDHCBKz5ZsfM43T5M7YL
- w6LVwB8ESiQZrfYccBIk1Sag4dKiqCrF8eZZNLgqwwzqzRhdGeE82QeHCPMhVWUJ6Lbki9dM28Lo
- JGcCCe5x6ntEzvieEb+fqTMfTu3UcMCRWk93tDX2xq0IRHaigWR4GmnmvyoQF7RljOE5Dy0kIn1S
- +xE6dEa4ITSORxoHJPO7jtECLiprxnxXDQkNiSsY2JE82yoZXENc5iBe5UBNo8b5j5EtxVNpEcGW
- Tu3UcMCRWk93tDX2xq0IRHaigWR4GmnmvyoQF7RljOF2PyW5cLuSbbpC1c/2zTYs
-X-Report-Abuse-To: spam@quarantine16.antispamcloud.com
-X-Complaints-To: abuse@master.antispamcloud.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.04 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[reactivated.net:s=default];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38055-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[reactivated.net];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:dan@reactivated.net,s:lists@lfdr.de];
-	HAS_X_AS(0.00)[dan@reactivated.net];
-	FORGED_SENDER(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	HAS_X_GMSV(0.00)[dan@reactivated.net];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-38056-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:heiko@sntech.de,m:jay.xu@rock-chips.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-rockchip@lists.infradead.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[disroot.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[reactivated.net:-];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B0FFD651DB9
+X-Rspamd-Queue-Id: 9C8B4651DEE
 
-Commit d1d564ec49929 ("gpio: move hogs into GPIO core") introduced a
-behaviour change that breaks boot on Raspberry Pi 5 when using the
-firmware-supplied device tree:
+Hi all,
 
-  gpiochip_add_data_with_key: GPIOs 544..575
-    (/soc@107c000000/gpio@7d517c00) failed to register, -22
-  brcmstb-gpio 107d517c00.gpio: Could not add gpiochip for bank 1
-  brcmstb-gpio 107d517c00.gpio: probe with driver brcmstb-gpio failed
-    with error -22
+This series fixes a generic IRQ chip leak in the gpio-rockchip driver
+and performs two small cleanups to use standard platform device helper APIs.
 
-gpio-brcmstb registers two gpio_chips against the device tree
-node gpio@7d517c00, one for each bank. The firmware-supplied DT includes
-a gpio-hog on RP1 RUN, and this gpio-hog is attempted to be applied to
-*both* gpio_chips. This succeeds against bank 0 (which hosts the GPIO)
-and fails for bank 1 (which does not).
+Patch 1 fixes a leak caused by generic IRQ chips not being removed before
+IRQ domain teardown.
 
-In the previous implementation, failures to apply gpio-hogs were
-quietly ignored. In the new code, the error code propagates and causes
-probe to fail.
+Patch 2 converts register mapping to use devm_platform_ioremap_resource().
 
-Closely approximate the previous behaviour by ensuring that each
-gpio-hog is processed only once. The handling of gpio-hogs on a DT node
-with multiple gpio_chips remains a bit incomplete/unclear, but this at
-least retains the ability to apply hogs to the first gpio_chip per node.
+Patch 3 converts interrupt retrieval to use platform_get_irq().
 
-Signed-off-by: Daniel Drake <dan@reactivated.net>
----
- drivers/gpio/gpiolib.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Marco Scardovi (3):
+gpio: rockchip: fix generic IRQ chip leak on remove
+gpio: rockchip: use devm_platform_ioremap_resource() to map registers
+gpio: rockchip: use platform_get_irq() to retrieve interrupt
 
-This bug is only exposed by the firmware-provided DT that has the
-gpio-hog. The DT shipped in the mainline kernel does not have the hog
-here. I'm not sure to what extent Linux cares about supporting the
-RPi-downstream firmware DT.
+ drivers/gpio/gpio-rockchip.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-I'm also happy to consider other approaches. This multi-gpiochip setup is
-a bit weird and gpio-brcmstb could perhaps be converted to register only a
-single gpio_chip covering all banks. I verified that the other drivers
-that obviously follow this same multiple-gpiochip pattern
-(pinctrl-amlogic-a4, pinctrl-st and pinctrl-stm32) do not seem to be used by
-any board DTs that include gpio-hogs.
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1e6dce430dca..fc4dacee0a84 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1031,6 +1031,11 @@ static int gpiochip_hog_lines(struct gpio_chip *gc)
- 		if (!fwnode_property_present(fwnode, "gpio-hog"))
- 			continue;
- 
-+		/* The hog may have been handled by another gpio_chip on the same fwnode */
-+		if (is_of_node(fwnode) &&
-+		    of_node_check_flag(to_of_node(fwnode), OF_POPULATED))
-+			continue;
-+
- 		ret = gpiochip_add_hog(gc, fwnode);
- 		if (ret)
- 			return ret;
 -- 
 2.54.0
 
