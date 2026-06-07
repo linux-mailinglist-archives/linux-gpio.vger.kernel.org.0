@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-38052-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id svn2JAGvJWrGKQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38052-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 19:48:49 +0200
+	id F2fMMR+wJWr1KQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38053-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 19:53:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16A1E6511E5
-	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 19:48:49 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D5DA651217
+	for <lists+linux-gpio@lfdr.de>; Sun, 07 Jun 2026 19:53:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=lunn.ch header.s=20171124 header.b=PiWeJiep;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38052-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38052-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=lunn.ch header.s=20171124 header.b=0kEo+1js;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38053-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38053-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=lunn.ch;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8F577301112B
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 17:48:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B1FCC300382E
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2026 17:53:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CFD313520;
-	Sun,  7 Jun 2026 17:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E181331353C;
+	Sun,  7 Jun 2026 17:53:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6922D8391;
-	Sun,  7 Jun 2026 17:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C89527453;
+	Sun,  7 Jun 2026 17:53:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780854491; cv=none; b=Ig83NwOu6mgPn/10lFNncc2NtUNpECAa+zr5waVtXRLNOgO0vhMrU/4mmMBqpahCXJqKxLyPV0YkTp7pMHitLdgQLSOT4daf4zjsmEr+p9IJl9OfT2koF/rAtd1kIsaIiOTJTPkxaxgDEnU+3gnVzTov+RdH6MrRMeG39lTOzTY=
+	t=1780854807; cv=none; b=PKOFFjLuajzjcKBuazg3dWVeMFRMPjYLB4gR30yZVl8/HJq4TGh+tV7gqUa6c3Mb4CjsbFxuuhyI419HZgkmpP/ByR3LbPzTLCod5U2EppK8b0H0+RXQ3FMVyax8RP5SW8WgZ1xeUuMNoIrYiyGWJzHPIAeXH9CHWtTkG7yx0Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780854491; c=relaxed/simple;
-	bh=vhAEZTC8qFssdX7V7evYRjIDzbHRXZRsjneOPqdZQl4=;
+	s=arc-20240116; t=1780854807; c=relaxed/simple;
+	bh=Wp1sWLpC4lb/tpO67nATgDedJ2AC/9CZP7Uafk3jLjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G3uUtcDq+CmCaGLI7dB72fTGX5yLWClt/La1hnwTxi89DjnMFQ8+TuzFH7ZDtW/2Th/Q6GEYnEK3T9L+8xdEPl1pEjD03xsYvuKsdskEneDHHj25O35tMLBcMHw4MyX1psSg3fYBzN77CENu1OE/X+u6+vIJzGVaK2hEVJLE2Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PiWeJiep; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=Reeur0gZnGDDQN7EFcCcktu3IN00EZiEfwMmo0L18hM41UMxtbaCprvjtg2LdKc31blJ1gqHUbFStOcJ3HffwkF3IRGq0/QxlvFdws2iPErI0WJQgAI31H9ZM4r3v/gEIxf5ZtPdFlOQSA1/cQxiR7P+wTkYMR746DGPP1cNPOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0kEo+1js; arc=none smtp.client-ip=156.67.10.101
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=2xtDkA21NeZRaX1G4a6jGRcwZXTTpKAlx691TaVn4bs=; b=PiWeJiep9JIlVFLuSrzn+fzmqk
-	NctgIppNAiVpisjN2sQqaFgTZDzMFgGFvXPx3TMJWJtDhr20QqM4hIG4k7mmv81noHJ8T3KG03Z7v
-	S4GAQiJ+shhLynijk3+hRPi0yuJ6jRi1kKcwBqFRng9db2ilr1XkZZWxRUbS2bokyHAg=;
+	bh=RC4UpJZWJ3dXT7LKa11Eh5lvkgD8MR6nBFl7fzqu7wY=; b=0kEo+1jsZFmFPuILPU9h2Z8lK0
+	Tw3q/RsYcediV3XhUhcgz1JZyCPjTJbVqiHFhYhnrYRh5JjHvOVU4aib0LsSn1jxM9cKym+PQh0z+
+	bIovlTt9IcCUj1kEWGq/mQ6LuxQ+pbLPW6ZZ/t/TAnOA2bZRwcQwVSX+NwRlbO4jA79g=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1wWHan-006UUN-T8; Sun, 07 Jun 2026 19:47:25 +0200
-Date: Sun, 7 Jun 2026 19:47:25 +0200
+	id 1wWHg4-006UW9-B8; Sun, 07 Jun 2026 19:52:52 +0200
+Date: Sun, 7 Jun 2026 19:52:52 +0200
 From: Andrew Lunn <andrew@lunn.ch>
 To: Alex Elder <elder@riscstar.com>
 Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
@@ -69,11 +69,11 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
 	linux-gpio@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 03/14] net: pcs: pcs-xpcs-regmap: support
- XPCS memory-mapped MDIO bus via regmap
-Message-ID: <1ef2c525-e58e-4b1b-8150-4ff7d8b9a730@lunn.ch>
+Subject: Re: [PATCH net-next v2 05/14] net: pcs: pcs-xpcs: select operating
+ mode for 10G-baseR capable PCS
+Message-ID: <1225f728-8b54-44fb-bf70-94e3966359eb@lunn.ch>
 References: <20260605010022.968612-1-elder@riscstar.com>
- <20260605010022.968612-4-elder@riscstar.com>
+ <20260605010022.968612-6-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,19 +82,19 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260605010022.968612-4-elder@riscstar.com>
+In-Reply-To: <20260605010022.968612-6-elder@riscstar.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38052-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38053-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
@@ -116,23 +116,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:mid,lunn.ch:from_mime,lunn.ch:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:mid,lunn.ch:from_mime,lunn.ch:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 16A1E6511E5
+X-Rspamd-Queue-Id: 4D5DA651217
 
-> +struct dw_xpcs *devm_xpcs_regmap_register(struct device *dev,
-> +					  const struct xpcs_regmap_config *config)
-> +{
-> +	static atomic_t id = ATOMIC_INIT(-1);
+> Rather than introduce another quirk for TC956x let's attempt so solve
+> this generically by setting SR_XS_PCS_CTRL2:PCS_TYPE_SEL to a reserved
+> value when we detect the right we detect the right combination of phy
+> interface and XPCS feature support.
 
-...
+This sentence is broken.
 
-> +	snprintf(pxpcs->bus->id, MII_BUS_ID_SIZE,
-> +		 "dwxpcs-%x", atomic_inc_return(&id));
-
-dev_name(dev) should be unique, and it also makes it easier to
-associate the PCS to the MAC when looking in /sys.
-
-	Andrew
+     Andrew
 
