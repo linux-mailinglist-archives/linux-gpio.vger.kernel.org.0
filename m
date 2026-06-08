@@ -1,327 +1,192 @@
-Return-Path: <linux-gpio+bounces-38087-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38088-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wUChFcyOJmrWYgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38087-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 11:43:40 +0200
+	id fGCELXyXJmo2ZQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38088-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 12:20:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE5DA654B1E
-	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 11:43:39 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53758654FD7
+	for <lists+linux-gpio@lfdr.de>; Mon, 08 Jun 2026 12:20:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=Nvidia.com header.s=selector2 header.b=WxuuzLt3;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38087-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38087-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=nvidia.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=SsmReYi5;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b="Tr8/q2WP";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38088-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38088-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B3794302DFA5
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2026 09:42:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EF4EB3043ECF
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2026 10:07:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB79D3B3BE9;
-	Mon,  8 Jun 2026 09:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D86C3C2BA3;
+	Mon,  8 Jun 2026 10:05:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013006.outbound.protection.outlook.com [40.107.201.6])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6183A6B8E;
-	Mon,  8 Jun 2026 09:41:59 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780911721; cv=fail; b=GrKGeTMc1BRTQ/zWU6PkBhgr9ICEPzDx/CUiEHjI6x2PjkrExaYft2JP0XEm579x+LI+gv80I3w8FRSwrlYu/UJ3psrc0cYwiTAwCoIJmLbxPWqMBYSLYcAP1Y0PsUWnAWCTMOhHemRVaCYqm4UuCDTKq2+W5rFzZg4PjyfeTPk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780911721; c=relaxed/simple;
-	bh=Y1SyH3hfHUqZ9Y7Nll7V+jtx90lodGuBdjjbBN8EKVQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UTnUV2IrAwRG0WnWwNN06C99K+6oj3UlpXM6+8/Zf0BWTIRUiRVd0+0tANwiqZInMLL0F7rugS7p2PmkFwtAIK22T9UQmogANf4tvTX9DgNwcy0b9BtkC7HUOJBI/dFnpdxg4DbH0Dzoxbu/10vNitpbj7dcrKCAgzBgcu5S81o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WxuuzLt3; arc=fail smtp.client-ip=40.107.201.6
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y+8vz2aRDSpdh02DA7kgUT1CjDsae6OTWY0iATNi5NGWkZrP3xjUkgqqCLDpG75HPRMzXHpSOp+DICQvzUEluDc1G9sBMfXCQulZFLw1MV1hq0XdJiiR6rSVql4JT5YkNDkEHFxrVVRhfdps6AeL0xXvbZZJEbuRsLc2wKoaZUsfcN16yMMTqXpYke2OH6ZMqRC/puUbKabIG0i9UzeUh2a/plfK6vMdZvM/j/CsFisT8xzHvKxPA0xiFbvDmQ2Vg5yB8FNL9ac2plZRAUtNALggR3+1jaNQjYx0Cyy84kV8FtwNh4MYPOIN85g0x+OXJKKIfE5cn+TBXVL/TICtiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gTw9h0g5xtOBgK7zuGYP6GO39pjwSBo7jHwNqIg1zos=;
- b=QcYjvdJ3Ftj44x5+kd5y2zQS7JZiXX85TViD0h8KhL/KwoHYTt6RDCTegYoEIQZ22etxKKPMKOCbhXSHFRcGnZl42YXTBFmJ+Yf9VI8rlnUcF/rOFbK6na5CEd03h5UkZ+b/SZnfQeI+wtQwxn76P9zmnH9tKCB/Swt8iDzdgdIr4DoI+9vEUKuHLVpglPOyWcvRIn7lNObfpqigqYOECDtS+CjIlMHAnUOy0N3ozGudUMAeLKPT4B463hfAN8SBSKSBtgbm+aYMrRIHi4bS+kfdiFPjbkIwqzbKlDlz5LD0EZjR+61jzYzSeieH8LJwiJzX1TmXdpSyMoQ0gUnhrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gTw9h0g5xtOBgK7zuGYP6GO39pjwSBo7jHwNqIg1zos=;
- b=WxuuzLt3wOoYzWqfP4yVaXANsFcRLF4a2T9THJsinz0yJkZq6uUUQIbkAJRfgVIgWXRiBzt847Yj5fcVkegimU0WPxtpnpSdWQqYxVskp31J3zhL6IyAy7gu66yMB79QU72fhvha8l0U3gTLL2RsnTS8gCwsYEgYWzmSSjpJlqNQX74Cwfx/isepWnv4Yq26c1f0VVNI5zqnpFvvNRN9p2E6JxHAY83rWZLqBlAVKeYzrflVmAeb+lX67vmwCzXrGp9KYwJKH8Vy9bf00Qmog0Ef0mn/plY7JG1tUtmjsxW8klEBVo/StBU7X+tBCwv/D3tyXrkyLVZoZ9M90dynsg==
-Received: from BN0PR08CA0025.namprd08.prod.outlook.com (2603:10b6:408:142::10)
- by DS7PR12MB8418.namprd12.prod.outlook.com (2603:10b6:8:e9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Mon, 8 Jun 2026
- 09:41:49 +0000
-Received: from BN2PEPF000055DD.namprd21.prod.outlook.com
- (2603:10b6:408:142:cafe::9c) by BN0PR08CA0025.outlook.office365.com
- (2603:10b6:408:142::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.13 via Frontend Transport; Mon, 8
- Jun 2026 09:41:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000055DD.mail.protection.outlook.com (10.167.245.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.139.1 via Frontend Transport; Mon, 8 Jun 2026 09:41:49 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 8 Jun
- 2026 02:41:29 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 8 Jun
- 2026 02:41:28 -0700
-Received: from build-pshete-focal-20260601.internal (10.127.8.14) by
- mail.nvidia.com (10.129.68.9) with Microsoft SMTP Server id 15.2.2562.20 via
- Frontend Transport; Mon, 8 Jun 2026 02:41:28 -0700
-From: Prathamesh Shete <pshete@nvidia.com>
-To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@kernel.org>, Jonathan Hunter
-	<jonathanh@nvidia.com>, Arnd Bergmann <arnd@arndb.de>
-CC: Prathamesh Shete <pshete@nvidia.com>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] pinctrl: tegra238: add missing AON pin groups
-Date: Mon, 8 Jun 2026 09:41:22 +0000
-Message-ID: <20260608094122.1245189-2-pshete@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260608094122.1245189-1-pshete@nvidia.com>
-References: <20260608094122.1245189-1-pshete@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A603C1413
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2026 10:05:04 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780913105; cv=none; b=U4KixMvqYTRzlNh838c4Uc4mWaxeGQrILtFHOtOpY9/DRXaYUvMJEQgTPiS6RWIrzu6xjebc5s48HRYbp5nlDTycQVqXm4DyPUphxXAKrnshfvYfsNzcX5TKHc2LCTZuYOJlF2BZqOY+lbkNyRam6bInpbHsZTiRzllPw1Uvnqo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780913105; c=relaxed/simple;
+	bh=hlfs03Xx9bg6vz32VheIEg4FEzOKPnzkVBiyVQe7oRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HXPnLiolYCJtpOPhxarmiEacsWtjQEEyWB08pfltQmorasJHAK8Mvv5gtR2q0WFuSMQvfELhzrhz/eGoyvVk3PgU1noPrKIGrROl5rnWBcGPGXNUYvF1BJ3hscIpOjCjBoXlTpcum02pEM88LEbrFo7FQ/T4i1nMTT6BYf1t8cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SsmReYi5; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Tr8/q2WP; arc=none smtp.client-ip=205.220.168.131
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6586OrHt2274513
+	for <linux-gpio@vger.kernel.org>; Mon, 8 Jun 2026 10:05:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1OWXlkGlD5B8kceck4cb0Q6AFE/5sQ53veciYy8JoFI=; b=SsmReYi5meb6veN6
+	ylLJP/+Ku/s3BNRwy6NZnquFzyElJi1SJJhHzb4Uge4oIcPoEC/DernDKO8NMNPH
+	Uy0jDPgmlswv2tMgr6cXZW0P2RPGjt9Ypqp7/DJYLEgX5+doBE8V8W5+OaxJ0hpD
+	0vWfmXI7D62WelIPtCqEW3qvnNCtYx27Yq3EB3LrCPyUMwH9dcQXxjTXE6cg7N52
+	Rq1SYGZmvg8OskrsoXN+j4IoH2FiDMjidYSwFYCvAN6z79Kk86zB4Iop2LwCe/On
+	iZ8g4vUIllndqQemNU8ZFY3KevC7ucZ35IwHR2VYHenw/4L9Qd7W6f1K85yOCEqp
+	KslqbQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4emcqgxy0s-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2026 10:05:03 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-51757324dcdso8124131cf.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2026 03:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1780913102; x=1781517902; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1OWXlkGlD5B8kceck4cb0Q6AFE/5sQ53veciYy8JoFI=;
+        b=Tr8/q2WP+jmTthUUOYKLDdtiQWFfL8cy5EhApK/oyIaEuihUa6UTcW8MCOJ36HfZvh
+         aAZQjU/OYT10EPxoy6m7FMovlqb7BYWNod4j38QiNEDvcpFNUU+hSmKzCbS4+IBc2BYX
+         +cbIIwGDVR6jDKTqduLxjCRuG/OUaA1ICASSet3fYgvEbwUEzfeAKr98d9/wwqT0yRy1
+         mhwgVeT2C0VY15gQmrCCdL1EpJMksJd3CHmzqpKGDDzvQJetjEhtnX/0PlLLtXzF2fMG
+         Rf6NCx4mETMEFzCcqYCFlLL2iG9tBuiDhuSAOy4T0lbOD9c2r+H1dQxvN6oxFwveb0rQ
+         el3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780913102; x=1781517902;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1OWXlkGlD5B8kceck4cb0Q6AFE/5sQ53veciYy8JoFI=;
+        b=aNYBqKugbQMXKoPmMhabXL5wCtilJpgpSCt5vWHtV/YQaBz9uTzLscMRxvzTa6EPdt
+         1u1YfscWTnoi4MhoShz92J9KxMCIauhAsE59XlDvAcmBFUynkGVwo+Inz/k+0PTI5H2o
+         gN2+pL9YCL6HvLL7EEpSoZtB38WJbDP2qXDdsfMZOAK7BKG5b7hCww7J32Nl+qGG4tyB
+         SA7NangEubzv/uc7XT/WDc/TS+7WfnSnm3a/ElW7cUMprHyYr8jV2+y5VC9sR9+s1VUT
+         gHrXk+HrwxJG3I3c3pAvkJyzkDHhD0ULGNGhPL1GwkgwxPoRUowG5UQrKmCM+F/s8+zT
+         BDNw==
+X-Forwarded-Encrypted: i=1; AFNElJ9XnR6fS+LpVAlsPnPWuFRgKIbTewSYHZqlaumajalRMr00FH95tI7RJJEWaJ5y9EmI3pLZvanriO93@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmfY0dxKJ6OCXj/AWrw2YwJM5nHX3dkO1qC0kq+nr3H3ZtP/lx
+	muM3SBOtYl4uzel84EQZoJyLOACpckrIeElWcWSNxAVInzNd9BDYF6Cqp64V2siC7FSLN2qDaNC
+	CKhmBHyd0glEWN3CxlHD+OPQHmWmPrZ9e8wwZn1JpUrzqb1MN/JtYMtp77aEqP9Y5
+X-Gm-Gg: Acq92OF2rnsYOYFLneFWzfFqArFiflzbJCyPI8ANfwbSJ5AcnbyU6+1jMNKaAtQW/b9
+	VWZERdbH3SFUis9JehA7bBtKJVsVj2aAcKgiVX+dZiilypqplAFi6j6TF8dTPYL80Dq3yIdAGFa
+	CuYW+zNPb+2r0hWItQo1KOl4hn8vbv5cj/io6tAhjSK/bINfNmXUfC7AFhqkJcQpU7aYUWXSvJz
+	EE7ICX0a9mQ+Ps6jpEcCygO5scLqJyOTcS8gsUOCMM+veuq08pmqax+DHKrRZIB7Uj9E+Cze344
+	FrsMi1YhXsMSVVS+VHOe7A9vVt3czmG0bclkprnyzpg7Tov0ItdyRAFQePF0RicE9/o5h27Kxf2
+	dk7xHNuKJLWjxjonQKYvL/ZBeeHJ0K9I3+REJIPXa7JJDeS+z7Fhc0vJX
+X-Received: by 2002:a05:622a:d:b0:50e:487a:bfef with SMTP id d75a77b69052e-51795a481e4mr128027271cf.2.1780913102491;
+        Mon, 08 Jun 2026 03:05:02 -0700 (PDT)
+X-Received: by 2002:a05:622a:d:b0:50e:487a:bfef with SMTP id d75a77b69052e-51795a481e4mr128026981cf.2.1780913102054;
+        Mon, 08 Jun 2026 03:05:02 -0700 (PDT)
+Received: from [192.168.120.170] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6912365bd3fsm3425407a12.5.2026.06.08.03.04.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2026 03:05:00 -0700 (PDT)
+Message-ID: <0bd25e6e-b4d7-4133-a718-0b569405cad7@oss.qualcomm.com>
+Date: Mon, 8 Jun 2026 12:04:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DD:EE_|DS7PR12MB8418:EE_
-X-MS-Office365-Filtering-Correlation-Id: 83bdf0ff-965d-45a7-8272-08dec5422a17
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700016|7416014|376014|82310400026|22082099003|18002099003|6133799003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	5QaFz2kHhvQKWDBj8s6T/RN0nghSH4ZReaG+VQVbACW/0pq8fR7NsV78PRntOa/mTQqDd+rRe6MyyrVM1p0vLYcafzb9wBXZPW1oc4x8Ub8xkjfr85UGPn6sVPzDtloI9K5v+RUUkI8gmnUyTNaUsJ6jrqKcXVYaWxkjGEvJEYbr1nVvhXaOqGylgqlW7TKMhMG2kda7DGVUFBGM5nrYEmHPNzq8gAZBSiW4VjMVDci4CyHra+ahC2dtsIiJ4z9Cj0+Ie5mkdtV+5QDvpp1UyPF7CTQp2Gu/efLaAW49RCc6U5XCP6CuxQ5DnT05LpxrJsZbOPLWJ/taxV0BQTlRSOfPcgu6CXSZ2zzqBROiE2eQdRlO0st3Qd+Hj89ZBlxRKUdHl5PgHQjp2xqId4GL1DYQg3cZKE9v5xcH0r/Mv4FVThUz3hcemfuYMqhbzJPz7IxwYr1I47ZxJLoHsiOOLiuoJyL7O6KMjPVyTMrW7JEhVhTzXrVOrVhnzIc2IrqTcQHFuuiqo7m/ppw0JsNgz88hY0o4ACV/Z+uLXOy79g7GW0dVFwWojOqeMJWcavGMlE0TKehogXthy6QANQ6Mmxxt1NlxmIBwJBeEy5LM7MshgGq710wx/xpuYcPtMCnWp6gMC7kKAO9nG5U5FqhdMYJdZgTa1CpIbEwBhBSqQwITSVMXqod36Klx6eyrP8NzI2Ntfg5ZGN67DiVDhU6MYMHK/5g5h/SY6oWEQtN8VMo=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(7416014)(376014)(82310400026)(22082099003)(18002099003)(6133799003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	Oz2JhlfND3ErCzitWQEoDhVHYzkIt5zta1pyDAX+p5V+fNFRWkb4GH2WSOt12P4pLT7Zs1QN5ZacSWLtP/8DhqtKlIWNrTMVWYwYGffYSPRyv07K36gDE1hW7xuDG1uHcvRVeV/Ea8cGDaLszI5VgH0uZ1iDZ3qmIm5ot00R5sAO3m6jPLSoYg6w3hQFfl/S5c3oZFw5Aofm9dOJUXs++oh2eaNoEdQWHM1BbubF4itzFwC+K9ogKpwgR0r/ESqmt5tvR2LcHsV3Sdhvg5Er2CV58R5QAF/EZ/nyzDoBRAw4uKFEsvI2IiEfJGbZFxp52dnOZMiRZ/7YTxBEIXGdGULLeQSWdWDt1J2ywVsJP3sqqsEF4cZYME8hZsuROwrPvNSw5bClyP96vnXhODCHB2Zs6y+vHUVsQqbx9nIgxaZNbU+mzOJEqHcseW6GnSTn
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2026 09:41:49.5694
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83bdf0ff-965d-45a7-8272-08dec5422a17
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DD.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8418
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: qcom: Remove unused macro definitions
+To: Navya Malempati <navya.malempati@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linusw@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20260529-macros_pinctrl-v1-1-3d5671efd18f@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260529-macros_pinctrl-v1-1-3d5671efd18f@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=dJGWXuZb c=1 sm=1 tr=0 ts=6a2693cf cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=EUspDBNiAAAA:8 a=QQIitYBaRXPuBUzoCRMA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-GUID: 45A1_R0gvW42BEtC4dbALemv45cImfxg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA5NCBTYWx0ZWRfX2NlYsxNOkLoh
+ q65gaxoQIk8UiY4VJN9JlWNegvs+VCYHJ12l25KzkuAaPAVec0szo/CII/iwS5ODxvTgEeMPABX
+ 8H9ccqbGtdsQ/Q+J13JINLPqlaGZS+FrxkDnugxThxMIRlqAJSLdfCeuPVHAAOyK6xShmOaoNrb
+ 3rQtGOOBwFo1t9ylPPFY54kheGJwWhvRr9Gs2zcBTc69Ixh8BK0VN5q0JoFulzbENr1hv3EoNHc
+ fPXCik//2kngvx8yKXOMsMpnTKBQ3UlTHU/1SjRVIW1eMRWGC4hYnaHGr64kXtGxL6VNiud3Ypy
+ w9XSKo9QGhT3D6ueLiSy9zkKcy7oGOFx91wTbOohhGcIi7x7QJ+qX+u/07QkyNtbT0AsxF907pL
+ INgXTzbmNT6bnJ2tprYgxel8oEZnRIQOf+hZiq7GTP4x3Ycee6Drta0jFQkxNpcTKnbjTwtYCHL
+ Czn1zObEGWbzKsjenpg==
+X-Proofpoint-ORIG-GUID: 45A1_R0gvW42BEtC4dbALemv45cImfxg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-08_02,2026-06-05_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080094
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38087-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[pshete@nvidia.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:arnd@arndb.de,m:pshete@nvidia.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38088-lists,linux-gpio=lfdr.de];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:navya.malempati@oss.qualcomm.com,m:andersson@kernel.org,m:linusw@kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pshete@nvidia.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,nvidia.com:mid,nvidia.com:from_mime,nvidia.com:email,Nvidia.com:dkim];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[9]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BE5DA654B1E
+X-Rspamd-Queue-Id: 53758654FD7
 
-Add 24 pin groups on ports EE, FF, GG and HH to the AON pin controller
-group table (tegra238_aon_groups[]). Their pin arrays, drive-group
-macros and pin descriptors were already defined, but the matching
-PINGROUP() entries were not present, so these pins could not be muxed
-or configured through the AON pin controller.
+On 5/29/26 12:43 PM, Navya Malempati wrote:
+> The macros QUP_I3C and UFS_RESET are defined in some platforms
+> and yet not used. Remove these macros as they are unnecessary.
+> 
+> Signed-off-by: Navya Malempati <navya.malempati@oss.qualcomm.com>
+> ---
 
-The pin arrays were not referenced, so the build emitted
--Wunused-const-variable warnings, and commit 119de2c33d96 ("pinctrl:
-tegra238: remove unused entries") removed three of them. Restore those
-arrays and add the full set of PINGROUP() entries to make the pins
-usable.
+Wonder if we can/should turn on -Wunused-macros for pinctrl/qcom..
 
-Fixes: 25cac7292d49 ("pinctrl: tegra: Add Tegra238 pinmux driver")
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
----
- drivers/pinctrl/tegra/pinctrl-tegra238.c | 120 +++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra238.c b/drivers/pinctrl/tegra/pinctrl-tegra238.c
-index c765b6b880e5..d3809594a5b5 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra238.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra238.c
-@@ -1074,6 +1074,102 @@ static const unsigned int pwm7_pee1_pins[] = {
- 	TEGRA_PIN_PWM7_PEE1,
- };
- 
-+static const unsigned int soc_gpio49_pee2_pins[] = {
-+	TEGRA_PIN_SOC_GPIO49_PEE2,
-+};
-+
-+static const unsigned int soc_gpio82_pee3_pins[] = {
-+	TEGRA_PIN_SOC_GPIO82_PEE3,
-+};
-+
-+static const unsigned int soc_gpio50_pee4_pins[] = {
-+	TEGRA_PIN_SOC_GPIO50_PEE4,
-+};
-+
-+static const unsigned int soc_gpio83_pee5_pins[] = {
-+	TEGRA_PIN_SOC_GPIO83_PEE5,
-+};
-+
-+static const unsigned int soc_gpio69_pff0_pins[] = {
-+	TEGRA_PIN_SOC_GPIO69_PFF0,
-+};
-+
-+static const unsigned int soc_gpio70_pff1_pins[] = {
-+	TEGRA_PIN_SOC_GPIO70_PFF1,
-+};
-+
-+static const unsigned int soc_gpio71_pff2_pins[] = {
-+	TEGRA_PIN_SOC_GPIO71_PFF2,
-+};
-+
-+static const unsigned int soc_gpio72_pff3_pins[] = {
-+	TEGRA_PIN_SOC_GPIO72_PFF3,
-+};
-+
-+static const unsigned int soc_gpio73_pff4_pins[] = {
-+	TEGRA_PIN_SOC_GPIO73_PFF4,
-+};
-+
-+static const unsigned int soc_gpio74_pff5_pins[] = {
-+	TEGRA_PIN_SOC_GPIO74_PFF5,
-+};
-+
-+static const unsigned int soc_gpio80_pff6_pins[] = {
-+	TEGRA_PIN_SOC_GPIO80_PFF6,
-+};
-+
-+static const unsigned int soc_gpio76_pff7_pins[] = {
-+	TEGRA_PIN_SOC_GPIO76_PFF7,
-+};
-+
-+static const unsigned int soc_gpio77_pgg0_pins[] = {
-+	TEGRA_PIN_SOC_GPIO77_PGG0,
-+};
-+
-+static const unsigned int soc_gpio84_pgg1_pins[] = {
-+	TEGRA_PIN_SOC_GPIO84_PGG1,
-+};
-+
-+static const unsigned int uart2_tx_pgg2_pins[] = {
-+	TEGRA_PIN_UART2_TX_PGG2,
-+};
-+
-+static const unsigned int uart2_rx_pgg3_pins[] = {
-+	TEGRA_PIN_UART2_RX_PGG3,
-+};
-+
-+static const unsigned int uart2_rts_pgg4_pins[] = {
-+	TEGRA_PIN_UART2_RTS_PGG4,
-+};
-+
-+static const unsigned int uart2_cts_pgg5_pins[] = {
-+	TEGRA_PIN_UART2_CTS_PGG5,
-+};
-+
-+static const unsigned int soc_gpio85_pgg6_pins[] = {
-+	TEGRA_PIN_SOC_GPIO85_PGG6,
-+};
-+
-+static const unsigned int uart5_tx_pgg7_pins[] = {
-+	TEGRA_PIN_UART5_TX_PGG7,
-+};
-+
-+static const unsigned int uart5_rx_phh0_pins[] = {
-+	TEGRA_PIN_UART5_RX_PHH0,
-+};
-+
-+static const unsigned int uart5_rts_phh1_pins[] = {
-+	TEGRA_PIN_UART5_RTS_PHH1,
-+};
-+
-+static const unsigned int uart5_cts_phh2_pins[] = {
-+	TEGRA_PIN_UART5_CTS_PHH2,
-+};
-+
-+static const unsigned int soc_gpio86_phh3_pins[] = {
-+	TEGRA_PIN_SOC_GPIO86_PHH3,
-+};
-+
- static const unsigned int sdmmc1_comp_pins[] = {
- 	TEGRA_PIN_SDMMC1_COMP,
- };
-@@ -1890,6 +1986,30 @@ static const struct tegra_pingroup tegra238_aon_groups[] = {
- 	PINGROUP(dmic1_clk_pdd4,	DMIC1_CLK,	RSVD1,			DMIC5_CLK,	RSVD3,		0x11d0,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
- 	PINGROUP(dmic1_dat_pdd5,	DMIC1_DAT,	RSVD1,			DMIC5_DAT,	RSVD3,		0x11d8,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
- 	PINGROUP(soc_gpio19_pdd6,	RSVD0,		WDT_RESET_OUTB,		RSVD2,		RSVD3,		0x10f8,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio49_pee2,	RSVD0,		RSVD1,			RSVD2,		RSVD3,		0x10c0,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio50_pee4,	RSVD0,		RSVD1,			RSVD2,		RSVD3,		0x10c8,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio82_pee3,	RSVD0,		RSVD1,			RSVD2,		RSVD3,		0x10d0,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio71_pff2,	PPC_MODE_1,	RSVD1,			RSVD2,		RSVD3,		0x10d8,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio76_pff7,	RSVD0,		RSVD1,			TSC_EDGE_OUT0,	TSC_EDGE_OUT0A,	0x10e0,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio74_pff5,	PPC_READY,	PPC_I2C_DAT,		RSVD2,		RSVD3,		0x10e8,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio86_phh3,	RSVD0,		SPI5_CS1,		TSC_EDGE_OUT3,	TSC_EDGE_OUT0D,	0x1100,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio72_pff3,	PPC_MODE_2,	RSVD1,			RSVD2,		RSVD3,		0x1108,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio77_pgg0,	RSVD0,		RSVD1,			TSC_EDGE_OUT1,	TSC_EDGE_OUT0B,	0x1110,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio80_pff6,	RSVD0,		PPC_RST_N,		RSVD2,		RSVD3,		0x1118,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio84_pgg1,	RSVD0,		RSVD1,			TSC_EDGE_OUT2,	TSC_EDGE_OUT0C,	0x1120,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio83_pee5,	RSVD0,		RSVD1,			RSVD2,		RSVD3,		0x1128,		1,	Y,	-1,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio73_pff4,	PPC_CC,		PPC_I2C_CLK,		RSVD2,		RSVD3,		0x1130,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio70_pff1,	PPC_MODE_0,	RSVD1,			RSVD2,		RSVD3,		0x1138,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio85_pgg6,	RSVD0,		SPI4_CS1,		RSVD2,		RSVD3,		0x1148,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(soc_gpio69_pff0,	PPC_INT_N,	RSVD1,			RSVD2,		RSVD3,		0x1150,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart5_tx_pgg7,		UARTE_TXD,	SPI5_SCK,		RSVD2,		RSVD3,		0x1168,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart5_rx_phh0,		UARTE_RXD,	SPI5_MISO,		RSVD2,		RSVD3,		0x1170,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart2_tx_pgg2,		UARTB_TXD,	SPI4_SCK,		RSVD2,		RSVD3,		0x1178,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart2_rx_pgg3,		UARTB_RXD,	SPI4_MISO,		RSVD2,		RSVD3,		0x1180,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart2_cts_pgg5,	UARTB_CTS,	SPI4_CS0,		RSVD2,		RSVD3,		0x1188,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart2_rts_pgg4,	UARTB_RTS,	SPI4_MOSI,		RSVD2,		RSVD3,		0x1190,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart5_cts_phh2,	UARTE_CTS,	SPI5_CS0,		RSVD2,		RSVD3,		0x1198,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
-+	PINGROUP(uart5_rts_phh1,	UARTE_RTS,	SPI5_MOSI,		RSVD2,		RSVD3,		0x11a0,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
- 	PINGROUP(pwm2_pdd7,		GP_PWM2,	LED_BLINK,		RSVD2,		RSVD3,		0x11b0,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
- 	PINGROUP(pwm3_pee0,		GP_PWM3,	RSVD1,			RSVD2,		RSVD3,		0x11b8,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
- 	PINGROUP(pwm7_pee1,		GP_PWM7,	RSVD1,			RSVD2,		RSVD3,		0x11a8,		1,	Y,	5,	7,	6,	8,	-1,	10,	12),
--- 
-2.50.1
-
+Konrad
 
