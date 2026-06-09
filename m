@@ -1,644 +1,224 @@
-Return-Path: <linux-gpio+bounces-38161-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38162-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id o0ciGNXMJ2rN2QIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38161-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 10:20:37 +0200
+	id tphmBiPbJ2rf3QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38162-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 11:21:39 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34F0665DB08
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 10:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93BED65E457
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 11:21:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=DB5rB350;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38161-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38161-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=starfivetech.com (policy=quarantine);
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38162-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38162-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1C398309BF1A
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 08:14:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8B3F7301C647
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 09:13:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8ED3EEAEC;
-	Tue,  9 Jun 2026 08:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6F23F1AB7;
+	Tue,  9 Jun 2026 09:13:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2139.outbound.protection.partner.outlook.cn [139.219.146.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED133EDE64;
-	Tue,  9 Jun 2026 08:13:57 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780992837; cv=none; b=OxB+2YnfINSk0qH18unDXBNSi5vpAVZBC4pVcq17eX+8k9Pl8VTqI29LCzB0qIdzLj5ylbmPlHwdVVvGI6m5w3WISoZkb4HW4XDIWN2SJTiR6IKd/KUSi4/XgHJNcdGUQnZtuncQlmAKGa/zps2yvlo5Kn4ZraTRRxzHj/sj4yk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780992837; c=relaxed/simple;
-	bh=ndg4zfj6eHURyeX3YFUhtfw53BUBtjqFldZvPpjbIFM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Buf/r+APcl3HYTflmSXlrQGCQfJPKpcp8tb1ghSKIEKGpQZYBaKJncSviY6tXKC+YmPjUn5jkLchuNXpsAXqNBRUIljFWeIg7jwjl6iUalYIKOvqde/b4wCdtGR3bpnuRI/6oEzWf7yfh00l6eOn9aaMDJ+akGhDe9tDikyGSM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DB5rB350; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7A4CC4AF48;
-	Tue,  9 Jun 2026 08:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780992836;
-	bh=ndg4zfj6eHURyeX3YFUhtfw53BUBtjqFldZvPpjbIFM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=DB5rB3503xShGiyarKKvrHYvXw+zaWZLLlSXLj/+vv2bbJL0NXBxXO/pSivFLTI9O
-	 rPZ8L27Rlc9zpgEpTgxArEDjuPA2HICSXZOr2bdUTeQjjNxkule+7Zre8kgikklrIP
-	 1Lov9oA67S3VGTvHyMFG/uWDcupQjaIIbwsA6NiMcLysBEiFTNJx4CX7z8dctcZkjN
-	 QEv+qFWVctGPffmwrmiATYeo0od/vrjB6/LB5XtWF9RO/oh0HQixO4iWeFL9NX/4bi
-	 Y2vk97zkqmKWCFH7hvmPEz78SUpBD6kzt6ZHct5fFtd92tToNqHMm4xBz8u5gW+96L
-	 KgHgCQWn7B2HA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6E0CD8CA4;
-	Tue,  9 Jun 2026 08:13:56 +0000 (UTC)
-From: Alexandre MINETTE via B4 Relay <devnull+contact.alex-min.fr@kernel.org>
-Date: Tue, 09 Jun 2026 10:13:49 +0200
-Subject: [PATCH v4 6/6] ARM: dts: qcom: Add Samsung Galaxy S4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F3638332A;
+	Tue,  9 Jun 2026 09:13:48 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780996433; cv=fail; b=ahtnC3J/PPONxdsMcO4Ic8HENL4KtmmeXH1j6+EuJzLEElOrJvNjEHSTZFbRrVxOnuCvUQpq7vIcHyVI7sV24HMpJE9WMBdrTygCR92+Bd6RQivEN2z5r9AKNNBcWTTz4sp2nlX68XhdaozViIc/QGocDy0KVrf8AGWJaNrTg18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780996433; c=relaxed/simple;
+	bh=82+AfVPcJ1ejgkuxD8IkmJXCk7yzXy+q4XlrX2WU518=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=IxsqSsUCC7a1N29H1Vo3a37I3CWJW0Jz+Kh2fCa0GnDp7wVApXVzEzGomb3a5sUidTIfzWhgvUge9YvxKuyLuN82x5ce4hSlCwM6wbh6h/xXZQkcFJBMS3+74sgO1s5k/RQMXhU1JNra9yhZ7UcDxevoki9ymwxKej0PiB8EIM4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.139
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJwG9jCfeL6yxAJY5EpCAO+XA3R8SnAgG1f8zT82tk6xz+pTQlqdTjwCCJfhTpEqykNAHl9uTzYc1Z7uMpj+ls8ljzaCmtr0CXrZ8LWlcEph3+KvsLilBwNXNPJmHO1JtJ8wY+/Urm7VXDRz6PJ66RDpVQs32s1K6wltCRI7jaCezIvlZeosu2dyWG3CiTDjm6kD91ObK9okbIbHlK9zr7dG8gdxjyBoepRvZAsFMIrUH+wYLuDRILJRo4QnTO7lsUtwdfiePOT4IXprAn0RzgsbiTiFxoS61LP3mx0VnIizoFzGTrkuHhjDnDplJ2XFpvJ26k/+2t4zIDmcZbj/tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=82+AfVPcJ1ejgkuxD8IkmJXCk7yzXy+q4XlrX2WU518=;
+ b=Uw2D/69XAotJADTZupTUPyVNWPCo5oDRtEiT+nkJIiovW9E2DMcrnrM2PVQ6rKxrQ0dtbhw6KokMkfLW7BQbOz/66T2tq/nH7ZxOfKuNU1rDDw1NFe5WGr/0xuj0K0MaWBj+nKkABHJ/SZZBfVMjeHn37J/7KmB7P14hiakMBxoioDyTFvAcBHsxHEM7t9lvq/n2Z+M91WJnqSzLQ4PD8PO/BxtMQacUPb3tWNrQK9mSFY3jeq/bdZB4cc1+hHeTUrQWWTCyALne167Mgkbtw1zZoAtV3xdtZpDo9vPXrOp+4iTdEp8glZwyi8jGlFBx+gUr0HOGrzP0szzyueLTBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1234.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Tue, 9 Jun 2026
+ 09:13:37 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
+ with mapi id 15.21.0092.011; Tue, 9 Jun 2026 09:13:37 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Lianfeng
+ Ouyang <lianfeng.ouyang@starfivetech.com>, Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
+	Paul Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel
+	<p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 18/21] pinctrl: starfive: Add StarFive JHB100 per2pok
+ controller driver
+Thread-Topic: [PATCH v3 18/21] pinctrl: starfive: Add StarFive JHB100 per2pok
+ controller driver
+Thread-Index: AQHc8x1tp2Au4C5gdUyj+dl+vOcD87Y0xL0AgAE1iUA=
+Date: Tue, 9 Jun 2026 09:13:37 +0000
+Message-ID:
+ <ZQ4PR01MB1202592BD39A138751CE14F1F21D2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+References: <20260603055347.66845-1-changhuang.liang@starfivetech.com>
+ <20260603055347.66845-19-changhuang.liang@starfivetech.com>
+ <CAMRc=Md1z52A_JzMG=3Ce5nN-HMvwH0TO=t2jEqC3kdCQK8EwA@mail.gmail.com>
+In-Reply-To:
+ <CAMRc=Md1z52A_JzMG=3Ce5nN-HMvwH0TO=t2jEqC3kdCQK8EwA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1234:EE_
+x-ms-office365-filtering-correlation-id: 24535645-a37f-410d-94f6-08dec60763ed
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021|22082099003|18002099003|3023799007|56012099006|5023799004|4143699003;
+x-microsoft-antispam-message-info:
+ NfK16NmSn3k6wQLzyUxOG+4eiCTUlc4uqv5JIYEBBjT/Cc/WCUrr1DWdtUkGCQSbOoXDUyqZyR/C3yKYln5k8QvmdP4r3i7q6WaQrQ+ZS3N6hldXY6fjHPqppuWbUzvwhKx2zMPL5AQzCSu/6Pp2wV88zustfnpHzyneqEnkdxpElnoCYnEVVA6HRInsiqLYkOdtd5Km5bK7cruezLZ1O77w2uS/dpt5euxa8AzfM3c8R23jKric3KLsEYA/oc0W7/wGlWvo2DkMBpPt3NhxDh2gm/7Dwhe/Ir3kqskE+HiVwDMzq5AVCfcaPhP6V687B7X7AB12grBzAfjGMDgEekkC2jFPCS/sXWAM7c48urKShtMroNFXN6CgHaBDUqfDk+DNW/dkENfrNMASwKZCF8y1d8whE7bkVSJcvowK9gbnOReM4jbmb0FA9ZJnCW7eFgRRNIs31lXuxeeCJMusEbXD4Vqxldv1G9VyldotfcHRbiypYIGDNEWx/RWzFddI9LjmDG1iuz1nPHNbbSVQyNT6jJ2B92SJi4sVY5pgn3m09HElxoNodQCZrVr1/3hI
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021)(22082099003)(18002099003)(3023799007)(56012099006)(5023799004)(4143699003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?dEgrSTAvdlMvajhmVVcvYlZiUDJjZDIxQjFNdFl0eTRRWVFBSStXM3grRkNO?=
+ =?utf-8?B?aFBERU0wSkx6NXN6UEdseU5lMU5BekJUdk40YTcwQkJPVTVGOUlvVkR0VjQr?=
+ =?utf-8?B?ZGJpRFl4ZTZqUkI5R1JXQTFNbW1PR1NNRGxSZGxOZWRkMXRNNXVOampnWmx2?=
+ =?utf-8?B?S1U2b2tkWWt5ME53QTBNOTJhajJYMENVcWRGMjdPKzM0aE0vSnhYNmxmWnA2?=
+ =?utf-8?B?WXRwS0EyK1ZlR2pjYnpETlBVWjA2ZkF5Wkp1TEU2elZIK0ZPYzl2bDcycW56?=
+ =?utf-8?B?Rit5SVNxUVVwc2hwWmNyNjlBQnd5K2FaRU1hRThrZGlFeTFzckFwRTB6ejFv?=
+ =?utf-8?B?cXhVRFNaWkJscWU1Uzdham9neGtwaDBsSEZJNnJwZnZuU2hmVDY2TmFObDN0?=
+ =?utf-8?B?eis5NTVtT0YzV0lOREJOVUlDYURVeW9RWFFOUU5pdCsrQU9EdSsrckZhWkt1?=
+ =?utf-8?B?NWg3K3VxV1g4M25ieExmaThrUCtNM21JQ1ZlZHlEYm14T0hjWS9JL2k3b2J1?=
+ =?utf-8?B?SEtqZGordlBQSU1DODZERjZ3clo4L0RNSDdJYjNEcEV5NkkrWkpyVmRsNUhQ?=
+ =?utf-8?B?a25GTUFkdEpHaVdpWk1vejM5V2hUd01aREk3MzA3VnR3SFhMeUthVkdaQnYr?=
+ =?utf-8?B?VHZ5dVNMaUJXU2pZVlV3alAxTjVicnZOU2NkdlhTZWNQbEpQc2R1RFpRd3cy?=
+ =?utf-8?B?VWg2WGtzMFdaYjF3dS90QWFLWDgvRkg5am5lUEtZYlN1S0VnbWxmSk9haC9Z?=
+ =?utf-8?B?cWRYYkxyclhCME04VUhRUi80d25oQzBFNDhzMGp4czNjOFl4bXQ0M0cxVXhW?=
+ =?utf-8?B?WVoyWEJDM2Z0bHdvNGNnck5EdTJiNUM0cHRNSkU1dDBsaGFJWGVBbGhhQitw?=
+ =?utf-8?B?QTQ1eFVWYWsrSndtZjhBR1hmMC84N0VTOEV6Z0lIcitkSWMxcG5aRWJqODdu?=
+ =?utf-8?B?VVRVZE1yR3JUamRvbFVMMi9KQUljT05qN1pFaU8zYXZKMTFvOXJSMUJzSXNS?=
+ =?utf-8?B?WGtxbHNvSkJubzNFLysrdHVLVThPUnRGRDZ2U2xhQU9qME1GellKVHA5WUFS?=
+ =?utf-8?B?cEp2L2lYNlZaZVpJbzRKNlZrcW1xRWY4eFR3eFJVTjR2eEFCOGUrYVVGLzRS?=
+ =?utf-8?B?bEZsZnV5WDhENHBMdnU0VmVpZVRRVmRBd2d3MEFUVHRzdjFrYlIyNXYyMklv?=
+ =?utf-8?B?OTRRei9TNUswZ014eCsyRWZCYXgrbm13ZkFtMkZsenhyZ3F4ZStNc0pCSHgy?=
+ =?utf-8?B?bU00dExCVGwxRGtwRjFQejhteER4dWRvWEZlVzVGeTdxZmR1dURqenFRRmZq?=
+ =?utf-8?B?dThCQnk5QURtMVZYLzNaQWVybG01Vm0rZXFyeTZ2a09OcStWUndEK3gwZHRt?=
+ =?utf-8?B?OER4VkpUb2FqTDFuWUlERlBIakc2Z3hYN1VSelpKeURxMEdNSnpXOEwxNmpN?=
+ =?utf-8?B?cGh5cDlPOEZWNFRIN0Q1VWd5aUl4QnJ2RlpuOEVWdmF3SGhWY1cxdm5aOXFE?=
+ =?utf-8?B?QTFFNjhYVkFQeGlLTjBOY3lQam5xQjJRajAraEdmbTNhVTNEdXlXMXhkTEt6?=
+ =?utf-8?B?UEloRzIrWXdBM2FiZXVEdTRVUzIvZjhwUVhDd0VsdWE4MjZGVk5oNXVzUExT?=
+ =?utf-8?B?R1p0a2UvSjVlNDgzeHBtRk1OMVJXYjJUdkx3V0xsNEhlQXQvNXgzNk9rVmJo?=
+ =?utf-8?B?UXNYeEhPdUMydzZnRkl6c1dSSmY2SXppNktSckdEdnM0Z1JQUmJ3U0k2azYr?=
+ =?utf-8?B?dzlpdVY4c21FVGJEVnpjT2haczFrM0JvaFBWb1lDL1FxUExxM1llQVlRbGV2?=
+ =?utf-8?B?ZjRKTXluYTBNLzFvbG5vdjBzazFtSzFMdGpKOGZJTC8rQ3psZStDb1JmNWZH?=
+ =?utf-8?B?M3B3ZHNzM2hxc0pkSjBJRC95UjI5UDkvVDdYWWt6TlQ2aFhpWDlOcFZLY3lG?=
+ =?utf-8?B?c2lLeTRPaFJhYkVSODdDMXdXeGZDZVN5Q1dTZ0hqRGJoVjhPcEt6aG1RMkxn?=
+ =?utf-8?B?M2ttbVZtVDhUZTVVUXZJbkxvSjNvY2M5bWQxVDVoUWlKOXhiOVA2OG1qYXFY?=
+ =?utf-8?B?REszdzhURDhPVUJCcW5TSlN4aEJzUm1aNTJxZGI1V3htZndPTzNuQSsvVzJ0?=
+ =?utf-8?B?R3NBYTVxaHlXSkxGalZheDIwaVdON1AvUG9ja2lFMlZBUkhRR1VZM2pZRFZD?=
+ =?utf-8?B?UlV1b015bVBZbDUvZE14RGdhc1ZYUDhlbjR1QVpHYithY2tidUxuNE1ONzJz?=
+ =?utf-8?B?SEczckxuQkRZQngwUGlIMmlPOUZUMm41NlNqN2lmdlRsYWRtaW5LN0pSSFJ3?=
+ =?utf-8?B?bHhZbHBwNzRCQm5LQW0vSGJVdS9ta1Myc2ZqUU5mVWZEdGNDNHB1Wjd6ampO?=
+ =?utf-8?Q?7ztXOaLNRuCsx+1w=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-mainline-send-v1-sending-v4-6-83768fbf404d@alex-min.fr>
-References: <20260609-mainline-send-v1-sending-v4-0-83768fbf404d@alex-min.fr>
-In-Reply-To: <20260609-mainline-send-v1-sending-v4-0-83768fbf404d@alex-min.fr>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, 
- Guru Das Srinagesh <linux@gurudas.dev>, Linus Walleij <linusw@kernel.org>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, Kees Cook <kees@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- phone-devel@vger.kernel.org, Alexandre MINETTE <contact@alex-min.fr>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780992834; l=11902;
- i=contact@alex-min.fr; s=20260421; h=from:subject:message-id;
- bh=nctRB+KA+oUj8EPwfdjz/B+lJlxwLzH4CwLXPFywPY8=;
- b=U80ELQyGqWqDbDuzC0HkfjeNdREk1eC0vr1yyVDU2DXLCXT7fWUSaaTfLjUdPtV/qMdkbLyhP
- fmPrdzhXv7ZB3KaMGH4DV7jqFrv/IofA1jJWp5rLH6nC13WB4T6MW0/
-X-Developer-Key: i=contact@alex-min.fr; a=ed25519;
- pk=KOCaxY4v16ptaT0uk1FRkuaDF2n1JhmnYwLiqWD76M4=
-X-Endpoint-Received: by B4 Relay for contact@alex-min.fr/20260421 with
- auth_id=743
-X-Original-From: Alexandre MINETTE <contact@alex-min.fr>
-Reply-To: contact@alex-min.fr
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24535645-a37f-410d-94f6-08dec60763ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2026 09:13:37.6523
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5cttVYhBY+VuevdqtMAyeuojwg2ZB9xkKjNeuPCKMeyPKJsMSZ+inlug6/hQUaZNJ7qGn2XqkuAFXP7lVFgDdnQNadFsTgx0WML7Y1S36bVV7aEB6yec1myap89J9w7M
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1234
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [4.64 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-38162-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38161-lists,linux-gpio=lfdr.de,contact.alex-min.fr];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_RECIPIENTS(0.00)[m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:myungjoo.ham@samsung.com,m:cw00.choi@samsung.com,m:linux@gurudas.dev,m:linusw@kernel.org,m:robin.clark@oss.qualcomm.com,m:kees@kernel.org,m:tony.luck@intel.com,m:gpiccoli@igalia.com,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:phone-devel@vger.kernel.org,m:contact@alex-min.fr,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:lianfeng.ouyang@starfivetech.com,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:kernel@esmil.dk,m:pjw@kernel.org,m:aou@eecs.berkeley.edu,m:palmer@dabbelt.com,m:alex@ghiti.fr,m:p.zabel@pengutronix.de,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FORGED_SENDER(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	GREYLIST(0.00)[pass,body];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_DKIM_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	HAS_REPLYTO(0.00)[contact@alex-min.fr]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,starfivetech.com:from_mime,starfivetech.com:email,ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 34F0665DB08
+X-Rspamd-Queue-Id: 93BED65E457
 
-From: Alexandre MINETTE <contact@alex-min.fr>
-
-Add a device tree for the Samsung Galaxy S4, codenamed jflte.
-
-This has been tested on a Samsung Galaxy S4 GT-I9505. The initial support
-covers UART, USB peripheral mode with USB networking, the front LED and
-the physical buttons.
-
-Signed-off-by: Alexandre MINETTE <contact@alex-min.fr>
----
- arch/arm/boot/dts/qcom/Makefile                    |   1 +
- .../boot/dts/qcom/qcom-apq8064-samsung-jflte.dts   | 481 +++++++++++++++++++++
- 2 files changed, 482 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
-index 32a44b02d2fa..6f89ba426f98 100644
---- a/arch/arm/boot/dts/qcom/Makefile
-+++ b/arch/arm/boot/dts/qcom/Makefile
-@@ -13,6 +13,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-sony-xperia-lagan-yuga.dtb \
- 	qcom-apq8064-asus-nexus7-flo.dtb \
- 	qcom-apq8064-lg-nexus4-mako.dtb \
-+	qcom-apq8064-samsung-jflte.dtb \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-ipq4018-ap120c-ac.dtb \
- 	qcom-ipq4018-ap120c-ac-bit.dtb \
-diff --git a/arch/arm/boot/dts/qcom/qcom-apq8064-samsung-jflte.dts b/arch/arm/boot/dts/qcom/qcom-apq8064-samsung-jflte.dts
-new file mode 100644
-index 000000000000..75ae19af96e5
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom/qcom-apq8064-samsung-jflte.dts
-@@ -0,0 +1,481 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/qcom-rpm.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+
-+#include "qcom-apq8064-v2.0.dtsi"
-+#include "pm8821.dtsi"
-+#include "pm8921.dtsi"
-+
-+/ {
-+	model = "Samsung Galaxy S4 (jflte)";
-+	compatible = "samsung,jflte", "qcom,apq8064";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@88d00000 {
-+			compatible = "ramoops";
-+			reg = <0x88d00000 0x100000>;
-+			record-size = <0x20000>;
-+			console-size = <0x20000>;
-+			ftrace-size = <0x20000>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&gpio_keys_default>;
-+		pinctrl-names = "default";
-+
-+		key-home {
-+			label = "Home";
-+			gpios = <&pm8921_gpio 30 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <5>;
-+			linux,code = <KEY_HOME>;
-+			wakeup-source;
-+		};
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&pm8921_gpio 35 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <5>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			wakeup-source;
-+		};
-+
-+		key-volume-down {
-+			label = "Volume Down";
-+			gpios = <&pm8921_gpio 37 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <5>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	i2c-led {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&tlmm_pinmux 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&tlmm_pinmux 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led-controller@30 {
-+			compatible = "panasonic,an30259a";
-+			reg = <0x30>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			led@1 {
-+				reg = <1>;
-+				function = LED_FUNCTION_STATUS;
-+				color = <LED_COLOR_ID_RED>;
-+			};
-+
-+			led@2 {
-+				reg = <2>;
-+				function = LED_FUNCTION_STATUS;
-+				color = <LED_COLOR_ID_GREEN>;
-+			};
-+
-+			led@3 {
-+				reg = <3>;
-+				function = LED_FUNCTION_STATUS;
-+				color = <LED_COLOR_ID_BLUE>;
-+			};
-+		};
-+	};
-+
-+	i2c-muic {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&tlmm_pinmux 22 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&tlmm_pinmux 23 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		i2c-gpio,delay-us = <2>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		max77693: pmic@66 {
-+			compatible = "maxim,max77693";
-+			reg = <0x66>;
-+			interrupt-parent = <&tlmm_pinmux>;
-+			interrupts = <55 IRQ_TYPE_EDGE_FALLING>;
-+			pinctrl-0 = <&muic_int_default_state>;
-+			pinctrl-names = "default";
-+
-+			muic: muic {
-+				compatible = "maxim,max77693-muic";
-+				safeout1-supply = <&esafeout1_reg>;
-+				safeout2-supply = <&esafeout2_reg>;
-+			};
-+
-+			regulators {
-+				esafeout1_reg: ESAFEOUT1 {
-+					regulator-name = "ESAFEOUT1";
-+				};
-+
-+				esafeout2_reg: ESAFEOUT2 {
-+					regulator-name = "ESAFEOUT2";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&gsbi7 {
-+	qcom,mode = <GSBI_PROT_I2C_UART>;
-+
-+	status = "okay";
-+};
-+
-+&gsbi7_serial {
-+	pinctrl-0 = <&gsbi7_uart_pin_a>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&pm8821 {
-+	interrupts-extended = <&tlmm_pinmux 76 IRQ_TYPE_LEVEL_LOW>;
-+};
-+
-+&pm8921 {
-+	interrupts-extended = <&tlmm_pinmux 74 IRQ_TYPE_LEVEL_LOW>;
-+};
-+
-+&riva {
-+	pinctrl-0 = <&riva_wlan_pin_a>, <&riva_bt_pin_a>, <&riva_fm_pin_a>;
-+	pinctrl-names = "default";
-+
-+	vddcx-supply = <&pm8921_s3>;
-+	vddmx-supply = <&pm8921_l24>;
-+	vddpx-supply = <&pm8921_s4>;
-+
-+	status = "okay";
-+
-+	iris {
-+		vddxo-supply = <&pm8921_l4>;
-+		vddrfa-supply = <&pm8921_s2>;
-+		vddpa-supply = <&pm8921_l10>;
-+		vdddig-supply = <&pm8921_lvs2>;
-+	};
-+};
-+
-+&rpm {
-+	regulators {
-+		compatible = "qcom,rpm-pm8921-regulators";
-+
-+		vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+		vdd_l24-supply = <&pm8921_s1>;
-+		vdd_l25-supply = <&pm8921_s1>;
-+		vdd_l26-supply = <&pm8921_s7>;
-+		vdd_l27-supply = <&pm8921_s7>;
-+		vdd_l28-supply = <&pm8921_s7>;
-+		vin_lvs1_3_6-supply = <&pm8921_s4>;
-+		vin_lvs2-supply = <&pm8921_s1>;
-+		vin_lvs4_5_7-supply = <&pm8921_s4>;
-+
-+		pm8921_l1: l1 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1100000>;
-+			regulator-always-on;
-+			bias-pull-down;
-+		};
-+
-+		/* mipi_dsi.1-dsi1_pll_vdda */
-+		pm8921_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			bias-pull-down;
-+		};
-+
-+		/* msm_otg-HSUSB_3p3 */
-+		pm8921_l3: l3 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3500000>;
-+			bias-pull-down;
-+		};
-+
-+		/* msm_otg-HSUSB_1p8 */
-+		pm8921_l4: l4 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		/* msm_sdcc.1-sdc_vdd */
-+		pm8921_l5: l5 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		/* earjack_debug */
-+		pm8921_l6: l6 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		/* mipi_dsi.1-dsi_vci */
-+		pm8921_l8: l8 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+			bias-pull-down;
-+		};
-+
-+		/* wcnss_wlan.0-iris_vddpa */
-+		pm8921_l10: l10 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <2900000>;
-+			bias-pull-down;
-+		};
-+
-+		/* mipi_dsi.1-dsi1_avdd */
-+		pm8921_l11: l11 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+			bias-pull-down;
-+		};
-+
-+		/* touch_vdd */
-+		pm8921_l15: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+			bias-pull-down;
-+		};
-+
-+		/* slimport_dvdd */
-+		pm8921_l18: l18 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1100000>;
-+			bias-pull-down;
-+		};
-+
-+		/* touch_io */
-+		pm8921_l22: l22 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			bias-pull-down;
-+		};
-+
-+		/*
-+		 * mipi_dsi.1-dsi_vddio
-+		 * pil_qdsp6v4.1-pll_vdd
-+		 * pil_qdsp6v4.2-pll_vdd
-+		 * msm_ehci_host.0-HSUSB_1p8
-+		 * msm_ehci_host.1-HSUSB_1p8
-+		 */
-+		pm8921_l23: l23 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			bias-pull-down;
-+		};
-+
-+		/*
-+		 * tabla2x-slim-CDC_VDDA_A_1P2V
-+		 * tabla2x-slim-VDDD_CDC_D
-+		 */
-+		pm8921_l24: l24 {
-+			regulator-min-microvolt = <750000>;
-+			regulator-max-microvolt = <1150000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l25: l25 {
-+			regulator-min-microvolt = <1250000>;
-+			regulator-max-microvolt = <1250000>;
-+			regulator-always-on;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l26: l26 {
-+			regulator-min-microvolt = <375000>;
-+			regulator-max-microvolt = <1050000>;
-+			regulator-always-on;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_l27: l27 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1100000>;
-+		};
-+
-+		pm8921_l28: l28 {
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1050000>;
-+			bias-pull-down;
-+		};
-+
-+		/* wcnss_wlan.0-iris_vddio */
-+		pm8921_lvs1: lvs1 {
-+			bias-pull-down;
-+		};
-+
-+		/* wcnss_wlan.0-iris_vdddig */
-+		pm8921_lvs2: lvs2 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs3: lvs3 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs4: lvs4 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_lvs5: lvs5 {
-+			bias-pull-down;
-+		};
-+
-+		/* mipi_dsi.1-dsi_iovcc */
-+		pm8921_lvs6: lvs6 {
-+			bias-pull-down;
-+		};
-+
-+		/*
-+		 * pil_riva-pll_vdd
-+		 * lvds.0-lvds_vdda
-+		 * mipi_dsi.1-dsi1_vddio
-+		 * hdmi_msm.0-hdmi_vdda
-+		 */
-+		pm8921_lvs7: lvs7 {
-+			bias-pull-down;
-+		};
-+
-+		pm8921_ncp: ncp {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+		};
-+
-+		/* Buck SMPS */
-+		pm8921_s1: s1 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1225000>;
-+			qcom,switch-mode-frequency = <3200000>;
-+			bias-pull-down;
-+		};
-+
-+		pm8921_s2: s2 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+			bias-pull-down;
-+		};
-+
-+		/* msm otg HSUSB_VDDCX */
-+		pm8921_s3: s3 {
-+			regulator-min-microvolt = <500000>;
-+			regulator-max-microvolt = <1150000>;
-+			qcom,switch-mode-frequency = <4800000>;
-+			bias-pull-down;
-+		};
-+
-+		/*
-+		 * msm_sdcc.1-sdc-vdd_io
-+		 * tabla2x-slim-CDC_VDDA_RX
-+		 * tabla2x-slim-CDC_VDDA_TX
-+		 * tabla2x-slim-CDC_VDD_CP
-+		 * tabla2x-slim-VDDIO_CDC
-+		 */
-+		pm8921_s4: s4 {
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+			bias-pull-down;
-+			qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-+		};
-+
-+		/*
-+		 * supply vdd_l26, vdd_l27, vdd_l28
-+		 */
-+		pm8921_s7: s7 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+			qcom,switch-mode-frequency = <3200000>;
-+		};
-+
-+		pm8921_s8: s8 {
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <2200000>;
-+			qcom,switch-mode-frequency = <1600000>;
-+		};
-+	};
-+};
-+
-+/* eMMC */
-+&sdcc1 {
-+	vmmc-supply = <&pm8921_l5>;
-+	vqmmc-supply = <&pm8921_s4>;
-+
-+	status = "okay";
-+};
-+
-+&pm8921_gpio {
-+	gpio_keys_default: gpio-keys-default-state {
-+		pins = "gpio30", "gpio35", "gpio37";
-+		function = PMIC_GPIO_FUNC_NORMAL;
-+		input-enable;
-+		bias-pull-up;
-+		power-source = <PM8921_GPIO_S4>;
-+	};
-+};
-+
-+&tlmm_pinmux {
-+	gsbi7_uart_pin_a: gsbi7-uart-pin-active-state {
-+		rx-pins {
-+			pins = "gpio83";
-+			function = "gsbi7";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio82";
-+			function = "gsbi7";
-+			drive-strength = <4>;
-+			bias-disable;
-+		};
-+	};
-+
-+	muic_int_default_state: muic-int-default-state {
-+		pins = "gpio55";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		input-enable;
-+		bias-disable;
-+	};
-+};
-+
-+&usb_hs1_phy {
-+	v3p3-supply = <&pm8921_l3>;
-+	v1p8-supply = <&pm8921_l4>;
-+	extcon = <&muic>;
-+};
-+
-+&usb1 {
-+	dr_mode = "otg";
-+	extcon = <&muic>, <&pm8921>;
-+
-+	status = "okay";
-+};
-
--- 
-2.43.0
-
-
+SGksIEJhcnRvc3oNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQo+IE9uIFdlZCwgMyBKdW4g
+MjAyNiAwNzo1Mzo0NCArMDIwMCwgQ2hhbmdodWFuZyBMaWFuZw0KPiA8Y2hhbmdodWFuZy5saWFu
+Z0BzdGFyZml2ZXRlY2guY29tPiBzYWlkOg0KPiA+IEFkZCBwaW5jdHJsIGRyaXZlciBmb3IgU3Rh
+ckZpdmUgSkhCMTAwIFNvQyBQZXJpcGhlcmFsLTIgUG93ZXIgT0sNCj4gPiAocGVyMnBvaykgcGlu
+Y3RybCBjb250cm9sbGVyLg0KPiA+DQo+ID4gQ28tZGV2ZWxvcGVkLWJ5OiBMaWFuZmVuZyBPdXlh
+bmcgPGxpYW5mZW5nLm91eWFuZ0BzdGFyZml2ZXRlY2guY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IExpYW5mZW5nIE91eWFuZyA8bGlhbmZlbmcub3V5YW5nQHN0YXJmaXZldGVjaC5jb20+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogQ2hhbmdodWFuZyBMaWFuZyA8Y2hhbmdodWFuZy5saWFuZ0BzdGFyZml2
+ZXRlY2guY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvS2NvbmZp
+ZyAgICAgICAgICAgICAgfCAxMiArKysNCj4gPiAgZHJpdmVycy9waW5jdHJsL3N0YXJmaXZlL01h
+a2VmaWxlICAgICAgICAgICAgIHwgIDEgKw0KPiA+ICAuLi4vcGluY3RybC1zdGFyZml2ZS1qaGIx
+MDAtcGVyMnBvay5jICAgICAgICAgfCA5Nw0KPiArKysrKysrKysrKysrKysrKysrDQo+ID4gIDMg
+ZmlsZXMgY2hhbmdlZCwgMTEwIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+DQo+ID4gZHJpdmVycy9waW5jdHJsL3N0YXJmaXZlL3BpbmN0cmwtc3RhcmZpdmUtamhiMTAwLXBl
+cjJwb2suYw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdGFyZml2ZS9L
+Y29uZmlnDQo+ID4gYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvS2NvbmZpZw0KPiA+IGluZGV4
+IGVkYzNiNmQ5YzhkNy4uYmY1OTE1ZTBhNWYyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGlu
+Y3RybC9zdGFyZml2ZS9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL3N0YXJmaXZl
+L0tjb25maWcNCj4gPiBAQCAtOTEsNiArOTEsMTggQEAgY29uZmlnIFBJTkNUUkxfU1RBUkZJVkVf
+SkhCMTAwX1BFUjINCj4gPiAgCSAgcGVyaXBoZXJhbHMgc3VwcG9ydGluZyBpbnB1dHMsIG91dHB1
+dHMsIGNvbmZpZ3VyaW5nIHB1bGwtdXAvcHVsbC1kb3duDQo+ID4gIAkgIGFuZCBpbnRlcnJ1cHRz
+IG9uIGlucHV0IGNoYW5nZXMuDQo+ID4NCj4gPiArY29uZmlnIFBJTkNUUkxfU1RBUkZJVkVfSkhC
+MTAwX1BFUjJQT0sNCj4gPiArCXRyaXN0YXRlICJTdGFyRml2ZSBKSEIxMDAgU29DIFBlcmlwaGVy
+YWwtMiBQb3dlciBPSyBwaW5jdHJsIGFuZCBHUElPDQo+IGRyaXZlciINCj4gPiArCWRlcGVuZHMg
+b24gQVJDSF9TVEFSRklWRSB8fCBDT01QSUxFX1RFU1QNCj4gPiArCWRlcGVuZHMgb24gT0YNCj4g
+DQo+IEkgZG9uJ3Qgc2VlIGFueSByZWFsIGRlcGVuZGVuY3kgb24gQ09ORklHX09GIGhlcmUsIGFt
+IEkgbWlzc2luZyBzb21ldGhpbmc/DQo+IFRoZSBPRiBJRCBtYXRjaGluZyBpcyBhdmFpbGFibGUg
+ZXZlbiB3aXRoICFDT05GSUdfT0YuDQoNCkkgd2lsbCBtb3ZlIGl0IHVuZGVyIGNvbmZpZyBQSU5D
+VFJMX1NUQVJGSVZFX0pIQjEwMC4NCg0KPiANCj4gU2FtZSBlbHNld2hlcmUuDQo+IA0KPiBCYXJ0
+DQoNCkJlc3QgUmVnYXJkcywNCkNoYW5naHVhbmcNCg==
 
