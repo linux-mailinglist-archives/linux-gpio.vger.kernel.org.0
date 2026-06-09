@@ -1,280 +1,164 @@
-Return-Path: <linux-gpio+bounces-38153-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38154-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nFbBNLK0J2p/0wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-38153-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 08:37:38 +0200
+	id 6WcfIQ3CJ2qm1gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-38154-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 09:34:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47A0265CD5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 08:37:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F8DF65D421
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 09:34:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ultrarisc.com header.s=dkim header.b=NWNe5Wko;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38153-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38153-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ultrarisc.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HqMYSfVS;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38154-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38154-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 175AD307B271
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 06:34:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 863C2304124A
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 07:33:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D6F378D8C;
-	Tue,  9 Jun 2026 06:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0EE43DDDAC;
+	Tue,  9 Jun 2026 07:33:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ultrarisc.com (unknown [218.76.62.146])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016445B21A;
-	Tue,  9 Jun 2026 06:34:29 +0000 (UTC)
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521A83DD512
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2026 07:33:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780986875; cv=none; b=nLWEIO8WInQh1ZYV2EqL90OoAp2eYr9rbDxyTBJbOXrtfCeyjn07zaEcgR8/kf9pim8OcadPLon9sr3jeuSL0SNsgwR+5qJa+oaxzdgWPfU/MGCPqcgut0qzqN1BFRUaTcAubLfj30GKlSnxddiFlMpGhbopALhiYUE0/Z5dQDI=
+	t=1780990402; cv=none; b=GOBmcTEGabcR//JQgkuEcWQw5zdVBgvVWL4yI8rMv6TwrSt1bYpJ96qNM645olTy1sganLwiVx3eylQdq/7J2OQ03t1tAHlaTL5iWfnQPw8BdIPQO5r/1lUyS7+GEj/ebKryFnJEDAge0h/Y4CfIBkzT+ClPVAZY0wM8dSEGjYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780986875; c=relaxed/simple;
-	bh=mN32kZcZe3s/2A/C2HeckScrSCdsoJ7ip9mv7bM0UFg=;
-	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=FhfDUFbdHFjjMMZ0oZITgk2A8rEs4kIqm6gQSippDudUhnqfwHFCKo9zin4n/OMfp4Hp787PFGkh8+yz2rtuNEUkGeNJwBAwW5dJSgb+oGLHPNp1kmO5php/qP8EbPOvyXoI228XvTmpBD0GhpT+OBG21ZNtjaB7wn7Io4tB1ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ultrarisc.com; spf=none smtp.mailfrom=ultrarisc.com; dkim=pass (1024-bit key) header.d=ultrarisc.com header.i=@ultrarisc.com header.b=NWNe5Wko; arc=none smtp.client-ip=218.76.62.146
+	s=arc-20240116; t=1780990402; c=relaxed/simple;
+	bh=RWkA0L6Q2phcYPLAt9VvFae3fkF5zlose9aOWTUDao0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oE1Rg9wGZFRWo5mET69jsxNuDJNenRm1OFz3yaxOAWZ5nVZBGdgPGgc/OmFOyORPig3HHU7+FZroNDYTimLQSVCMv1GlbZGBDbltlY7yLSulp+wWc97jyDzJqAPxf/19rkeU5hHm60yE2n71L6E0Kz9DiaYcvhnGLxPakYEnWl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqMYSfVS; arc=none smtp.client-ip=209.85.210.175
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-842264dde84so3038962b3a.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2026 00:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ultrarisc.com; s=dkim; h=Received:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Subject:From:To:Cc:In-Reply-To:
-	References:Date:Message-Id; bh=AdqnFv/tsFMI2ekiHo9Xhi/ZYvF9ZsyYq
-	x0a7TYngz8=; b=NWNe5WkojTXOU69xTUqzkLfK4fcO9+iw571Qp9ePbKv7n+q+F
-	/3bYrNhRArx0cIfl1wxYfwu0LB7L/SLeB0eCU1PD+r8ikLL+zZdgMFlxA0oH9jAf
-	lXS/uGN3Xe1TiFbImviQd7Z/KPl6k/JZDCxyVOl6cXV5CXZ7kltE1jDRW8=
-Received: from [127.0.0.1] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAfwDXEEIVtCdqi6sJAA--.8839S2;
-	Tue, 09 Jun 2026 14:35:02 +0800 (CST)
+        d=gmail.com; s=20251104; t=1780990400; x=1781595200; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EZxhU2iD6PdOyojyjLvdXFMxCVOPuNzGVXqMgxsvNpE=;
+        b=HqMYSfVSjYbnFcQNHI7CGVcdGJkSxy77f5Ip2TId1N1c9/PYkZPZ4aNLH5b+PCzCZw
+         lL7LjQFQOi/QgKh/kH7AKcCRVU1TFsR+PTLiVLNCZas+1wfJq1+i5xDVjneVHfOtX+PB
+         Ryx1b9pXxkk3iVNsguhSuN6RhD6/0nXxcdc5CYal/dRL/nQXVMHLE7wEtV2kVLWKj23E
+         Bu86DZgZf6JiCfIKeTXhn+XsxkajKBPEnHP2qLbzDD+6jE/WeHh1mGyo/8fTMzNKp93Z
+         nPoXt5rcodkFO3CUi2cqUvQhT2VOmq6SCTpEuHDzgg/jkpltiJIrySfBZxZ0wTRNdegH
+         IDQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780990400; x=1781595200;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EZxhU2iD6PdOyojyjLvdXFMxCVOPuNzGVXqMgxsvNpE=;
+        b=rZ66Vo/1VyH54EBd2IHgg506S0eVmLbu+OsoeuYp1/GtQyPY94f9vvVgeM4P1VeLwm
+         sZwgkpNKEv4fqsUg3+IXeQV1WU/Gomej5dPPCBam1k3x46/7sJVvlkZ9vKgrV7Hk3nPt
+         xTxTvVq0EBrq/gdLyqYCvSesakofR/DfF9b2kJccVSVjS1kV1Z9+c4MybWXRa5L+UI88
+         ZXy4eoZn91Z3E2dtjL+mm7ButLMTuJfq7UlQiXF1cu+l5A5Ixbn68s7jyvv3CHIKtDXb
+         hW8wBb2EcKrPDHx/3Z3tBYhd3CGZuQ/Bt6IV+QalQ0rg7uiF5pEB9XDNQBXy2LORmpn4
+         kH4A==
+X-Forwarded-Encrypted: i=1; AFNElJ+FA3ZLsDo8jyBP5gb/1EnGA5hKbDM57E/YpRgh8De6sGx5oH5d17YaRTn+Z1pBBBI1Et1UaOdQX+ZP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg5puQGXY3fsfLVzpJkQMHRFfiGctX90n5iPg8jvzCerWaLnlu
+	E1FtL32lpLIAhD/lam1HzXbqdJPB0kP/dU4tXB0dBPzJ2dVjLGCqeeON
+X-Gm-Gg: Acq92OF9jDN0zxs/kJRIcAPS7mJRsSTxav5RmNS3kdvMHAdCiQzlFvHZg6/LWtD8mFv
+	G9WJSQ1b5C3ala+hQIIO8mZ582SYzr9HHejDvu6iIMvWK5+TMK7fe7y5SRJ+/C1NLi5xCtS96gF
+	UxXPEczuJALk2Lauk4PN3J473DgWcVp5hywZ/KvD0HcAzzuOuG+Wp7Ut1q7ALasKNsNp9tq3uZb
+	GXPitaHP7VZLLqhi+nGBhKuRH5383v0fnPtj0EtZVgaugf8uak9SrnLMDWTOCMYl49vNs+6qNpU
+	OX4poqi8q692fXWjFqjvztHUMqu2H/uOGblrs35uMKS5o9PuYrVDwJEjt/mOF5x8fq8SHJWApOB
+	xjKeQfoDgNfIhLM+qHw0z6x6tS2BNcDWuN8b/RoKUX5oVELb9EYAvnRBaHqB16ygB53LI20WWcH
+	GVuM2MvumT6xCR4cO4nxIxGRmxtf7ebMMfJ9xE/RqpKKnhQtaGEFL9Yw==
+X-Received: by 2002:a05:6a21:7a9b:b0:3b2:86a4:acbd with SMTP id adf61e73a8af0-3b4d39ff987mr15436890637.2.1780990399495;
+        Tue, 09 Jun 2026 00:33:19 -0700 (PDT)
+Received: from haichao.tail057a43.ts.net ([2001:da8:e000:1206:37c9:44fa:729b:6aaa])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85df034a2csm17670712a12.3.2026.06.09.00.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 00:33:19 -0700 (PDT)
+From: Ruoyu Wang <ruoyuw560@gmail.com>
+To: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Harini Katakam <harini.katakam@xilinx.com>,
+	Soren Brinkmann <soren.brinkmann@xilinx.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ruoyu Wang <ruoyuw560@gmail.com>
+Subject: [PATCH] gpio: zynq: fix runtime PM leak on remove
+Date: Tue,  9 Jun 2026 15:33:13 +0800
+Message-ID: <20260609073313.5-1-ruoyuw560@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 2/2] pinctrl: ultrarisc: Add UltraRISC DP1000
- pinctrl driver
-From: Jia Wang <wangjia@ultrarisc.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: wangjia@ultrarisc.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <CAD++jL=LFZYUFyAt9eUMPw02yCXC3cD6h4wvHQ529OS-o-WtSQ@mail.gmail.com>
-References: <20260608-ultrarisc-pinctrl-v3-0-30a09ed74275@ultrarisc.com>
- <20260608-ultrarisc-pinctrl-v3-2-30a09ed74275@ultrarisc.com>
- <CAD++jL=LFZYUFyAt9eUMPw02yCXC3cD6h4wvHQ529OS-o-WtSQ@mail.gmail.com>
-Date: Tue, 09 Jun 2026 14:34:24 +0800
-Message-Id: <178098686461.187087.11502108328443255683.b4-reply@b4>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780986864; l=5128;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=mN32kZcZe3s/2A/C2HeckScrSCdsoJ7ip9mv7bM0UFg=;
- b=uWGowsAoO+tMaswPPgMSw3xoEFhNkl13lzfnxKILbv9igchVJOtfc3BnijLpc6g7S6mHrhFM/
- 13l3L2kIYpYAsJbugWIXAZvssPliwfcTrYJ6+RQPf4DxN9M2m2TP/lA
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-CM-TRANSID:AQAAfwDXEEIVtCdqi6sJAA--.8839S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr1kXF13XF4xAr43trW7CFg_yoWrZr1fpa
-	yrKw15CryUJrWrKa1vq3y8uFyfArs7JrW3Jr1rGFy7XFZxA3sayrWvgr1ruFyDCr95Jr4S
-	va15uFyayrn0yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUva14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	tVW8ZwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjfUonmRUUUUU
-X-CM-SenderInfo: pzdqwylld63zxwud2x1vfou0bp/1tbiAQAAEWoWakYABgA8s6
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ultrarisc.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ultrarisc.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:wangjia@ultrarisc.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38153-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38154-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[xilinx.com,vger.kernel.org,lists.infradead.org,gmail.com];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[ruoyuw560@gmail.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:shubhrajyoti.datta@amd.com,m:srinivas.neeli@amd.com,m:michal.simek@amd.com,m:linusw@kernel.org,m:brgl@kernel.org,m:harini.katakam@xilinx.com,m:soren.brinkmann@xilinx.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:ruoyuw560@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wangjia@ultrarisc.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[ultrarisc.com:+];
+	FROM_NEQ_ENVFROM(0.00)[ruoyuw560@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,ultrarisc.com:dkim,ultrarisc.com:email,ultrarisc.com:from_mime]
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 47A0265CD5C
+X-Rspamd-Queue-Id: 1F8DF65D421
 
-On 2026-06-09 00:23 +0200, Linus Walleij wrote:
-> Hi Jia,
-> 
-> thanks for your patch!
-> 
-> On Mon, Jun 8, 2026 at 9:50 AM Jia Wang via B4 Relay
-> <devnull+wangjia.ultrarisc.com@kernel.org> wrote:
-> 
-> > From: Jia Wang <wangjia@ultrarisc.com>
-> >
-> > Add support for the pin controller on the UltraRISC DP1000 SoC.
-> >
-> > The controller provides mux selection for pins in ports A, B, C, D, and
-> > LPC. Ports A-D default to GPIO and support peripheral muxing. LPC pins
-> > can be switched to eSPI, but are not available as GPIOs. Basic pin
-> > configuration controls such as drive strength, pull-up, and pull-down
-> > are also supported.
-> >
-> > Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
-> 
-> Overall this looks very good, some things to fix up below but nothing
-> major!
->
+pm_runtime_get_sync() increments the runtime PM usage counter even when it
+returns an error. zynq_gpio_remove() uses it to keep the controller active
+while removing the GPIO chip, but never drops the usage counter again.
 
-Thanks for the review.
+Balance the get with pm_runtime_put_noidle() after disabling runtime PM.
+
+Fixes: 3242ba117e9b ("gpio: Add driver for Zynq GPIO controller")
+Signed-off-by: Ruoyu Wang <ruoyuw560@gmail.com>
+---
+ drivers/gpio/gpio-zynq.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 571e366624d2a..fafca91128b2e 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -1014,6 +1014,7 @@ static void zynq_gpio_remove(struct platform_device *pdev)
+ 	gpiochip_remove(&gpio->chip);
+ 	device_set_wakeup_capable(&pdev->dev, 0);
+ 	pm_runtime_disable(&pdev->dev);
++	pm_runtime_put_noidle(&pdev->dev);
+ }
  
-> (...)
-> > +config PINCTRL_ULTRARISC
-> > +       tristate
-> > +       depends on OF
-> > +       depends on ARCH_ULTRARISC || COMPILE_TEST
-> > +       select GENERIC_PINCTRL
-> > +       select PINMUX
-> > +       select GPIOLIB
-> 
-> Why GPIOLIB? You don't implement any GPIO chips...
->
-
-Good catch. GPIOLIB is not actually needed here since the driver does not
-provide any GPIO functionality. I'll drop the select in the next version.
- 
-> > +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> > +       val = readl_relaxed(reg);
-> > +       val = (val & ~mask) | field_prep(mask, conf);
-> > +       writel_relaxed(val, reg);
-> > +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> 
-> Have you thought about using a scoped guard for this lock?
-> It will make the code easier to read.
-> (Applies everywhere.)
->
-
-Yes, that makes sense. I'll convert the lock sections to use scoped_guard()
-throughout the driver in the next version.
- 
-> > +static int ur_find_group_route(struct ur_pinctrl *pctrl,
-> > +                              const char *function,
-> > +                              u64 group_mask,
-> > +                              const struct ur_func_route **route_out)
-> > +{
-> > +       const struct ur_func_route *match = NULL;
-> > +
-> > +       for (u32 i = 0; i < pctrl->data->num_routes; i++) {
-> > +               const struct ur_func_route *route = &pctrl->data->routes[i];
-> > +
-> > +               if (strcmp(route->function, function))
-> > +                       continue;
-> > +
-> > +               if ((route->valid_pins & group_mask) != group_mask)
-> > +                       continue;
-> > +
-> > +               if (match) {
-> > +                       dev_err(pctrl->dev,
-> > +                               "ambiguous route for function %s group_mask=%#llx\n",
-> > +                               function, (unsigned long long)group_mask);
-> > +                       return -EINVAL;
-> > +               }
-> > +
-> > +               match = route;
-> > +       }
-> > +
-> > +       if (match) {
-> > +               *route_out = match;
-> > +               return 0;
-> > +       }
-> > +
-> > +       return -EINVAL;
-> > +}
-> 
-> This routing function needs some kind of comment before it explaining
-> what is going on and what constraints you are trying to resolve with this.
-> 
-
-Agreed. I'll add a comment describing the routing model and the constraints
-being resolved here.
-
-> > +static bool ur_function_is_gpio(struct pinctrl_dev *pctldev,
-> > +                               unsigned int selector)
-> 
-> Neat that you implement this!
->
-
-Thanks.
- 
-> > +static const struct pinctrl_ops ur_pinctrl_ops = {
-> > +       .get_groups_count = pinctrl_generic_get_group_count,
-> > +       .get_group_name = pinctrl_generic_get_group_name,
-> > +       .get_group_pins = pinctrl_generic_get_group_pins,
-> > +       .dt_node_to_map = pinctrl_generic_pins_function_dt_node_to_map,
-> > +       .dt_free_map = pinconf_generic_dt_free_map,
-> > +};
-> 
-> Good use of generic helpers!
-> 
-> > +static const struct pinmux_ops ur_pinmux_ops = {
-> > +       .get_functions_count = pinmux_generic_get_function_count,
-> > +       .get_function_name = pinmux_generic_get_function_name,
-> > +       .get_function_groups = pinmux_generic_get_function_groups,
-> > +       .function_is_gpio = ur_function_is_gpio,
-> > +       .set_mux = ur_set_mux,
-> > +       .gpio_request_enable = ur_gpio_request_enable,
-> > +       .strict = true,
-> > +};
-> 
-> Here too.
-> 
-> > +static const struct pinconf_ops ur_pinconf_ops = {
-> > +       .pin_config_get = ur_pin_config_get,
-> > +       .pin_config_set = ur_pin_config_set,
-> > +       .pin_config_group_get = ur_pin_config_group_get,
-> > +       .pin_config_group_set = ur_pin_config_group_set,
-> > +#ifdef CONFIG_GENERIC_PINCONF
-> > +       .is_generic = true,
-> > +       .pin_config_config_dbg_show = pinconf_generic_dump_config,
-> > +#endif
-> 
-> Why ifdef:ed? Just select it in your Kconfig and rely on it?
-> 
-
-GENERIC_PINCONF is already selected via GENERIC_PINCTRL, so the dependency
-is guaranteed. The ifdef is therefore unnecessary; I'll remove it in the
-next version.
-
-> Yours,
-> Linus Walleij
-> 
-
-Best regards,
-Jia Wang
-
+ static struct platform_driver zynq_gpio_driver = {
+-- 
+2.51.0
 
 
