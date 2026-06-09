@@ -1,72 +1,84 @@
-Return-Path: <linux-gpio+bounces-38201-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38202-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /u81Eg58KGpUFQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38201-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 22:48:14 +0200
+	id xeR5L9yGKGopFwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38202-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 23:34:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44D72664222
-	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 22:48:13 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5440166445F
+	for <lists+linux-gpio@lfdr.de>; Tue, 09 Jun 2026 23:34:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38201-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38201-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=riscstar-com.20251104.gappssmtp.com header.s=20251104 header.b=mfqFmqt+;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38202-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38202-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=riscstar.com (policy=none);
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0AB49300D7B2
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 20:48:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 43F653031107
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2026 21:31:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB69C388895;
-	Tue,  9 Jun 2026 20:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD3F411690;
+	Tue,  9 Jun 2026 21:31:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509DF1D0DEE
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2026 20:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F9935B653
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2026 21:31:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781038088; cv=none; b=fVOP+sjA45T6M9TgZgkU0bBaQXUlrJr7Wfwg199Aj+nSOZoP3+JPOnkYzJaEBfJCY9snTM+OhQI9uBnjCUMJfTed/rD2udzQuhmFetLJORTS20l++C0igNH8+kooDSYbkyI62BPemzzHbZkON1damf4qvvfFIZBzcvg+n2SX76U=
+	t=1781040715; cv=none; b=DBbudf8cGrPlW88HftqAR5phyc8P8Co89Ul0jbDi8vkfkDee1XSS/lSNxDjypL3ju8NoiQyx6sBRR+g0tx7piE/dsuYwwnNTu1cuBA5PPyXybfXJugoJx47DKqcmbWP9V8KiEu2hFlvC09fQ6jchSV7CIfwGEK6prZWO6xfAifM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781038088; c=relaxed/simple;
-	bh=EkIojasr4cXbtWr5ijvAwh+SxBjfIRnenZmdIfrX/Aw=;
+	s=arc-20240116; t=1781040715; c=relaxed/simple;
+	bh=u02KRuZlQFzGkv6nJNfx75RixQFD4xM54PRC9sX+TeM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N3o3JEqjBzuwzHF0wqEusZxhzvTwg40nFAIIgXsZguRZWxJT/8tHE8r6P+2uuTPaIdn052gpUHuXfNZrVGROuz45a6Bz1XnPeIJ+z8PnJ7lEUdEPMcIGyxk88w/Xwc4A5cLbmrs5pDtIDOTsuAQaqDS5WA3s8BdapgaXJv7zPjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=reactivated.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490be29c1c5so76483995e9.2
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2026 13:48:07 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=GzQW8jsZXIggs/LmRbWdRyUiXwC98uZ5DPpTqLxUEw7Qix8wLPtP/ugDKNqYv6DnkdSqsGS6YFXbvI0iRcfv55Bk7C+l4YPyQ8FiyYRxfbdvAM/RouI4/m5IHHR0Tr/7unIfWN4oV0fT+QTWeQNB8RdhirEEJj2w9Qn8LfAccy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=mfqFmqt+; arc=none smtp.client-ip=209.85.167.170
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-4866834f8deso2512030b6e.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2026 14:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1781040712; x=1781645512; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aGjz6oXrvv0vYyL9h564g5u9rOXsQ9Yj+tb2sJWaYA0=;
+        b=mfqFmqt+WJx8NSYfElhOBMTg++c3r8Yq+qOtPE6j+Rp39nGafXgFVejdw+XX6c1G8Y
+         WtGm1CHAjgdwVPbNMbusNhxrPEgqJ8ftBfI1CDBJrDXH58mf1cQs3T3t56ngL+brvLLL
+         mDkoPrurq+wWZP9/d3whgV2TL2M9jI29yrLoMadcZACt5Jkj7gMG0WC2DmIrIOQ1lWJ4
+         C84XQsZVeKsgRr9YkfYO+eZ6f41JO+z9W/2xJUO0ziqf9pp4rDolAUM9CN+pWjUre6Ew
+         KJLk2jUKoV5kpdOXgZjpUwWgg+0QmjaoZ/mmlgLndXknfUAZwyoJGFNJ8tQSbUdtBZ4z
+         v8IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781038086; x=1781642886;
+        d=1e100.net; s=20251104; t=1781040712; x=1781645512;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oJ/YXPB/iVQYKnH/A0lTAooADjyGEwknQY/Na+W/VMo=;
-        b=BD97VCynh0f5jmlDfbfkIBrqkqIWYPnOLbAsEN2+NpZF96SboEZXVMWHKUqURiiHth
-         fB4AVg/nHTtNOT9wZAu1mvVdh+zt5cY5ZCvmEo2Loh0has+OL5GQWfN1LDsR1eawQ5b+
-         qJyL2C3ewgnYH8QkaPcyMA5zt59QxtLV40TYPPsfgE2TPP2ndmGoYOoqzapDj5eYSndi
-         VrQ6RaDeYxntChoR9PQZE/XSiqyxYSW+xjm4y3fvPgk1MGXFLvn3oJXw9A59WctfR3hW
-         N57vjt7H8CUP+G1uTg+xqXcWBbAkxOVmRXrNeJJjDKfgyZJWSJYR+Ei0X9/MzmViAK3u
-         oDiQ==
-X-Gm-Message-State: AOJu0Yyad0iFpL/kyMrCt4bRQpni1HBvIMGxYWIS7z6Hw9WOtSmkxzBX
-	fRwBNnL/QwWve0ll88gkimSdkHL3iuY7h7BbJ0Qcx90TNBo8nXY8SHFg
-X-Gm-Gg: Acq92OHhKk3K/W3gEEX1XYxAJ7gsod0toDaBAcngRzIO4ysRDVc/m+uFDFBtLmRxz8E
-	nGUnWJkpv6wJu7G/qb2s6EWG0o4g/kngcZi3vVdiRZux9OF+TDxDbIRUmwGGcwF/4QLyTrh3GX3
-	af95j5u3TT6tFLYndt6iE2PpzEVJvnWZIJ8Wi9h3gj0IA/0XJPT4TNdGpwgX8nkDv4GEHFNTF4j
-	QuTsj3kAkIXbHwbJpMApOUsLPPxlouQ5yDqOGmvegXkp9g0EBNEZ8SaV71RzC4qdARQ1AMw/El2
-	lvnizLU2X4imJghN1pz8yp9zVzJWQckhic83OUMo1cUYlckbs8mz8C8bJv+EJ8Z51IQS5f42B0l
-	7vr+TqZ+BKiWHYX/AaLiD7L0iuKPJNkAwVJiYEiORj2WAFYobZ84fQJ9jK9TPI8qRDMJYzkVw8l
-	PeqB8nHrbMPvDZEn9Z5+yntViAjrqeyb/56amd2ZPiE+JomwZioAcDMbEqU+tm0UtkDyb5I0WJC
-	+bWt3VR3/vBaRujRai853t8D7SPqnNbSWJIiH4xnA==
-X-Received: by 2002:a05:600c:4e45:b0:490:c01a:5f10 with SMTP id 5b1f17b1804b1-490c257f8cdmr363952705e9.15.1781038085472;
-        Tue, 09 Jun 2026 13:48:05 -0700 (PDT)
-Received: from ?IPV6:2001:8a0:d6cd:9000:86f4:4e71:9fc8:3183? ([2001:8a0:d6cd:9000:86f4:4e71:9fc8:3183])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3fd502sm509551525e9.11.2026.06.09.13.48.04
+        bh=aGjz6oXrvv0vYyL9h564g5u9rOXsQ9Yj+tb2sJWaYA0=;
+        b=tI3nxSHV8SKPLxTsz2wrWgT9jFJ8l1xE7uWag61/C2vDYGN/atQ1DUOG07Uq5pnSKd
+         XmJWH2CKG6nMfHrUZN/+RB1M+JDz4VGr2MR8/gKD7k1LJQYMmlWPxyw0SPxpIPLI4vHW
+         mpt2ObsA7BfSb+HBxYScYId3fExKLg+VSjFo7MF+i6egjrnBYyBuUZTKNCBlT2iA+tim
+         qFgEYj8ZBoQ6t0MOAs7R5F3FY7hoFJbKPHbjydfeUZGKRmAW2iXxkpe9EMFmBH26+ws9
+         wPh6EAljTWSgATN9OLTUXHSiWlzLhSbPR+T0Q70QU+6qCRlDjp2iLX6a5qEnCkjGVXX/
+         eFtg==
+X-Forwarded-Encrypted: i=1; AFNElJ+HbgDypzELrS9HhxeofpRwt3f5LkZTU2RawcZDScs9PW1k7m4yLh6t68/lEvaW7gaFVDUFiCYX0OX8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoT9k00F8W5dXoUQ8RD6+EdIMBAzN59Z+8FHLHowVd1IMX+/OA
+	waColRvLE18KFQTMBSkemqeLJ7fq+W/QjziYBuTzF5s+FBByAwjHX/9DP9TDom4goKY=
+X-Gm-Gg: Acq92OELVWYaAuW4hWgtbFoB988aLD6dbcYYw/mJ1d3rL75/eQmd6cEMF1oNxrR7WIK
+	kPUu2LCRhpITddZ3WMyGzmrqwm7Z3SdSzVYGsU0Oli77cO3xjAXhPNxxxniXZ1tojQAfT2rKddW
+	8YpwdnW+8JlOHg3quQ/+vX+slw72MCvv4j1G5iJLuNj3/+IZtAKKd+XQeIroIsCVezd1xU6gwfD
+	8oPuPe28TJ6guli4Qle3rARSXqkRsyi26REOVYZHLiYAQqs3yfYm1/evGesrR/lani+k81h/EKN
+	53C6OpSpN9swR3AJs0fSeh3aK6EkCJYqEgl2Ab/wTga2e3RgqrKkva0bh51lNzPxsPVL069riC+
+	5qQfUgLYMNcF6FFYf9ZSCGUhfyoGsJQgYHvMfqNGnWJWtj4kf5dVOTauMDDoHnNgC7Ha4EoXzRf
+	pV196NatyfpQf5j+wkYCFhy5TSRa1yg8AROQ==
+X-Received: by 2002:a05:6808:191e:b0:47b:bd7b:10e5 with SMTP id 5614622812f47-4868db2d9eamr11794474b6e.3.1781040712262;
+        Tue, 09 Jun 2026 14:31:52 -0700 (PDT)
+Received: from [172.22.22.28] ([73.62.185.64])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4865b5a5a64sm17024127b6e.4.2026.06.09.14.31.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2026 13:48:04 -0700 (PDT)
-Message-ID: <b07f5bd8-26f8-4de4-becb-4f76f9d33361@reactivated.net>
-Date: Tue, 9 Jun 2026 21:48:03 +0100
+        Tue, 09 Jun 2026 14:31:51 -0700 (PDT)
+Message-ID: <e5c0fc2a-dcf0-4165-b2dc-d16c6cbe92df@riscstar.com>
+Date: Tue, 9 Jun 2026 16:31:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,114 +86,235 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpiolib: handle gpio-hogs only once
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linusw@kernel.org
-References: <20260608210108.36248-1-dan@reactivated.net>
- <CAMRc=MfUd3nwpjgz-87hrpQ9AV6T8_1zwCm+tfYFurkYHKoKTw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 10/14] dt-bindings: net: toshiba,tc9654-dwmac:
+ add TC9564 Ethernet bridge
+To: Rob Herring <robh@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+ arnd@arndb.de, gregkh@linuxfoundation.org,
+ Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
+ a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
+ boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
+ inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
+ livelycarpet87@gmail.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260605010022.968612-1-elder@riscstar.com>
+ <20260605010022.968612-11-elder@riscstar.com>
+ <20260605144032.GA3659201-robh@kernel.org>
 Content-Language: en-US
-From: Daniel Drake <dan@reactivated.net>
-In-Reply-To: <CAMRc=MfUd3nwpjgz-87hrpQ9AV6T8_1zwCm+tfYFurkYHKoKTw@mail.gmail.com>
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20260605144032.GA3659201-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-0.06 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38201-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38202-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[reactivated.net];
-	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linusw@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:robh@kernel.org,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:maxime.chevallier@bootlin.com,m:rmk+kernel@armlinux.org.uk,m:andersson@kernel.org,m:konradybcio@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:daniel@riscstar.com,m:mohd.anwar@oss.qualcomm.com,m:a0987203069@gmail.com,m:alexandre.torgue@foss.st.com,m:ast@kernel.org,m:boon.khai.ng@altera.com,m:chenchuangyu@xiaomi.com,m:chenhuacai@kernel.org,m:daniel@iogearbox.net,m:hawk@kernel.org,m:hkallweit1@gmail.com,m:inochiama@gmail.com,m:john.fastabend@gmail.com,m:julianbraha@gmail.com,m:livelycarpet87@gmail.com,m:mcoquelin.stm32@gmail.com,m:me@ziyao.cc,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:richardcochran@gmail.com,m:rohan.g.thomas@altera.com,m:sdf@fomichev.me,m:siyanteng@cqsoftware.com.cn,m:weishangjuan@eswincomputing.com,m:wens@kernel.org,m:netdev@vg
+ er.kernel.org,m:bpf@vger.kernel.org,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:andrew@lunn.ch,m:rmk@armlinux.org.uk,m:krzk@kernel.org,m:conor@kernel.org,m:johnfastabend@gmail.com,m:mcoquelinstm32@gmail.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[48];
+	FORGED_SENDER(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dan@reactivated.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,reactivated.net:email,reactivated.net:mid,reactivated.net:from_mime]
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,riscstar.com:email,riscstar.com:mid,riscstar.com:from_mime,riscstar-com.20251104.gappssmtp.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 44D72664222
+X-Rspamd-Queue-Id: 5440166445F
 
-On 09/06/2026 13:39, Bartosz Golaszewski wrote:
-> On Mon, 8 Jun 2026 23:01:08 +0200, Daniel Drake <dan@reactivated.net> said:
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index 1e6dce430dca..b02d711289d0 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -1031,9 +1031,17 @@ static int gpiochip_hog_lines(struct gpio_chip *gc)
->>   		if (!fwnode_property_present(fwnode, "gpio-hog"))
->>   			continue;
+On 6/5/26 9:40 AM, Rob Herring wrote:
+> On Thu, Jun 04, 2026 at 08:00:17PM -0500, Alex Elder wrote:
+>> From: Daniel Thompson <daniel@riscstar.com>
 >>
->> +		/* The hog may have been handled by another gpio_chip on the same fwnode */
->> +		if (is_of_node(fwnode) &&
->> +		    of_node_check_flag(to_of_node(fwnode), OF_POPULATED))
->> +			continue;
+>> Add devicetree bindings for the Toshiba TC956x family of Ethernet-AVB/TSN
+>> bridges.
+>>
+>> The TC9564 contains a PCIe switch with one upstream and three downstream
+>> PCIe ports.  The third PCIe downstream port has an attached embedded PCIe
+>> endpoint, and that endpoint implements two PCIe functions.  Each internal
+>> PCIe function has a Synopsys XGMAC Ethernet interface capable of 10 Gbps
+>> operation.
+>>
+>> The TC9564 also implements an embedded GPIO controller, which exposes
+>> 10 lines externally.  Some platforms use these GPIO lines, so this
+>> GPIO controller is managed by a separate driver.  Other embedded
+>> peripherals (like a microcontroller, SRAM, and UART) are currently
+>> unused.
+>>
+>> The GPIO controller is managed by registers accessed via MMIO on an
+>> internal PCIe function's registers.
+>>
+>> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> ---
+>>   .../bindings/net/toshiba,tc9564-dwmac.yaml    | 120 ++++++++++++++++++
+>>   MAINTAINERS                                   |   6 +
+>>   2 files changed, 126 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/toshiba,tc9564-dwmac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/toshiba,tc9564-dwmac.yaml b/Documentation/devicetree/bindings/net/toshiba,tc9564-dwmac.yaml
+>> new file mode 100644
+>> index 0000000000000..6e7a63dfcf86a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/toshiba,tc9564-dwmac.yaml
+>> @@ -0,0 +1,120 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/toshiba,tc9564-dwmac.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->>   		ret = gpiochip_add_hog(gc, fwnode);
->>   		if (ret)
->>   			return ret;
+>> +title: Toshiba TC956x Ethernet-AVB/TSN Controller
 >> +
->> +		if (is_of_node(fwnode))
->> +			of_node_set_flag(to_of_node(fwnode), OF_POPULATED);
+>> +maintainers:
+>> +  - Alex Elder <elder@riscstar.com>
+>> +  - Daniel Thompson <daniel@riscstar.com>
+>> +
+>> +description: |
+>> +  The Toshiba TC9564 (and more generally, TC956x) incorporates a PCIe
+>> +  gen 3 switch with one upstream and three downstream ports.  The first
+>> +  two downstream ports are exposed externally, while the third is used
+>> +  by an internal PCIe endpoint.  The PCIe endpoint implements two PCIe
+>> +  functions, and attached to each of these is a 10 Gbps capable Synopsys
+>> +  Ethernet controller.
+>> +
+>> +  The TC956x additionally implements other internal IP blocks, and in
+>> +  particular it implements a GPIO controller.  Ten of the 35 GPIO lines
+>> +  implemented are exposed externally and are usable by the platform.
+>> +  It is platform-dependent whether the GPIO function must be exposed,
+>> +  and if it is, PCIe function 0 supplies it.
+>> +
+>> +              ----------------------------------
+>> +              |              Host              |
+>> +              ------+...+----------+........+---
+>> +                    |i2c|          |  PCIe  |
+>> +    ----------------+...+----------+........+------
+>> +    | TC956x        |I2C|          |upstream|     |
+>> +    |               -----        --+--------+---  |
+>> +    |  -----  ------  -------    | PCIe switch |  |
+>> +    |  |SPI|  |GPIO|  |reset|    |             |  |
+>> +    |  -----  ------  |clock|    | DS3 DS2 DS1 |  |
+>> +    |                 -------    ---++--++--++--  |
+>> +    |  -----  ------     downstream//    \\  \\   |  downstream
+>> +    |  |MCU|  |SRAM|    /==========/      \\  \===== PCIe port 1
+>> +    |  -----  ------   //PCIe port 3       \\     |
+>> +    |                  ||                   \======= downstream
+>> +    |  ----+-----------++-----------+----         |  PCIe port 2
+>> +    |  | M | internal PCIe endpoint | M |         |
+>> +    |  | S |------------------------| S |  ------ |
+>> +    |  | I |   PCIe   |  |   PCIe   | I |  |UART| |
+>> +    |  | G |function 0|  |function 1| G |  ------ |
 > 
-> Sashiko correctly points out that on errors, the state will be corrupted. We
-> could maybe move the clearing of the flag to gpiochip_free_hogs() and track its
-> state when processing fwnodes in order not to clear it incorrectly?
+> I don't see nodes for these PCI functions. Boot this platform with
+> CONFIG_PCI_DYNAMIC_OF_NODES enabled and use the resulting DT node
+> structure. Anything else is wrong. This will give you the DTS:
+> 
+> dtc -O dts /proc/device-tree
+> 
+> The ethernet nodes should be just these PCI function nodes. You need to
+> make the DWMAC PCI driver (stmmac_pci.c) bind to those 2 PCI devices.
+> And really, a DT node for them should be completely optional (unless
+> there's some power on ctrl needed).
+> 
+> Everything else like SPI, GPIO, UART, etc. should be under the PCIe
+> switch upstream node in a pci-ep-bus.
 
-I guess you are referring to:
+I unfortunately hadn't looked closely enough at pci-ep-bus
+before.  It really looks like what we should use.  It's a
+simple bus, and we'll use platform drivers and compatible
+strings to match the devices on the bus.
 
-> Does setting OF_POPULATED here cause state corruption if a secondary chip on a
-> shared node fails to probe?
-> When multiple gpio_chip instances share a device node, the first chip processes
-> its hogs and sets OF_POPULATED. If a subsequent chip fails probe (for example,
-> returning -EPROBE_DEFER), its cleanup path calls of_gpiochip_remove() which
-> clears the flag for all hogs.
-> If the flag is unconditionally cleared, will the deferred chip attempt to
-> process the first chip's hogs on retry, fail due to a mismatch, and
-> permanently abort probe?
+I'll work toward converting things over to use this model.
 
+> 
+> 
+>> +    |  | E |----++----|  |----++----| E |         |
+>> +    |  | N |  eMAC 0  |  |  eMAC 1  | N |         |
+>> +    --------+.......+------+.....+-----------------
+>> +            |USXGMII|      |SGMII|
+>> +          --+.......+--  --+.....+--
+>> +          |  ARQ113C  |  | QEP8121 |
+>> +          |    PHY    |  |   PHY   |
+>> +          -------------  -----------
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - pci1179,0220 # Toshiba TC9564 (a.k.a. Qualcomm QPS615)
+>> +
+>> +  gpio:
+>> +    type: object
+>> +    description: Embedded GPIO controller
+>> +    $ref: /schemas/gpio/gpio.yaml#
+> 
+> gpio.yaml alone does not define a GPIO controller. How many #gpio-cells
+> needs to be defined.
+> 
+> Is there no address associated with the controller?
+> 
+>> +
+>> +  ethernet:
+>> +    type: object
+>> +    description: XGMAC Ethernet controller
+>> +    $ref: /schemas/net/ethernet-controller.yaml#
+>> +    properties:
+>> +      mdio:
+>> +        $ref: snps,dwmac.yaml#/properties/mdio
+> 
+> Either all of snps,dwmac.yaml should apply or none of it. Generally, we
+> only reference whole schema files (OF graph being a notable exception).
 
-I don't think this is actually an issue. If we have two gpio_chips 
-sharing a device node, a first one with a hog that probes fine and a 
-subsequent one that fails during probe, both of the gpio_chips will 
-brought down and the flag is cleared. If it was a EPROBE_DEFER case 
-which is then retried later, the first chip's hogs will be set up a 2nd 
-time when the probe is retried.
+OK.
 
-It is true that the teardown of the 2nd gpio_chip would erase the 
-OF_POPULATED flag of a gpio-hog node that it does not "own", but the 
-first gpio_chip would also be torn down at the same time (and 
-OF_POPULATED unset a 2nd time). This is not ideal, but harmless as far 
-as I can see.
+> 
+>> +    required:
+>> +      - mdio
+>> +
+>> +required:
+>> +  - compatible
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-device.yaml#
+>> +  - $ref: /schemas/pci/pci-bus-common.yaml#
+> 
+> These 2 are just pci-pci-bridge.yaml.
 
-I don't quite follow the suggestion for doing the clearing better in 
-gpiochip_free_hogs(). It would be neat if we could go from a hogged 
-gpio_desc back to the fwnode, so that we could only unset OF_POPULATED 
-on the fwnode at the point when we are really removing the hog, but I 
-don't see a way to derive the gpio-hog fwnode from gpio_desc. Also, this 
-would be complicated because one gpio-hog node can hog multiple gpios.
+OK.
 
-Let me know if I'm missing anything or if you have any preference to 
-handle this differently!
+					-Alex
 
-Thanks
-Daniel
+> 
+> Rob
 
 
