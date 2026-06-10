@@ -1,319 +1,189 @@
-Return-Path: <linux-gpio+bounces-38279-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38280-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2Kf5MQaYKWo5aQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38279-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:59:50 +0200
+	id SYVrAVKaKWoEagMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38280-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 19:09:38 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C3FA66BC4A
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:59:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B14066BE00
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 19:09:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GpHIoWhx;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38279-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38279-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=baylibre.com header.s=google header.b=EsRNzYFn;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38280-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38280-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0EB2330377A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 16:59:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C72FE302BCDF
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 17:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31786331ECA;
-	Wed, 10 Jun 2026 16:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8C4A34752A;
+	Wed, 10 Jun 2026 17:09:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BD12D7393;
-	Wed, 10 Jun 2026 16:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0682E1F06
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 17:09:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781110786; cv=none; b=tYu0975nOBACuF90G/sPuuk0PlVIzuNyqgU1BSRQqY5KoAjFfUrKw+c5AP009a+A3ajnaT+Ka41b122aHZ5tObR3Ph17mOLXsBe/FVEszXdrmWP1J5BLncHwj2XqjCPM2ko8Vnd7ryf2H72hmrgdNusHj7+qbrJoDEvtfF47QsI=
+	t=1781111369; cv=none; b=exaseYPn1UYoNGrqIPpfShz3T2X9vtuPyPZrCEJteCEtenIU32qBh76BTmht4DthHzdJXRBMQqNFNNJdvwSM766LRDNb+9GYWS+Lfibep0LJ+WLkROoogf2rK5X7bHZ+KtEmwIxhpO3EITm4Ne6Riv4aoz6YtSSvTCYqCLRu994=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781110786; c=relaxed/simple;
-	bh=Sjl+/AckYq2nizXDXdQRHJzZf7ROurb2/g/1nNzJJbs=;
+	s=arc-20240116; t=1781111369; c=relaxed/simple;
+	bh=EfcKoOyON92U/4q+KcJVJUy7EEBLgJyqmWyHBdmVyTA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FHFawVLMh0qm2onmVrM5gcV2fWg5WJNoXl69PUPHuIW58G0a0cDU7O9l5hJ1qginZkaJkxggH2n0ajeMi3qMONXr3wgBw73qUPejaUiqv8Tkbax0jlfJC5cjTGHihmc+wWneExkqj7mI0qRIuewwRvrP1G1ERAmKsrth/Q17574=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpHIoWhx; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 189241F00893;
-	Wed, 10 Jun 2026 16:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781110784;
-	bh=dMnGH76MkpAb4+BlIR4HwpHGmyY5SFXwi5vwdT2ctYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GpHIoWhxlQ6YbeayN6H5zyhaD/idTSrlgu9vP4CbATxPE6UdrKHRhQDsXgcWIu4tf
-	 RSfm9DY3HoVadfVXJvOpbQZI0WMsfqvQnAe0CfdgWpCf6TQUGP2RYQiBIfsuRTK/RS
-	 VRvMocwiYSoV3IN/WL1zz5ELh58WKECdggFEvmNpFNyecXJC8X2UC0EB1G58PVZXoG
-	 aAKUt8kg9WnysBGnoXQsg3ai656hBOj05Tv8AFSi9Uig+MaVWoC5mSTOPBqRGY9RBV
-	 YOrfwxonBmld/XPYlX/cfF/LCGHUbMhAURVq3kxDPipU47WEj2sJGUAQA3cdmD2nrq
-	 bHZH616beEFtg==
-Date: Wed, 10 Jun 2026 09:59:39 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Hardik Prakash <hardikprakash.official@gmail.com>
-Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org,
-	andriy.shevchenko@intel.com, mario.limonciello@amd.com,
-	brgl@bgdev.pl, basavaraj.natikar@amd.com, linusw@kernel.org,
-	chaitanya.kumar.borah@intel.com
-Subject: Re: [PATCH] Revert "i2c: designware: defer probe if child GpioInt
- controllers are not bound"
-Message-ID: <20260610165939.GA3440020@ax162>
-References: <20260610083701.18663-1-hardikprakash.official@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gG46c635eI9QvagoGMqgf16d83fA3qxTU3b5PMi4/tje1oHgscbBGHyg+CI3xM1+qZIrC4sVhrAitWX6lV6Lv6WMXEavI+EhmU9GjrA0qCf0KvNG4DiVW4QCX4cCJWERMp4AKhAjJREf1HeUdhkgnn3jYN6JxCcMx9DEbFn2pMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=EsRNzYFn; arc=none smtp.client-ip=209.85.221.48
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-4600ddc4017so4861802f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 10:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1781111366; x=1781716166; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EfcKoOyON92U/4q+KcJVJUy7EEBLgJyqmWyHBdmVyTA=;
+        b=EsRNzYFnpJ6MC4ZMHW4/kIERMRpO0dKFqRAO8go5JANnasGl1MIDXez2BEX8aKnbOQ
+         rUnhmr3q4CNZwqSwYAX3B085DLlRELr5cnKEC3JwiFQiIolkWU7sIoOEk2xczD3cHG0A
+         iYKuveZzsqWX5gNZXCNiHIbNPcQg94U+ZsIzZsdolQMJC8vt/Eawcn6iudQ0tQbLA2js
+         UYoo8fw5Ng4X8Tm3l3VFkcFzPCOqBt+kCvfnxG1ae6atwnznz/ZPjDJevnJhlzTztaHj
+         IyCcl45EaTiJBn9PQ7MO/g4i5QWYUIEit0glvFrUJZC9R95CrHJzBkNkxx+X+qssPGSD
+         1Mpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781111366; x=1781716166;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EfcKoOyON92U/4q+KcJVJUy7EEBLgJyqmWyHBdmVyTA=;
+        b=mxLYSNuSqC9Dpi7laPC/KOgYrRgwwAtAzhvmflU+Cv8DnlmUrsC6fEkT86iQzLgQ7k
+         QLfGXqewdhbRSLppc5bGnlLGyIcIh5xDJyguORdW0GUhjU+Xic9YpdSScuqtTSOfHdCI
+         hb5ps1y9AQr4TUHwRPLCGt8cuKIe7gaw5mOVGy4J51E7nqhsmv/KJYvUavhJ+WOULs/D
+         pi56mUeI/+mwEVYe8lP3E8F3Pej8Cqkcvh6yDa/8XtkVHO3CH6+7/UNkDrWFJ7UlBzH9
+         221k1KC6853QpBmUMh76e4ZwFLc/t9cILMXTo+6pE0KRvsIXkmahbijznoDG9N9r9Rpv
+         YvFw==
+X-Forwarded-Encrypted: i=1; AFNElJ+L2dDtr2peqI6ZNBe+yGMjq1uo7nkIdbA41sJDIf3egXEzrcXfdFT6fXDTvghszAV+df6+7FcFMEp2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuVJHNuAm9PE4b9tY/P8duTi5PB3pcNyKU5og295og0a8LNkHR
+	bhd+l2Mjcubrb+07tkJJ2NICj3tBil9LC0a7UWBIe0ZlXgZB1Da7UwTHjIqRxUvqNt4=
+X-Gm-Gg: Acq92OHWRp7HfmG8kVckxd88jxdNpecYj/sRVhSmBqDA+BUnldHOQ6pyd8PjGI3xtRk
+	wwpoH7mMyYLvGer8iI6QG3/eMhVesoI2n0q5sNiWS93twwcGHZi02idK4S2ukzt/l/Ng7pgqxan
+	YC8bGeK0Rd7U6xe1sZkCt3VtisoWLo2Vv3qkCXGji6cy2hzAet61DujmV1L10GDSIGlUcK34dxm
+	o50ePe3M9tQnjB2fIrQrUiQ5sKFBhz0cCLVyK3RAZxV6QhvomNDI7ik1P/ZqQ6XPgKl6oe/0zr7
+	T/FUcuDiE8ZBuvAOh/z30k2EbUI/i7giPi+cD/4bXz6jDap954nX1Fej+1A7YHFBbjine/DYiQ8
+	HO6dP+/fgp4xW1GVMDirg/A92gdewh7LmL3ekIsi1lUrFIeYQxUsc8ZvLYgJovTVyriMPQZqvuZ
+	LLtu7PagHmmvG/vk5RhMP7Y1FNJtCYv4+LV4BU1yESK7mImzMmbAbgs2ibQXg9zz2XXVs+yAm9M
+	AFSwiuQ6qwvNzVnn6hUCPAVNg==
+X-Received: by 2002:a5d:678a:0:b0:45e:f381:cd8a with SMTP id ffacd0b85a97d-460302dcad1mr27957605f8f.2.1781111365865;
+        Wed, 10 Jun 2026 10:09:25 -0700 (PDT)
+Received: from localhost (p200300f65f47db046aec8c3a4b621e71.dip0.t-ipconnect.de. [2003:f6:5f47:db04:6aec:8c3a:4b62:1e71])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-46028a6dce6sm65899739f8f.30.2026.06.10.10.09.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 10:09:24 -0700 (PDT)
+Date: Wed, 10 Jun 2026 19:09:23 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Patrick Rudolph <patrick.rudolph@9elements.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pinctrl: Use named initializers for arrays of
+ i2c_device_data
+Message-ID: <aimZ-yzZ1hAut_KF@monoceros>
+References: <20260517134835.588648-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2kikhdq3f73oaosi"
 Content-Disposition: inline
-In-Reply-To: <20260610083701.18663-1-hardikprakash.official@gmail.com>
+In-Reply-To: <20260517134835.588648-2-u.kleine-koenig@baylibre.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hardikprakash.official@gmail.com,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:andriy.shevchenko@intel.com,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:chaitanya.kumar.borah@intel.com,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-38279-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[nathan@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:patrick.rudolph@9elements.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-38280-lists,linux-gpio=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nathan@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[baylibre.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,intel.com:email,vger.kernel.org:from_smtp,ax162:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,monoceros:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,baylibre.com:dkim,baylibre.com:email,baylibre.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5C3FA66BC4A
+X-Rspamd-Queue-Id: 6B14066BE00
 
-On Wed, Jun 10, 2026 at 02:07:01PM +0530, Hardik Prakash wrote:
-> This reverts commit ef76a3a28c79b628890431aa344af633e892035b.
-> 
-> The patch causes boot regressions on multiple machines. A NULL pointer
-> dereference occurs when agpio->resource_source.string_ptr is NULL (i.e.
-> when string_length is 0), and a probe deferral loop causes CPU starvation
-> leading to kernel panic on Intel CI machines.
-> 
-> The patch needs a proper rewrite addressing these issues before resubmission.
-> 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Reported-by: Borah, Chaitanya Kumar <chaitanya.kumar.borah@intel.com>
-> Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
 
-Closes: https://lore.kernel.org/20260602185339.GA404948@ax162/
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+--2kikhdq3f73oaosi
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1] pinctrl: Use named initializers for arrays of
+ i2c_device_data
+MIME-Version: 1.0
 
-> ---
->  drivers/i2c/busses/i2c-designware-platdrv.c | 156 --------------------
->  1 file changed, 156 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 1c01b0460385..3351c4a9ef11 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -8,8 +8,6 @@
->   * Copyright (C) 2007 MontaVista Software Inc.
->   * Copyright (C) 2009 Provigent Ltd.
->   */
-> -
-> -#include <linux/acpi.h>
->  #include <linux/clk-provider.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> @@ -132,152 +130,6 @@ static int i2c_dw_probe_lock_support(struct dw_i2c_dev *dev)
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_ACPI
-> -struct gpio_dep_ctx {
-> -	struct list_head gpio_controllers;
-> -	int ret;
-> -};
-> -
-> -struct gpio_controller_ref {
-> -	struct list_head node;
-> -	char *path;
-> -};
-> -
-> -static int check_gpioint_resource(struct acpi_resource *ares, void *data)
-> -{
-> -	struct gpio_dep_ctx *ctx = data;
-> -	struct acpi_resource_gpio *agpio;
-> -	struct gpio_controller_ref *ref, *tmp;
-> -	bool found = false;
-> -
-> -	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
-> -		return 1;
-> -
-> -	agpio = &ares->data.gpio;
-> -	if (agpio->connection_type != ACPI_RESOURCE_GPIO_TYPE_INT)
-> -		return 1;
-> -
-> -	/* Check if we've already tracked this GPIO controller */
-> -	list_for_each_entry(tmp, &ctx->gpio_controllers, node) {
-> -		if (!strcmp(tmp->path, agpio->resource_source.string_ptr)) {
-> -			found = true;
-> -			break;
-> -		}
-> -	}
-> -
-> -	if (!found) {
-> -		ref = kzalloc(sizeof(*ref), GFP_KERNEL);
-> -		if (!ref) {
-> -			ctx->ret = -ENOMEM;
-> -			return 0;
-> -		}
-> -
-> -		ref->path = kstrdup(agpio->resource_source.string_ptr, GFP_KERNEL);
-> -		if (!ref->path) {
-> -			kfree(ref);
-> -			ctx->ret = -ENOMEM;
-> -			return 0;
-> -		}
-> -
-> -		list_add_tail(&ref->node, &ctx->gpio_controllers);
-> -	}
-> -
-> -	return 1;
-> -}
-> -
-> -static int check_child_gpioint(struct acpi_device *adev, void *data)
-> -{
-> -	struct gpio_dep_ctx *ctx = data;
-> -	struct list_head res_list;
-> -
-> -	INIT_LIST_HEAD(&res_list);
-> -
-> -	acpi_dev_get_resources(adev, &res_list, check_gpioint_resource, ctx);
-> -	acpi_dev_free_resource_list(&res_list);
-> -
-> -	if (ctx->ret < 0)
-> -		return ctx->ret;
-> -
-> -	return 0;
-> -}
-> -
-> -static int i2c_dw_check_gpio_dependencies(struct device *dev)
-> -{
-> -	struct acpi_device *adev = ACPI_COMPANION(dev);
-> -	struct gpio_dep_ctx ctx = { .ret = 0 };
-> -	struct gpio_controller_ref *ref, *tmp;
-> -	int ret = 0;
-> -
-> -	if (!adev)
-> -		return 0;
-> -
-> -	INIT_LIST_HEAD(&ctx.gpio_controllers);
-> -
-> -	/* Walk all child devices and collect GpioInt controller references */
-> -	ret = acpi_dev_for_each_child(adev, check_child_gpioint, &ctx);
-> -	if (ret < 0 || ctx.ret < 0) {
-> -		ret = ctx.ret ?: ret;
-> -		goto cleanup;
-> -	}
-> -
-> -	/* For each GPIO controller, check if its parent device is bound */
-> -	list_for_each_entry(ref, &ctx.gpio_controllers, node) {
-> -		acpi_handle handle;
-> -		acpi_status status;
-> -		struct acpi_device *gpio_adev;
-> -		struct device *gpio_dev;
-> -		bool bound;
-> -
-> -		status = acpi_get_handle(NULL, ref->path, &handle);
-> -		if (ACPI_FAILURE(status))
-> -			continue;
-> -
-> -		gpio_adev = acpi_fetch_acpi_dev(handle);
-> -		if (!gpio_adev)
-> -			continue;
-> -
-> -		gpio_dev = acpi_get_first_physical_node(gpio_adev);
-> -		acpi_dev_put(gpio_adev);
-> -
-> -		if (!gpio_dev) {
-> -			ret = -EPROBE_DEFER;
-> -			goto cleanup;
-> -		}
-> -
-> -		/*
-> -		 * Check if the GPIO controller's device is bound. If not,
-> -		 * defer probe to ensure GPIO initialization (including IRQ
-> -		 * setup and quirks) is complete before we enumerate I2C
-> -		 * child devices.
-> -		 */
-> -		scoped_guard(device, gpio_dev) {
-> -			bound = device_is_bound(gpio_dev);
-> -		}
-> -		if (!bound) {
-> -			put_device(gpio_dev);
-> -			ret = -EPROBE_DEFER;
-> -			goto cleanup;
-> -		}
-> -
-> -		put_device(gpio_dev);
-> -	}
-> -
-> -cleanup:
-> -	list_for_each_entry_safe(ref, tmp, &ctx.gpio_controllers, node) {
-> -		list_del(&ref->node);
-> -		kfree(ref->path);
-> -		kfree(ref);
-> -	}
-> -
-> -	return ret;
-> -}
-> -#else
-> -static int i2c_dw_check_gpio_dependencies(struct device *dev)
-> -{
-> -	return 0;
-> -}
-> -#endif /* CONFIG_ACPI */
-> -
->  static int dw_i2c_plat_probe(struct platform_device *pdev)
->  {
->  	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
-> @@ -286,14 +138,6 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->  	struct dw_i2c_dev *dev;
->  	int irq, ret;
->  
-> -	/*
-> -	 * Check if any child devices have GpioInt resources, and if so,
-> -	 * defer probe until those GPIO controllers are fully bound.
-> -	 */
-> -	ret = i2c_dw_check_gpio_dependencies(device);
-> -	if (ret)
-> -		return ret;
-> -
->  	irq = platform_get_irq_optional(pdev, 0);
->  	if (irq == -ENXIO)
->  		flags |= ACCESS_POLLING;
-> 
-> base-commit: 3f786abd23951f3f600a62fef42469d9200d5f52
-> prerequisite-patch-id: 22fa9ba20fa28cf94185281704c51feef7abc701
-> -- 
-> 2.54.0
-> 
+Hello Linus,
 
--- 
-Cheers,
-Nathan
+On Sun, May 17, 2026 at 03:48:35PM +0200, Uwe Kleine-K=F6nig (The Capable H=
+ub) wrote:
+> While being less compact, using named initializers allows to more easily
+> see which members of the structs are assigned which value without having
+> to lookup the declaration of the struct. And it's also more robust
+> against changes to the struct definition.
+>=20
+> The mentioned robustness is relevant for a planned change to struct
+> i2c_device_id that replaces .driver_data by an anonymous union.
+>=20
+> While touching all these arrays, unify usage of whitespace in the list
+> terminator.
+>=20
+> This patch doesn't modify the compiled arrays, only their representation
+> in source form benefits. The former was confirmed with x86 and arm64
+> builds.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koenig@bayl=
+ibre.com>
+
+Gentil ping! I'd like work on the patch series that builds on top of
+this patch. Do you still have it on your radar and maybe even consider
+to apply it for your v7.2-rc1 PR?
+
+Best regards
+Uwe
+
+--2kikhdq3f73oaosi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmopmj8ACgkQj4D7WH0S
+/k4gsQf/SpNfALxM1ksnLAKy2EqmxSFxoM4gnFh8y6BDn82gNMVZACdsIvgmet6k
+/ZUMn2iAF3byFbtir77EZ8ybSuUqXgK/aSJVFmU2zB2pDeXC/4ZJhpWXSKRI7gSo
+molF6U7V5LXKR9YQG0MInfWS6RbH+ffsGGVqLrn62Tc73ZfyUPdgGOs9cOBDAVEo
+ezEIfU6Vu+bKDjjAZ0IQQeeYS7aT+o5Ycpu8SdcHXLfky++41HWX+hm1aJV9crtW
+tbo72JKtnj2rtRdlVyU6x1JbereCKQe8Ez71A7XM41XBbpLV87xPHz0Sko5y1tep
+HhSzlbE9Jj0k3SO/menp7syGO5mGPQ==
+=yhDO
+-----END PGP SIGNATURE-----
+
+--2kikhdq3f73oaosi--
 
