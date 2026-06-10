@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-38244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HVI4MPE7KWoBSwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38244-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:26:57 +0200
+	id s3TaHv87KWoJSwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38245-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:27:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFA556683FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:26:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C26D668405
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:27:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=sN3GT5bk;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38244-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38244-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=mNtkXmE0;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38245-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38245-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B29DF307A96C
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 10:21:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80165321AF72
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 10:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC313F54AC;
-	Wed, 10 Jun 2026 10:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2CE3F65FB;
+	Wed, 10 Jun 2026 10:21:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1D43F58D8
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 10:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E803F5BEF
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 10:21:19 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781086877; cv=none; b=V9AI11mfEE2cYkH0JQ14XirmWO8/VfgXM9hsyqQfWXAo8N/RKPamk2mu6vUQVk1fzfnu3azH/b1Mqa/wrBj/cP74vvWNZpeUG089v481qf2MTtcTGspErRsHjHpzOPO76mnaQzmLOo1o/Wa2SJGyvEIfJEFKc1Gawm+AemGhAUQ=
+	t=1781086880; cv=none; b=Foyht+uLl2vMJNmJ6twaGNWu+c6qBHtJ4h5xzQzU4Qhgrxggrf97+byuHYfAui6RcTyp2/vH873xUU3youKUHWDIZ9jM4x2wBuMaSKE3rBmFwADQOjKqliiszXkUKLDTHgneTM6WkzCxHY8U8lTu3IZEESCXVKDdYXaJycUT9l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781086877; c=relaxed/simple;
-	bh=xAwIEomSe/rVYBk55F2T1a2zoLu9gtjNH+NvgWc+v1g=;
+	s=arc-20240116; t=1781086880; c=relaxed/simple;
+	bh=jQF2PD5Ek55INuzVksah+lqn8zIcy/oMy6ahCFURIeQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PpEup8qy7FmpH4YrJjOmoBm1p0FRjMVVuet67O8zP39rUarl15HBtAJjeukhFXoqySqDRjiLB40jiqBsuYPHvRbUGip7YXOEhqSqFuFyYmAFWlc8q7NjKm0DFCecmDIC9Ef7U/PMo6Hn1YfDmW2N6FhFl/cGdPg7uJiUriz7P/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sN3GT5bk; arc=none smtp.client-ip=209.85.214.171
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c0c2c7d45eso59184595ad.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 03:21:15 -0700 (PDT)
+	 MIME-Version; b=khkwgxsYMO07pHtTEhysCW+0q26WxHlUKgtJq5eN2ZMVq0SI38EFEpQg0Yee7iqD7i8WIEOeDU5jyzoK5KaiNbuw2a48SwiKbB4Lkj3vEKdaBLAmLiddU42DIX95VTS53xZxH3625o5UDqphq3dyy/apDndfu8UMi0npLyAjiCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNtkXmE0; arc=none smtp.client-ip=209.85.214.174
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c0c2a68d01so44386525ad.1
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 03:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781086875; x=1781691675; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781086879; x=1781691679; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8rJRzCL8/vGU1Cnds6wAoa9R/cBJXeGAkkZCjOz43G0=;
-        b=sN3GT5bk0bfhn696q2IMhV6MNEf8BFcd/h6CHH5ezvb2L8vcz1HB/6zJWZOSsClMb+
-         Su1jHZpMRopEa/IIX5j1Z8XPMbMBMpiy0vRWkn886+1Yyq/vEw7pYVZWBRxjnHtvRZVA
-         Kk9o8DsqOJ/1Sm7EUxGAV7DVUmUIgyUUcKMouN30PgjCzLvfHBUi20TZjkXUstj1Izmw
-         +Os2HrK0OsMg/uZqPqpgiGVnC7BPD2Zi27myz8RBr+27EgRLysdnxiBmQC5ugG6kYUXg
-         jSPFWH4qmq3FXmBYr+gO01p8WMYljDxGXWE2Qhi08jhxin4KZv0MkUAdrZOe2Oxu/sv/
-         FyhQ==
+        bh=i8yD0V3JpTBBCPvBkTEEQc4c3oKXbaRtxhAPfIJqxXo=;
+        b=mNtkXmE0wdEM3nz7SZalvd7bHgjdbSCRB0ke43RPR+SWaPiVIdAZDjuP18uUJqCnrU
+         Woqyv2pmVx5hBxqmbgi9yIUT9gi+Ap6QnexzBhFeW/9BLl7ub912Q/EN9foskObM0jLu
+         kMnlBQC/MaQ8S5IiKPdjCW+mKXxC894ksvhhDJgauAmdwxh1kT68HGe0bo2QFMUcdIVA
+         MuIhj3NgOyARKYTXCWd4kGgn/wdre9QKgZ8SIkDifspoS+zofQ1ihHsN4bTpRTn7kTkB
+         j6ZFniYt9d/lCu4J2zvFSkUVaAGZ6UZjft18H+eUSF9yDHdUtDD7yw320kulD+oxxa3T
+         YKHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781086875; x=1781691675;
+        d=1e100.net; s=20251104; t=1781086879; x=1781691679;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8rJRzCL8/vGU1Cnds6wAoa9R/cBJXeGAkkZCjOz43G0=;
-        b=cSW2pqHZ8t1gxzDXsXwoM3cHR1cx3IoFXZp4l2z3ua4jmJ9valfe2VZkid1TKKnQBI
-         v/5HLbCocGdnsKYzIa8oLSDIAy8DJw704AGjtPJWEeyAOdFIe2SgzVRYnKLVNedIhPvU
-         npO9pyQoWUDQWyFw1dM9YZXOLKjuLHJJ/0a6/E2UCTuA0jVtrf/aP81TF/sTIo11tPcf
-         SUdskuwQbbCPFtmqhIq6qXZjWu1sstFec2yo6sY7Ra9sC0DpB5/4fIAVSfWTLG2KHkkt
-         IWb8LgC1gRAA9I/VlgRvGqa4g0APLo2DdgYpNDF+pUQkojrXPSSp6db9S91zWqr1xYqK
-         0WBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8MtUvas6lHpJsHRFC83iOjWc0q2b2srZycTJSm4lnZK/wEaPczQQqQS5ub5ZeGRE7ACZ2TfWrBI+L/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG9y5ucqF1ptqJAkKnT83nEi3jD0/9UWAfo6AIV0NaedrD4RbY
-	qDsLHsts3dsYuH4eVC6wW1OXSU2F3GEr+7Hp/cQS5LDw3udnNBTdsxvy
-X-Gm-Gg: Acq92OGpY8hiA7NMdHgWCbIs5kqZvXSW1iJlyj+yZLEtDMZvrPGtYTGc4TZLltuEakx
-	hziiuI2ofkdnBFt2Eins5YEyzYqlg20KG3h2H6FYK8RFt5wMBiu9YqiaT94lVgxB8DvbSaazAEk
-	Itlwbd9TG3fS7c8WqHOpRFqPgwTOi12/WGTGOBkDOXLC2usMbREzqDnLUXNZnIkMmu5V9ryzBP3
-	mysvJKOL4Z7YpAVy6PJFwrsbqWZ+KTDozHjFYzw9Sgh7Zpw71FG/Xz+b8PjJ0Y4V9lyH5cMNwxE
-	uo3OA9n2RUwn0+lByAzNUchjkruO04qqb4zkB4qouduu4ZJ/Nv26oYDYVjTcEtObaHdEsd+8cAo
-	dXNAJn9k71VM/5gqlTI4eVnWQ2RJzQSdglC/MMZq97nMpjtVjN6p8jNwC1vrsHgp0hWeVzlKS6P
-	ull5K/V6H/MGrh8LXED6K7SDm+KiWb2pZ6cjVRYIr0+5L/KkQQITQD4AIEmGpqG1KacK/K
-X-Received: by 2002:a17:903:2a84:b0:2ba:4ad9:70f6 with SMTP id d9443c01a7336-2c1e85c5022mr288228085ad.31.1781086874701;
-        Wed, 10 Jun 2026 03:21:14 -0700 (PDT)
+        bh=i8yD0V3JpTBBCPvBkTEEQc4c3oKXbaRtxhAPfIJqxXo=;
+        b=aJA0DuHoPDSy5TE0vMJCA+z3K/aVCIROVCwvbx+xe++IBCzpYDFHlh5X6NLwZXxgc+
+         jOKSU4uWN9E8n/wkebkmNFgjwMZfmqIx/VCJkGMdvEHTnQe+FJGAI5xrkoRZq6AMvuls
+         Sx5RvRKcUUanlm4FQdPP8rCB3bbERXitCiPFAGQRk6DqLM5gEVN/4y9lBrXDWAqvD8cW
+         FPQQLcnI40q/1xc3PlVy2URBhbVUiDlg/0T9iNfdXJj4Bz7dK1PiRj/efzwO72/9KOWl
+         jX89yKhItJMIyWXVQNOW+SDvTKcufBT1WNOdusLw02Wpt1Adrfo7RmmAo9xLw0AXPa27
+         +8jw==
+X-Forwarded-Encrypted: i=1; AFNElJ+STK1EaMfhLnPh6gfv2bE3ieW+4wMWz3rKKzVs2GINE8b4LWTwO8Fn90YZ6X2dfCsZP4Fmve0YrBwT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3X0ZzRNM7EJGOxicUHT0Fgwszv8PH68XUm9KrBYCUlDhSTNMm
+	lCvqa27rUTrJUMV3XAqXShvn8mCkbJXUvs3d/nmFV1xxy4vJ6mow1YCH
+X-Gm-Gg: Acq92OEEIkvdsMEBtzSn1OF3nhBEdMb4l9l/1hWcwy2VR+6C96Gzc3M2aJnxV0AEqWg
+	zkB/ORLbhm1vsw6weSzoNAio3BF7CA5rWgR1Q+ZMCHP7ANPL6qQ/YXhOs4pjJmRJ75LaaipVVxx
+	11arUvwXDpOMTValnPqEvq0C8jQQFiKVf2y0k1C2z1pX7Sg89DJdqRk+ZI8aXNHEWLzIffWsqor
+	qH6MdnlNBrn55ps5hh+MbZAWlIG8jeLbDyjL7x1iYS2dGC1OfLH/FwcRO/faniQU9BDXk9Pegh5
+	qGf3qsQzIpzDmKWhjFv3kV8s9aa6lOYNVjyxex1FC+yvjbqZwu52MBjV8UnXaFF6jjE+vLpcYGu
+	lRCffPq7AtoHRA/0ZC3Cg8TI9xByD2Slvyi1XZ4L8DKskaX6045Qqwe22iBXov9uxyQSZAWdxM0
+	MedKJLAUDdbuZ9ZBoBusy/fx+ZXyVnH0vf1xpVNZtkk7pPxlGyL0b2NMqAZnkvV/q6C5dF
+X-Received: by 2002:a17:902:da4b:b0:2c1:f262:494d with SMTP id d9443c01a7336-2c1f2624a70mr252269075ad.19.1781086879138;
+        Wed, 10 Jun 2026 03:21:19 -0700 (PDT)
 Received: from phuc-desktop.. ([183.91.15.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f96b3fsm250133875ad.29.2026.06.10.03.21.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f96b3fsm250133875ad.29.2026.06.10.03.21.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 03:21:14 -0700 (PDT)
+        Wed, 10 Jun 2026 03:21:18 -0700 (PDT)
 From: phucduc.bui@gmail.com
 To: Mark Brown <broonie@kernel.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>
@@ -91,9 +91,9 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	bui duc phuc <phucduc.bui@gmail.com>
-Subject: [PATCH 08/10] ASoC: mediatek: mt8195: mt8365-afe-clk: Use guard() for mutex & spin locks
-Date: Wed, 10 Jun 2026 17:20:19 +0700
-Message-ID: <20260610102021.83273-9-phucduc.bui@gmail.com>
+Subject: [PATCH 09/10] ASoC: mediatek: mt8195: mt8365-dai-adda: Use guard() for spin locks
+Date: Wed, 10 Jun 2026 17:20:20 +0700
+Message-ID: <20260610102021.83273-10-phucduc.bui@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260610102021.83273-1-phucduc.bui@gmail.com>
 References: <20260610102021.83273-1-phucduc.bui@gmail.com>
@@ -111,14 +111,14 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38244-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38245-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:broonie@kernel.org,m:matthias.bgg@gmail.com,m:lgirdwood@gmail.com,m:angelogioacchino.delregno@collabora.com,m:linusw@kernel.org,m:brgl@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linux-sound@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:phucduc.bui@gmail.com,m:matthiasbgg@gmail.com,m:phucducbui@gmail.com,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
@@ -138,139 +138,63 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BFA556683FA
+X-Rspamd-Queue-Id: 1C26D668405
 
 From: bui duc phuc <phucduc.bui@gmail.com>
 
-Clean up the code using guard() for mutex & spin locks.
+Clean up the code using guard() for spin locks.
 Merely code refactoring, and no behavior change.
 
 Signed-off-by: bui duc phuc <phucduc.bui@gmail.com>
 ---
- sound/soc/mediatek/mt8365/mt8365-afe-clk.c | 30 +++++-----------------
- 1 file changed, 7 insertions(+), 23 deletions(-)
+ sound/soc/mediatek/mt8365/mt8365-dai-adda.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/mediatek/mt8365/mt8365-afe-clk.c b/sound/soc/mediatek/mt8365/mt8365-afe-clk.c
-index 7078c01ba19b..af96aa446fe2 100644
---- a/sound/soc/mediatek/mt8365/mt8365-afe-clk.c
-+++ b/sound/soc/mediatek/mt8365/mt8365-afe-clk.c
-@@ -194,16 +194,13 @@ int mt8365_afe_enable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
- 	unsigned int reg = get_top_cg_reg(cg_type);
- 	unsigned int mask = get_top_cg_mask(cg_type);
- 	unsigned int val = get_top_cg_on_val(cg_type);
--	unsigned long flags;
+diff --git a/sound/soc/mediatek/mt8365/mt8365-dai-adda.c b/sound/soc/mediatek/mt8365/mt8365-dai-adda.c
+index a04c24bbfcff..d8eda9e17eb8 100644
+--- a/sound/soc/mediatek/mt8365/mt8365-dai-adda.c
++++ b/sound/soc/mediatek/mt8365/mt8365-dai-adda.c
+@@ -63,10 +63,9 @@ static int mt8365_dai_set_adda_in(struct mtk_base_afe *afe, unsigned int rate)
  
--	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
-+	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
- 
- 	afe_priv->top_cg_ref_cnt[cg_type]++;
- 	if (afe_priv->top_cg_ref_cnt[cg_type] == 1)
- 		regmap_update_bits(afe->regmap, reg, mask, val);
- 
--	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
--
- 	return 0;
- }
- 
-@@ -213,9 +210,8 @@ int mt8365_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
- 	unsigned int reg = get_top_cg_reg(cg_type);
- 	unsigned int mask = get_top_cg_mask(cg_type);
- 	unsigned int val = get_top_cg_off_val(cg_type);
--	unsigned long flags;
- 
--	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
-+	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
- 
- 	afe_priv->top_cg_ref_cnt[cg_type]--;
- 	if (afe_priv->top_cg_ref_cnt[cg_type] == 0)
-@@ -223,8 +219,6 @@ int mt8365_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
- 	else if (afe_priv->top_cg_ref_cnt[cg_type] < 0)
- 		afe_priv->top_cg_ref_cnt[cg_type] = 0;
- 
--	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
--
- 	return 0;
- }
- 
-@@ -263,25 +257,21 @@ int mt8365_afe_emi_clk_off(struct mtk_base_afe *afe)
- int mt8365_afe_enable_afe_on(struct mtk_base_afe *afe)
+ int mt8365_dai_enable_adda_on(struct mtk_base_afe *afe)
  {
- 	struct mt8365_afe_private *afe_priv = afe->platform_priv;
 -	unsigned long flags;
- 
--	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
-+	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
- 
- 	afe_priv->afe_on_ref_cnt++;
- 	if (afe_priv->afe_on_ref_cnt == 1)
- 		regmap_update_bits(afe->regmap, AFE_DAC_CON0, 0x1, 0x1);
- 
--	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
--
- 	return 0;
- }
- 
- int mt8365_afe_disable_afe_on(struct mtk_base_afe *afe)
- {
- 	struct mt8365_afe_private *afe_priv = afe->platform_priv;
--	unsigned long flags;
- 
--	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
-+	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
- 
- 	afe_priv->afe_on_ref_cnt--;
- 	if (afe_priv->afe_on_ref_cnt == 0)
-@@ -289,8 +279,6 @@ int mt8365_afe_disable_afe_on(struct mtk_base_afe *afe)
- 	else if (afe_priv->afe_on_ref_cnt < 0)
- 		afe_priv->afe_on_ref_cnt = 0;
- 
--	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
--
- 	return 0;
- }
- 
-@@ -322,13 +310,11 @@ int mt8365_afe_enable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll
- {
  	struct mt8365_afe_private *afe_priv = afe->platform_priv;
  
--	mutex_lock(&afe_priv->afe_clk_mutex);
-+	guard(mutex)(&afe_priv->afe_clk_mutex);
+-	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
++	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
  
- 	afe_priv->apll_tuner_ref_cnt[apll]++;
--	if (afe_priv->apll_tuner_ref_cnt[apll] != 1) {
--		mutex_unlock(&afe_priv->afe_clk_mutex);
-+	if (afe_priv->apll_tuner_ref_cnt[apll] != 1)
- 		return 0;
--	}
+ 	adda_afe_on_ref_cnt++;
+ 	if (adda_afe_on_ref_cnt == 1)
+@@ -74,17 +73,14 @@ int mt8365_dai_enable_adda_on(struct mtk_base_afe *afe)
+ 				   AFE_ADDA_UL_DL_ADDA_AFE_ON,
+ 				   AFE_ADDA_UL_DL_ADDA_AFE_ON);
  
- 	if (apll == MT8365_AFE_APLL1) {
- 		regmap_update_bits(afe->regmap, AFE_APLL_TUNER_CFG,
-@@ -342,7 +328,6 @@ int mt8365_afe_enable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apll
- 				   AFE_APLL_TUNER_CFG1_EN_MASK, 0x1);
+-	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
+-
+ 	return 0;
+ }
+ 
+ int mt8365_dai_disable_adda_on(struct mtk_base_afe *afe)
+ {
+-	unsigned long flags;
+ 	struct mt8365_afe_private *afe_priv = afe->platform_priv;
+ 
+-	spin_lock_irqsave(&afe_priv->afe_ctrl_lock, flags);
++	guard(spinlock_irqsave)(&afe_priv->afe_ctrl_lock);
+ 
+ 	adda_afe_on_ref_cnt--;
+ 	if (adda_afe_on_ref_cnt == 0)
+@@ -96,8 +92,6 @@ int mt8365_dai_disable_adda_on(struct mtk_base_afe *afe)
+ 		dev_warn(afe->dev, "Abnormal adda_on ref count. Force it to 0\n");
  	}
  
--	mutex_unlock(&afe_priv->afe_clk_mutex);
- 	return 0;
- }
- 
-@@ -350,7 +335,7 @@ int mt8365_afe_disable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apl
- {
- 	struct mt8365_afe_private *afe_priv = afe->platform_priv;
- 
--	mutex_lock(&afe_priv->afe_clk_mutex);
-+	guard(mutex)(&afe_priv->afe_clk_mutex);
- 
- 	afe_priv->apll_tuner_ref_cnt[apll]--;
- 	if (afe_priv->apll_tuner_ref_cnt[apll] == 0) {
-@@ -365,7 +350,6 @@ int mt8365_afe_disable_apll_tuner_cfg(struct mtk_base_afe *afe, unsigned int apl
- 		afe_priv->apll_tuner_ref_cnt[apll] = 0;
- 	}
- 
--	mutex_unlock(&afe_priv->afe_clk_mutex);
+-	spin_unlock_irqrestore(&afe_priv->afe_ctrl_lock, flags);
+-
  	return 0;
  }
  
