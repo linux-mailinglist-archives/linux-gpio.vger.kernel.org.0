@@ -1,986 +1,229 @@
-Return-Path: <linux-gpio+bounces-38213-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38214-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 70MxLGb2KGoAOQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38213-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:14 +0200
+	id CrB+Lc4CKWo5OwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38214-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 08:23:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5131F665F36
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B52C66631E
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 08:23:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=X4+8MKwV;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38213-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38213-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=JJ2nS2wn;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b="f57F/sDo";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38214-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38214-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ABF81307BA27
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 05:30:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CC4543014653
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 06:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFE16372677;
-	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B02233689B;
+	Wed, 10 Jun 2026 06:16:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620E42EDD6C;
-	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427192D47FF
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 06:16:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781069398; cv=none; b=mKw8bqRTqZpH7zC2IHMUxulG/d9FacoYZ1B7O6MZe/FfuTTMzfG8KKgGUjqPFnMigmNtbof+UT2NNxhKWTjGxrK4/80sxP5Mlx8Srz4bK9hEhSvghHshtY/RRYZ5CXBuk0180wKAh5nYz8INcDq/n94goy7FfGQNRbBRhTs1X1k=
+	t=1781072210; cv=none; b=czkmhnzuthdIF6geJOV6EPvidCDDFz7rTE9eIxenAs6e6MhXlPW1+Bzm1v7zWg6BnLqPzXzO1UUR/AOgOFfN9n6XQr98QfWa8sPdGXBgNmwq2Z1oBLjeUx+zURGzbGJMM5tIjg9vMhlmDKhTd3yzV0EtM3OmZsc0R0J/rc46yjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781069398; c=relaxed/simple;
-	bh=2H+ePRY5tAIZsB4sDY5dZFbW2QsRiDfNz3dXjozC1RU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rtbFjMjxh2xOwNJDq59mAsn6upWW7+PQPC3q4MIHI06ZkduvbX0fqNsg0qTCmlke54/l716n4zXCbrx5ka2dUME391w+Agmw5cLQ4ZSqvaS0fckkHJ9bLUQFmatQS09RFHSwsC1fZbMlwHFH+fCDLbJryrSY+LLSmEpbQ8QSvUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4+8MKwV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 24123C4AF10;
-	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781069398;
-	bh=2H+ePRY5tAIZsB4sDY5dZFbW2QsRiDfNz3dXjozC1RU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=X4+8MKwVOB5DUVMXhesPI/nmJr3J2Rl5x4jRa0/hSHnM58BbKv7kw4BsKK/9udSvr
-	 JagcpyeFlCLWrdBiRfpOVEsT7gO2X34dlR67VuNB713YqDQfKBZXcy0Kw3dGjK60jg
-	 mC2OW26q7H4YlhLENy5uO0nzyZcb7ue/OjDEjHZzIxLsvQULvBX3+SAj5m7yRh8s4j
-	 zMg/OoULR1gmDX3ccrlZHfV3dcsJ9UUlpJdwae6Djmn8HvOXqWGFTyR62NpdTTFIZ8
-	 dzG3zlvHh2v6YGrWl2vrYYJYfG/oWgphZFjVIw5H2I0RJDlpqOmYGww+pGKwsPeOrA
-	 QgdyDzPvvNmvA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09125CD8CB9;
-	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
-From: Jia Wang via B4 Relay <devnull+wangjia.ultrarisc.com@kernel.org>
-Date: Wed, 10 Jun 2026 13:29:56 +0800
-Subject: [PATCH v4 2/2] pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl
- driver
+	s=arc-20240116; t=1781072210; c=relaxed/simple;
+	bh=eRdB9IcExeSuHVeD4iZ6KuqU/GRLMfDP/J7Iq/x5/Ok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t1G/scfX/qeP+YV75VpQAF7xsTvyjw9z1aq/vmp3a7mcj2fHIDzTiWRi2GrG7Bffieh3Fo7cQ2d0nGY1/TsoCB7MRwJhiGf1MI1QjlD5YaMHFgbYvJzrNXnckzqCm1zwLH+as68AiWmpWoEJZ1JwzGinG/qegd9kkshFH40KKpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JJ2nS2wn; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=f57F/sDo; arc=none smtp.client-ip=205.220.180.131
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65A4Wwab571992
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 06:16:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TFJyzzVwH204oZf0Zg9D/JDdPLwjY1lv4WhKivVcE3A=; b=JJ2nS2wnDcbLNzEp
+	MeWnFjGDML5Dcd50WyQkOhOulgMRAX1Zfkx190kXhHHuAaOhKmHwxC5CwK1gISpL
+	d1w0gsEK8HTMFU+pUdY7G8wxijIvQE3foEfoDa0D+gyKIJJOelMlCK82xO+s1MtL
+	50HZSuTTvyddKQUHSaCa8wueKM28knuHUnj91BIJ0IlFA86aiGObIjisDb/mxFAf
+	wRIcmPp2FlXFUm1+b70u1TOIuefevAXmMeW6kNJScW/cOYckJE/vYqg/mI4jtqJb
+	APipRJVXmIqBQJqbZt7+KxkCX/UZ086sY9iLbOtpD+oIA1/PeAJYyGHPY02k4Asb
+	J3Ti1g==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eq10a8b1r-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 06:16:48 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-36d982d932aso7966477a91.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2026 23:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781072207; x=1781677007; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TFJyzzVwH204oZf0Zg9D/JDdPLwjY1lv4WhKivVcE3A=;
+        b=f57F/sDoxScGnxE2ksN7aHuc9fIXQYZrGvn3PSn59VwNZZp9IbVIoijCL/BNrX4K6h
+         5F4H31o2gvFYStek631q8HGkVh9LymVlD6sKNNvVjXtcs1dRoMwxK/EW7fLUfY2h2ve2
+         wk2D2je8M1LozTHd1k1BtM2svb5LeassT7C6/s1rwLhNOuqmfRR3sN4+/gs5FW9Czf11
+         ijIHES73t0q1bwd1yx2r/gZs0ckmekSCnGcebJv9pyThz3rpE/tEihhEO1CGshrFnMO6
+         oTYptmzUjRLabu7pSwCqsxSeknExOfYewoh5/+3kJoCI4fK2xc8OASUnhNAYd+SGwhuH
+         mEkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781072207; x=1781677007;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TFJyzzVwH204oZf0Zg9D/JDdPLwjY1lv4WhKivVcE3A=;
+        b=KMbELp1VjEbedr74Ea69g18dCsLh46CmP4xGN275IZLcw1HVwXrV/wLdTG4NvtX6yS
+         g7XMbLe7FgOZ10q4OsmJqXMRgx/ofx324i9i+iPRTv4mupdt4xKf3cdYpOkfAZPS3OEi
+         ERZQ4OLUoVaSP6FzR1bdtNpAW8HplsKYeLAuYqbHTHyY+BQx3lkuDu3C8QrJ1kBonrFw
+         P6yzVLy0pygalzZoBt1NNSO3PQ08WwGbscl3/3Dlb8QTKg0ErOUTdao3Ttc8t/jecsCq
+         tJK11cHZvPEGwvVEbkYxS1/vYryvZFg/yJtVM+bcqSo0UxEsVf+Rlgz3ZqcTP9zs+mNt
+         OvQw==
+X-Forwarded-Encrypted: i=1; AFNElJ+vUCvTNOKkddRm26SAKdm5hEW7I/EiLUFqeBxpSUo2A6rD0xxDt7pDUVsRhQllUOH9kK+t5usz59WU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqt3DvWyz9rMFmX3PQyo4X8+cJ5n7xyFUxVOhRIHjm52wmfMR5
+	BV3HqxUNI6hHi4j6s0dzwLnFOLsaPWdDZGBiJ2nx0KZgcf/crtY6eS2Vm9bLC521CoVsDrPDz5x
+	kajpgpvme/CAAklIJ2blHpG3W8CWVVOg0cuW3Q2sG3YHlxRmhcsZSZLde5fa2JCDT
+X-Gm-Gg: Acq92OHSc/I+VSX3g70MWDZDn/ssbZ8C6PE9Grt9+vIkBxcNavMdNGuzP5dR6x6sBlh
+	QlyOIRZaE9UK7MkV+vvpQTjKtCy7Da426+0AI7OdfIycbagnQAGgVvrKwAOMPv2QMw9G00vNnUB
+	c6ZxLpofs6yktkdw9EDLwak0Oa6BF1WgN2NfbLFdznVv72zVH6PbDjiAH2KP7r+fhKqYFPPoCpT
+	XA0s9hLaFyQVKaEXkLkMqtsLZS3u2baPTNI7/fOxxmIKil6kGjkK/Bf08aReTAmZUy/NLJlhIdF
+	3boTGm1LGh/ABt18nr8kbcxo5SS5Ncn9Dzlqt7ekH0Zgp+qp/GCO1wmDBCgH3z0UUPAX5k0HjHU
+	zVBun+aqrD3ie9rw7QqulksifOa4bToL+2ATnjgpDo6a4RaWojelOWAYdWqQ6
+X-Received: by 2002:a17:90b:54cd:b0:36e:2106:ded8 with SMTP id 98e67ed59e1d1-370f1333f8fmr23429117a91.25.1781072206889;
+        Tue, 09 Jun 2026 23:16:46 -0700 (PDT)
+X-Received: by 2002:a17:90b:54cd:b0:36e:2106:ded8 with SMTP id 98e67ed59e1d1-370f1333f8fmr23429087a91.25.1781072206473;
+        Tue, 09 Jun 2026 23:16:46 -0700 (PDT)
+Received: from [10.218.15.172] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37624b83589sm1779078a91.16.2026.06.09.23.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2026 23:16:46 -0700 (PDT)
+Message-ID: <8b110f90-2001-4655-856d-ec8cff98fc0a@oss.qualcomm.com>
+Date: Wed, 10 Jun 2026 11:46:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260610-ultrarisc-pinctrl-v4-2-b7e9b2a8ed84@ultrarisc.com>
-References: <20260610-ultrarisc-pinctrl-v4-0-b7e9b2a8ed84@ultrarisc.com>
-In-Reply-To: <20260610-ultrarisc-pinctrl-v4-0-b7e9b2a8ed84@ultrarisc.com>
-To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jia Wang <wangjia@ultrarisc.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781069395; l=26753;
- i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=CKMr0nfz9lHg7FQprNpLIgLV/1LWPDGD60cZAPsXWkA=;
- b=1wGs3h2ktzlUh1+M5jhVcAqO7Jgz23VvMVkEYEisU5rXm7JostEA7FIL0jls6BxNfa1CfEY6F
- OFn7ENia+p/DcqDUsO9Ntaba1++mgxCnijxhXdAo5g/oIsxwu4GqqZR
-X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
- pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
-X-Endpoint-Received: by B4 Relay for wangjia@ultrarisc.com/20260515 with
- auth_id=779
-X-Original-From: Jia Wang <wangjia@ultrarisc.com>
-Reply-To: wangjia@ultrarisc.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pinctrl: qcom: Avoid assigning thread_op_remain in
+ unthreaded test
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Yuanjie Yang <quic_yuanjiey@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20260529-tlmm_test_changes-v1-0-88bfdccb4369@oss.qualcomm.com>
+ <20260529-tlmm_test_changes-v1-3-88bfdccb4369@oss.qualcomm.com>
+ <bf77fa4c-168a-49ac-bfe9-87880b0bbc9f@oss.qualcomm.com>
+Content-Language: en-US
+From: Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+In-Reply-To: <bf77fa4c-168a-49ac-bfe9-87880b0bbc9f@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=GoFyPE1C c=1 sm=1 tr=0 ts=6a290150 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
+ a=EUspDBNiAAAA:8 a=86_BQXzD9sKH6W767hAA:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-ORIG-GUID: PUbT_GEFO5SJ0LiYknmYeUDmBfJyK3aU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEwMDA1NyBTYWx0ZWRfX2t6J8e8vDMp+
+ aleeBgMxipAYbQFlGuqKEzKkGvzkUQOiyznPnPa989LzpiaEkeK57UNEBTfcp61jIT7m332fY4N
+ QoB8eUevUwdZbUYmTyP504FggzGCCD6LQQQyatft3YqL5QGEFsZ3uXJAfPWGKmkrntYGUBgr+fd
+ pX5FOBdIIx5fxifWcPqM2QyKkvxcGt8y4n4RAhkku3bjLDbCgtoEJin6gTJe6jHIhezA+EoxuJM
+ z667qOlV7ozA1RBua2pfbUit89nWN6J5wLKm+gESqdBa48nITeSESig6X+m9i0+Thv+RUjUaQ4B
+ XH6UHKaGIuGf+zBhtgTUycYCYr9S+N6jGa12YWflE9zrtURKb5ffQfjSirjkLQyE6lMXrBSonmw
+ kq/OPIDoDxqPIWePAyQcHydFWuOW6mx9H3ODXvD4gSIEUBf8wDE61aDy/8rxD6mrVq30+LXpqwR
+ sypjsenHJcqV5LnadaA==
+X-Proofpoint-GUID: PUbT_GEFO5SJ0LiYknmYeUDmBfJyK3aU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-10_01,2026-06-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 clxscore=1015 spamscore=0 phishscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
+ definitions=main-2606100057
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38213-lists,linux-gpio=lfdr.de,wangjia.ultrarisc.com];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:wangjia@ultrarisc.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38214-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sneh.mankad@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:konrad.dybcio@oss.qualcomm.com,m:andersson@kernel.org,m:linusw@kernel.org,m:quic_yuanjiey@quicinc.com,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[wangjia@ultrarisc.com];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:replyto,ultrarisc.com:email,ultrarisc.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sneh.mankad@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5131F665F36
+X-Rspamd-Queue-Id: 0B52C66631E
 
-From: Jia Wang <wangjia@ultrarisc.com>
 
-Add support for the pin controller on the UltraRISC DP1000 SoC.
 
-The controller provides mux selection for pins in ports A, B, C, D, and
-LPC. Ports A-D default to GPIO and support peripheral muxing. LPC pins
-can be switched to eSPI, but are not available as GPIOs. Basic pin
-configuration controls such as drive strength, pull-up, and pull-down
-are also supported.
+On 03-Jun-26 7:28 PM, Konrad Dybcio wrote:
+> 
+> 
+> On 29-May-26 14:55, Sneh Mankad wrote:
+>> tlmm_test_rising_while_disabled() sets thread_op_remain to 10, but this
+>> variable is only used by the threaded IRQ handler to control the number
+>> of GPIO pin toggles. Since tlmm_test_rising_while_disabled() does not
+>> register a threaded IRQ handler, the assignment is never used.
+>>
+>> Remove the thread_op_remain assignment from
+>> tlmm_test_rising_while_disabled().
+>>
+>> This does not cause any change in functionality.
+>>
+>> Signed-off-by: Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+>> ---
+>>  drivers/pinctrl/qcom/tlmm-test.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/tlmm-test.c b/drivers/pinctrl/qcom/tlmm-test.c
+>> index 007d6539ceced294e81cfbe93a00c75a98c858de..e9e04300ab3687825255885821ebde0f3ee586a8 100644
+>> --- a/drivers/pinctrl/qcom/tlmm-test.c
+>> +++ b/drivers/pinctrl/qcom/tlmm-test.c
+>> @@ -521,7 +521,6 @@ static void tlmm_test_rising_while_disabled(struct kunit *test)
+>>  	unsigned int before_edge;
+>>  
+>>  	priv->intr_op = TLMM_TEST_COUNT;
+>> -	atomic_set(&priv->thread_op_remain, 10);
+> 
+> Should this be setting priv->intr_op_remain instead?
 
-Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
----
- MAINTAINERS                                   |   1 +
- drivers/pinctrl/Kconfig                       |   1 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/ultrarisc/Kconfig             |  20 +
- drivers/pinctrl/ultrarisc/Makefile            |   4 +
- drivers/pinctrl/ultrarisc/pinctrl-dp1000.c    | 168 +++++++++
- drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c | 517 ++++++++++++++++++++++++++
- drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h |  63 ++++
- 8 files changed, 775 insertions(+)
+Should not be needed.
+priv->intr_op_remain is to indicate the hard IRQ handler how many times to toggle the GPIO line within the irq handler.
+Here the test case does not require any toggles within IRQ handler.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1ef874d342a5..04f2126d8af5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -27362,6 +27362,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
-+F:	drivers/pinctrl/ultrarisc/*
- 
- ULTRATRONIK BOARD SUPPORT
- M:	Goran Rađenović <goran.radni@gmail.com>
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 03f2e3ee065f..2a5491e3fb47 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -708,6 +708,7 @@ source "drivers/pinctrl/sunplus/Kconfig"
- source "drivers/pinctrl/sunxi/Kconfig"
- source "drivers/pinctrl/tegra/Kconfig"
- source "drivers/pinctrl/ti/Kconfig"
-+source "drivers/pinctrl/ultrarisc/Kconfig"
- source "drivers/pinctrl/uniphier/Kconfig"
- source "drivers/pinctrl/visconti/Kconfig"
- source "drivers/pinctrl/vt8500/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index f7d5d5f76d0c..61d502ba06b9 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -95,6 +95,7 @@ obj-y				+= sunplus/
- obj-$(CONFIG_PINCTRL_SUNXI)	+= sunxi/
- obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
- obj-y				+= ti/
-+obj-$(CONFIG_PINCTRL_ULTRARISC)	+= ultrarisc/
- obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
- obj-$(CONFIG_PINCTRL_VISCONTI)	+= visconti/
- obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
-diff --git a/drivers/pinctrl/ultrarisc/Kconfig b/drivers/pinctrl/ultrarisc/Kconfig
-new file mode 100644
-index 000000000000..80ac997f6c51
---- /dev/null
-+++ b/drivers/pinctrl/ultrarisc/Kconfig
-@@ -0,0 +1,20 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config PINCTRL_ULTRARISC
-+	tristate
-+	depends on OF
-+	depends on ARCH_ULTRARISC || COMPILE_TEST
-+	select GENERIC_PINCTRL
-+	select PINMUX
-+
-+config PINCTRL_ULTRARISC_DP1000
-+	tristate "UltraRISC DP1000 SoC Pinctrl driver"
-+	select PINCTRL_ULTRARISC
-+	depends on OF && HAS_IOMEM
-+	depends on ARCH_ULTRARISC || COMPILE_TEST
-+	default ARCH_ULTRARISC
-+	help
-+	  Say Y to select the pinctrl driver for UltraRISC DP1000 SoC.
-+	  This pin controller allows selecting the mux function for
-+	  each pin. This driver can also be built as a module called
-+	  pinctrl-dp1000.
-diff --git a/drivers/pinctrl/ultrarisc/Makefile b/drivers/pinctrl/ultrarisc/Makefile
-new file mode 100644
-index 000000000000..5d49ce1c0af9
---- /dev/null
-+++ b/drivers/pinctrl/ultrarisc/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_PINCTRL_ULTRARISC)		+= pinctrl-ultrarisc.o
-+obj-$(CONFIG_PINCTRL_ULTRARISC_DP1000)	+= pinctrl-dp1000.o
-diff --git a/drivers/pinctrl/ultrarisc/pinctrl-dp1000.c b/drivers/pinctrl/ultrarisc/pinctrl-dp1000.c
-new file mode 100644
-index 000000000000..f9c85c8c4433
---- /dev/null
-+++ b/drivers/pinctrl/ultrarisc/pinctrl-dp1000.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
-+ *
-+ * Author: Jia Wang <wangjia@ultrarisc.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-ultrarisc.h"
-+
-+/* Port indices. */
-+#define UR_DP1000_PORT_A_IDX		0
-+#define UR_DP1000_PORT_B_IDX		1
-+#define UR_DP1000_PORT_C_IDX		2
-+#define UR_DP1000_PORT_D_IDX		3
-+#define UR_DP1000_PORT_LPC_IDX		4
-+
-+/* Port mux register offsets. */
-+#define UR_DP1000_PORTA_FUNC_OFFSET	0x2c0
-+#define UR_DP1000_PORTB_FUNC_OFFSET	0x2c4
-+#define UR_DP1000_PORTC_FUNC_OFFSET	0x2c8
-+#define UR_DP1000_PORTD_FUNC_OFFSET	0x2cc
-+#define UR_DP1000_PORTLPC_FUNC_OFFSET	0x2d0
-+
-+/* Port pinconf register offsets. */
-+#define UR_DP1000_PORTA_CONF_OFFSET	0x310
-+#define UR_DP1000_PORTB_CONF_OFFSET	0x318
-+#define UR_DP1000_PORTC_CONF_OFFSET	0x31c
-+#define UR_DP1000_PORTD_CONF_OFFSET	0x320
-+#define UR_DP1000_PORTLPC_CONF_OFFSET	0x324
-+
-+/* Pin ranges for function descriptors. */
-+#define UR_DP1000_PINS_ABCD	GENMASK_ULL(39, 0)
-+#define UR_DP1000_PINS_LPC	GENMASK_ULL(52, 40)
-+
-+/* Static table entry helpers. */
-+#define UR_DP1000_PORT(_base, _npins, _func, _conf, _modes, _gpio) \
-+	{ .pin_base = (_base), .npins = (_npins), .func_offset = (_func), \
-+	  .conf_offset = (_conf), .supported_modes = (_modes), \
-+	  .supports_gpio = (_gpio) }
-+
-+#define UR_DP1000_PIN(_nr, _name, _port) \
-+	{ .number = (_nr), .name = (_name), .drv_data = (void *)&ur_dp1000_ports[_port] }
-+
-+static const struct ur_func_route ur_dp1000_routes[] = {
-+	{ "gpio", UR_FUNC_DEFAULT, UR_DP1000_PINS_ABCD },
-+	{ "i2c", UR_FUNC_0, GENMASK_ULL(13, 12) },
-+	{ "i2c", UR_FUNC_0, GENMASK_ULL(23, 22) },
-+	{ "i2c", UR_FUNC_0, GENMASK_ULL(25, 24) },
-+	{ "i2c", UR_FUNC_0, GENMASK_ULL(27, 26) },
-+	{ "pwm", UR_FUNC_0, GENMASK_ULL(19, 16) },
-+	{ "spi", UR_FUNC_1, GENMASK_ULL(39, 32) },
-+	{ "spi", UR_FUNC_0, GENMASK_ULL(6, 0) },
-+	{ "uart", UR_FUNC_1, GENMASK_ULL(9, 8) },
-+	{ "uart", UR_FUNC_0, GENMASK_ULL(21, 20) },
-+	{ "uart", UR_FUNC_0, GENMASK_ULL(29, 28) },
-+	{ "uart", UR_FUNC_0, GENMASK_ULL(31, 30) },
-+	{ "lpc", UR_FUNC_DEFAULT, UR_DP1000_PINS_LPC },
-+	{ "espi", UR_FUNC_0, UR_DP1000_PINS_LPC },
-+};
-+
-+static const struct ur_port_desc ur_dp1000_ports[] = {
-+	UR_DP1000_PORT(0, 16, UR_DP1000_PORTA_FUNC_OFFSET,
-+		       UR_DP1000_PORTA_CONF_OFFSET,
-+		       UR_FUNC_0 | UR_FUNC_1, true),
-+	UR_DP1000_PORT(16, 8, UR_DP1000_PORTB_FUNC_OFFSET,
-+		       UR_DP1000_PORTB_CONF_OFFSET,
-+		       UR_FUNC_0 | UR_FUNC_1, true),
-+	UR_DP1000_PORT(24, 8, UR_DP1000_PORTC_FUNC_OFFSET,
-+		       UR_DP1000_PORTC_CONF_OFFSET,
-+		       UR_FUNC_0 | UR_FUNC_1, true),
-+	UR_DP1000_PORT(32, 8, UR_DP1000_PORTD_FUNC_OFFSET,
-+		       UR_DP1000_PORTD_CONF_OFFSET,
-+		       UR_FUNC_0 | UR_FUNC_1, true),
-+	UR_DP1000_PORT(40, 13, UR_DP1000_PORTLPC_FUNC_OFFSET,
-+		       UR_DP1000_PORTLPC_CONF_OFFSET,
-+		       UR_FUNC_0,             false),
-+};
-+
-+static const struct pinctrl_pin_desc ur_dp1000_pins[] = {
-+	UR_DP1000_PIN(0, "PA0", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(1, "PA1", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(2, "PA2", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(3, "PA3", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(4, "PA4", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(5, "PA5", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(6, "PA6", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(7, "PA7", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(8, "PA8", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(9, "PA9", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(10, "PA10", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(11, "PA11", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(12, "PA12", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(13, "PA13", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(14, "PA14", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(15, "PA15", UR_DP1000_PORT_A_IDX),
-+	UR_DP1000_PIN(16, "PB0", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(17, "PB1", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(18, "PB2", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(19, "PB3", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(20, "PB4", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(21, "PB5", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(22, "PB6", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(23, "PB7", UR_DP1000_PORT_B_IDX),
-+	UR_DP1000_PIN(24, "PC0", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(25, "PC1", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(26, "PC2", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(27, "PC3", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(28, "PC4", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(29, "PC5", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(30, "PC6", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(31, "PC7", UR_DP1000_PORT_C_IDX),
-+	UR_DP1000_PIN(32, "PD0", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(33, "PD1", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(34, "PD2", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(35, "PD3", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(36, "PD4", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(37, "PD5", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(38, "PD6", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(39, "PD7", UR_DP1000_PORT_D_IDX),
-+	UR_DP1000_PIN(40, "LPC0", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(41, "LPC1", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(42, "LPC2", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(43, "LPC3", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(44, "LPC4", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(45, "LPC5", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(46, "LPC6", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(47, "LPC7", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(48, "LPC8", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(49, "LPC9", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(50, "LPC10", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(51, "LPC11", UR_DP1000_PORT_LPC_IDX),
-+	UR_DP1000_PIN(52, "LPC12", UR_DP1000_PORT_LPC_IDX),
-+};
-+
-+static const struct ur_pinctrl_data ur_dp1000_pinctrl_data = {
-+	.pins = ur_dp1000_pins,
-+	.npins = ARRAY_SIZE(ur_dp1000_pins),
-+	.routes = ur_dp1000_routes,
-+	.num_routes = ARRAY_SIZE(ur_dp1000_routes),
-+};
-+
-+static const struct of_device_id ur_pinctrl_of_match[] = {
-+	{ .compatible = "ultrarisc,dp1000-pinctrl" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ur_pinctrl_of_match);
-+
-+static int ur_dp1000_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return ur_pinctrl_probe(pdev, &ur_dp1000_pinctrl_data);
-+}
-+
-+static struct platform_driver ur_pinctrl_driver = {
-+	.driver = {
-+		.name = "ultrarisc-pinctrl-dp1000",
-+		.of_match_table = ur_pinctrl_of_match,
-+	},
-+	.probe = ur_dp1000_pinctrl_probe,
-+};
-+
-+module_platform_driver(ur_pinctrl_driver);
-+
-+MODULE_DESCRIPTION("UltraRISC DP1000 pinctrl driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
-new file mode 100644
-index 000000000000..8fb5b0ea5b93
---- /dev/null
-+++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
-@@ -0,0 +1,517 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
-+ *
-+ * Author: Jia Wang <wangjia@ultrarisc.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+
-+#include "../core.h"
-+#include "../devicetree.h"
-+#include "../pinconf.h"
-+#include "../pinmux.h"
-+
-+#include "pinctrl-ultrarisc.h"
-+
-+#define UR_CONF_BIT_PER_PIN	4
-+#define UR_CONF_PIN_PER_REG	(32 / UR_CONF_BIT_PER_PIN)
-+static const u32 ur_drive_strengths[] = { 20, 27, 33, 40 };
-+
-+static const struct ur_port_desc *ur_get_pin_port(struct pinctrl_dev *pctldev,
-+						  unsigned int pin)
-+{
-+	const struct pin_desc *desc = pin_desc_get(pctldev, pin);
-+
-+	if (!desc || !desc->drv_data)
-+		return NULL;
-+
-+	return desc->drv_data;
-+}
-+
-+static u32 ur_get_pin_conf_offset(const struct ur_port_desc *port_desc, u32 pin)
-+{
-+	return port_desc->conf_offset +
-+	       (pin / UR_CONF_PIN_PER_REG) * sizeof(u32);
-+}
-+
-+static int ur_read_pin_conf(struct ur_pinctrl *pctrl, unsigned int pin, u32 *conf)
-+{
-+	const struct ur_port_desc *port_desc;
-+	u32 pin_offset;
-+	u32 reg_offset;
-+	u32 shift;
-+	u32 mask;
-+
-+	port_desc = ur_get_pin_port(pctrl->pctl_dev, pin);
-+	if (!port_desc)
-+		return -EINVAL;
-+
-+	pin_offset = pin - port_desc->pin_base;
-+	reg_offset = ur_get_pin_conf_offset(port_desc, pin_offset);
-+	shift = (pin_offset % UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN;
-+	mask = GENMASK(UR_CONF_BIT_PER_PIN - 1, 0) << shift;
-+	*conf = field_get(mask, readl_relaxed(pctrl->base + reg_offset));
-+
-+	return 0;
-+}
-+
-+static int ur_write_pin_conf(struct ur_pinctrl *pctrl, unsigned int pin, u32 conf)
-+{
-+	const struct ur_port_desc *port_desc;
-+	void __iomem *reg;
-+	u32 pin_offset;
-+	u32 reg_offset;
-+	u32 shift;
-+	u32 mask;
-+	u32 val;
-+
-+	port_desc = ur_get_pin_port(pctrl->pctl_dev, pin);
-+	if (!port_desc)
-+		return -EINVAL;
-+
-+	pin_offset = pin - port_desc->pin_base;
-+	reg_offset = ur_get_pin_conf_offset(port_desc, pin_offset);
-+	reg = pctrl->base + reg_offset;
-+	shift = (pin_offset % UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN;
-+	mask = GENMASK(UR_CONF_BIT_PER_PIN - 1, 0) << shift;
-+
-+	scoped_guard(raw_spinlock_irqsave, &pctrl->lock) {
-+		val = readl_relaxed(reg);
-+		val = (val & ~mask) | field_prep(mask, conf);
-+		writel_relaxed(val, reg);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ur_set_pin_mux(struct ur_pinctrl *pctrl,
-+			  const struct ur_port_desc *port_desc,
-+			  u32 pin_offset, u32 mode)
-+{
-+	void __iomem *reg = pctrl->base + port_desc->func_offset;
-+	u32 val;
-+
-+	if (WARN_ON(pin_offset >= UR_MAX_PINS_PER_PORT))
-+		return -EINVAL;
-+
-+	scoped_guard(raw_spinlock_irqsave, &pctrl->lock) {
-+		val = readl_relaxed(reg);
-+		val &= ~((UR_FUNC_0 | UR_FUNC_1) << pin_offset);
-+		val |= mode << pin_offset;
-+		writel_relaxed(val, reg);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ur_set_pin_mux_by_num(struct ur_pinctrl *pctrl, unsigned int pin, u32 mode)
-+{
-+	const struct ur_port_desc *port_desc = ur_get_pin_port(pctrl->pctl_dev, pin);
-+	u32 pin_offset;
-+
-+	if (!port_desc)
-+		return -EINVAL;
-+
-+	if (mode != UR_FUNC_DEFAULT && !(port_desc->supported_modes & mode))
-+		return -EINVAL;
-+
-+	pin_offset = pin - port_desc->pin_base;
-+
-+	return ur_set_pin_mux(pctrl, port_desc, pin_offset, mode);
-+}
-+
-+static int ur_hw_to_config(unsigned long *config, u32 conf)
-+{
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	u32 drive = FIELD_GET(UR_DRIVE_MASK, conf);
-+	u32 pull = FIELD_GET(UR_PULL_MASK, conf);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+		if (pull != UR_PULL_DIS)
-+			return -EINVAL;
-+		*config = pinconf_to_config_packed(param, 1);
-+		return 0;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		if (pull != UR_PULL_UP)
-+			return -EINVAL;
-+		*config = pinconf_to_config_packed(param, 1);
-+		return 0;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
-+		if (pull != UR_PULL_DOWN)
-+			return -EINVAL;
-+		*config = pinconf_to_config_packed(param, 1);
-+		return 0;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		if (drive >= ARRAY_SIZE(ur_drive_strengths))
-+			return -EINVAL;
-+		*config = pinconf_to_config_packed(param, ur_drive_strengths[drive]);
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ur_config_to_hw(unsigned long config, u32 *conf)
-+{
-+	enum pin_config_param param = pinconf_to_config_param(config);
-+	u32 arg = pinconf_to_config_argument(config);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+		FIELD_MODIFY(UR_PULL_MASK, conf, UR_PULL_DIS);
-+		return 0;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		FIELD_MODIFY(UR_PULL_MASK, conf, UR_PULL_UP);
-+		return 0;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
-+		FIELD_MODIFY(UR_PULL_MASK, conf, UR_PULL_DOWN);
-+		return 0;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		for (u32 i = 0; i < ARRAY_SIZE(ur_drive_strengths); i++) {
-+			if (ur_drive_strengths[i] != arg)
-+				continue;
-+			FIELD_MODIFY(UR_DRIVE_MASK, conf, i);
-+			return 0;
-+		}
-+		return -EINVAL;
-+	case PIN_CONFIG_PERSIST_STATE:
-+		/*
-+		 * For PIN_CONFIG_PERSIST_STATE, gpiolib only treats
-+		 * -ENOTSUPP as an optional unsupported result.
-+		 * Do not use -EOPNOTSUPP here.
-+		 */
-+		return -ENOTSUPP;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+/**
-+ * ur_find_group_route() - Find the route matching a function and pin set
-+ * @pctrl: pin controller instance
-+ * @function: mux function name
-+ * @group_mask: bitmap of pins in the selected group
-+ * @route_out: returned route entry on success
-+ *
-+ * A mux function may be associated with multiple hardware routing options,
-+ * each valid for a specific set of pins. This helper finds the unique route
-+ * whose valid_pins mask covers all pins in @group_mask.
-+ *
-+ * The routing table must guarantee that a given function plus pin set
-+ * resolves to exactly one route. If multiple routes match, the routing
-+ * description is considered ambiguous and the lookup fails.
-+ *
-+ * Return: 0 on success, or -EINVAL if no matching route exists or if the
-+ * routing table contains ambiguous entries.
-+ */
-+static int ur_find_group_route(struct ur_pinctrl *pctrl,
-+			       const char *function,
-+			       u64 group_mask,
-+			       const struct ur_func_route **route_out)
-+{
-+	const struct ur_func_route *match = NULL;
-+
-+	for (u32 i = 0; i < pctrl->data->num_routes; i++) {
-+		const struct ur_func_route *route = &pctrl->data->routes[i];
-+
-+		if (strcmp(route->function, function))
-+			continue;
-+
-+		if ((route->valid_pins & group_mask) != group_mask)
-+			continue;
-+
-+		if (match) {
-+			dev_err(pctrl->dev,
-+				"ambiguous route for function %s group_mask=%#llx\n",
-+				function, (unsigned long long)group_mask);
-+			return -EINVAL;
-+		}
-+
-+		match = route;
-+	}
-+
-+	if (match) {
-+		*route_out = match;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const char *ur_get_group_function(struct pinctrl_dev *pctldev,
-+					 unsigned int group_selector,
-+					 unsigned int pin_index)
-+{
-+	const struct group_desc *group;
-+	const char * const *functions;
-+
-+	group = pinctrl_generic_get_group(pctldev, group_selector);
-+	if (!group || pin_index >= group->grp.npins || !group->data)
-+		return NULL;
-+
-+	functions = group->data;
-+
-+	return functions[pin_index];
-+}
-+
-+static int ur_resolve_group_mux(struct pinctrl_dev *pctldev,
-+				struct ur_pinctrl *pctrl,
-+				unsigned int group_selector,
-+				const unsigned int *pins,
-+				unsigned int npins,
-+				const struct ur_func_route **route_out)
-+{
-+	const char *function;
-+	u64 group_mask = 0;
-+
-+	if (!npins)
-+		return -EINVAL;
-+
-+	function = ur_get_group_function(pctldev, group_selector, 0);
-+	if (!function)
-+		return -EINVAL;
-+
-+	for (u32 i = 0; i < npins; i++)
-+		group_mask |= BIT_ULL(pins[i]);
-+
-+	return ur_find_group_route(pctrl, function, group_mask, route_out);
-+}
-+
-+static bool ur_function_is_gpio(struct pinctrl_dev *pctldev,
-+				unsigned int selector)
-+{
-+	const struct function_desc *function;
-+
-+	function = pinmux_generic_get_function(pctldev, selector);
-+	if (!function)
-+		return false;
-+
-+	for (u32 i = 0; i < function->func->ngroups; i++) {
-+		const char *func_name;
-+		int group_selector;
-+
-+		group_selector = pinctrl_get_group_selector(pctldev,
-+							    function->func->groups[i]);
-+		if (group_selector < 0)
-+			return false;
-+
-+		func_name = ur_get_group_function(pctldev, group_selector, 0);
-+		if (!func_name || strcmp(func_name, "gpio"))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+static const struct pinctrl_ops ur_pinctrl_ops = {
-+	.get_groups_count = pinctrl_generic_get_group_count,
-+	.get_group_name = pinctrl_generic_get_group_name,
-+	.get_group_pins = pinctrl_generic_get_group_pins,
-+	.dt_node_to_map = pinctrl_generic_pins_function_dt_node_to_map,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static int ur_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				  struct pinctrl_gpio_range *range,
-+				  unsigned int offset)
-+{
-+	struct ur_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct ur_port_desc *port_desc;
-+	const struct ur_func_route *route;
-+	int ret;
-+
-+	(void)range;
-+
-+	port_desc = ur_get_pin_port(pctldev, offset);
-+	if (!port_desc || !port_desc->supports_gpio)
-+		return -EINVAL;
-+
-+	ret = ur_find_group_route(pctrl, "gpio", BIT_ULL(offset), &route);
-+	if (ret)
-+		return ret;
-+
-+	return ur_set_pin_mux_by_num(pctrl, offset, route->mode);
-+}
-+
-+static int ur_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-+		      unsigned int group_selector)
-+{
-+	struct ur_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct ur_func_route *route;
-+	const unsigned int *pins;
-+	unsigned int npins;
-+	int ret;
-+
-+	(void)func_selector;
-+
-+	ret = pinctrl_generic_get_group_pins(pctldev, group_selector, &pins, &npins);
-+	if (ret)
-+		return ret;
-+
-+	ret = ur_resolve_group_mux(pctldev, pctrl, group_selector, pins, npins,
-+				   &route);
-+	if (ret)
-+		return ret;
-+
-+	for (u32 i = 0; i < npins; i++) {
-+		ret = ur_set_pin_mux_by_num(pctrl, pins[i], route->mode);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops ur_pinmux_ops = {
-+	.get_functions_count = pinmux_generic_get_function_count,
-+	.get_function_name = pinmux_generic_get_function_name,
-+	.get_function_groups = pinmux_generic_get_function_groups,
-+	.function_is_gpio = ur_function_is_gpio,
-+	.set_mux = ur_set_mux,
-+	.gpio_request_enable = ur_gpio_request_enable,
-+	.strict = true,
-+};
-+
-+static int ur_pin_config_get(struct pinctrl_dev *pctldev,
-+			     unsigned int pin,
-+			     unsigned long *config)
-+{
-+	struct ur_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	u32 conf;
-+	int ret;
-+
-+	ret = ur_read_pin_conf(pctrl, pin, &conf);
-+	if (ret)
-+		return ret;
-+
-+	return ur_hw_to_config(config, conf);
-+}
-+
-+static int ur_pin_config_set(struct pinctrl_dev *pctldev,
-+			     unsigned int pin,
-+			     unsigned long *configs,
-+			     unsigned int num_configs)
-+{
-+	struct ur_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	u32 conf;
-+	int ret;
-+
-+	ret = ur_read_pin_conf(pctrl, pin, &conf);
-+	if (ret)
-+		return ret;
-+
-+	for (u32 i = 0; i < num_configs; i++) {
-+		ret = ur_config_to_hw(configs[i], &conf);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ur_write_pin_conf(pctrl, pin, conf);
-+}
-+
-+static int ur_pin_config_group_get(struct pinctrl_dev *pctldev,
-+				   unsigned int selector,
-+				   unsigned long *config)
-+{
-+	const unsigned int *pins;
-+	unsigned int npins;
-+	int ret;
-+
-+	ret = pinctrl_generic_get_group_pins(pctldev, selector, &pins, &npins);
-+	if (ret || !npins)
-+		return ret ?: -EINVAL;
-+
-+	return ur_pin_config_get(pctldev, pins[0], config);
-+}
-+
-+static int ur_pin_config_group_set(struct pinctrl_dev *pctldev,
-+				   unsigned int selector,
-+				   unsigned long *configs,
-+				   unsigned int num_configs)
-+{
-+	const unsigned int *pins;
-+	unsigned int npins;
-+	int ret;
-+
-+	ret = pinctrl_generic_get_group_pins(pctldev, selector, &pins, &npins);
-+	if (ret)
-+		return ret;
-+
-+	for (u32 i = 0; i < npins; i++) {
-+		ret = ur_pin_config_set(pctldev, pins[i], configs, num_configs);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops ur_pinconf_ops = {
-+	.pin_config_get = ur_pin_config_get,
-+	.pin_config_set = ur_pin_config_set,
-+	.pin_config_group_get = ur_pin_config_group_get,
-+	.pin_config_group_set = ur_pin_config_group_set,
-+	.is_generic = true,
-+	.pin_config_config_dbg_show = pinconf_generic_dump_config,
-+};
-+
-+int ur_pinctrl_probe(struct platform_device *pdev,
-+		     const struct ur_pinctrl_data *data)
-+{
-+	struct pinctrl_desc *desc;
-+	struct ur_pinctrl *pctrl;
-+	int ret;
-+
-+	if (!data)
-+		return -ENODEV;
-+
-+	desc = devm_kzalloc(&pdev->dev, sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl)
-+		return -ENOMEM;
-+
-+	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(pctrl->base))
-+		return PTR_ERR(pctrl->base);
-+	pctrl->dev = &pdev->dev;
-+	pctrl->data = data;
-+
-+	raw_spin_lock_init(&pctrl->lock);
-+
-+	desc->name = dev_name(&pdev->dev);
-+	desc->owner = THIS_MODULE;
-+	desc->pins = data->pins;
-+	desc->npins = data->npins;
-+	desc->pctlops = &ur_pinctrl_ops;
-+	desc->pmxops = &ur_pinmux_ops;
-+	desc->confops = &ur_pinconf_ops;
-+
-+	ret = devm_pinctrl_register_and_init(&pdev->dev, desc, pctrl, &pctrl->pctl_dev);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "failed to register pinctrl\n");
-+
-+	platform_set_drvdata(pdev, pctrl);
-+
-+	return pinctrl_enable(pctrl->pctl_dev);
-+}
-+EXPORT_SYMBOL_GPL(ur_pinctrl_probe);
-+
-+MODULE_DESCRIPTION("UltraRISC pinctrl core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
-new file mode 100644
-index 000000000000..c874688aafca
---- /dev/null
-+++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
-+ *
-+ * Author: Jia Wang <wangjia@ultrarisc.com>
-+ */
-+
-+#ifndef __PINCTRL_ULTRARISC_H__
-+#define __PINCTRL_ULTRARISC_H__
-+
-+#include <linux/io.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/spinlock.h>
-+
-+struct platform_device;
-+
-+#define UR_FUNC_DEFAULT		0U
-+#define UR_FUNC_0		1U
-+#define UR_FUNC_1		0x10000U
-+
-+#define UR_MAX_PINS_PER_PORT	16
-+
-+#define UR_BIAS_MASK		0x0000000F
-+#define UR_PULL_MASK		0x0C
-+#define UR_PULL_DIS		0
-+#define UR_PULL_UP		1
-+#define UR_PULL_DOWN		2
-+#define UR_DRIVE_MASK		0x03
-+
-+struct ur_port_desc {
-+	u32 pin_base;
-+	u32 npins;
-+	u32 func_offset;
-+	u32 conf_offset;
-+	u32 supported_modes;
-+	bool supports_gpio;
-+};
-+
-+struct ur_func_route {
-+	const char *function;
-+	u32 mode;
-+	u64 valid_pins;
-+};
-+
-+struct ur_pinctrl_data {
-+	const struct pinctrl_pin_desc *pins;
-+	u32 npins;
-+	const struct ur_func_route *routes;
-+	u32 num_routes;
-+};
-+
-+struct ur_pinctrl {
-+	struct device *dev;
-+	struct pinctrl_dev *pctl_dev;
-+	const struct ur_pinctrl_data *data;
-+	void __iomem *base;
-+	raw_spinlock_t lock; /* Protects mux and conf registers */
-+};
-+
-+int ur_pinctrl_probe(struct platform_device *pdev,
-+		     const struct ur_pinctrl_data *data);
-+
-+#endif
+I also found other test cases where intr_op_remain is assigned but never used. Will remove them in v2.
 
--- 
-2.34.1
+Thanks,
+Sneh
+
 
 
 
