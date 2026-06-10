@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-38237-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38238-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EfSnNJI7KWrwSgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38237-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:25:22 +0200
+	id LGg0HUU8KWoWSwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38238-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:28:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 634526683CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C17BF668425
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 12:28:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=BvJtK8uD;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38237-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38237-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=azPn0ung;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38238-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38238-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B7A3312E1C7
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 10:20:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93BA2313FA0B
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 10:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA133368B6;
-	Wed, 10 Jun 2026 10:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2BF23EFD02;
+	Wed, 10 Jun 2026 10:20:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BF13B38B1
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 10:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D8E3D566D
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 10:20:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781086844; cv=none; b=b/eyn1/rrmbW/hh/gyE5Z1GAMrfghNBB3OmYZwDVPmjlf2J/zh8xS+Zl3n6kP4gBcApsBgOik+v4j2YtAu1VDQ19TILXbvW9LCBSXugPjeCJmHi70nV7Vvlr4gjDyIXcgGQ3ruWb74sQGNz5bTYAxITvZY44k2oBo7bBknF+Shc=
+	t=1781086849; cv=none; b=eh94QO8T8GbFNsYgRW4xqCwy028QOv1Pdiy4qVIPxaiVZNHMUWBr6ACZZ3EMT9HiQvobgxKHDfpr3CR9O/vy+7adn166WRydXlAAYMvSMvwfAIrx8pLvyoPUwmID5qiiv7VDapeddrn7N0i2p/d+NPX00WkfhO9Z0b6eMT4qjx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781086844; c=relaxed/simple;
-	bh=k6r2KGx9VPLGPcD+NY3o4A7mZFjO7jK4Y+7LRvu/zoU=;
+	s=arc-20240116; t=1781086849; c=relaxed/simple;
+	bh=B0H2WtJ5TfN7fCTCPJlxSseEixkQNbFgXQ0JnWUQn/o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RU47HCsVMI7jEPMP+3rZbp0xP+Wqjbk7l/F9DNw963yLBidmM6vVVlOBEn9snUrBufE6Tjif5O+hQxUSN+apKutEDRsh6C4OgaBkUPhJjs9VVcYOZVtJVa+udLgDOk6l4iGrHwx7lbPAsbBJvbJmqpRCYrv/u4104DND6M6akA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BvJtK8uD; arc=none smtp.client-ip=209.85.216.51
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-36baec934b6so4282851a91.0
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 03:20:43 -0700 (PDT)
+	 MIME-Version; b=dAfFLbVq4/R8v3OVq1e7So1W7/FrTcB9P7ozu/+o5sIPD+eUwMHFxy+VJid0vNxl4BibvPdB8m7x6vPs7qCLr/0JMf5N3jHR45N+RAScNtwmTSzeYzrsFU0JCSVCMG2+zqZG0mhAe7t2eKUtAm0yahnb041U5qJXV1MCGoKwOYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azPn0ung; arc=none smtp.client-ip=209.85.214.182
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2bf20f6be6bso51931765ad.3
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 03:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781086843; x=1781691643; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781086847; x=1781691647; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qDRxQkDh59yrFta7WYo63tMmQrTE8dc3M19ZI2IlDYU=;
-        b=BvJtK8uDorMhhwNj+p2taFv+em2FAaVu/h5NFccQuc+fdTJ1wktYOYxqPYb/94vnQQ
-         2wKwRYAyLh7HyuvP4abXZzGd6/B1rNVUR4vKgQEvLpqJeSK1RdZkt/5HypAPxDFeNhae
-         J2J7GIhT8vKzpzSiBjCRJVYe19Ufxq+ZDuNbeDxhOLzlnhB+RA6H6Oi68pq0CRowGC2D
-         lvxsGye6ArRKuURnG5C0xYAsTqjmuAmG2A0cf/Z0aQSHtILk1bjDwy4Xd9oFiDZSXqlN
-         vDWBjMu7Q0FEj5B+UC0xY5mn/2NfInqOisfeeJpzmYZ5D/ZQO4RqbxdlJ+vEnqk7BU5G
-         Im+Q==
+        bh=ccE2EB2fnzyeaAU6yY7eDAKmvbXrjVPbtb4CUqU9a2E=;
+        b=azPn0ungQd+TkcTijZ6rmGHMZX0vjBfyczP1AiU/rRDqoCPcpLitBBmQ+WUXV+xgUs
+         POy4BqUwBEfk7hqtH8ja9HgtocK8yjIAsei/VS+T8AFewQ/Rslt8OFsirZAJQrxF9eQW
+         hogSASlzT8Qwwblm44ig4bQUwbhhXh+NOP4Xy4cC9yIrc0IlCbqahE/Vz/+1FLHqFe4A
+         cU5Q3pumuAxQu6o7M8+oRre50wbe7HNq+S0ezH0oT1xa5ztPrwLXkPoA7zIohpEHjLXy
+         H1mhWKSxp+TNj2mEe7dyCCpubDnaQUzfpUMVqQpN7bNX9ok8QvsXX5aHeFC6YoYyzJjU
+         BCuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781086843; x=1781691643;
+        d=1e100.net; s=20251104; t=1781086847; x=1781691647;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qDRxQkDh59yrFta7WYo63tMmQrTE8dc3M19ZI2IlDYU=;
-        b=lPzCmDAPxPlUCZDpc6DSASQkE3DbOv9E9fzYgmgYzx6zrKEgmG7Ukz9X7LMuqdn+0W
-         4fG7VsYGvGzvvh6XFw3z9N85cHyOGkGUBQ1yilp75T4NjXCpCjFo02LdlBQ1cIWtiApb
-         bFMPYh7i7HJTzHSeSfrPhoSkdUxYbfgFpw5DmKZLDvdJ29EWJVdT0MBVJOTDVeZUd30e
-         9axMNv+m92gsr34FWgwoSli4k5VtK4kVsUMuslMPMj/5KpliKPri5RjKqxOGggNoqmgs
-         G3jr3S1GQTlJEzZcyY0fVloSvdcypIPmWNbCJxW77SHN9Pxtgw/0115OGAjELzB6dEPu
-         8CXQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+Z7EU5wXFzjrhqyYISE3uVmU+z6FpTOOuh92I1bs9v+t0NHblJRoZzHBtFR73qqwjqLOvqSYsHRX/d@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7BatqvABGbfPs6ltbYyIaqJDZQMca1UelhPbV5T78JHq4XiZT
-	v87BWnK0i8vvmqdOAbsHqi6ksxN3x9fXlvXxf3OrXzGWzo5pd+xk4FIp
-X-Gm-Gg: Acq92OHpfaErXWqDf2cXeJjblLKiO3+aNALdftpSybLphM+5wDOKUS0w4+5euS9f0nH
-	l6nGGGh6dlSeNHNdTghsZ3j0KN1H5HJMgv4DAKcfoccpmetk4uyw9MwtPHckv3HNZ4Cls8VP2uI
-	dq1GAsjm9uo7RxTODIZhQX2/85tZ2CJFS4ZdbCSU8rHCnSF7WPSTHFvjzKINAL5v78zvTJAGyi5
-	ubusIskQgH3OP/nt2ttbSGhYcgkpjKfnteQEcxOdJbixZDPfipt0x5Icx9xj9CHd5DrvfVHaZq1
-	Wk7EjJXAuIs08AkoXwxhgKkgbW3P6slveWNI2imYTmD9mM87Pww2tp11tdxjRK5quTCZ+HUpEFA
-	cFxVB5Wkf4UBw6h/VTx7nON2VPzHmnheBbrDZnve6eqKsnYSZxi1n/hAxaU7dMLR0Kng8UJmisU
-	37/D7poHRktGTJCaI51sHm343x7RafGfSN44pCw359WVLOsd9XXMS6qiPneU9Z8eJzVUQy
-X-Received: by 2002:a17:903:94d:b0:2c0:d94f:50c7 with SMTP id d9443c01a7336-2c1ec508177mr220303605ad.7.1781086842787;
-        Wed, 10 Jun 2026 03:20:42 -0700 (PDT)
+        bh=ccE2EB2fnzyeaAU6yY7eDAKmvbXrjVPbtb4CUqU9a2E=;
+        b=SPa+t4VurbBa/Crgf9IM0UrjRSNgiRtFv7P+vbVfC/xDY0nmY4ajNXFPwb81I5ZP6B
+         LCHbOnTA5RovdW2aFdwBZrmCqnG7LPWbRgJXwXUDkHLKRjB3J0WK7n8C4N7m9LL6vtwJ
+         vdVkawdgLcu5PRGHYIaCOFD/qd6tF1rEm6fZjpPB3MPH9s3/S7+NVuX3c2xIp/34LyfW
+         aY3ya5l8aJyK2Tr3/GDQA4idMMPHbJScFTeVKrOR1ehqUVpOumTWB7dXZtwwvHwXyjWA
+         ku4UeIbmOswYDqWaPNyYSGKAP5rUWhaUzhgQAr5U9NZCFmYuHXqdJWxF+fCCsVi+PoD+
+         f36Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8T2YYGD+f5UPOBsgrB70bSTLHCyxyqQB7yxGccbGEjuXew4dkqMfPw3B+0awn9Sy5eGbr2S9YjZE4V@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA9JlMsKbC4FJbsoEEXDZBcldp3i/Tg1N8waRGbT211wC9k910
+	WETWa+Auv1W2+AiTujP4/8JAmJdMd9WyeuqVCiNqZLWxLaVRCyOilAXA
+X-Gm-Gg: Acq92OHha5PGTYNUT5/INQ8eOST2PFemCLJF5bGbvaes+hwmfsFaJA1nHScpNNN9P+Z
+	Hy78uKNojWT5rMePOsJzLtLcf+GtVlj9S5Qagkm5r9o3YrlX8csthe5jlFTGyKIWGY/F7WP6dyA
+	zK6EHU7G+X/bYJAeS86jhHS13gSOI+Z7NzZirqqTd3iBpuP5CR6DXiwYIXOyVaCg+wwCFRK+Vt+
+	9horl91zKTCS7lOiJ6+X2dc791bFsPn0fj+uh5t6roT3nmafO5/oNtiKblHPCjAuCQxvVQxR0vJ
+	hGxCbwQBfuzz/FTTC96er5mrtYFlwSrnHf6O21Hg5DncAVi6Qrb4fLV8vwA8+dk4/FT4yuPWCjr
+	rtV8BKBin4qjglKNtacPBt3si5BxFtwBzz4e9SEYCe2HA2++JPeTWTXe2yrkbgHLEeukLMR+kRR
+	OkjFUUAGkfnH5S0BkJ2q/lnVAaz7/xKeZbLtu+cnsPg4z7gDsn6j5l0MQv/TPhcP4os26Y
+X-Received: by 2002:a17:903:b0b:b0:2b4:6080:d4d0 with SMTP id d9443c01a7336-2c1e80ec3b7mr273180005ad.22.1781086847357;
+        Wed, 10 Jun 2026 03:20:47 -0700 (PDT)
 Received: from phuc-desktop.. ([183.91.15.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f96b3fsm250133875ad.29.2026.06.10.03.20.39
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f96b3fsm250133875ad.29.2026.06.10.03.20.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 03:20:42 -0700 (PDT)
+        Wed, 10 Jun 2026 03:20:46 -0700 (PDT)
 From: phucduc.bui@gmail.com
 To: Mark Brown <broonie@kernel.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>
@@ -91,9 +91,9 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	bui duc phuc <phucduc.bui@gmail.com>
-Subject: [PATCH 01/10] ASoC: mediatek: common: mtk-afe-fe-dai: Use guard() for mutex locks
-Date: Wed, 10 Jun 2026 17:20:12 +0700
-Message-ID: <20260610102021.83273-2-phucduc.bui@gmail.com>
+Subject: [PATCH 02/10] ASoC: mediatek: common: mtk-btcvsd: Use guard() for spin locks
+Date: Wed, 10 Jun 2026 17:20:13 +0700
+Message-ID: <20260610102021.83273-3-phucduc.bui@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260610102021.83273-1-phucduc.bui@gmail.com>
 References: <20260610102021.83273-1-phucduc.bui@gmail.com>
@@ -118,7 +118,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38237-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38238-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:broonie@kernel.org,m:matthias.bgg@gmail.com,m:lgirdwood@gmail.com,m:angelogioacchino.delregno@collabora.com,m:linusw@kernel.org,m:brgl@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linux-sound@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:phucduc.bui@gmail.com,m:matthiasbgg@gmail.com,m:phucducbui@gmail.com,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
@@ -140,55 +140,231 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 634526683CF
+X-Rspamd-Queue-Id: C17BF668425
 
 From: bui duc phuc <phucduc.bui@gmail.com>
 
-Clean up the code using guard() for mutex locks.
+Clean up the code using guard() for spin locks.
 Merely code refactoring, and no behavior change.
 
 Signed-off-by: bui duc phuc <phucduc.bui@gmail.com>
 ---
- sound/soc/mediatek/common/mtk-afe-fe-dai.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ sound/soc/mediatek/common/mtk-btcvsd.c | 81 +++++++++++---------------
+ 1 file changed, 35 insertions(+), 46 deletions(-)
 
-diff --git a/sound/soc/mediatek/common/mtk-afe-fe-dai.c b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-index 3809068f5620..2a20fa5dba49 100644
---- a/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-+++ b/sound/soc/mediatek/common/mtk-afe-fe-dai.c
-@@ -292,28 +292,24 @@ int mtk_dynamic_irq_acquire(struct mtk_base_afe *afe)
+diff --git a/sound/soc/mediatek/common/mtk-btcvsd.c b/sound/soc/mediatek/common/mtk-btcvsd.c
+index 5e7e85b4c98a..85cfc602dfd3 100644
+--- a/sound/soc/mediatek/common/mtk-btcvsd.c
++++ b/sound/soc/mediatek/common/mtk-btcvsd.c
+@@ -319,7 +319,6 @@ static int btcvsd_tx_clean_buffer(struct mtk_btcvsd_snd *bt)
  {
- 	int i;
+ 	unsigned int i;
+ 	unsigned int num_valid_addr;
+-	unsigned long flags;
+ 	enum BT_SCO_BAND band = bt->band;
  
--	mutex_lock(&afe->irq_alloc_lock);
-+	guard(mutex)(&afe->irq_alloc_lock);
- 	for (i = 0; i < afe->irqs_size; ++i) {
- 		if (afe->irqs[i].irq_occupyed == 0) {
- 			afe->irqs[i].irq_occupyed = 1;
--			mutex_unlock(&afe->irq_alloc_lock);
- 			return i;
+ 	/* prepare encoded mute data */
+@@ -330,7 +329,7 @@ static int btcvsd_tx_clean_buffer(struct mtk_btcvsd_snd *bt)
+ 		       table_msbc_silence, SCO_PACKET_180);
+ 
+ 	/* write mute data to bt tx sram buffer */
+-	spin_lock_irqsave(&bt->tx_lock, flags);
++	guard(spinlock_irqsave)(&bt->tx_lock);
+ 	num_valid_addr = bt->tx->buffer_info.num_valid_addr;
+ 
+ 	dev_info(bt->dev, "%s(), band %d, num_valid_addr %u\n",
+@@ -349,7 +348,6 @@ static int btcvsd_tx_clean_buffer(struct mtk_btcvsd_snd *bt)
+ 					     bt->tx->buffer_info.packet_length,
+ 					     bt->tx->buffer_info.packet_num);
+ 	}
+-	spin_unlock_irqrestore(&bt->tx_lock, flags);
+ 
+ 	return 0;
+ }
+@@ -365,7 +363,6 @@ static int mtk_btcvsd_read_from_bt(struct mtk_btcvsd_snd *bt,
+ 	int pv;
+ 	u8 *src;
+ 	unsigned int packet_buf_ofs;
+-	unsigned long flags;
+ 	unsigned long connsys_addr_rx, ap_addr_rx;
+ 
+ 	connsys_addr_rx = *bt->bt_reg_pkt_r;
+@@ -385,7 +382,7 @@ static int mtk_btcvsd_read_from_bt(struct mtk_btcvsd_snd *bt,
+ 				     bt->rx->temp_packet_buf, packet_length,
+ 				     packet_num);
+ 
+-	spin_lock_irqsave(&bt->rx_lock, flags);
++	guard(spinlock_irqsave)(&bt->rx_lock);
+ 	for (i = 0; i < blk_size; i++) {
+ 		packet_buf_ofs = (bt->rx->packet_w & SCO_RX_PACKET_MASK) *
+ 				 bt->rx->packet_size;
+@@ -403,7 +400,7 @@ static int mtk_btcvsd_read_from_bt(struct mtk_btcvsd_snd *bt,
+ 		       SCO_CVSD_PACKET_VALID_SIZE);
+ 		bt->rx->packet_w++;
+ 	}
+-	spin_unlock_irqrestore(&bt->rx_lock, flags);
++
+ 	return 0;
+ }
+ 
+@@ -414,7 +411,6 @@ static int mtk_btcvsd_write_to_bt(struct mtk_btcvsd_snd *bt,
+ 				  unsigned int blk_size)
+ {
+ 	unsigned int i;
+-	unsigned long flags;
+ 	u8 *dst;
+ 	unsigned long connsys_addr_tx, ap_addr_tx;
+ 	bool new_ap_addr_tx = true;
+@@ -430,17 +426,17 @@ static int mtk_btcvsd_write_to_bt(struct mtk_btcvsd_snd *bt,
+ 		return -EIO;
+ 	}
+ 
+-	spin_lock_irqsave(&bt->tx_lock, flags);
+-	for (i = 0; i < blk_size; i++) {
+-		memcpy(bt->tx->temp_packet_buf + (bt->tx->packet_size * i),
+-		       (bt->tx_packet_buf +
+-			(bt->tx->packet_r % SCO_TX_PACKER_BUF_NUM) *
+-			bt->tx->packet_size),
+-		       bt->tx->packet_size);
++	scoped_guard(spinlock_irqsave, &bt->tx_lock) {
++		for (i = 0; i < blk_size; i++) {
++			memcpy(bt->tx->temp_packet_buf + (bt->tx->packet_size * i),
++			       (bt->tx_packet_buf +
++				(bt->tx->packet_r % SCO_TX_PACKER_BUF_NUM) *
++				bt->tx->packet_size),
++			       bt->tx->packet_size);
+ 
+-		bt->tx->packet_r++;
++			bt->tx->packet_r++;
++		}
+ 	}
+-	spin_unlock_irqrestore(&bt->tx_lock, flags);
+ 
+ 	dst = (u8 *)ap_addr_tx;
+ 
+@@ -462,11 +458,11 @@ static int mtk_btcvsd_write_to_bt(struct mtk_btcvsd_snd *bt,
+ 	if (new_ap_addr_tx) {
+ 		unsigned int next_idx;
+ 
+-		spin_lock_irqsave(&bt->tx_lock, flags);
+-		bt->tx->buffer_info.num_valid_addr++;
+-		next_idx = bt->tx->buffer_info.num_valid_addr - 1;
+-		bt->tx->buffer_info.bt_sram_addr[next_idx] = ap_addr_tx;
+-		spin_unlock_irqrestore(&bt->tx_lock, flags);
++		scoped_guard(spinlock_irqsave, &bt->tx_lock) {
++			bt->tx->buffer_info.num_valid_addr++;
++			next_idx = bt->tx->buffer_info.num_valid_addr - 1;
++			bt->tx->buffer_info.bt_sram_addr[next_idx] = ap_addr_tx;
++		}
+ 		dev_info(bt->dev, "%s(), new ap_addr_tx = 0x%lx, num_valid_addr %d\n",
+ 			 __func__, ap_addr_tx,
+ 			 bt->tx->buffer_info.num_valid_addr);
+@@ -701,17 +697,16 @@ static ssize_t mtk_btcvsd_snd_read(struct mtk_btcvsd_snd *bt,
+ {
+ 	ssize_t read_size = 0, read_count = 0, cur_read_idx, cont;
+ 	unsigned long avail;
+-	unsigned long flags;
+ 	unsigned int packet_size = bt->rx->packet_size;
+ 
+ 	while (count) {
+-		spin_lock_irqsave(&bt->rx_lock, flags);
+-		/* available data in RX packet buffer */
+-		avail = (bt->rx->packet_w - bt->rx->packet_r) * packet_size;
++		scoped_guard(spinlock_irqsave, &bt->rx_lock) {
++			/* available data in RX packet buffer */
++			avail = (bt->rx->packet_w - bt->rx->packet_r) * packet_size;
+ 
+-		cur_read_idx = (bt->rx->packet_r & SCO_RX_PACKET_MASK) *
+-			       packet_size;
+-		spin_unlock_irqrestore(&bt->rx_lock, flags);
++			cur_read_idx = (bt->rx->packet_r & SCO_RX_PACKET_MASK) *
++				       packet_size;
++		}
+ 
+ 		if (!avail) {
+ 			int ret = wait_for_bt_irq(bt, bt->rx);
+@@ -749,9 +744,8 @@ static ssize_t mtk_btcvsd_snd_read(struct mtk_btcvsd_snd *bt,
+ 			return -EFAULT;
  		}
- 	}
--	mutex_unlock(&afe->irq_alloc_lock);
- 	return afe->irqs_size;
- }
- EXPORT_SYMBOL_GPL(mtk_dynamic_irq_acquire);
  
- int mtk_dynamic_irq_release(struct mtk_base_afe *afe, int irq_id)
+-		spin_lock_irqsave(&bt->rx_lock, flags);
+-		bt->rx->packet_r += read_size / packet_size;
+-		spin_unlock_irqrestore(&bt->rx_lock, flags);
++		scoped_guard(spinlock_irqsave, &bt->rx_lock)
++			bt->rx->packet_r += read_size / packet_size;
+ 
+ 		read_count += read_size;
+ 		count -= read_size;
+@@ -778,7 +772,6 @@ static ssize_t mtk_btcvsd_snd_write(struct mtk_btcvsd_snd *bt,
+ 				    size_t count)
  {
--	mutex_lock(&afe->irq_alloc_lock);
-+	guard(mutex)(&afe->irq_alloc_lock);
- 	if (irq_id >= 0 && irq_id < afe->irqs_size) {
- 		afe->irqs[irq_id].irq_occupyed = 0;
--		mutex_unlock(&afe->irq_alloc_lock);
- 		return 0;
+ 	int written_size = count, avail, cur_write_idx, write_size, cont;
+-	unsigned long flags;
+ 	unsigned int packet_size = bt->tx->packet_size;
+ 
+ 	/*
+@@ -794,14 +787,14 @@ static ssize_t mtk_btcvsd_snd_write(struct mtk_btcvsd_snd *bt,
+ 	bt->tx->buf_data_equivalent_time *= 1000;
+ 
+ 	while (count) {
+-		spin_lock_irqsave(&bt->tx_lock, flags);
+-		/* free space of TX packet buffer */
+-		avail = bt->tx->buf_size -
+-			(bt->tx->packet_w - bt->tx->packet_r) * packet_size;
++		scoped_guard(spinlock_irqsave, &bt->tx_lock) {
++			/* free space of TX packet buffer */
++			avail = bt->tx->buf_size -
++				(bt->tx->packet_w - bt->tx->packet_r) * packet_size;
+ 
+-		cur_write_idx = (bt->tx->packet_w % SCO_TX_PACKER_BUF_NUM) *
+-				packet_size;
+-		spin_unlock_irqrestore(&bt->tx_lock, flags);
++			cur_write_idx = (bt->tx->packet_w % SCO_TX_PACKER_BUF_NUM) *
++					packet_size;
++		}
+ 
+ 		if (!avail) {
+ 			int ret = wait_for_bt_irq(bt, bt->tx);
+@@ -838,9 +831,8 @@ static ssize_t mtk_btcvsd_snd_write(struct mtk_btcvsd_snd *bt,
+ 			return -EFAULT;
+ 		}
+ 
+-		spin_lock_irqsave(&bt->tx_lock, flags);
+-		bt->tx->packet_w += write_size / packet_size;
+-		spin_unlock_irqrestore(&bt->tx_lock, flags);
++		scoped_guard(spinlock_irqsave, &bt->tx_lock)
++			bt->tx->packet_w += write_size / packet_size;
+ 		count -= write_size;
  	}
--	mutex_unlock(&afe->irq_alloc_lock);
- 	return -EINVAL;
+ 
+@@ -985,7 +977,6 @@ static snd_pcm_uframes_t mtk_pcm_btcvsd_pointer(
+ 	int hw_packet_ptr;
+ 	int packet_diff;
+ 	spinlock_t *lock;	/* spinlock for bt stream control */
+-	unsigned long flags;
+ 
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		lock = &bt->tx_lock;
+@@ -995,7 +986,7 @@ static snd_pcm_uframes_t mtk_pcm_btcvsd_pointer(
+ 		bt_stream = bt->rx;
+ 	}
+ 
+-	spin_lock_irqsave(lock, flags);
++	guard(spinlock_irqsave)(lock);
+ 	hw_packet_ptr = substream->stream == SNDRV_PCM_STREAM_PLAYBACK ?
+ 			bt->tx->packet_r : bt->rx->packet_w;
+ 
+@@ -1018,8 +1009,6 @@ static snd_pcm_uframes_t mtk_pcm_btcvsd_pointer(
+ 
+ 	bt_stream->prev_frame = frame;
+ 
+-	spin_unlock_irqrestore(lock, flags);
+-
+ 	return frame;
  }
- EXPORT_SYMBOL_GPL(mtk_dynamic_irq_release);
+ 
 -- 
 2.43.0
 
