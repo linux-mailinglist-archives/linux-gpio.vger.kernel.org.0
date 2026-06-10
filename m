@@ -1,57 +1,58 @@
-Return-Path: <linux-gpio+bounces-38211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XK76N2L2KGr+OAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38211-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:10 +0200
+	id vSu1CmX2KGr/OAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38212-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80E53665F2E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76BE9665F33
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 07:30:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=CfxDgH1x;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38211-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38211-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=pxDqEWfn;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38212-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38212-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6324D305B5B6
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E9863077703
 	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 05:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7251372063;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2D3372073;
 	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6200923393E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62066238150;
 	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781069398; cv=none; b=WZkdE3CuNRwLuqyMHfqiNvpoIernru0P41PgSroKvKKJjtM5ELoG4GqeII+pNDkr5750jgvSMgXciAyYFIG/n9GJQprw5IQ9EdWvq3D070yzQl8THpxjNWajvbPOiVU4W2OMiEBXQZU+bF0UCEssQ0ICSTfwpfI4GX4XthTzTOo=
+	t=1781069398; cv=none; b=Io0Vgci5zLPeSyU2NpaUqant9SNO7dE79zHNh3o7FnCxlwl577BXkf6SQBdxamMSwmNX1BEvHrpMcEv7dmyrm5SyJEaHs2zxuhDGaRyFeI7jysjbTk7VRCtwELkNWsk2tHl8yrWM/i2thVqFNrXMAbZyifRpJvTtOQ2ig56shxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781069398; c=relaxed/simple;
-	bh=apdwZ7rou12zXbDIPX+MxhDBa1i7yNhr4u5YXE2irHU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UtBJ2ZLY8WfzYSMVnWFRRjSMCG8b4C0jHuxMHUE0f6hFFZwDjliQiZgNGFm8U6glogCEciD40ne42QX1eFuewlVykoYre+M9NdtIT6W4sK/Pee7+h9HKVF3pwP86XWNKq0f24J+lH3M5ViivZs3vRglwHHg6PSgE4tUfDAptrxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfxDgH1x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C274C2BCB8;
+	bh=cVlyyItktmstkhMJWuMMQegzdtakcdfVsuHnRn693lA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Xvky1t1mAWtQP0VeeoLN6z5AcPlwbrrWa9fTob1wWDe7W7ezeQw30K6xHXC2KTu5bC9OP5wFweI0ksqJFrMF1FH33ULqAtNl1GnAFt+eXVLifnmgijjKZqSPz+zcvSZCe5eBcHM6rFS45alqylX6mykWk5g2tfgLrR5GRiO+1ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxDqEWfn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 14084C2BCB9;
 	Wed, 10 Jun 2026 05:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1781069398;
-	bh=apdwZ7rou12zXbDIPX+MxhDBa1i7yNhr4u5YXE2irHU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=CfxDgH1x6hi60UGkFvYaFurvhOlYjhgYwlPWo53VwlBLgO3q8d4DZteh7pjI4MQMg
-	 WQWykqo0DhQTjAc4lZ63cY+GfDSrYPBOOF5rLAUB0PzzstO+DdSued21F4CIGeoT3y
-	 79sdNdJChnlOB1ikya6lCyXvlowXWR+eB3gwzSTxV2wKQn7dbINNTibrtnN2er2aSJ
-	 rqJYFmtGiT5u0BnFyYCznHIsMvUl1g/RZUjhDZv4zFlxYROWv/DuYWS5wNNNq1OSMY
-	 BC+Z5UMfwGX6IHD5QcuGgZBsGhZSa11hhDpi4y085BOCJ5Tlh7jzIo6esqhaBz9G0i
-	 cMyiIAOEsIqtw==
+	bh=cVlyyItktmstkhMJWuMMQegzdtakcdfVsuHnRn693lA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=pxDqEWfnEW8mJs5GRwjVSV6hCtpf+2dkk0D779F0DS8hPllRWdNQV1Srs6oUJ4uct
+	 ClZoq9HDwwHBsi4kuDtGfBy7ksuYzCJiyHtOAl3t0O/KOk2ZGsDc0j4Chcwgq5lkm9
+	 33BIufitU1OuF7Fxg0MJxSrORiHLA/fACRJU3gWHarRCJjI8OcnUmRj7mVMqqD3l9A
+	 KnsCqK07zbrgsUtDPdiH4REhcawJc+f6dS0ctHG1mS8wWT+k3ItJy6FYPT2zr5p1UK
+	 nwQp5qsRHBaIZp33O9utahs9Bok0jlH20pFsMMEmhZ4QpnJk0x4pLo3hdV0A6O4ena
+	 oWb+8OjWStvUw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F9FCD8CB2;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAE2CD98C5;
 	Wed, 10 Jun 2026 05:29:57 +0000 (UTC)
 From: Jia Wang via B4 Relay <devnull+wangjia.ultrarisc.com@kernel.org>
-Subject: [PATCH v4 0/2] pinctrl: ultrarisc: add DP1000 pinctrl support
-Date: Wed, 10 Jun 2026 13:29:54 +0800
-Message-Id: <20260610-ultrarisc-pinctrl-v4-0-b7e9b2a8ed84@ultrarisc.com>
+Date: Wed, 10 Jun 2026 13:29:55 +0800
+Subject: [PATCH v4 1/2] dt-bindings: pinctrl: Add UltraRISC DP1000 pinctrl
+ controller
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,12 +60,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFL2KGoC/23NSw6CMBgE4KuQrq3pG3DlPYyLUn6kBoG0QDSEu
- 9tCosawnGTmmxl5cBY8OiUzcjBZb7s2BHFIkKl1ewNsy5ARI0wRThUem8FpZ73BvW3N4BoMlVb
- AhBEZ4SjsegeVfa7m5bplPxZ3MEOEYqO2fujcaz2daOxtvqRyx58oJriopMxlloPO9PnTOZrug
- eLHxL6KInRPYUEhqTaScqJzVe4p/FfJ9hQelLAnOZSpYKn8V5ZleQPNn8BFVAEAAA==
-X-Change-ID: 20260316-ultrarisc-pinctrl-efa6e24c4803
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260610-ultrarisc-pinctrl-v4-1-b7e9b2a8ed84@ultrarisc.com>
+References: <20260610-ultrarisc-pinctrl-v4-0-b7e9b2a8ed84@ultrarisc.com>
+In-Reply-To: <20260610-ultrarisc-pinctrl-v4-0-b7e9b2a8ed84@ultrarisc.com>
 To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
@@ -72,11 +71,11 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Jia Wang <wangjia@ultrarisc.com>, 
  Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781069395; l=3342;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781069395; l=4553;
  i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
- bh=apdwZ7rou12zXbDIPX+MxhDBa1i7yNhr4u5YXE2irHU=;
- b=u8fdlGbzSH3DKWPq1UBQO53LJssEw+Pff8FDcAyaV86JMk+oELpmcxZd25salpVyWdojlGe4q
- Q/IWv2s7cQlCrCP9TD32es4nRRQkRBtqqVWkIEuk70gHQBlF+6zwpMK
+ bh=HDhBrs4WQFdifP+U6mC2pKW12Nvlscm7MFaLWDp8vUI=;
+ b=6MhhPtIU8EPspqTjVIy5+cc3s5GzUmDoxiSOq2Xhq4WEL+4NWF9dTgnu6yEf4oO8YQl1FfJ6d
+ WhjotP0i7zxAsd+BwQdWKSoa/auZL6G6Pr+OZkly2iWRkBxs/Na+poN
 X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
  pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
 X-Endpoint-Received: by B4 Relay for wangjia@ultrarisc.com/20260515 with
@@ -89,12 +88,12 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38211-lists,linux-gpio=lfdr.de,wangjia.ultrarisc.com];
+	TAGGED_FROM(0.00)[bounces-38212-lists,linux-gpio=lfdr.de,wangjia.ultrarisc.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
@@ -115,86 +114,179 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ultrarisc.com:replyto,ultrarisc.com:email,ultrarisc.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,microchip.com:email,ultrarisc.com:replyto,ultrarisc.com:email,ultrarisc.com:mid,vger.kernel.org:from_smtp,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 80E53665F2E
+X-Rspamd-Queue-Id: 76BE9665F33
 
-This series adds the devicetree schema and the pinctrl driver for the
-DP1000 controller using generic pinctrl bindings.
+From: Jia Wang <wangjia@ultrarisc.com>
 
-Compared with v1, this series is narrowed down to the pinctrl binding
-and driver only. v1 patches 1, 2, 3, 5, 7, 8, and 9 (vendor prefix,
-CPU/SoC bindings, DTS files, and defconfig update) are not included in
-v2 and will be sent separately.
-
-Note:
-- ARCH_ULTRARISC support is being reviewed separately:
-  * Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com/
-
-Testing:
-- dt_binding_check and yamllint
-- Kernel build for RISC-V and boot-tested on DP1000 (Milk-V Titan and
-  Rongda M0)
+Add doc for the pinctrl controllers on the UltraRISC DP1000 RISC-V SoC.
 
 Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-Changes in v4:
-- Drop the public DT binding header and document the numeric pin IDs
-  directly in the binding schema and examples.
-- Drop the unnecessary GPIOLIB select from the pinctrl Kconfig.
-- Replace the open-coded raw_spin_lock_irqsave()/unlock_irqrestore()
-  pairs with scoped guards.
-- Add comments for ur_find_group_route().
-- Remove the CONFIG_GENERIC_PINCONF ifdef around the generic pinconf
-  ops fields.
-- Link to v3: https://patch.msgid.link/20260608-ultrarisc-pinctrl-v3-0-30a09ed74275@ultrarisc.com
+ .../bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml | 130 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 +
+ 2 files changed, 136 insertions(+)
 
-Changes in v3:
-- Re-add the DT binding header and use numeric pin IDs in the binding.
-- Replace instance-specific mux names with generic function names.
-- Tighten the schema constraints for A-D and LPC pins.
-- Switch the driver to pinctrl_generic_pins_function_dt_node_to_map()
-  and resolve mux routes from the pins + function combination.
-- Link to v2: https://patch.msgid.link/20260601-ultrarisc-pinctrl-v2-0-07ac5130a96d@ultrarisc.com
+diff --git a/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
+new file mode 100644
+index 000000000000..c2332e6e60c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
+@@ -0,0 +1,130 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/ultrarisc,dp1000-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UltraRISC DP1000 Pin Controller
++
++maintainers:
++  - Jia Wang <wangjia@ultrarisc.com>
++
++description: |
++  UltraRISC RISC-V SoC DP1000 pin controller.
++  The controller manages ports A, B, C, D and LPC. Ports A-D default to
++  GPIO and provide additional SPI, UART, I2C, and PWM mux functions.
++  LPC pins default to the LPC interface and can be muxed to eSPI.
++  All pins also support pin configuration, including drive strength,
++  pull-up, and pull-down settings.
++
++properties:
++  compatible:
++    const: ultrarisc,dp1000-pinctrl
++
++  reg:
++    items:
++      - description: pin controller registers
++
++required:
++  - compatible
++  - reg
++
++patternProperties:
++  '.*-pins$':
++    type: object
++    unevaluatedProperties: false
++    allOf:
++      - $ref: /schemas/pinctrl/pincfg-node.yaml#
++      - $ref: /schemas/pinctrl/pinmux-node.yaml#
++      - if:
++          properties:
++            pins:
++              items:
++                minimum: 40
++                maximum: 52
++        then:
++          properties:
++            function:
++              enum:
++                - lpc
++                - espi
++        else:
++          properties:
++            pins:
++              items:
++                maximum: 39
++            function:
++              enum:
++                - gpio
++                - i2c
++                - pwm
++                - spi
++                - uart
++
++    properties:
++      pins:
++        description: |
++          List of pins affected by this state node, using numeric pin IDs.
++          Pins 0-39 correspond to ports A-D, and pins 40-52 correspond
++          to LPC0-LPC12.
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        uniqueItems: true
++        items:
++          minimum: 0
++          maximum: 52
++
++      function:
++        description: |
++          Mux function to select for the listed pins. Supported functions
++          depend on the selected pins and match the DP1000 hardware mux
++          table.
++        enum:
++          - gpio
++          - i2c
++          - pwm
++          - spi
++          - uart
++          - lpc
++          - espi
++
++      bias-disable: true
++      bias-high-impedance: true
++      bias-pull-up: true
++      bias-pull-down: true
++
++      drive-strength:
++        description: Output drive strength in mA.
++        enum: [20, 27, 33, 40]
++
++    required:
++      - pins
++      - function
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      pinctrl@11081000 {
++        compatible = "ultrarisc,dp1000-pinctrl";
++        reg = <0x0 0x11081000 0x0 0x1000>;
++
++        i2c0-pins {
++          pins = <12 13>;
++          function = "i2c";
++          bias-pull-up;
++          drive-strength = <33>;
++        };
++
++        uart0-pins {
++          pins = <8 9>;
++          function = "uart";
++          bias-pull-up;
++          drive-strength = <33>;
++        };
++      };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e035a3be797c..1ef874d342a5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -27357,6 +27357,12 @@ S:	Maintained
+ F:	drivers/usb/common/ulpi.c
+ F:	include/linux/ulpi/
+ 
++ULTRARISC DP1000 PINCTRL DRIVER
++M:	Jia Wang <wangjia@ultrarisc.com>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml
++
+ ULTRATRONIK BOARD SUPPORT
+ M:	Goran Rađenović <goran.radni@gmail.com>
+ M:	Börge Strümpfel <boerge.struempfel@gmail.com>
 
-Changes in v2:
-- Split the vendor prefix, CPU binding, SoC binding, DTS, and defconfig
-  patches out of this series for separate submission.
-- Drop the legacy DT node format from both the binding and the driver,
-  and switch to the generic pinctrl interface with
-  pinconf_generic_dt_node_to_map_all().
-- Drop the DT binding header from the series.
-- Replace the generic func0/func1 mux names with named hardware functions
-  in the binding and driver.
-- Wire the driver through CONFIG_PINCTRL_ULTRARISC and add COMPILE_TEST
-  coverage.
-- Restrict function selection to valid pins in the driver.
-- Link to v1: https://patch.msgid.link/20260515-ultrarisc-pinctrl-v1-0-bf559589ea8a@ultrarisc.com
-
----
-Jia Wang (2):
-      dt-bindings: pinctrl: Add UltraRISC DP1000 pinctrl controller
-      pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl driver
-
- .../bindings/pinctrl/ultrarisc,dp1000-pinctrl.yaml | 130 ++++++
- MAINTAINERS                                        |   7 +
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/ultrarisc/Kconfig                  |  20 +
- drivers/pinctrl/ultrarisc/Makefile                 |   4 +
- drivers/pinctrl/ultrarisc/pinctrl-dp1000.c         | 168 +++++++
- drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c      | 517 +++++++++++++++++++++
- drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h      |  63 +++
- 9 files changed, 911 insertions(+)
----
-base-commit: 2d3090a8aeb596a26935db0955d46c9a5db5c6ce
-change-id: 20260316-ultrarisc-pinctrl-efa6e24c4803
-
-Best regards,
---  
-Jia Wang <wangjia@ultrarisc.com>
+-- 
+2.34.1
 
 
 
