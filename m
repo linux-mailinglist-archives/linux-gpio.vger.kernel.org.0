@@ -1,70 +1,65 @@
-Return-Path: <linux-gpio+bounces-38271-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38273-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id osXuIWiXKWoLaQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38271-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:57:12 +0200
+	id 9+9TF6KJKWrUYwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38273-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 17:58:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6CA766BBD2
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:57:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66A8666B195
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 17:58:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=fail ("headers rsa verify failed") header.d=baodeep.com header.s=dkim header.b=rPBrzQAh;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38271-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38271-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed)" header.from=baodeep.com (policy=reject);
+	dkim=pass header.d=disroot.org header.s=mail header.b=kEpSL967;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38273-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38273-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=disroot.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F736309C544
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 15:34:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E6DB830AAFCD
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 15:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DEDE352003;
-	Wed, 10 Jun 2026 15:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5730944105C;
+	Wed, 10 Jun 2026 15:42:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AFA3E9C1F;
-	Wed, 10 Jun 2026 15:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DFC40F8CC;
+	Wed, 10 Jun 2026 15:42:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781105679; cv=none; b=arSkigSz/vz53S+a1tm8+mn7qegNwH/A7GLJjQTtOM6MnMkLpX0rVKJRs2hYYjskgknNi2B/xJe7DKtumgvzX3Vkj9yfFwQ/tiemAY7As368A1K8arPq1EiXz/Fj+9N/o5p/uvE7AbhMb+8PDoUXGGl+NPsiEPrlCCutGgZTIo0=
+	t=1781106147; cv=none; b=TO9e0lWpXN18penMn08OlDVwfZkL27eiyloOyaTQcPhQ+0UZwfitTKHwCZ6KE9lmYEMthXgcvr7fNuFntVn3kmcExp+rIiyTQVEqT01AANgoQhGeKSa3nNrmVLlfgAzRqApe3O0fmudVLZIiVdN2yEEh8IlZYSZtwKautr509JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781105679; c=relaxed/simple;
-	bh=YsdvJcGUHS+XdA/J7Hb8nCGweWTaO6RIQHL07ueXIJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pr942kjWM6RNH8ZL/ZPWCAzpxMEzquB2Ev65K/zPS5yLhkWlC/aGOI7ug+FwMctQt6R1bEHR6nTC5xbFqKtty06Cf+4ODgozx/VCavkEZhxLGvQ58r3GUg30bnlDkyvKvKMoVUEB+TaqJyBI+Zqc7Bw4O6Mpp0/5G4pf6r5tju0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=baodeep.com; spf=pass smtp.mailfrom=baodeep.com; dkim=fail (2048-bit key) header.d=baodeep.com header.i=@baodeep.com header.b=rPBrzQAh reason="signature verification failed"; arc=none smtp.client-ip=185.250.0.168
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2FA14176A4E;
-	Wed, 10 Jun 2026 18:34:27 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baodeep.com; s=dkim;
-	t=1781105675; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=LaXsQyCAP4gFiFFUxqAjDQuXyDetzIk5A6HbOjXl79U=;
-	b=rPBrzQAhI7sIJSm/VbEUy8m4NQdwlKi4aq7hGmcYTc1ZAoY7gJyQT7dZ8X4HjbB5HBh0Zb
-	RzFsB3X/fTHt7McYqV3r9dHKeR562E2AUpCREJSNrL+vzsD2w249st0gRiMk2hQVb1p9ul
-	Gk9CouqxPtNGjennSKUy8l5K2OFVbNXjO8ZtXZg7E8fMz+vds8so53bE+Sg+X02QmsZz+2
-	YXU5MRCavCERdNRU2FGPFs3dHiZmnFyWy1GufZb9msYl583o1UI63K6txkNP09eYsGo+aZ
-	PY0ZC6hi3CqJMaytDOYTqJibqOfnHwKa5aXRXoE3fMaVNIdyJAFfSQbFNZlQIA==
-From: Viacheslav Bocharov <v@baodeep.com>
-To: Linus Walleij <linusw@kernel.org>,
+	s=arc-20240116; t=1781106147; c=relaxed/simple;
+	bh=02qHKq/wpjrU3Zpo+QXsFmqiJeihLt2qusX03B77E08=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d80XgkX+qxTtP6c5AmruheyLifDVGWkGcg0rX19Up8hUBqtYj/Npvk1Vn1f0ijJOqksVo8HrhRiL/kylD/Zi68ji1Y0VVT3+95kJ92ILYW83YhB9OGNBfg7QlMuBIFFRT8sro26/ToboQYKGoV8Juyr2UxTBmzriTp4w3XakM/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kEpSL967; arc=none smtp.client-ip=178.21.23.139
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 82ED126FC5;
+	Wed, 10 Jun 2026 17:42:24 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id zq8J03xMRTJR; Wed, 10 Jun 2026 17:42:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1781106143; bh=02qHKq/wpjrU3Zpo+QXsFmqiJeihLt2qusX03B77E08=;
+	h=From:To:Cc:Subject:Date;
+	b=kEpSL9675VQ0x9ALIGY7PCDomcC3pCHP/JMyV1426y6hEcB0A//AUCcWPGJo+sJ41
+	 HbKF8YGXL0ZRl5QNpgeGG1m7PJ3TJEBZ+qh84jBzkrG1XtrTV8ZaHzYmugobQ02pdF
+	 d/+kvDYNMtmtl0k0YAQCDgBWxUzisIORF7bWodpL2NqXhqGYBfCdqEGrSAAI+viNYb
+	 E4b/qDD4zHkZ8cyS50Jwt7J7rtXqTrqHMWZojXUv5Q6tNQ0JKpEiU2ONcCt7NUcPzD
+	 rQlBcs6axdy7QzbZubIVFpy1I9dDERqar7GfddCpjziA9hMYuYvo5a3aUBYYhAgmPH
+	 5/xw22LozPpmA==
+From: Marco Scardovi <scardracs@disroot.org>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Diederik de Haas <diederik@cknow-tech.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
+Cc: linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: meson: restore non-sleeping GPIO access
-Date: Wed, 10 Jun 2026 18:32:11 +0300
-Message-ID: <20260610153329.937833-3-v@baodeep.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260610153329.937833-1-v@baodeep.com>
-References: <20260610153329.937833-1-v@baodeep.com>
+Subject: [PATCH v6 0/2] gpiolib: acpi: Add robust bounds-checking and safe address handling
+Date: Wed, 10 Jun 2026 17:42:02 +0200
+Message-ID: <20260610154204.110379-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,99 +67,98 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [4.54 / 15.00];
-	DMARC_POLICY_REJECT(2.00)[baodeep.com : SPF not aligned (relaxed),reject];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_REJECT(1.00)[baodeep.com:s=dkim];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38271-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[v@baodeep.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	GREYLIST(0.00)[pass,body];
-	DKIM_TRACE(0.00)[baodeep.com:-];
+	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-38273-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[disroot.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[v@baodeep.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,samsung.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,baodeep.com:email,baodeep.com:mid,baodeep.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[disroot.org:dkim,disroot.org:mid,disroot.org:from_mime,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A6CA766BBD2
+X-Rspamd-Queue-Id: 66A8666B195
 
-Commit 28f240683871 ("pinctrl: meson: mark the GPIO controller as
-sleeping") set gpio_chip.can_sleep = true to work around
-gpio-shared-proxy holding a spinlock across a sleeping pinctrl config
-path. That locking bug is now fixed in the shared-proxy itself ("gpio:
-shared-proxy: always serialize with a sleeping mutex"), so the
-controller-wide workaround is no longer needed; the meson GPIO
-controller does not sleep.
+Hi all,
 
-meson_gpio_get/set/direction_* access MMIO through regmap. The
-regmap_mmio bus uses fast I/O (spinlock) locking, so these value
-callbacks do not contain sleeping operations. Since gpio_chip.can_sleep
-describes the get/set value path, restore can_sleep = false.
+The series adds explicit bounds checking for GPIO pin accesses and
+ensures safe handling of ACPI addresses in OperationRegion handlers,
+without referring to truncation or wrap-around behavior, which does
+not apply.
 
-Marking the controller sleeping also broke atomic value consumers such
-as w1-gpio (1-Wire bitbang): w1_io.c runs its read time slot under
-local_irq_save() and uses the non-cansleep gpiod_set_value() /
-gpiod_get_value(), which with can_sleep=true trigger WARN_ON(can_sleep)
-in gpiolib on every transferred bit (from w1_gpio_write_bit() /
-w1_gpio_read_bit() via w1_reset_bus() and w1_search()). The printk and
-stack dump inside the IRQs-off, microsecond-scale time slot destroy the
-bit timing, so reset/presence detection and ROM search fail: the bus
-master registers but w1_master_slave_count stays at 0 and no devices
-are found. Verified on an Amlogic A113X board (DS18B20 on GPIOA_14):
-with can_sleep restored to false the warnings are gone and the sensor
-is detected and read again.
+Changes in v6:
+- Rebased onto next-20260609.
+- Corrected commit messages to describe bounds checking and
+  safe ACPI GPIO address handling.
+- Removed references to truncation or wrap-around behavior.
+- No code changes compared to v5.
 
-This must not be applied or backported without the shared-proxy locking
-fix above; otherwise the original Khadas VIM3 splat returns on boards
-that genuinely share a meson GPIO.
+Changes in v5:
+- Changed the types of length and loop counter 'i' to unsigned int in
+  acpi_gpio_adr_space_handler() to prevent signedness mismatches.
+- Replaced the min() macro in the length calculation with an
+  overflow-safe check (bits > agpio->pin_table_length - pin_index)
+  to prevent integer overflow.
+- See v5 series at:
+  https://lore.kernel.org/linux-gpio/20260602113529.52570-1-scardracs@disroot.org/
 
-Fixes: 28f240683871 ("pinctrl: meson: mark the GPIO controller as sleeping")
-Link: https://lore.kernel.org/all/20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com/
-Signed-off-by: Viacheslav Bocharov <v@baodeep.com>
----
+Changes in v4:
+- Dropped the connection resource leak fix to keep the series focused
+  strictly on bounds-checking and address validation.
+- See v4 series at:
+  https://lore.kernel.org/linux-gpio/20260531120816.17255-1-scardracs@disroot.org/
 
+Changes in v3:
+- Fixed a global over-cleanup bug in the error path of the OpRegion
+  handler.
+- See v3 series at:
+  https://lore.kernel.org/linux-gpio/20260520074955.55443-1-mscardovi95@gmail.com/
 
- drivers/pinctrl/meson/pinctrl-meson.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- Split the original single patch into two distinct patches: one for
+  bounds checking in the event/wakeup path, and one for safe
+  handling of ACPI addresses.
+- See v2 series at:
+  https://lore.kernel.org/linux-gpio/20260519070039.9280-1-mscardovi95@gmail.com/
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index 4507dc8b5563..18295b15ecd9 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -619,7 +619,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
- 	pc->chip.set = meson_gpio_set;
- 	pc->chip.base = -1;
- 	pc->chip.ngpio = pc->data->num_pins;
--	pc->chip.can_sleep = true;
-+	pc->chip.can_sleep = false;
- 
- 	ret = gpiochip_add_data(&pc->chip, pc);
- 	if (ret) {
+Changes in v1:
+- Initial submission of the refactored, hardened, and modularized
+  ACPI GPIO core.
+- See v1 series at:
+  https://lore.kernel.org/linux-gpio/20260518075357.112584-1-mscardovi95@gmail.com/
+
+Marco Scardovi (2):
+  gpiolib: acpi: Add robust bounds-checking for GPIO pin resources
+  gpiolib: acpi: Prevent out-of-bounds pin access in OperationRegion
+    handler
+
+ drivers/gpio/gpiolib-acpi-core.c | 38 +++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
+
 -- 
 2.54.0
 
