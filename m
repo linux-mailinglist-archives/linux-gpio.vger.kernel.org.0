@@ -1,68 +1,87 @@
-Return-Path: <linux-gpio+bounces-38275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8obCI1qIKWplYwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38275-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 17:52:58 +0200
+	id spMzMI6RKWoXZwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38276-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:32:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ACCF66B0E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 17:52:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F4C966B7FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 18:32:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=disroot.org header.s=mail header.b=C4zcVzSm;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38275-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38275-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=disroot.org;
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=bf7lCs4I;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38276-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38276-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9ABD13036FA6
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 15:45:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 35B2735AB2A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 15:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08857480336;
-	Wed, 10 Jun 2026 15:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA1643901B;
+	Wed, 10 Jun 2026 15:57:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EAD41931A;
-	Wed, 10 Jun 2026 15:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23DB4218B8;
+	Wed, 10 Jun 2026 15:57:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781106147; cv=none; b=oT7HX7HlT2cwM01PJ47YwYIkREpSMzkzFIa11CZLvqMHPIm5/Wo9rdAg2/TNzZ0SpLOnYTZChZ2sdLJeUy7xEX+mPcQky6KcXYMhL92LtZvEOpbkUr8QqBnu2xnw9+NjC/KmWxA9eLVT3PKpPT/ZEQrUl4WLDGSMqn5ugIkjhGs=
+	t=1781107044; cv=none; b=bI9/gXNWwiuxh7zLmhbP9HQOabw/N5Rwqwzm87rjE8tCGzGQqm4BqHLZtrUXGBNGC+gbAiJ4S94+RMyE15eeRNSmc4UB3wUWAjqqLCn2gE+FAewDMYJqloL+523EDkpc9VRDzmJwIpoRuuJ89+GET41ky3T6N1RofG/KiWm5VUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781106147; c=relaxed/simple;
-	bh=/fN3ClSTe4U9KLVELdPxIwav4o3WqFFx4c5sUcoQUSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hdm9iV6P7l2UxuVMQDg3Fu9kxIIU90kgAOGaZX2+VfGl76GXJTf2iyfkVrb6zXnIns3h69m0NXRYke2gZdW/brlcSfSdOEQ6AIN0eevSkJpvJGoPd5VVdL31c2uHdwHGas9lJ7jNCjTF977V5QikJcEdazYO0W2vsv2EK8Hfw44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=C4zcVzSm; arc=none smtp.client-ip=178.21.23.139
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 64D6926E45;
-	Wed, 10 Jun 2026 17:42:25 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id IkDPol2vP5IG; Wed, 10 Jun 2026 17:42:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1781106144; bh=/fN3ClSTe4U9KLVELdPxIwav4o3WqFFx4c5sUcoQUSU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=C4zcVzSm73GCHsYbbSajVCvyhQMvtWCM1XNHo2TQFn2+Y6UUHvOMnS8Kow4YMY2Mk
-	 7SBxcU5luSnbK3pXfkZVijKe8q6qYBC9IuSUiKn6yeQeB7ta6rXrl3qYckMbhQwg9v
-	 9l0A4TBmhHHpV1fa2oR/GmLI+UH7Bamx7LHrHF9bIC9V6ulNsYUedkG5VjMlHP9bhs
-	 XbII2++HdB5fStws2rWZvTCorRkq3XMVCMXMOV48S8jFei6FOBNcOq6xIb+/2XsJ46
-	 p7Zn7LY3Ohvd8kdp9YR2GWd87qQJ2XMaBnDn2P4qghGxZg4rRY62riKEOL+ZJVlq6g
-	 YYO7PWh9nfwdw==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/2] gpiolib: acpi: Prevent out-of-bounds pin access in OperationRegion handler
-Date: Wed, 10 Jun 2026 17:42:04 +0200
-Message-ID: <20260610154204.110379-3-scardracs@disroot.org>
-In-Reply-To: <20260610154204.110379-1-scardracs@disroot.org>
-References: <20260610154204.110379-1-scardracs@disroot.org>
+	s=arc-20240116; t=1781107044; c=relaxed/simple;
+	bh=h7P53uFc7SEJfNucfm32xC+ai27BRGWxdMVNGS9lDvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dBDlCL+OoD4Hr3fFlI4I9+CFK6YsoRaPU9B14PIfWWssllaH+s+Mp4xcezcczhAECnlChGW3HQ55zB355FQabBaR12gRP7uR1237NXwzgLiuP8ST3vSJyTSQe5J56d1WNXBZC5Z9/cGioie4tbkrb3o0kSQ9LDsUweqAc/hE36E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bf7lCs4I; arc=none smtp.client-ip=205.220.168.131
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65ACBl4u1072714;
+	Wed, 10 Jun 2026 15:57:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=pZg/Ji48yUD3zYDdKhobPrwg5IvsJ9Q+xFZ
+	UIdUe2DU=; b=bf7lCs4IJNhyOJlRTTLkE8t/y7hoLkLxWFyxGC9uGrItRM60miu
+	5gcotUSYHXIIBDu/tv4cy9FYbnLntqQ3MGcpFcXoFE8RhJEa22vqEtXiWKdiTfkH
+	hc4bp/PNCBtczc3iENy0FhXW9kOY5WbuuflaRBZaTlHan+/Bi8dKtnDywWM4Z1Vx
+	+VVu0RDSr2MZ5JbP5CmxhHbMlwnD/h9Ru1wCWeDY0/BoXCNQX5yCShSSsQljIUZB
+	V91Nr5ocJ0obJAZXAQ/e8GkHUkxRuUELATg68qJeFj9ZtBlnHxjMw2k+ubEnXydj
+	r8vaMLgykr31GCe+BOz3Ug9aOkXP6sdZ3Gw==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4epxuvk2kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jun 2026 15:57:16 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 65AFvBXG017570;
+	Wed, 10 Jun 2026 15:57:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4emcmk7k8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jun 2026 15:57:11 +0000 (GMT)
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 65AFvBmc017555;
+	Wed, 10 Jun 2026 15:57:11 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 65AFvBP9017551
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Jun 2026 15:57:11 +0000 (GMT)
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
+	id 3CB85631; Wed, 10 Jun 2026 21:27:10 +0530 (+0530)
+From: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
+To: Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v1 0/2] ASoC: add Qualcomm WSA885X I2C codec support
+Date: Wed, 10 Jun 2026 21:27:06 +0530
+Message-Id: <20260610155708.151067-1-prasad.kumpatla@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,97 +89,96 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-GUID: t8U3yd8vn43CmP1jDHN33ETq7bNw3sLH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEwMDE1MSBTYWx0ZWRfX/J5Q7VBVVW6J
+ DrBLUsg8+w8S68FQ9oalqBGlwsHGpDL8x1oLrDiN7VPU825m+3fUp3BGCyDPxLrPi/++lCj/CCq
+ fy1LGIqR7i7z52JaaopL7eQmZEIZ3NVTgEMnNNKoqrm2Ez45C/rfvR27cWT2qddFpgbR7xFBgWU
+ kgFnCAxZVvPP01dVjDNcznTziUZgVrlAtefZxyzcfJqYrfadNIdfNq1y8zw0KePYvQulOH/l652
+ yzCE6P1pYb3OxVek2XXTRoHaScnbFERrTo4O5wC/0OBZiAIAxcCKfuFJ6xPewcx6ZtWYarOgsaD
+ +VfpcWbIY2U7054ZeW8XXHcqxYowk/qc1VlcN5AqQfG4mZoj+kJIm3qNU0uhm182Vi2t9XaruUs
+ 0jwiQcg34A0CUwF2KtUxqODWt2rpbsNxh+t1cRHyP+9Lcqh7F4vMy1pzH3QX8Svw8mB3vJifZbv
+ hPie6VNAHi7mcqiP3cA==
+X-Authority-Analysis: v=2.4 cv=Co+PtH4D c=1 sm=1 tr=0 ts=6a29895c cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=_K5XuSEh1TEqbUxoQ0s3:22 a=izUB74xbDtXez7lD44YA:9
+X-Proofpoint-ORIG-GUID: t8U3yd8vn43CmP1jDHN33ETq7bNw3sLH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-10_03,2026-06-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ spamscore=0 clxscore=1011 impostorscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606100151
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-38275-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	DKIM_TRACE(0.00)[disroot.org:+];
+	TAGGED_FROM(0.00)[bounces-38276-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com,oss.qualcomm.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:srini@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linusw@kernel.org,m:brgl@kernel.org,m:prasad.kumpatla@oss.qualcomm.com,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-sound@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	DKIM_TRACE(0.00)[qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,vger.kernel.org:from_smtp,qualcomm.com:dkim];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[disroot.org:dkim,disroot.org:email,disroot.org:mid,disroot.org:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCVD_COUNT_SEVEN(0.00)[10]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3ACCF66B0E1
+X-Rspamd-Queue-Id: 1F4C966B7FD
 
-The ACPI GPIO OperationRegion handler receives pin offsets as a
-64-bit address. Previously, this value could be assigned to a pin index
-without validation, potentially causing out-of-bounds access if
-the ACPI table provides an invalid offset.
+Add support for the Qualcomm WSA885X smart speaker amplifier accessed
+over I2C.
 
-This patch explicitly checks that the 64-bit address is less than
-agpio->pin_table_length before using it, returning AE_BAD_PARAMETER
-if the check fails. Additionally, it makes the length calculation
-overflow-safe and ensures proper unsigned types for loop counters.
+The series first documents the qcom,wsa885x-i2c devicetree binding,
+including supplies, GPIOs, battery configuration, and the init-table
+data used during codec initialization.
 
-This corrects the commit message from v5 to accurately reflect the
-underlying issue, removing references to truncation or wrap-around,
-which do not occur in ACPICA.
+It then adds the ASoC codec driver with register programming, serial
+interface setup, clock handling, mute and gain control, reset handling,
+interrupt support, runtime TDM slot-count configuration, and stream-time
+power-state sequencing.
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
----
- drivers/gpio/gpiolib-acpi-core.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+validated speaker playback on Shikra and Hawi platforms.
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index b09f89832890..220f0ac4204e 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -1098,10 +1098,10 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 	struct gpio_chip *chip = achip->chip;
- 	struct acpi_resource_gpio *agpio;
- 	struct acpi_resource *ares;
--	u16 pin_index = address;
-+	unsigned int length;
- 	acpi_status status;
--	int length;
--	int i;
-+	unsigned int i;
-+	u16 pin_index;
- 
- 	status = acpi_buffer_to_resource(achip->conn_info.connection,
- 					 achip->conn_info.length, &ares);
-@@ -1121,7 +1121,14 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 		return AE_BAD_PARAMETER;
- 	}
- 
--	length = min(agpio->pin_table_length, pin_index + bits);
-+	/* address represents GPIO pin index in connection table */
-+	if (address >= agpio->pin_table_length) {
-+		ACPI_FREE(ares);
-+		return AE_BAD_PARAMETER;
-+	}
-+
-+	pin_index = address;
-+	length = min_t(unsigned int, agpio->pin_table_length, pin_index + bits);
- 	for (i = pin_index; i < length; ++i) {
- 		unsigned int pin = agpio->pin_table[i];
- 		struct acpi_gpio_connection *conn;
+Prasad Kumpatla (2):
+  dt-bindings: sound: add qcom,wsa885x-i2c
+  ASoC: codecs: add Qualcomm WSA885X I2C codec driver
+
+ .../bindings/sound/qcom,wsa885x-i2c.yaml      |   89 +
+ sound/soc/codecs/Kconfig                      |   11 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa885x-i2c.c                | 1643 +++++++++++++++++
+ 4 files changed, 1745 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
+ create mode 100644 sound/soc/codecs/wsa885x-i2c.c
+
+
+base-commit: 49e02880ec0a8c378e811bc9d85da188d7c6204c
 -- 
-2.54.0
+2.34.1
 
 
