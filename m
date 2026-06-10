@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38234-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5+ZBDFcqKWplRwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:11:51 +0200
+	id DyVyBqkpKWo4RwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38234-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:08:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C935667AE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:11:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B6D1667A72
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:08:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=Us2SU9PV;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ADdhmcdR;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38234-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38234-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 94B6C3172144
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 09:01:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E0CDF34CB1B2
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 09:01:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9828E3B9DAD;
-	Wed, 10 Jun 2026 09:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6660A3C1082;
+	Wed, 10 Jun 2026 09:00:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7493B774B
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 09:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84183BD225
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 09:00:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781082022; cv=none; b=ioUdmPWKJS+u60TeAROV/Hl5A7iFYSjvCyYhwvopDJWUF8QmISoxgjNUtaiL+23GdWwxKIkW13/LCrCkxB1Xpznod0hQr91C37/6E7gUo6RQl4d0acB1OD3DRvAUS8mPhfnQJWJ6/JgCdb5eayTgwKvoBl809qualoW5BGldT4k=
+	t=1781082026; cv=none; b=WoX4hNLlh1kFUOwv0/1SUrHq+qXBcs6tjov3ccThZ5bClEFUqL76qOcrhQBCWIbxHACyULBQfI2vgyUFscA/oxsqksrcbU16ZpoiabXLFlKfDAFkIW0KWpV5Lw+uMh/2Xsrjf/C6wxhzYQRVWWjN7sJWS+rzXfQD3BSN34X/4XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781082022; c=relaxed/simple;
-	bh=bLwChESGbZtz/2x058HtLBA1jHktHhTBvzQNfjT9q/s=;
+	s=arc-20240116; t=1781082026; c=relaxed/simple;
+	bh=UVsYCrTgabPt3+1KO398dNio5IWM0Bffio+EXkZMC24=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VLfkSnaCHwnnFPMwjptjGpA5qnbicPOxxcbhRGU92yZJDdYsjVMOFKomsZarkVw/2ztNfSnKMip10HwMuNX+YhLN3HmM5H0Zk1+qJwdvECGHtOnwcaD7gRpnhmNIjXUMOjjcPP7mzLpH7C0ow6DAy+1rW5grgxZNj7s0TcWGbfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Us2SU9PV; arc=none smtp.client-ip=209.85.216.49
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-36bcf3d2565so4554150a91.3
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 02:00:20 -0700 (PDT)
+	 In-Reply-To:To:Cc; b=KU/7D4oZslI+mpHmIxbJmUS95X/8Es1L9UCD7STCf1Gxb6IbSucWIGbE8UMFLrsPJR4NVEwzH63QtlRd74tWQk0cnmNniw3p2sM1/mxPa5pDoFRNQNd+yj5S6jkxJEScNHxLnFNcV1UEqeG4p1+uc6/W6csrY5jYzfOKLAfouVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADdhmcdR; arc=none smtp.client-ip=209.85.216.51
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-36da8439078so5766281a91.2
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 02:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781082020; x=1781686820; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781082024; x=1781686824; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=akyQhflaBKd1fIBT6+6thwEUVwavJvRtr15bNxaWbNY=;
-        b=Us2SU9PVNaiQFSi9A+Wk2AONfG8ldkRDEm3cSJYDIm9evoFIZi1xPvMyPc4TUAwrd8
-         /s3e8XdM3PfL1ujRgaVHDRw9lOUqGfNxgUXYBZjqq6tpDxZ3mS/Pm8LaXFCQAYfr+cA6
-         QqC1UZjnTSeLW2kUkDe4yHfqeY0gYUc5WKNUbeC9e+2N2GBTK7+ff3lZL6Q5FvgBdnUT
-         IgTZNKildlqeDDNrveAyZTICpAryDBfbzlGbyvQilkzt31jPHQyZjE9jJhDodWUrogez
-         ki6pyhboe5Rw/v7NR2EluQMhrYmw68JDyzmCmwNazQP6UbmF5EumBO74OqM0HeT+Kx4G
-         W2+g==
+        bh=qRIQSXlzENM4jEBupLB81DONFaVdzlOx+4/Y850SEjk=;
+        b=ADdhmcdRFzAI9coxhRoMF1PBQIZAbSJoE+UbroGoyp/Crl+2TErSVmQaTciNJB/Qjm
+         Me2QX20TFnfY4FsCWySATaKpDeS+Y85iTRZfXBQXQ5kU1OZwXLedC1cZ26n8yggIKW2x
+         cAI0cD04MnZpJlDKVebOpE0rDRFsgPvytQl3tQ+iGpv91FSqga82QHn6Hk84WVAgGnAF
+         Bed7ef4IX33pZ9in0dynS4ZJGqDOPVbOv/BAMepWaqZ1R3bL7N+hYFpwNN12Kq5vBx8r
+         AuPis6Mrbq3YA6A9BOtMOynA457WC2SdMJSSX5JeQeNXZzH0xrC/piOX5B3nm7SomSA5
+         ZQYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781082020; x=1781686820;
+        d=1e100.net; s=20251104; t=1781082024; x=1781686824;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=akyQhflaBKd1fIBT6+6thwEUVwavJvRtr15bNxaWbNY=;
-        b=chbpdFNJe5GwYHDwqybO9MOTzEiKLIuPczzcHA8zOTtn79xXqbhhDAvo4DKPtBvXrK
-         2R+tIhRZlMlKqASK/4IY/k8qsiP52OPs80CpD6oBKeB8TUNpErX1VEq68X6zlENsPi5A
-         Jmxkho6RgoFdvOBdJs/dwpCDOJZA7sdS/HWuG2H6bNrzCsHs5DZ+Cpnbs5bz5RbZjtqO
-         277i5aFn34aLCOYxdgSSMN+hZJj+/qSwZyUJ5GQ1nzDO//j/f7GvPwmlYtGmn0HHbanQ
-         dTfoPqTdhHrmBTK7gAV0oLCzY6h+ISegUaBEKldhdHEfEfuAY6dPTYl2bbV3LPhyBLzs
-         T3nQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/n0s1V64VOPNNb9Ot/9znO8WGNh3lON0pCUwpTAa/xTnOXgo7Uu3PP0bwfItpcmTSYamR2J8/BLKGR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPbTgbddZyCirxTbom+bCAr4lgWA7ShfckoZJH2yhn4L0NBC07
-	YtGrufVRjwX1le5giKJQNXyOqpJUVITdnIyVZbvnXPUY9pdBQNgQMBF/
-X-Gm-Gg: Acq92OFq2yJPDhn6+p4UlQjhiyswaXTcTkqww9QbGsGCfmv/oAT8nXPPMBCICkPgspU
-	+FOBr4m8viwQS4iUKX/sRNDuywwoYA83vw+bLNHy9crmaweUfz5nfnjuBNnxbPMJmgdhnyJ7Uo5
-	ExmLCW0xqpIYXDx+nwWwiJ1bfeKM8CBrCJc1z/pt9MlICbKHvhKTH1Vr+wZq19cJFsYLxlE1FE2
-	3cFvWxZnw08gXrLApFv1FE7ImRpXdhF8KvHnVixdKwc2ceiLcYWUlm5Qh92VZxDr8x/6H+sWpxF
-	N54bkgKlGUTyu/c1cAcGqUXY0Pd+MyaQKBf+Gs8cejaAkR+oeTMVuh1zbtgWddHSoyCgtPzBza4
-	rrxlCLIuLDaOaSNMohkodMeGYWix8mEdFJd/Ep/8lSbpU3yic8W5bINuuOsYQrxONuSfduRV2j2
-	0oO9UxqA4oAKCwTbSnNiQIovSqLohtn8Q=
-X-Received: by 2002:a17:90b:4d81:b0:36d:66d4:270d with SMTP id 98e67ed59e1d1-370f0582547mr26420780a91.20.1781082019678;
-        Wed, 10 Jun 2026 02:00:19 -0700 (PDT)
+        bh=qRIQSXlzENM4jEBupLB81DONFaVdzlOx+4/Y850SEjk=;
+        b=WRvXQzhfQdc2mfWYA6zmhZE861hYcNc45vjjtEZ3oJ202eWW8ZaNITlj9bGeZJz9/D
+         +l2ilK9nDer2NE/shXc2t1oGnR8eXAyE3COUGYJPYm5qaT6xcM0R0pur/ePSublseKF9
+         94w5EMyXGEFYbU8W3KYryk6FkJVWd927HfBvUpD7Z1DF8gaoVFE4JoX6k15z/4UpLCFc
+         dtcOFPGJzBiWivC2jq5Ern0xGy6f8bqMWj8rG4af2l6iGf84gkTGixXdn1xN8gCjyOXs
+         dMg/aAlEHAOYChpo+GcoS833jf1oyyVYxPV0t8aE41y1CRDnjksMZaNNCh6owVWUaOdU
+         EKSg==
+X-Forwarded-Encrypted: i=1; AFNElJ9h5sWEN8A1T3rHXPYZ1BiEz95Fdvry5uETT39+agIaOuOyNVrXSgqWS9c7qg8nXmadVfCvYbHAxJnr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkYka84WBYUZ5CjHrGPUzXVdhQnkVyUC1KtWYKsN99kNkeWllD
+	oSzkwVIR7Du8BDmacxesw3b5IxZFhw1OYHoDlFj2PFz+tWs75T1pdquL
+X-Gm-Gg: Acq92OFTp8qin4yRB2ehGV+mjuCas9lO7kw5TdyR0KJ2ZG7DW66mhZg102uk55bdrZD
+	SO9eTR2leUkqBIbwFK1jrNXFvyXY+mzZ9HXKN/pm62bW1vY9aNzSdfYyekz3OTJYuuvixYOKmOf
+	Wmg753tThU2r+7RGs8BHnoU/FSOAZIjzWeOKjuodCExxblM2gTLxb0AeMf2COJRJTY5e1CTmQsk
+	4JxEefOvHCDnSx6xNcjNBnkyWWW+otaeKepYeslA1k1G2KlXu0REEzqDNVnnQIEjp3f+6QID15J
+	hExgm4nPnZt1io8hwWiecvuayi8qzuJ3rxSnukSLG9Ko9+CCQCm/thBdGyPgKUgWEVdQL518hq3
+	m6Z61nLuztGYeskocyRVmWoCo6ZntaSeq6EQpvlMpELDO4+cjbF6X/9/vc8ZGTg9ImblqDNf61n
+	NOXZY+ssaW29Txae1CYklSBxJyvhRA8KM=
+X-Received: by 2002:a17:90a:d40f:b0:36a:a16b:5f65 with SMTP id 98e67ed59e1d1-370ef1f3d01mr26131246a91.11.1781082023870;
+        Wed, 10 Jun 2026 02:00:23 -0700 (PDT)
 Received: from [127.0.1.1] ([150.117.174.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-376465ca306sm1308995a91.2.2026.06.10.02.00.15
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-376465ca306sm1308995a91.2.2026.06.10.02.00.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 02:00:19 -0700 (PDT)
+        Wed, 10 Jun 2026 02:00:23 -0700 (PDT)
 From: GaryWang <is0124@gmail.com>
-Date: Wed, 10 Jun 2026 16:34:23 +0800
-Subject: [PATCH 1/2] pinctrl: tigerlake: add some pin groups and functions
- for INTC1055
+Date: Wed, 10 Jun 2026 16:34:24 +0800
+Subject: [PATCH 2/2] pinctrl: upboard: add device id INTC1055 based UP
+ boards support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,7 +88,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-1-8185d2abbfb1@gmail.com>
+Message-Id: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-2-8185d2abbfb1@gmail.com>
 References: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com>
 In-Reply-To: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com>
 To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
@@ -104,11 +104,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38233-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38234-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[aaeon.eu,aaeon.com.tw,vger.kernel.org,gmail.com];
 	FROM_HAS_DN(0.00)[];
@@ -119,7 +119,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -132,68 +132,81 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7C935667AE1
+X-Rspamd-Queue-Id: 5B6D1667A72
 
-Add i2c0, i2c1, pwm0, uart1, ssp2 pin groups & functions in tgllp_soc_data
- for device id INTC1055.
+Add support "UP Xtreme i12", "UP Squared Pro 7000", "UP Squared i12",
+ "UP 7000" boards and I2C/PWM/UART/SPI pins mapping data.
 
 Signed-off-by: GaryWang <is0124@gmail.com>
 ---
- drivers/pinctrl/intel/pinctrl-tigerlake.c | 32 +++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/pinctrl/pinctrl-upboard.c | 45 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-tigerlake.c b/drivers/pinctrl/intel/pinctrl-tigerlake.c
-index ae231f7fba49..aeb031570536 100644
---- a/drivers/pinctrl/intel/pinctrl-tigerlake.c
-+++ b/drivers/pinctrl/intel/pinctrl-tigerlake.c
-@@ -330,6 +330,34 @@ static const struct pinctrl_pin_desc tgllp_pins[] = {
- 	PINCTRL_PIN(276, "SPI0_CLK_LOOPBK"),
+diff --git a/drivers/pinctrl/pinctrl-upboard.c b/drivers/pinctrl/pinctrl-upboard.c
+index f8c8b9d84990..09018b665ee3 100644
+--- a/drivers/pinctrl/pinctrl-upboard.c
++++ b/drivers/pinctrl/pinctrl-upboard.c
+@@ -912,6 +912,19 @@ static const struct upboard_pinctrl_map upboard_pinctrl_map_apl01 = {
+ 	.nmaps = ARRAY_SIZE(pinctrl_map_apl01),
  };
  
-+static const unsigned int tgllp_i2c0_pins[] = { 5, 6 };
-+static const unsigned int tgllp_i2c1_pins[] = { 7, 8 };
-+static const unsigned int tgllp_pwm0_pins[] = { 99 };
-+static const unsigned int tgllp_uart1_pins[] = { 85, 86, 87, 88 };
-+static const unsigned int tgllp_ssp2_pins[] = { 108, 109, 110, 111 };
-+
-+static const struct intel_pingroup tgllp_groups[] = {
-+	PIN_GROUP("i2c0_grp", tgllp_i2c0_pins, 2),
-+	PIN_GROUP("i2c1_grp", tgllp_i2c1_pins, 2),
-+	PIN_GROUP("pwm0_grp", tgllp_pwm0_pins, 1),
-+	PIN_GROUP("uart1_grp", tgllp_uart1_pins, 1),
-+	PIN_GROUP("ssp2_grp", tgllp_ssp2_pins, 7),
++static const struct pinctrl_map pinctrl_map_adl[] = {
++	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "i2c0_grp", "i2c0"),
++	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "i2c1_grp", "i2c1"),
++	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "pwm0_grp", "pwm0"),
++	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "uart1_grp", "uart1"),
++	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "ssp2_grp", "ssp2"),
 +};
 +
-+static const char * const tgllp_i2c0_groups[] = { "i2c0_grp" };
-+static const char * const tgllp_i2c1_groups[] = { "i2c1_grp" };
-+static const char * const tgllp_pwm0_groups[] = { "pwm0_grp" };
-+static const char * const tgllp_uart1_groups[] = { "uart1_grp" };
-+static const char * const tgllp_ssp2_groups[] = { "ssp2_grp" };
-+
-+static const struct intel_function tgllp_functions[] = {
-+	FUNCTION("i2c0", tgllp_i2c0_groups),
-+	FUNCTION("i2c1", tgllp_i2c1_groups),
-+	FUNCTION("pwm0", tgllp_pwm0_groups),
-+	FUNCTION("uart1", tgllp_uart1_groups),
-+	FUNCTION("ssp2", tgllp_ssp2_groups),
++static const struct upboard_pinctrl_map upboard_pinctrl_map_adl = {
++	.maps = &pinctrl_map_adl[0],
++	.nmaps = ARRAY_SIZE(pinctrl_map_adl),
 +};
 +
- static const struct intel_padgroup tgllp_community0_gpps[] = {
- 	INTEL_GPP(0, 0, 25, 0),				/* GPP_B */
- 	INTEL_GPP(1, 26, 41, 32),			/* GPP_T */
-@@ -367,6 +395,10 @@ static const struct intel_community tgllp_communities[] = {
- static const struct intel_pinctrl_soc_data tgllp_soc_data = {
- 	.pins = tgllp_pins,
- 	.npins = ARRAY_SIZE(tgllp_pins),
-+	.groups = tgllp_groups,
-+	.ngroups = ARRAY_SIZE(tgllp_groups),
-+	.functions = tgllp_functions,
-+	.nfunctions = ARRAY_SIZE(tgllp_functions),
- 	.communities = tgllp_communities,
- 	.ncommunities = ARRAY_SIZE(tgllp_communities),
+ static const struct dmi_system_id dmi_platform_info[] = {
+ 	{
+ 		/* UP Squared */
+@@ -921,6 +934,38 @@ static const struct dmi_system_id dmi_platform_info[] = {
+ 		},
+ 		.driver_data = (void *)&upboard_pinctrl_map_apl01,
+ 	},
++	{
++		/* UP Xtreme i12 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPX-ADLP01"),
++		},
++		.driver_data = (void *)&upboard_pinctrl_map_adl,
++	},
++	{
++		/* UP Squared Pro 7000 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPN-ADLN01"),
++		},
++		.driver_data = (void *)&upboard_pinctrl_map_adl,
++	},
++	{
++		/* UP Squared i12 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPS-ADLP01"),
++		},
++		.driver_data = (void *)&upboard_pinctrl_map_adl,
++	},
++	{
++		/* UP 7000 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UP-ADLN01"),
++		},
++		.driver_data = (void *)&upboard_pinctrl_map_adl,
++	},
+ 	{ }
  };
+ 
 
 -- 
 2.43.0
