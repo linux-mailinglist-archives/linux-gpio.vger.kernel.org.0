@@ -1,83 +1,85 @@
-Return-Path: <linux-gpio+bounces-38232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id r87PAhksKWrHRwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38232-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:19:21 +0200
+	id 5+ZBDFcqKWplRwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:11:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62344667C04
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:19:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C935667AE1
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 11:11:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="WPUb/pAo";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38232-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38232-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=Us2SU9PV;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38233-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F2D91349AE70
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 09:00:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 94B6C3172144
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2026 09:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAD553BA222;
-	Wed, 10 Jun 2026 09:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9828E3B9DAD;
+	Wed, 10 Jun 2026 09:00:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F69C3B8130
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 09:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7493B774B
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 09:00:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781082017; cv=none; b=NBGO9Um0WPG7yevurz5x3luzgm+cszpu4doX46wV2hjXC0oxKqhDjHya0e8ELsSXmeCVj0ylVnfSsnAbG1DD4v5/VgBb34bkUWh/tOaPh96Q8vwRnzWvlnfEkg3aHvhZnXT+U7kMG5niiueuUFksfeL8sqQ+jwSOIeNgcTXELhA=
+	t=1781082022; cv=none; b=ioUdmPWKJS+u60TeAROV/Hl5A7iFYSjvCyYhwvopDJWUF8QmISoxgjNUtaiL+23GdWwxKIkW13/LCrCkxB1Xpznod0hQr91C37/6E7gUo6RQl4d0acB1OD3DRvAUS8mPhfnQJWJ6/JgCdb5eayTgwKvoBl809qualoW5BGldT4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781082017; c=relaxed/simple;
-	bh=adQkjTCUBge0DN12BPGBfTK4j8DDnGyAmmaTSzwM/88=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Mzx82OABlX3UGHCfbtCBZMrkYWQC2E26m9gy26S6TZfE9VMXlqDgJtgo0iTRVCO78aLkYT8lnT7kmD1XYci3kwgjFTXdmMhCzftJXAtZbNsTWs4dxDxL41t96NVxHuoQHVUQ75cO2gY1kyPuYwRUYLbVx1dkGTd8iS4BC3vDrO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WPUb/pAo; arc=none smtp.client-ip=209.85.216.43
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-36ba285e98bso6442399a91.2
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 02:00:16 -0700 (PDT)
+	s=arc-20240116; t=1781082022; c=relaxed/simple;
+	bh=bLwChESGbZtz/2x058HtLBA1jHktHhTBvzQNfjT9q/s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VLfkSnaCHwnnFPMwjptjGpA5qnbicPOxxcbhRGU92yZJDdYsjVMOFKomsZarkVw/2ztNfSnKMip10HwMuNX+YhLN3HmM5H0Zk1+qJwdvECGHtOnwcaD7gRpnhmNIjXUMOjjcPP7mzLpH7C0ow6DAy+1rW5grgxZNj7s0TcWGbfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Us2SU9PV; arc=none smtp.client-ip=209.85.216.49
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-36bcf3d2565so4554150a91.3
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2026 02:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781082016; x=1781686816; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YxCGCjO5J65KQbrEt8Fhh13O8MG6osQvSprxzap97q0=;
-        b=WPUb/pAo+7Tw798jA1iz3sXgQQXd6o0hOLlv4oyro9XYYC7QDSJ6XZOEzEpyvciwL5
-         DsxTlPdrCZVRr+Z4ycSXjcH3cNyWl66cxw5R3MdQ8x0HrOzQWlO3UKin3x8NWeDdfGwD
-         PW9WL4jLZ56AdLkCk831cmRiFbVDGCyG8r2DauDX3UQK/9uwRIF8uQ7Jnq3xKRbzrmo2
-         +vjj7+ZQd7Uczc0yT94a00Jx4VMz97vUlazzeRaLySrLNcENhdw/gKrMHJezF9bHWzZl
-         Bv+143uGoh9bjHxSyTKwmYkHYwPBYMK3yfFXA7E3AiRVPJkVsqiSTLjC4Uh/WYzexfDB
-         2i3g==
+        d=gmail.com; s=20251104; t=1781082020; x=1781686820; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=akyQhflaBKd1fIBT6+6thwEUVwavJvRtr15bNxaWbNY=;
+        b=Us2SU9PVNaiQFSi9A+Wk2AONfG8ldkRDEm3cSJYDIm9evoFIZi1xPvMyPc4TUAwrd8
+         /s3e8XdM3PfL1ujRgaVHDRw9lOUqGfNxgUXYBZjqq6tpDxZ3mS/Pm8LaXFCQAYfr+cA6
+         QqC1UZjnTSeLW2kUkDe4yHfqeY0gYUc5WKNUbeC9e+2N2GBTK7+ff3lZL6Q5FvgBdnUT
+         IgTZNKildlqeDDNrveAyZTICpAryDBfbzlGbyvQilkzt31jPHQyZjE9jJhDodWUrogez
+         ki6pyhboe5Rw/v7NR2EluQMhrYmw68JDyzmCmwNazQP6UbmF5EumBO74OqM0HeT+Kx4G
+         W2+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781082016; x=1781686816;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YxCGCjO5J65KQbrEt8Fhh13O8MG6osQvSprxzap97q0=;
-        b=PkCfbbHc47UmCyulV/Dd7pvLIYHrI+oVRI5/HuE1nrIEWo1k5pHz1oMQD9bb2/pJHm
-         h/3qFKcH/00aHGMzdODvd3Ag9cpdO/Ak2cPIkQEvBTZ03zB2jGxQzoN6RuIQquFOo8SY
-         kUhLkLc1SmnaUQwkw+x9+ZldFKX7qLIeVUDgLuqhGpFd+ee+6YuJLUH+SWI5yumnb4aA
-         4BDSvpmxjGsmAyrmPfSBGJu+pY3o9ZA8VQdVPXY4gaCwk0ZtKUwNVp/bb/LDbmnV6pLl
-         tssfEjwf3KaUO+aU3bRKoVKPPlNKG5VrmHBdiEWTOWbfYdnw7+43Azfg026quDHCBr9M
-         zxbA==
-X-Forwarded-Encrypted: i=1; AFNElJ/kULY5jQEIhPHnwQo+vU2rEvO+v1fFT8ovQpplPBVc9y2HMMyhy3O48ub2GuWGtF+E8W9PcKuMQNvt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxul7Ajbwb0K7HtnlSZnWWy74nfHbojv9bzCjv/ubNCzckmjKNI
-	51QtpMXdTuZm8T6oRmwq1A3oDK40KoDEecEIOy+t4YU3xxU7w89ETtUT
-X-Gm-Gg: Acq92OFPDOFRXgStgm4GDHgzoRydHUpEm718SulfdXIAPpbhE3rg3TCbgP6ASHdqJFk
-	JJ+z/Vib5x4R9Ynse5ThTqOR39eM5YrIbuom7jd7PdFxyYVir4yoQ7RTXqSoMyr6XAzNj3Ch3Q+
-	ZzqgHzErVIg6V1O5UnhlKqUknlus5erFCHQchFxQQwZce+GRzOg6vx4lhlA/bgWk0Q6+p6fVh8k
-	CjMtrGkryigZGph9LEnu5LmoJpRq9cXgZCd6GQ6qi06rvsasLaL07lBUuyeDPcF7Mx3UL2QMcrB
-	lDXLeIiQrrQXGB5xuCxZPvjx+Aec35lL/M1ue0+PAGYQTdPQqoI4VveHV/n7n1Uthe5B6FNrhUz
-	hGKqVjj6SJUQLk5Jjt6gUntthoJlKdW0/ctyw96bJCwpji7ZAm52YlQIyXASTi6HxNiQAjdjkk9
-	F+Ym9AA2PLv3qwgG0Jn73LfMiLvWZKmKM=
-X-Received: by 2002:a17:90b:4b0f:b0:366:1172:597e with SMTP id 98e67ed59e1d1-370ef2efae9mr26079598a91.9.1781082015523;
-        Wed, 10 Jun 2026 02:00:15 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781082020; x=1781686820;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=akyQhflaBKd1fIBT6+6thwEUVwavJvRtr15bNxaWbNY=;
+        b=chbpdFNJe5GwYHDwqybO9MOTzEiKLIuPczzcHA8zOTtn79xXqbhhDAvo4DKPtBvXrK
+         2R+tIhRZlMlKqASK/4IY/k8qsiP52OPs80CpD6oBKeB8TUNpErX1VEq68X6zlENsPi5A
+         Jmxkho6RgoFdvOBdJs/dwpCDOJZA7sdS/HWuG2H6bNrzCsHs5DZ+Cpnbs5bz5RbZjtqO
+         277i5aFn34aLCOYxdgSSMN+hZJj+/qSwZyUJ5GQ1nzDO//j/f7GvPwmlYtGmn0HHbanQ
+         dTfoPqTdhHrmBTK7gAV0oLCzY6h+ISegUaBEKldhdHEfEfuAY6dPTYl2bbV3LPhyBLzs
+         T3nQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/n0s1V64VOPNNb9Ot/9znO8WGNh3lON0pCUwpTAa/xTnOXgo7Uu3PP0bwfItpcmTSYamR2J8/BLKGR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPbTgbddZyCirxTbom+bCAr4lgWA7ShfckoZJH2yhn4L0NBC07
+	YtGrufVRjwX1le5giKJQNXyOqpJUVITdnIyVZbvnXPUY9pdBQNgQMBF/
+X-Gm-Gg: Acq92OFq2yJPDhn6+p4UlQjhiyswaXTcTkqww9QbGsGCfmv/oAT8nXPPMBCICkPgspU
+	+FOBr4m8viwQS4iUKX/sRNDuywwoYA83vw+bLNHy9crmaweUfz5nfnjuBNnxbPMJmgdhnyJ7Uo5
+	ExmLCW0xqpIYXDx+nwWwiJ1bfeKM8CBrCJc1z/pt9MlICbKHvhKTH1Vr+wZq19cJFsYLxlE1FE2
+	3cFvWxZnw08gXrLApFv1FE7ImRpXdhF8KvHnVixdKwc2ceiLcYWUlm5Qh92VZxDr8x/6H+sWpxF
+	N54bkgKlGUTyu/c1cAcGqUXY0Pd+MyaQKBf+Gs8cejaAkR+oeTMVuh1zbtgWddHSoyCgtPzBza4
+	rrxlCLIuLDaOaSNMohkodMeGYWix8mEdFJd/Ep/8lSbpU3yic8W5bINuuOsYQrxONuSfduRV2j2
+	0oO9UxqA4oAKCwTbSnNiQIovSqLohtn8Q=
+X-Received: by 2002:a17:90b:4d81:b0:36d:66d4:270d with SMTP id 98e67ed59e1d1-370f0582547mr26420780a91.20.1781082019678;
+        Wed, 10 Jun 2026 02:00:19 -0700 (PDT)
 Received: from [127.0.1.1] ([150.117.174.129])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-376465ca306sm1308995a91.2.2026.06.10.02.00.11
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-376465ca306sm1308995a91.2.2026.06.10.02.00.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 02:00:15 -0700 (PDT)
+        Wed, 10 Jun 2026 02:00:19 -0700 (PDT)
 From: GaryWang <is0124@gmail.com>
-Subject: [PATCH 0/2] upboard pinctrl support for device id INTC1055
-Date: Wed, 10 Jun 2026 16:34:22 +0800
-Message-Id: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com>
+Date: Wed, 10 Jun 2026 16:34:23 +0800
+Subject: [PATCH 1/2] pinctrl: tigerlake: add some pin groups and functions
+ for INTC1055
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,9 +88,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI4hKWoC/z2NywrCMBAAf6Xs2YVspfXxK9JDko26IMmySUUo/
- XeDB48zh5kNajJJFa7DBpbeUqXkDnQYID59fiQU7gyjG2c3uwuuGoo3RpUcm73QM/+d5BbJTRP
- WVbVYw8DEZzoShZOHnlRLd/n8drdl379aR1+bfgAAAA==
+Message-Id: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-1-8185d2abbfb1@gmail.com>
+References: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com>
+In-Reply-To: <20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com>
 To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
  Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
  Thomas Richard <thomas.richard@bootlin.com>
@@ -102,11 +104,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38232-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38233-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[aaeon.eu,aaeon.com.tw,vger.kernel.org,gmail.com];
 	FROM_HAS_DN(0.00)[];
@@ -117,7 +119,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -130,28 +132,70 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 62344667C04
+X-Rspamd-Queue-Id: 7C935667AE1
 
-Add missing groups and functions in Tigerlake's pinctrl driver for INTC1055.
-Add support "UP Xtreme i12", "UP Squared Pro 7000", "UP Squared i12", "UP 7000" boards.
+Add i2c0, i2c1, pwm0, uart1, ssp2 pin groups & functions in tgllp_soc_data
+ for device id INTC1055.
 
 Signed-off-by: GaryWang <is0124@gmail.com>
 ---
-GaryWang (2):
-      pinctrl: tigerlake: add some pin groups and functions for INTC1055
-      pinctrl: upboard: add device id INTC1055 based UP boards support
+ drivers/pinctrl/intel/pinctrl-tigerlake.c | 32 +++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
- drivers/pinctrl/intel/pinctrl-tigerlake.c | 32 ++++++++++++++++++++++
- drivers/pinctrl/pinctrl-upboard.c         | 45 +++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
----
-base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
-change-id: 20260609-upboard-pinctrl-add-upboard-intc1055-support-bd1d81311b7a
+diff --git a/drivers/pinctrl/intel/pinctrl-tigerlake.c b/drivers/pinctrl/intel/pinctrl-tigerlake.c
+index ae231f7fba49..aeb031570536 100644
+--- a/drivers/pinctrl/intel/pinctrl-tigerlake.c
++++ b/drivers/pinctrl/intel/pinctrl-tigerlake.c
+@@ -330,6 +330,34 @@ static const struct pinctrl_pin_desc tgllp_pins[] = {
+ 	PINCTRL_PIN(276, "SPI0_CLK_LOOPBK"),
+ };
+ 
++static const unsigned int tgllp_i2c0_pins[] = { 5, 6 };
++static const unsigned int tgllp_i2c1_pins[] = { 7, 8 };
++static const unsigned int tgllp_pwm0_pins[] = { 99 };
++static const unsigned int tgllp_uart1_pins[] = { 85, 86, 87, 88 };
++static const unsigned int tgllp_ssp2_pins[] = { 108, 109, 110, 111 };
++
++static const struct intel_pingroup tgllp_groups[] = {
++	PIN_GROUP("i2c0_grp", tgllp_i2c0_pins, 2),
++	PIN_GROUP("i2c1_grp", tgllp_i2c1_pins, 2),
++	PIN_GROUP("pwm0_grp", tgllp_pwm0_pins, 1),
++	PIN_GROUP("uart1_grp", tgllp_uart1_pins, 1),
++	PIN_GROUP("ssp2_grp", tgllp_ssp2_pins, 7),
++};
++
++static const char * const tgllp_i2c0_groups[] = { "i2c0_grp" };
++static const char * const tgllp_i2c1_groups[] = { "i2c1_grp" };
++static const char * const tgllp_pwm0_groups[] = { "pwm0_grp" };
++static const char * const tgllp_uart1_groups[] = { "uart1_grp" };
++static const char * const tgllp_ssp2_groups[] = { "ssp2_grp" };
++
++static const struct intel_function tgllp_functions[] = {
++	FUNCTION("i2c0", tgllp_i2c0_groups),
++	FUNCTION("i2c1", tgllp_i2c1_groups),
++	FUNCTION("pwm0", tgllp_pwm0_groups),
++	FUNCTION("uart1", tgllp_uart1_groups),
++	FUNCTION("ssp2", tgllp_ssp2_groups),
++};
++
+ static const struct intel_padgroup tgllp_community0_gpps[] = {
+ 	INTEL_GPP(0, 0, 25, 0),				/* GPP_B */
+ 	INTEL_GPP(1, 26, 41, 32),			/* GPP_T */
+@@ -367,6 +395,10 @@ static const struct intel_community tgllp_communities[] = {
+ static const struct intel_pinctrl_soc_data tgllp_soc_data = {
+ 	.pins = tgllp_pins,
+ 	.npins = ARRAY_SIZE(tgllp_pins),
++	.groups = tgllp_groups,
++	.ngroups = ARRAY_SIZE(tgllp_groups),
++	.functions = tgllp_functions,
++	.nfunctions = ARRAY_SIZE(tgllp_functions),
+ 	.communities = tgllp_communities,
+ 	.ncommunities = ARRAY_SIZE(tgllp_communities),
+ };
 
-Best regards,
 -- 
-GaryWang <is0124@gmail.com>
+2.43.0
 
 
