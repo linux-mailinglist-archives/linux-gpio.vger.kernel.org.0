@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-38319-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38320-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Zu1wHfKBKmqLrQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38319-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 11:37:54 +0200
+	id nPbDJG2CKmq2rQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38320-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 11:39:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1C98670761
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 11:37:53 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 422176707C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 11:39:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cT+XRqbN;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38319-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38319-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gO2+HB+d;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38320-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38320-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2AB91322A49B
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 09:34:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2E8F830309E7
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 09:39:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396AB3BCD16;
-	Thu, 11 Jun 2026 09:34:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D11973BED6A;
+	Thu, 11 Jun 2026 09:39:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AEE3A3822;
-	Thu, 11 Jun 2026 09:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F7E3451D6;
+	Thu, 11 Jun 2026 09:39:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781170462; cv=none; b=MuoMT4nqgX8ET6uf9+gc4aXgnORJDuk1j8877UHZ0iY6gAdYTrDQ9F3c+4FfUIsD0XjkyQ/i+Zo8Cy08x3026bq+h/XbFWh/IRCyoLsEHK68Bd+k6at9kRFEBtIIGzSebzAykZyLsp0S9u+DNk0CU0Lq+UQh7mZ7d0N0we74DnU=
+	t=1781170794; cv=none; b=RPR3HExQGLp5KtjvLkLpfsk6HONWR15JJq4XT/tliY4B5+RkneD2LsqOU/qrmAX3iT0zmRw3tUCeEf03GcARI0+80Ch8yTVhQpPItUFkPs+rEkeBV2l5TzGZE/VLlOmm81nlABTTcm5NXmjO8llUSIh1feDwEmXa8WpVRj/qw68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781170462; c=relaxed/simple;
-	bh=Vqwlo43bVLgUB8f7B4RoMUMMkIB/znkq0rsByvipKek=;
+	s=arc-20240116; t=1781170794; c=relaxed/simple;
+	bh=Kp1l3i82/bTOksbc51tcQ4Gvr9B1S3ou4MHzLSUTFtE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hy2Dfg7a5LnqDkwcp8eS+fAGm4ZOoqwDRQb6qITp0OFOKw6iLuqViHmUdykYnK4hz8V6hEmfZVZ2V0CavyUhoPXQ64gjwxGO6hKvA7M8ukm/YD13oSgxU+0PUN2UfUdJPfff9tj7vQnLW1mIwvffqzkOpsOpNmrSnvAnEFdp9LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT+XRqbN; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E21521F00893;
-	Thu, 11 Jun 2026 09:34:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=F8Eat02OKnLY2aOv5yjm1qjGB+t/LTpPDa60m7r/la9r7uDbqBsFE6yRLSwP9mL84LoXqluTauN5PocktnOk1YqRP99XjFE2HvQmfdUJWwglVgntmuAPW8OwYRDQArY02mjrphI6un8h7B/AD0PAKEPivrv0yT6nBjKy8+InxxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gO2+HB+d; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF741F00893;
+	Thu, 11 Jun 2026 09:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781170460;
-	bh=4CE+B5X87C4B+lcYhCceZRzgV1so3jPdEvEN6nolt7A=;
+	s=k20260515; t=1781170793;
+	bh=R5yiotapJVMX0NE8j/ye5/VtU3Y1gWhYPhxIoCxJbW4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cT+XRqbN+FRsGAYF7zyhydCwdA1+FVZrjIxCw9k5QqP55DrFhJweTKJwU8aW3lEEH
-	 WCEbXzTF0Wc59BMqRkX46PYhGvRvodJq40IA36JbRNKJVi9IMMi2U9xWosqKnxP40I
-	 GEdig7RJa6lQdUPGFgnkQzLeULgYzXeRUVaS+M4Z7NLNAbOpTdIjTXiG1r2Uy4LEcd
-	 1geXGJ/eVZoN1LTVIpIXAnCie28UWQrxf1lNaR2naP3a4HB2Ka8majO5xWOgDBYIJs
-	 +DjERFUC9KUHdBpoXKKt4fMYic5RKw93gABhuxbQvM42y2LfCxgfnFzZuAGE8iX662
-	 5H8/EITDcDxpQ==
-Date: Thu, 11 Jun 2026 11:34:18 +0200
+	b=gO2+HB+dSMqvPSMzDGoem5nbamut+f22nTmegbMqmhUlvUSbJ5XpYl3jggfkNWw1L
+	 fJK4uKqnjUpoX6GONzuai8pHkOv2Eibbgrjbb0IL3lFhH6BXG1VUc9SAQ521067PFk
+	 kYaYljI44FeHCBzXjxV8HiCZbyvdcbchvaKGB6gJWe63+wPNzr55mgYSC8wcjz4FuZ
+	 ksA/vevapSRQksd8/aid512J9QKxv/DjyKmVhNO940cGm0Eh36+3wbvZT4vfrx2ZMt
+	 HoSyJav6z5ts/HA2ukvNz6o/St9MUgtqBm6IJjmPKLEp/BhnlXr+JD5BaXgoEHgLm8
+	 sXhnPbXNDMKeQ==
+Date: Thu, 11 Jun 2026 11:39:50 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
 Cc: Srinivas Kandagatla <srini@kernel.org>, 
@@ -56,10 +56,11 @@ Cc: Srinivas Kandagatla <srini@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>, 
 	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dt-bindings: sound: add qcom,wsa885x-i2c
-Message-ID: <20260611-debonair-barnacle-of-action-ee9d22@quoll>
+Subject: Re: [PATCH v1 2/2] ASoC: codecs: add Qualcomm WSA885X I2C codec
+ driver
+Message-ID: <20260611-straight-refined-beetle-e2c934@quoll>
 References: <20260610155708.151067-1-prasad.kumpatla@oss.qualcomm.com>
- <20260610155708.151067-2-prasad.kumpatla@oss.qualcomm.com>
+ <20260610155708.151067-3-prasad.kumpatla@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260610155708.151067-2-prasad.kumpatla@oss.qualcomm.com>
+In-Reply-To: <20260610155708.151067-3-prasad.kumpatla@oss.qualcomm.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
@@ -77,7 +78,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -88,7 +89,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:prasad.kumpatla@oss.qualcomm.com,m:srini@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linusw@kernel.org,m:brgl@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-sound@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38319-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38320-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -103,136 +104,158 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[quoll:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,devicetree.org:url,qualcomm.com:email]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[quoll:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E1C98670761
+X-Rspamd-Queue-Id: 422176707C3
 
-On Wed, Jun 10, 2026 at 09:27:07PM +0530, Prasad Kumpatla wrote:
-> Document the Qualcomm WSA885X I2C smart amplifier binding.
-> 
-> Describe the required supplies, powerdown and interrupt GPIOs, the
-> optional battery configuration, and the optional init-table property
-> used to program the device during codec initialization.
-> 
-> This matches the driver programming model and documents the DT data
-
-Binding matches hardware, not driver. Please describe the hardware.
-
-> needed to use the codec on platforms with Audio IF playback.
-> 
-> Signed-off-by: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
-> ---
->  .../bindings/sound/qcom,wsa885x-i2c.yaml      | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
-> new file mode 100644
-> index 000000000..1069f470d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
-
-There is no I2C in device name.
-
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wsa885x-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+On Wed, Jun 10, 2026 at 09:27:08PM +0530, Prasad Kumpatla wrote:
+> +};
 > +
-> +title: Qualcomm WSA885x I2C smart speaker amplifier
+> +static void wsa885x_gpio_set(struct wsa885x_i2c_priv *wsa885x, bool val)
+> +{
+> +	if (!wsa885x || !wsa885x->sd_n)
+
+How wsa885x can be NULL?
+
+This wrapper is pointless. Avoid creating abstraction layers over single
+call to standard kernel interfaces.
+
+> +		return;
 > +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-> +  - Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
+> +	gpiod_set_value_cansleep(wsa885x->sd_n, val);
+> +}
 > +
-> +description: |
 
-Do not need '|' unless you need to preserve formatting.
-
-> +  WSA885x is a Qualcomm Aqstic smart speaker amplifier with an I2C control
-> +  interface and a digital audio interface exposed through ASoC DAI callbacks.
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,wsa885x-i2c
-
-Same here
-
-Also, incorrect usage of wildcard. Look at other bindings how this is
-written, so you will not repeat the same comments:
-https://lore.kernel.org/all/20250522-rb2_audio_v3-v3-3-9eeb08cab9dc@linaro.org/
-
-Read writing bindings before posting next version.
-
-I also cannot find traces of internal review of this. Did it happen? Did
-you receive toolset comments?
+...
 
 > +
-> +  reg:
-> +    maxItems: 1
+> +static void wsa885x_gpio_powerdown(void *data)
+> +{
+> +	struct wsa885x_i2c_priv *wsa885x = data;
 > +
-> +  '#sound-dai-cells':
-> +    const: 0
-> +
-> +  powerdown-gpios:
-> +    description: GPIO controlling the SD_N powerdown pin.
-> +    maxItems: 1
-> +
-> +  interrupt-gpios:
+> +	if (!wsa885x)
+> +		return;
 
-No, interrupts are never written as GPIOs.
+How is this possible?
 
-Where is this binding coming from?
-
-> +    description: GPIO used for the codec interrupt output.
-> +    maxItems: 1
 > +
-> +  vdd-1p8-supply: true
+> +	wsa885x_gpio_set(wsa885x, true);
+> +}
 > +
-> +  vdd-io-supply: true
+
+...
+
+> +	if (count > 0) {
+> +		if (count % 2) {
+> +			dev_err(dev, "%s: Invalid number of elements in %s (%d)\n",
+> +				__func__, init_table_prop, count);
+> +			return -EINVAL;
+> +		}
+> +		if (count > WSA885X_INIT_TABLE_MAX_ITEMS) {
+> +			dev_err(dev, "%s: %s has too many elements (%d > %u)\n",
+> +				__func__, init_table_prop, count,
+> +				WSA885X_INIT_TABLE_MAX_ITEMS);
+> +			return -EINVAL;
+> +		}
+> +		wsa885x->init_table_size = count;
 > +
-> +  qcom,battery-config:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Speaker battery configuration, 1 for 1S and 2 for 2S.
-
-Use string
-
-> +    default: 1
-> +    enum: [1, 2]
+> +		wsa885x->init_table = devm_kcalloc(dev, wsa885x->init_table_size,
+> +						   sizeof(*wsa885x->init_table), GFP_KERNEL);
+> +		if (!wsa885x->init_table)
+> +			return -ENOMEM;
 > +
-> +  qcom,wsa885x-init-table:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 2
-> +    maxItems: 256
-> +    description: |
-> +      Sequence of register/value pairs applied during codec hardware
-
-No, we don't store register values usually.
-
-> +      initialization. Entries are encoded as alternating register address and
-> +      register value cells. The number of entries must be even (register/value
-> +      pairs); maxItems is 256 (128 pairs).
+> +		if (device_property_read_u32_array(dev, init_table_prop,
+> +						   wsa885x->init_table,
+> +						   wsa885x->init_table_size)) {
+> +			dev_err(dev, "%s: Failed to read %s\n",
+> +				__func__, init_table_prop);
+> +			return -EINVAL;
+> +		}
+> +	}
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#sound-dai-cells'
-> +  - powerdown-gpios
-> +  - interrupt-gpios
-> +  - vdd-1p8-supply
-> +  - vdd-io-supply
+> +	ret = device_property_read_u32(dev, "qcom,battery-config",
+> +				       &wsa885x->batt_conf);
+> +	if (ret) {
+> +		wsa885x->batt_conf = WSA885X_BATT_1S;
+> +	} else if (wsa885x->batt_conf != WSA885X_BATT_1S &&
+> +		   wsa885x->batt_conf != WSA885X_BATT_2S) {
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid battery config %u (expected 1S or 2S)\n",
+> +				     wsa885x->batt_conf);
+> +	}
 > +
-> +additionalProperties: false
+> +	for (i = 0; i < WSA885X_SUPPLIES_NUM; i++)
+> +		wsa885x->supplies[i].supply = wsa885x_supply_name[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, WSA885X_SUPPLIES_NUM, wsa885x->supplies);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+> +
+> +	ret = regulator_bulk_enable(WSA885X_SUPPLIES_NUM, wsa885x->supplies);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+> +
+> +	ret = devm_add_action_or_reset(dev, wsa885x_regulator_disable, wsa885x);
 
-unevaluated instead. Again, OPEN other existing bindings. Why doing
-something completely different? Is there any WSA88xx binding with
-additionalProperties? No.
+Why you cannot simply use devm_regulator_get_enable?
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
+> +
+> +	wsa885x->sd_n = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(wsa885x->sd_n))
+> +		return dev_err_probe(dev, PTR_ERR(wsa885x->sd_n),
+> +							 "Shutdown Control GPIO not found\n");
+
+Messed/misaligned indentation.
+
+> +
+> +	wsa885x_gpio_set(wsa885x, false);
+> +
+> +	ret = devm_add_action_or_reset(dev, wsa885x_gpio_powerdown, wsa885x);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
+> +
+> +	i2c_set_clientdata(client, wsa885x);
+> +
+> +	wsa885x->intr_pin = devm_gpiod_get(dev, "interrupt", GPIOD_IN);
+> +	if (IS_ERR(wsa885x->intr_pin))
+> +		return dev_err_probe(dev, PTR_ERR(wsa885x->intr_pin),
+> +							 "Interrupt GPIO not found\n");
+> +
+> +	ret = wsa885x_register_irq(wsa885x);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "wsa885x irq registration failed\n");
+> +
+> +	ret = devm_snd_soc_register_component(dev, component_driver,
+> +					      wsa885x_i2c_dai,
+> +					      ARRAY_SIZE(wsa885x_i2c_dai));
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Codec component registration failed\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id wsa885x_i2c_dt_match[] = {
+> +	{
+> +		.compatible = "qcom,wsa885x-i2c",
+> +	},
+> +	{}
+> +};
+> +
+> +static const struct i2c_device_id wsa885x_id_i2c[] = {
+> +	{"wsa885x_i2c", 0},
+
+Used named initializers.
+
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, wsa885x_id_i2c);
+> +MODULE_DEVICE_TABLE(of, wsa885x_i2c_dt_match);
+
+Don't come with own coding style. Each above goes IMMEDIATELY after the table.
 
 Best regards,
 Krzysztof
