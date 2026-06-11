@@ -1,304 +1,185 @@
-Return-Path: <linux-gpio+bounces-38312-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38313-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +cePBNVvKmpJpQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-38312-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 10:20:37 +0200
+	id bkCeHzhxKmqepQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-38313-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 10:26:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AB6F66FCC1
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 10:20:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF03066FD68
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 10:26:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kWlxg8LF;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38312-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38312-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=WP5fVf7b;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38313-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38313-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=samsung.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8A7AE3004D18
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 08:20:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9A143300CEAC
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2026 08:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 157C0377EA1;
-	Thu, 11 Jun 2026 08:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC058379C53;
+	Thu, 11 Jun 2026 08:26:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB9D375F80;
-	Thu, 11 Jun 2026 08:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06558379974
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Jun 2026 08:26:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781166006; cv=none; b=ixhswIch2iwLwQYuLszCUJIA7HwC2aT18illtw8FQBqRWYTIvHVa87eUb//e0fUcPz3A3e4V0anjfdyIxuRhPY5g3PqWgQ5zYad7bbFnQQBx1AE7H/ttJd5fiWEFt4NfXKygvNrohMU1LnrGZuUayQN26nge/ykFXzN8mRMQdpk=
+	t=1781166388; cv=none; b=O/iX3MK7KFoKoPi9cMm+rr5e8/5NhrTcn87pSWW2jZia0AU2QMUb8/MH3oDtvXMBYLJXZ8B5u42FiSqgNiVVqinlRQERuYuspEMQRciC0KCcvWZcWj6ZzxkHDT4Wn61fxuRhnqCCjOOiIavGhoiUrGSTiv+Osj9FTvd2K3aN6yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781166006; c=relaxed/simple;
-	bh=jHOP6IhQ37hetV0uorj1mEiX8MFbmjK/VF+clQ/ci64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qnbmaGWrLhbGKMKiIqhXD2OYeRdu9V8VPdUPGqtdBhihveOqc1nvlX1qjA6hMgHiQCutV7WVLRrfmNLr9bkX9UGCDpwJyvaVlxPY2X7H6A/riyAHntzZEyBM2xi5LjFc3dD9CeQ1tP7Ew7ReJBusfm/4XfagNBxZ3IQqkoe3K9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWlxg8LF; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234A21F00893;
-	Thu, 11 Jun 2026 08:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781166005;
-	bh=fr+DMHV7C/ONH1wbSjwWQxeSkxkzZtV3gH63+z7VYZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kWlxg8LFLCAeQTFADVA9UsmL3cBo4vuLEta8ks3k/wLAFPzCLSS+3re9JM4+LcpS4
-	 YC2Zl2fRTK4N/76LIk8JgxaUswuj9lgxBFVzcKauEV6v3E4BvZ+oW2Y50sArj+vgKE
-	 sq1GDO7iZ10+PbMUmda/rz6XcgsO09627Ozm7QpJId3hdrOnGzbt9/Uj57tq1hP6Ti
-	 G8PHa81vRpgOkDr0hq64S2tktMrFtJQw84m/Dw8ektnBIwIDu8EhgCd2LX62z+yBAe
-	 Ddnon1tfqm/lJL86YggAekIubSRYedpLks0yh0ucOYfnSff7xzPkwPTODEbN4UgU5J
-	 G8JBHg7C0AXOQ==
-Date: Thu, 11 Jun 2026 09:20:00 +0100
-From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v5 2/2] mfd: arizona: Convert GPIO IRQ handling to
- descriptors
-Message-ID: <20260611082000.GL4151951@google.com>
-References: <20260527-mfd-arizona-irq-v5-0-ebeda2e925da@kernel.org>
- <20260527-mfd-arizona-irq-v5-2-ebeda2e925da@kernel.org>
+	s=arc-20240116; t=1781166388; c=relaxed/simple;
+	bh=yrHk8vQXuFVs66bjErYiRp21ChFTNAqXmEMeBmKpI4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=lqgiEbOeBCG6bTpS9k2uASj0MEMoap7A2WH85ZNJ/25RTWexzr/GzWWLIK+YTQSI3LWZpBcORv6zOuY5ng4/f7e9FZriXAux/2bqXCyjhzMXMOi3l2XbVDR9kQJVSFmrigy94zzroDpuF1GoE+G1PV89IST7Kqb9UA6eSoOhJbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WP5fVf7b; arc=none smtp.client-ip=210.118.77.12
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20260611082616euoutp0259c3b49b7cf8a5fd610eb2b7b77de723~3_WHQ3-G02244822448euoutp02Y
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Jun 2026 08:26:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20260611082616euoutp0259c3b49b7cf8a5fd610eb2b7b77de723~3_WHQ3-G02244822448euoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1781166376;
+	bh=DhwGhRTjppBgNw8HHFKEmC3YfseR6UOeLF4WLAZNcaw=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=WP5fVf7bqkbo4VdgHWn8qqtBKF+RHRqV6LI00ZwUCFzhaBP9Eq70e7Py9u09YikTW
+	 Fm6zSKjRTYXbF6SnqgLbnVCAvgIU09OXFAIR8ifTes5554DpJgawudUQOPqaZxhgZJ
+	 BjdWLYKrK2SjvkVRm9a5LiwWmJee0pVSsXSXo/Mo=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260611082615eucas1p2e0d075707c644743cc2b745ed838d646~3_WGwPZ402819828198eucas1p2c;
+	Thu, 11 Jun 2026 08:26:15 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260611082614eusmtip15addb285747362b715188d44fa381fda~3_WGD3M962800828008eusmtip1H;
+	Thu, 11 Jun 2026 08:26:14 +0000 (GMT)
+Message-ID: <184d315b-a0a1-4792-8a40-1b4967025916@samsung.com>
+Date: Thu, 11 Jun 2026 10:26:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260527-mfd-arizona-irq-v5-2-ebeda2e925da@kernel.org>
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 0/2] gpio: fix sleeping-in-atomic in shared-proxy;
+ restore meson non-sleeping
+To: Viacheslav Bocharov <v@baodeep.com>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+	<khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
+	Blumenstingl <martin.blumenstingl@googlemail.com>, Robin Murphy
+	<robin.murphy@arm.com>, Diederik de Haas <diederik@cknow-tech.com>,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20260610153329.937833-1-v@baodeep.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20260611082615eucas1p2e0d075707c644743cc2b745ed838d646
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260610153425eucas1p29d20a835114a28b15cb12ea00534e074
+X-EPHeader: CA
+X-CMS-RootMailID: 20260610153425eucas1p29d20a835114a28b15cb12ea00534e074
+References: <CGME20260610153425eucas1p29d20a835114a28b15cb12ea00534e074@eucas1p2.samsung.com>
+	<20260610153329.937833-1-v@baodeep.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-3.65 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-38313-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38312-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ckeepax@opensource.cirrus.com,m:patches@opensource.cirrus.com,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[lee@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER(0.00)[m.szyprowski@samsung.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FORGED_RECIPIENTS(0.00)[m:v@baodeep.com,m:linusw@kernel.org,m:brgl@kernel.org,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:heiko@sntech.de,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org,sntech.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lee@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[m.szyprowski@samsung.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[samsung.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,cirrus.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:dkim,samsung.com:email,samsung.com:mid,samsung.com:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0AB6F66FCC1
+X-Rspamd-Queue-Id: CF03066FD68
 
-Couple of Sashiko issues I'd like you to comment on please buddy.
+Hi Viachesla,
 
-On Wed, 27 May 2026, Linus Walleij wrote:
+On 10.06.2026 17:32, Viacheslav Bocharov wrote:
+> gpio-shared-proxy chooses its descriptor lock (mutex vs spinlock) from
+> the underlying chip's can_sleep, but under that lock it calls config and
+> direction ops that reach sleeping pinctrl paths. On a controller with
+> non-sleeping MMIO value ops the lock is a spinlock, so a sleeping call
+> runs from atomic context:
+>
+>   BUG: sleeping function called from invalid context
+>     ... pinctrl_gpio_set_config <- gpiochip_generic_config
+>     <- gpio_shared_proxy_set_config (voting spinlock held)
+>     <- ... <- mmc_pwrseq_simple_probe
+>
+> This was reported on Khadas VIM3 and worked around for Amlogic by
+> commit 28f240683871 ("pinctrl: meson: mark the GPIO controller as
+> sleeping"), which marked the whole meson controller sleeping. That
+> workaround broke atomic value-path consumers: w1-gpio (1-Wire bitbang)
+> no longer detects devices, because its IRQ-disabled read slot calls the
+> non-cansleep gpiod_*_value() and now hits WARN_ON(can_sleep) per bit.
+>
+> Patch 1 fixes the proxy locking generically (always a sleeping mutex).
+> Patch 2 then restores meson can_sleep=false, fixing 1-Wire.
+>
+> Patch 1 has a trade-off: a proxied GPIO becomes sleeping, so consumers
+> gating on gpiod_cansleep() change behaviour. No current device needs
+> atomic (non-cansleep) value access on a shared GPIO -- every report
+> (Khadas VIM3, ODROID-M1, my test on JetHub D1+) is a shared reset line
+> (eMMC/SDIO pwrseq or PCIe reset) driven through the cansleep accessors,
+> which is what the proxy exists to vote on. An alternative that keeps
+> atomic value access (split locking) is possible but adds a second lock
+> and new race windows. I went with the simpler, verified approach and
+> would appreciate guidance on whether the atomic value path must be
+> preserved.
+>
+> The two are a unit: patch 2 must not be applied without patch 1,
+> otherwise the original VIM3 splat returns on boards that share a meson
+> GPIO -- please keep the order. I have not Cc'd stable; I will request
+> stable backports separately once both patches have landed.
+>
+> Viacheslav Bocharov (2):
+>   gpio: shared-proxy: always serialize with a sleeping mutex
+>   pinctrl: meson: restore non-sleeping GPIO access
 
-> Convert the arizona polling GPIO handling to use a GPIO descriptor
-> instead of passing a global GPIO number as platform data.
-> 
-> This mechanism is not used in the kernel, but let's preserve
-> the mechanism to be nice.
-> 
-> Users can define "irq-gpios" in the devicetree or software node
-> for the Arizona chip to provide the GPIO line corresponding to
-> the IRQ.
-> 
-> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
-> ---
->  drivers/mfd/arizona-irq.c         | 50 +++++++++++++++++++++------------------
->  include/linux/mfd/arizona/core.h  |  2 ++
->  include/linux/mfd/arizona/pdata.h |  5 ----
->  3 files changed, 29 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/mfd/arizona-irq.c b/drivers/mfd/arizona-irq.c
-> index 544016d420fe..cf8e42662585 100644
-> --- a/drivers/mfd/arizona-irq.c
-> +++ b/drivers/mfd/arizona-irq.c
-> @@ -136,21 +136,19 @@ static irqreturn_t arizona_irq_thread(int irq, void *data)
->  			dev_err(arizona->dev,
->  				"Failed to read main IRQ status: %d\n", ret);
->  		}
-> -#ifdef CONFIG_GPIOLIB_LEGACY
->  		/*
->  		 * Poll the IRQ pin status to see if we're really done
->  		 * if the interrupt controller can't do it for us.
->  		 */
-> -		if (!arizona->pdata.irq_gpio) {
-> +		if (!arizona->irq_gpiod) {
->  			break;
->  		} else if (arizona->pdata.irq_flags & IRQF_TRIGGER_RISING &&
-> -			   gpio_get_value_cansleep(arizona->pdata.irq_gpio)) {
-> +			   gpiod_get_value_cansleep(arizona->irq_gpiod)) {
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[Severity: High]
-Does this incorrectly check the logical value of the GPIO instead of the raw
-physical state?
+This probably also affects the similar changes in Rockchip GPIO driver done
+by the following commits:
+20cf2aed89ac ("gpio: rockchip: mark the GPIO controller as sleeping")
+7ca497be0016 ("gpio: rockchip: Stop calling pinctrl for set_direction")
 
-The legacy gpio_get_value_cansleep() returned the raw physical state of the
-pin. The new gpiod_get_value_cansleep() returns the logical state, which
-incorporates the ACTIVE_LOW flag from the devicetree or software node.
+I've checked this patchset with these two reverted and no warning was reported.
 
-Because the IRQ trigger flags describe physical voltage transitions, comparing
-these physical flags against a logical value might be incorrect. For example,
-if a user defines irq-gpios with GPIO_ACTIVE_LOW for a falling edge interrupt,
-a physically low line becomes logically 1, causing the polling condition
-!gpiod_get_value_cansleep() to evaluate to 0, which fails to poll when the
-interrupt is active.
-
-Conversely, when the line is idle, it evaluates to 1, causing the IRQ handler
-to poll infinitely.
-
-Should this use gpiod_get_raw_value_cansleep() to preserve the original
-physical semantics?
-
-
-
-[Severity: High]
-This is a pre-existing issue, but can this loop forever if the GPIO read
-returns a negative error code?
-
-gpiod_get_value_cansleep() (and its legacy predecessor) can return a negative
-error code (e.g., -EIO) if reading the GPIO state fails over the bus. Since
-negative values are non-zero, this evaluates to true for IRQF_TRIGGER_RISING,
-setting poll = true and causing an infinite loop in the IRQ handler thread if
-the read continues to fail.
-
-Conversely, for IRQF_TRIGGER_FALLING, !(-EIO) evaluates to false, which
-immediately aborts the poll.
-
-Could the return value be stored in an integer and explicitly checked for
-negative errors before evaluating it as a boolean?
-
-
->  			poll = true;
->  		} else if (arizona->pdata.irq_flags & IRQF_TRIGGER_FALLING &&
-> -			   !gpio_get_value_cansleep(arizona->pdata.irq_gpio)) {
-> +			   !gpiod_get_value_cansleep(arizona->irq_gpiod)) {
->  			poll = true;
->  		}
-> -#endif
->  	} while (poll);
->  
->  	pm_runtime_put_autosuspend(arizona->dev);
-> @@ -210,6 +208,7 @@ int arizona_irq_init(struct arizona *arizona)
->  	const struct regmap_irq_chip *aod, *irq;
->  	struct irq_data *irq_data;
->  	unsigned int virq;
-> +	int gpio_irq;
->  
->  	arizona->ctrlif_error = true;
->  
-> @@ -350,27 +349,32 @@ int arizona_irq_init(struct arizona *arizona)
->  		goto err_map_main_irq;
->  	}
->  
-> -#ifdef CONFIG_GPIOLIB_LEGACY
-> -	/* Used to emulate edge trigger and to work around broken pinmux */
-> -	if (arizona->pdata.irq_gpio) {
-> -		if (gpio_to_irq(arizona->pdata.irq_gpio) != arizona->irq) {
-> -			dev_warn(arizona->dev, "IRQ %d is not GPIO %d (%d)\n",
-> -				 arizona->irq, arizona->pdata.irq_gpio,
-> -				 gpio_to_irq(arizona->pdata.irq_gpio));
-> -			arizona->irq = gpio_to_irq(arizona->pdata.irq_gpio);
-> +	/*
-> +	 * Used to emulate edge trigger and to work around broken pinmux
-> +	 * define "irq-gpios" in device tree or software node.
-> +	 */
-> +	arizona->irq_gpiod = devm_gpiod_get_optional(arizona->dev, "irq",
-> +						     GPIOD_IN);
-> +	if (IS_ERR(arizona->irq_gpiod)) {
-> +		ret = dev_err_probe(arizona->dev,
-> +				    PTR_ERR(arizona->irq_gpiod),
-> +				    "Error getting IRQ GPIO\n");
-> +		goto err_main_irq;
-> +	}
-> +	if (arizona->irq_gpiod) {
-> +		gpio_irq = gpiod_to_irq(arizona->irq_gpiod);
-> +		if (gpio_irq < 0) {
-> +			ret = dev_err_probe(arizona->dev, gpio_irq,
-> +					    "GPIO IRQ line is invalid\n");
-> +			goto err_main_irq;
->  		}
-> -
-> -		ret = devm_gpio_request_one(arizona->dev,
-> -					    arizona->pdata.irq_gpio,
-> -					    GPIOF_IN, "arizona IRQ");
-> -		if (ret != 0) {
-> -			dev_err(arizona->dev,
-> -				"Failed to request IRQ GPIO %d:: %d\n",
-> -				arizona->pdata.irq_gpio, ret);
-> -			arizona->pdata.irq_gpio = 0;
-> +		if (gpio_irq != arizona->irq) {
-> +			dev_warn(arizona->dev, "IRQ %d does not match GPIO's IRQ %d\n",
-> +				 arizona->irq, gpio_irq);
-> +			arizona->irq = gpio_irq;
->  		}
-> +		gpiod_set_consumer_name(arizona->irq_gpiod, "arizona IRQ");
->  	}
-> -#endif
->  
->  	ret = request_threaded_irq(arizona->irq, NULL, arizona_irq_thread,
->  				   flags, "arizona", arizona);
-> diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/arizona/core.h
-> index 6d6f96b2b29f..7129651c9af6 100644
-> --- a/include/linux/mfd/arizona/core.h
-> +++ b/include/linux/mfd/arizona/core.h
-> @@ -11,6 +11,7 @@
->  #define _WM_ARIZONA_CORE_H
->  
->  #include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/notifier.h>
->  #include <linux/regmap.h>
-> @@ -136,6 +137,7 @@ struct arizona {
->  	struct irq_domain *virq;
->  	struct regmap_irq_chip_data *aod_irq_chip;
->  	struct regmap_irq_chip_data *irq_chip;
-> +	struct gpio_desc *irq_gpiod;
->  
->  	bool hpdet_clamp;
->  	unsigned int hp_ena;
-> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-> index d465dcd8c90a..2f980d51cdfa 100644
-> --- a/include/linux/mfd/arizona/pdata.h
-> +++ b/include/linux/mfd/arizona/pdata.h
-> @@ -178,11 +178,6 @@ struct arizona_pdata {
->  	/** Haptic actuator type */
->  	unsigned int hap_act;
->  
-> -#ifdef CONFIG_GPIOLIB_LEGACY
-> -	/** GPIO for primary IRQ (used for edge triggered emulation) */
-> -	int irq_gpio;
-> -#endif
-> -
->  	/** General purpose switch control */
->  	unsigned int gpsw;
->  };
-> 
-> -- 
-> 2.54.0
-> 
-
+Best regards
 -- 
-Lee Jones
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
