@@ -1,154 +1,138 @@
-Return-Path: <linux-gpio+bounces-38374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38375-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uh0RMrwwLGogNQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38374-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 18:15:56 +0200
+	id HEkOAQpPLGqoPAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38375-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 20:25:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41D4067ACA0
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 18:15:56 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6272A67BA88
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 20:25:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=SsLYRTmM;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38374-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38374-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=samsung.com;
+	dkim=pass header.d=intel.com header.s=Intel header.b=QySR2KP0;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38375-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38375-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BED6533BFEA2
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 16:11:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0943E31F3532
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 18:18:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A663955CD;
-	Fri, 12 Jun 2026 16:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6905337BE9C;
+	Fri, 12 Jun 2026 18:18:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC23B3914E4
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 16:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A7638239B
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 18:18:13 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781280716; cv=none; b=ICzXwXpi3PrUtQLSYxa6GU/HdZNMFz3yg+vO0T9r/zAodoCmHEZw2RzX3cgK6F7NkuGQrqV7nOuXoSi9oe+msJHAwV9tUG6LljGSQiTH4exQIQZyWbPiG8sneSXMPx8Gs0SkENz0VBTU9N92ab2bHrmyLYJSur/BzmvIBTb+xk0=
+	t=1781288295; cv=none; b=XnI4ve+/1OLAALt+9qLcI3rLApXF9kIG/ilBwXfDsewN3VqoCQZnkIoDTaqjnI04ySihg1I+vmJXpW92T3ag3cdKvpV7bKBEYMlAX4Jeq1t1YzKll6oW5KrAPROzPxkujcdQ42kvGqRlBQyiLFBb1liMdhKslwtNP2UA5niNHVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781280716; c=relaxed/simple;
-	bh=hqIZNEJ+ngwlZ761oj7BZgDyKDMxvbazfKsfFaHaPBQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=oTj9GN9isL3jBv4SkmpIBjmtwfwCmZ4P22Zj71kNdYV1c4FCpbt55ic+F9ex1SOqrsBX1oeNLCPwO6+esKeIHmIf6BsTIXgPnQ/IEsX9bpRTl0zTjzpql5CazikWPNYMvwsmQHyOcngUrY5fSbHywRnr8EboI/4lK8S6Z/3j7oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SsLYRTmM; arc=none smtp.client-ip=203.254.224.25
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260612161151epoutp023a3a968adb4e1e60c2e2fa29e4097575~4YV56801b1807818078epoutp02M
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 16:11:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260612161151epoutp023a3a968adb4e1e60c2e2fa29e4097575~4YV56801b1807818078epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1781280711;
-	bh=yaYCowk7JVZ5hc+4haO2BGnTeTwQ73DyggnqwLDb2as=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SsLYRTmMUTDiOWZonhICrLVWD4VceVyRQZuPWuhgv1ae+UdFgy8b8QLizPYnqImwN
-	 mzZXbMP7w475RcRyc6qcEIJZ61bO1LQokwL3k6cJnAKgA5Hyps1YfbMq9oHWiUxDci
-	 u9Pu/RtvM5yUDG85bfRjo2OwFonV72tRD8moROP0=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260612161149epcas5p1f98f57d56cf872c97db48be3bd4f9fc1~4YV48nMGB1158811588epcas5p13;
-	Fri, 12 Jun 2026 16:11:49 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.92]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4gcPfF2RnXz3hhT3; Fri, 12 Jun
-	2026 16:11:49 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20260612161148epcas5p33904df90bd840d20a6db05622aaa28b8~4YV3Hzo0y1868818688epcas5p38;
-	Fri, 12 Jun 2026 16:11:48 +0000 (GMT)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260612161145epsmtip12f104651608bcf2fb1a3b7b036a8c368~4YV1DZASj0270302703epsmtip1l;
-	Fri, 12 Jun 2026 16:11:45 +0000 (GMT)
-From: Alim Akhtar <alim.akhtar@samsung.com>
-To: krzk@kernel.org, peter.griffin@linaro.org, robh@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	hajun.sung@samsung.com, Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH 5/5] MAINTAINERS: Add entry for Samsung Exynos8855 SoC
-Date: Fri, 12 Jun 2026 22:00:20 +0530
-Message-Id: <20260612163020.411761-6-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260612163020.411761-1-alim.akhtar@samsung.com>
+	s=arc-20240116; t=1781288295; c=relaxed/simple;
+	bh=GgXwtHCxCdjGr2EMLikfw9VatVYG3ZHRAJxS0RtI0o0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iJJ64oJxjHeBahtBFgCWMG5RGRFw//yyLxXnGoL9/w7Uh11G1tQcTuV08mZpA4U4L5wlvifoGwgmrkwInZJGyVKyLQF/HkonWr8vVS+A6cAXowIUmPHmyroPUYiQCicZRzOnKrOH+kmQNUazVD5BPt8fx50Vjvx35vtQl9bWfzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QySR2KP0; arc=none smtp.client-ip=192.198.163.12
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781288294; x=1812824294;
+  h=date:from:to:cc:subject:message-id;
+  bh=GgXwtHCxCdjGr2EMLikfw9VatVYG3ZHRAJxS0RtI0o0=;
+  b=QySR2KP0RyNKo3EoALDdQbjNTPqGul48lRv7ri3s+5eqQydaUUX33SlY
+   +vTrhIq8JG4IzR+DOqDP6MUDfA55iJU+DwTnRfMllrjGuiAw2pAJZHn8t
+   xKGqRQvJQb/o2X1U0HoCjhkQMKt9G/wdvyTdWIXY8pP/BXRQwHZLFdgHN
+   jE50nfQ75FhxfI9B6smn+tb+a90M7OubzTJvD0MTaBqy/wjcyxszxLlRE
+   npSVUySkBhNFvXME1Q3USs0dzQkLftPHEIhwYUKsYQ363Z92EWpoAVMyj
+   KNLACRLcdSe5P4EvfvljlPYrDEisoXP+fwpldd94gKbGNlyk+6F6usyd1
+   w==;
+X-CSE-ConnectionGUID: oPyqtaFTQ8KjFgTH0TwQPw==
+X-CSE-MsgGUID: ZwpLRV1qTIu8ZhLuh4tZKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="85969208"
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="85969208"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 11:18:13 -0700
+X-CSE-ConnectionGUID: +vqLKWf9T+irdFBg0Zrxtg==
+X-CSE-MsgGUID: gisD8UCbQmeAb2PyXyWVEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="251170555"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 12 Jun 2026 11:18:11 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wY6SG-00000000PBJ-1fAc;
+	Fri, 12 Jun 2026 18:18:08 +0000
+Date: Sat, 13 Jun 2026 02:17:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jia Wang <wangjia@ultrarisc.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [linusw-pinctrl:devel 125/127] ERROR: modpost:
+ "pinctrl_get_group_selector" [drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.ko]
+ undefined!
+Message-ID: <202606130210.ytVPxHlm-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260612161148epcas5p33904df90bd840d20a6db05622aaa28b8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-543,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260612161148epcas5p33904df90bd840d20a6db05622aaa28b8
-References: <20260612163020.411761-1-alim.akhtar@samsung.com>
-	<CGME20260612161148epcas5p33904df90bd840d20a6db05622aaa28b8@epcas5p3.samsung.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38374-lists,linux-gpio=lfdr.de];
+	SUBJECT_ENDS_EXCLAIM(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:dkim,samsung.com:email,samsung.com:mid,samsung.com:from_mime,infradead.org:email,vger.kernel.org:from_smtp,linaro.org:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:alim.akhtar@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-38375-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:wangjia@ultrarisc.com,m:llvm@lists.linux.dev,m:oe-kbuild-all@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,s:lists@lfdr.de];
 	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:dkim,intel.com:email,intel.com:mid,intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 41D4067ACA0
+X-Rspamd-Queue-Id: 6272A67BA88
 
-Add maintainers entry for the Samsung Exynos8855 SoC based platforms
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+head:   981aefd53b3cdafae0e45332a1023b80d67f52be
+commit: cb7037924836a352e767f69f1aa65b82f3e815f4 [125/127] pinctrl: ultrarisc: Add UltraRISC DP1000 pinctrl driver
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20260613/202606130210.ytVPxHlm-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project c8ad049db78ae52052722b6f42b54cd2a666072b)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260613/202606130210.ytVPxHlm-lkp@intel.com/reproduce)
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606130210.ytVPxHlm-lkp@intel.com/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 49a10f0ceb07..fb9b24220258 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23914,6 +23914,13 @@ F:	arch/arm64/boot/dts/exynos/exynos850*
- F:	drivers/clk/samsung/clk-exynos850.c
- F:	include/dt-bindings/clock/exynos850.h
- 
-+SAMSUNG EXYNOS8855 SoC SUPPORT
-+M:	Alim Akhtar <alim.akhtar@samsung.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-samsung-soc@vger.kernel.org
-+S:	Maintained
-+F:	arch/arm64/boot/dts/exynos/exynos8855*
-+
- SAMSUNG EXYNOS ACPM MAILBOX PROTOCOL
- M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- L:	linux-kernel@vger.kernel.org
--- 
-2.34.1
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
+>> ERROR: modpost: "pinctrl_get_group_selector" [drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.ko] undefined!
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
