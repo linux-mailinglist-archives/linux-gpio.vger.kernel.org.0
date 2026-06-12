@@ -1,214 +1,166 @@
-Return-Path: <linux-gpio+bounces-38368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8nIKAQrcK2pIGgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38368-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 12:14:34 +0200
+	id MxcNIDswLGrtNAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38369-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 18:13:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 701A1678A20
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 12:14:33 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9BBA67AC43
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 18:13:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=VpYABd48;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38368-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38368-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=ptBKKfSx;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38369-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38369-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=samsung.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BD6D0319047C
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 10:14:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C9500326080D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 16:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF0723A9DB2;
-	Fri, 12 Jun 2026 10:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0C1390C88;
+	Fri, 12 Jun 2026 16:11:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801593AD524
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 10:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C99A2BE7D1
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 16:11:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781259241; cv=none; b=KmGdFGV0M5dasGCZxBHYDk36gsol5XGLmewiktaRS1uPn8SMoJ0kPQ5puHCplqa1/x+fxyA/DG/g6uJ0dGFy1sTzxE9fONPc2Itt4/X+2DVGRfFonPEpHc40aR6rJjSPVSXq9xGs4lhucmJ5FKsN9jtgeR8ufEnPia2r/3F6qTA=
+	t=1781280701; cv=none; b=bTIz0f39gzfQNUhzx29l2KWsyIbwY0OA1J+tjQ9CZ/dpN7Dk9M60nCYYnpqrezYPMY2QSjYm4cPd7+A2vhHmPTRNq4wlq8jB3Ol6JSLf09yrBkgOSUVBx7NeIDb7EoTgZESECl7R4nPSDTqsGLFwk0cOh1e5Rh0yWRf7FRrLENs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781259241; c=relaxed/simple;
-	bh=UVsYCrTgabPt3+1KO398dNio5IWM0Bffio+EXkZMC24=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tLDsP97DM1BPunyWGximXjUBnOOLzyHL+HGxg5o7km1u6td9JCBZ/42mTwZR7RmRpTmWRyMpzmHWHC7XzL8zrZqrPnNxYodJhIP4awKJQVHn1BlM7xBaVe+UPEfc1XaNSs77dGHRS6m4rlHvy66H2igSmFWEngZA/twcS0ybOaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VpYABd48; arc=none smtp.client-ip=209.85.215.169
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c86307c4e6bso308817a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 03:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781259240; x=1781864040; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qRIQSXlzENM4jEBupLB81DONFaVdzlOx+4/Y850SEjk=;
-        b=VpYABd48xVXG0LfcZ6wp/A7UUJrWmiMS/gEWmNN3GthV8viWPzEGveKV6NhbbR/V3r
-         PUlYOSx2RCFCZByhY96I6NZgPf7UCgdLw36jGIUTmEXtVVD47sMgZi8P/a8ddqKcD5sS
-         DPPWdAhhs7kyM2fBcN0VNRQRWLnfok6ov5oqoVz4YTqtcZHCdDk6hx74VGZAOFwgK83g
-         SQgWf7RqQUfw8Yry96mCgO6g4m6x9+0FOjpDbqSw9D0xE01MhVYCw/u530KRu2q/k8vc
-         WyrO1QvOJFBZ9kw1QCf/jxTkp5y85y8H/0U0D/ug1w8FlL1uHVZnI0GxUPdz57op2xjM
-         GgUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781259240; x=1781864040;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qRIQSXlzENM4jEBupLB81DONFaVdzlOx+4/Y850SEjk=;
-        b=gEkdBF8VfAVurrDsUXl5/AZ0Hy0NyJTMexUFY7RgdssPp3GUtfLHs6fWdn8RNSb4TI
-         vm3/HnDBk/3smbR36PuQvkrCiwkHmNCPaOcO4iQ+RwShh22wEdvKaJSCKdfzzJixdDQL
-         eY6/z1ViAZ86D6LRIIwdWoggy+7Bao+s5EniefAq0H+P9+braTvUDl70RQM39ra1dsXZ
-         sMjSoUNqX0RDEVLAR66vTuAA2KmqBoIvzUjx4kFWQAK3IRLsvsroogDl51XEnaPJjt/6
-         lrkx/0z6/j62g0RfkrL6xA5XYku0ej7hQ+xJRTvwiTvHSwi6rQ54dUKgSas5Vj3NbhUz
-         4Ctw==
-X-Forwarded-Encrypted: i=1; AFNElJ+AfBHEPQPTDfo2+GP4MgGNO412Chq/BdAdiwkhS8u3Y8O+YWknu0pvH1b4649Qz18ce1kVyRaphRVx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyad44vlWC+BWxTetMnTSAdB4wK0cVioS1rYsbxsw0MlZevzwnc
-	azzLhwx0MIWvEa4TCsRb+xu5IW8ShwxOLavnWo+f8ruBLcA4O4wo5mwzpwbwRhKCcuU=
-X-Gm-Gg: Acq92OEASwPMPfwjywA5ApHAhnHGQv06iOUww+hnukOiNrxPEEd0GEQWmh0DGLu01y7
-	Sqmw5G/rnUDS6tmt1kjZZrZghgs1jYZBP9Evnmx3qXrPOzDW0cMmyJv61nX5TZl5EFRp8PxQRBb
-	Vt2AKEwlDbTj/lZhnJTFNtX7en00lSTyzJVQuCPB5ZJv7sRuNF3YgZ2W9AYup5/vk/LSpbYF+/D
-	xDc55OO3kXRT2JTZBWI1HiLA1tPZjJwY9MEPX6jFhdVShBP8i18MOpCKksBn2var+UaA8JYe59J
-	KMl/eFGltaKnNTeNehACgDPF5j2a127Dhh6+cbj++zABi5ySZE1DY5JwRghvZYQUD9SZ7Pn20xs
-	30JRuCqCRnelMXlFvKgf48+aZ2XgrKo+4sR0Exv7efLkwyy+ylVuAS3HkAY1E7SqljnhND0KBSl
-	hb1e88GSndbTwxaqqYiDbl
-X-Received: by 2002:a05:6a20:d04f:b0:398:6ea8:21d2 with SMTP id adf61e73a8af0-3b783c1bc74mr2993626637.19.1781259239751;
-        Fri, 12 Jun 2026 03:13:59 -0700 (PDT)
-Received: from [127.0.1.1] ([150.117.174.129])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c86651adc16sm1557909a12.31.2026.06.12.03.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 03:13:59 -0700 (PDT)
-From: GaryWang <is0124@gmail.com>
-Date: Fri, 12 Jun 2026 18:13:33 +0800
-Subject: [PATCH v2 2/2] pinctrl: upboard: add device id INTC1055 based UP
- boards support
+	s=arc-20240116; t=1781280701; c=relaxed/simple;
+	bh=C4h9EdJZYlADWuf36oAoqn7TGOV0koyiTZfT0PDJDNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=geP5poAHcm62ep4CWf7kfprde4HtLUmW0Uj6j7szUBBY36uGCLspPqXeaOFjR4+FieliKvpOR6pqD4qUMTCUgNjNSgRjPo0/NkxPDOCYlvPt7C/Fkaqvz/6s6PyOGeUey3QUfb8eZgIHM7AHtCGTPO6hK4an6MSnMwVieyXPT+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ptBKKfSx; arc=none smtp.client-ip=203.254.224.34
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260612161130epoutp04c722c77d09f560904e338ddb58d6ab22~4YVmtZfh42674626746epoutp04Y
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 16:11:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260612161130epoutp04c722c77d09f560904e338ddb58d6ab22~4YVmtZfh42674626746epoutp04Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1781280690;
+	bh=ZSlvOETrwTn2jxfzGFRxLhh+UJTgzZUXiHMZq9fMGA8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=ptBKKfSxUycgJ5M07OQHuV24JKqNuo891BpbY7ia707o9x4HGPxEWZAC+DsEDd6Fw
+	 livBDHhP9/yJo82uSXMGTJimGRQkzaRdQXEhGm3ZOoEbIZ3wgf9OMNQoJcyLbEULOV
+	 bgLOe5rhSbDarTlsL1Fu4OVEDHv3twjk7F3fePtE=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260612161129epcas5p3e7ede89e23bee40f35bdaacb9cfbb384~4YVl4WjcP1858918589epcas5p3H;
+	Fri, 12 Jun 2026 16:11:29 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.95]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4gcPdr5x8Yz6B9m6; Fri, 12 Jun
+	2026 16:11:28 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260612161128epcas5p2fe6ebf4b1a7b3ad1794804768180cbdd~4YVkfHhST0551705517epcas5p2F;
+	Fri, 12 Jun 2026 16:11:28 +0000 (GMT)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260612161125epsmtip17a32a09a1f76610c7c663861c61459eb~4YVifqoaT2559525595epsmtip1b;
+	Fri, 12 Jun 2026 16:11:25 +0000 (GMT)
+From: Alim Akhtar <alim.akhtar@samsung.com>
+To: krzk@kernel.org, peter.griffin@linaro.org, robh@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	hajun.sung@samsung.com, Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH 0/5] Add minimal Exynos8855 SoC support
+Date: Fri, 12 Jun 2026 22:00:15 +0530
+Message-Id: <20260612163020.411761-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20260612161128epcas5p2fe6ebf4b1a7b3ad1794804768180cbdd
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-2-4111b256c840@gmail.com>
-References: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
-In-Reply-To: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
- Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Thomas Richard <thomas.richard@bootlin.com>
-Cc: Daniele Cleri <danielecleri@aaeon.eu>, 
- JunYingLai <junyinglai@aaeon.com.tw>, Louis Chen <louischen@aaeon.com.tw>, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- GaryWang <is0124@gmail.com>
-X-Mailer: b4 0.13.0
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-543,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260612161128epcas5p2fe6ebf4b1a7b3ad1794804768180cbdd
+References: <CGME20260612161128epcas5p2fe6ebf4b1a7b3ad1794804768180cbdd@epcas5p2.samsung.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-4.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38368-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38369-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[aaeon.eu,aaeon.com.tw,vger.kernel.org,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[is0124@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:mika.westerberg@linux.intel.com,m:andy@kernel.org,m:linusw@kernel.org,m:thomas.richard@bootlin.com,m:danielecleri@aaeon.eu,m:junyinglai@aaeon.com.tw,m:louischen@aaeon.com.tw,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:is0124@gmail.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,samsung.com:dkim,samsung.com:mid,samsung.com:from_mime];
+	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:alim.akhtar@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[samsung.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[is0124@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCVD_COUNT_SEVEN(0.00)[8]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 701A1678A20
+X-Rspamd-Queue-Id: E9BBA67AC43
 
-Add support "UP Xtreme i12", "UP Squared Pro 7000", "UP Squared i12",
- "UP 7000" boards and I2C/PWM/UART/SPI pins mapping data.
+This series adds initial support for the Exynos8855 SoC and also
+initial SMDK board support. 
 
-Signed-off-by: GaryWang <is0124@gmail.com>
----
- drivers/pinctrl/pinctrl-upboard.c | 45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Exynos8855 has octa-core CPUs, a combination of Cortex-A720 and Cortex-A520,
+arranged in 3 clusters. And other peripheral for mobile application.
 
-diff --git a/drivers/pinctrl/pinctrl-upboard.c b/drivers/pinctrl/pinctrl-upboard.c
-index f8c8b9d84990..09018b665ee3 100644
---- a/drivers/pinctrl/pinctrl-upboard.c
-+++ b/drivers/pinctrl/pinctrl-upboard.c
-@@ -912,6 +912,19 @@ static const struct upboard_pinctrl_map upboard_pinctrl_map_apl01 = {
- 	.nmaps = ARRAY_SIZE(pinctrl_map_apl01),
- };
- 
-+static const struct pinctrl_map pinctrl_map_adl[] = {
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "i2c0_grp", "i2c0"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "i2c1_grp", "i2c1"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "pwm0_grp", "pwm0"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "uart1_grp", "uart1"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("upboard-pinctrl", "INTC1055:00", "ssp2_grp", "ssp2"),
-+};
-+
-+static const struct upboard_pinctrl_map upboard_pinctrl_map_adl = {
-+	.maps = &pinctrl_map_adl[0],
-+	.nmaps = ARRAY_SIZE(pinctrl_map_adl),
-+};
-+
- static const struct dmi_system_id dmi_platform_info[] = {
- 	{
- 		/* UP Squared */
-@@ -921,6 +934,38 @@ static const struct dmi_system_id dmi_platform_info[] = {
- 		},
- 		.driver_data = (void *)&upboard_pinctrl_map_apl01,
- 	},
-+	{
-+		/* UP Xtreme i12 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPX-ADLP01"),
-+		},
-+		.driver_data = (void *)&upboard_pinctrl_map_adl,
-+	},
-+	{
-+		/* UP Squared Pro 7000 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPN-ADLN01"),
-+		},
-+		.driver_data = (void *)&upboard_pinctrl_map_adl,
-+	},
-+	{
-+		/* UP Squared i12 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UPS-ADLP01"),
-+		},
-+		.driver_data = (void *)&upboard_pinctrl_map_adl,
-+	},
-+	{
-+		/* UP 7000 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AAEON"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "UP-ADLN01"),
-+		},
-+		.driver_data = (void *)&upboard_pinctrl_map_adl,
-+	},
- 	{ }
- };
- 
+This initial support consists of CPUs, pinctrl and related nodes
+needed for initial kernel boot.
 
+With these patches, kernel can boot using initramfs till file system mounts.
+
+More platform support will be added in near future, clock driver to go next.
+
+Known issue: uart driver probe fails because of clk being not available yet.
+
+Alim Akhtar (5):
+  dt-binding: ARM: samsung: Add Samsung Exynos8855
+  dt-binding: pinctrl: samsung: Add exynos8855-pinctrl compatible
+  pinctrl: samsung: Add Exynos8855 pinctrl configuration
+  arm64: dts: exynos: add initial support for Samsung Exynos8855 smdk
+  MAINTAINERS: Add entry for Samsung Exynos8855 SoC
+
+ .../bindings/arm/samsung/samsung-boards.yaml  |   6 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml     |   1 +
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/exynos/Makefile           |   1 +
+ .../boot/dts/exynos/exynos8855-pinctrl.dtsi   | 581 ++++++++++++++++++
+ .../arm64/boot/dts/exynos/exynos8855-smdk.dts |  37 ++
+ arch/arm64/boot/dts/exynos/exynos8855.dtsi    | 214 +++++++
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 124 ++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
+ 10 files changed, 974 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos8855-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos8855-smdk.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos8855.dtsi
+
+
+base-commit: b99ae45861eccff1e1d8c7b05a13650be805d437
 -- 
-2.43.0
+2.34.1
 
 
