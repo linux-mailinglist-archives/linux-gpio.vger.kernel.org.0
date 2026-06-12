@@ -1,83 +1,84 @@
-Return-Path: <linux-gpio+bounces-38390-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38391-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id f2SoInSNLGooSgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38390-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 00:51:32 +0200
+	id IJx9CXGMLGrSSQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38391-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 00:47:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 124AB67CE93
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 00:51:32 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D012367CE13
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 00:47:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=F2dDb9UD;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38390-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38390-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=hxnDBCdz;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38391-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38391-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E97923246068
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 22:47:03 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D3EA1301957A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2026 22:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30E213D5C3A;
-	Fri, 12 Jun 2026 22:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 497D73D6496;
+	Fri, 12 Jun 2026 22:47:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BA6356755
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 22:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928AF3D6474
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 22:47:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781304423; cv=none; b=vGCEhnnAEHfzgybhcymlJvaKCd8M4DSlKpBgWp8qHJBk7XZ4vgmow8JIXDRJnRMO5Ulsy+H4fB+6JrIsgrsRVXFlDDB1UXHKex8B/e2CUWHkOK1C6L81bc4SxO2P3AcPuVZIsumNB5NRaLTVeKkiPtaGi7euCRcT1S67IPeJ5oY=
+	t=1781304426; cv=none; b=EDQBxgXBQe8RgAbm3pDrHw6LxjDPfLQWtHslRJH0OZlyXDSYVvbKavshthPSZkhBezaAeGi7E3nzrJyZFy+JNRE1g5PDCMC4YsNuLMIgAeIdtMjqAHFU+5U6CWd9SeEQyhc2l3bwD0b7xB7rhKRFUL8FkcX7aoKRq4SEZDBZHJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781304423; c=relaxed/simple;
-	bh=DnQqRk8Wr3CWD8K3b2VzKXlVynzHi8xJBBFO2aUAQTw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EZrOmmOkEuyfy68GbUUZwsIsoFpFHuqvlKPt+0H8dKG929IEozOlRQlXyS+f3o4hBwSBDK4mmChxDBp+Hd2c+UFQBOzsXKEvReSlFzdnipLGLgvMcrOZ3Do48ltsCL9w6KhqMSwR3raSuS6ykTaBcWz4Vah1hNWd2X/CjdS5z2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2dDb9UD; arc=none smtp.client-ip=209.85.221.181
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-59be89d310aso1511526e0c.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 15:47:01 -0700 (PDT)
+	s=arc-20240116; t=1781304426; c=relaxed/simple;
+	bh=wPe+MCGV7y8p2VWX5tNsJUlFInLquvWFNJQafrXkt8k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FkDV5NNdOHJ5Hh3BzZkXoEug+byqEmatYE2YZwf/L716HcUi99c7sjbgH1AfLB/xoIAKWBPB/f3E19BJMJXDIZ04CO8RLrd/WnvAqlWjaAEXgxOEy/8JvI8HWNlqNDM/qEQmpALtzy5PonlgDBi5vsPwF3nAeRVYXKk24DEdPdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxnDBCdz; arc=none smtp.client-ip=209.85.221.178
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-59dc1714d44so519416e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2026 15:47:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781304421; x=1781909221; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jPinIBTvadn6Wv8oxclaLI9sZqTMC+eS72l1Gak81fk=;
-        b=F2dDb9UDuHSQP0ItNP+xI2ylfUd3azMotZ3Xc7DWDo0wzpRjSPqhsfHerV5TzNaADG
-         ar8woOvvc1rRGwxNeDYfzS/bOX92wIG21MTaYQWDbXQ7SINYEuQsx9H2N9ShYM877WtY
-         WYRprkBYIWlfnlyiD9ACJYfGw+cDAXBi8rDOV2zsiE9nf3HdHtGxHLs88MWdaCHBioZU
-         zMpWjE1zMWbOZgFbI167WwN+Z9WfjoM9f8RBKCxjhPv9BXwhMDvBBR8mAZcjAkvPyWOg
-         2s1h6bDF5Drfolf+jUftAI229ECze52jiB2QbTyTfGYEsOhy5491BMtVao/W63+A0cY0
-         s6IA==
+        d=gmail.com; s=20251104; t=1781304422; x=1781909222; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g1aVnlrURhUdP5DcLJVh35bGmgGAkbGlAndwroGP4wM=;
+        b=hxnDBCdzIZv4YMA1Wgah5WeTrWWD2KHv5VQovlcfT7AwAGetZFFOrxz2JwTKr9cw4i
+         xYSvQkN+C8sPmsYpDcfdix+piaxHqMtyOvLHbueVCsFLaXpvb9ZyFvofwig4xguk/KFz
+         Y0JulkGIu5k8yu/lhtdeoSBfYIHjE6zdeVUl7lth8dWKcJDcy3+mCXvGqUR2aCkZzFxV
+         +MdU844pUQr/vU8qYa4735KcFAmYERoyFhYjco0zHToOm1gF7DMYBeb6R3GRQdfrKGrQ
+         XtD6VWTfOp8XWpw4Xm7Y4BqOEoCd4+4I2JciZkM20p8ZLa3GzmWOw8MhHpQctkLS5cit
+         GNww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781304421; x=1781909221;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPinIBTvadn6Wv8oxclaLI9sZqTMC+eS72l1Gak81fk=;
-        b=qNWvox5ibFthIo74ljkSJ4iZqN5l49yPuT6CZWFisedDp29oXFqaSI4A0/phNA1D3p
-         4iCeE1M5T+R54zi6tq8BgaymNo/z28wL+/UFmNMzqTJt+1dbJkd5u7ywlQKSR5EDfbRH
-         N/AiriaVKZ52ITvF0qLag1nbiS6pqa/XeO2Dn46/souQaVaSa85WRgJT7dgWSK1AbMU5
-         PyQJsz+N+64rEc+dYWS5W3xzCS2KB3gsTnERohTfZ7Q1r42YuT1Vjto2ODzB9bVi1NNZ
-         L98STgoVAbk4GOuM2dCggXy9T4jFXCBtR3BUxjcP5gHb0krBrZuwdGMMifnG7kgxCyxp
-         aJnQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/ThSQiTh2Y31xqd9LiT4WC3qmKQ3+4gIdr6wDNBT8nSvGcfjMNES9GQ1ItZxmkC0eBpCdNqABkWlpp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd5FWyjXNqubv56dZz7AY1h48dm+dSymJsy3fNvQow6b21ZSgP
-	vgmrqjaT4ZdY1JSAl/Wzn6AEDRF9jxz61nLQNEoa4Sqm23Ot4k1rwHY0
-X-Gm-Gg: Acq92OFSX51W2fO31LgwecC/wMnWvQQUaGKXIyRLmEGEliep9KkR4MG0cLIQmliHZT1
-	6+pgyNXWkhq3LXFkLZ+V7jz5B4hCizyzpMdQe8DsoXWdm2xEdTG0rgvMPgZ4VgcRtM27OjouwFO
-	L6tO4n5SFITu2W6LmonFzFnWiBn+VkDXApUZrMHGHypvx1e5FhWCPqocIzEcjq9kxG09vgb9b4B
-	V6dW45tjKxl4LEwHpnR9sYRelhTyqhZt/mjydXS5YsdZL+1fRVBTHPHUwgJmo/ZPQZAxTcPuJqV
-	VDQJu6Vi7/0H7gMOfIwavgh1hmh9BiaczztAGzzwS+Gal5zCU3XhntO16NXMiMa9ORlqCl6LLcQ
-	Ic4uh1yw7pVx8fIJanrtjACaDg3cYnl47j4i3ji29ZTMEC6SD8Po1QewduNRBJSLmadaWARnM2c
-	E3t0S8jBUCW2deGqSfSxDwdg==
-X-Received: by 2002:ac5:c0c9:0:b0:59c:627b:8425 with SMTP id 71dfb90a1353d-5bb6a20c818mr1891552e0c.10.1781304420670;
-        Fri, 12 Jun 2026 15:47:00 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781304422; x=1781909222;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g1aVnlrURhUdP5DcLJVh35bGmgGAkbGlAndwroGP4wM=;
+        b=K7EunTp12Lb/8vaKBSV8VFk7mLEA9JIemfnWaaPKP+V5sObEGv1jopHCGeIrwXV1EH
+         Hj6vUKR4WeOXlVBB/mqRX0NmV+f/Rw7owx6AaHMR/0nHSM2YyE3OIYdeEZOddvhSuNfZ
+         eUFcmGXWlkzev+HepnFucBq6mlvVhnvfjNPX0WPo13RFmyxeepLNHAsL8dC/5iKiwDGx
+         nsklJnQmPDgOYti5ryfI19oTFEXgpqwST7J+pnAIuLuxvejdm+VCy6WHPaiDdy6BrvG6
+         xSgANg/xKr2F1GljkuIWS02Ef5eICpDcD0LFvXoZLcZpy0+R0647ds6lOKHbQgWHZmD5
+         D28A==
+X-Forwarded-Encrypted: i=1; AFNElJ9Al6ZI8gKV57uFA3pE/1Qj9stohY05e9bKsFfyKF9/Q/fW5kyfgZ66CNNCdS5+IC4pXIdG1hhk94Ol@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+kmoQTo1GVSPhTeXoBTpzb5ExVo1ThHcvLxZrVK7wV1PbDB+0
+	tow0Zr+0jiea6/ZhQoQQCPckbGpbUfHKuZJdUFIEgdKXEvv+RXleNyynLu779Q==
+X-Gm-Gg: Acq92OHb5rCFFdTApurRvPFg+XPChzEdcKIaPhYe+IbG/2FsxcNQpJG4V20dZ0UZz+s
+	ZRygFMMK7cVd5UPhrv5MofPnYljplAcs/WgDMcLLA/w89u/RQGbLzI+vf591Jwzxksz8R6qBewN
+	b6gS0fBLX0jl5qec+mkm94sdV+NMmAqAgh2EiXzFCFSeSXluD2sLghb6+xLq2fr/JGzpi5ejesk
+	tUUcIlW+zmj9OlsKcjEX3C5g+VE19kJ6P2oD0/BA76Ecku9j4pXV6DFZCaUoZLRpUcQ8ClambT0
+	jc+PFitaI0V7fiR0wGqpZ/HyRXVTPbVv4f0xBUpIJD3YTSiHSAzBaPrYJQgs2UqRj2pemjrVMfL
+	ijvYKTeXXQM9sqjBhYlszTMHvGczpn4Z1EsM6p9Ecnsn18WwsoNyXTzWL/wGpOpy5hmhwAwMxt3
+	OeLUWMli5AI8DGDbLOlqzHjQ==
+X-Received: by 2002:a05:6122:828e:b0:573:a779:62cf with SMTP id 71dfb90a1353d-5bb6c0352d7mr3035023e0c.7.1781304422519;
+        Fri, 12 Jun 2026 15:47:02 -0700 (PDT)
 Received: from [192.168.100.6] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5bb691fd8adsm4244553e0c.13.2026.06.12.15.46.58
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5bb691fd8adsm4244553e0c.13.2026.06.12.15.47.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 15:47:00 -0700 (PDT)
+        Fri, 12 Jun 2026 15:47:02 -0700 (PDT)
 From: Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 0/5] iio: adc: Add TI ADS126X ADC family support
-Date: Fri, 12 Jun 2026 17:46:18 -0500
-Message-Id: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
+Date: Fri, 12 Jun 2026 17:46:19 -0500
+Subject: [PATCH 1/5] dt-bindings: iio: adc: Add TI ADS126x ADC family
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,11 +86,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDQyNL3cSUYkMjswrdtCQzQwNzUwPT5MRUJaDqgqLUtMwKsEnRsbW1AEJ
- Wc4ZZAAAA
-X-Change-ID: 20251129-ads126x-fb6107505cae
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260612-ads126x-v1-1-894c788d03ed@gmail.com>
+References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
+In-Reply-To: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
 To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
@@ -101,12 +101,12 @@ Cc: David Lechner <dlechner@baylibre.com>,
  linux-gpio@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>, 
  Jonathan Cameron <jic23@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2823; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=DnQqRk8Wr3CWD8K3b2VzKXlVynzHi8xJBBFO2aUAQTw=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDFk6PSEvDK5L/5u+Ol4odc5EIRk1ljh9gcUGlyb32k3+f
- Yex4U53RykLgxgXg6yYIkt7wqJvj6Ly3vodCL0PM4eVCWQIAxenAEzEaykjw7LT5VwlE576GuQa
- 3GN7n9l58b9ajESEs8ybKLty16nrgxkZLgkdjwnYy76p89nThz15b4qnC+n/F77VKt38ueiUxBE
- tTgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10990; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=wPe+MCGV7y8p2VWX5tNsJUlFInLquvWFNJQafrXkt8k=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDFk6PUnTRJR7nf5drStyczgZVCfYKLl+gtOnH7YvhOSTs
+ 67W35raUcrCIMbFICumyNKesOjbo6i8t34HQu/DzGFlAhnCwMUpABNZ0s/wT3F91lqm2v0qbpeX
+ VEi+jvm5/NKn3Ml8TysePRDzDJqrnczwP+qDGE9UT9fO21ejZ7oUayxmv32UUdlvS863Vtm3Mzm
+ VGAE=
 X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
  fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 X-Rspamd-Action: no action
@@ -115,11 +115,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38390-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38391-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:jic23@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:kuurtb@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[kuurtb@gmail.com,linux-gpio@vger.kernel.org];
@@ -139,88 +139,412 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,ti.com:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,dimonoff.com:email,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 124AB67CE93
+X-Rspamd-Queue-Id: D012367CE13
 
-Hi all,
-
-This series introduces support for TI ADS1262 and ADS1263 ADCs [1].
-These devices are very similar (if not the same), except ADS1263
-includes a secondary auxiliary ADC.
-
-The main ADC has quite a few features supported the main driver
-(ti-ads1262), including:
-
-  - Power management
-  - IIO direct and buffer modes
-  - Channel hot-reloading
-  - Internal or external oscillator
-  - Internal or external voltage reference
-  - Filter configuration
-  - Sensor bias configuration
-  - IDAC configuration
-  - Level-shift voltage configuration
-  - Manual calibration support
-  - GPIO controller capabilities
-
-I plan to add these features to the main driver soon:
-
-  - SPI offload support (38400 SPS turns out to be too high for some
-    systems)
-  - User triggered, automatic calibration (Datasheet 9.4.9)
-
-Additionally, full support for the (less capable) auxiliary ADC is
-introduced by the auxiliary ti-ads1263-adc2 driver included in this
-series.
-
-The auxiliary ADC operates almost completely independent of the main
-ADC. The only consideration that has to be taken for interoperability is
-when reading conversion data in direct mode (Datasheet 9.4.7.1), which
-happens only in buffer mode, when multiple channels are enabled.
-
-When reading data in direct mode, all SPI activity is forbidden between
-the data-ready signal and the data retrieval. To achieve this a second
-mutex called xfer_lock was introduced to block SPI activity on the
-device.
-
-This is one of the biggest drivers I've developed, so I hope the code
-and the comments are self-explainatory. If not, please let me know so I
-can clarify them.
-
-As always, thanks for your reviews and help. Submitting upstream is
-always a great learning experience :)
-
-[1] https://www.ti.com/lit/ds/symlink/ads1263.pdf
+Add TI ADS1262 and TI ADS1263 ADC2 devicetree bindings documentation.
 
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Kurt Borja (5):
-      dt-bindings: iio: adc: Add TI ADS126x ADC family
-      iio: adc: Add ti-ads1262 driver
-      iio: adc: ti-ads1262: Add GPIO controller support
-      iio: adc: ti-ads1262: Add calibration support
-      iio: adc: Add ti-ads1263-adc2 driver
+ .../devicetree/bindings/iio/adc/ti,ads1262.yaml    | 308 +++++++++++++++++++++
+ .../bindings/iio/adc/ti,ads1263-adc2.yaml          |  49 ++++
+ MAINTAINERS                                        |   7 +
+ 3 files changed, 364 insertions(+)
 
- .../devicetree/bindings/iio/adc/ti,ads1262.yaml    |  308 +++
- .../bindings/iio/adc/ti,ads1263-adc2.yaml          |   49 +
- MAINTAINERS                                        |   10 +
- drivers/iio/adc/Kconfig                            |   26 +
- drivers/iio/adc/Makefile                           |    2 +
- drivers/iio/adc/ti-ads1262.c                       | 2180 ++++++++++++++++++++
- drivers/iio/adc/ti-ads1262.h                       |   39 +
- drivers/iio/adc/ti-ads1263-adc2.c                  |  470 +++++
- 8 files changed, 3084 insertions(+)
----
-base-commit: ae696dfa47c30016cd429b9db5e70b259b8f509e
-change-id: 20251129-ads126x-fb6107505cae
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+new file mode 100644
+index 000000000000..1c4fde94f6c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+@@ -0,0 +1,308 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/ti,ads1262.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI ADS1262/ADS1263 analog to digital converter
++
++maintainers:
++  - Kurt Borja <kuurtb@gmail.com>
++
++description: |
++  The ADS1262 and ADS1263 are 38.4-kSPS, delta-sigma (ΔΣ) ADCs with an
++  integrated PGA, reference, and internal fault monitors. The ADS1263 integrates
++  an auxiliary, 24-bit, ΔΣ ADC intended for background measurements.
++
++  Datasheets:
++    - ADS126x: https://www.ti.com/lit/ds/symlink/ads1262.pdf
++
++properties:
++  compatible:
++    enum:
++      - ti,ads1262
++      - ti,ads1263
++
++  reg:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  spi-max-frequency:
++    maximum: 8000000
++
++  spi-cpha: true
++
++  interrupts:
++    description: Data ready (DRDY) interrupt line.
++    maxItems: 1
++
++  start-gpios:
++    description: Start conversion control.
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  dvdd-supply:
++    description: Digital power supply.
++
++  avdd-supply:
++    description: Analog power supply.
++
++  vref-supply:
++    description: Optional external voltage reference.
++
++  ti,pos-refmux:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Selects the positive voltage reference input:
++      0: Internal 2.5 V reference
++      1: AIN0 pin
++      2: AIN2 pin
++      3: AIN4 pin
++      4: AVDD pin
++    minimum: 0
++    maximum: 4
++    default: 0
++
++  ti,neg-refmux:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Selects the negative voltage reference input:
++      0: Internal 2.5 V reference
++      1: AIN1 pin
++      2: AIN3 pin
++      3: AIN5 pin
++      4: AVSS pin
++    minimum: 0
++    maximum: 4
++    default: 0
++
++  ti,vbias:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: Enables the level-shift voltage on the AINCOM pin.
++    default: false
++
++  ti,idac1-pin:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Selects the analog input pin to connect IDAC1:
++      0: AIN0
++      1: AIN1
++      2: AIN2
++      3: AIN3
++      4: AIN4
++      5: AIN5
++      6: AIN6
++      7: AIN7
++      8: AIN8
++      9: AIN9
++      10: AINCOM
++      11: No Connection
++    minimum: 0
++    maximum: 11
++    default: 11
++
++  ti,idac1-microamp:
++    description: Selects the current values of IDAC1.
++    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
++    default: 0
++
++  ti,idac2-pin:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Selects the analog input pin to connect IDAC2:
++      0: AIN0
++      1: AIN1
++      2: AIN2
++      3: AIN3
++      4: AIN4
++      5: AIN5
++      6: AIN6
++      7: AIN7
++      8: AIN8
++      9: AIN9
++      10: AINCOM
++      11: No Connection
++    minimum: 0
++    maximum: 11
++    default: 11
++
++  ti,idac2-microamp:
++    description: Selects the current values of IDAC2.
++    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
++    default: 0
++
++  clocks:
++    maxItems: 1
++
++  '#io-channel-cells':
++    const: 1
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-controller: true
++
++  adc:
++    $ref: /schemas/iio/adc/ti,ads1263-adc2.yaml#
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - dvdd-supply
++  - '#address-cells'
++  - '#size-cells'
++
++unevaluatedProperties: false
++
++patternProperties:
++  "^channel@[0-9]+$":
++    $ref: /schemas/iio/adc/adc.yaml#
++    additionalProperties: false
++
++    properties:
++      reg:
++        maxItems: 1
++
++      diff-channels:
++        description: |
++          Selects the analog input configuration for this channel. The first
++          value is the positive input and the second is the negative input.
++          The following values are available:
++          0: AIN0 pin
++          1: AIN1 pin
++          2: AIN2 pin
++          3: AIN3 pin
++          4: AIN4 pin
++          5: AIN5 pin
++          6: AIN6 pin
++          7: AIN7 pin
++          8: AIN8 pin
++          9: AIN9 pin
++          10: AINCOM pin
++          11: Temperature sensor monitor
++          12: Analog power supply monitor
++          13: Digital power supply monitor
++          14: TDAC test signal
++          15: Float (open connection)
++        items:
++          minimum: 0
++          maximum: 15
++
++      ti,chop-mode:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          When enabled, the ADC performs two internal conversions to cancel the
++          input offset voltage. The first conversion is taken with normal input
++          polarity. The ADC reverses the internal input polarity for the second
++          conversion. The difference of the two conversions is computed to yield
++          the final corrected result with the offset voltage removed.
++        default: false
++
++      ti,idac-rotation-mode:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          The rotation mode automatically swaps the IDAC1 and IDAC2 connections
++          of alternate conversions. The ADC averages the alternate conversions
++          to eliminate IDAC mismatch.
++        default: false
++
++      ti,pga-bypass:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description: Bypass the Programmable Gain Amplifier (PGA).
++        default: false
++
++      ti,rev-vref-pol:
++        $ref: /schemas/types.yaml#/definitions/flag
++        description:
++          The reference polarity can be negative, but the ADC requires a
++          positive voltage reference. In this case, the reference
++          polarity-reversal switch changes the reference polarity from negative
++          to positive.
++        default: false
++
++      ti,sbias-connection:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: |
++          Selects the sensor bias current source connection:
++          0: Sensor bias connected to ADC1 mux out
++          1: Sensor bias connected to ADC2 mux out
++        minimum: 0
++        maximum: 1
++        default: 0
++
++      ti,sbias-polarity:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: |
++          Selects the sensor bias current source polarity:
++          0: Sensor bias pull-up
++          1: Sensor bias pull-down
++        minimum: 0
++        maximum: 1
++        default: 0
++
++      ti,sbias-magnitude:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: |
++          Selects the sensor bias magnitude:
++          0: No sensor bias current or resistor
++          1: 0.5-uA sensor bias current
++          2: 2-uA sensor bias current
++          3: 10-uA sensor bias current
++          4: 50-uA sensor bias current
++          5: 200-uA sensor bias current
++          6: 10-Mohm resistor
++        minimum: 0
++        maximum: 6
++        default: 0
++
++    required:
++      - reg
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "ti,ads1263";
++            reg = <0>;
++            spi-max-frequency = <8000000>;
++            spi-cpha;
++            avdd-supply = <&avdd>;
++            dvdd-supply = <&dvdd>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            reset-gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++
++            /* AINP: 0 - AINN: AINCOM */
++            channel@0 {
++                reg = <0>;
++                diff-channels = <0x0 0xA>;
++            };
++
++            /* Temperature sensor monitor */
++            channel@1 {
++                reg = <1>;
++                diff-channels = <0xB 0xB>;
++            };
++
++            adc {
++                compatible = "ti,ads1263-adc2";
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads1263-adc2.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads1263-adc2.yaml
+new file mode 100644
+index 000000000000..9dd5577589b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti,ads1263-adc2.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/ti,ads1263-adc2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI ADS1263 ADC2 analog-to-digital converter
++
++maintainers:
++  - Kurt Borja <kuurtb@gmail.com>
++
++description:
++  The ADS1263 includes an auxiliary, 24-bit, delta-sigma ADC (ADC2). ADC2
++  operation is independent of ADC1, with independent selections of input
++  channel, reference voltage, sample rate, and channel gain.
++
++properties:
++  compatible:
++    enum:
++      - ti,ads1263-adc2
++  vref-supply:
++    description: Optional external voltage reference.
++
++  ti,refmux:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Selects the positive voltage reference input:
++      0: Internal 2.5 V reference
++      1: AIN0-AIN1 pins
++      2: AIN2-AIN3 pins
++      3: AIN4-AIN5 pins
++      4: AVDD-AVSS pins
++    minimum: 0
++    maximum: 4
++    default: 0
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  '#io-channel-cells':
++    const: 1
++
++required:
++  - compatible
++
++additionalProperties: false
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 396d4e76dccc..9379699d99c6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -26668,6 +26668,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/adc/ti,ads1018.yaml
+ F:	drivers/iio/adc/ti-ads1018.c
+ 
++TI ADS1262 ADC DRIVER
++M:	Kurt Borja <kuurtb@gmail.com>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
++F:	Documentation/devicetree/bindings/iio/adc/ti,ads1263-adc2.yaml
++
+ TI ADS7924 ADC DRIVER
+ M:	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+ L:	linux-iio@vger.kernel.org
 
 -- 
-Thanks, 
- ~ Kurt
+2.54.0
 
 
