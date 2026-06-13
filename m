@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-38403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SngjF1BgLWrnfQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38403-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 15:51:12 +0200
+	id y//+FvhjLWrVfgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38404-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 16:06:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D658367EB35
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 15:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D2EE067EB7C
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 16:06:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KW3vOKcw;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38403-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38403-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Apuxhaca;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38404-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38404-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1FE81302FB72
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 13:51:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93372303028C
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2026 14:06:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1922EEE6D;
-	Sat, 13 Jun 2026 13:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB60E3090C1;
+	Sat, 13 Jun 2026 14:06:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EE5283FCF;
-	Sat, 13 Jun 2026 13:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6A72D7D59;
+	Sat, 13 Jun 2026 14:06:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781358666; cv=none; b=gMnsUOSASYJ8h4ONT8O/ccrQT/TMOintJFwgQWbvmhGl1NXW+cIMl2kVzovzJWoPloTuhxglQlsqK0p8uC5eb/MdZtMbcwoID2DFPCkBncZhowQ8B5NZLItmFFf6f4lmegOTcEumS0GjG6kohfJj+f2Ufk4Xb/fGMpfVGUVXsXk=
+	t=1781359600; cv=none; b=NWzfU7x3A8s5L6I2ZzlR89/xiEeH7vsLL2D/WAh+MZB5jhSqSEprBGmRZnJUJv6EbRfT47+R9QImXwBIw6/BRmbsS4Cz0Y4AGA34Ur9gD7aPKLzZqW/29osKmsBR4W2XBPOMFk84EyFSvQRn6SdmSnYFCk7e9Gh6LPMdMvtapiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781358666; c=relaxed/simple;
-	bh=jN3SlDuiV5stp+Buf5kpbd349ZwyzjpyEHsr9AvDj6w=;
+	s=arc-20240116; t=1781359600; c=relaxed/simple;
+	bh=XKfpxlRn1tTHF4IatoVwyeK78OYpu52Yx1NBvHFRFNQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oPuSR7d8/38CjwqahElZkxqJTBCZ92A5UgJk+8OoYKtP6ZKYlc1/vX1ZUpgl0dhHGNSIOFGK2PwRApiUbWojRK+Os1qEqerHUNgbGBTGmNg6QSZ3aZZ0DELGCXvIJYb2VWPOOJkkUB0s8Xsj76mpocvHdjWMNrfHGLg9uhIDkls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KW3vOKcw; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD83B1F000E9;
-	Sat, 13 Jun 2026 13:51:00 +0000 (UTC)
+	 MIME-Version:Content-Type; b=G6kF0kU1ItKn4/e5dX7mNrG7HZw+M6PMU75uaxZ1LryAzvv1hWqTEvfAPjeEFIryZy6meccpf0dXMAORr4C5Vcs3pkA4oEpIDMXgWwqONzVxa9R/AI/ZsthYyXdEzrNJSHo7m+u44RKBSBifeVFuVR2N6YQNjpg+52zIhfVZT5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Apuxhaca; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAE71F000E9;
+	Sat, 13 Jun 2026 14:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781358665;
-	bh=tOV/mV9f5iulpY/spBqX8ZpBgnL8iS2MkL1dmpe4PXQ=;
+	s=k20260515; t=1781359599;
+	bh=+8bBAMX6vKJfF5EfKeHvtPhAZlrJ15UIYFCzm2FZ+gg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=KW3vOKcwLvi+0AZ9U1BftRWGZ8UnidZm0sDbOjoUunn7olxl9iC4TdoflBiy3dkkR
-	 njgxykl2t7knz+6hhs7HoOkiMKaTqCaPdLFJDxalBMV6AKzOGviLpWY/uwzXd6ZKIo
-	 vgdy9tK//iL9QuFLlL5aMed5wo3+NUO3X/RZzHvjsthUS3+s2eVUIxqluB6Tm0QWHE
-	 mFxhcV7lQjJFdaZaTYDQk7npDQ6vqucdj735kbdjd9EBfMNUw01uHkVFUHFaH3iRWB
-	 CuQ5GnyBW8CFFvcin1or8+YxECFuO+qqFl0itOagsJGeBqfSNPL/KwpVQUj3UHI/iV
-	 VZkAskKtlIe7w==
-Date: Sat, 13 Jun 2026 14:50:55 +0100
+	b=ApuxhacaqN7D7HW+gNshGd2ze4fnvIZjfiZCByRz56+/7ni4x59Z27usFgK11JeKX
+	 bKcuOLjcFy4hS6WnrhMdpBpEvuQXFuagYtudg9xFF6YpgZqnus/l86OI7gph54FUJl
+	 4qIHoRZLI8lDz16QMuSOAH89zfAS0yn2twmuRHr/gGgR7/hRiAta5S5uHjCL164yXW
+	 GplrwjK6K8A84u123pWwuiVQM1uimDwn2yVmDSX6R0BeX7mqpQt6r4+lbk/MEeYjZR
+	 Sxm2/09ruWnGVLaKe0MiIzh8+XzsmtjPKFusXKh2SOHOQtbMen8+a8VJLulUYBWIM3
+	 oWJ4Nwh0/XsVA==
+Date: Sat, 13 Jun 2026 15:06:29 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Kurt Borja <kuurtb@gmail.com>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -56,11 +56,12 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/5] iio: adc: ti-ads1262: Add calibration support
-Message-ID: <20260613145055.06aedf2b@jic23-huawei>
-In-Reply-To: <20260612-ads126x-v1-4-894c788d03ed@gmail.com>
+Subject: Re: [PATCH 2/5] iio: adc: Add ti-ads1262 driver
+Message-ID: <20260613150629.26914a16@jic23-huawei>
+In-Reply-To: <20260613144544.0594a7f0@jic23-huawei>
 References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
-	<20260612-ads126x-v1-4-894c788d03ed@gmail.com>
+	<20260612-ads126x-v1-2-894c788d03ed@gmail.com>
+	<20260613144544.0594a7f0@jic23-huawei>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -82,12 +83,12 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:kuurtb@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:kuurtb@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -97,7 +98,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-38403-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38404-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
@@ -105,76 +106,28 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D658367EB35
+X-Rspamd-Queue-Id: D2EE067EB7C
 
-On Fri, 12 Jun 2026 17:46:22 -0500
-Kurt Borja <kuurtb@gmail.com> wrote:
 
-> Add channel calibration support.
 > 
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->  drivers/iio/adc/ti-ads1262.c | 70 +++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 69 insertions(+), 1 deletion(-)
+> > +static int ads1262_channel_hot_reload(struct ads1262 *st,
+> > +				      const struct iio_chan_spec *chan)
+> > +{
+> > +	unsigned int weight;
+> > +	unsigned long i;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Hot reloading is only required on buffer mode and if only one channel
+> > +	 * is enabled.
+> > +	 */
+> > +	if (!iio_device_try_claim_buffer_mode(st->indio_dev))
+> > +		return 0;  
 > 
-> diff --git a/drivers/iio/adc/ti-ads1262.c b/drivers/iio/adc/ti-ads1262.c
-> index 6d5f22836ad8..b33505e7fdc7 100644
-> --- a/drivers/iio/adc/ti-ads1262.c
-> +++ b/drivers/iio/adc/ti-ads1262.c
-> @@ -217,6 +217,10 @@
->  #define ADS1262_RMUX_AVDD_AVSS			4
->  #define ADS1262_RMUX_COUNT			5
->  
-> +/* The calibration word is signed 24 bits value */
-> +#define ADS1262_CALIB_WORD_MAX		((int)(GENMASK(22, 0)))
-> +#define ADS1262_CALIB_WORD_MIN		(-ADS1262_CALIB_WORD_MAX - 1)
-> +
->  struct ads1262_channel {
->  	/* MODE0 */
->  	u8 conv_delay:4;
-> @@ -453,6 +457,32 @@ static int ads1262_dev_start_one(struct ads1262 *st, u8 runmode)
->  	return 0;
->  }
->  
-> +static int ads1262_read_calib(struct ads1262 *st, unsigned int reg, u32 *val)
-> +{
-> +	__le32 lval;
-> +	int ret;
-> +
-> +	/*
-> +	 * The calibration word is a signed 24 bit LSB-first value.
+> Look at IIO_ACQUIRE_DIRECT_MODE()
+obviously that comment is garbage  - so please ignore!
 
-Single line comment.  However, it's also fairly clear from the code, so maybe
-no comment at all. 
-
-> +	 */
-> +	ret = regmap_bulk_read(st->regmap, reg, &lval, 3);
-
-Read it into a u8 [3] and use get_unaligned_le24()
-That avoids us having to think too much about the bits that aren't
-initialized and static analysis / compilers having to figure out
-they don't matter. I general it is easier to understand.
-
-> +	if (ret)
-> +		return ret;
-> +	*val = sign_extend32(le32_to_cpu(lval), 23);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ads1262_write_calib(struct ads1262 *st, unsigned int reg, u32 val)
-> +{
-> +	__le32 lval = cpu_to_le32(val);
-> +
-> +	/*
-> +	 * The calibration word is a signed 24 bit LSB-first value.
-> +	 */
-> +	return regmap_bulk_write(st->regmap, reg, &lval, 3);
-
-Similar with a u8 [3] for the '__le24' storage.
-
-> +}
-> +
-
-
+> 
+> That should let you simplify the error paths in here.
+> I see you used it elsewhere.
 
