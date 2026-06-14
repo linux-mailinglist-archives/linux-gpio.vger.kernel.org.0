@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-38418-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38419-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id b5gAJ5USL2rG7gQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38418-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:44:05 +0200
+	id yfelIMQUL2r67gQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38419-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:53:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E11B682359
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:44:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAF62682381
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:53:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=HYWhiIa4;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38418-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38418-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=pxnSti5g;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38419-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38419-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 81458300915C
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 20:44:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 76AFB3007AC8
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 20:53:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E4F3264F1;
-	Sun, 14 Jun 2026 20:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C164F32B136;
+	Sun, 14 Jun 2026 20:53:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11E32F7F07
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 20:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4E8320A00
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 20:53:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781469839; cv=none; b=DuE47k/TsDbvABX+ShUjUvno7oNGsJkz5mUOJXaTCjGeD1LD78Qv4CuAVuiHkv6h5Aswd5iM3t3P/irPqSMlVuz7DhGO7PBE6F12GABZLkuDILwrJyLy4+upenpUT8//lLhPpXcoGvWQAq78o/prs2COX0f3VSru4pyD44swTho=
+	t=1781470398; cv=none; b=lbyPu33Iu3jdop1muM/njF3YJl3v76CMUzHvGBUjVxym3tM8moCuc9Y/jSaKwBZmkEDXZ2AhLm2CE+g4uKEHcLj4RZJyUOMnjbV8cw9NQeRdwHTAy214D3frOj/LZfkvLpQL76631AnTXGlUzCIZColEtV1oyKLCahKU3EE5VI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781469839; c=relaxed/simple;
-	bh=D27UulZYaetxYDKjX/8/X7LYBqLyMAuGnFuaAW4GWvo=;
+	s=arc-20240116; t=1781470398; c=relaxed/simple;
+	bh=nSDzCXKT3jQnRAcphUHmXusud9gWL+o/NpnAWujBRdg=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DfwI6+V6yX1yR04RCoIYCe9p6/wSS3FQrEntiAflBxvBuUDzf+tIb6Wh5Scc7l+FcCePQXOtlVn8KBxyAVAqieiPN2/v1Li0D4RDY1p206K2tkBXaBOnlIBzFSZFBmwxUOzGbgDpIfhrYEfIj4e0K+kZ27KFuoMECACqO1f+zuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYWhiIa4; arc=none smtp.client-ip=209.85.217.50
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-6cb414a5d50so2220846137.3
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 13:43:57 -0700 (PDT)
+	 References:In-Reply-To; b=Xy/j0VgEVI6G6sDKjaVHQKpeuWvwljgNTxkjyIGA/aE71TMu5sNL7lKhLQoniAGok3pCD5BFUhodk2ZoZyLCHU3PJQdUHJRkKt0y69OFf3WKWO43hw3HMqQ4n6PlE1quM8hvxPZ4TWwhuu8rj56Xr1kc7taPsYP9sjR4y4KPBJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pxnSti5g; arc=none smtp.client-ip=209.85.221.177
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5ab02fb64b0so1428506e0c.1
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 13:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781469837; x=1782074637; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781470396; x=1782075196; darn=vger.kernel.org;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=73FE8dDRzs2A2yFSDW5KK1ljxB2vUgkxUvq5kN7HbwI=;
-        b=HYWhiIa42lb0pv7HPvRUnu/svzoLpVL07KJRWfHjlFzzO9I4ejpB41F17Nfa34hAsA
-         x3gD/Ccn0l7KPbCj5UTeslwBAqdDp4aeB7aX/0XTnKiOTl3QJ1PcyneWOR5oW1sq3kKw
-         GOVTydYLSJQ2fMOMLk/JOQX6ptxNfhI8P36ckE3kDFavp+5qrQvpuOO6+ICbz1q8L3yU
-         37kLxKBl6uwPX/qSGS20TyxsIw0oaG1tazuLk+0r8d7FWiYBaT3/MCpihrsRQeGLK00W
-         DO2sACQ3eSYmgi2HSikIs619hid/KBf60az9iFiuUda/k8BR1x7zOnVx+5xlMaJYZ3ma
-         oOWw==
+        bh=XhzWVFBovbUbRqI9wqfpVReAjsX1CU4k99CUksmW2lE=;
+        b=pxnSti5gBAr0tPxM+BI89Ue/9l3vE08b2Fatruwe3xCaUxC3vdGVpx4aB/w/lvUNqT
+         bvTO+qPRv+btYkYv97KO7+NmspEZgAXaakHWlsV7u89Oipj/RRJW4CCtMz9LRzq+cKOX
+         NxWuaMkiyY6UJHcQ3UILaVjwU8hil8BcVaUJMq11Gukjpc5Zzif1m/Zyhf7rpQd0/JTG
+         RPhrh9n/gJbODdyr+/xu7bvjUGxqQK2C6szJOi366waMVeFuUaPQx1gY/ZtaFh77DlMM
+         l2Ggf26wgpjdulNOtOTMEIOX70yJvrBfLa24y2jbomD79xMSKTpgrhB4GQe3Q3yInS+l
+         euog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781469837; x=1782074637;
+        d=1e100.net; s=20251104; t=1781470396; x=1782075196;
         h=in-reply-to:references:to:from:subject:cc:message-id:date
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=73FE8dDRzs2A2yFSDW5KK1ljxB2vUgkxUvq5kN7HbwI=;
-        b=OQ7+oue0VWlPftbpPHgULbdx0ecFATHs1f7EBmDFdgzIffN0wxw1/jG5hWxLmpymMf
-         /xRBZweOsq3Y58WSr/v+W48We7YkkL8zRqsKagYbPQFX+r/ghnwcpfZxkzHIkm2x3fHN
-         mOM0M16rS/fOoTu8+yyy+5q/Qtuz2gSJPxKcYdcoZ/3nbGSgNwCzdIhDVat3vXxHNzlY
-         ZxRbbt6WsykmDcDPgwAsIc3DXrD99eQSlyPb7FumK9YkviXrI+K/Y56EVcBSjiMZGEuj
-         CMmmYdzDpEpV3NgTKOVJVvaQWPgrY8JFb1ZNYvHGyxjB/Kf4jMLxFDY3nm2DeATLLL29
-         2YSg==
-X-Forwarded-Encrypted: i=1; AFNElJ/s2o1VOQxCqhM/IFidMB/4nLBVmqoGgftsUeqJKOo6y/QPLylFcAd99ec5b1njuQUnfzIc+zjSFZdS@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywov/0uxW+u1Ua4JvT7DrNzLpNSf+A7ViWfpgrlWG+Fs7T4GIEe
-	B/XlJWUMqt6oa356QCxR/P59LvydLEDK6HLTf3Mn/ZUat0YIup6K5oWdzPrB3A==
-X-Gm-Gg: Acq92OGD8tuBzFu46G7+qzzCwpQ/h/1k73eypoNOHCxXOD1lBPerP9MndtH9h4f+TiS
-	oBw9jtpG4vWc8eulzPL7+ROZISBB0YBzO+kwi33EbDeX171lXeQt6p0r9mImkNA5a+Zzugae6f4
-	ECDpifcCP7xZbh0FjX4+57W9a1HHUvaek7ak9oxOeRDTzaeeK244tbWIHWFC8NCkz3N9XMsRknL
-	nGqf+Ut80+UwbEF8+kbt89RbIAmD2P3Luya0/WbUKP8RTKR4x46a2HWsbG6zy6qgiaQisWRZx9E
-	fDeBL/AXVYOA8D1KLbmzO3cAMTkehFDwUdeUT/F7bCimBsIXaTzjvr6YnCRuX5F3dNcVzhiMDwr
-	gi8Y08O4ADinZY8PhrLj28Q97Q/SQqaPMsDvYkLSDVh71RVVK2zifY7RefNjTfLfhbiWfcs+a2g
-	PzZBqpKoXNLddFPQ==
-X-Received: by 2002:a05:6102:3f06:b0:64e:32c3:1458 with SMTP id ada2fe7eead31-71e88d95324mr6724172137.22.1781469836702;
-        Sun, 14 Jun 2026 13:43:56 -0700 (PDT)
+        bh=XhzWVFBovbUbRqI9wqfpVReAjsX1CU4k99CUksmW2lE=;
+        b=HU2nAyCU8941uKuhXj0tdUPseN9cw9TryqS9g1dmpOCwsUyjWfjPMN/EoM/SJwUQK7
+         C23QH7O6KIQLc4l0ynFlgvvrFYcjITpLt7JR9RKWUqZFjd5FYvH1FfY6Mku+JgLWCcdS
+         GtyBGVNWZ1QekJ2xjNeKzMTT6OzF7+m+qC0QnntITYUeAwe2nM3lTOxEqRCcieoRGaor
+         BBooo4NR5L0VMbYa6CMkpCyjvlEIwzhefJrdc9LNApZPTeUPeZSlSQp/DuVuT4psXmMN
+         fKn29uZcceG3zNlyFudzukKdm/Se7HsPUEE58bGu2lnNZQyGC7j5tGebihfuzlorcRjb
+         E8/w==
+X-Forwarded-Encrypted: i=1; AFNElJ/vPCTFTRy5bPVLv4XkqWYZiPiZ8Wn8ZuVxa0iUbTZhdTAs5+9Avq/DL8aFFf7s1etYDL6h8T43D7SC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHTZelEztaUOvGemIOBT4Cm/rIkmnOuKOH7IgTudPp9pxq56Gw
+	1Y0ZhOXLBHIClbh1lW0ZjHHOgbHKB7b9ZoFGDolN7BkxO1JHfTNXBjCC
+X-Gm-Gg: Acq92OHMNA5JvnIrdKiCD11uOt2M8ku50YAnqEZOzhEiYG49+boCYnM0gTXOf2zFVvr
+	VGvznsS6I+QRiL8wbgzCfthAN3AYhNyU4oEWDcNc1GvuwGwRhYcHAEoD46SO2SKJcHm2NknA52P
+	nKHbQirOoTYArmlscjYcqKt9X7/NWIHTMtEo/Wv7EJTYOx8EzWAXI+2NPnu244DA+9F4er4+Axf
+	5tsQANFuRifbYucZP9z0Mf2OeWbo8fN+YCt6TfjD3lLIjxsVWfcAB6Ki9aF+wa3PR1/yw8M4Qrn
+	RB3iU9Kn97uSDcar97KT7G6YkeT7hxnNFeQungIcW5sWGYDOn6uWi2Z3/HJdlBXsrN1gJte68hB
+	ZXWFC8HzH4mtjUVkBAxOR+4qy5qIVP64cl7tDZ+7H/qE5l8M28L22BeJa1H394Kj+S6q+nUmxDC
+	sq6dzQyCBXPWo8AQ==
+X-Received: by 2002:a05:6122:3c53:b0:5a2:9154:2792 with SMTP id 71dfb90a1353d-5bb6c058399mr6140865e0c.7.1781470396353;
+        Sun, 14 Jun 2026 13:53:16 -0700 (PDT)
 Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-966a05a7da1sm1696835241.10.2026.06.14.13.43.54
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5bb900138e8sm2216269e0c.6.2026.06.14.13.53.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2026 13:43:56 -0700 (PDT)
+        Sun, 14 Jun 2026 13:53:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,23 +84,24 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 14 Jun 2026 15:43:49 -0500
-Message-Id: <DJ92CLJIJ04T.3HSUHGGSF8EPG@gmail.com>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Linus Walleij"
- <linusw@kernel.org>, "Bartosz Golaszewski" <brgl@kernel.org>, "David
- Lechner" <dlechner@baylibre.com>, =?utf-8?q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, "Andy Shevchenko" <andy@kernel.org>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 5/5] iio: adc: Add ti-ads1263-adc2 driver
+Date: Sun, 14 Jun 2026 15:53:14 -0500
+Message-Id: <DJ92JT0CPSXJ.1113K3KLSRHH4@gmail.com>
+Cc: "Jonathan Cameron" <jic23@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Linus Walleij" <linusw@kernel.org>, "Bartosz
+ Golaszewski" <brgl@kernel.org>, "David Lechner" <dlechner@baylibre.com>,
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, "Andy Shevchenko"
+ <andy@kernel.org>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: Add TI ADS126x ADC family
 From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Jonathan Cameron" <jic23@kernel.org>, "Kurt Borja" <kuurtb@gmail.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Kurt Borja" <kuurtb@gmail.com>
 X-Mailer: aerc 0.21.0-0-g5549850facc2
 References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
- <20260612-ads126x-v1-5-894c788d03ed@gmail.com>
- <20260613151047.57cd074f@jic23-huawei>
-In-Reply-To: <20260613151047.57cd074f@jic23-huawei>
+ <20260612-ads126x-v1-1-894c788d03ed@gmail.com>
+ <20260613-loyal-azure-goldfish-cf6d54@quoll>
+In-Reply-To: <20260613-loyal-azure-goldfish-cf6d54@quoll>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -108,19 +109,19 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38418-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38419-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:jic23@kernel.org,m:kuurtb@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:jic23@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:kuurtb@gmail.com,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[kuurtb@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -133,208 +134,142 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3E11B682359
+X-Rspamd-Queue-Id: DAF62682381
 
-On Sat Jun 13, 2026 at 9:10 AM -05, Jonathan Cameron wrote:
-> On Fri, 12 Jun 2026 17:46:23 -0500
-> Kurt Borja <kuurtb@gmail.com> wrote:
->
->> The TI ADS1263 includes an auxiliary, 24-bit, delta-sigma ADC (ADC2).
->> ADC2 operation is independent of ADC1, with independent selections of
->> input channel, reference voltage, sample rate, and channel gain
->>=20
->> Add support for this ADC as an independent IIO device, through the
->> auxiliary bus API.
->
-> A few things inline.
->
->>=20
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->
->> diff --git a/drivers/iio/adc/ti-ads1262.c b/drivers/iio/adc/ti-ads1262.c
->> index b33505e7fdc7..1a4b2f934d43 100644
->> --- a/drivers/iio/adc/ti-ads1262.c
->> +++ b/drivers/iio/adc/ti-ads1262.c
->
->> +static int ads1262_aux_device_setup(struct ads1262 *st)
->> +{
->> +	struct device *dev =3D &st->spi->dev;
->> +	struct ads1263_adc2_channel *chans;
->> +	struct auxiliary_device *adev;
->> +	struct ads1263_adc2_ctx *ctx;
->> +	struct fwnode_handle *node;
->> +	int id, ret;
+Hi Krzysztof,
+
+On Sat Jun 13, 2026 at 1:54 PM -05, Krzysztof Kozlowski wrote:
+> On Fri, Jun 12, 2026 at 05:46:19PM -0500, Kurt Borja wrote:
+>> +  ti,neg-refmux:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Selects the negative voltage reference input:
+>> +      0: Internal 2.5 V reference
+>> +      1: AIN1 pin
+>> +      2: AIN3 pin
+>> +      3: AIN5 pin
+>> +      4: AVSS pin
+>> +    minimum: 0
+>> +    maximum: 4
+>> +    default: 0
 >> +
->> +	node =3D device_get_named_child_node(dev, "adc");
->> +	if (!node)
->> +		return 0;
->> +
->> +	ctx =3D kzalloc_obj(*ctx);
->> +	if (!ctx) {
->> +		ret =3D -ENOMEM;
->> +		goto out_node_put;
->> +	}
->> +
->> +	id =3D ida_alloc(&ads1262_ida, GFP_KERNEL);
->> +	if (id < 0) {
->> +		ret =3D id;
->> +		goto out_free_adc2;
->> +	}
->> +
->> +	chans =3D kcalloc(st->num_channels, sizeof(*chans), GFP_KERNEL);
->> +	if (!chans) {
->> +		ret =3D -ENOMEM;
->> +		goto out_free_id;
->> +	}
->> +
->> +	for (unsigned int i =3D 0; i < st->num_channels; i++) {
->> +		chans[i].negative_input =3D st->channels[i].negative_input;
->> +		chans[i].positive_input =3D st->channels[i].positive_input;
->> +	}
->> +
->> +	ctx->chip =3D st;
->> +	ctx->num_channels =3D st->num_channels;
->> +	ctx->channels =3D chans;
->> +	ctx->enable =3D ads1263_adc2_enable;
->> +	ctx->start =3D ads1263_adc2_start;
->> +	ctx->stop =3D ads1263_adc2_stop;
->> +	ctx->read =3D ads1263_adc2_read;
->> +	mutex_init(&ctx->chan_lock);
-> devm_mutex_init()
-
-I actually call mutex_destroy() on device .release.
-
-I think it makes more sense that way, otherwise we would UAF?
-
-[...]
-
->> +struct ads1263_adc2_ctx {
->> +	struct auxiliary_device adev;
->> +	struct ads1262 *chip;
->> +	/* Protects channel state */
->> +	struct mutex chan_lock;
->> +	struct ads1263_adc2_channel *channels;
->> +	unsigned int num_channels;
->> +	int (*enable)(struct ads1263_adc2_ctx *ctx,
->> +		      const struct ads1263_adc2_channel *chan);
->> +	int (*start)(struct ads1263_adc2_ctx *ctx);
->> +	int (*stop)(struct ads1263_adc2_ctx *ctx);
->> +	int (*read)(struct ads1263_adc2_ctx *ctx, __be32 *val);
+>> +  ti,vbias:
+>> +    $ref: /schemas/types.yaml#/definitions/flag
+>> +    description: Enables the level-shift voltage on the AINCOM pin.
+>> +    default: false
 >
-> I'm not sure I see this loose coupling as that useful. I'd just export th=
-e
-> functions from the other module and add them to this header.
-> Maybe I'm missing why you need this complexity.
+> There is no such syntax, drop.
 
-I'll go for the exported (NS) functions. Much cleaner that way.
-
-I don't know where did I read this callback approach was a way to handle
-auxiliary devices and I got fixated on that.
-
-[...]
-
->> +static int ads1263_adc2_channels_setup(struct iio_dev *indio_dev)
->> +{
->> +	struct ads1263_adc2 *st =3D iio_priv(indio_dev);
->> +	struct device *dev =3D &st->ctx->adev.dev;
->> +	struct ads1263_adc2_ctx *ctx =3D st->ctx;
->> +	struct iio_chan_spec *chns;
->> +	unsigned int i;
->> +
->> +	/* Account for the timestamp channel */
->> +	chns =3D devm_kcalloc(dev, ctx->num_channels + 1, sizeof(*chns),
->> +			    GFP_KERNEL);
->> +	if (!chns)
->> +		return -ENOMEM;
->> +
->> +	for (i =3D 0; i < ctx->num_channels; i++) {
->> +		guard(mutex)(&ctx->chan_lock);
->> +
->> +		ctx->channels[i].refmux =3D st->refmux;
->> +
->> +		chns[i] =3D ads1263_adc2_iio_voltage_template;
-> Rather than using a template like this I'd just set it all here using
-> a designated initializer.  Means there is one place to see all the fields=
-.
->
-> 		chns[i] =3D (struct iio_chan_spec) {
-> 			.type =3D IIO_VOLTAGE,
-> 			.indexed =3D true,
-> 			.differential =3D true, //not sure why this wasn't in your template.
-> 			.channel =3D ctx->channels[i].positive_input;
-> 			.channel2 =3D ctx->channels[i].negative_input;
-> 			.scan_index =3D i,
-> 			.scan_type =3D {
-> 				.format =3D IIO_SCAN_FORMAT_SIGNED_INT,
-> 				.realbits =3D 24,
-> 				.storagebits =3D 32,
-> 				.shift =3D 8,
-> 				.endianness =3D IIO_BE,
-> 			},
-> 			.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> 				BIT(IIO_CHAN_INFO_SCALE) |
-> 				BIT(IIO_CHAN_INFO_HARDWAREGAIN) |
-> 				BIT(IIO_CHAN_INFO_SAMP_FREQ),
-> 			.info_mask_shared_by_all_available =3D=20
-> 				BIT(IIO_CHAN_INFO_HARDWAREGAIN) |
-> 				BIT(IIO_CHAN_INFO_SAMP_FREQ),
-
-Sounds good to me.
-
-> 		}
->> +		chns[i].scan_index =3D i;
->> +		chns[i].channel =3D ctx->channels[i].positive_input;
->> +		chns[i].channel2 =3D ctx->channels[i].negative_input;
->> +		chns[i].differential =3D true;
->> +	}
->> +
->> +	chns[i] =3D (struct iio_chan_spec)
->> +		IIO_CHAN_SOFT_TIMESTAMP(ctx->num_channels - 1);
-> That macro has recently become a designated intializer so
-> 	chns[i] =3D IIO_CHAN_SOFT_TIMESTAMP(ctx->num_channels - 1);
->
->> +	chns[i].scan_index =3D i;
->
-> Isn't this just overwriting the ctx->num_channels - 1 we just
-> passed in above?
-
-It is. Thanks!
-
-[...]
-
->> +static const struct auxiliary_device_id ads1263_adc2_auxiliary_match[] =
-=3D {
->> +	{ .name =3D "ti_ads1262.ads1263_adc2",
->> +	  .driver_data =3D (kernel_ulong_t)"ads1263_adc2" },
-> 	{
-> 		.name =3D "ti_ads1262.ads1263_adc2",
-> 	  	.driver_data =3D (kernel_ulong_t)"ads1263_adc2",
->
-> Though I really don't like forcing that cast in there and it should be ir=
-relevant
-> given there is only one entry in this table.  Should be fine to just hard=
- code that
-> where used.  If you need this later, wrap it in a structure.
-
-You're right. I'll add a NAME macro.
-
-I don't think we'll ever add entries here.
+The "default: false" syntax? Sure I'll drop.
 
 >
-> 	},
+>> +
+>> +  ti,idac1-pin:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Selects the analog input pin to connect IDAC1:
+>> +      0: AIN0
+>> +      1: AIN1
+>> +      2: AIN2
+>> +      3: AIN3
+>> +      4: AIN4
+>> +      5: AIN5
+>> +      6: AIN6
+>> +      7: AIN7
+>> +      8: AIN8
+>> +      9: AIN9
+>> +      10: AINCOM
+>> +      11: No Connection
+>> +    minimum: 0
+>> +    maximum: 11
+>> +    default: 11
+>> +
+>> +  ti,idac1-microamp:
+>> +    description: Selects the current values of IDAC1.
+>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
+>> +    default: 0
+>> +
+>> +  ti,idac2-pin:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Selects the analog input pin to connect IDAC2:
+>> +      0: AIN0
+>> +      1: AIN1
+>> +      2: AIN2
+>> +      3: AIN3
+>> +      4: AIN4
+>> +      5: AIN5
+>> +      6: AIN6
+>> +      7: AIN7
+>> +      8: AIN8
+>> +      9: AIN9
+>> +      10: AINCOM
+>> +      11: No Connection
+>> +    minimum: 0
+>> +    maximum: 11
+>> +    default: 11
+>> +
+>> +  ti,idac2-microamp:
+>> +    description: Selects the current values of IDAC2.
+>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
+>> +    default: 0
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  '#io-channel-cells':
+>> +    const: 1
+>> +
+>> +  '#gpio-cells':
+>> +    const: 2
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  adc:
+>> +    $ref: /schemas/iio/adc/ti,ads1263-adc2.yaml#
 >
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(auxiliary, ads1263_adc2_auxiliary_match);
+> Not a separate device node. Fold into the parent... or explain in
+> commit msg. You have entire commit msg to explain odd things.
+>
+> In that binding description you call it "independent", so it should have
+> its own SPI chip select? Why "independent" and part of this binding?
+> Maybe not independent, so basically part of this device?
 
-Thanks for your feedback, Jonathan! Apologies if this version was a
-little rough... I'm a bit embarrased by the bugs found by Sashiko.
+It's independent in the sense that it is a proper subdevice on the same
+chip. It shares the serial interface but operates completely in
+parallel.
+
+I decided to add a subnode because other devices might request their
+io-channels and most importantly a different voltage reference might be
+connected to it.
+
+I'll clarify this in the commmit message on the next version. Although
+after seeing this submitted bindings [1], I wonder if it's a better
+approach to do something like
+
+	spi@0 {
+		mydevice@0 {
+			...
+			adc@0 { ... };
+			adc@1 { ... };
+		};
+	};
+
+Any thoughts?
+
+> Best regards,
+> Krzysztof
+
+Ack to the rest of comments.
+
+[1] https://lore.kernel.org/linux-iio/20260519-ad5529r-driver-v3-1-267c0731=
+aa68@analog.com/
 
 --=20
 Thanks,
