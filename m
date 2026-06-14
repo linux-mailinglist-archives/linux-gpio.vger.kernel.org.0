@@ -1,195 +1,392 @@
-Return-Path: <linux-gpio+bounces-38415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id jt+gLmi+Lmom2QQAu9opvQ
-	(envelope-from <linux-gpio+bounces-38415-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 16:44:56 +0200
+	id bOutEb0OL2pm7gQAu9opvQ
+	(envelope-from <linux-gpio+bounces-38416-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:27:41 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2773D6814E6
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 16:44:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 965CC682284
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 22:27:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="Gtk4QDf/";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38415-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38415-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=lG8Nqp7A;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38416-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38416-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 143E93008503
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 14:44:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 564E9300C926
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jun 2026 20:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC0D93AE1B9;
-	Sun, 14 Jun 2026 14:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351DB31E855;
+	Sun, 14 Jun 2026 20:27:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD153C584B
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 14:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4A62E1722
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 20:27:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781448293; cv=none; b=QWF2xaKCTY+aXdRZRyTuejtSUO31HitaQdf7vafpPybgLYYiyPH5VKRZZqQJw+zSI4lKCRF0pKmh1ZQTfp8Yik5CFg9EtE31LEzXkw5CcuRfJRKG6IYmAZjp+GHZvtQ5HZrsjf7AUa0n/tstX7Gl1WULOt35Aej1G0zkVy2Lxh8=
+	t=1781468843; cv=none; b=kMW6WvSfxSUODw/AK/5lro2thgW/pRlxi8S1/R3YhUcjDXUPSX3G0ytcE/vssfBNCRZtiEab50SNfiMv93BOwpkR6Chw9WCnbpY+6BJEgTeSeXKuu8y6967nI1Ganahck79EwrK3jFDgWnLCb7P49KbRTBn7d9KAtMw1hsA+2kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781448293; c=relaxed/simple;
-	bh=TisGf5pX6ErFtdTDgfTV+0zQmwRZj3uZQwSjI9GluTo=;
-	h=Message-ID:From:To:Cc:Date:Subject; b=KDbXB0lCiwkenQFtif97Ecc8YS9WdlDBnnlT7qDgZMo5fCz0UfeTX05BNCVGXt89AI00GOZEj40g5ujfzbsSWdJx8tnVR+5vPwtZFUqC7t8xj9WfF4eIQSTMDEtBvSnM9izWHPabQp86PxY58QtABymngpocCCoDikEpidtz/zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gtk4QDf/; arc=none smtp.client-ip=209.85.216.49
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-36b8d414666so1512620a91.3
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 07:44:52 -0700 (PDT)
+	s=arc-20240116; t=1781468843; c=relaxed/simple;
+	bh=h9xk+G+xayD5RQ4g2h7FGIIaCxcLrzsO9b0YSlCPg9M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=aUv4Za1cS3zNN50fiToj7yuUTceo2zs/Hly22gM4RuXmimBfSbeDc9m9w0U+Ec2jCy9hBufs+GcmwDXVOaFPrOilWg7vMcmEWYOR5Upq0QePDyIFemwSBX4mxso7+iM0Iiol2PKGEMACbLHxECQlgOCBntKMtP5TQw3k7L28/ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lG8Nqp7A; arc=none smtp.client-ip=209.85.221.179
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-59ebde7d704so824725e0c.2
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Jun 2026 13:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781448292; x=1782053092; darn=vger.kernel.org;
-        h=subject:date:cc:to:from:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1781468839; x=1782073639; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JCH56oESC6n7X2Ge9q8ZdkIBLhIo7OksXBXPlx+vTys=;
-        b=Gtk4QDf/KPuswbKBaPegfz7SgJb+16nslak8dx7AefmEPfM8gyL4fpSwk/ZO4eH96a
-         t4SWSOiXYwehDkSFTcviDvPTvP1AvjFoBP2dvCIVcxAJPSmrPvf30PnGrnDEZ8ZLthkr
-         ADoLcpDtBeYYhW+C/u4XLXJlTr9R0wYc2ivLL9/XS1PK29l4NpPrkoGtuAlur4Lw7iK2
-         fIrThBVcgxef6NTleGgsF+GMxYiYUJPfeSPugub569hYJn3lLa+/YXSm5efEZxKDOZ8R
-         B+MuE8XEDSZk/QbV5Y29pU41ww9I12YT3i4B8CgPDi+BAwQixiCWJgjMRZKKDG/zGLfA
-         ruQA==
+        bh=D8ijRA6s0uqNGh2yBan54U2T2vOUvgrEDPKm+USlvSY=;
+        b=lG8Nqp7Aj5+DnGGQZNLI/TmEUWTNzmgRJwS5h3RuN1CzC9qRuMXUO6HoQms6qe7NKR
+         an9N6bHx4XdhVhlK13nsQYl99p5GYmeC7TcYrHy+E5Veh3IYpoTMhZ+8If5pu25M1LeG
+         ffn+KFoBUZhtIpeCtNhtq6GcNGLD1IV8fDtVlQlrtv0IxpUkZHUXg0bYUfO9CnRHftH/
+         is4znB2aimGFLi2G99e9P96v1hRc0m/ey64NvEY0V7AtAB7Z1dN72oELQYWRyicKNdEE
+         eZYGQjh+PDZXtzPUBSJOBoq0elIcSA+WtvgT+Hc8LyHal2GY0OdYUDvngHMH91zU0Ocl
+         38bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781448292; x=1782053092;
-        h=subject:date:cc:to:from:message-id:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JCH56oESC6n7X2Ge9q8ZdkIBLhIo7OksXBXPlx+vTys=;
-        b=P15tpSmt24zpVZPCDo2U8Uta5o6sFyvg82EhrAlkHSWw8eoO6411nsanGJMixYN7t6
-         Gs/1iItQgX/au/CdhYu0H3lf2A/SLCEiq3jxu3u/YLVfOJV+9GEhC1HL70vTEdt8nljE
-         f+klLPDq2357I8MMSDCt3CTzQxCc81eyUP97uo1HD4GiCyhkLFecSVYDbIk+i2RjuDbm
-         LQ/au3rkwf/ldKK5XfU2xs+fkiU0Vovm9bkwHPFKHnOwm6OqYzaEd9I8sNu56awOE67J
-         NBNgBoevHGEY1lA7089CNU8te1gH9srfiliydi0htuWJc6K7hGvx9Oa9fS9M6ET82sEJ
-         DMUg==
-X-Gm-Message-State: AOJu0YwWvgmQsgOza3PeJjWZ9o0kObHAaqdeihhwgJkAJj1HnEb6wcAX
-	nfFMy0MSd6WcHAdZfF98eWFq2ksC6jHJGyJWFvbmzQRBGxvM77raAAF3XrU3S8ui4K9GuA==
-X-Gm-Gg: Acq92OGdJ8XUdFnMInfHo7Mxrn4RB0RVDpbWi2F8KF8rGgerlyavbskkweLqR2GxZ65
-	F2NQ5qjwhlP+Wpd75rqce/eX8ayXjp5lOQ+hJlpKG965HMnazpCwGLrz/LFWOWMAu/l5McPwCtS
-	3PoBwRS98abGlq6nBGJn+Vox+1v9k0T9NryKLOZhn2jwar2jIfWqRdazC/Q/jwdQLS8Ms40tJ+3
-	lp0pW/2vqnf6CuwBL46HF1/d9dSQtQuQrvPEhxgg7hWlTvrkLkzNG7MNoEuF0bxFtHa//gnQlnc
-	b/c/BDoq/E443vzlamvG9Imer2/Dur3uL9NkFj+twn7djUx3LnNYo//8IHcYcDnRbGhLdVXOZ7Q
-	9RGoTCuvi+UpN98GHltD1DUg0gyqxx+0QKJkZOtHStXQXtqMmePbFmB9fEUTi/tr/xYg6oi5kJu
-	/0xfNjT1lXfrOHDH9U3sDYgil3A44=
-X-Received: by 2002:a17:90b:1348:b0:36d:b12f:6143 with SMTP id 98e67ed59e1d1-37a04784e81mr10827516a91.25.1781448291679;
-        Sun, 14 Jun 2026 07:44:51 -0700 (PDT)
-Received: from [127.0.1.1] ([47.253.114.73])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37a1eba8fb3sm7273168a91.4.2026.06.14.07.44.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2026 07:44:51 -0700 (PDT)
-Message-ID: <6a2ebe63.f0a9eb5a.7cfd4.8e8d@mx.google.com>
-From: Wayen Yan <win847@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: lorenzo@kernel.org, linus.walleij@linaro.org
-Date: Sun, 14 Jun 2026 22:43:11 +0800
-Subject: [PATCH] pinctrl: airoha: fix led1 gpio11 typo and phy4 duplicated map
- value
+        d=1e100.net; s=20251104; t=1781468839; x=1782073639;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D8ijRA6s0uqNGh2yBan54U2T2vOUvgrEDPKm+USlvSY=;
+        b=Ul/dych3Mua+oKD8llRO1gtNjQoSQs+UFbm2DwXTM1/aQdSBkjGQOHZoBrmfzMwd9+
+         tSn2XF5Klsu3BG7OYO2uVaAzCbjcKoVBaTLMaAFBWeCnp7He1kEsJFrs/JYXAJQvj7Si
+         WHYcoTLY1sGmZWvtjTlUS2GCbNgzRllEmMox9WmjXImpdLE/EUjXGrH9D4nJNeoLhWk+
+         8TNvP8EjKJSZZ6g66zN90+YnKLgyGUxSbOwDxotW68hw61SEJgEP4IvTffSOKjSEDIMJ
+         OKWvYorYRvvNrPCWfyrghiLPgBqK54LyTVf3/a2f66TCgoKYrEpQq0mDAIjAvku5ZzTi
+         yt5A==
+X-Forwarded-Encrypted: i=1; AFNElJ9CHHIhYTKJKH6DYfo8gShGPN3VQhwdYBvvz+5DjSgLTIqbJ9y8bC/OZt4IYzHcACitHXvf3fNhX3vx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm6YHHdlQ0xZZTOd+7Q6Wkc4+RGnWXz+4KdrTeF0qiX1FrrpRp
+	NCv99qlpez/QxZ00MJSkkfp3QWW+i1NHDviYO6c82RLYNW8EJ+cxMnZA
+X-Gm-Gg: Acq92OEvCYtyuxRu1mDL4UfhSratCnXhsYJFWpY4itDkea0ipovl90p7RXF+Gb20NOX
+	rURf4vcBQCG85u5ovp4j4PIvx2c9tDf1yQ3ycIana86hh0ED1MBNT8VMMk6kYwXO3AoE9kk+jWx
+	Cg4j62mpshsq1XTxBVyByWkALr41ijJY0WiYPZPaOG0I8loqqgvvEvbOMramYJysQIWCGF9S5Ky
+	1DnKYq5EN3YxoJQG9KReZtJXwe5YlGuoKimN0oTDK7rQ8MpzIYpnBThaWSH8o6NsvB7j/jqzzjH
+	5ReciF0VgyG2AhFdQ9BZethg17cndauZtGif3Y1JOTCD50ygCRx4HwrFg6U/hKCSI8867+M3xy3
+	TeTRVfEw+S2mJovNxOGtrsFWAVQYqRusoaGWJeREKP8KKHgotjmHS5oOLr64oY64rchjdsZR/au
+	I0cQO6mIk6SZcSsw==
+X-Received: by 2002:a05:6122:7d0:b0:59d:6004:d453 with SMTP id 71dfb90a1353d-5bb6c05b321mr5101381e0c.2.1781468839085;
+        Sun, 14 Jun 2026 13:27:19 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5bb9018080bsm1995179e0c.10.2026.06.14.13.27.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Jun 2026 13:27:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 14 Jun 2026 15:27:11 -0500
+Message-Id: <DJ91ZV8FQOMZ.YLIC552K4G5D@gmail.com>
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Linus Walleij"
+ <linusw@kernel.org>, "Bartosz Golaszewski" <brgl@kernel.org>, "David
+ Lechner" <dlechner@baylibre.com>, =?utf-8?q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, "Andy Shevchenko" <andy@kernel.org>,
+ <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 2/5] iio: adc: Add ti-ads1262 driver
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Jonathan Cameron" <jic23@kernel.org>, "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
+ <20260612-ads126x-v1-2-894c788d03ed@gmail.com>
+ <20260613144544.0594a7f0@jic23-huawei>
+In-Reply-To: <20260613144544.0594a7f0@jic23-huawei>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38415-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38416-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:lorenzo@kernel.org,m:linus.walleij@linaro.org,s:lists@lfdr.de];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER(0.00)[win847@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:jic23@kernel.org,m:kuurtb@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[kuurtb@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[win847@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_NONE(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kuurtb@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mx.google.com:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2773D6814E6
+X-Rspamd-Queue-Id: 965CC682284
 
-Two bugs in LED1 configuration:
+Hi Jonathan,
 
-1. an7583_phy1_led1_func_group uses "gpio1" instead of "gpio11" for
+On Sat Jun 13, 2026 at 8:45 AM -05, Jonathan Cameron wrote:
+> On Fri, 12 Jun 2026 17:46:20 -0500
+> Kurt Borja <kuurtb@gmail.com> wrote:
+>
+>> Add ti-ads1262 driver for TI ADS1262 and ADS1263 ADCs with initial
+>> support for the following features:
+>>=20
+>>   - Power management
+>>   - IIO direct and buffer modes
+>>   - Channel hot-reloading
+>>   - Internal or external oscillator
+>>   - Internal or external voltage reference
+>>   - Filter configuration
+>>   - Sensor bias configuration
+>>   - IDAC configuration
+>>   - Level-shift voltage configuration
+>>   - Auxiliary ADC interoperability considerations
+>>=20
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>  MAINTAINERS                  |    1 +
+>>  drivers/iio/adc/Kconfig      |   13 +
+>>  drivers/iio/adc/Makefile     |    1 +
+>>  drivers/iio/adc/ti-ads1262.c | 1816 +++++++++++++++++++++++++++++++++++=
++++++++
+>
+> That is rather too big. I think you'll have to work out how to split this
+> up into more manageable chunks.  Staying under a 1000 (preferably a lot l=
+ess)
+> per patch makes it much easier for people to review.
+>
+> Given the complexity of the device this might be one that has to go
+> in as several series, building up functionality as we go.
 
-   LAN3_LED1, causing wrong GPIO assignment (AN7583 only).
+I'll split it up as much as possible for next version.
 
-2. phy4_led1_func_group and an7583_phy4_led1_func_group use MAP(2)
+I was thinking of taking out the hot-reloading stuff for a follow-up
+series. In that case I would also add IIO_ACQUIRE_BUFFER_MODE().
+What do you think?
 
-   duplicated with phy3, should use MAP(3) to match phy4 sequence.
+>
+> I'll ignore all the DT stuff as sounds like that may radically change and
+> just take a fairly superficial first look at this.
 
-Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
+Yes, I will just address Krzysztof comments and leave that patch until
+we can discuss it with David.
 
-Fixes: 3ffeb17a9a27 ("pinctrl: airoha: add support for Airoha AN7583 PINs")
+>
+> Jonathan
+>
 
-Signed-off-by: Wayen Yan <win847@gmail.com>
----
- drivers/pinctrl/mediatek/pinctrl-airoha.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+[...]
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-index 995ba6175c..b20f2057cc 100644
---- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-@@ -1618,13 +1618,13 @@ static const struct airoha_pinctrl_func_group phy3_led1_func_group[] = {
- 
- static const struct airoha_pinctrl_func_group phy4_led1_func_group[] = {
- 	AIROHA_PINCTRL_PHY_LED1("gpio43", GPIO_LAN0_LED1_MODE_MASK,
--				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio44", GPIO_LAN1_LED1_MODE_MASK,
--				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio45", GPIO_LAN2_LED1_MODE_MASK,
--				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio46", GPIO_LAN3_LED1_MODE_MASK,
--				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(3)),
- };
- 
- static const struct airoha_pinctrl_func_group an7583_phy1_led0_func_group[] = {
-@@ -1678,7 +1678,7 @@ static const struct airoha_pinctrl_func_group an7583_phy1_led1_func_group[] = {
- 				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(0)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio10", GPIO_LAN2_LED1_MODE_MASK,
- 				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(0)),
--	AIROHA_PINCTRL_PHY_LED1("gpio1", GPIO_LAN3_LED1_MODE_MASK,
-+	AIROHA_PINCTRL_PHY_LED1("gpio11", GPIO_LAN3_LED1_MODE_MASK,
- 				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(0)),
- };
- 
-@@ -1706,13 +1706,13 @@ static const struct airoha_pinctrl_func_group an7583_phy3_led1_func_group[] = {
- 
- static const struct airoha_pinctrl_func_group an7583_phy4_led1_func_group[] = {
- 	AIROHA_PINCTRL_PHY_LED1("gpio8", GPIO_LAN0_LED1_MODE_MASK,
--				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(2)),
-+				LAN0_LED_MAPPING_MASK, LAN0_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio9", GPIO_LAN1_LED1_MODE_MASK,
--				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(2)),
-+				LAN1_LED_MAPPING_MASK, LAN1_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio10", GPIO_LAN2_LED1_MODE_MASK,
--				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(2)),
-+				LAN2_LED_MAPPING_MASK, LAN2_PHY_LED_MAP(3)),
- 	AIROHA_PINCTRL_PHY_LED1("gpio11", GPIO_LAN3_LED1_MODE_MASK,
--				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(2)),
-+				LAN3_LED_MAPPING_MASK, LAN3_PHY_LED_MAP(3)),
- };
- 
- static const struct airoha_pinctrl_func en7581_pinctrl_funcs[] = {
--- 
-2.51.0
+>> +#include <linux/lockdep.h>
+>
+> Fairly unusual to see that header in a driver.
+> What's it here for?
+
+I included it for lockdep_assert_held().
+
+[...]
+
+>> +/* IDACMAG constants */
+>> +#define ADS1262_IDACMAG_OFF			0
+>> +#define ADS1262_IDACMAG_COUNT			11
+>> +
+>> +/* REFMUX constants */
+>
+> Naming is good enough I'm not sure I'd bother with the comments
+> to say what these are.
+>
+> On option is to just group them with the register they are about
+> and using extra indenting to visually separate them from the register
+>
+> #define ADS1262_REFMUX_REG			0xxx
+> #define   ADS1262_REFMUX_RMUXP_MASK		GENMASK(5, 3)
+> #define     ADS1262_RMUX_INTER				0
+> #define     ADS1262_RMUX_AIN0_AIN1			1
+> #define     ADS1262_RMUX_AIN2_AIN3			2
+> #define     ADS1262_RMUX_AIN4_AIN5			3
+> #define     ADS1262_RMUX_AVDD_AVSS			4
+> #define     ADS1262_RMUX_COUNT				5
+
+I like this...
+
+> However, if you are going to have a terminating entry, an anonymous enum =
+might be better
+> with that just as the last item.
+
+...but this sounds good too. I'll go for what looks more organized.
+
+>
+> #define   ADS1262_REFMUX_RMUXN_MASK		GENMASK(2, 0)
+>
+>
+>> +#define ADS1262_RMUX_INTER			0
+>> +#define ADS1262_RMUX_AIN0_AIN1			1
+>> +#define ADS1262_RMUX_AIN2_AIN3			2
+>> +#define ADS1262_RMUX_AIN4_AIN5			3
+>> +#define ADS1262_RMUX_AVDD_AVSS			4
+>> +#define ADS1262_RMUX_COUNT			5
+>> +
+>> +struct ads1262_channel {
+>
+> As a general rule we tend to avoid bitfields because of all the problems
+> with how loose the C spec is on how these actually get laid out.
+> I'd just have this as a suitable 32 bit value and then have
+> defines for masks within that.
+
+Are you suggesting storing this whole struct data as a u32 and
+reading/writing with FIELD_*() helpers? I think that may be less
+readable but it would save memory. I don't know if I understood
+correctly though.
+
+I'm dropping the bitfield approach for next version anyway.
+
+[...]
+
+>> +struct ads1262 {
+>> +	struct spi_device *spi;
+>> +	struct regmap *regmap;
+>> +	struct iio_dev *indio_dev;
+>> +	struct iio_trigger *trig;
+>> +	struct gpio_desc *reset_gpiod;
+>> +	struct gpio_desc *start_gpiod;
+>> +
+>> +	void *scan_buffer;
+> I think this is always accessed as a __be32. If so just type it as that.
+
+I was hesitant to do that because of the space reserved at the end for
+the timestamp. Didn't feel right to assign __be32 when it would actually
+be something like
+
+	struct {
+		__be32 buff;
+		aligned_s64 ts;
+	};
+
+But I have no problem doing it.
+
+[...]
+
+>> +static int ads1262_fill_buffer_mult(struct ads1262 *st)
+>> +{
+>> +	__be32 val, *scan_buffer =3D st->scan_buffer;
+>
+> Avoid mixing pointer and no point, or anything with assignments
+> as it makes the code harder to read.
+>
+>> +	unsigned int chan;
+>> +	int i =3D -1;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * This routine enables and reads channels in a full-duplex fashion.
+>> +	 *
+>> +	 * When a channel is enabled, the previous conversion is clocked out o=
+f
+>> +	 * the shift data register on the same transfer (Section 9.4.7.1). Thi=
+s
+>> +	 * allows for low latency software sequencing but forbids any SPI
+>> +	 * activity happen in between or data corruption may occur, hence the
+>> +	 * need to take the xfer_lock for the whole operation.
+>> +	 */
+>
+> Just to check: Is SPI traffic on the same bus to a different device fine?
+> If not you'd need spi_bus_lock(). If it is fine then reword this to talk =
+about
+> communications with this device just to avoid confusion.
+
+Yes, to a different device is fine. I'll reword it.
+
+[...]
+
+>> +static int ads1262_read_chip_name(struct ads1262 *st, char **name)
+>> +{
+>> +	struct device *dev =3D &st->spi->dev;
+>> +	u8 dev_id;
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	ret =3D regmap_read(st->regmap, ADS1262_ID_REG, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dev_id =3D FIELD_GET(ADS1262_DEV_ID_MASK, val);
+>> +
+>> +	switch (dev_id) {
+>> +	case ADS1262_DEV_ID_ADS1262:
+>> +		*name =3D "ads1262";
+>
+> Given, at somepoint I would guess you'll want to support the auxiliary ad=
+c
+> on the 1263, I'd start with a struct chip_info  (with the name in there)
+> and pick that rather than just the name here.
+
+Makes sense. In that case I can add a dev_warn if the name doesn't match
+the internal model. Would that be ok or would you prefer dev_dbg?
+
+>
+>> +		break;
+>> +	case ADS1262_DEV_ID_ADS1263:
+> Not particularly important but common practice to just change the prefix
+> for anything device specific.
+> 	case ADS1263_DEV_ID
+
+Good to know!
+
+>
+>> +		*name =3D "ads1263";
+>> +		break;
+>> +	default:
+>> +		*name =3D "ads1262";
+> Given we'll ultimately want fallback compatibles to work and so allow
+> for firmware to specify which device to fallback to, this should really b=
+e
+> using the guidance from firmware to select rather than always guessing
+> the 1262 variant.  That is safe though given the 'subset' nature so this
+> doesn't matter as much as it normally does.
+
+Agreed.
+
+[...]
+
+>> +static const struct reg_default ads1262_reg_defaults[] =3D {
+>> +	{ ADS1262_POWER_REG,		0x11 },
+>
+> Is it sensible to specify these in terms of the fields that make them up?
+> Can make it easier to see what the default state actually means.
+> Sometimes it is just too complex, so we don't bother.
+
+I prefer not to do it because it would be too complex. I'll try though.
+
+[...]
+
+>> +MODULE_DESCRIPTION("Texas Instruments ADS1262 ADC driver");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Kurt Borja <kuurtb@gmail.com>");
+>>=20
+
+Ack to the rest of comments!
+
+--=20
+Thanks,
+ ~ Kurt
 
 
