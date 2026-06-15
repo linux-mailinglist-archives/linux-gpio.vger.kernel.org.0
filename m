@@ -1,148 +1,189 @@
-Return-Path: <linux-gpio+bounces-38493-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38494-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TkO/IK30L2qoJwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38493-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:48:45 +0200
+	id Cl1aEwP1L2rlJwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38494-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:50:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA168686630
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:48:44 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90619686658
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:50:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=mB6RCqnZ;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38493-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38493-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=baylibre.com header.s=google header.b=D5PXKn7L;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38494-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38494-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 933EA3291F08
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:41:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D62AD3019450
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:49:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 374393F4DD3;
-	Mon, 15 Jun 2026 12:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 834973E832B;
+	Mon, 15 Jun 2026 12:49:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4733F0A9F
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC15E3E274D
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:49:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781527191; cv=none; b=F9z24thO6i+Kati9V8J1yyhJNWV5Mq9wxx+kp87UwWTufHxpiUbW6ug7B0fDz8hj1yLUyTt7E7ExgByRGSvgiHgIcAXLmN+JPdbA1i4oexMd7ZabVgN219xKBRdLlPBitvM8nOT1OXYyRKVdbG4Jym31Wo7v8l+wzZ2ZxpK/ZgQ=
+	t=1781527788; cv=none; b=SFSXLvgjoeNJkoTQg9qClhsE9RPCevbLCkpQZWlTt89Fd5o6UJAy9G6OkiivXEE3TplmxZam4DEaEt6FrLVzc3zJ2PDKDLeZ1Ggs+PRhPdVyux6dO2LHT4CK4qf4uh4XF3bs9Ew8LODfWbTFsejA25NN1oECC+Yb2mfNBIFma4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781527191; c=relaxed/simple;
-	bh=bdVJ07nAphri25imo7nsgUcUOxQUMPVUR1ipYfK5CAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=By/kHfWgBXYkFZa5iT/bLXRCZ9WxLF7C/tuCP3G5AJSv81Tw512kidDOlCaI27CTtYL18atvkeKSKBQrNhnd45QOQfu8ABu3GeKrAHgV17nIALFL1LsIIwouvX9zp+F/KDkU/eGeNvpRTreHPl+pd9Jj4eBjCbnFe6TXPEi1zHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mB6RCqnZ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C6A1F000E9
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781527190;
-	bh=3HwTZQKx3R5nFnMVQD0UnmKNX6QPykatQ2QJBzWpTuA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=mB6RCqnZfoadfqstkbuB9D1ya4jx79P2NLyAKcqY+vTLunCOaY9NQk5dmAoVYTJos
-	 Jemaf1tWnPw/tXIi5yvdpBarHzXLfLJN6VRS6efYEWF+SrH/stpK/uNX6pi7AB5YMb
-	 GiK5oCaYzPRaV9uameTmnUMlA+/i76Us/dazyR21H3DG3ztnbCHszDXHVGPlJ0lNTZ
-	 CIRxjNTaCBCTfTQxPGF0HXEx5ZH770t0kwvEk7I/rAhZkStRZt3h9O1NuAMU+5vMkY
-	 wz0SVGSzvVopRGio0InHmHDU+F+q32rCiNvZPhlm9IsUlzwZTTYOrh4wSt/d/YV4mB
-	 eFeeNksEBdTTw==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5aa5be9ab1aso3030200e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:39:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ85GhOkMyGvLe44dyLm9o7C8ehRG9Xky5JdiWxK1WhtwT5ib/wHKGwnrQ0c6okEcrLSLD+R8d165pC3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvp2ucAiFAMzWqzuklpVnzpScvDHZKtmwLVWgSTmUoCv9d1XxE
-	0WP86bscq7SnOHO7nLm8jN3KSD4q+cKcuZ7ruo2PBJBEQQjq7P0Bo5zIAA482j4bwu45zM4tuOY
-	Gh0Ee443Xukhd2FpnPlgIu8ee5WWpWk8=
-X-Received: by 2002:a05:6512:378b:20b0:5a3:f25f:cc30 with SMTP id
- 2adb3069b0e04-5ad30dc0e51mr2166732e87.32.1781527188817; Mon, 15 Jun 2026
- 05:39:48 -0700 (PDT)
+	s=arc-20240116; t=1781527788; c=relaxed/simple;
+	bh=io1/2r11HO51BPZXO/tRzlJTOUlpv8g3afd0+OUSQqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7HW9YHfnPE/OPW1/ayUoFueGsQVSVwcy8RlMjzGrmkR5kainNr0eSJSPlkEm31VqZlijJwH1wcZ52on+WUHqLvR/OSfrhLEky45k/Jj/prc0yK8w5Q26wvxCkU1griWK/GMvHlmYJG+j2cH5kS+XPyG9G4tUTYh1SZQASHkmlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=D5PXKn7L; arc=none smtp.client-ip=209.85.221.50
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-45fd464d51fso1839737f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:49:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1781527784; x=1782132584; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1QHIUpga64KoOO69MKvFZ85iZtZeRcvr0EhP2ZBJr0=;
+        b=D5PXKn7Lzhjwz/aKAfePCqBkw08DtV5f0/IIeDbvGkJ4bCI/9QEmPJ1/RXEK5Y91Ut
+         9y9RWp2oTXzzgN9XEIg2+OcMifPKBBVlDyi5kUmF7SVulKGkTwtrXcEJNodWvTHzqPNv
+         kyWug8reiE1RAblStPthfMwiPwLN3pi+SG+R9wFWfqjL9eCETEI1VKwi1R6XKEo/0v0+
+         sJErgeRCFdELS8Cv/oXQC9KQb5wSL4OXEosLMGnBrEND5GxSyk4dGrkXwhKXm8PlHLUg
+         IUY6QHSxCt83R5EhEkhISM2ZZ/w5XOPjTmmcZSQPXMlbcbBL8TyNsUZLcauFCmWZ944p
+         rolA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781527784; x=1782132584;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B1QHIUpga64KoOO69MKvFZ85iZtZeRcvr0EhP2ZBJr0=;
+        b=ghcofm6vt5ob0sgo0QLL2oHqZSbalm0Ye5hx8ioNCBNnLfSfjNTNUDhyDVQbFd6zR7
+         HTNdnbm1w5cGqwnnCt1IrgAqr+whRGZjGrf0BnClWm+p9LTYIrJvtRA0CJulsSyF0DNR
+         m5i1uVSlCIUQMUW5L8W2/1tYevOQtsftkaoF42Z+SMCY4xHl6Y+2Lq76xlElHp0UAoRm
+         NFl0LzPXtHWFAnovSG3brWVRJwBWNB0Lyx1Z6hnupk6FxFb9aqz0bRdoEFXlgW8wDeFy
+         7TJ8+aa3UCuOi4Htf32HPRDoM9aggp++F4ylR9YmVH/W8+c//3gAKfPq3/6J2z2wJ5Ko
+         S1zw==
+X-Forwarded-Encrypted: i=1; AFNElJ/WG7VYNxDCuKC+GShhxaRvukqmSeAXP1XahjxAuEAn38maR1yvv3obp9m9Kt4vA4NSJDMrApR7dBSn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjpI2gMNrbIyOvQ2f/hFYdfwPpCxemHgrsf9g7/EKrcFtUaHMZ
+	a1KasU2aW3kaKOkY8VPi8b11enZh6Oub4SOphnFpLBwqQS+u4M4Iq6yknm0W8UDihZk=
+X-Gm-Gg: Acq92OF4jpDXaP6zgtOiNZR/ibAij96gvVUQh8pmk4yZ5R2gyCP/yR2NjMjh3NgnqZF
+	Oxpt61v4zHbHwAyaMwMn/WFkjRfl8KhZa74BdGy0pw/Wpru80Cuzq5AR26FojslQaumuB5wtJIS
+	g8j0lH+l5PlqNCA/4gS1Q9sURHDe0uolWEfCdM9s2RYg4waG4HJFly7xnPSaKmEsFEEx9DDKbWc
+	4bSdd4fw/WNN+bHVaKGUyHXMVbc9s/poDuBisDr5lth33aAl5OylUyz2B3ZthIqdsHTB05tChlS
+	YDRL/7PnmWg+eT8v1UoU3odNJOo7n2jQAVsHTzGTbTbrt6q9a4zwPWWm6mBJYS4sLklt+ORGh/r
+	LiXJLji8ncNojzjqLF4hK611doyc4TgOIUB2S5XeeYqeEHexi3xE/y97otP5smjKL4SP8V93zo5
+	vNCEzOL1UDSklvj1c6/Gyb47bpbObE
+X-Received: by 2002:a05:6000:1842:b0:45e:e5d1:8a72 with SMTP id ffacd0b85a97d-46076a24946mr14442075f8f.28.1781527784380;
+        Mon, 15 Jun 2026 05:49:44 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-4606f26f309sm33140486f8f.14.2026.06.15.05.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 05:49:43 -0700 (PDT)
+Date: Mon, 15 Jun 2026 14:49:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Jia Wang <wangjia@ultrarisc.com>, linux-gpio@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] pinctrl: Export pinctrl_get_group_selector()
+Message-ID: <ai_0i2cicHHzwIXj@monoceros>
+References: <20260613-export-get-group-selector-v1-1-fc4451a9ff0e@kernel.org>
+ <ai_QMNydoXXoOFmB@monoceros>
+ <CAD++jLm+rv+Tm-WxvD51ynKeDUrPMAG=nfTNxRbf8FvSNy+dGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20260612161148epcas5p33904df90bd840d20a6db05622aaa28b8@epcas5p3.samsung.com>
- <20260612163020.411761-1-alim.akhtar@samsung.com> <20260612163020.411761-6-alim.akhtar@samsung.com>
- <CAD++jL=mQUJCqVyqK746UdkZCsO+2oeO1MCQM4F-_pSOfpuQuA@mail.gmail.com> <007a01dcfc9d$aa94dd60$ffbe9820$@samsung.com>
-In-Reply-To: <007a01dcfc9d$aa94dd60$ffbe9820$@samsung.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 15 Jun 2026 14:39:35 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkX99o8B0jhU1UA8XtMPtEfJwvGHvi6fQ34HXdkN+hE+Q@mail.gmail.com>
-X-Gm-Features: AVVi8CdJ5ZyduBAkMoAW0l1uu5Q5fbJbTHlK3_-9P33lCUu398OHaVFPyVfP_0w
-Message-ID: <CAD++jLkX99o8B0jhU1UA8XtMPtEfJwvGHvi6fQ34HXdkN+hE+Q@mail.gmail.com>
-Subject: Re: [PATCH 5/5] MAINTAINERS: Add entry for Samsung Exynos8855 SoC
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: krzk@kernel.org, peter.griffin@linaro.org, robh@kernel.org, 
-	conor+dt@kernel.org, linux-samsung-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, hajun.sung@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="spvkojtcfrr7x2eo"
+Content-Disposition: inline
+In-Reply-To: <CAD++jLm+rv+Tm-WxvD51ynKeDUrPMAG=nfTNxRbf8FvSNy+dGQ@mail.gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.70 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MIXED_CHARSET(0.56)[subject];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38493-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:alim.akhtar@samsung.com,m:krzk@kernel.org,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:wangjia@ultrarisc.com,m:linux-gpio@vger.kernel.org,m:nathan@kernel.org,m:lkp@intel.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38494-lists,linux-gpio=lfdr.de];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[baylibre.com:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,samsung.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	RCPT_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,baylibre.com:dkim,baylibre.com:email,baylibre.com:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DA168686630
+X-Rspamd-Queue-Id: 90619686658
 
-Hi Alim,
 
-On Mon, Jun 15, 2026 at 10:05=E2=80=AFAM Alim Akhtar <alim.akhtar@samsung.c=
-om> wrote:
-> > On Fri, Jun 12, 2026 at 6:11=E2=80=AFPM Alim Akhtar <alim.akhtar@samsun=
-g.com>
-> > wrote:
+--spvkojtcfrr7x2eo
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pinctrl: Export pinctrl_get_group_selector()
+MIME-Version: 1.0
 
-> > > +F:     arch/arm64/boot/dts/exynos/exynos8855*
-
-^ Actually what I am requesting...
-
-> > If you really want to single out a single platform like this (and I don=
-'t even
-> > know if that is a good idea... how do you keep the big picture in mind?=
-) you
-> > should probably want to also add a wildcard for all the
-> > 8855 device tree files.
+On Mon, Jun 15, 2026 at 02:27:59PM +0200, Linus Walleij wrote:
+> On Mon, Jun 15, 2026 at 12:16=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@baylibre.com> wrote:
+> > Checkpatch criticises:
 > >
-> I am also not sure, just followed what was done historically, other Exyno=
-s8855 file will get added once they
-> are posted for review, e.g. clock driver.
-> Let me discuss with Krzk during OSS (Mumbai) and see how do we handle thi=
-s or any other better ways.
+> >         WARNING: Reported-by: should be immediately followed by Closes:=
+ or Link: with a URL to the report
+> >         #9:
+> >         Reported-by: Nathan Chancellor <nathan@kernel.org>
+> >         Reported-by: kernel test robot <lkp@intel.com>
+>=20
+> Now that is just checkpatch being silly, because what in in next looks
+> like this:
+>=20
+>     Reported-by: Nathan Chancellor <nathan@kernel.org>
+>     Reported-by: kernel test robot <lkp@intel.com>
+>     Closes: https://lore.kernel.org/oe-kbuild-all/202606130210.ytVPxHlm-l=
+kp@intel.com/
+>     Fixes: cb7037924836 ("pinctrl: ultrarisc: Add UltraRISC DP1000
+> pinctrl driver")
+>     Signed-off-by: Linus Walleij <linusw@kernel.org>
 
-I just misread the patch, dunno why, probably too little coffee.
+Yeah, so the kernel test robot report has a Closes, but Nathan's
+doesn't.
 
-Sorry for the fuzz.
+Best regards
+Uwe
 
-Yours,
-Linus Walleij
+--spvkojtcfrr7x2eo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmov9OMACgkQj4D7WH0S
+/k4lUAf+KFDcQ+g3aWzBANz5YIePToL2qga0SjR7Qb/9K0oxID9Btbw9CPIW8K86
+jax9iI12yqLpnCug+o9p5HFxCdc515qbzoJBcJsSuPxPNVGtA4HmZBYuHs5YOB87
+Ys70WfwQwMXV9PKTsXfdaU5Z5uWxSl5mi89UTiKfLIrNro7WPmEACfOZcwICyvJ1
+Ghk0igvHAQpdsotYQUxqVjfhZOTmK44sIBYJh6k4qIY2qZ9/JuMYmQnwBiF516xf
+3YNwJECyeAfkHjwGxVn8myXii3MxC/M9x9cnwBoHCyDIQYHF/XXAK1DOPht4SDbe
+jqTdjUPmlJbJ/nmw5eXXYY8wRLcpVg==
+=oM18
+-----END PGP SIGNATURE-----
+
+--spvkojtcfrr7x2eo--
 
