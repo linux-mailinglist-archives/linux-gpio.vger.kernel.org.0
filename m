@@ -1,177 +1,142 @@
-Return-Path: <linux-gpio+bounces-38485-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38486-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gc9jMK7uL2oVJQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38485-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:23:10 +0200
+	id zLOCHD3vL2o+JQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38486-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:25:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1673E68626F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:23:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D374F6862CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:25:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=Yjmew9QS;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38485-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38485-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MkOVC1W3;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38486-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38486-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 93D063086624
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:19:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD809300EF76
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:21:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FDC23E8340;
-	Mon, 15 Jun 2026 12:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FCB3E7BCE;
+	Mon, 15 Jun 2026 12:21:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DE23E6DC3
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110243E6DD8
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:21:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781525968; cv=none; b=H+wb2F6GYqgKiuu2+WrgQYNXFyLP6vG4nKoxP3WgLmDEk9YDoTihbf+eFQUqomaSSFk3zRuejuXf659Teer6tQ0fUYMOepz7BpJp4rYmQ/WvPqtMhC5GjQk/RmB0OUWfgfZrOY572ylbq65AY4ju7u0KVtOcD9m61MX+s/YRiVI=
+	t=1781526083; cv=none; b=muw8hg4Q4JZbgInKAk+MMeU95cb+25WEkTW9rxetI6wDbowTKm7/KWLC+iCiWcdrb7oLzLmEKQhUy82T5wTW1jymfQF5SEY1BYt+HozkPsozhjLcWOXMnfBYr9SCl+wTFNyW8K7ias4A+M11Yx9+5abiwZxO5WlpjdZR7QnDDw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781525968; c=relaxed/simple;
-	bh=fBO2hJf4+rPrkOp74SVXocT1M+hIBpxOon9pkP770BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bgas9IF4D0P48j99Bo7Ype59TLAOVNjSiEiuVPwpg8m/eeO1CwCAv9PVvQePjJnXhoZmD7wn35pdt1OK5nuOidmDcqArAXKan4Li6SqG//FekLDmM316yVIIQS1eJBDBel7UMlrCF7MB1r2ZaSxEh4TiYh+26GhOWshjd7MOWl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yjmew9QS; arc=none smtp.client-ip=209.85.160.172
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-5178a42caa3so34152401cf.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781525966; x=1782130766; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4ZBzvTGg5RXWxT981zetPvdIqY02XPOz3n0/R5VS1+w=;
-        b=Yjmew9QSovj+Gv8k1T854IGf/12+JinUw11DK6RSF7W9n4aCMc/YwA1tYGlKcItWvE
-         AbU72v7UHCxAW3snmUXOmRdayDtgTUppa7hLGOBo6bxv39Hd4aNnZu32x3+1THuwWubD
-         0jUt79H6VTs0fx9SciXc3Qi9NxSyO8YOviBF/a0T0oXHwNFkDeyi5MCG/lHIlXvqdNW2
-         /bAbqGiZqTBSBZB/EC8h+KoW3pOi6KfP90wSVoGOt3HVdY83ogkBwVJ8IYTeeNFeKJyf
-         zwtSrYrUrgSL9b9sZiQxuKn9glvOEZWtCCacxTx8A7Lm/w3E9p2tuhsOJ+J9/dPZ/Sht
-         7Dsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781525966; x=1782130766;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ZBzvTGg5RXWxT981zetPvdIqY02XPOz3n0/R5VS1+w=;
-        b=Q9MgjmLDWSIReuke2HY1LWoFQDFZYOw8gdMfFaJddgl8bpf0EVxDNlD8KONdAedxM/
-         7sf5sxSDet80pDPPBka+JLA8HPj2LT/3V65neyHiW8pp4RRnxK5TJshSoeZK9LYvVMTP
-         ZDI7naNLe8mff5mI+UHBqZP+PPIb1jZV7/60SkAdmsu7F8tDweB5gaKDOqtFxIzwMgxE
-         nCk1Ku3/ybtFbxSbQw/UQWXskit44VJ2lCcWUiccQslWWAxu457p85iQ7+o7yyX+T2Ya
-         RXtnksPIXNeCABIr6l8K/7eaQV7BT9nPtxGfVW9GzgDOfUy/TOQC1zk7u+mW+thhxHWK
-         +AsQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9RW1vjCJ0TjLOWz+yQR5XYKt0RoG2jw3l7lkTK0KcfF5esS4tm02DrLHMUntjqL+NZfI4LhHlAKxEB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvPEVKoWBE+BWUckWsoHA9qGwhQYUs7IS11dazIajc+x1PFeeN
-	JCelzsf4NBsQczqkgFiGSwgcZpRnDMO+VIxVMYbodfMK08nHehj/1/I0
-X-Gm-Gg: Acq92OF5WS1yKchiaYuqH/GfRtrWCmt5rD8XE5fOJBujLGCEFiEy6Iem0Ce8FTCNZ4X
-	j/eQzG9ARjEltvKJpujZ8iWnaXKwj9fLrSrXPHnfSzAW0nmY/GHhxdx6v4iD/+3XdaV38S3bZuN
-	0PnDXFfeFO/VeZGQ3qopcN9is/Jl8otWuCGE9rCtHeKodHuYNIv+xMksI5fUBE0tvkJmjABJH+o
-	YIduRhyt0FeH/LiAjPQFQRYXQTGr+cUy5G2AoZcGZrkQ9IpIIb3KcAlZ3112RWe9P/i7/JWVLof
-	FuxmmmOV8nv5Vhcnr2JTNeberslDsv1QR1bQy1CkLjdgZLYMB8QcnckHab+eILPWETQd2dNzlae
-	UAAAsHs329Gpm7tAJibKET/FnxLtpQGjRXv3ESSkCG7oc54+xWEC9lbA0AfNN9F/Tfrp7OjA0Ru
-	4gW5xpUDoSkwkZRSv1EIjp8slFF3A=
-X-Received: by 2002:a05:622a:1819:b0:517:5bc6:b575 with SMTP id d75a77b69052e-517fbc898cfmr190512591cf.4.1781525965791;
-        Mon, 15 Jun 2026 05:19:25 -0700 (PDT)
-Received: from localhost ([43.225.189.75])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7a3c4asm106505581cf.14.2026.06.15.05.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 05:19:24 -0700 (PDT)
-Date: Mon, 15 Jun 2026 15:19:18 +0300
-From: Dan Carpenter <error27@gmail.com>
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: dumitru.ceclan@analog.com,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Martin Hecht <Martin.Hecht@avnet.eu>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Cory Keitz <ckeitz@amazon.com>
-Subject: Re: [PATCH v13 17/22] media: i2c: maxim-serdes: add MAX96724 driver
-Message-ID: <ai_txjwLPHsSKsJI@stanley.mountain>
-References: <20260604-gmsl2-3_serdes-v13-0-9d8a4919983b@analog.com>
- <20260604-gmsl2-3_serdes-v13-17-9d8a4919983b@analog.com>
- <20260610144242.GF2948@ragnatech.se>
- <ail9bHXL_NV2DZK5@stanley.mountain>
+	s=arc-20240116; t=1781526083; c=relaxed/simple;
+	bh=ROD8BjDuhqrcHGOg3YU5pJx9aeO2ZrsENA67Q221pek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c4ANCQlqXr3pwOlti9AZIB3BM046dsjaHb9SEndlvz7SVhDJQtU8khS6eSQGzxsklrNXJ6rT0rynJ4zDcVJZCFFMBstipqKD8FJqv8927wXGpLd5hKkgem49+9dlL8aM9EaZ3JNppGxuPpkpUnAIFS9EB6wh1trquL5ihDapkyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkOVC1W3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8141F000E9
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781526083;
+	bh=F/R26Myyl0yIhGDi/iXaNrHDLf/HQBvBtxQkw+f6av0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=MkOVC1W3ae0yWWtsGOcuUFNtaGeCwRKcGjsxebAvK3Kooo/iGRyV1LK9XkneRwnbU
+	 Y7cQJwC6xQJVxrMDUZvPWWk7nK3KE30O+9f/DdZySbIh7BCqtDJdVIvI13aJtqkGNd
+	 tfZl+XZQDTNfKy+YsbRfX0pzKggYa7EtOR6/wZH0NOldCpGp+D/dpsEce9GqRFXiMH
+	 0yOi862Ui9Mbg9c1oD/whS26InRATQXCphBhqhht3tKyVeWk9j2dRWyq2VNgxE2nCH
+	 pSew8sAQmdyx9lZ+kOyS/hke9Qau7olrMIidVBBneAL0WKL0Ge6XndE4m12G7f8tqZ
+	 OFImQJlj0V6KA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5aa5e0d57e5so2307512e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:21:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+Y7vyJCgm7VTCT68ooU26pM2RU+K9pR3+LHSWo4z5d3hM9UH7AN5ebj5dlRK3xz6V7kBgIZY1SUzxT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwblKeWBMumduNHaR4PJ5nujP9yAHyYnGIRRrrchtCUnMo7ofpA
+	n7uJB4yGbmgwpKS14WdAswAaMYarU7LQRWDJuBOWTIfoJrgpZNoO0+/QSQvqB2Xf5WxlAq4SDYA
+	yLG/jGKUqFtvTe2Ncw0Ug+uRghfh5TOs=
+X-Received: by 2002:ac2:42d5:0:b0:5aa:8824:1571 with SMTP id
+ 2adb3069b0e04-5ad2db8b01emr2615896e87.49.1781526081757; Mon, 15 Jun 2026
+ 05:21:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ail9bHXL_NV2DZK5@stanley.mountain>
+References: <20260610083701.18663-1-hardikprakash.official@gmail.com> <ai8jhK9hUGHpojB5@zenone.zhora.eu>
+In-Reply-To: <ai8jhK9hUGHpojB5@zenone.zhora.eu>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 15 Jun 2026 14:21:08 +0200
+X-Gmail-Original-Message-ID: <CAD++jLkZfFRBdbMzs3arLu61OO9KcJpS1pB18e4gdyu5PADvhQ@mail.gmail.com>
+X-Gm-Features: AVVi8CelMRVH7oTzrLtejJtW_HL-yUSQgpLF7pD3CatF0zFZ_HBArAsp2CAL2-c
+Message-ID: <CAD++jLkZfFRBdbMzs3arLu61OO9KcJpS1pB18e4gdyu5PADvhQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "i2c: designware: defer probe if child GpioInt
+ controllers are not bound"
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Hardik Prakash <hardikprakash.official@gmail.com>, linux-i2c@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, wsa@kernel.org, andriy.shevchenko@intel.com, 
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com, 
+	nathan@kernel.org, chaitanya.kumar.borah@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38485-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38486-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[error27@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:niklas.soderlund@ragnatech.se,m:dumitru.ceclan@analog.com,m:tomi.valkeinen+renesas@ideasonboard.com,m:mchehab@kernel.org,m:sakari.ailus@linux.intel.com,m:laurent.pinchart@ideasonboard.com,m:julien.massot@collabora.com,m:robh@kernel.org,m:gregkh@linuxfoundation.org,m:mitrutzceclan@gmail.com,m:linux-media@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-staging@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:Martin.Hecht@avnet.eu,m:demonsingur@gmail.com,m:ckeitz@amazon.com,m:tomi.valkeinen@ideasonboard.com,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[analog.com,ideasonboard.com,kernel.org,linux.intel.com,collabora.com,linuxfoundation.org,gmail.com,vger.kernel.org,lists.linux.dev,avnet.eu,amazon.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:andi.shyti@kernel.org,m:hardikprakash.official@gmail.com,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:andriy.shevchenko@intel.com,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:nathan@kernel.org,m:chaitanya.kumar.borah@intel.com,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[error27@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,mail.gmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1673E68626F
+X-Rspamd-Queue-Id: D374F6862CF
 
-On Wed, Jun 10, 2026 at 06:06:20PM +0300, Dan Carpenter wrote:
-> On Wed, Jun 10, 2026 at 04:42:42PM +0200, Niklas Söderlund wrote:
-> > Hi,
-> > 
-> > Thanks for your work.
-> > 
-> > This patch gives me new compiler warnings, can they be avoided?
-> > 
-> >   .../max96724.c:402 max96724_log_phy_status() warn: subtract is higher precedence than shift
-> >   .../max96724.c:409 max96724_log_phy_status() warn: subtract is higher precedence than shift
-> >   .../max96724.c:588 max96724_init_phy() warn: subtract is higher precedence than shift
-> >   .../max96724.c:756 max96724_set_pipe_remap() warn: subtract is higher precedence than shift
-> >   .../max96724.c:796 max96724_set_pipe_phy() warn: subtract is higher precedence than shift
-> >   .../max96724.c:818 max96724_set_pipe_stream_id() warn: subtract is higher precedence than shift
-> >   .../max96724.c:830 max96724_set_pipe_link() warn: subtract is higher precedence than shift
-> >   .../max96724.c:942 max96724_set_link_version() warn: subtract is higher precedence than shift
-> > 
-> 
-> These are Smatch warnings.  I appologize for them.  I know about them
-> but I haven't looked at them.  I'll fix them by the end of the week.
+On Sun, Jun 14, 2026 at 11:57=E2=80=AFPM Andi Shyti <andi.shyti@kernel.org>=
+ wrote:
 
-I've pushed a fix for these to the devel branch of Smatch.
+> On Wed, Jun 10, 2026 at 02:07:01PM +0530, Hardik Prakash wrote:
+> > This reverts commit ef76a3a28c79b628890431aa344af633e892035b.
+>
+> Is this in your branch?
 
-regards,
-dan carpenter
+Nope. It was too late for me to handle as fix, what was merged for fixes wa=
+s
+this:
 
+commit 3f786abd23951f3f600a62fef42469d9200d5f52
+Author: Hardik Prakash <hardikprakash.official@gmail.com>
+Date:   Fri May 29 15:38:36 2026 +0530
+
+    Revert "pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo
+Yoga 7 14AGP11"
+
+    This reverts commit 3812a9e84265a5cdd90d29fe8d97a023e91fb945.
+
+This needs to go through the i2c tree at this point.
+
+Yours,
+Linus Walleij
 
