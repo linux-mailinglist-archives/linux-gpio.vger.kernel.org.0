@@ -1,77 +1,64 @@
-Return-Path: <linux-gpio+bounces-38480-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38481-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /ZMdIxrYL2o9HwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38480-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:46:50 +0200
+	id HarrIWLdL2ppIAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38481-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 13:09:22 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AD90685712
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:46:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5998685986
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 13:09:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38480-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38480-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Z45vdnCP;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38481-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38481-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 53A9B306DA95
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 10:43:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A94E73039F4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 11:07:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B314033F589;
-	Mon, 15 Jun 2026 10:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B8A43E3156;
+	Mon, 15 Jun 2026 11:07:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A68CB339708;
-	Mon, 15 Jun 2026 10:43:51 +0000 (UTC)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462843E2AD7;
+	Mon, 15 Jun 2026 11:07:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781520233; cv=none; b=Wjx44uOUfGTiO/ScBM2daqEhP2iMZ4U8YWXHWYI//BwUKdeezdBwW8/d1cmpI7cdd8I69+KW6r79F1tfzm7Cp6IaFRBO+yHw3qks733VD6lwMqRu1CxR3GoIDtB00suL3z0HfyutBPnpeJ3NxKeYjmH64rUIxWRAiApUywcraBo=
+	t=1781521667; cv=none; b=iU/VL6zw2htzT0hBNJ0juWMyUIosxNUinY8886UdEkXNQDXN4GufVzGKDUykUgA3Fg0NPwGylqu7slvziSGXe+jIzuXMMgV5hNGdYsws+JYwSEtz+LB3ChInZGmcxDJ3ZH4dIN7SfHZIVxUWrchtPrWb1Ta9otlpGs30pG8LuY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781520233; c=relaxed/simple;
-	bh=oVfd44ufR+op111XMW1UXh0Dk/Avy9DCMpoW+by1up8=;
+	s=arc-20240116; t=1781521667; c=relaxed/simple;
+	bh=5IsDVMKoPJvLpvptuX1lpJHY6wn9dp8hACNCowdF2AU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a6zf9w9OuO0ugr/TjXFDSh5Y4SxKLIEX/GMLUaJEbqkkssPP0Llz++56hJTFP7yDlJWpfxshz4qShW/zG9shhgGixEb+48gGo4W6AzeDw6lLByT4Vzgxz4JmXXSrJJ33iJlUTmm859M9SfQKzZYUV9B+uecB/UN6xGQxZdlp55A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1wZ4ey-0000JJ-00; Mon, 15 Jun 2026 12:35:16 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id C060CC084D; Mon, 15 Jun 2026 12:33:22 +0200 (CEST)
-Date: Mon, 15 Jun 2026 12:33:22 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Lamparter <chunkeey@googlemail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jonas Gorski <jonas.gorski@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-wireless@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-leds@vger.kernel.org, netdev@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH 05/10] [v2] mips: select legacy gpiolib interfaces where
- used
-Message-ID: <ai_U8j3uOoIzoYrJ@alpha.franken.de>
-References: <20260520183815.2510387-1-arnd@kernel.org>
- <20260520183815.2510387-6-arnd@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1NvIeB5eb1e8B/BQ/QqYJH3pze4hTh/t2vLKGr8ZyERa6G9v3d+twHTsxds64k8tdagrvUbSEmLVad1gOquHGFkePaSF1s6/iyTeAoKtG0dbhVAaE/v06WeYnmroNAlGmf1xmef78qMLbccpFssSsK2t67e/pVkRRxT4a2fc/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z45vdnCP; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 168C21F000E9;
+	Mon, 15 Jun 2026 11:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781521666;
+	bh=UO3rpfvYBBfuE5Ibo3k4HDGQ/cgjzFJy9qYSUkcP7I8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Z45vdnCP/DIFOtMyTiQHaC/jwY7RguxR3orCHgTJj7TjBJmOai+rw+wMalmWzYFLx
+	 iWF7txnOF962LrHydjZH6GEaEFbOJEqFmbFdBhJZmj1fk2czHvsX2wMD0+GQ25DPa9
+	 hauKuHV7W91vADi22vqSYS/vfXtnnyfEMWqneDypF+xe2bD5F6Xl8ud44l/8QjB/9r
+	 RloRpAuitmV/+psivHebPD8SvKrblMbMKSvCA1wOkZv3/zdTcNpU2BmvICCfQ+c6n7
+	 eUWR/qDQdLQKKlZY1gKIHmC34WH87uIjrjFV16TQpVxpng/bTkgMUMNiIxIWa9wBET
+	 Z0gJYbhPY17aA==
+Date: Mon, 15 Jun 2026 13:07:41 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Hardik Prakash <hardikprakash.official@gmail.com>, 
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org, 
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com, linusw@kernel.org, 
+	nathan@kernel.org, chaitanya.kumar.borah@intel.com
+Subject: Re: [PATCH] Revert "i2c: designware: defer probe if child GpioInt
+ controllers are not bound"
+Message-ID: <ai_cAd41W3iX1ic-@zenone.zhora.eu>
+References: <20260610083701.18663-1-hardikprakash.official@gmail.com>
+ <ai8jhK9hUGHpojB5@zenone.zhora.eu>
+ <ai_PwNWnMZB01AYU@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -80,82 +67,66 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260520183815.2510387-6-arnd@kernel.org>
+In-Reply-To: <ai_PwNWnMZB01AYU@ashevche-desk.local>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38480-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[franken.de];
-	FORGED_RECIPIENTS(0.00)[m:arnd@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:arnd@arndb.de,m:chunkeey@googlemail.com,m:johannes@sipsolutions.net,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:glaubitz@physik.fu-berlin.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:linusw@kernel.org,m:brgl@kernel.org,m:dmitry.torokhov@gmail.com,m:lee@kernel.org,m:pavel@kernel.org,m:mazziesaccount@gmail.com,m:florian.fainelli@broadcom.com,m:jonas.gorski@gmail.com,m:andrew@lunn.ch,m:olteanv@gmail.com,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:linux-wireless@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mips@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-leds@vger.kernel.org,m:netdev@vger.kernel.org,m:bartosz.golaszewski@oss
- .qualcomm.com,m:chunkeey@gmail.com,m:dmitrytorokhov@gmail.com,m:jonasgorski@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[41];
-	FREEMAIL_CC(0.00)[vger.kernel.org,arndb.de,googlemail.com,sipsolutions.net,iki.fi,kemnade.info,baylibre.com,kernel.org,atomide.com,physik.fu-berlin.de,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,broadcom.com,lunn.ch,davemloft.net,google.com,lists.infradead.org,oss.qualcomm.com];
+	TAGGED_FROM(0.00)[bounces-38481-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:hardikprakash.official@gmail.com,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:nathan@kernel.org,m:chaitanya.kumar.borah@intel.com,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[andi.shyti@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,amd.com,bgdev.pl,intel.com];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andi.shyti@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,alpha.franken.de:mid,alpha.franken.de:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[zenone.zhora.eu:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2AD90685712
+X-Rspamd-Queue-Id: E5998685986
 
-On Wed, May 20, 2026 at 08:38:10PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> A few old machines have not been converted away from the old-style
-> gpiolib interfaces. Make these select the new CONFIG_GPIOLIB_LEGACY
-> symbol so the code still works where it is needed but can be left
-> out otherwise.
-> 
-> This is the list of all gpio_request() calls in mips:
-> 
->   arch/mips/alchemy/devboards/db1000.c:           gpio_request(19, "sd0_cd");
->   arch/mips/alchemy/devboards/db1000.c:           gpio_request(20, "sd1_cd");
->   arch/mips/alchemy/devboards/db1200.c:   gpio_request(215, "otg-vbus");
->   arch/mips/bcm47xx/workarounds.c:        err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
->   arch/mips/bcm63xx/boards/board_bcm963xx.c:              gpio_request_one(board.ephy_reset_gpio,
->   arch/mips/txx9/rbtx4927/setup.c:        gpio_request(15, "sio-dtr");
-> 
-> Most of these should be easy enough to change to modern gpio descriptors
-> or remove if they are no longer in use.
-> 
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: no changes. There was no discussion on this, but the patch
->     has so far not made it into the linux-mips tree, so I'm including
->     it for completeness.
-> ---
->  arch/mips/Kconfig         | 5 +++++
->  arch/mips/alchemy/Kconfig | 1 -
->  arch/mips/txx9/Kconfig    | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
+Hi Andy,
 
-applied to mips-next
+> > > This reverts commit ef76a3a28c79b628890431aa344af633e892035b.
+> > 
+> > Is this in your branch?
+> 
+> $ git tag --contains ef76a3a28c79b6288
+> next-20260601
+> next-20260602
+> next-20260603
+> next-20260604
+> next-20260605
+> next-20260608
+> next-20260609
+> next-20260610
+> next-20260611
 
-Thomas.
+Yes, but I'm not finding out how it got there. I only see it in
+one of Wolfram's branches, but I don't think it came in that way.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+I can merge this revert as well, but only after the original
+patch hits mainline.
+
+Andi
 
