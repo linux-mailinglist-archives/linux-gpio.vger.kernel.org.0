@@ -1,79 +1,77 @@
-Return-Path: <linux-gpio+bounces-38489-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38490-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YtLNL2XzL2q9JgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38489-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:43:17 +0200
+	id cZwfKh72L2qoKAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38490-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:54:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12C82686545
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:43:17 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E87F6866F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 14:54:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=lqlkVlPB;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38489-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38489-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=e44RYy2F;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38490-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38490-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 63C0130FFF8F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:36:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4C2F6303C289
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 12:37:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7117F3F4830;
-	Mon, 15 Jun 2026 12:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5063EF670;
+	Mon, 15 Jun 2026 12:34:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88703F410B
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1683F2117
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:34:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781526790; cv=none; b=RQZreFT/b8WKXyIazLFmLjOLejcOq4k0ivU9wlbyltY3ux9SDUv0adx+d9qc8+NMmmiLZlwZLpK1yUItnmZimog3mOGvw+9Q9PYAdwBcIslpMQXjOQcm1KlQ6Og2DiCr4DTPY41kvu9uB2NjrUqG8P7iRTypZfa7NL6026gtZyQ=
+	t=1781526866; cv=none; b=E5VuB0dKKrUYfy7jErMqiDaKehaYsPfmkq2gbASmt7ndYsodtYBb3vYWGwWiOJPk7YpQ7Pjbfglz1S2VzOEyG3A7MTUH0i9T4K++SrHotpplvE8vtwaoDdlTYb9Ze7gjvhuMYe6Smhx22Evvl8gF0nEy02ruzrMSH7WlNtnRpy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781526790; c=relaxed/simple;
-	bh=JkzLGFYF5wthZZS+ia3UdT2LVznklUVYah/o2Gc1PjE=;
+	s=arc-20240116; t=1781526866; c=relaxed/simple;
+	bh=E+wYYnmm9+ovJEQoA+ux5mujxcyQjCG8ZJBUVfQKZnM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oj99XFsrajk0TCJv9k3PnXsDgJKyz9ulMZGWR54eDaV5dLcNEZTj0O/vhJBPu8mq4XGCix45Hz0fvISHApJ9hR8GLSz9tKOwA1DK5026b6iWfo59v+jJbO2nHuECeNgxsd+XQKOG7aN29zfQfUWPBzG2ls72SvyHJ31Xwn+yYM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqlkVlPB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A921F00A3F
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:33:06 +0000 (UTC)
+	 To:Cc:Content-Type; b=lC0ApRJFe82ZmNUgriT6nsQ+DsO8v3FLpxy6uyUoz8KZoioFlbBXOODl+5RiPCMsGaCMFjeCRdkU0met69J2w+zJksc7c069MToDvZsXxEjC1RHBnSeneWojP2goeZPMOVJ6bTFN29jRQ+ZYdy+OR3F32synzBK7hbM+9+ftksM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e44RYy2F; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848FE1F00A3E
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 12:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781526786;
-	bh=CvRCEfFbYKVX9NjE8/CKLBfPcnBzf+v+nPciyYIQM9E=;
+	s=k20260515; t=1781526861;
+	bh=E+wYYnmm9+ovJEQoA+ux5mujxcyQjCG8ZJBUVfQKZnM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=lqlkVlPBeLLvHC+XxEANSntqLg+pgOA0DIljDhF3BYxNms036yjm5FLhX5i50rb8/
-	 1V9hIuM0mJuYtrj+KIGLo7oj8pPOV588O8ykFuo5Tba8FkW+IjVO0Brma7ln3OPz4W
-	 nZC/7DYOaSDFkYVZgPtQZH1VTVDkKUJVhLJ+dbxjGMj/WDRuYA+oFl+I8MxFI50XFi
-	 6kziCGIX5U/8ij4GJpgMZQ/+ZHMYy3k0FDKk3sdqJqMTk/+QuZ3XH9hDHumB6EWh10
-	 KxJYpHG+ZK+31cspueEpBoZpYDHk6fsYH3FA2QiyyBxK3+GmS3KFnHO2L/6oW0ZL5i
-	 aYJHOYTAixhPw==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5aa6c66e6c5so2117076e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:33:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ94wKbHr/GB0Yem0B3lUIgvOa8qHZJ6Fziwu650agzRKv+tsKOQISPZSPawbwr9u6dagR0vPRov6rqm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx46fXJd+S0BYX0P1O1wpGogBMlWn3PSrlyFaQmJvsLEysjbwG7
-	Mwtbnu0GH3Mezt7mE4ZnwHIPrdl/lktl11dMFS/SPcmLjgHHNPGjJOcF7pZq7uZRtEbha6X5T9k
-	a7eQW5v5YlrYqvGPPJ49oOO7MWTT0aDI=
-X-Received: by 2002:ac2:4247:0:b0:5aa:7770:8fc2 with SMTP id
- 2adb3069b0e04-5ad2db5c41emr2856886e87.32.1781526784894; Mon, 15 Jun 2026
- 05:33:04 -0700 (PDT)
+	b=e44RYy2Fbut20aIcSF6rpSa2ySHCpmwiIt40GoMNdP7zQhNr3iMZ7Zjm8DRjDdWYy
+	 zrwO5FvefTMWZGKEfd6PqopVPHg10RJrK1zj/pqhdpUZzKcz44UyCj6nDClxBWSZZF
+	 Q59LaBgwhMR55VFllEO7dxJ7PGcG589S549idI7AxRQp7Om0ox6RaBsQJecLSSWepB
+	 JHialOfIhxishWlX2EwCr2+0l5VXolrifhcG9bK36R6M6/jPispWx4yb1SMYYorPYh
+	 PwRteTGhd0RYFPjYXJcMN3Tv8SAHuzAvYNtWVgWjDwZqtDwvkW+dtdMt1lP22igjNF
+	 /8NeDx5Fxh1xQ==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5aa2c25c632so3308898e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 05:34:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8FEo1UoKzk1fIhd0rH9Lbe8JG74cQil1Nq+vLY+Se4lV6pWD5y8GuKAuc3b4iagOhdQhk+9ics3wjs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEJfk1m5HBC840vNEh5Q8yK11qK2Ruq3FbXV68ebOPxJizS6aP
+	A9GSnXOYWGty86C5D321URH7fvH8OnPq8D3dGIypCEFvm/165aCv2ACm1Lxh+F1gfAQ4CXCOx4i
+	WxHStsCXwfUAJ0f/lInIlrejUtZXxaBc=
+X-Received: by 2002:a05:6512:66c5:b0:5aa:6f47:32a2 with SMTP id
+ 2adb3069b0e04-5ad30d994cbmr2096824e87.6.1781526860269; Mon, 15 Jun 2026
+ 05:34:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
-In-Reply-To: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
+References: <20260615091918.43333-1-pengpeng@iscas.ac.cn>
+In-Reply-To: <20260615091918.43333-1-pengpeng@iscas.ac.cn>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 15 Jun 2026 14:32:51 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmFKz19CRp-E=JcUnNkxNzKtSow6T8_9jDpR-wTrs9Ptw@mail.gmail.com>
-X-Gm-Features: AVVi8CdfAW9s5sgRANpPXt8QrdknCspcSqJgRQz8kxnesuf5cZFXyiy1GzbrKNY
-Message-ID: <CAD++jLmFKz19CRp-E=JcUnNkxNzKtSow6T8_9jDpR-wTrs9Ptw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] upboard pinctrl support for device id INTC1055
-To: GaryWang <is0124@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Thomas Richard <thomas.richard@bootlin.com>, Daniele Cleri <danielecleri@aaeon.eu>, 
-	JunYingLai <junyinglai@aaeon.com.tw>, Louis Chen <louischen@aaeon.com.tw>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 15 Jun 2026 14:34:06 +0200
+X-Gmail-Original-Message-ID: <CAD++jLnaH=+Y3jt7Ovqjxn=eRVCGSqNMm8CYKFmKFbuy6ULQNQ@mail.gmail.com>
+X-Gm-Features: AVVi8CdBCMjQ5hFLiCoiBp5_cF696oE_iHp_de8tf28S2SH4yxZf5JeAUewTOrc
+Message-ID: <CAD++jLnaH=+Y3jt7Ovqjxn=eRVCGSqNMm8CYKFmKFbuy6ULQNQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mlxbf3: fail probe if gpiochip registration fails
+To: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
@@ -82,57 +80,49 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38489-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:is0124@gmail.com,m:mika.westerberg@linux.intel.com,m:andy@kernel.org,m:thomas.richard@bootlin.com,m:danielecleri@aaeon.eu,m:junyinglai@aaeon.com.tw,m:louischen@aaeon.com.tw,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38490-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:pengpeng@iscas.ac.cn,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,iscas.ac.cn:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 12C82686545
+X-Rspamd-Queue-Id: 9E87F6866F2
 
-On Fri, Jun 12, 2026 at 12:13=E2=80=AFPM GaryWang <is0124@gmail.com> wrote:
+On Mon, Jun 15, 2026 at 11:19=E2=80=AFAM Pengpeng Hou <pengpeng@iscas.ac.cn=
+> wrote:
 
-> Add missing groups and functions in Tigerlake's pinctrl driver for INTC10=
-55.
-> Add support "UP Xtreme i12", "UP Squared Pro 7000", "UP Squared i12", "UP=
- 7000" boards.
+> mlxbf3_gpio_probe() logs a devm_gpiochip_add_data() failure but still
+> returns success. That leaves the platform device bound even though the
+> GPIO chip was not registered.
 >
-> The pinctrl-upboard is provide additional driving power & pin mux functio=
-n
->  through native SOC pins -> FPGA/CPLD -> hat  pins for flexable board lev=
-el
->  applications. it's probe from ACPI device id AANT0F01 & AANT0F04.
+> Return the registration error so probe failure matches the missing
+> gpiochip state.
 >
-> Signed-off-by: GaryWang <is0124@gmail.com>
+> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
 
-LGTM
-Acked-by: Linus Walleij <linusw@kernel.org>
-
-Since these touch Tigerlake, I expect Andy to queue and send me
-the patches from his tree.
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
 Linus Walleij
