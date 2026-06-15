@@ -1,293 +1,149 @@
-Return-Path: <linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38431-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 11ZVE/iAL2pvBgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:35:04 +0200
+	id OTGYMmKBL2qDBgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38431-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:36:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E071F6834A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 245436834C8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:36:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AJL2UoCf;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=intel.com header.s=Intel header.b=B6GVPNzL;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38431-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38431-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1E4D23008D36
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 04:34:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 61A26300A8D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 04:35:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2212F8E87;
-	Mon, 15 Jun 2026 04:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24138301493;
+	Mon, 15 Jun 2026 04:35:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4CA246782;
-	Mon, 15 Jun 2026 04:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3945305692;
+	Mon, 15 Jun 2026 04:35:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781498097; cv=none; b=sRbn5jl4r+5m+m55waBJXnUblubaMMdVqBNqIlSvAoyZ6ohmaKlCoe8hQqCKmdcg7gz4PWJ+xk4AyKagUkWSy7LTrx3Q/GzRHVDSvrMGEv2fq2IH6Nnk+7AxQ3ZdCpVtS4qumJ+Hdfm7wDc0s/5SAYOGo8otcaMY9bmetEHJrL4=
+	t=1781498141; cv=none; b=QJDKpNaZqjV3iOxPZ69/SFSpaZbzA3U+zMCUJ6iltgfPPdLdl3Q08dVu9HVmEJpf7fIXVQWCHOKqZhfOOIxJJ94rxqhneDPCI5UPNGhCnOAuINQg0Hwj3bp17D0buKnAnRuMX9zbFfkTrEcYHQwEpGDt5z26EEGt0s+YoEZb1FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781498097; c=relaxed/simple;
-	bh=5SJTvxfd7f2iLculV5spHy/9XNjuDl8oyP2/AUktYjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7x0pP5eDgICSuzSWkCfx47fRzbLB8eaSHb7oc4QcwonrfcN7T+BzvRLgxCyeYOF/H6PxvDVkadsrO83zAKEbgsenBzsYeN7+LM+Lvc15Onakm/zAS+bB66XFT4zReq9sEoSLDv2RKowLDUM6OGaXMqjXLghVjPCuwliYI1pzHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJL2UoCf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 337EE1F000E9;
-	Mon, 15 Jun 2026 04:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781498096;
-	bh=gWEDPbPVwTMCS3dB5DzxYPLhtVx2MMG50KY35u0kwNY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=AJL2UoCf3sgrhkCxCgOI4reu1Fwp+hbLiNg2OZf8xtC8ki2FvTbMefCh8/MToR4Zu
-	 BQDqREDzO+WmenxNwuXrBbT2yC9GSt9vUFFZZ0uoneZe9iAwjb2WUM03CfQfSLOaLw
-	 bWn0TTmK+fMLnUh3xksry6clYXJAGpbH9OAteS9A0jfnv7jSl74DGoHonV7MhTITeq
-	 wcYfoqeTsFW0TDj4MVb8mjFONHo1jpxMTjdhD3KVotqKvsoYFkUvzNrJeVTRy0kvJ8
-	 JTE8MBIpLTNlOEEMbgal2LliBgOS5AJZTvRXgzpg0mtQZqS5sPQW/2Rj7fGp4jqyzB
-	 J1cHjnFh5PINg==
-Message-ID: <73d85fad-d39a-4c34-90c2-819998656f7a@kernel.org>
-Date: Mon, 15 Jun 2026 06:34:48 +0200
+	s=arc-20240116; t=1781498141; c=relaxed/simple;
+	bh=yfRH7RprFbObRlNDYkLQ2uHKQDVz+sEkfWGjmv6Ens4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEjkWF5VkHnTkX0589xAT3l/knFNmI3ujRsUtIIv4sQbNB9GB1sHuFATpEcB+fDe+02QJa/FNDi2KiDxnAstI2PEwqSRttUmXURtEdHN96FgScWw6yffqSPP1nztvlfSc3CZzGRkQyQ2jhQ2J0Uj8hcasYTUpkAYD2gjf3lyKXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B6GVPNzL; arc=none smtp.client-ip=198.175.65.18
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781498140; x=1813034140;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yfRH7RprFbObRlNDYkLQ2uHKQDVz+sEkfWGjmv6Ens4=;
+  b=B6GVPNzLK41Hdu/NQjPO49iAnrP6j018Y7P6FaC4o4kQsqxbOt5HZ45G
+   OT79E7Olg3ncY2NzkuxJIro7z2S9BSjZAc9KwbEuV/h6q4MSgk1l2pfY/
+   ki64XL4k1if+NI5G/EbYwPr+ykp2m1ykcTmnJ4xS7DaFSGhMZrkFD7cqc
+   pcGX9PJAS7CsqJ7nmeenQWs8iMlXj5OsC2MdhoOQSnqj27j4rmCzajCdU
+   AMltnKxNbatcj73khCfM38kdTdq+dwrhkf1vTf6i/n5nSBlpgAro8dpiG
+   9ZYVEmlPuMgUCffx/raYFP2dGFwVl0ZvAIp2IDIvBOyiuqMiEx9fOcMiM
+   g==;
+X-CSE-ConnectionGUID: 5UhjSNDISle6Uz999tUDkA==
+X-CSE-MsgGUID: PqovoLOAT86tVa2KywLxNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="82294980"
+X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
+   d="scan'208";a="82294980"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 21:35:39 -0700
+X-CSE-ConnectionGUID: uXblxUB2RIWqSYeRtaH7lg==
+X-CSE-MsgGUID: naHHem3kQ36Sh29TPMRgDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
+   d="scan'208";a="242996470"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa006.fm.intel.com with ESMTP; 14 Jun 2026 21:35:37 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 1137E95; Mon, 15 Jun 2026 06:35:36 +0200 (CEST)
+Date: Mon, 15 Jun 2026 06:35:36 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: GaryWang <is0124@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Daniele Cleri <danielecleri@aaeon.eu>,
+	JunYingLai <junyinglai@aaeon.com.tw>,
+	Louis Chen <louischen@aaeon.com.tw>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] upboard pinctrl support for device id INTC1055
+Message-ID: <20260615043536.GZ2990@black.igk.intel.com>
+References: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: Add TI ADS126x ADC family
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
- <20260612-ads126x-v1-1-894c788d03ed@gmail.com>
- <20260613-loyal-azure-goldfish-cf6d54@quoll>
- <DJ92JT0CPSXJ.1113K3KLSRHH4@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <DJ92JT0CPSXJ.1113K3KLSRHH4@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260612-upboard-pinctrl-add-upboard-intc1055-support-v2-0-4111b256c840@gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:kuurtb@gmail.com,m:jic23@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38431-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:is0124@gmail.com,m:andy@kernel.org,m:linusw@kernel.org,m:thomas.richard@bootlin.com,m:danielecleri@aaeon.eu,m:junyinglai@aaeon.com.tw,m:louischen@aaeon.com.tw,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-38430-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,black.igk.intel.com:mid,linux.intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E071F6834A2
+X-Rspamd-Queue-Id: 245436834C8
 
-On 14/06/2026 22:53, Kurt Borja wrote:
-> Hi Krzysztof,
-> 
-> On Sat Jun 13, 2026 at 1:54 PM -05, Krzysztof Kozlowski wrote:
->> On Fri, Jun 12, 2026 at 05:46:19PM -0500, Kurt Borja wrote:
->>> +  ti,neg-refmux:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Selects the negative voltage reference input:
->>> +      0: Internal 2.5 V reference
->>> +      1: AIN1 pin
->>> +      2: AIN3 pin
->>> +      3: AIN5 pin
->>> +      4: AVSS pin
->>> +    minimum: 0
->>> +    maximum: 4
->>> +    default: 0
->>> +
->>> +  ti,vbias:
->>> +    $ref: /schemas/types.yaml#/definitions/flag
->>> +    description: Enables the level-shift voltage on the AINCOM pin.
->>> +    default: false
->>
->> There is no such syntax, drop.
-> 
-> The "default: false" syntax? Sure I'll drop.
-> 
->>
->>> +
->>> +  ti,idac1-pin:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Selects the analog input pin to connect IDAC1:
->>> +      0: AIN0
->>> +      1: AIN1
->>> +      2: AIN2
->>> +      3: AIN3
->>> +      4: AIN4
->>> +      5: AIN5
->>> +      6: AIN6
->>> +      7: AIN7
->>> +      8: AIN8
->>> +      9: AIN9
->>> +      10: AINCOM
->>> +      11: No Connection
->>> +    minimum: 0
->>> +    maximum: 11
->>> +    default: 11
->>> +
->>> +  ti,idac1-microamp:
->>> +    description: Selects the current values of IDAC1.
->>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
->>> +    default: 0
->>> +
->>> +  ti,idac2-pin:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: |
->>> +      Selects the analog input pin to connect IDAC2:
->>> +      0: AIN0
->>> +      1: AIN1
->>> +      2: AIN2
->>> +      3: AIN3
->>> +      4: AIN4
->>> +      5: AIN5
->>> +      6: AIN6
->>> +      7: AIN7
->>> +      8: AIN8
->>> +      9: AIN9
->>> +      10: AINCOM
->>> +      11: No Connection
->>> +    minimum: 0
->>> +    maximum: 11
->>> +    default: 11
->>> +
->>> +  ti,idac2-microamp:
->>> +    description: Selects the current values of IDAC2.
->>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
->>> +    default: 0
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  '#io-channel-cells':
->>> +    const: 1
->>> +
->>> +  '#gpio-cells':
->>> +    const: 2
->>> +
->>> +  gpio-controller: true
->>> +
->>> +  adc:
->>> +    $ref: /schemas/iio/adc/ti,ads1263-adc2.yaml#
->>
->> Not a separate device node. Fold into the parent... or explain in
->> commit msg. You have entire commit msg to explain odd things.
->>
->> In that binding description you call it "independent", so it should have
->> its own SPI chip select? Why "independent" and part of this binding?
->> Maybe not independent, so basically part of this device?
-> 
-> It's independent in the sense that it is a proper subdevice on the same
+Hi,
 
-You cannot use DT syntax as argument why you use DT syntax like that.
-
-
-> chip. It shares the serial interface but operates completely in
-> parallel.
-
-How completely in parallel? If the interface is the same, then it does
-not operate in parallel. It's impossible.
-
+On Fri, Jun 12, 2026 at 06:13:31PM +0800, GaryWang wrote:
+> Add missing groups and functions in Tigerlake's pinctrl driver for INTC1055.
+> Add support "UP Xtreme i12", "UP Squared Pro 7000", "UP Squared i12", "UP 7000" boards.
 > 
-> I decided to add a subnode because other devices might request their
-> io-channels and most importantly a different voltage reference might be
-> connected to it.
+> The pinctrl-upboard is provide additional driving power & pin mux function
+>  through native SOC pins -> FPGA/CPLD -> hat  pins for flexable board level
+>  applications. it's probe from ACPI device id AANT0F01 & AANT0F04.
 > 
-> I'll clarify this in the commmit message on the next version. Although
-> after seeing this submitted bindings [1], I wonder if it's a better
-> approach to do something like
+> Signed-off-by: GaryWang <is0124@gmail.com>
+> ---
+> Changes in v2:
+> - Add brief introduction pinctrl-upboard architecture in cover content. 
+> - Add more detail explaining for pinctrl-tigerlake commit message.
+> - Link to v1: https://lore.kernel.org/r/20260610-upboard-pinctrl-add-upboard-intc1055-support-v1-0-8185d2abbfb1@gmail.com
 > 
-> 	spi@0 {
-> 		mydevice@0 {
-> 			...
-> 			adc@0 { ... };
-> 			adc@1 { ... };
-> 		};
-> 	};
-> 
-> Any thoughts?
+> ---
+> GaryWang (2):
+>       pinctrl: tigerlake: add some pin groups and functions for INTC1055
+>       pinctrl: upboard: add device id INTC1055 based UP boards support
 
-Does not look like separate subnode. You still did not provide arguments
-why this is independent.
+Both,
 
-Best regards,
-Krzysztof
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
