@@ -1,74 +1,75 @@
-Return-Path: <linux-gpio+bounces-38468-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38467-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BOyvLGK5L2qaFAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38468-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 10:35:46 +0200
+	id lYadNlq5L2qZFAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38467-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 10:35:38 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FA5F68496B
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 10:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3081A684966
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 10:35:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=B3QX1w4M;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38468-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38468-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=lyY7TH7A;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38467-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38467-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=samsung.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4D7F53031CE8
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 08:35:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 068BF302AE02
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 08:34:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A75653CEB90;
-	Mon, 15 Jun 2026 08:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC0013CE080;
+	Mon, 15 Jun 2026 08:34:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE803CEB8F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24013CEBB6
 	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 08:34:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781512470; cv=none; b=ktfJX6+JGiF7sPVA798HcPZpXlWwcyk/BJTEfgU+gf/p1inJ30pFZUp7ZonSqxjxb1kt6rvs+/IDhkYvplfTWTUWA5nkdrLpOByALA6r2gJAKXEvywKVkmTzXafunILfHTjrexlgXr2vZbQcmpyfKfb/0fq6NqvtD727vCH8VAs=
+	t=1781512469; cv=none; b=EcXrlQW+Xp1zOtsMXw3eItE4bBXARmyYUg/4NeBmdl3Fm5fMgcg948pIiM6oikOZzV9oW1ayyM3yj8zxv1gq1RTJ+NIZctkO53nzP2qc65lGOOGXPCVVhMKOzum+PDe15tdH1hiGn/1Gi091m/niHmmfJPjPM3bTWwLMXphm/NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781512470; c=relaxed/simple;
-	bh=eYfoVTTY5NEjUxbcKceaFp2ZtOa8bfuibisKfUP+gSc=;
+	s=arc-20240116; t=1781512469; c=relaxed/simple;
+	bh=Coc6+axgNyuKZ/w9tZNcDBOAp4QRsPLZuDPcvvKDRkU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=YNL9Ho+UC2wgDr3AGxp21lhY+GvUcGjeHp+gBFSxG+MyrOF24JPk5C5z/0Jfo+myqc1bNPA09nM3JaCxbN/bDykzUtyJMDNGyKEbUpd+Ep5qVLvYOraMooLUyykeJCQKjtFFVJSzwwjk4c2bqT13K6UFwGvT/s7ENZSdA/VufiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=B3QX1w4M; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=cHaz3uivghrgEUj17zvaQwylofjti1We5za6DAp26O8v9kGi+jgnBfv2lLLjiY6XwUx8AwpZk0afgmw3igtUBB/otAjJCmutXZK4xy8CFmqU9c5lH2uS0lhPU7oBvpbDW6xCMLx1vaAuQGgOogkov4N0uALO9tzUnn2jSdwbJoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lyY7TH7A; arc=none smtp.client-ip=203.254.224.24
 Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260615083420epoutp044949b0cc032955b35d2b8d2b9a5c3234~5NCTS60Br2334723347epoutp04u
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260615083420epoutp016c6ee7dc3fd350d965d2329536316995~5NCTtp00q2412324123epoutp01T
 	for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2026 08:34:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260615083420epoutp044949b0cc032955b35d2b8d2b9a5c3234~5NCTS60Br2334723347epoutp04u
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260615083420epoutp016c6ee7dc3fd350d965d2329536316995~5NCTtp00q2412324123epoutp01T
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1781512460;
-	bh=wl26fAR/gW6o8YIBNsSnb/apIo7BbF6qv1tG/czd9Dg=;
+	bh=Cz8/kWNTiABNBQS/iHlFdfUP/vEMQXqsBrLkZrtPWyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B3QX1w4MKhmduwNZ7cmVp02v3c4u3d0CkIfDJadcgAS/IV26QVoupTwO/2qfQFeyk
-	 MiW0Vzlr8w7l/5Wk4SkdFGMevUxEN86vPAgYxvTxfFE/Sy2MFq3qK5zNOOt3Zkba6b
-	 NWRf/4bgrw7UebOXtmJeNYGOaJztXtqwr3eCWZj4=
+	b=lyY7TH7Ar87nItfdex/Hke4TwXQfqv26BAeQG4/CmYg9EBJirtx3Hh4D//O9fUFc7
+	 HrI/khjJ4TyGcf1fIaIhQhlBB2/rLm0TFpPHuePA9B+9p8iMeQV7QTaVWG94HUDIv3
+	 n+nB7pHE00URYRnyCWPpyXmnnnCM38TYIjrgVBeI=
 Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260615083420epcas5p4165ab507ad0395eff05b47f40302028f~5NCS-cyqD3233832338epcas5p4Q;
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260615083420epcas5p3c6d8f488fffa7add3b943b7e82f2cce9~5NCTiTU1o2361823618epcas5p3o;
 	Mon, 15 Jun 2026 08:34:20 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.87]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4gf3Lv4SCtz6B9mG; Mon, 15 Jun
-	2026 08:34:15 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.92]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4gf3Lz4v8Xz6B9m5; Mon, 15 Jun
+	2026 08:34:19 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260615083414epcas5p1391355f26fb4ce147782382af6668063~5NCOSYQKc2849128491epcas5p1n;
-	Mon, 15 Jun 2026 08:34:14 +0000 (GMT)
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260615083419epcas5p48c6b192d1abcbd5411f0958aa9b83237~5NCSTNBha0786007860epcas5p4Y;
+	Mon, 15 Jun 2026 08:34:19 +0000 (GMT)
 Received: from bose.samsungds.net (unknown [107.108.83.9]) by
 	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260615083413epsmtip147883ec3f24d1808b5113998f4de05ec~5NCMinSDw0113401134epsmtip1j;
-	Mon, 15 Jun 2026 08:34:12 +0000 (GMT)
+	20260615083417epsmtip10db0ab1e9dba5e80ec21a960585f06f4~5NCQVQDJS0113401134epsmtip1o;
+	Mon, 15 Jun 2026 08:34:17 +0000 (GMT)
 From: Alim Akhtar <alim.akhtar@samsung.com>
 To: krzk@kernel.org, peter.griffin@linaro.org, robh@kernel.org,
 	conor+dt@kernel.org, linusw@kernel.org
 Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
 	hajun.sung@samsung.com, Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v2 1/5] dt-binding: ARM: samsung: Add Samsung Exynos8855
-Date: Mon, 15 Jun 2026 14:22:48 +0530
-Message-Id: <20260615085252.1964423-2-alim.akhtar@samsung.com>
+Subject: [PATCH v2 2/5] dt-binding: pinctrl: samsung: Add exynos8855-pinctrl
+ compatible
+Date: Mon, 15 Jun 2026 14:22:49 +0530
+Message-Id: <20260615085252.1964423-3-alim.akhtar@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260615085252.1964423-1-alim.akhtar@samsung.com>
 Precedence: bulk
@@ -78,15 +79,15 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260615083414epcas5p1391355f26fb4ce147782382af6668063
+X-CMS-MailID: 20260615083419epcas5p48c6b192d1abcbd5411f0958aa9b83237
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-543,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260615083414epcas5p1391355f26fb4ce147782382af6668063
+X-CMS-RootMailID: 20260615083419epcas5p48c6b192d1abcbd5411f0958aa9b83237
 References: <20260615085252.1964423-1-alim.akhtar@samsung.com>
-	<CGME20260615083414epcas5p1391355f26fb4ce147782382af6668063@epcas5p1.samsung.com>
+	<CGME20260615083419epcas5p48c6b192d1abcbd5411f0958aa9b83237@epcas5p4.samsung.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-4.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
@@ -98,7 +99,7 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38468-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38467-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,samsung.com:dkim,samsung.com:email,samsung.com:mid,samsung.com:from_mime];
 	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
@@ -121,32 +122,27 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_SEVEN(0.00)[8]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3FA5F68496B
+X-Rspamd-Queue-Id: 3081A684966
 
-Add Samsung Exynos8855 smdk board to documentation
+Document pin controller support on Exynos8855 SoC.
 
 Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
- .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-index 753b3ba1b607..273464400477 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -235,6 +235,12 @@ properties:
-               - winlink,e850-96                 # WinLink E850-96
-           - const: samsung,exynos850
- 
-+      - description: Exynos8855 based boards
-+        items:
-+          - enum:
-+              - samsung,exynos8855-smdk         # Samsung SMDK
-+          - const: samsung,exynos8855
-+
-       - description: Exynos8895 based boards
-         items:
-           - enum:
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+index 7b006009ca0e..c4773701c92e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+@@ -53,6 +53,7 @@ properties:
+       - samsung,exynos7870-pinctrl
+       - samsung,exynos7885-pinctrl
+       - samsung,exynos850-pinctrl
++      - samsung,exynos8855-pinctrl
+       - samsung,exynos8890-pinctrl
+       - samsung,exynos8895-pinctrl
+       - samsung,exynos9610-pinctrl
 -- 
 2.34.1
 
