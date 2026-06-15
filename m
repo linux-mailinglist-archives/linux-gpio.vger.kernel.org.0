@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-38429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id c9arFouAL2o1BgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38429-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:33:15 +0200
+	id 11ZVE/iAL2pvBgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:35:04 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2DE2683483
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:33:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E071F6834A2
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 06:35:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=n2SHkEin;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38429-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38429-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AJL2UoCf;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38430-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0E52B3007654
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 04:33:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1E4D23008D36
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2026 04:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA322F7EF6;
-	Mon, 15 Jun 2026 04:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2212F8E87;
+	Mon, 15 Jun 2026 04:34:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F240025F7A9;
-	Mon, 15 Jun 2026 04:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4CA246782;
+	Mon, 15 Jun 2026 04:34:56 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781497988; cv=none; b=q6K937s1gXXgwXel94kKSISbz+M9O6kpKoZEQvLa03QWgkpDI2vGYFW7kqhA8u0l1/dWOSTD/xcKsXwdiuQnVCwOp+dH9UV1syxOwSK+8FdvrKtEwaOkV/lBB/TbSzbzda25RCHaGDU7U1wkwqJxR6PxGGU6lp6aQWIy2uBIvsY=
+	t=1781498097; cv=none; b=sRbn5jl4r+5m+m55waBJXnUblubaMMdVqBNqIlSvAoyZ6ohmaKlCoe8hQqCKmdcg7gz4PWJ+xk4AyKagUkWSy7LTrx3Q/GzRHVDSvrMGEv2fq2IH6Nnk+7AxQ3ZdCpVtS4qumJ+Hdfm7wDc0s/5SAYOGo8otcaMY9bmetEHJrL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781497988; c=relaxed/simple;
-	bh=P3zSckp5h+c44Cd8qDORRvZEvrslvL+AnavpACqEy34=;
+	s=arc-20240116; t=1781498097; c=relaxed/simple;
+	bh=5SJTvxfd7f2iLculV5spHy/9XNjuDl8oyP2/AUktYjA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ScuT6RfermgmOpxOfxr3soxD25wh5oKGyjFP1sAuR+gHsEjE4Dp8qleWCjAmRyQ/y81yrqyAlFAKSj3PBuU0c8lggu2bmbdnbI044MbdKDFYQ/2FkddJpPP/rd+0H3PE1YPJWrUR0YZ/KvGUEPhWf4MJEHtTO4tMeHTnelgw01o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2SHkEin; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4801F000E9;
-	Mon, 15 Jun 2026 04:33:02 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=m7x0pP5eDgICSuzSWkCfx47fRzbLB8eaSHb7oc4QcwonrfcN7T+BzvRLgxCyeYOF/H6PxvDVkadsrO83zAKEbgsenBzsYeN7+LM+Lvc15Onakm/zAS+bB66XFT4zReq9sEoSLDv2RKowLDUM6OGaXMqjXLghVjPCuwliYI1pzHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJL2UoCf; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 337EE1F000E9;
+	Mon, 15 Jun 2026 04:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781497987;
-	bh=2K0ZyeO5lKCHZiIJsQJRuxND50txb5KnZhkTjhYsL5Y=;
+	s=k20260515; t=1781498096;
+	bh=gWEDPbPVwTMCS3dB5DzxYPLhtVx2MMG50KY35u0kwNY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=n2SHkEinxB46GtyrXTE2pkV3/WM5DFjIBH1keEY6PlU1ftfvIeeUrxF2jH4tT9PXV
-	 dExiFRdfC9LPVKKC4/YrdpIJFrlxsnzs3Bk0OYpoGNoKI/985U0fi8Fpx7vR6WWf0O
-	 b7PCFVw8hClR27DsJzrBKg28QzXIyddJroIW0O7UeWY08RTLCiyvN7W6LTBjG6pwHo
-	 lDgAre/FT4Q0T1CydX00FbHl9QYFXgjZnxFAGO5k9swwU9DMmsRndeRcAyG6pLrx/a
-	 eR6hIHPckajisatZ2HUKIC/KTuyLbTjhIHZrhWDpHh7MitmoJtZvslJmIOKGvuijCT
-	 kEAEJ2U9KNYtw==
-Message-ID: <08a9a68a-f0f3-45eb-b018-43007a0acfdf@kernel.org>
-Date: Mon, 15 Jun 2026 06:33:00 +0200
+	b=AJL2UoCf3sgrhkCxCgOI4reu1Fwp+hbLiNg2OZf8xtC8ki2FvTbMefCh8/MToR4Zu
+	 BQDqREDzO+WmenxNwuXrBbT2yC9GSt9vUFFZZ0uoneZe9iAwjb2WUM03CfQfSLOaLw
+	 bWn0TTmK+fMLnUh3xksry6clYXJAGpbH9OAteS9A0jfnv7jSl74DGoHonV7MhTITeq
+	 wcYfoqeTsFW0TDj4MVb8mjFONHo1jpxMTjdhD3KVotqKvsoYFkUvzNrJeVTRy0kvJ8
+	 JTE8MBIpLTNlOEEMbgal2LliBgOS5AJZTvRXgzpg0mtQZqS5sPQW/2Rj7fGp4jqyzB
+	 J1cHjnFh5PINg==
+Message-ID: <73d85fad-d39a-4c34-90c2-819998656f7a@kernel.org>
+Date: Mon, 15 Jun 2026 06:34:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,9 +55,9 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] iio: adc: Add ti-ads1262 driver
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Kurt Borja <kuurtb@gmail.com>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/5] dt-bindings: iio: adc: Add TI ADS126x ADC family
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
  Bartosz Golaszewski <brgl@kernel.org>, David Lechner
@@ -66,9 +66,9 @@ Cc: Kurt Borja <kuurtb@gmail.com>, Rob Herring <robh@kernel.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
 References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
- <20260612-ads126x-v1-2-894c788d03ed@gmail.com>
- <20260613-sparkling-naughty-tuna-3e9bf1@quoll>
- <20260614143918.35503c5a@jic23-huawei>
+ <20260612-ads126x-v1-1-894c788d03ed@gmail.com>
+ <20260613-loyal-azure-goldfish-cf6d54@quoll>
+ <DJ92JT0CPSXJ.1113K3KLSRHH4@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,7 +114,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  K9bCVaboTA2T77QYkRcRJYSsO1alGX0ome/hMLD1daXlkrNUp1HWa3K4iytLRXjCSIorWiGs
  n+q3krnpXu3TFkA8qtOFZMdnIiFuiq1yLT8hptsV5xh1TA2nsVvSYiaCr3q4s4BKjS/KrLDb
  qoxzw8ISjdUp4pA85vb6YLCmb39NgidD+7PmAr65lBNveIFynTgsja1rRQ4=
-In-Reply-To: <20260614143918.35503c5a@jic23-huawei>
+In-Reply-To: <DJ92JT0CPSXJ.1113K3KLSRHH4@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -123,66 +123,170 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:kuurtb@gmail.com,m:jic23@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38429-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:jic23@kernel.org,m:kuurtb@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:dlechner@baylibre.com,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,baylibre.com,analog.com,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38430-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C2DE2683483
+X-Rspamd-Queue-Id: E071F6834A2
 
-On 14/06/2026 15:39, Jonathan Cameron wrote:
+On 14/06/2026 22:53, Kurt Borja wrote:
+> Hi Krzysztof,
 > 
+> On Sat Jun 13, 2026 at 1:54 PM -05, Krzysztof Kozlowski wrote:
+>> On Fri, Jun 12, 2026 at 05:46:19PM -0500, Kurt Borja wrote:
+>>> +  ti,neg-refmux:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Selects the negative voltage reference input:
+>>> +      0: Internal 2.5 V reference
+>>> +      1: AIN1 pin
+>>> +      2: AIN3 pin
+>>> +      3: AIN5 pin
+>>> +      4: AVSS pin
+>>> +    minimum: 0
+>>> +    maximum: 4
+>>> +    default: 0
 >>> +
->>> +DEFINE_RUNTIME_DEV_PM_OPS(ads1262_runtime_pm, ads1262_runtime_suspend,
->>> +			  ads1262_runtime_resume, NULL);
->>> +
->>> +static const struct of_device_id ads1262_of_match[] = {
->>> +	{ .compatible = "ti,ads1262" },
->>> +	{ .compatible = "ti,ads1263" },  
+>>> +  ti,vbias:
+>>> +    $ref: /schemas/types.yaml#/definitions/flag
+>>> +    description: Enables the level-shift voltage on the AINCOM pin.
+>>> +    default: false
 >>
->> So devices are fully compatible? Then it should be expressed in the
->> binding and drop one entry here.
+>> There is no such syntax, drop.
 > 
-> They aren't. It's relying on one of them having a subnode that spins up an
+> The "default: false" syntax? Sure I'll drop.
+> 
+>>
+>>> +
+>>> +  ti,idac1-pin:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Selects the analog input pin to connect IDAC1:
+>>> +      0: AIN0
+>>> +      1: AIN1
+>>> +      2: AIN2
+>>> +      3: AIN3
+>>> +      4: AIN4
+>>> +      5: AIN5
+>>> +      6: AIN6
+>>> +      7: AIN7
+>>> +      8: AIN8
+>>> +      9: AIN9
+>>> +      10: AINCOM
+>>> +      11: No Connection
+>>> +    minimum: 0
+>>> +    maximum: 11
+>>> +    default: 11
+>>> +
+>>> +  ti,idac1-microamp:
+>>> +    description: Selects the current values of IDAC1.
+>>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
+>>> +    default: 0
+>>> +
+>>> +  ti,idac2-pin:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Selects the analog input pin to connect IDAC2:
+>>> +      0: AIN0
+>>> +      1: AIN1
+>>> +      2: AIN2
+>>> +      3: AIN3
+>>> +      4: AIN4
+>>> +      5: AIN5
+>>> +      6: AIN6
+>>> +      7: AIN7
+>>> +      8: AIN8
+>>> +      9: AIN9
+>>> +      10: AINCOM
+>>> +      11: No Connection
+>>> +    minimum: 0
+>>> +    maximum: 11
+>>> +    default: 11
+>>> +
+>>> +  ti,idac2-microamp:
+>>> +    description: Selects the current values of IDAC2.
+>>> +    enum: [0, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]
+>>> +    default: 0
+>>> +
+>>> +  clocks:
+>>> +    maxItems: 1
+>>> +
+>>> +  '#io-channel-cells':
+>>> +    const: 1
+>>> +
+>>> +  '#gpio-cells':
+>>> +    const: 2
+>>> +
+>>> +  gpio-controller: true
+>>> +
+>>> +  adc:
+>>> +    $ref: /schemas/iio/adc/ti,ads1263-adc2.yaml#
+>>
+>> Not a separate device node. Fold into the parent... or explain in
+>> commit msg. You have entire commit msg to explain odd things.
+>>
+>> In that binding description you call it "independent", so it should have
+>> its own SPI chip select? Why "independent" and part of this binding?
+>> Maybe not independent, so basically part of this device?
+> 
+> It's independent in the sense that it is a proper subdevice on the same
 
-I don't  see anything in the this patch that would be using the other
-compatible, so driver looks like handling it fully compatible.
+You cannot use DT syntax as argument why you use DT syntax like that.
 
 
+> chip. It shares the serial interface but operates completely in
+> parallel.
 
-> auxdev for the hardware block they don't share.  A fallback would be fine
+How completely in parallel? If the interface is the same, then it does
+not operate in parallel. It's impossible.
 
-Patch #5 adding auxdev still does it uncoditionally, thus driver
-clearly treats them as 100% compatible.
+> 
+> I decided to add a subnode because other devices might request their
+> io-channels and most importantly a different voltage reference might be
+> connected to it.
+> 
+> I'll clarify this in the commmit message on the next version. Although
+> after seeing this submitted bindings [1], I wonder if it's a better
+> approach to do something like
+> 
+> 	spi@0 {
+> 		mydevice@0 {
+> 			...
+> 			adc@0 { ... };
+> 			adc@1 { ... };
+> 		};
+> 	};
+> 
+> Any thoughts?
 
-Or I missed piece of code - please point me where is any incompatible
-behavior coded.
-
-
+Does not look like separate subnode. You still did not provide arguments
+why this is independent.
 
 Best regards,
 Krzysztof
