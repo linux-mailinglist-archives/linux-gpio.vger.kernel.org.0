@@ -1,161 +1,155 @@
-Return-Path: <linux-gpio+bounces-38559-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38560-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id TSuoMMYAMWouaQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38559-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 09:52:38 +0200
+	id zSMVBdcSMWrdbAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38560-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:09:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2620F68CF6A
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 09:52:38 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08A0368D64D
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:09:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=MXFb+3CE;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38559-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38559-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=disroot.org header.s=mail header.b=ElIeszfo;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38560-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38560-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=disroot.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2A1FD3026F1E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 07:48:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 62F1F3085EA9
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 09:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C958F3EDADF;
-	Tue, 16 Jun 2026 07:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE7B541C2E7;
+	Tue, 16 Jun 2026 09:08:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4B29E0F6
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 07:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61C3B42E0;
+	Tue, 16 Jun 2026 09:08:50 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781596102; cv=none; b=DXmk7OxZ5NLsiFregsmPiqbi5f5nxlz3ndJ0XQJ6ZPEKjrs7MNSVGacaQxz7IgkYqZV08v4Geu8RXii17TKAbGWaQRVkO2XvNqmCtp2OMbYykJFyfv3LivDLgKBLYj7veG2q2RR1gsevv0xNTcQBTVV0iBZCLXeMuxXppfc5OSI=
+	t=1781600933; cv=none; b=hTDrl3QmogyLuauFeM6Vq6qX6Zj5XG5bOC4Xx5KX6KGOdrXNtY1h2AHBCBrRqZieMdCqa3OJ/FynCxs7nD5SCF5572sXQEW4bJl3B4CkcAWemjjw9bdsy5WXCYx+wnq2oZ9o6KE+6eICaAXIfhIWzzctQC4uFFsRNbkSMVVyTEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781596102; c=relaxed/simple;
-	bh=gIbC4mT4rnQeta6IicIaFvJ1Wxa93KPb8b+R1G56ToA=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwBGZNYnHKPQsd647yz1JBFLfMYo3nioDAEBNvLQtd3ByMAftYPWWpOx/nrstJDHo2Cxs+5AH+iniYTiVgL8p+Y7EigpHlRkvxjy7X+TS4xgMEs15LBqySN6pTGqyve6eBH/gLSyKhn/wx3Rr/NVKWCVO3afkBRR2jqK7mjvsLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXFb+3CE; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BAD1F000E9
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 07:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781596101;
-	bh=av37NSExZHs3jYv7N/cbYxXhdk81GmmlLSodKahJSTI=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=MXFb+3CE1mUm/r3/ht6RkLj7FdoVoyhQHS0UbSWitfKo0GykCBBNKLC1uaXfBgtzG
-	 leo0TifVYnP1eNwKoDWT2aD8qkN//lEScIeom0GSvMDIqWL3CUIO6TIRmnnMJunxZN
-	 mQpeThs2VLdCsl8CNrnxS+exlCF3AIhPNDxnmaSGgiC3wnkyfYKSbzlOIGjDL9noAm
-	 Oy+Ba8Kibzo0xEFY8yS5z6WDfXFVC4a/XFXrTG/PTmZ9g2uyCa6baAgHgPPkL4Jtz+
-	 C+tWi1FOd7+lo2d2o2kVquGHc0OqTilLRkexSCSB/P49zqv9rawBX03NsEjm0Lk4Z2
-	 1uDtIGGG+VPJQ==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5aa68cd8dd3so3853186e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 00:48:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/xZZKJ4eQcks2vKj/VhjMbgtkwstQ0gTWNbsW3WP4xSBDHaRh+1RcQ52XgeudNbZCIjVSV/YZ2DRFZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfCCVAyD5ZQhRqANcIOfxvSFf92QhrqUrZJAB33rZlEBS4dK2s
-	OdoR72mEky35lN6sMeK0K3+Lt6CpTPuGUFQoTzz5ucNKwtNAltTIrPF3lZ96YWfnoe9GKOapWBK
-	Opm1QVefqOF6ArwZr6AHchI7FMAD9YQxg2WpQsEH1XQ==
-X-Received: by 2002:ac2:5392:0:b0:5ad:2acc:5789 with SMTP id
- 2adb3069b0e04-5ad43316475mr591337e87.12.1781596100374; Tue, 16 Jun 2026
- 00:48:20 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 00:48:19 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 00:48:19 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260616003941.82648-1-pengpeng@iscas.ac.cn>
+	s=arc-20240116; t=1781600933; c=relaxed/simple;
+	bh=n0NkIV/Qx3Uk2GLJjYkZ09/aArbxPofUZwETgU7mhwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ni0uIXsDmntRhiedUJtD2gwr600In2B24ZeW5nSf+Ii0wHAnmO8aFgpMHdO/9EMBm8Y6nUIaDjMv3MNyWVkmiFeOxkGYbIWjNJrmUI0HBKOExDw3jpVhWwTxoGXMBOFNxiM7yqOc/qg0GGuXfCiRQ3f/CrnLLQO6hJ1rM1dparU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=ElIeszfo; arc=none smtp.client-ip=178.21.23.139
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 71B75276FB;
+	Tue, 16 Jun 2026 11:08:48 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id JlPkQ8I8lPOs; Tue, 16 Jun 2026 11:08:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1781600927; bh=n0NkIV/Qx3Uk2GLJjYkZ09/aArbxPofUZwETgU7mhwg=;
+	h=From:To:Cc:Subject:Date;
+	b=ElIeszfovhCsLBpW3VM5xwtWOJZqz0j7jGpSFYxydhh53qoOYFZjYCaNwgCm3mcjq
+	 Aq/pXi784cnY7tBVmKX+S/BBZvY4pJl92MY2GvTnfF9dS7GKlraOqErwgZ1gdpLuQw
+	 97Gg5sNEw0Ped6bDq88Uu8fuCP9nWLjzcj11TzsgXmwAZywx7oo6Y4TIBh0Mut1oRh
+	 gAa2M5uuvX30r/a9+dbGnonyNLRWpA8CRaA/LJm94jAOF5bJiMTmrYDib9ErwFi6EM
+	 FVX5JF54G3G/XCsg22xUyWbKwhfVRMTuJdj5Mghezuxjpo72dikZjgCoM60/5OSCRS
+	 Edn4iQS9ZF9ag==
+From: Marco Scardovi <scardracs@disroot.org>
+To: Mika Westerberg <westeri@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: [PATCH] gpiolib: acpi: Add quirk for ASUS ROG Strix G614 series
+Date: Tue, 16 Jun 2026 11:08:24 +0200
+Message-ID: <20260616090824.5967-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260616003941.82648-1-pengpeng@iscas.ac.cn>
-Date: Tue, 16 Jun 2026 00:48:19 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MeAWDtYPLXPDvD=cPNjKKJBSgneAEGb2UzvTJWCB5a6ZQ@mail.gmail.com>
-X-Gm-Features: AVVi8CcdIm-y_dyUEVYiaijZkxF7bmVrL1ujcMQqVrkTzQB7BTWheWqfXGTTFuw
-Message-ID: <CAMRc=MeAWDtYPLXPDvD=cPNjKKJBSgneAEGb2UzvTJWCB5a6ZQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: htc-egpio: use managed gpiochip registration
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38559-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:pengpeng@iscas.ac.cn,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,iscas.ac.cn:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-38560-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:linusw@kernel.org,m:brgl@kernel.org,m:mario.limonciello@amd.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:scardracs@disroot.org,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[disroot.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,disroot.org:dkim,disroot.org:email,disroot.org:mid,disroot.org:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2620F68CF6A
+X-Rspamd-Queue-Id: 08A0368D64D
 
-On Tue, 16 Jun 2026 02:39:40 +0200, Pengpeng Hou <pengpeng@iscas.ac.cn> said:
-> egpio_probe() registers each configured gpiochip in a loop but ignores
-> registration failures. If one registration fails, probe can continue with
-> only part of the provider registered.
->
-> Use devm_gpiochip_add_data() and propagate the error. The managed helper
-> also removes any earlier chips automatically if probe later fails.
->
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> ---
->  drivers/gpio/gpio-htc-egpio.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
-> index d15423c718d0..1f7d7ac5603f 100644
-> --- a/drivers/gpio/gpio-htc-egpio.c
-> +++ b/drivers/gpio/gpio-htc-egpio.c
-> @@ -268,6 +268,7 @@ static int __init egpio_probe(struct platform_device *pdev)
->  	struct gpio_chip  *chip;
->  	unsigned int      irq, irq_end;
->  	int               i;
-> +	int               ret;
->
->  	/* Initialize ei data structure. */
->  	ei = devm_kzalloc(&pdev->dev, struct_size(ei, chip, pdata->num_chips), GFP_KERNEL);
-> @@ -326,7 +327,9 @@ static int __init egpio_probe(struct platform_device *pdev)
->  		chip->base            = pdata->chip[i].gpio_base;
->  		chip->ngpio           = pdata->chip[i].num_gpios;
->
-> -		gpiochip_add_data(chip, &ei->chip[i]);
-> +		ret = devm_gpiochip_add_data(&pdev->dev, chip, &ei->chip[i]);
-> +		if (ret)
-> +			return ret;
+The ASUS ROG Strix G16 G614 series laptops experience a long boot delay of
+approximately 36 seconds. This happens because the system firmware triggers
+a slow/hanging ActiveBoth GPIO interrupt handler at boot time.
 
-Please use dev_err_probe() here.
+Even though commit 3bb62e3f99a5 ("gpiolib: acpi: Only trigger ActiveBoth
+interrupts on boot") restricted boot-time execution to ActiveBoth edge
+events, the problematic interrupt on these laptops is configured as
+ActiveBoth. Consequently, the handler is still executed at boot and
+the boot process stalls.
 
-Bart
+Fix the delay by adding a DMI quirk to disable edge event execution at
+boot for the ASUS ROG Strix G16 G614 family.
 
->  	}
->
->  	/* Set initial pin values */
-> --
-> 2.50.1 (Apple Git-155)
->
->
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
+ drivers/gpio/gpiolib-acpi-quirks.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+index a0116f004975..fa0f03bd51af 100644
+--- a/drivers/gpio/gpiolib-acpi-quirks.c
++++ b/drivers/gpio/gpiolib-acpi-quirks.c
+@@ -392,6 +392,20 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+ 			.ignore_wake = "VEN_0488:00@355",
+ 		},
+ 	},
++	{
++		/*
++		 * ASUS ROG Strix G614 series laptops experience a long boot
++		 * delay (approx. 36 seconds) due to a slow/hanging ActiveBoth
++		 * GPIO interrupt handler executing at boot.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614"),
++		},
++		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
++			.no_edge_events_on_boot = true,
++		},
++	},
+ 	{} /* Terminating entry */
+ };
+ 
+-- 
+2.54.0
+
 
