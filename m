@@ -1,380 +1,224 @@
-Return-Path: <linux-gpio+bounces-38586-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38587-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UjmROWZHMWrgfwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38586-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 14:53:58 +0200
+	id wGTqNcpLMWrfgAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38587-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 15:12:42 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3A3A68FA26
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 14:53:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A3BF68FC84
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 15:12:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=JUrsC+XK;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38586-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38586-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=PxDxIkdu;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=Lx0fe6EI;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38587-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38587-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 20129300CD94
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 12:53:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7BF87311EFF0
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 13:10:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EA7369D6F;
-	Tue, 16 Jun 2026 12:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE062376462;
+	Tue, 16 Jun 2026 13:10:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB73D3655F0
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 12:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4F73750CC
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 13:10:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781614436; cv=none; b=OwjWiouF4Mmc5t9IWARMck8TNyAzDXu+zRjfa7R7ilFHeoqLnbUtAyHwxlV/6Uh1mvzOP32YNMM3zGQ7WRsyX0XzRoy537M238BR/l+HJPWvgd+o8iPA6UKdEPGnvk7oKNdGni65SJGJf2uyyPAmvfGuhDDD4V+1+1lVe/7OMmY=
+	t=1781615429; cv=none; b=Hkh2LEjqyITvzIr1FlO7JkocrQSfmNQt80q1G6QdUDh1NlQv73oJoEDLcmU1CHluWxyHB5JOjsDtzpZW+Ol9S4ck00W9MfQeARuXBbE7fCVtHazxNSvL5gateNr0ESLHkZVXWGuTsJV4VJB6jkELYdPX9nCZuUAvZ8xHJvS2ch4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781614436; c=relaxed/simple;
-	bh=aTFNtkROMCSJt7Y8EHtNZbmnCb9m6B6kFDcMKFB6w0o=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IzIgOOWDMUmNqxPbhZ2IPrZQwMxTO54A1bvAck4sp+6jfrsXQsa3RRqPiXLrloGa0QKRmme01TXG9okzFy2TkTKyiFlYGzUjh0vKnv8OzjDz6wDgAeoH6Dr3so0F8SLBb9XOMr3yEfhhmnDeghnL1M6Qv7zaliydrU6j5iiG6zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUrsC+XK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E781F00ADF
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 12:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781614434;
-	bh=kp1syzW1srOQcyb+eZQpIHaaqzeGgItPN+sOMv5L2Hg=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=JUrsC+XKP0qscMP7HnDfrjRQ5ozuE9hbzBs0+iQMt0fT6UdRzpvOOtTYmVgwiQgo3
-	 tl2PGkkWyGntRfGI47/vPqdpoKco0OMvD34hr7l5spnoO7bPndkY4IEu/XilC2eNnI
-	 H9u2U7NpDdw5zdnWMcAx1ZThsxbefVoJN4ROv+nxQArO3IPIRGkf5hufb4ojt9SRgY
-	 KyG0NvdvuQG7T1wBhhUfV/7A07FLTVvmyHUR6vZOpbBIg0ddZMDkGGYyGgKf7SGNMr
-	 6uBVXZMLwgqVlT08MaZh5cM/DhT7JaR/sEh3tELaBROfyOPbrSSqSO7sTkHsksxhwA
-	 8X9FwEViiLwVg==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aa68cf03bfso5276417e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 05:53:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8rcMXI0rLkNdKEJ0Y6rmBHxxzCu/XjMgrKpR5bUZGMhSRHA6Eulw54DeY3XwZMUDUGTLPRYluUInjA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqHXuZQyeluES7w5qHDyCI9fGMUimhZkWaiXBHESmqMIMHyK4O
-	fUZY60H/9K21+2vx0tnqLmpZN2fhuIqs9DfHo2s38wsXiXO6XhmribZtuobBziRBJ9q/r5GPm16
-	t6aqGn9/qz1wyOmobKQaCXRGOVKFcQ46+VqLYehPSGw==
-X-Received: by 2002:ac2:5df3:0:b0:5ad:3035:c2c2 with SMTP id
- 2adb3069b0e04-5ad428bdd78mr855785e87.51.1781614433226; Tue, 16 Jun 2026
- 05:53:53 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 12:53:51 +0000
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 12:53:51 +0000
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260610153329.937833-2-v@baodeep.com>
+	s=arc-20240116; t=1781615429; c=relaxed/simple;
+	bh=7KtoaWHRSW6prUDBgssSr9WOdTqvJcgFyozrKS4b4sk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJbm3UaVq35oDvDzTpXtfzE+g8/zfvOIN1bHVy2b0DDAC25ZapUvkiJONSXazU6qDXNScSjWKB6j1Zkmi84lxKaZWwCGm8BzEsyPtt5e0zLKzvUGZeG9XZlmRxRF93DCOFRx0r7O3wUEe2oDDzguWlH2lpcqmAjOhsFaz+aFT6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PxDxIkdu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Lx0fe6EI; arc=none smtp.client-ip=205.220.168.131
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65GA9Juo2914529
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 13:10:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7fmUqfGeJxD4om6MsTpdnfamCbm69Gri3ssVDYU8XJo=; b=PxDxIkdugThTuWCs
+	QokoOGAps98XgYAqJme/bofg38paeVtQWQthw4Be9GN0pySBzZXb2JlslaENZhPM
+	JjdHcGwwXvXGCLc0EvCg7cGTN955aR1VXULNHRQbTAKByCtyEpz+WP08+V1X0Cqv
+	F0262Qj5vu5olilzdda0x6GFkcMhXpR8270gzzv7E04aYK5Rnjh0f7LNzstGIY/9
+	D3HPi3JQiHKnvyx7Rut1oC+bkW/wRERd8ymjIxfUvufiDdTMh6w8iwG9afvFPMTx
+	srhFc14CeRfFaG3NZiSIjqYMZlGsa7APRxD9hr6WWbB5asPhUV86h3MokdEflQD+
+	82iR8A==
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com [209.85.217.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eu1761mgt-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 13:10:27 +0000 (GMT)
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-6c5a5133221so150147137.0
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 06:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781615427; x=1782220227; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7fmUqfGeJxD4om6MsTpdnfamCbm69Gri3ssVDYU8XJo=;
+        b=Lx0fe6EI+M3xUhiXDMZWysS47BSsypHI7pUgzqBZGhwwe7lxJF/RII9uBZkkgqIFfp
+         Y8f7gUNuyqnKOJfhFSAvepfe1MHm4SPO8r4FiBjki/Lw71tZe+GdGM9V1v/qAD5TGQ1F
+         M3pG2WdrvADN9isuFktrO7DoJ2vGy9viIFVEZ/imjFZlW46qRI8gAO/sjeiMgF4i3Ep+
+         2vFA8iIoioZ10VMb1zGsvf0fz9K48q0ZopBg/9dnwn4gfiZCXm58O3v2IxXSkqUi9/sh
+         qICP+HsKpLJuW7NuGwp6FOg1oU25Ncx1DyHlub3oBXrvCVm0OYxr9pK6w0mMRPyJJVKu
+         9XXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781615427; x=1782220227;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7fmUqfGeJxD4om6MsTpdnfamCbm69Gri3ssVDYU8XJo=;
+        b=McNafEHscUMzJ0Uv4IN61SX0mXcErvZBF8PHnWHu9MG8xp5hWCO0T8oyvi6aoNVQk6
+         1hCz4vvS1fkLVP27YlPGpICDO7TymsIK1gGT2GiJgHG7f4/GKcz2miuG2cLPOt9Trz7a
+         wd6csBDz9bW0fZvOVS0PwL8dnbbELMAnZe+hU78/1/bBpVUlA/8VW2uQCZa9T3SGZZoq
+         JxUzFeApx8iEP+IAgF1tkGk8XaMxHyXAILFQQTTw7QFdFbackpRVe/1MCkSTAH71XxMG
+         AQHBDv6f1RMLhYDJKAHaSsB9rY+C9vgvFED/hYQQOoaMwmhiNybkAIbkIbtO0356G1tu
+         NrGQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/vmHKAQ8WKit9bCFfybPrMd+aQANdJkP7NTfb/s/TK3krB5MdDerDoSCQJWYLAOWFnoBin8ly6al7o@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw6bg2Ad0VNJZrAnveSUBqxyQtFVb6XcDkG1fkvKAbxN5VhuV4
+	W0S2iwUmYY/3XGM4I/wGnGGh3CXJQ7yGUB55YTA7HugMtWH4gsCZf812TBcowLFMOLMjbFta8su
+	EyNm0gie+NrmYYtGsiHQQJaTnMhr2iOcKpxgULVz4WGdz+JIj9tEAawDqzfERGdUw
+X-Gm-Gg: Acq92OHltPqXCdyuCe4w7Af9hQUSphRbzfvvXXzVMz4sgTgBt5VpZt5Cazmu8cy0O7A
+	lhEpqGFhtjapoATtuJG5Gn4pHcvnSKzuAZfBFx3m7Vno7f1UBwqDSc4TiJ3lRk8WSl89fNWyL9s
+	3E/k0u6ukh+9ZuPkPlgmcSwIlL08vQNNbIHjUQdLROv8RNRnAGvmnGP5SVlA16N0fjm322WrX+n
+	s2W9Vacq75Fvz/8fPm99C83IxG2W+pSy2XkMFuTNPJ1i3jqBUz/FIigD2WpEi07Y54Vn19NEnny
+	3ysxrWBm0Jo/1wuWtcFvf0T6Qc9cZSnv/wavG7mQwRTvGNooHG9WIe+WUpGS0idJp3MpKW8Szd4
+	CofoDuRlkPvPqU8tsXJsSVwX8Pi4RqNTsASBB8DO1nhkdBA==
+X-Received: by 2002:a05:6102:508d:b0:631:b312:a2a6 with SMTP id ada2fe7eead31-71e888ef7b8mr3277118137.0.1781615426836;
+        Tue, 16 Jun 2026 06:10:26 -0700 (PDT)
+X-Received: by 2002:a05:6102:508d:b0:631:b312:a2a6 with SMTP id ada2fe7eead31-71e888ef7b8mr3277098137.0.1781615426375;
+        Tue, 16 Jun 2026 06:10:26 -0700 (PDT)
+Received: from [192.168.120.170] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad2e1b4869sm3576118e87.75.2026.06.16.06.10.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2026 06:10:25 -0700 (PDT)
+Message-ID: <08b52051-fdd8-4016-ad03-560aea32286e@oss.qualcomm.com>
+Date: Tue, 16 Jun 2026 15:10:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260610153329.937833-1-v@baodeep.com> <20260610153329.937833-2-v@baodeep.com>
-Date: Tue, 16 Jun 2026 12:53:51 +0000
-X-Gmail-Original-Message-ID: <CAMRc=Mf-nMWzTiP3vZQSBW_NQQ6OFPmMGGG0-VE_iWs-B-Q4_A@mail.gmail.com>
-X-Gm-Features: AVVi8CfI5Xcsmf9X5ZMB8tIz5JfgYHEL15SP9-TSKbR6tUfKWWLJo7jfpnDNBRA
-Message-ID: <CAMRc=Mf-nMWzTiP3vZQSBW_NQQ6OFPmMGGG0-VE_iWs-B-Q4_A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: shared-proxy: always serialize with a sleeping mutex
-To: Viacheslav Bocharov <v@baodeep.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Diederik de Haas <diederik@cknow-tech.com>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/2] pinctrl: qcom: eliza: Fix HDMI_RCV_DET function
+ slot
+To: Alexander Koskovich <akoskovich@pm.me>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
+ <linusw@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20260423-misc-eliza-pinctrl-v1-0-2498b365ff2c@pm.me>
+ <20260423-misc-eliza-pinctrl-v1-1-2498b365ff2c@pm.me>
+ <5dae3a56-a17c-4201-ba0b-8591646197ef@oss.qualcomm.com>
+ <P33wW6i3eN15uYIbIb8LfIVRvmL0zVdiI_FOKDoMIM_KFi01m_7PMaZmU1z3YJl9mGN2kDtSvXUujD-TWaXXiSOZeEH-kwj3JSjmIRfRb54=@pm.me>
+ <109ad54c-f17f-49ea-9d7f-54e13dd367da@oss.qualcomm.com>
+ <U4Ou8tzXQzd_9s7-BdFTARdlOQdxQ2P7o9Lx8kaqvvbPd-Jm16U26MFqvYUFkEGiOZ_yhO0GNref9oLmgbtMe9_8yUodoRODhYxWH_0c2Z0=@pm.me>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <U4Ou8tzXQzd_9s7-BdFTARdlOQdxQ2P7o9Lx8kaqvvbPd-Jm16U26MFqvYUFkEGiOZ_yhO0GNref9oLmgbtMe9_8yUodoRODhYxWH_0c2Z0=@pm.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: YlhLCUEzJ-c-TO6xDwlpQJAxqa-MBZi6
+X-Proofpoint-ORIG-GUID: YlhLCUEzJ-c-TO6xDwlpQJAxqa-MBZi6
+X-Authority-Analysis: v=2.4 cv=I4RVgtgg c=1 sm=1 tr=0 ts=6a314b43 cx=c_pps
+ a=N1BjEkVkxJi3uNfLdpvX3g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
+ a=EUspDBNiAAAA:8 a=db-TDxVd8kBkxHJwRWQA:9 a=QEXdDO2ut3YA:10
+ a=crWF4MFLhNY0qMRaF8an:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE2MDEzNCBTYWx0ZWRfX3NpPabKTjrCz
+ 2Kl+wg0CwwObnWuJaOJWu7WmXi3489oWe+zN5/ZdqtU84iwX1paDnZ/GLHIKMda3s34wGasADud
+ IqI9Uj7r1P4TDK5P+fuRR1bJGRl8MWk=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE2MDEzNCBTYWx0ZWRfXxvyeZr2UFDQk
+ iBVxvLG5f3JvPIMc7u2+Ikz0B8lX11D+R045SAIHZ0T+tWmiP1urCirJIJ9t6buBiC0nRDAAtOm
+ dmzNKvqDHzx9x5aJia/B+tx3dPesdv3dZ23sdpDEBT1OC/y5nH1nNMTgD9G6rqK+aV4q0xvJhiw
+ s5fxwDYH42akQV++XLh6t/NXXIRiETYzoFvWpRXX77efvqv/P8WfMkeWm6FGUAAXk3LUSnJKYmv
+ lpELF3eVH3cSwMHB61rlm9zx4mDyhua7Laowi80DpodqDDKTlXxO8vpgxvywsQo74XOlnMjBdOD
+ N77H2cwIJu94/QRm6QaJL+jBCXBIXfOV0kUoPGaQN5wgj6hi8OErLdDrzVr78beAXoAZ+MJycZ9
+ MqBNKgSeYjbDJFgoX0S0k350uDCXmrXnk2kGCvkxSEhUxvyntOHpLYtbk/ZGGIo1++l6JeZS8ly
+ MK6pFfTbWIU/eoHCizQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-16_03,2026-06-15_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 malwarescore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606160134
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38586-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:v@baodeep.com,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,samsung.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org,kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:email,vger.kernel.org:from_smtp,mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38587-lists,linux-gpio=lfdr.de];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:akoskovich@pm.me,m:andersson@kernel.org,m:linusw@kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,qualcomm.com:dkim,qualcomm.com:email];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A3A3A68FA26
+X-Rspamd-Queue-Id: 3A3BF68FC84
 
-On Wed, 10 Jun 2026 17:32:10 +0200, Viacheslav Bocharov <v@baodeep.com> said:
-> The shared GPIO descriptor used either a mutex or a spinlock, chosen at
-> runtime from the underlying chip's can_sleep:
->
-> 	shared_desc->can_sleep = gpiod_cansleep(shared_desc->desc);
-> 	... if (can_sleep) mutex_lock(); else spin_lock_irqsave();
->
-> can_sleep describes only the value path (->get/->set). Under the same
-> lock, however, the proxy may call gpiod_set_config() and
-> gpiod_direction_*(), which can reach pinctrl paths that take a mutex
-> (e.g. gpiod_set_config() -> gpiochip_generic_config() ->
-> pinctrl_gpio_set_config()), independent of can_sleep. On a controller
-> with non-sleeping MMIO value ops the descriptor lock was a spinlock, so
-> the sleeping pinctrl call ran from atomic context. Reproduced on an
-> Amlogic A113X board with the workaround from commit 28f240683871
-> ("pinctrl: meson: mark the GPIO controller as sleeping") reverted; the
-> original Khadas VIM3 report hit the same path:
->
-> 	BUG: sleeping function called from invalid context
-> 	  __mutex_lock
-> 	  pinctrl_get_device_gpio_range
-> 	  pinctrl_gpio_set_config
-> 	  gpiochip_generic_config
-> 	  gpiod_set_config
-> 	  gpio_shared_proxy_set_config   <- voting spinlock held
-> 	  ...
-> 	  mmc_pwrseq_simple_probe
->
-> The spinlock existed to take the value vote from atomic context, but the
-> vote and the (possibly sleeping) control operations share the same state
-> and lock, so this scheme cannot serialize config under a mutex and still
-> offer atomic value access. Always serialize the shared descriptor with a
-> mutex instead and mark the proxy a sleeping gpiochip, driving the
-> underlying GPIO through the cansleep value accessors: those are valid
-> for both sleeping and non-sleeping chips, so value access keeps working
-> on fast controllers, at the cost of no longer being atomic.
->
-> This is observable: consumers gating on gpiod_cansleep() take their
-> sleeping branch on a proxied GPIO (mmc-pwrseq-emmc skips its
-> emergency-restart reset handler; its normal reset is unaffected), and
-> consumers that reject sleeping GPIOs (pwm-gpio, ps2-gpio, ...) would
-> fail to probe. Such atomic users do not share a pin through the proxy,
-> whose purpose is voting on shared reset/enable lines. The same narrowing
-> already applies on Amlogic since that workaround, and rockchip
-> addressed the identical splat per-driver in commit 7ca497be0016 ("gpio:
-> rockchip: Stop calling pinctrl for set_direction"); fixing the proxy
-> addresses the locking error once, for every controller.
->
-> The lock type was added by commit a060b8c511ab ("gpiolib: implement
-> low-level, shared GPIO support"); the sleeping call under it arrived with
-> the proxy driver.
->
-> Fixes: e992d54c6f97 ("gpio: shared-proxy: implement the shared GPIO proxy driver")
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Closes: https://lore.kernel.org/all/00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com/
-> Signed-off-by: Viacheslav Bocharov <v@baodeep.com>
-> ---
+On 6/8/26 8:41 PM, Alexander Koskovich wrote:
+> On Monday, June 8th, 2026 at 7:55 AM, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> 
+>> On 5/28/26 7:24 PM, Alexander Koskovich wrote:
+>>> On Thursday, April 23rd, 2026 at 7:08 PM, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+>>>
+>>>> On 4/23/26 6:51 AM, Alexander Koskovich wrote:
+>>>>> The hdmi_rcv_det function was placed at alt function slot 2, but the
+>>>>> correct mux value for this function on GPIO 19 is slot 3. Move it
+>>>>> accordingly and leave slot 2 unassigned.
+>>>>
+>>>> No, 2 is the desired one per docs
+>>>>
+>>>> 0 -> GPIO
+>>>> 1 -> QUP2_SE5_L3
+>>>> 2 -> HDMI_RCV_DET
+>>>
+>>> Is it possible that CQ7790S is a special case? The pin assignment I have for it
+>>> here is:
+>>>
+>>> 0 -> GPIO
+>>> 1 -> QUP2_SE5_L3
+>>> 2 -> N/A
+>>> 3 -> GP_PDM_MIRA[0]/HDMI_RCV_DET
+>>
+>> I was reassured that my source has the latest information
+>>
+>> For reference, does your reference doc have any 80-xxxx-xx-like number?
+> 
+> Yes, the document I am referencing is 80-97791-1A, though since you've double
+> checked likely just means this is is incorrect?
 
-Sigh... Ok let's try this. This limits users of shared pins to using them from
-process context exclusively but maybe there is in fact no need to do it from
-atomic context. After all: bit-banging can't work if we're using the voting
-mechanism.
+Yes, I got confirmation from 2 separate people
 
->
->  drivers/gpio/gpio-shared-proxy.c | 43 +++++++-------------------------
->  drivers/gpio/gpiolib-shared.c    |  9 ++-----
->  drivers/gpio/gpiolib-shared.h    | 31 +++++++++--------------
->  3 files changed, 23 insertions(+), 60 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-shared-proxy.c b/drivers/gpio/gpio-shared-proxy.c
-> index 6941e4be6cf1..856e5b9d6163 100644
-> --- a/drivers/gpio/gpio-shared-proxy.c
-> +++ b/drivers/gpio/gpio-shared-proxy.c
-> @@ -109,7 +109,7 @@ static void gpio_shared_proxy_free(struct gpio_chip *gc, unsigned int offset)
->
->  	if (proxy->voted_high) {
->  		ret = gpio_shared_proxy_set_unlocked(proxy,
-> -			shared_desc->can_sleep ? gpiod_set_value_cansleep : gpiod_set_value, 0);
-> +			gpiod_set_value_cansleep, 0);
->  		if (ret)
->  			dev_err(proxy->dev,
->  				"Failed to unset the shared GPIO value on release: %d\n", ret);
-> @@ -222,13 +222,6 @@ static int gpio_shared_proxy_direction_output(struct gpio_chip *gc,
->  	return gpio_shared_proxy_set_unlocked(proxy, gpiod_direction_output, value);
->  }
->
-> -static int gpio_shared_proxy_get(struct gpio_chip *gc, unsigned int offset)
-> -{
-> -	struct gpio_shared_proxy_data *proxy = gpiochip_get_data(gc);
-> -
-> -	return gpiod_get_value(proxy->shared_desc->desc);
-> -}
-> -
->  static int gpio_shared_proxy_get_cansleep(struct gpio_chip *gc,
->  					  unsigned int offset)
->  {
-> @@ -237,29 +230,15 @@ static int gpio_shared_proxy_get_cansleep(struct gpio_chip *gc,
->  	return gpiod_get_value_cansleep(proxy->shared_desc->desc);
->  }
->
-> -static int gpio_shared_proxy_do_set(struct gpio_shared_proxy_data *proxy,
-> -				    int (*set_func)(struct gpio_desc *desc, int value),
-> -				    int value)
-> -{
-> -	guard(gpio_shared_desc_lock)(proxy->shared_desc);
-> -
-> -	return gpio_shared_proxy_set_unlocked(proxy, set_func, value);
-> -}
-> -
-> -static int gpio_shared_proxy_set(struct gpio_chip *gc, unsigned int offset,
-> -				 int value)
-> -{
-> -	struct gpio_shared_proxy_data *proxy = gpiochip_get_data(gc);
-> -
-> -	return gpio_shared_proxy_do_set(proxy, gpiod_set_value, value);
-> -}
-> -
->  static int gpio_shared_proxy_set_cansleep(struct gpio_chip *gc,
->  					  unsigned int offset, int value)
->  {
->  	struct gpio_shared_proxy_data *proxy = gpiochip_get_data(gc);
->
-> -	return gpio_shared_proxy_do_set(proxy, gpiod_set_value_cansleep, value);
-> +	guard(gpio_shared_desc_lock)(proxy->shared_desc);
-> +
-> +	return gpio_shared_proxy_set_unlocked(proxy, gpiod_set_value_cansleep,
-> +					      value);
->  }
->
->  static int gpio_shared_proxy_get_direction(struct gpio_chip *gc,
-> @@ -302,20 +281,16 @@ static int gpio_shared_proxy_probe(struct auxiliary_device *adev,
->  	gc->label = dev_name(dev);
->  	gc->parent = dev;
->  	gc->owner = THIS_MODULE;
-> -	gc->can_sleep = shared_desc->can_sleep;
-> +	/* Always a sleeping gpiochip: see the lock comment in gpiolib-shared.h. */
-> +	gc->can_sleep = true;
->
->  	gc->request = gpio_shared_proxy_request;
->  	gc->free = gpio_shared_proxy_free;
->  	gc->set_config = gpio_shared_proxy_set_config;
->  	gc->direction_input = gpio_shared_proxy_direction_input;
->  	gc->direction_output = gpio_shared_proxy_direction_output;
-> -	if (gc->can_sleep) {
-> -		gc->set = gpio_shared_proxy_set_cansleep;
-> -		gc->get = gpio_shared_proxy_get_cansleep;
-> -	} else {
-> -		gc->set = gpio_shared_proxy_set;
-> -		gc->get = gpio_shared_proxy_get;
-> -	}
-> +	gc->set = gpio_shared_proxy_set_cansleep;
-> +	gc->get = gpio_shared_proxy_get_cansleep;
->  	gc->get_direction = gpio_shared_proxy_get_direction;
->  	gc->to_irq = gpio_shared_proxy_to_irq;
->
-> diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
-> index de72776fb154..495bd3d0ddf0 100644
-> --- a/drivers/gpio/gpiolib-shared.c
-> +++ b/drivers/gpio/gpiolib-shared.c
-> @@ -627,8 +627,7 @@ static void gpio_shared_release(struct kref *kref)
->
->  	shared_desc = entry->shared_desc;
->  	gpio_device_put(shared_desc->desc->gdev);
-> -	if (shared_desc->can_sleep)
-> -		mutex_destroy(&shared_desc->mutex);
-> +	mutex_destroy(&shared_desc->mutex);
->  	kfree(shared_desc);
->  	entry->shared_desc = NULL;
->  }
-> @@ -659,11 +658,7 @@ gpiod_shared_desc_create(struct gpio_shared_entry *entry)
->  	}
->
->  	shared_desc->desc = &gdev->descs[entry->offset];
-> -	shared_desc->can_sleep = gpiod_cansleep(shared_desc->desc);
-> -	if (shared_desc->can_sleep)
-> -		mutex_init(&shared_desc->mutex);
-> -	else
-> -		spin_lock_init(&shared_desc->spinlock);
-> +	mutex_init(&shared_desc->mutex);
->
->  	return shared_desc;
->  }
-> diff --git a/drivers/gpio/gpiolib-shared.h b/drivers/gpio/gpiolib-shared.h
-> index 15e72a8dcdb1..5c725118b1af 100644
-> --- a/drivers/gpio/gpiolib-shared.h
-> +++ b/drivers/gpio/gpiolib-shared.h
-> @@ -6,7 +6,6 @@
->  #include <linux/cleanup.h>
->  #include <linux/lockdep.h>
->  #include <linux/mutex.h>
-> -#include <linux/spinlock.h>
->
->  struct gpio_device;
->  struct gpio_desc;
-> @@ -42,35 +41,29 @@ static inline int gpio_shared_add_proxy_lookup(struct device *consumer,
->
->  struct gpio_shared_desc {
->  	struct gpio_desc *desc;
-> -	bool can_sleep;
->  	unsigned long cfg;
->  	unsigned int usecnt;
->  	unsigned int highcnt;
-> -	union {
-> -		struct mutex mutex;
-> -		spinlock_t spinlock;
-> -	};
-> +	struct mutex mutex; /* serializes all proxy operations on this descriptor */
->  };
->
->  struct gpio_shared_desc *devm_gpiod_shared_get(struct device *dev);
->
-> +/*
-> + * Under this lock the proxy may call gpiod_set_config()/gpiod_direction_*(),
-> + * which can reach pinctrl paths that take a mutex (e.g. gpiod_set_config() ->
-> + * gpiochip_generic_config() -> pinctrl_gpio_set_config()), independent of the
-> + * underlying chip's can_sleep. A spinlock would run that sleeping call from
-> + * atomic context, so the descriptor lock must be a mutex and the proxy
-> + * gpiochip is therefore sleeping (can_sleep=true).
-> + */
->  DEFINE_LOCK_GUARD_1(gpio_shared_desc_lock, struct gpio_shared_desc,
-> -	if (_T->lock->can_sleep)
-> -		mutex_lock(&_T->lock->mutex);
-> -	else
-> -		spin_lock_irqsave(&_T->lock->spinlock, _T->flags),
-> -	if (_T->lock->can_sleep)
-> -		mutex_unlock(&_T->lock->mutex);
-> -	else
-> -		spin_unlock_irqrestore(&_T->lock->spinlock, _T->flags),
-> -	unsigned long flags)
-> +	mutex_lock(&_T->lock->mutex),
-> +	mutex_unlock(&_T->lock->mutex))
-
-Just drop these wrappers altogether then, let's open-code mutex locking in
-the proxy.
-
->
->  static inline void gpio_shared_lockdep_assert(struct gpio_shared_desc *shared_desc)
->  {
-> -	if (shared_desc->can_sleep)
-> -		lockdep_assert_held(&shared_desc->mutex);
-> -	else
-> -		lockdep_assert_held(&shared_desc->spinlock);
-> +	lockdep_assert_held(&shared_desc->mutex);
-
-Same here, move it to the proxy.
-
->  }
->
->  #endif /* __LINUX_GPIO_SHARED_H */
-> --
-> 2.54.0
->
->
->
-
-Bart
+Konrad
 
