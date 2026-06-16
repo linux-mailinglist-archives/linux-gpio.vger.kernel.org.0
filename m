@@ -1,133 +1,141 @@
-Return-Path: <linux-gpio+bounces-38571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vcbjKfAaMWq6bgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38571-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:44:16 +0200
+	id LnmJAUcdMWpJbwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38572-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:54:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A8E268DA64
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:44:16 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E296168DBFE
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 11:54:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=disroot.org header.s=mail header.b=AYFSXRX1;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38571-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38571-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=disroot.org;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Ns/tzrJp";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38572-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38572-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7DDDE300DEDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 09:44:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E6B2A3006923
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2026 09:54:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9305D4219EE;
-	Tue, 16 Jun 2026 09:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FE0421EF5;
+	Tue, 16 Jun 2026 09:54:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3498421A05;
-	Tue, 16 Jun 2026 09:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75B6421890
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 09:54:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781603053; cv=none; b=sdyAbezpIJkiDLTmkaBaQ0h84vCOWFeqW6hlot1lPfm/OAaWMxnK4+9kYVBigowGVJaQhmjJdlr5BFr6W2Pgrc3b6+uMHkYYKsmI8HCXh0KBlWOpFtLrFce2FgVW/rTnXuDV9Ec5xbcxSOFNbvQmUn7mcY3kQPLAazGYrbMFToM=
+	t=1781603646; cv=none; b=UOdaLh2QJnk2uZDU6bvWdMjqJHlkGb9luqQYDKMqQ9bU1J41gfNZjmolz1q/OK8vmyKbjAJkywV+T6ZH9j6CdaDwWDHpDOdCjbEeeGOlgqd7SyMZk2AO4NLr3eRF3dGViJsfApqcThhLtiVBADlKPtsPInaalCtCbIzN5ZDDNP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781603053; c=relaxed/simple;
-	bh=mWWaJuOm2MSxr7vAoqriZoUvC9+aAaZ6/3TJS9Nvy+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nM3E3KpvbxMxoV5ztggIIsl26whZtRyN0Lxfp2mkEYc7XFJEQuaC02qhVSbwqoYFe2XtTM94Ho7iDuOkD/p6wt8dhZVvHVtmJMI3cKMq40goAxA3gcMM5n1QKhJalCuAa6ogbC3rSm9fyCcONOtGS8gZ7QXNhYrLuqST5b7bkVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=AYFSXRX1; arc=none smtp.client-ip=178.21.23.139
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 410C3277CE;
-	Tue, 16 Jun 2026 11:44:10 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id htInjrjOE_y1; Tue, 16 Jun 2026 11:44:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1781603049; bh=mWWaJuOm2MSxr7vAoqriZoUvC9+aAaZ6/3TJS9Nvy+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AYFSXRX1OU1syY4HtWLAgayQSVJ+ScjbizFZwDPoSoY7p4wNtHY/3RzmqkDAitHMA
-	 tF9COnQXnKIEh53H7KnproEY1n5+tDocQvCVUZo8387VGu53jGBJki3w/Rs7z6xk5N
-	 ER3h+tiniwkipKTjxXKKVDdlSTY5dbjQvG37KkEs6j8S1YXCBZD3XJcMTNax7oGXz3
-	 U6SkLwUV2Qe3O8qJWBGCdfil4XH/Ai/bSplQpRnKoLdqEw+K/CW7p30UA2bURULPQB
-	 wYtNshXcv7WVm2hbPje1Cb2IUqw34vdpZ9GfyOFWvG1inDECDlnm59VeeHJGFd/JHt
-	 oh90zzGou938w==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <westeri@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Add quirk for ASUS ROG Strix G614 series
-Date: Tue, 16 Jun 2026 11:43:56 +0200
-Message-ID: <RqcbSmnzQWas394Kq-TG7w@disroot.org>
-In-Reply-To: <ajEX8L63vAhhndv7@ashevche-desk.local>
-References:
- <20260616090824.5967-1-scardracs@disroot.org>
- <ajEX8L63vAhhndv7@ashevche-desk.local>
+	s=arc-20240116; t=1781603646; c=relaxed/simple;
+	bh=+URwGBoKKQopuhgwzkoaWddBJJZzAiMnIIQn74OaPNo=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FKBihaomLzzbTuJt0uft9jyuq2G7Yp8gKkJx1BhzvjII31ex66A7etj169cv7NXf1lAIiDzaOXYAQdoHKwE4AM3D5fhvDp3yxN8SJR02OmnNYNKTHMygUEGxMpvQN5B9Bh4SS4UGPRQDUyLavIwTZM6rksUymgYdQJjQbxnWFdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ns/tzrJp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D201F00A3A
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 09:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781603645;
+	bh=+URwGBoKKQopuhgwzkoaWddBJJZzAiMnIIQn74OaPNo=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=Ns/tzrJpIglOiySBTbQdfr0f6rZR2z+BRM84629Fi0M9YFE8eUzX+UviGviW4mnyW
+	 +LK6V7Q+ZsA3D4peLthUK8hWS6+MKP25gzeR1VRCnky8pj7h5GHL41J5S0BWvyHXK7
+	 2BhesK0GP1nhcuSaKSRD9F3uQnwV0mzkIMv0rhco+hnK/lEHADi4wG3b4t+XrZ1mO4
+	 B56J4+hk4af/FedqGCN0Lcruq5lL8olhq4jTyDNWDPnmQzm28gkAYP0C/kOEy9BgAm
+	 J0ThWvyPswrGkjdfz7Rf91e0VmgWqJQEds1DHcAse4p+kQbRoBvLQ2naMdu0I75/C7
+	 XYq7OLo+7pQFA==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-396aacc5bcfso39494711fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2026 02:54:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9PUumfwCJHEMtkQkFWnCVED3MwgnrG7/omXglXSBn7fz3X2kBupgM4pFg4eWpSHJIUTOaOLeX6P07e@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8sbh2rdsvmlxyyHnXoEBW8klsCvTKutuVbtj4N+pMIqSeCxGY
+	uJu+aAY4+jSGLNsstnU1wZSaG54r70T5YUAWsgfT5Cafocwrr13cyIApOyhzZDcrXDq89mEZYpS
+	vn0HO87oU+Y9T+hb2/PS/8D4YtlYaZsiJ7ZGaE8nm7Q==
+X-Received: by 2002:ac2:52b9:0:b0:5aa:77e2:51b0 with SMTP id
+ 2adb3069b0e04-5ad43730740mr629116e87.45.1781603644454; Tue, 16 Jun 2026
+ 02:54:04 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 16 Jun 2026 02:54:02 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 16 Jun 2026 02:54:02 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260612085257.GY2990@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+References: <20260610154204.110379-1-scardracs@disroot.org> <20260612085257.GY2990@black.igk.intel.com>
+Date: Tue, 16 Jun 2026 02:54:02 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mcv7SWVYA6rNZo+-tYx_ohOdedkewLZOa=X1Eei=1fTzA@mail.gmail.com>
+X-Gm-Features: AVVi8Cf8SX-PFW9ubAlWfGkrgV7gQ9a14lXvOtYxhpfIKCXMWl99SlqnsWEeRzY
+Message-ID: <CAMRc=Mcv7SWVYA6rNZo+-tYx_ohOdedkewLZOa=X1Eei=1fTzA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] gpiolib: acpi: Add robust bounds-checking and safe
+ address handling
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Marco Scardovi <scardracs@disroot.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	CTE_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
-	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[disroot.org:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-38571-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:westeri@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:mario.limonciello@amd.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38572-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:email];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:mika.westerberg@linux.intel.com,m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:scardracs@disroot.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[scardracs@disroot.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,disroot.org:dkim,disroot.org:mid,disroot.org:from_mime]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3A8E268DA64
+X-Rspamd-Queue-Id: E296168DBFE
 
-Hi Andy,
+On Fri, 12 Jun 2026 10:52:57 +0200, Mika Westerberg
+<mika.westerberg@linux.intel.com> said:
+> Hi,
+>
+> On Wed, Jun 10, 2026 at 05:42:02PM +0200, Marco Scardovi wrote:
+>> Hi all,
+>>
+>> The series adds explicit bounds checking for GPIO pin accesses and
+>> ensures safe handling of ACPI addresses in OperationRegion handlers,
+>> without referring to truncation or wrap-around behavior, which does
+>> not apply.
+>
+> I'm fine with these now.
+>
+> For both,
+>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
 
-> 'slow'? Did you mean 'low'?
+Andy, Mika: do you want me to queue these directly for v7.2?
 
-Yes, sorry, that was a typo. I meant 'low'.
-
-> What is this interrupt for? Touchpad?
-
-It is an ACPI event interrupt on the AMD GPIO controller (AMDI0030).
-Specifically, it triggers on pin 21, appearing in /proc/interrupts as
-"amd_gpio 21 ACPI:Event" and as you guessed it is the touchpad.
-
-Previously, using "gpiolib_acpi.ignore_interrupt=AMDI0030:00@21" or
-"gpiolib_acpi.run_edge_events_on_boot=0" as a boot parameter successfully
-bypassed the 36-second delay, which confirms this specific pin/handler is the
-culprit stalling the boot process.
-
-Thanks for the review!
-
-Marco
-
-
-
+Bart
 
