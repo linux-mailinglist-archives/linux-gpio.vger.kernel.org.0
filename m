@@ -1,58 +1,63 @@
-Return-Path: <linux-gpio+bounces-38632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38634-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3p2+KL1xMmpD0AUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38632-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 12:06:53 +0200
+	id DGpaJMt3Mmq40QUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38634-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 12:32:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04D9B698429
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 12:06:53 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08BE4698857
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 12:32:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=ideasonboard.com header.s=mail header.b=ZSIbktkV;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38632-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38632-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=ideasonboard.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nngpRcHq;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38634-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38634-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1005F313B96B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 09:58:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 39AA1308B74E
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 10:20:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45ED63D1AB5;
-	Wed, 17 Jun 2026 09:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B790E3F44E8;
+	Wed, 17 Jun 2026 10:20:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F6F3CE4A3;
-	Wed, 17 Jun 2026 09:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7783EFFAF;
+	Wed, 17 Jun 2026 10:20:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781690296; cv=none; b=Xl2E/2Zg+QAGZFa2KqVDMo5ch7OEqfV3ql8ZjplL6pvK02EuWwchbbUppQf2AjL3Tw4AS7aoqSkxPHNY4ajy01o6Sw+mMREMb3/nWlMY2SZE1fo0o95WkK0T+8pA1hz3LT3PmRfcusbVAYn7kxkSXf5mOTSAxsbWD/Qo8tH9y6Q=
+	t=1781691626; cv=none; b=kWB91REpjZMz/JA4v6T3v4KaQOb+5Z0fIjn2/tzy/DTjCdHUHnFjws9BnR26jL4YJAulhnPcp1l98Saz3MyzQTaUvXsasRm554tZXC8b+U7chwh2i8psrol0odTi9M2UF5bTpe3kHPro277gth8Qxym77c4uHq1yzaJM04K9Kdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781690296; c=relaxed/simple;
-	bh=+ndcSoGZm49UtMp4jBGHTFV2C8LSvo9Cf1fRV5Ed1Yg=;
+	s=arc-20240116; t=1781691626; c=relaxed/simple;
+	bh=LemMe3KggFiCwPPl9bGmfkEUoHEUWpJ7AOoGFXW6Xbo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F97ixOl+fxUYKPuN2WpRO1CdpCfwzZDot99PZyOTUR7r2i8Gvw62RGWIpjcmcv8YQ9SYW/YIGwaLQMiilIT7GrHyRq/qLvPg3dFXB8G9hUAcQK2JpqSYHSInjrQgpI+DbMT4aSGc2Xc4DnWc5Yn5zqKgh4IT1Jt9P1XoH0jLl+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZSIbktkV; arc=none smtp.client-ip=213.167.242.64
-Received: from killaraus.ideasonboard.com (2001-14ba-70f3-e800--a06.rev.dnainternet.fi [IPv6:2001:14ba:70f3:e800::a06])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1ECC32F8;
-	Wed, 17 Jun 2026 11:57:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1781690259;
-	bh=+ndcSoGZm49UtMp4jBGHTFV2C8LSvo9Cf1fRV5Ed1Yg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZSIbktkVruY1N01c2q4AL5f+cnGjtMvzN65rHEBAbfN0u3+4ksTwbitqAo+a4H5Jx
-	 BsiVUWloH3Wy9RjuJMSyGo77I6YdgewrpEvYa2RC2Gk42GDujXma5C1qacqY6222Q/
-	 xQumZjfwJ0WkfcfQXLgHOPjxD8OuXmyuq36OASEM=
-Date: Wed, 17 Jun 2026 12:58:11 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] pwm: Use named initializers for platform_device_id
- arrays
-Message-ID: <20260617095811.GG3054789@killaraus.ideasonboard.com>
-References: <b515eb1644e793d019163fd2a717d3fccef857f5.1781689255.git.u.kleine-koenig@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFw38jjPlHupeIcQAUJEH6fCitXNBNR0n1TCYQbjMRuxCGXMc9KWDOzWl4ttfkCyLxluh+JeLBv2P8fEQRW/MOc9UT4o8Kwp3eGl/RuJoyxPBzZVjK4xNPtdpgH+JOV7nMs0EBH0FR1zU+DH8HyZllEQ3+ZaVjVBQ4KcGIKbpEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nngpRcHq; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 073691F000E9;
+	Wed, 17 Jun 2026 10:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781691617;
+	bh=mGDpQKiaGmdMQBKgXybhSkmu2YNTiVFD1n1EPaO+ol0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nngpRcHqLTi0JBr234u9hEGzndNN1zkYDSWphGDzDeiBEyXscpEG3E02lAUNeKgLr
+	 bP1/yubOPljYWqR+GDt7wHMLqr0kuTYXCU85r2UncLrQigEttDWrbj91/PKDZkqcOp
+	 Zz2hTNleWc3ZJCNLsMwsfvkDXOvGuVeTQnNj+jzTigQ7+3uXR2bzVSHExxFwQkJ1YZ
+	 l2qWmqEOCWBP1CPk3MS22aYCRqTjOZfFmXsfMgGt0Kw9IrDDe66Wk2hRZdyNDjCgbB
+	 3gzrKgwCuKBANm8nFxQVd8FsZyYKOP9Mr+Ot0EfDPX2i+7Rvk7uHvEWVe/ZL/kllUw
+	 1RHDFK3QZxvnQ==
+Date: Wed, 17 Jun 2026 12:20:13 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: peter.griffin@linaro.org, robh@kernel.org, conor+dt@kernel.org, 
+	linusw@kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, hajun.sung@samsung.com
+Subject: Re: [PATCH v2 2/5] dt-binding: pinctrl: samsung: Add
+ exynos8855-pinctrl compatible
+Message-ID: <20260617-favorite-bobcat-of-ecstasy-02f62f@quoll>
+References: <20260615085252.1964423-1-alim.akhtar@samsung.com>
+ <CGME20260615083419epcas5p48c6b192d1abcbd5411f0958aa9b83237@epcas5p4.samsung.com>
+ <20260615085252.1964423-3-alim.akhtar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,105 +66,56 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b515eb1644e793d019163fd2a717d3fccef857f5.1781689255.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <20260615085252.1964423-3-alim.akhtar@samsung.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ideasonboard.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ideasonboard.com:s=mail];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38632-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[laurent.pinchart@ideasonboard.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:u.kleine-koenig@baylibre.com,m:linux-pwm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alim.akhtar@samsung.com,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ideasonboard.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-38634-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[laurent.pinchart@ideasonboard.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:email,ideasonboard.com:dkim,ideasonboard.com:email,ideasonboard.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,quoll:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 04D9B698429
+X-Rspamd-Queue-Id: 08BE4698857
 
-On Wed, Jun 17, 2026 at 11:41:50AM +0200, Uwe Kleine-König (The Capable Hub) wrote:
-> Named initializers are better readable and more robust to changes of the
-> struct definition. This robustness is relevant for a planned change to
-> struct platform_device_id replacing .driver_data by an anonymous union.
+On Mon, Jun 15, 2026 at 02:22:49PM +0530, Alim Akhtar wrote:
+> Document pin controller support on Exynos8855 SoC.
 > 
-> While touching these arrays drop a comma after a list terminator.
-> 
-> Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 > ---
->  drivers/pwm/pwm-adp5585.c |  4 ++--
 
-For this driver,
+No wakeup-eint?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>  Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
->  drivers/pwm/pwm-pxa.c     | 12 ++++++------
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-> index 806f8d79b0d7..f4aa74b44ed2 100644
-> --- a/drivers/pwm/pwm-adp5585.c
-> +++ b/drivers/pwm/pwm-adp5585.c
-> @@ -203,8 +203,8 @@ static const struct adp5585_pwm_chip adp5589_pwm_chip_info = {
->  };
->  
->  static const struct platform_device_id adp5585_pwm_id_table[] = {
-> -	{ "adp5585-pwm", (kernel_ulong_t)&adp5585_pwm_chip_info },
-> -	{ "adp5589-pwm", (kernel_ulong_t)&adp5589_pwm_chip_info },
-> +	{ .name = "adp5585-pwm", .driver_data = (kernel_ulong_t)&adp5585_pwm_chip_info },
-> +	{ .name = "adp5589-pwm", .driver_data = (kernel_ulong_t)&adp5589_pwm_chip_info },
->  	{ /* Sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
-> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-> index 80d2fa10919f..b844bb2dd92e 100644
-> --- a/drivers/pwm/pwm-pxa.c
-> +++ b/drivers/pwm/pwm-pxa.c
-> @@ -32,12 +32,12 @@
->  #define HAS_SECONDARY_PWM	0x10
->  
->  static const struct platform_device_id pwm_id_table[] = {
-> -	/*   PWM    has_secondary_pwm? */
-> -	{ "pxa25x-pwm", 0 },
-> -	{ "pxa27x-pwm", HAS_SECONDARY_PWM },
-> -	{ "pxa168-pwm", 0 },
-> -	{ "pxa910-pwm", 0 },
-> -	{ },
-> +	/*             PWM            has_secondary_pwm? */
-> +	{ .name = "pxa25x-pwm", .driver_data = 0 },
-> +	{ .name = "pxa27x-pwm", .driver_data = HAS_SECONDARY_PWM },
-> +	{ .name = "pxa168-pwm", .driver_data = 0 },
-> +	{ .name = "pxa910-pwm", .driver_data = 0 },
-> +	{ }
->  };
->  MODULE_DEVICE_TABLE(platform, pwm_id_table);
->  
-> 
-> base-commit: 4fa3f5fabb30bf00d7475d5a33459ea83d639bf9
+Best regards,
+Krzysztof
 
--- 
-Regards,
-
-Laurent Pinchart
 
