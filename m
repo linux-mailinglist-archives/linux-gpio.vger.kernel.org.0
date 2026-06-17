@@ -1,333 +1,187 @@
-Return-Path: <linux-gpio+bounces-38630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id LqKBL6RoMmo/zgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-38630-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 11:28:04 +0200
+	id sRwIDKduMmqIzwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-38631-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 11:53:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59AB1697E78
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 11:28:04 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96357698224
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 11:53:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=mw2ycwaI;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38630-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38630-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=baylibre.com header.s=google header.b=NT0Toa7G;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38631-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38631-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5CE02300288C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 09:27:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1E670314A44D
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2026 09:42:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B82B3B3C0D;
-	Wed, 17 Jun 2026 09:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EADFA388374;
+	Wed, 17 Jun 2026 09:41:59 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DA939B94F;
-	Wed, 17 Jun 2026 09:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30839D3F1
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2026 09:41:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781688438; cv=none; b=SjjTe4iaiDwInv8xWAJp2QHWz+5hj6glbOREvLYE7N8sHy4Jrcq5azK0QMYZsSDNlQHDpgq+060VB6RuDDw1qSEGFToYcnnleOkiPFeVMdSai3h8dvckE3n/WL1q7SxHZKIMvH3XebSm13e5AdNkvbh5SSJz9/qW1G0ryeGQ36g=
+	t=1781689319; cv=none; b=GulJWMWUPXtIv1lKWGFjAIr5nEi/NbRtxgURPmqSB/M7dEGYro1XxqfRy3s0HFGWdu5ET9S7gjJQNh1A6vS6hm1uSfI1r9aDD+ehoJSwSQ0sZHF9WI5zTKchU5GnuZBhJ/jkgy+uDM4+HGONhJ8QtV2yEFCzu1mRsEakGhPvCdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781688438; c=relaxed/simple;
-	bh=T3Lp3YNULabHqplHcZlMQc3WXWf+KjkB95K3YQHpBck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2+68rSxcG+7jEAIet5zI21ymOj7j6J7nR+9TWqSOGRbu9/WqJ56G3gbqRaFd2CNt7xU92YRNxwflid6MOK7rRMZSdRu6BDpHeJGvR/UYERKI7fXOOKsbyiwuiS9yTL/fgAaocp+QPp/iDN/EufN1/uxxL0SlZ+WK5nEtrKFxpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mw2ycwaI; arc=none smtp.client-ip=192.198.163.12
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781688437; x=1813224437;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T3Lp3YNULabHqplHcZlMQc3WXWf+KjkB95K3YQHpBck=;
-  b=mw2ycwaIKI4O/xBcudKgR6suIt+UYMZYkO2bFhjN6UdwRUcSEcn0HK//
-   Hne0XfUcagg4pCegTsdhxH+LYNDnr0aNqjxDGUj3hwn2yv59CuBZbFVni
-   XRW80hS3+GjI9Pt902jyLE9Nm1Mx5bVVxAVj5Gazwz57EKuIIYJOeVheV
-   TS5uzmUrPJjgh25IKnYZuQ81i7WhhFc7TqUD6iv7WMqnkRpY0QKGCHNtS
-   lbk+RAc4VXJ8WgiNgNDjN/xpUsUD8whQvma9kcdtQP0Jgq8420g066w18
-   yGWZd0EPTVMARXcVyk/1opzGysGfUju5q58gcLcLrC8QH44ddZ8ie5EED
-   g==;
-X-CSE-ConnectionGUID: Wfmzm56QRNSWdUM4JTXeQg==
-X-CSE-MsgGUID: cFt6Tdq2SfihQLFpSu33yg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="86315588"
-X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
-   d="scan'208";a="86315588"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 02:27:16 -0700
-X-CSE-ConnectionGUID: 3FGDRaZfRg2Ey4UFBi5lzQ==
-X-CSE-MsgGUID: X2+LnDp1QFuD7L/al7IlSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
-   d="scan'208";a="248080418"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.245.69])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 02:27:13 -0700
-Date: Wed, 17 Jun 2026 12:27:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Hardik Prakash <hardikprakash.official@gmail.com>
-Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org,
-	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com,
-	linusw@kernel.org, nathan@kernel.org,
-	chaitanya.kumar.borah@intel.com
-Subject: Re: [PATCH v9 2/2] i2c: designware: defer probe if child GpioInt
- controllers are not bound
-Message-ID: <ajJobvY67HKufaTs@ashevche-desk.local>
-References: <20260617065922.26004-1-hardikprakash.official@gmail.com>
- <20260617065922.26004-3-hardikprakash.official@gmail.com>
+	s=arc-20240116; t=1781689319; c=relaxed/simple;
+	bh=Tz2U4aa4r2L6c5MgiQtCST5v5LB369yfPwSVmbc5WAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uYhHNloCLkcM1UONRXJIlpgWkSvfBLOH+1vUaVJWUsRM+f+20x6ZyTYNU9gNQko+BNeMoN4zu/4XrZdOCu0MioN8rx6n6OFCYeezVYVOindx0S4M6gjRn9oh2JiGgQupILxXRMZX0I5iDUJYNWZ4zwhzyu/q8D2FVR+6YYYup6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=NT0Toa7G; arc=none smtp.client-ip=209.85.128.46
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-490b211ee6aso42194445e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2026 02:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1781689317; x=1782294117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wiycEI0K89UfGBPRijVeVid8zfJcpLlj8A8KclF/STE=;
+        b=NT0Toa7GlvAyfeDrKiNmd5E1jp3snzJM2Lk/eCSFN2GtRGPXt7hymrKgbsnkljMaM6
+         j3CMSJcbUEEfezk9P87lP1viEdI/YyNV3dBq+aSTZFU563EfOAQFVQSVQw/PtsjNaZf/
+         43LYC2EeKkFjwjkIqijyecu5ZG3yIWQi3OX6NNZ1M5fRvi58VzlgCkQQQc00H+iEXIL2
+         7JBqaKfUplbHlqmjeMeBQ/2pPV737hE2qxAC31l1qCHhhcTvlgNRrW+eU/LwHy+2KByd
+         KWX2Vx4Y1XiVpZKc37kkZ5A4ftWT3QIgfQZQDFCjVwEmdZ0oQpVRPz88vZmyBm9+/nSC
+         kY9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781689317; x=1782294117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wiycEI0K89UfGBPRijVeVid8zfJcpLlj8A8KclF/STE=;
+        b=n3pmR41P/4CgmJvQWJPnLUf3aDtovhzyNH09kCq0zsgf8xKZe+Wk5Lq0tXbIlWXhUY
+         4aEeOENAjjOXHyhSoyOjmEcwewsAQhov4I1CIyuF6h7zEXHHJAbW9gTu4vcoxxZUg6wy
+         If4Gac7z4zx/pCD82WMrmGUwCnoezjTO5JHRTtRO0mLp+/1kvo7OC+L3XqlwKt1mgNdC
+         S402iDDqNoj80vkqbdbVTGm9sLK3Bq+fNDXVSy8PXYP08ko+/eWCuXbAZNnO9/oIz5RQ
+         bVEXXPlKbIjdKTGuhntSSOEa78B+XPpJ4jJvmci7WccTkHV+WBTzdb2Xa3ShHak+rZjl
+         j9yw==
+X-Forwarded-Encrypted: i=1; AFNElJ8L23SNknKNqs+2Uxb5OkXxXKP7VmnIRTNwQ0fgf+J0TX1QDWJlGzfggyrfZZWbRGre566q38hKiG/r@vger.kernel.org
+X-Gm-Message-State: AOJu0YySDqvxXGMPOXdTd/+DVeVbjieyEB663ZzZjWZW4z8I0/BiS4zq
+	GBCiNI/w3gX07bT6u/07+a9d9xqrL0kZkwCHhkzWKZeji/QP67OOBIKiyOgfQ3q9aNw=
+X-Gm-Gg: Acq92OE6mzrKAXp1WDYoktCql+FoiAt17sWLPS/Dz9atFFQ/VCPR1jNPCM6if0Mr/Wc
+	9H0STqJ0JTqOVQ6CHDm1cX5b+7e0To5ShEwENdqn5UNH+2eP3itnL/StCkY1cX3DwJ+uRlNzu+R
+	AItCeaZos7AL9w1/ch5WloRcnD3Eiwhb0ReEVGmPEwc3cfOWM9nBFpSdZjJROz91D/9YjChUmj8
+	FdqvsWPNCG8r6F98xrG7Z4W7eBW+tCYAyPZxMvYp+ZGHD0deQ/myarG9zzdqAAJLqi24Ye5kH1d
+	maYGEy2HfzdDIFKJTPgq261RSq5JgAtE8a2lEoiYIVnjowlrf6yPzyybNFAXO90Q/EyrcXHaMxQ
+	7Et+3NLkkXpGYDLzx2efWbGdxCiIW9aUOZ3zgRHxRJwukLRMN79YkXJEU21WbnOm/7FverAnTYi
+	LmFWq1PRyIKcG5Tet4lhBe0b7tqoKtxcaTkf5eeLyXcLUaQCHpATcp/aDCnvbJE2ZqAImJU3Btd
+	WO9
+X-Received: by 2002:a05:600c:3e05:b0:492:2e58:666c with SMTP id 5b1f17b1804b1-492333f8014mr54683495e9.37.1781689316666;
+        Wed, 17 Jun 2026 02:41:56 -0700 (PDT)
+Received: from localhost (p200300f65f47db04bc2080ea3c93ea6d.dip0.t-ipconnect.de. [2003:f6:5f47:db04:bc20:80ea:3c93:ea6d])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-461eaa0d1c7sm9118044f8f.7.2026.06.17.02.41.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 02:41:56 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] pwm: Use named initializers for platform_device_id arrays
+Date: Wed, 17 Jun 2026 11:41:50 +0200
+Message-ID:  <b515eb1644e793d019163fd2a717d3fccef857f5.1781689255.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260617065922.26004-3-hardikprakash.official@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=Tz2U4aa4r2L6c5MgiQtCST5v5LB369yfPwSVmbc5WAc=; b=owEBbAGT/pANAwAKAY+A+1h9Ev5OAcsmYgBqMmveH9DsdXyFGFrVbLZjAXgPNn2JCE/2ZJl+5 zzK+VFWVn+JATIEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCajJr3gAKCRCPgPtYfRL+ TuddB/YtPTBlkmS5kcR8CR6fr6KVpgDTVbSLbXwmuVWCWLQg9kT9SDOgfozZ6SixCgFOJo05fJK zhuMkq27DUzVFwd+KD6opvO6HQoZsVbSKg3lcKA0iF2zUKsMnXjGSSXhzMGKs3wDDqKpI6FZIdD EzwtkjG4NfqDvYJWq7qHYVZ5NWtrmjI8BvlIqEaXYJ/k3cEcVsmPZW/Z2ScaMp8bKSYRQz2gKwC bAQ6RxWMN+2MVU252lAvvKEYkRu9rhu0CfO1hJ4DjMhL7hFjqrHR974WZfS3C3ItUab0XOMNfS9 8eS80y60S73vfjzlPy2bFi5aw7Vd+cWUKGSDjVlP8DsP0ao=
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38630-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hardikprakash.official@gmail.com,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:nathan@kernel.org,m:chaitanya.kumar.borah@intel.com,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-38631-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:linux-pwm@vger.kernel.org,m:laurent.pinchart@ideasonboard.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[baylibre.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,baylibre.com:dkim,baylibre.com:email,baylibre.com:mid,baylibre.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 59AB1697E78
+X-Rspamd-Queue-Id: 96357698224
 
-On Wed, Jun 17, 2026 at 12:29:22PM +0530, Hardik Prakash wrote:
-> I2C controllers may have child devices with GpioInt resources that
-> depend on GPIO controllers to be fully initialized. If the I2C
-> controller probes and enumerates children before the referenced GPIO
-> controller has completed probe, GPIO interrupts may not be properly
-> configured, leading to device failures.
-> 
-> On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
-> AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
-> pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
-> AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
-> fail with lost arbitration errors.
-> 
-> Add a generic dependency check in i2c-designware that walks ACPI child
-> devices, identifies any GpioInt resources, resolves the referenced GPIO
-> controllers, and defers probe if those controllers are not yet bound.
-> Uses acpi_gpio_get_irq_resource() to avoid duplicating GPIO resource
-> parsing logic from gpiolib-acpi. Skips resources with no resource
-> source string (string_length == 0 or string_ptr == NULL) to avoid
-> crashes on hardware where GPIO resources have no named controller.
-> 
-> The probe ordering race was confirmed via dynamic debug tracing:
-> 
->   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
->   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
->   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
->   2.348157  lost arbitration
+Named initializers are better readable and more robust to changes of the
+struct definition. This robustness is relevant for a planned change to
+struct platform_device_id replacing .driver_data by an anonymous union.
 
-...
+While touching these arrays drop a comma after a list terminator.
 
-> +static int check_gpioint_resource(struct acpi_resource *ares, void *data)
-> +{
-> +	struct list_head *gpio_controllers = data;
-> +	struct acpi_resource_gpio *agpio;
-> +	struct gpio_controller_ref *ref;
-> +
-> +	if (!acpi_gpio_get_irq_resource(ares, &agpio))
-> +		return 1;
+Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-adp5585.c |  4 ++--
+ drivers/pwm/pwm-pxa.c     | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-> +	if (!agpio->resource_source.string_length ||
-> +	    !agpio->resource_source.string_ptr)
-> +		return 1;
+diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+index 806f8d79b0d7..f4aa74b44ed2 100644
+--- a/drivers/pwm/pwm-adp5585.c
++++ b/drivers/pwm/pwm-adp5585.c
+@@ -203,8 +203,8 @@ static const struct adp5585_pwm_chip adp5589_pwm_chip_info = {
+ };
+ 
+ static const struct platform_device_id adp5585_pwm_id_table[] = {
+-	{ "adp5585-pwm", (kernel_ulong_t)&adp5585_pwm_chip_info },
+-	{ "adp5589-pwm", (kernel_ulong_t)&adp5589_pwm_chip_info },
++	{ .name = "adp5585-pwm", .driver_data = (kernel_ulong_t)&adp5585_pwm_chip_info },
++	{ .name = "adp5589-pwm", .driver_data = (kernel_ulong_t)&adp5589_pwm_chip_info },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index 80d2fa10919f..b844bb2dd92e 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -32,12 +32,12 @@
+ #define HAS_SECONDARY_PWM	0x10
+ 
+ static const struct platform_device_id pwm_id_table[] = {
+-	/*   PWM    has_secondary_pwm? */
+-	{ "pxa25x-pwm", 0 },
+-	{ "pxa27x-pwm", HAS_SECONDARY_PWM },
+-	{ "pxa168-pwm", 0 },
+-	{ "pxa910-pwm", 0 },
+-	{ },
++	/*             PWM            has_secondary_pwm? */
++	{ .name = "pxa25x-pwm", .driver_data = 0 },
++	{ .name = "pxa27x-pwm", .driver_data = HAS_SECONDARY_PWM },
++	{ .name = "pxa168-pwm", .driver_data = 0 },
++	{ .name = "pxa910-pwm", .driver_data = 0 },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(platform, pwm_id_table);
+ 
 
-I'm wondering if we simply can move to strncmp() instead of this check
-
-> +	/* Skip if we've already tracked this GPIO controller */
-> +	list_for_each_entry(ref, gpio_controllers, node) {
-> +		if (!strcmp(ref->path, agpio->resource_source.string_ptr))
-
-		if (!strncmp(ref->path, agpio->resource_source.string_ptr))
-
-
-> +			return 1;
-> +	}
-> +
-> +	ref = kzalloc(sizeof(*ref), GFP_KERNEL);
-> +	if (!ref)
-> +		return -ENOMEM;
-> +
-> +	ref->path = kstrdup(agpio->resource_source.string_ptr, GFP_KERNEL);
-> +	if (!ref->path) {
-> +		kfree(ref);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	list_add_tail(&ref->node, gpio_controllers);
-> +	return 1;
-> +}
-> +
-> +static int check_child_gpioint(struct acpi_device *adev, void *data)
-> +{
-> +	struct list_head res_list;
-> +	int ret;
-> +
-> +	INIT_LIST_HEAD(&res_list);
-
-> +	ret = acpi_dev_get_resources(adev, &res_list,
-> +				     check_gpioint_resource, data);
-
-Make it a single line.
-
-> +	acpi_dev_free_resource_list(&res_list);
-
-It's not critical double free (it will try to free an empty list) on error.
-
-> +	return ret < 0 ? ret : 0;
-
-	ret = acpi_dev_get_resources(adev, &res_list, check_gpioint_resource, data);
-	if (ret < 0)
-		return ret;
-
-	acpi_dev_free_resource_list(&res_list);
-	return 0;
-
-> +}
-> +
-> +static int i2c_dw_check_gpio_dependencies(struct device *dev)
-> +{
-> +	struct acpi_device *adev;
-> +	LIST_HEAD(gpio_controllers);
-> +	struct gpio_controller_ref *ref;
-
-Reversed xmas tree order.
-
-> +	int ret = 0;
-
-Useless assignment.
-
-> +	adev = ACPI_COMPANION(dev);
-> +	if (!adev)
-> +		return 0;
-> +
-> +	/* Walk all child devices and collect GpioInt controller references */
-
-> +	ret = acpi_dev_for_each_child(adev, check_child_gpioint,
-> +				      &gpio_controllers);
-
-Make it a single line.
-
-> +	if (ret < 0)
-> +		goto cleanup;
-> +
-> +	/* For each GPIO controller, check if its platform device is bound */
-> +	list_for_each_entry(ref, &gpio_controllers, node) {
-> +		acpi_handle handle;
-> +		acpi_status status;
-> +		struct acpi_device *gpio_adev;
-> +		struct device *gpio_dev;
-
-Reversed xmas tree order.
-
-> +		bool bound;
-> +
-> +		status = acpi_get_handle(NULL, ref->path, &handle);
-> +		if (ACPI_FAILURE(status))
-> +			continue;
-> +
-> +		gpio_adev = acpi_fetch_acpi_dev(handle);
-> +		if (!gpio_adev)
-> +			continue;
-
-> +		gpio_dev = acpi_get_first_physical_node(gpio_adev);
-> +		acpi_dev_put(gpio_adev);
-> +		if (!gpio_dev) {
-> +			ret = -EPROBE_DEFER;
-> +			goto cleanup;
-> +		}
-
-> +		/*
-> +		 * Defer probe until the GPIO controller is fully bound,
-> +		 * ensuring its IRQ setup is complete before we enumerate
-> +		 * I2C child devices.
-> +		 */
-> +		scoped_guard(device, gpio_dev)
-> +			bound = device_is_bound(gpio_dev);
-
-> +		if (!bound) {
-
-Some of the compilers might complain the use of uninitialised variable (they
-might not parse properly scoped_guard() case).
-
-> +			ret = -EPROBE_DEFER;
-> +			goto cleanup;
-> +		}
-
-To make it sure and deduplicate above the whole stuff can be written as
-
-		gpio_dev = acpi_get_first_physical_node(gpio_adev);
-		acpi_dev_put(gpio_adev);
-		if (gpio_dev) {
-			guard(device)(gpio_dev);
-
-			bound = device_is_bound(gpio_dev);
-		} else {
-			bound = false;
-		}
-		/*
-		 * Defer probe until the GPIO controller is fully bound,
-		 * ensuring its IRQ setup is complete before we enumerate
-		 * I2C child devices.
-		 */
-		if (!bound) {
-			ret = -EPROBE_DEFER;
-			goto cleanup;
-		}
-
-> +	}
-> +
-> +cleanup:
-> +	free_gpio_controller_list(&gpio_controllers);
-> +	return ret;
-> +}
-> +#else
-> +static int i2c_dw_check_gpio_dependencies(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_ACPI && CONFIG_GPIOLIB */
-
-I'm not sure if it's good to have all this quirk here or simply start
-a i2c-designware-quirks.c. Theoretically the PCI counterpart might,
-but I think quite unlikely, want to have something similar in the future.
-
+base-commit: 4fa3f5fabb30bf00d7475d5a33459ea83d639bf9
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.3
 
 
