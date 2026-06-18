@@ -1,164 +1,179 @@
-Return-Path: <linux-gpio+bounces-38688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SbNqAwoXNGrvOAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38688-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:04:26 +0200
+	id vNjUB28YNGqKOQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38689-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:10:23 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8866E6A174B
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:04:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C43B6A17E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:10:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=eSuLXf9R;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38688-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38688-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=0leil.net header.s=20231125 header.b="X1/Emyvh";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38689-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38689-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=0leil.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6B1403151D87
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 15:57:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F0C1E30E0D65
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 16:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C203931E844;
-	Thu, 18 Jun 2026 15:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0909345CD3;
+	Thu, 18 Jun 2026 16:03:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49C13438B3
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2026 15:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628EB343882
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2026 16:03:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781798213; cv=none; b=jpvMW4/SYBV5xZIKNeU60SF0JcNPvLllmOQ8OX4uXUMBan51NbI1b3uEqcVFdWki0Uw2iLf0KcaB8SSedco0mn6W6BQLGQ70g3VLKAgw8ISYzMaXENzDOKN1XiOSzC3R3Lhm4ILt6r3DFmlDJ+BSB3FCSImuRwv1eje4RzpgBYc=
+	t=1781798599; cv=none; b=OF7CtYF0yOmX8QwdLXIYZ8flShvSP7Bywdg0WH909yWzKsoxLO+BZdsdN5JrSwz5EA3dHE1duRtzfSaHv09BA5Ob1sRT2M48Kxym300wf3b0nuHXVrGhIEVSnXUmW4FIZQvtf4pqqPOLfKvhvuDF7t5ARdl5rTdRzrHpvPzhWEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781798213; c=relaxed/simple;
-	bh=hdYYxiC7Jb9gGQW2i4fD6vQeo0dsTo7SyP1h0B5NZRc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=itHZL1KjCjVp7ErZQJ2gM45X57CJ++R/XhgR2+a/+FR6bwo5oqfMlbuUaDcIfDua5rvK4FItM1QJkIosg0NPoVZaX+iLlf6hktHI37ux0c+o4kska5PzXG3uyhifZja+DdEPdl3H3ZXsTjUIyLBclMZs+aFQctoSEYotO0+Gt+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSuLXf9R; arc=none smtp.client-ip=209.85.167.46
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5ad522bddceso680051e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2026 08:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781798210; x=1782403010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ommdRM+1YGnowlRMn1MkEDpytWOEfkBSapu+NiFj3J0=;
-        b=eSuLXf9RRpkJVTuhLXhqdPBDGyofzzGPyhU3KqGiXwcNt60OD2smQx1OmbaqAPe0aP
-         5HiI9qOyaml4VBIdtH+5lU/a9Spodb75wp2CvxZWSMR5ld35notvVQDU7eUrbCRVf9Bp
-         16okLwzJD6TV1QmE7vQuWmVG1xC5Bta9RO1M2yubLl/WblUPPlNRHCPKUDn1G/MnhmfS
-         1rYNCKTJTDqz5JHC0BCH+V87b8bdIb0nF0qYqST0RqKaP5FhhDSUWaUFmyF2NO1f11wA
-         3xxFkMSzaFVzGN3lto6Ss3xluwsQAEFWxX1ckb2uGbm/A4v9ygNdM1n+rmaXOJrkdry1
-         zz1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781798210; x=1782403010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ommdRM+1YGnowlRMn1MkEDpytWOEfkBSapu+NiFj3J0=;
-        b=AWRqM4Km8veKoJ46BBA117iELwkwx2DSRnVK9v99uZ98uILuZmDyen5xV0AnqV7Ra3
-         FeLvhAJN6ePs7oEptfd7XrJ3+LiLsYuqD7RKVem76agrH++t1YuzDBnM9D21tqvkqizb
-         VV8jHELf+Q04SL+/0amKQGykZRHp3TTbDQcGKWtRTECWqZf5ywnp80ed/IIWUgrNgRZg
-         cof2KytBY6ld++Wg4Apos6a+DhRxoIRG3s/Regx8RK/Dls6lBTjg1wiWEjl3y3QHKQXv
-         eLceyapGHqZsVqUXlbSB9Zce/xhSadW4Why7BzUOSjDK2g52z4Yfo+olq4DhcWSmXFxV
-         97qQ==
-X-Gm-Message-State: AOJu0YwVHVS4LpJsCeXTmx+znZTXZpMo0UkkHN7IbgwmaHBYZ2Sg+dKe
-	aa3/QBwbdP9HcyIFInkfvzptockbQ7R4D3Tj78Qb/M6bWzob9+BdtDIY
-X-Gm-Gg: AfdE7clJXnJQIpP1QBE0wjjLCtY3UiTZpnl2o5fH59eLuFO4Ae8+5QgQNRuQA1b9IqI
-	KDe98+ypADm3PuUifwjLiBoQ0dB6MrUCJJjlO39zwlqjOA4TuVuYoeRMT1LIQhEZdJqf5tPBxdn
-	vTpxNYd/5W9cb9E8i2UsjOEGVkk0NHocVb/nqbLNFGrjsisITFMLh9FDxAMuVuAI6K9guRIdElC
-	7H+zl9IZHUOJO27P7SI3trEFPJ7XEqMqt3s42EaPT9OV0KZ0fH4oPVSf5By9sxKgboITJ4/bL9k
-	hsTXeU+m0ycKdLUH5RVRZCoGZZbwpNnwYy+a8mXAHwWu8pQw+ck0XblOsJvMVjAdT2XTTAXqIDv
-	kjhIEsuldqL6RtB8arr8UtmbF9y7r+BvBhb1QYMv8vU71D0/hQC8vDJ/CtknfsT2Og+y5wL3UCQ
-	vBx6OyQumYELOGNFBa2nUxwAwc+lLbe3UkNZzwPmuTLB0Ome+NNOxAutuhlwMk+e6uHMcvUG/Vn
-	x5KqBrRS2M=
-X-Received: by 2002:a05:6512:628e:b0:5aa:6cd6:a7f0 with SMTP id 2adb3069b0e04-5ad562dd626mr44491e87.44.1781798209842;
-        Thu, 18 Jun 2026 08:56:49 -0700 (PDT)
-Received: from g.localdomain (95-25-158-125.broadband.corbina.ru. [95.25.158.125])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5ad56375f38sm13217e87.17.2026.06.18.08.56.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 08:56:48 -0700 (PDT)
-From: Igor Putko <igorpetindev@gmail.com>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Igor Putko <igorpetindev@gmail.com>
-Subject: [PATCH 3/3] gpio: tb10x: remove unnecessary braces
-Date: Thu, 18 Jun 2026 18:56:26 +0300
-Message-Id: <20260618155626.18751-4-igorpetindev@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260618155626.18751-3-igorpetindev@gmail.com>
-References: <20260618155626.18751-1-igorpetindev@gmail.com>
- <20260618155626.18751-2-igorpetindev@gmail.com>
- <20260618155626.18751-3-igorpetindev@gmail.com>
+	s=arc-20240116; t=1781798599; c=relaxed/simple;
+	bh=4NhTXoOQZEs4cN6xbmxVzuH8Qf9Bn1i/4b+0+fEoDcM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=l/a2Ndt48yA9gmE3bJJEZBpHHiEFYyyPaltGol7Y8JNPdK6clTT5/9kMmMDqbQjZZlWa4xx0VvfKVgGk3tv+JI5a7km7HPosm5vIR4D1KzKlXwmdAj5X89ykAHCyaUhARI2WaTUDD8pjgNtGGFssF/7WWRYyN8j+yyw/MNNUHm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; dkim=pass (2048-bit key) header.d=0leil.net header.i=@0leil.net header.b=X1/Emyvh; arc=none smtp.client-ip=185.125.25.9
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gh59T6yfWzd18;
+	Thu, 18 Jun 2026 18:03:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
+	s=20231125; t=1781798589;
+	bh=CvD9z9YN4M+/vOXsi6tXS5UgQCp5qSoTR48bj8emK8g=;
+	h=From:Subject:Date:To:Cc:From;
+	b=X1/EmyvhD6ujMlv6Aeg26+976pX8f0ZRNDzK7W1azwHh1H5FOXxH3/DjRA/PF2eN5
+	 mrcBorvPsqDeO4GurIPVIZIEF8tubwbcnwCFLT4yUPka0seUnUpBNos/dcgNzoBo+s
+	 rQV+oP8ZSOTLFKvrm1FK+AioA1kjBA7Z9N2Ut9Gw9etU13gI1O7UZoEBzH8wNiv8fg
+	 28r1MR/5vWy2I1nZSd9nEKGC7nYM+ic6Ffw2ddf5Jdy8oCQCx3hACc5iMDYpa6b+n/
+	 ZTZCoACU7ZJMQ6XnqQWhtwG7hhoHqhcSJWwgoB8dsQ17oxGZYXXWAHqnHkW2emTWUx
+	 opTTwGgNhvIjw==
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gh59S03xCz5nn;
+	Thu, 18 Jun 2026 18:03:07 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Subject: [PATCH 6.12.y 0/3] gpiolib: backport 16fdabe143fc
+Date: Thu, 18 Jun 2026 18:02:50 +0200
+Message-Id: <20260618-6-12-cve-2026-31732-v1-0-7ca0d0b906b0@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQ6CMBAAv0L27JLuNmyNXzEepCywHtC0SCSEv
+ 1v0OJPMbJA1mWa4VBskXSzbcypApwrieJ8GResKAzsWJ3RGQWKMi+Jh0FPwjOJdkK4hCeyglK+
+ kvX1+1ytITVyvcPv7/G4fGudjCfv+BZVCl2x/AAAA
+X-Change-ID: 20260618-6-12-cve-2026-31732-63076d516720
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Tzung-Bi Shih <tzungbi@kernel.org>, stable@vger.kernel.org, 
+ Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.15-dev-47773
+X-Infomaniak-Routing: alpha
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[0leil.net,reject];
+	R_DKIM_ALLOW(-0.20)[0leil.net:s=20231125];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-38688-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:igorpetindev@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[igorpetindev@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[igorpetindev@gmail.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-38689-lists,linux-gpio=lfdr.de,kernel];
+	FORGED_RECIPIENTS(0.00)[m:linus.walleij@linaro.org,m:brgl@bgdev.pl,m:gregkh@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bartosz.golaszewski@linaro.org,m:quentin.schulz@cherry.de,m:andriy.shevchenko@linux.intel.com,m:mathieu.dubois-briand@bootlin.com,m:tzungbi@kernel.org,m:stable@vger.kernel.org,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FORGED_SENDER(0.00)[foss@0leil.net,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[0leil.net:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[foss@0leil.net,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,checkpatch.pl:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,0leil.net:dkim,0leil.net:from_mime,cherry.de:mid,cherry.de:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8866E6A174B
+X-Rspamd-Queue-Id: 0C43B6A17E2
 
-Fix the checkpatch.pl warning by removing unnecessary braces from
-a single-statement if-block in tb10x_gpio_probe().
+Backport 16fdabe143fc ("gpio: Fix resource leaks on errors in
+gpiochip_add_data_with_key()") to 6.12.y. To make the git diff more
+similar with the upstream commit, also backport 375790f18396 ("gpiolib:
+Extract gpiochip_choose_fwnode() for wider use") and 550300b9a295
+("gpiolib: Remove redundant assignment of return variable").
 
-Signed-off-by: Igor Putko <igorpetindev@gmail.com>
+The changes between 16fdabe143fc and the third patch of this series is
+(according to git-range-diff):
+
+"""
+      ## drivers/gpio/gpiolib.c ##
+     @@ drivers/gpio/gpiolib.c: static const struct device_type gpio_dev_type = {
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     +	}
+     +
+     +	gdev->can_sleep = gc->can_sleep;
+    -+	rwlock_init(&gdev->line_state_lock);
+    -+	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+    ++	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+     +	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+     +#ifdef CONFIG_PINCTRL
+     +	INIT_LIST_HEAD(&gdev->pin_ranges);
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     -	gdev->ngpio = gc->ngpio;
+     -	gdev->can_sleep = gc->can_sleep;
+     -
+    --	rwlock_init(&gdev->line_state_lock);
+    --	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+    +-	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+     -	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+     -
+     -	ret = init_srcu_struct(&gdev->srcu);
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+      		ret = gpiodev_add_to_list_unlocked(gdev);
+      		if (ret) {
+    - 			gpiochip_err(gc, "GPIO integer space overlap, cannot add chip\n");
+    + 			chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
+     -			goto err_cleanup_desc_srcu;
+     +			goto err_put_device;
+      		}
+"""
+
+s/gpiochip_err/chip_err/ aside, the rest of the diff comes from feature
+commits which do not fit the rules for backporting to stable.
+
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- drivers/gpio/gpio-tb10x.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Andy Shevchenko (2):
+      gpiolib: Extract gpiochip_choose_fwnode() for wider use
+      gpiolib: Remove redundant assignment of return variable
 
-diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
-index d30524dbc841..7fb8e6223bd1 100644
---- a/drivers/gpio/gpio-tb10x.c
-+++ b/drivers/gpio/gpio-tb10x.c
-@@ -167,9 +167,8 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
- 		tb10x_gpio->domain = irq_domain_create_linear(dev_fwnode(dev),
- 							      tb10x_gpio->chip.gc.ngpio,
- 							      &irq_generic_chip_ops, NULL);
--		if (!tb10x_gpio->domain) {
-+		if (!tb10x_gpio->domain)
- 			return -ENOMEM;
--		}
- 
- 		ret = irq_alloc_domain_generic_chips(tb10x_gpio->domain,
- 				tb10x_gpio->chip.gc.ngpio, 1, tb10x_gpio->chip.gc.label,
--- 
-2.34.1
+Tzung-Bi Shih (1):
+      gpio: Fix resource leaks on errors in gpiochip_add_data_with_key()
+
+ drivers/gpio/gpiolib.c | 156 +++++++++++++++++++++++++------------------------
+ 1 file changed, 79 insertions(+), 77 deletions(-)
+---
+base-commit: 1d3a00d3bacff25652c96e1527610c69e91f7c38
+change-id: 20260618-6-12-cve-2026-31732-63076d516720
+
+Best regards,
+--  
+Quentin Schulz <quentin.schulz@cherry.de>
 
 
