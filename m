@@ -1,58 +1,57 @@
-Return-Path: <linux-gpio+bounces-38692-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38694-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wi7fGx8XNGr7OAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38692-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:04:47 +0200
+	id geC6FRgeNGrgOwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38694-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:34:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B666A1760
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:04:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE9446A19C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 18:34:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=0leil.net header.s=20231125 header.b=YagjMM7n;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38692-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38692-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=0leil.net header.s=20231125 header.b=nJsKeg+G;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38694-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38694-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=0leil.net;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4FE7D305520B
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 16:03:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8F2FA30574A6
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2026 16:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51170347520;
-	Thu, 18 Jun 2026 16:03:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4556F31355D;
+	Thu, 18 Jun 2026 16:34:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-42aa.mail.infomaniak.ch (smtp-42aa.mail.infomaniak.ch [84.16.66.170])
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209C233F599
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2026 16:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FE12EA151
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2026 16:34:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781798601; cv=none; b=SHi3G6h0oxdykudMPmUBs1mO5TJ6gdsFIrGe0jhOgz1L6X8ww7UhIRPi9Pv8yiUEI6JDlutTf5mYumxdA/0uXArU3/71C7YcujUi4/D8P33EG57PoWv84Cz6Pp6mIL9jD83xFu1Jdg3y7MEKgpJqOXxkI1a336ZtBxqYsZhN8PM=
+	t=1781800461; cv=none; b=K5VWkYbkSPRNDfGjrlJdjgOLGw07r+b3hgBtotg0vk02avuZ3v1hmLd+uLNUzTdAOZVvfngCesCQ6G0ytsFjcj3PGEpov1dbtj4mIa5JlcYdySBD9FbtrwduIu5/Y7ZzDPqXMHr2pC7bdwPfZTfirnJkkools+Tp4z1qpNeMg5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781798601; c=relaxed/simple;
-	bh=eqas2mXkgbO1aHhP2Cfjdf8hQgnkrjngdvU2L2nnFwY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WcxCdvTLaaNnBIEfmrjiXawKzqJOoFHCCGTfplh3sow3ZVe4RTqXecx7udN7E4jBA5vqXncJLVNXIxtMrYgreHVa5qX0ifAoqI7rm1dGulJML2Ghs4K6K5ZZYEcuQd3gHaCgIuKXTkLrpdzlc6/ck3TI+VXWre8tLvSf4H6EHTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; dkim=pass (2048-bit key) header.d=0leil.net header.i=@0leil.net header.b=YagjMM7n; arc=none smtp.client-ip=84.16.66.170
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gh59W6B1JzWmb;
-	Thu, 18 Jun 2026 18:03:11 +0200 (CEST)
+	s=arc-20240116; t=1781800461; c=relaxed/simple;
+	bh=sH4Ke66JIpnc0MZHo3EIyfu1ZYY+mgAZrrnNVgq4yPg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hFndXKS0H3mcobXWO7a7wC4pu63W2toTMVBUMkjs9ROzPsTHCy1XxmxQ5cnBc0ENohPEfE4ER8l5jBGc0YU1SUS8RoDGkCgXVsafrV5Nz/IDzv57KVzn83eAc0bT4oItnITVQCgczinKQMlnJ6TdcObRxeOcmsDVFzYxUQ+FSJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; dkim=pass (2048-bit key) header.d=0leil.net header.i=@0leil.net header.b=nJsKeg+G; arc=none smtp.client-ip=45.157.188.10
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gh5sN2xjmzpTM;
+	Thu, 18 Jun 2026 18:34:16 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
-	s=20231125; t=1781798591;
-	bh=WFWr/eRu56LbwkIihFliOGU03+8mIpPHxBpsnuv42Mc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YagjMM7nX31btQfPZj7IutRgA5Jq4zezCURaUIwlXqaYOXVhGs/YzJWbo5dsvgXnW
-	 +pchwAvOnHIYVMBcAsjXTmVUtRI30P/X7kQE5tLKFpbskOIUZDedYlA3GfKEJKeIvU
-	 covdEJBDSbU08yDtL228WzGG7wqMnTIYRfz1T+/MQmZSnHuT7X1BdD26IDZwTOGfJY
-	 0JOsYdGE3Funo5HYipxqpfxx3/rEgvHN3YgE0I3AvdxmueqzOE0DYMdtGl2PH8RKWb
-	 zUyVs4WhsXPsm1qhnmHgidLIHLxDFr4jgoTe3kh+Ju683fcLzxm7ZVlD0SQZ/BZ+NU
-	 308GOaXTmMznQ==
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gh59V6j3Hz7GT;
-	Thu, 18 Jun 2026 18:03:10 +0200 (CEST)
+	s=20231125; t=1781800456;
+	bh=PHAWjs2Y1yJ4pF784Wz2QgiwURvcLQMB3ILixgzZUmg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=nJsKeg+Gzquz90VmPRmUQAvcfpXfE0vRjqm75lM0E2WISsTFpnXqzjWRMd6sb+sPp
+	 HwrQ88ezCGzaSD7gYQE2Mz1v6s/NWpwAdV5FqsBA1SxQ1Rpf5jnBMP+MJO4cCbKhH8
+	 rPlBwjvMPGpWDHmWXvcr5RUULkEPNy4t6ACdF+WhA0DO7chnFXzr7d+jK9ePrjfOM2
+	 Lq9j4xMDApRj9ifDJxdv67AIFrqi5h8VUXMuDkzimwJZpjlVOklIEkaCR3UODZanPh
+	 QuizTgRE3se7mnq4j7GhyCNR9H/xuc02/fEOMZ6W1A3M9odtyT3c5yLNL1LIn+TO8C
+	 xABidE4dW2z/A==
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gh5sL3fJDzhjJ;
+	Thu, 18 Jun 2026 18:34:14 +0200 (CEST)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Thu, 18 Jun 2026 18:02:53 +0200
-Subject: [PATCH 6.12.y 3/3] gpio: Fix resource leaks on errors in
- gpiochip_add_data_with_key()
+Subject: [PATCH 6.12.y v2 0/3] gpiolib: backport 16fdabe143fc
+Date: Thu, 18 Jun 2026 18:34:00 +0200
+Message-Id: <20260618-6-12-cve-2026-31732-v2-0-42cc54b7bf04@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,17 +60,20 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-6-12-cve-2026-31732-v1-3-7ca0d0b906b0@cherry.de>
-References: <20260618-6-12-cve-2026-31732-v1-0-7ca0d0b906b0@cherry.de>
-In-Reply-To: <20260618-6-12-cve-2026-31732-v1-0-7ca0d0b906b0@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NwQ6CMBBEf4Xs2SW7JW7Vk/9hOEC7Sj2AabGRE
+ P5dwLvHmbx5M0PSGDTBpZghag4pDP0azKEA1zX9QzH4NYMhIyR8QkE26LLi1mDFtjIoFVnxRxZ
+ rCNblK+o9fHbrDaRkU05Q//r0bp/qxk25kV1I4xCn/T7zzv99yoyE1jXkqT2TtHR1ncY4lV6hX
+ pblC/IaTQTQAAAA
+X-Change-ID: 20260618-6-12-cve-2026-31732-63076d516720
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- Tzung-Bi Shih <tzungbi@kernel.org>, stable@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>, 
+ stable@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Tzung-Bi Shih <tzungbi@kernel.org>, Linus Walleij <linusw@kernel.org>, 
  Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.15-dev-47773
 X-Infomaniak-Routing: alpha
@@ -79,289 +81,104 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[0leil.net,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[0leil.net:s=20231125];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38692-lists,linux-gpio=lfdr.de,kernel];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linus.walleij@linaro.org,m:brgl@bgdev.pl,m:gregkh@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bartosz.golaszewski@linaro.org,m:quentin.schulz@cherry.de,m:tzungbi@kernel.org,m:stable@vger.kernel.org,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38694-lists,linux-gpio=lfdr.de,kernel];
+	FORGED_RECIPIENTS(0.00)[m:linus.walleij@linaro.org,m:brgl@bgdev.pl,m:gregkh@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bartosz.golaszewski@linaro.org,m:stable@vger.kernel.org,m:quentin.schulz@cherry.de,m:andriy.shevchenko@linux.intel.com,m:mathieu.dubois-briand@bootlin.com,m:tzungbi@kernel.org,m:linusw@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FORGED_SENDER(0.00)[foss@0leil.net,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[0leil.net:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[0leil.net:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[foss@0leil.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,qualcomm.com:email,vger.kernel.org:from_smtp,cherry.de:mid,cherry.de:email,0leil.net:dkim,0leil.net:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[0leil.net:dkim,0leil.net:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,cherry.de:mid,cherry.de:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 08B666A1760
+X-Rspamd-Queue-Id: EE9446A19C5
 
-From: Tzung-Bi Shih <tzungbi@kernel.org>
+Backport 16fdabe143fc ("gpio: Fix resource leaks on errors in
+gpiochip_add_data_with_key()") to 6.12.y. To make the git diff more
+similar with the upstream commit, also backport 375790f18396 ("gpiolib:
+Extract gpiochip_choose_fwnode() for wider use") and 550300b9a295
+("gpiolib: Remove redundant assignment of return variable").
 
-[ Upstream commit 16fdabe143fce2cbf89139677728e17e21b46c28 ]
+The changes between 16fdabe143fc and the third patch of this series is
+(according to git-range-diff):
 
-Since commit aab5c6f20023 ("gpio: set device type for GPIO chips"),
-`gdev->dev.release` is unset.  As a result, the reference count to
-`gdev->dev` isn't dropped on the error handling paths.
+"""
+      ## drivers/gpio/gpiolib.c ##
+     @@ drivers/gpio/gpiolib.c: static const struct device_type gpio_dev_type = {
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     +	}
+     +
+     +	gdev->can_sleep = gc->can_sleep;
+    -+	rwlock_init(&gdev->line_state_lock);
+    -+	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+    ++	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+     +	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+     +#ifdef CONFIG_PINCTRL
+     +	INIT_LIST_HEAD(&gdev->pin_ranges);
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     -	gdev->ngpio = gc->ngpio;
+     -	gdev->can_sleep = gc->can_sleep;
+     -
+    --	rwlock_init(&gdev->line_state_lock);
+    --	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+    +-	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+     -	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+     -
+     -	ret = init_srcu_struct(&gdev->srcu);
+    @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, voi
+     @@ drivers/gpio/gpiolib.c: int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+      		ret = gpiodev_add_to_list_unlocked(gdev);
+      		if (ret) {
+    - 			gpiochip_err(gc, "GPIO integer space overlap, cannot add chip\n");
+    + 			chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
+     -			goto err_cleanup_desc_srcu;
+     +			goto err_put_device;
+      		}
+"""
 
-Drop the reference on errors.
+s/gpiochip_err/chip_err/ aside, the rest of the diff comes from feature
+commits which do not fit the rules for backporting to stable.
 
-Also reorder the instructions to make the error handling simpler.
-Now gpiochip_add_data_with_key() roughly looks like:
-
-   >>> Some memory allocation.  Go to ERR ZONE 1 on errors.
-   >>> device_initialize().
-
-   gpiodev_release() takes over the responsibility for freeing the
-   resources of `gdev->dev`.  The subsequent error handling paths
-   shouldn't go through ERR ZONE 1 again which leads to double free.
-
-   >>> Some initialization mainly on `gdev`.
-   >>> The rest of initialization.  Go to ERR ZONE 2 on errors.
-   >>> Chip registration success and exit.
-
-   >>> ERR ZONE 2.  gpio_device_put() and exit.
-   >>> ERR ZONE 1.
-
-Cc: stable@vger.kernel.org
-Fixes: aab5c6f20023 ("gpio: set device type for GPIO chips")
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-Link: https://patch.msgid.link/20260205092840.2574840-1-tzungbi@kernel.org
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-[missing commit fcc8b637c542 ("gpiolib: switch the line state notifier
- to atomic"), commit dcb73cbaaeb3 ("gpio: cdev: use raw notifier for
- line state events") and commit d4f335b410dd ("gpiolib: rename GPIO chip
- printk macros") in 6.12.y.
- s/gpiochip_err/chip_err/ as well as replaced
- rwlock_init+RAW_INIT_NOTIFIER_HEAD with BLOCKING_INIT_NOTIFIER_HEAD
- based on missing commits, following same logic as in 16fdabe143fc.]
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- drivers/gpio/gpiolib.c | 121 ++++++++++++++++++++++++-------------------------
- 1 file changed, 58 insertions(+), 63 deletions(-)
+Changes in v2:
+- added stable@vger.kernel.org in Cc, apologies for the noise.
+- Link to v1: https://patch.msgid.link/20260618-6-12-cve-2026-31732-v1-0-7ca0d0b906b0@cherry.de
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 97a32e6f901fc..878f9ab4a0982 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -785,13 +785,15 @@ static const struct device_type gpio_dev_type = {
- #define gcdev_unregister(gdev)		device_del(&(gdev)->dev)
- #endif
- 
-+/*
-+ * An initial reference count has been held in gpiochip_add_data_with_key().
-+ * The caller should drop the reference via gpio_device_put() on errors.
-+ */
- static int gpiochip_setup_dev(struct gpio_device *gdev)
- {
- 	struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
- 	int ret;
- 
--	device_initialize(&gdev->dev);
--
- 	/*
- 	 * If fwnode doesn't belong to another device, it's safe to clear its
- 	 * initialized flag.
-@@ -859,9 +861,11 @@ static void gpiochip_setup_devs(void)
- 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
- 				 srcu_read_lock_held(&gpio_devices_srcu)) {
- 		ret = gpiochip_setup_dev(gdev);
--		if (ret)
-+		if (ret) {
-+			gpio_device_put(gdev);
- 			dev_err(&gdev->dev,
- 				"Failed to initialize gpio device (%d)\n", ret);
-+		}
- 	}
- }
- 
-@@ -941,33 +945,64 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	int base = 0;
- 	int ret;
- 
--	/*
--	 * First: allocate and populate the internal stat container, and
--	 * set up the struct device.
--	 */
- 	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
- 	if (!gdev)
- 		return -ENOMEM;
--
--	gdev->dev.type = &gpio_dev_type;
--	gdev->dev.bus = &gpio_bus_type;
--	gdev->dev.parent = gc->parent;
--	rcu_assign_pointer(gdev->chip, gc);
--
- 	gc->gpiodev = gdev;
- 	gpiochip_set_data(gc, data);
- 
--	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
--
- 	ret = ida_alloc(&gpio_ida, GFP_KERNEL);
- 	if (ret < 0)
- 		goto err_free_gdev;
- 	gdev->id = ret;
- 
--	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
-+	ret = init_srcu_struct(&gdev->srcu);
- 	if (ret)
- 		goto err_free_ida;
-+	rcu_assign_pointer(gdev->chip, gc);
- 
-+	ret = init_srcu_struct(&gdev->desc_srcu);
-+	if (ret)
-+		goto err_cleanup_gdev_srcu;
-+
-+	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
-+	if (ret)
-+		goto err_cleanup_desc_srcu;
-+
-+	device_initialize(&gdev->dev);
-+	/*
-+	 * After this point any allocated resources to `gdev` will be
-+	 * free():ed by gpiodev_release().  If you add new resources
-+	 * then make sure they get free():ed there.
-+	 */
-+	gdev->dev.type = &gpio_dev_type;
-+	gdev->dev.bus = &gpio_bus_type;
-+	gdev->dev.parent = gc->parent;
-+	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
-+
-+	ret = gpiochip_get_ngpios(gc, &gdev->dev);
-+	if (ret)
-+		goto err_put_device;
-+	gdev->ngpio = gc->ngpio;
-+
-+	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
-+	if (!gdev->descs) {
-+		ret = -ENOMEM;
-+		goto err_put_device;
-+	}
-+
-+	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
-+	if (!gdev->label) {
-+		ret = -ENOMEM;
-+		goto err_put_device;
-+	}
-+
-+	gdev->can_sleep = gc->can_sleep;
-+	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
-+#ifdef CONFIG_PINCTRL
-+	INIT_LIST_HEAD(&gdev->pin_ranges);
-+#endif
- 	if (gc->parent && gc->parent->driver)
- 		gdev->owner = gc->parent->driver->owner;
- 	else if (gc->owner)
-@@ -976,36 +1011,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	else
- 		gdev->owner = THIS_MODULE;
- 
--	ret = gpiochip_get_ngpios(gc, &gdev->dev);
--	if (ret)
--		goto err_free_dev_name;
--
--	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
--	if (!gdev->descs) {
--		ret = -ENOMEM;
--		goto err_free_dev_name;
--	}
--
--	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
--	if (!gdev->label) {
--		ret = -ENOMEM;
--		goto err_free_descs;
--	}
--
--	gdev->ngpio = gc->ngpio;
--	gdev->can_sleep = gc->can_sleep;
--
--	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
--	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
--
--	ret = init_srcu_struct(&gdev->srcu);
--	if (ret)
--		goto err_free_label;
--
--	ret = init_srcu_struct(&gdev->desc_srcu);
--	if (ret)
--		goto err_cleanup_gdev_srcu;
--
- 	scoped_guard(mutex, &gpio_devices_lock) {
- 		/*
- 		 * TODO: this allocates a Linux GPIO number base in the global
-@@ -1020,7 +1025,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			if (base < 0) {
- 				ret = base;
- 				base = 0;
--				goto err_cleanup_desc_srcu;
-+				goto err_put_device;
- 			}
- 
- 			/*
-@@ -1040,14 +1045,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		ret = gpiodev_add_to_list_unlocked(gdev);
- 		if (ret) {
- 			chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
--			goto err_cleanup_desc_srcu;
-+			goto err_put_device;
- 		}
- 	}
- 
--#ifdef CONFIG_PINCTRL
--	INIT_LIST_HEAD(&gdev->pin_ranges);
--#endif
--
- 	if (gc->names)
- 		gpiochip_set_desc_names(gc);
- 
-@@ -1128,25 +1129,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	scoped_guard(mutex, &gpio_devices_lock)
- 		list_del_rcu(&gdev->list);
- 	synchronize_srcu(&gpio_devices_srcu);
--	if (gdev->dev.release) {
--		/* release() has been registered by gpiochip_setup_dev() */
--		gpio_device_put(gdev);
--		goto err_print_message;
--	}
-+err_put_device:
-+	gpio_device_put(gdev);
-+	goto err_print_message;
-+
- err_cleanup_desc_srcu:
- 	cleanup_srcu_struct(&gdev->desc_srcu);
- err_cleanup_gdev_srcu:
- 	cleanup_srcu_struct(&gdev->srcu);
--err_free_label:
--	kfree_const(gdev->label);
--err_free_descs:
--	kfree(gdev->descs);
--err_free_dev_name:
--	kfree(dev_name(&gdev->dev));
- err_free_ida:
- 	ida_free(&gpio_ida, gdev->id);
- err_free_gdev:
- 	kfree(gdev);
-+
- err_print_message:
- 	/* failures here can mean systems won't boot... */
- 	if (ret != -EPROBE_DEFER) {
+---
+Andy Shevchenko (2):
+      gpiolib: Extract gpiochip_choose_fwnode() for wider use
+      gpiolib: Remove redundant assignment of return variable
 
--- 
-2.54.0
+Tzung-Bi Shih (1):
+      gpio: Fix resource leaks on errors in gpiochip_add_data_with_key()
+
+ drivers/gpio/gpiolib.c | 156 +++++++++++++++++++++++++------------------------
+ 1 file changed, 79 insertions(+), 77 deletions(-)
+---
+base-commit: 1d3a00d3bacff25652c96e1527610c69e91f7c38
+change-id: 20260618-6-12-cve-2026-31732-63076d516720
+
+Best regards,
+--  
+Quentin Schulz <quentin.schulz@cherry.de>
 
 
