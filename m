@@ -1,69 +1,70 @@
-Return-Path: <linux-gpio+bounces-38717-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rZH3D19kNWrduwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38717-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:39 +0200
+	id sgYKOYJkNWr7uwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38719-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:47:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96E2C6A6CE2
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 646626A6D0F
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:47:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=vhGD1UAI;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38717-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38717-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b="iUZ/4Ab8";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38719-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38719-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D8BCC30DE219
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:42:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 65234300D31F
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C1F3B5F5D;
-	Fri, 19 Jun 2026 15:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B146B3B3899;
+	Fri, 19 Jun 2026 15:42:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011008.outbound.protection.outlook.com [52.101.65.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519A33B47EB;
-	Fri, 19 Jun 2026 15:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85F93B52FF;
+	Fri, 19 Jun 2026 15:41:51 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781883711; cv=fail; b=kjz7o2JNi/REsjT3De0QXpqJsyCkxMHpBqp8myHCj5BYCK7tcuvKy+VnnGzo9G/51QwnyxFhouwkCrnezgashxhHT+TRkaHws9SxVvmmu/hCW/dQaJPoQXxrtFkWSV+1hPt2yvm2XJglguMxpj//AnXIz98lvFLtm7j3b+ssORs=
+	t=1781883719; cv=fail; b=KMu/hyCWqFPBbBQwRfLICRhez7smAIEq+NGj3a1VrAnEOmMyrmtHkMw8yvYavgkIemcORK0PA0l/OzCsI/KqEW/VkS+2NsmzUuGcZ2tjmne3RRSeb/F3oMKo6lokq7yFAeYHq4wRFbnDWjlXVUcuDiAPPuAgrI2ceAd7ZKp0RdE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781883711; c=relaxed/simple;
-	bh=r6Z7JuoN6m7MCez0Fu9BhuDWTv9nGS5585fDF+7mjgI=;
+	s=arc-20240116; t=1781883719; c=relaxed/simple;
+	bh=LJmEu/Lok8W8aZOw2sMBEgaqgvktJZ5JH8ZOE+0EqnA=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=dqAsoyVOkOwtlu4FecJx0DaPolNghTs8dqy2zeAFEhzoS9k+gudYFsvMpXIfMGTvYv+8gruSXzivqZm9K4clVYq1MPrYj67UN6uPmXozAcbgSvVr15/1xgCps4CiNmXKfgYMP4ziP5E6LwSeGkvzNfRc+NQI7Ue1UwAzflWdwIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=vhGD1UAI; arc=fail smtp.client-ip=52.101.65.8
+	 To:Cc:MIME-Version; b=S0RNL4Mztbs15sUCYMLU/nEy0i0l/RM7QtVjhYsGFskVHXFnnwsSNL9EGAtwP/WoR8/zC03vvlNnUd91Xj0HspxWOylVM6QXOuO5xnoacmf3QDGenbpEw2MSakMGmNVe2HIzK5476YsIoqZn/dVee4ICftmsBbCuuf1duds3xQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=iUZ/4Ab8; arc=fail smtp.client-ip=52.101.65.8
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WnijSK7iV6sw7j03sSCb9p/e8jDP5w31pZedzdlMg8JoMKNwB0pwm6afGfFD7XuK3KXoiDeT7c4B7eoeKGDpzQdY7SrfC77sTRsRPTVf2ueV9zIUqqLgAts22d+Z+xZcAFlJ13LlyJIjg98U+WjSGgyQEoHmefXiiGrE7mcBcx5ji/285/8Kr3Hj5E2qpCJ4CrfY2aLxiS3BlqeoRqaP76HppjNXtOsL2bDRLwMcq2PJeKTPJup6hRLD5G+vLEZhZcE/O2s550z3TBjsDeVafYqqEI7yauTIbBa/LXFwKARpJbeUAsT3NLRGwYr34z8l2R/Ufo7TItz6C/9bQCf6Og==
+ b=HYyHJAMprbmyUeX/eyKLxi819vIjQdaaXbo3xL5+ECO1nc2NbAR69VZmoz4Sw2B63X1Np5yq8rHJ/fp+sSvG862lS83mDEAm7zgugYXQQCeI+Aet7dfU9qSEi+JzGgrKmku+n1UxIej39hUG5nt2uIx+CWGZwYXaHfuj3ptGdSwICwWf0/2/wWf16tUc5xs1CboU1kUL/r317X3a1ZuojZxK022t7X4HcaDp5yndoA0OubuWJG58Sn1Y3fpujaRfImbUCNP7noVFG+sV3ONW5TKvHidkaL4skJ4JN8moRCYg5d7jmf1l+UpppQPREKKdChQu6I3aKa5wHymd4fBH7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D7WyDX7myArDFe1g4LPD+yngsQHVWixC6l2FC91sHhM=;
- b=JmtN/BDR4+rUI5SK51OoBBJkXCJ/7eL1nPwMi14Hkmc1dvEmn0G/TD00cjckKmJ9X/DaoIc+7kSxsUF5fAyNkJGZr20JCJHw/1EBLO9alEJAcuTf/wtPrtEfTSCrsl46v+BgdjCM8OyG0r6PLfgVrJ+OqP2a7s833hCsLo5aUffkk9Sk5kDqm+SKZxT55QGiIbYznLgavu6AGm7HDyJ1xtDJNwVC9gO8fj3viaqO2QtfZgyChIwtbReVXxgHXtli2trOpFgr6Qr3R5+y6ixVD5XFlpZQNxMrdL//m/fGY6clqe+j7NLHKq12O5LIv5c+WJrqekkwE+KxN6fsMja6CQ==
+ bh=zfmCqNnjSIzwL4nsVzq8Eb+wS2MxaJA9rKk82viUn40=;
+ b=kDne48B6ZiigEI0hV2gQZpYEiKTSCpF/28n13TvnazLUwgT60mvQW/9s1cZ4XBi4NyexFqHQsUcJTeJFUlr7MiJJV/RP82y/JKKdEIKdcIgYEDXSBQRZMK//lY+Q6hdxaX2XrLdGhPmli2MUT7wq0+qB7Hno0CY8IRwwIORhLjb8KM4WUmJLznXZXUJKeR6QEpD7OjFn+ycWQjRMGUCIEJzAJxOyEaU0D40F33jPxGo793PU0ikKEAXp07JSaqn0H5xv+IBpNqDuc3/OcSp+FEjAWHXnwkJef8CRoYRxHWmAL5p7iU+AbtJCL1WhzZusF0QR393cV4acFpanlAzzeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D7WyDX7myArDFe1g4LPD+yngsQHVWixC6l2FC91sHhM=;
- b=vhGD1UAIiwIW3Ct0frhuvvYzGy6JC5KZdOrtWDV4TUwv01T65jE7BdeHgigJJQ/iStVnMXBotF2umPmIeGKY90ZxV5ps+0oxyOs9ANKu9n4arjOefJFcHsog8IIdqA+h0ToGFLns55MAIs+Xn2SrH8Vo/DJ/b7Ewmx6Y5YqkeCM7SUf90SYvHPBBjtOvoloq4lVfS2jf1BP1fJtu1+3QiNXCdxYldsmBV9k37ynFeNqI/Ry5LvueAxiOyal0TiG6ULQKC41nVZodd7ZLIOBNuieo71v2+/v6I/9HDn4NSKiaeCSMmxjh7bOrPJe9tmf6/IoIuxF5zxV83xeYnU5r3A==
+ bh=zfmCqNnjSIzwL4nsVzq8Eb+wS2MxaJA9rKk82viUn40=;
+ b=iUZ/4Ab89EfE1tKvsEQQvf2tMmIYMUXH9+UDkRZKoiI4ZhEj5SQJxsvuyUpGkAJsOiSsgxoJZuizR7d+2uey3bEdLpMSYlmha3mzJfaYRl1ApWzPIqhal8MPAvIa75bkN117I/TgJ8CocMKQ0vNRjjNq6pglZet46QRglpd3gEVyFgHlF6WTOKpF9kPUsVjhWThFMPYlIKJ7tRzKN2MrTpywzZ6tqYkFaHUqEkqf3Ry1/957I4+tQUluheOGVNBsyJlIukef6+TEGSRQW1x/yNRyX7j2LoSYLC7BVy4f15x6C1rScP9BpchaMRKjr4GuJf3S/QdGubR69gXORvLj5w==
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
  by AM0PR04MB6818.eurprd04.prod.outlook.com (2603:10a6:208:186::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.13; Fri, 19 Jun
- 2026 15:41:38 +0000
+ 2026 15:41:43 +0000
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Fri, 19 Jun 2026
- 15:41:38 +0000
+ 15:41:43 +0000
 From: Frank.Li@oss.nxp.com
-Date: Fri, 19 Jun 2026 11:41:01 -0400
-Subject: [PATCH 04/11] clk: imx: imxrt1050: Remove NOMMU platform support
+Date: Fri, 19 Jun 2026 11:41:02 -0400
+Subject: [PATCH 05/11] pinctrl: freescale: IMXRT: Remove NOMMU platform
+ support
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260619-dts_cleanup_arm_mcore-v1-4-0101795a2662@nxp.com>
+Message-Id: <20260619-dts_cleanup_arm_mcore-v1-5-0101795a2662@nxp.com>
 References: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 In-Reply-To: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 To: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -84,15 +85,15 @@ Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
  linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=13807;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=30820;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=/Ww2vlAK3hgYXQRTH9gvPFVx2cUpwK4COiGwa56Ztuc=;
- b=ARnOjw+NxAz3Ak4likSl1RV42/5e1lS+CWhbOMOBRbeOGDfdfxjGco2Gz8jrCd5FQsFqxNMjN
- /mocDl1aS/sDdPd1t1+XHUdsxFKyXDFQWWvT8L/+lQAq+3kjaL4l0qa
+ bh=rEundGioiHZHL1aI73BlNhtXsXVCvmX9iAwWtVaP5k0=;
+ b=KMkI59XPmkrxuuW94sXba6YDZ1dSuXvPDoci5m+sWgEjOWc9Hbq5QEMc5kWpNddYzUxNFi7cW
+ 3eoqlaA7Iu+BiF8MaAutBSpFlg39sAmJd7H63FkPwlXt7qnQi+hhIrp
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SA1P222CA0010.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:22c::12) To GV2PR04MB11799.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SN7PR04CA0088.namprd04.prod.outlook.com
+ (2603:10b6:806:121::33) To GV2PR04MB11799.eurprd04.prod.outlook.com
  (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -102,67 +103,67 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|AM0PR04MB6818:EE_
-X-MS-Office365-Filtering-Correlation-Id: 219c5e90-88a0-463a-16b4-08dece19403f
+X-MS-Office365-Filtering-Correlation-Id: 85e0ae9a-3a2a-497d-a02a-08dece194318
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|1800799024|7416014|376014|19092799006|56012099006|11063799006|22082099003|18002099003|921020;
+	BCL:0;ARA:13230040|23010399003|366016|1800799024|7416014|376014|19092799006|56012099006|11063799006|6133799003|22082099003|18002099003|3023799007|921020|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	aJEkhvPCapusZ9/iomP0usah9ze0ufDvRzqx45xiG6KnhOrlHVSTB4xZ+g6l6V8/c8ggPU7DLytbsw5z5agKxNK9lLXamvKlIe9BYwiOTF10zwDM/1vBjXukZHN0vQbrxaigSnW8xTf2y1hegatm16HPclRFPnWdN/uzXsslnc3uUb6CqRle1FGZXKqsJfmq92cYYXL9QKneavwDib9+eWT2uroM7FddXDsSPvI0iwtjLxHjrw+dcRtqUcf17ouctzaexbFSubmdT/gc1k+YcpXaQrQwNo+hZiI0B2wyxou0Tec8RfX5hL42vcEFnZuxmnoKdPpEq3kFH/mhItZg772IGzYC48TsBYROM1Tjut0hkZeJrgEBLRqPIfcgohSA+JkWRWIQoAAddS/aBWMgeWzgQWs0iqhD/dx6iFW3Vg5xnv8F7A6dUyLMu1cZe1b+eCZcZq0muEJyxwvW2r7XXsWL2xlJqxfrmA/R2ltxzfoahU5bncOjZrzrNa2RQ7t7u7kNSeCPvtG+hXdK64aRCYituiMJ26wtX4M1XonVJ3Ja5jUXRmdL1vTbBSycNXB5qAP5EcpYgZuD6CZRi7vJxf4xAI/HSA/cWE3DaO6yb+e5JNWETrMGuBAMFZPHnGfhb2wHo1GPt6J8M+lf0IZBi4qX/O1E3+EggOQmc8F86Yv4VkXP+XsEe2s7M03uGmuoZ/ECKfO+8NjZ9BipHRrdXw==
+	lpom2uo+etXS403XAb2uvnLAJmimqiJJo8hZuV5ngD/oEqHjPDFD7dLQkeX10jaQR5FAltIBDLCSPoIWLvrmC2baS0PMIpHDIlEVgkd+uMtalED2Gnyl3rH2dvkcYwSPoQx8FYj5EjK8fD8lk0GW24u2IghHM/6xklPhSr6RRPWHuFryn6cMxyDjknaTFMJWpoUVgBud/tbcV19Z1P3uJN/s/kH3viGYXBJ3tW1rKBfByRxZ4Ele1spwMjznCz3dWVj4DhS2HvJVTaorlZfo1WzL97th4jJfvYzX1sSt647j6hCkJJNJK26DslaXq+bbwLbaj02NjBsd6WKvKf3f2RYdENi9u296VMgYaZrKJMaP62lscTo7uo9hHYZiTVMn+DwHCinVRq4xeJ7OogmWXK7XErP4QAfL8na6LowZhT8wqI8b7rQXHRoaq7+ueleZG/j2kyfT43YMqNAjKO5qUR1kvj6+eLgCA6k19BQ0Zr2LrBqINVAUGab3LhNUKN2VNwnv/pj8je8yQYioUlycM5sm9dYWK1tCzXEPqJBpC9wJWSCnlzo1OXZWX16keAHrDP7f/GgV32FPkH/pg9GyUr4W5Jpj5gudp0A+UgKWxqc1E1HjB1fYnrgKyl1/prhhG/SoPswEKDxDmWeAfT5wvJqcl9w38slsKIrwDHF0pVE=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(7416014)(376014)(19092799006)(56012099006)(11063799006)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(7416014)(376014)(19092799006)(56012099006)(11063799006)(6133799003)(22082099003)(18002099003)(3023799007)(921020)(13003099007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ejRDaHJuYndPL3NwT0U1YlVIbnZsTGNmK25vYzI3SC9UZ3pBSVFHcHNOdXJp?=
- =?utf-8?B?a3ZNblVTU1J5NHhEaXN5K2RvMmtuR0NvMjlVODV0clVBZnpGYVRPNCtRNGVF?=
- =?utf-8?B?Sit3aXVkWWM4bDZtaEUvWk5kYWFNS0cwMEliQzNJWkVad1hLTEdoTVBlaE1J?=
- =?utf-8?B?WG10OHNteldhd2Z3SzEvbkwvM29yODB5Wm5FZ3psclBlYkhvWUE2MmJKRXdE?=
- =?utf-8?B?aWFRc3NLT0V1TmJRNUNHZ0wvMk5wb25uLzdPUXZabGZwVW93cEZSVXZTYkZq?=
- =?utf-8?B?eGNrSmxWb1NlUTZ2V1pIWUI5U2JZK1pqV245c3dNbFo3WWxNVWJIZ3NQOUxn?=
- =?utf-8?B?TTA1S2FGbmw1OFE2R1FicGNGUUtrQ0JvWGNzeGtVM2ZaSDZ0T1NMZVhhcnUr?=
- =?utf-8?B?NG1BeDNqajlVTHhhcG1lWkd5L1BoYzB2YjEvcHFCaTVOdHlsYzlqTFlBK3ZG?=
- =?utf-8?B?QzJiWi82OXhYS1U2TTJLZU1wZVdnR1VLQ3lscXhEK1NQRUFiQ3dLSUJJOFhM?=
- =?utf-8?B?L3p1M1NrTmlQSUZjUVoyQWdDVFYzSE1CV01DSWt1bG5wYmdad1dCYk4vbmU0?=
- =?utf-8?B?YlZ3ejAxL3djRW5JcGhiWHZXZitIV1I5alFoZVc1VW5hSENSWi9QSlNlcGtJ?=
- =?utf-8?B?eTJTNlY2cjRkeHRHTGFjcURCRjRYVFNqNnZYQWlwOE9LQWNqZ1BJL1ZHY1NX?=
- =?utf-8?B?dTU0ZVNoNHhWZjR3UFBUZ0NlNGVOdFVaK21ZejJ4ZjdHYlpLbUNkdytYLzRJ?=
- =?utf-8?B?MnJ5OEdueGpjTTJLZXRsL295bG1oV2MwUkNVZTdSUmdvTUtqYmQ2SDl4YytI?=
- =?utf-8?B?T1V0QzBmQ3g3K1phVXc4QTR2aGwwTnVkcmFxMElXdm1idFNlTExiMUxuRVdh?=
- =?utf-8?B?b3ZteitOalhvWGxaQmpMWGV6VzE4UGkwQjlkWGxONEQrZzIrRWVrekJzUFlz?=
- =?utf-8?B?SUpocENDbElJTTFkY0ZHZjRKRDVqbmt5NnJqNG1XSGZJNXZ2cW9HZzBDUlNk?=
- =?utf-8?B?Q2p1MlhielBKajFkMHhCZjVHMmlqOUFSTi95WXh3R01vRUVqMzRhaHJPU0lr?=
- =?utf-8?B?aXFmbngzWVpHams0T2w2QlBFcUcyOVJBN3RaOEpOWTRYd1V0b3VhMTR2TDZ2?=
- =?utf-8?B?MmpkVndiRkwxdEhuY0J0REluWUQ3SE80MkF1K3o3Y2NKR1YzUjQ0REYyNTU3?=
- =?utf-8?B?NVNGcjJrNVliSWMzQW00NmQwVEdOZTdpaVdCbVh6YVMzRnIrTjBZdGlrcVlm?=
- =?utf-8?B?V2xQNW16R3V6OWM2Yi9rQm9IcllHTkU4NmhCTlRRT2ZRWGlhSGhpNmpWcW9w?=
- =?utf-8?B?Tm5ORHdQbmEyTlVtSVdTdFh6NkFoamgvd0ZpbDV4REp2djRPVW9wY0YzaVlr?=
- =?utf-8?B?YlJQZVQrSkxNcDQ5LzFneDk4WVYwbTU5clJJeUFhbC9NMjdVdUdwU3N2Vnpo?=
- =?utf-8?B?bC8xVlFCZ3BYQVBPeDF2aFZHODc1ZHJrbkZkaTd4TTdMMVdqYzE0RmVXM1M3?=
- =?utf-8?B?UDZZV2xUMzgvNXVUeVdlSk9nQ1M2c3JjbUkyMkU2NnJGbW01b2xQaXBvbFoz?=
- =?utf-8?B?aUJFS25kUzhiY2tyMXc2ZjFJYW9NK2FSSXRVNnhoRGRlWlpLV2Q4TGRjc0k3?=
- =?utf-8?B?dnV5SXBoeURadCs4QlA3VXRQY0xYWTExOHZsUVJTVUxTM2xTVXhHWGQzMGtm?=
- =?utf-8?B?ZkpFdW5UaG5nZnBRMzBZMW5VMXFmVHRhOHpsMHE5b3NNZU84Zzh6L21kd0xq?=
- =?utf-8?B?RHRUcTRpWWxIMUJCcDNYd2gzQy9PRjRsVHNnR1FsYkFxenVpWXdnSVI4N2Ir?=
- =?utf-8?B?blpvWHc1bWNtbGxielQ1bk1MZFlEcGtoT0QxYThKeEZMdFZzeVIrMElKUDlp?=
- =?utf-8?B?WElFaE5WZTRZTkJUTlZuazkxemNvL3FHSnJWWFFjZExURGZ1bndjWTcvdENi?=
- =?utf-8?B?N21DajNpdWxRVVE2M1JhV0RwZkFCR3IrZjlLbUFIeHl6UGFBcHBQU2xZZGdy?=
- =?utf-8?B?WVA5TmROYzBtenRXUVB3SUUzMlFGakJxQXJKbng2Mmp2SXg3SUZjZDl5YjR2?=
- =?utf-8?B?dzdUUFNaNEErVmZwZmRkdzR3TE5mOC8yM2NiNFhqeXBDUjh5M21TNjVLQUlI?=
- =?utf-8?B?ZGtaNEdmUzh2WE82NC83Z09Ld2pLRCsvME92MHhMcU9NTWUxUmoxejlSMFpT?=
- =?utf-8?B?Qjgrazlab2VTYktsbkpaL1BNNmI3NTQ0ZXB0czdjanRiVGJpMHZTOFQxK1Zq?=
- =?utf-8?B?K25hSU9nZ283QU1WbGM0aFNYemZxR0JHK3hONzN1TDV0V2dLckt0Y3d3OU9j?=
- =?utf-8?B?b3A2blBnSTc2K2djbzNndzlTTllIMGNUd0FVc1k5Vms5ZEZVYW53QnF0aEk4?=
- =?utf-8?Q?DV45sNkBG/D6vVq7oy1UprBL5kYXkEY2u4UDF?=
+	=?utf-8?B?elJTdVArdm41WFI0VkEvcTVWQnpPK0krbEpHRUhsMkFTY2Y3YmgwL2V4Rlhi?=
+ =?utf-8?B?bC9uRHlqeWlWZDhaYVVOM0Vhd1YvQm8ra0g4QU5wWDhkSm1iYzNlYTBEaUdU?=
+ =?utf-8?B?b2V4MmxEd3hWNmk1TFU0UzZOcllxcVhKYVRXZHo5TW9TRVBuaGZaQmFLRDlN?=
+ =?utf-8?B?Ymt4N3lHSnEyRTh4WC9HRTVUMlZWVkxpTDJoZlFMN0N4WlBPZHQ4UHpwazk4?=
+ =?utf-8?B?NnZSeFJOM0VrYnlaN3YwVkdIdDRqK0FWNmZ0NkN6dzRXYk04UE5Eek9JM3BC?=
+ =?utf-8?B?MXhhNVhhRStPWU4vVkNJV3NSMkh6SWlxaXBHalpCVGRaL3ZmNUUwMGh0ZGI2?=
+ =?utf-8?B?TVB6QWVxdXZSTmZFQjkvNFcwZ3cwcU9jSXRkQk9vZDU3dzUvOUgvZU93T3Zj?=
+ =?utf-8?B?UUVWZGdtRFFEa0Y3WFM0N3RiOE55TG9LYXVLNTVJNDUxbWsvT2E5WWh0aEtz?=
+ =?utf-8?B?eXl4bSt1TVNONnFqd1VVZGtqamVxZ0R5UStnUFFHc3VzSWpsY2s4RXNOSmZF?=
+ =?utf-8?B?NzlDT1RLTDhEUHNHNU5Hcnh1a0NNL0RVVVc2dnNiU01jeUhJK083NU1WcHky?=
+ =?utf-8?B?U2VFYmlydEROS3I2MEViVCtVNVN3bVNDdktZekdsNzFFVWJBbVJIVVJSMTIw?=
+ =?utf-8?B?eUJmZHBVNUlxQ2xjaWdydVdPeFlqcXNmNnpZZjBabXhYRlA3bnhmc1F4K2dv?=
+ =?utf-8?B?cVQrWFFnNElCOEthRysvdkd1VWVuMkZaVGJ5L1IxbTN4alJBbmU1UE42Q2pW?=
+ =?utf-8?B?aUQwV1U3VHllTE1oenJycU5oTmpmQWgyeXNFeVY2Y3RXNUlqRi9vckkrd2Fr?=
+ =?utf-8?B?djFqemlGd0VCVUViMkN4ZkxnZmR6TkFwTXREL2U4VlJIZHZGMzd4c3dwQUw4?=
+ =?utf-8?B?RXJWU0tlU0cyMlhQOXF4SjYydmlXeGxVQW9pc1YvTmVkbyt0LytCR3g0N3JB?=
+ =?utf-8?B?TFlWYTI4WDhvT3BZbVV1aWZHeTl0SWRSL1V5VDhtL0IzcDJYMlB1MmI5cERz?=
+ =?utf-8?B?THRJY2RFblFQOGRFaGM2ZTltQjZucUlLTFlCVlFKUis5OTJ3N1RzaU5RbWlO?=
+ =?utf-8?B?bytuMUtTZmtVUE5OMTloVldlL2lhS3RYdWVSeDl1K2l0cUxFWXBWTDZqcnZZ?=
+ =?utf-8?B?d2NBNFBwQngrNjVLVnp6SlVFQVM4WHphdENkdkt0bU85dzhSSnFxTkEzd3Zj?=
+ =?utf-8?B?eTl5anNTMkwwRHpRNHVEdyt2WXJjMlhpZ2xuS3UvaHhkK0VzRmV4d2FBRUZG?=
+ =?utf-8?B?STdGZTVZNlEydEJMejA3OXdOc29vcEUyNndYaUczTXZLdERwUVlOM294RXZF?=
+ =?utf-8?B?aXFjR1RLM2o2UEttRnVQNERhUWpRN1Z4elNQQlVNSXF4WkxNaTZicjJwdldt?=
+ =?utf-8?B?Q2hBb0VLWTRJdHRaNDh6QWtTTkpwUHdwbktOd1J2d3BEa0J4UmpwYmozSjJU?=
+ =?utf-8?B?UFBpTUJxaWR5TWc2Rm56bFI4US84OW1Rb1ZzNkM0Q1VjeHllQnVMWk5yc2pG?=
+ =?utf-8?B?NlY4L3hmSjlBd1Z5ZlArS2M2TkgyYnZ6UEcyd0pHbUEwaWFVcmJCZmY2c0ZS?=
+ =?utf-8?B?Mk0vQ3FhRmZlT1EvS2tad0h2VW9tNmlDUU5vRXB2dHNiT3c3bUZjcm1TbERK?=
+ =?utf-8?B?cW9BZWg2NWJuWHg3bUtXcnpPOEQ5NWdXQ3dWSVNFTlZJQmMxYVhHWnhMdmRn?=
+ =?utf-8?B?elhyVDNyOXpSc1owQ2FSVVQ2WG9NaDdpNVJPcTY0N0NHdFRUREpRQlIrV1dN?=
+ =?utf-8?B?QzFkcUJBaHBBbnlYVkZ6VWpMaE16dCtyM0g0SlN2anAxNXVsVU5rOHBFdG5k?=
+ =?utf-8?B?bjhOVnhqOE9xVDA2SGYrbCsrR1Zic3FYTXdMTVdVVS81NU0vcHdoVEhWTUtC?=
+ =?utf-8?B?am5LYUtOZ2ZDcjQwQ3dCRGRBVDdDVlBtMjlwU3ZOL0RIbVNmQ1hpYzhHYXFB?=
+ =?utf-8?B?cTEzZ3RUbjlGdU1vMGRMT3V3M21wNlZnakFaSmdLbnRzaVlWNTdtMXZnbjI3?=
+ =?utf-8?B?andXM0tvVWZrd0FJaXk4UzFxa2hsUk1YSTNLMXRmV1hGQTlOeEppbERRTU1H?=
+ =?utf-8?B?UzRFR0VxbVBpVlBvcXhEN3lFL0tUQkEvaFN0bzd6SGFVZEZzL3hUWGpCRVR1?=
+ =?utf-8?B?Ty9ucFNyZnlQTkJpVVA1RTgxZkZYcXlFZTBFdFVPbkNrWVliM1VMenlIRjRJ?=
+ =?utf-8?B?REFiZEFoT2ZDaXl5NEszMWVRZTJRTUlJRXBPM2Nub0QrUm92OW93UGdQcUll?=
+ =?utf-8?B?K2YzRHlMa2tiUG5FNmg0RWx4Z3FweTVNMDZYRVRhL0czZmNZMkM5Q3NsbTJs?=
+ =?utf-8?B?WXN2YkpGemsrV0w3WURkM1praHpEQzRwd0FFOU1uWTAyN1htL2hoU1lBNHRF?=
+ =?utf-8?Q?kcJ4UsXFvJZ13dDCzwHql1XYyiMD9ahqqd9Sn?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 219c5e90-88a0-463a-16b4-08dece19403f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85e0ae9a-3a2a-497d-a02a-08dece194318
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:41:38.2013
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:41:43.1198
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u7nxdLEfu75SQTlJDqkP/VkDI/S5IgqXCCY8kr9B4djIxxW9LuNe0GMhSquN2aidD4FHIfMg7BYvIYdtrKjEDPWA9BQFrht5+XP9/OCLRKCB2t8Emgiqe1j/cHiVJcgo
+X-MS-Exchange-CrossTenant-UserPrincipalName: yUgmALt8S+K4w5PFtjjHsvvRfpUYtYwsroIRrcmJG4drdGOkingLRuS7KZcX9OKRS5vRxJPTtM2UORmetbwbCn6nMNKBAOgb/gQqDWeXRtkP6BYVFXEZKL8MzjQFKBmk
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6818
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.94 / 15.00];
@@ -175,7 +176,7 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS(0.00)[m:arnd@arndb.de,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:stefan@agner.ch,m:festevam@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux@armlinux.org.uk,m:abelvesa@kernel.org,m:peng.fan@nxp.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:s32@nxp.com,m:linusw@kernel.org,m:vz@mleia.com,m:piotr.wojtaszczyk@timesys.com,m:kees@kernel.org,m:gustavoars@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:imx@lists.linux.dev,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:Frank.Li@nxp.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-38717-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38719-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -196,9 +197,9 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[benettiengineering.com:email,oss.nxp.com:from_mime,i.mx:url,nxp.com:mid,nxp.com:email,NXP1.onmicrosoft.com:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.nxp.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:mid,nxp.com:email,i.mx:url,benettiengineering.com:email,NXP1.onmicrosoft.com:dkim,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 96E2C6A6CE2
+X-Rspamd-Queue-Id: 646626A6D0F
 
 From: Frank Li <Frank.Li@nxp.com>
 
@@ -211,302 +212,893 @@ i.MX platform code.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/clk/imx/Kconfig                     |   6 -
- drivers/clk/imx/Makefile                    |   1 -
- drivers/clk/imx/clk-imxrt1050.c             | 182 ----------------------------
- include/dt-bindings/clock/imxrt1050-clock.h |  72 -----------
- 4 files changed, 261 deletions(-)
+ .../devicetree/bindings/pinctrl/fsl,imxrt1050.yaml |  79 -----
+ .../devicetree/bindings/pinctrl/fsl,imxrt1170.yaml |  77 -----
+ drivers/pinctrl/freescale/Kconfig                  |  16 -
+ drivers/pinctrl/freescale/Makefile                 |   2 -
+ drivers/pinctrl/freescale/pinctrl-imxrt1050.c      | 309 ------------------
+ drivers/pinctrl/freescale/pinctrl-imxrt1170.c      | 349 ---------------------
+ 6 files changed, 832 deletions(-)
 
-diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-index b292e7ca5c248..92ae6e095fadb 100644
---- a/drivers/clk/imx/Kconfig
-+++ b/drivers/clk/imx/Kconfig
-@@ -123,9 +123,3 @@ config CLK_IMX95_BLK_CTL
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1050.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1050.yaml
+deleted file mode 100644
+index db5fe66ad8733..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1050.yaml
++++ /dev/null
+@@ -1,79 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/pinctrl/fsl,imxrt1050.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Freescale IMXRT1050 IOMUX Controller
+-
+-maintainers:
+-  - Giulio Benetti <giulio.benetti@benettiengineering.com>
+-  - Jesse Taube <Mr.Bossman075@gmail.com>
+-
+-description:
+-  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-  for common binding part and usage.
+-
+-properties:
+-  compatible:
+-    const: fsl,imxrt1050-iomuxc
+-
+-  reg:
+-    maxItems: 1
+-
+-# Client device subnode's properties
+-patternProperties:
+-  'grp$':
+-    type: object
+-    description:
+-      Pinctrl node's client devices use subnodes for desired pin configuration.
+-      Client device subnodes use below standard properties.
+-
+-    properties:
+-      fsl,pins:
+-        description:
+-          each entry consists of 6 integers and represents the mux and config
+-          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+-          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+-          be found in <arch/arm/boot/dts/imxrt1050-pinfunc.h>. The last
+-          integer CONFIG is the pad setting value like pull-up on this pin. Please
+-          refer to i.MXRT1050 Reference Manual for detailed CONFIG settings.
+-        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+-        items:
+-          items:
+-            - description: |
+-                "mux_reg" indicates the offset of mux register.
+-            - description: |
+-                "conf_reg" indicates the offset of pad configuration register.
+-            - description: |
+-                "input_reg" indicates the offset of select input register.
+-            - description: |
+-                "mux_val" indicates the mux value to be applied.
+-            - description: |
+-                "input_val" indicates the select input value to be applied.
+-            - description: |
+-                "pad_setting" indicates the pad configuration value to be applied.
+-
+-    required:
+-      - fsl,pins
+-
+-    additionalProperties: false
+-
+-required:
+-  - compatible
+-  - reg
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    iomuxc: iomuxc@401f8000 {
+-        compatible = "fsl,imxrt1050-iomuxc";
+-        reg = <0x401f8000 0x4000>;
+-
+-        pinctrl_lpuart1: lpuart1grp {
+-            fsl,pins =
+-              <0x0EC 0x2DC 0x000 0x2 0x0	0xf1>,
+-              <0x0F0 0x2E0 0x000 0x2 0x0	0xf1>;
+-        };
+-    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1170.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1170.yaml
+deleted file mode 100644
+index 2e880b3e537c1..0000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imxrt1170.yaml
++++ /dev/null
+@@ -1,77 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/pinctrl/fsl,imxrt1170.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Freescale i.MXRT1170 IOMUX Controller
+-
+-maintainers:
+-  - Giulio Benetti <giulio.benetti@benettiengineering.com>
+-  - Jesse Taube <Mr.Bossman075@gmail.com>
+-
+-description:
+-  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-  for common binding part and usage.
+-
+-properties:
+-  compatible:
+-    const: fsl,imxrt1170-iomuxc
+-
+-  reg:
+-    maxItems: 1
+-
+-# Client device subnode's properties
+-patternProperties:
+-  'grp$':
+-    type: object
+-    description:
+-      Pinctrl node's client devices use subnodes for desired pin configuration.
+-      Client device subnodes use below standard properties.
+-
+-    properties:
+-      fsl,pins:
+-        description:
+-          each entry consists of 6 integers and represents the mux and config
+-          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+-          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+-          be found in <arch/arm/boot/dts/imxrt1170-pinfunc.h>. The last
+-          integer CONFIG is the pad setting value like pull-up on this pin. Please
+-          refer to i.MXRT1170 Reference Manual for detailed CONFIG settings.
+-        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+-        items:
+-          items:
+-            - description: |
+-                "mux_reg" indicates the offset of mux register.
+-            - description: |
+-                "conf_reg" indicates the offset of pad configuration register.
+-            - description: |
+-                "input_reg" indicates the offset of select input register.
+-            - description: |
+-                "mux_val" indicates the mux value to be applied.
+-            - description: |
+-                "input_val" indicates the select input value to be applied.
+-            - description: |
+-                "pad_setting" indicates the pad configuration value to be applied.
+-    required:
+-      - fsl,pins
+-
+-    additionalProperties: false
+-
+-required:
+-  - compatible
+-  - reg
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    iomuxc: iomuxc@400e8000 {
+-        compatible = "fsl,imxrt1170-iomuxc";
+-        reg = <0x400e8000 0x4000>;
+-        pinctrl_lpuart1: lpuart1grp {
+-            fsl,pins =
+-              <0x16C 0x3B0 0x620 0x0 0x0  0xf1>,
+-              <0x170 0x3B4 0x61C 0x0 0x0	0xf1>;
+-        };
+-    };
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index fd53cf5bb843d..9baf222abdecf 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -229,15 +229,6 @@ config PINCTRL_IMX8ULP
  	help
- 	    Build the clock driver for i.MX95 BLK CTL
+ 	  Say Y here to enable the imx8ulp pinctrl driver
  
--config CLK_IMXRT1050
--	tristate "IMXRT1050 CCM Clock Driver"
+-config PINCTRL_IMXRT1050
+-	bool "IMXRT1050 pinctrl driver"
+-	depends on OF
 -	depends on SOC_IMXRT || COMPILE_TEST
--	select MXC_CLK
+-	default SOC_IMXRT
+-	select PINCTRL_IMX
 -	help
--	    Build the driver for i.MXRT1050 CCM Clock Driver
-diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 208b46873a18c..e71a6a8f8b04f 100644
---- a/drivers/clk/imx/Makefile
-+++ b/drivers/clk/imx/Makefile
-@@ -56,5 +56,4 @@ obj-$(CONFIG_CLK_IMX6SX) += clk-imx6sx.o
- obj-$(CONFIG_CLK_IMX6UL) += clk-imx6ul.o
- obj-$(CONFIG_CLK_IMX7D)  += clk-imx7d.o
- obj-$(CONFIG_CLK_IMX7ULP) += clk-imx7ulp.o
--obj-$(CONFIG_CLK_IMXRT1050)  += clk-imxrt1050.o
- obj-$(CONFIG_CLK_VF610)  += clk-vf610.o
-diff --git a/drivers/clk/imx/clk-imxrt1050.c b/drivers/clk/imx/clk-imxrt1050.c
+-	  Say Y here to enable the imxrt1050 pinctrl driver
+-
+ config PINCTRL_IMX91
+ 	tristate "IMX91 pinctrl driver"
+ 	depends on ARCH_MXC
+@@ -276,10 +267,3 @@ config PINCTRL_IMX28
+ 	bool
+ 	select PINCTRL_MXS
+ 
+-config PINCTRL_IMXRT1170
+-	bool "IMXRT1170 pinctrl driver"
+-	depends on OF
+-	depends on SOC_IMXRT || COMPILE_TEST
+-	select PINCTRL_IMX
+-	help
+-	  Say Y here to enable the imxrt1170 pinctrl driver
+diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
+index d27085c2b4c45..72de53db68eb8 100644
+--- a/drivers/pinctrl/freescale/Makefile
++++ b/drivers/pinctrl/freescale/Makefile
+@@ -33,5 +33,3 @@ obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
+ obj-$(CONFIG_PINCTRL_IMX23)	+= pinctrl-imx23.o
+ obj-$(CONFIG_PINCTRL_IMX25)	+= pinctrl-imx25.o
+ obj-$(CONFIG_PINCTRL_IMX28)	+= pinctrl-imx28.o
+-obj-$(CONFIG_PINCTRL_IMXRT1050)	+= pinctrl-imxrt1050.o
+-obj-$(CONFIG_PINCTRL_IMXRT1170)	+= pinctrl-imxrt1170.o
+diff --git a/drivers/pinctrl/freescale/pinctrl-imxrt1050.c b/drivers/pinctrl/freescale/pinctrl-imxrt1050.c
 deleted file mode 100644
-index efd1ac9d8eeb7..0000000000000
---- a/drivers/clk/imx/clk-imxrt1050.c
+index f6435227d4fbb..0000000000000
+--- a/drivers/pinctrl/freescale/pinctrl-imxrt1050.c
 +++ /dev/null
-@@ -1,182 +0,0 @@
--// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+@@ -1,309 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
 -/*
-- * Copyright (C) 2021
-- * Author(s):
-- * Jesse Taube <Mr.Bossman075@gmail.com>
-- * Giulio Benetti <giulio.benetti@benettiengineering.com>
-- */
--#include <linux/clk.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
--#include <linux/platform_device.h>
--#include <dt-bindings/clock/imxrt1050-clock.h>
--
--#include "clk.h"
--
--static const char * const pll_ref_sels[] = {"osc", "dummy", };
--static const char * const per_sels[] = {"ipg_pdof", "osc", };
--static const char * const pll1_bypass_sels[] = {"pll1_arm", "pll1_arm_ref_sel", };
--static const char * const pll2_bypass_sels[] = {"pll2_sys", "pll2_sys_ref_sel", };
--static const char * const pll3_bypass_sels[] = {"pll3_usb_otg", "pll3_usb_otg_ref_sel", };
--static const char * const pll5_bypass_sels[] = {"pll5_video", "pll5_video_ref_sel", };
--static const char *const pre_periph_sels[] = {
--	"pll2_sys", "pll2_pfd2_396m", "pll2_pfd0_352m", "arm_podf", };
--static const char *const periph_sels[] = { "pre_periph_sel", "todo", };
--static const char *const usdhc_sels[] = { "pll2_pfd2_396m", "pll2_pfd0_352m", };
--static const char *const lpuart_sels[] = { "pll3_80m", "osc", };
--static const char *const lcdif_sels[] = {
--	"pll2_sys", "pll3_pfd3_454_74m", "pll5_video", "pll2_pfd0_352m",
--	"pll2_pfd1_594m", "pll3_pfd1_664_62m", };
--static const char *const semc_alt_sels[] = { "pll2_pfd2_396m", "pll3_pfd1_664_62m", };
--static const char *const semc_sels[] = { "periph_sel", "semc_alt_sel", };
--
--static struct clk_hw **hws;
--static struct clk_hw_onecell_data *clk_hw_data;
--
--static int imxrt1050_clocks_probe(struct platform_device *pdev)
--{
--	void __iomem *ccm_base;
--	void __iomem *pll_base;
--	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
--	struct device_node *anp;
--	int ret;
--
--	clk_hw_data = devm_kzalloc(dev, struct_size(clk_hw_data, hws,
--					  IMXRT1050_CLK_END), GFP_KERNEL);
--	if (WARN_ON(!clk_hw_data))
--		return -ENOMEM;
--
--	clk_hw_data->num = IMXRT1050_CLK_END;
--	hws = clk_hw_data->hws;
--
--	hws[IMXRT1050_CLK_OSC] = imx_get_clk_hw_by_name(np, "osc");
--
--	anp = of_find_compatible_node(NULL, NULL, "fsl,imxrt-anatop");
--	pll_base = devm_of_iomap(dev, anp, 0, NULL);
--	of_node_put(anp);
--	if (WARN_ON(IS_ERR(pll_base))) {
--		ret = PTR_ERR(pll_base);
--		goto unregister_hws;
--	}
--
--	/* Anatop clocks */
--	hws[IMXRT1050_CLK_DUMMY] = imx_clk_hw_fixed("dummy", 0UL);
--
--	hws[IMXRT1050_CLK_PLL1_REF_SEL] = imx_clk_hw_mux("pll1_arm_ref_sel",
--		pll_base + 0x0, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
--	hws[IMXRT1050_CLK_PLL2_REF_SEL] = imx_clk_hw_mux("pll2_sys_ref_sel",
--		pll_base + 0x30, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
--	hws[IMXRT1050_CLK_PLL3_REF_SEL] = imx_clk_hw_mux("pll3_usb_otg_ref_sel",
--		pll_base + 0x10, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
--	hws[IMXRT1050_CLK_PLL5_REF_SEL] = imx_clk_hw_mux("pll5_video_ref_sel",
--		pll_base + 0xa0, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
--
--	hws[IMXRT1050_CLK_PLL1_ARM] = imx_clk_hw_pllv3(IMX_PLLV3_SYS, "pll1_arm",
--		"pll1_arm_ref_sel", pll_base + 0x0, 0x7f);
--	hws[IMXRT1050_CLK_PLL2_SYS] = imx_clk_hw_pllv3(IMX_PLLV3_GENERIC, "pll2_sys",
--		"pll2_sys_ref_sel", pll_base + 0x30, 0x1);
--	hws[IMXRT1050_CLK_PLL3_USB_OTG] = imx_clk_hw_pllv3(IMX_PLLV3_USB, "pll3_usb_otg",
--		"pll3_usb_otg_ref_sel", pll_base + 0x10, 0x1);
--	hws[IMXRT1050_CLK_PLL5_VIDEO] = imx_clk_hw_pllv3(IMX_PLLV3_AV, "pll5_video",
--		"pll5_video_ref_sel", pll_base + 0xa0, 0x7f);
--
--	/* PLL bypass out */
--	hws[IMXRT1050_CLK_PLL1_BYPASS] = imx_clk_hw_mux_flags("pll1_bypass", pll_base + 0x0, 16, 1,
--		pll1_bypass_sels, ARRAY_SIZE(pll1_bypass_sels), CLK_SET_RATE_PARENT);
--	hws[IMXRT1050_CLK_PLL2_BYPASS] = imx_clk_hw_mux_flags("pll2_bypass", pll_base + 0x30, 16, 1,
--		pll2_bypass_sels, ARRAY_SIZE(pll2_bypass_sels), CLK_SET_RATE_PARENT);
--	hws[IMXRT1050_CLK_PLL3_BYPASS] = imx_clk_hw_mux_flags("pll3_bypass", pll_base + 0x10, 16, 1,
--		pll3_bypass_sels, ARRAY_SIZE(pll3_bypass_sels), CLK_SET_RATE_PARENT);
--	hws[IMXRT1050_CLK_PLL5_BYPASS] = imx_clk_hw_mux_flags("pll5_bypass", pll_base + 0xa0, 16, 1,
--		pll5_bypass_sels, ARRAY_SIZE(pll5_bypass_sels), CLK_SET_RATE_PARENT);
--
--	hws[IMXRT1050_CLK_VIDEO_POST_DIV_SEL] = imx_clk_hw_divider("video_post_div_sel",
--		"pll5_video", pll_base + 0xa0, 19, 2);
--	hws[IMXRT1050_CLK_VIDEO_DIV] = imx_clk_hw_divider("video_div",
--		"video_post_div_sel", pll_base + 0x170, 30, 2);
--
--	hws[IMXRT1050_CLK_PLL3_80M] = imx_clk_hw_fixed_factor("pll3_80m",  "pll3_usb_otg", 1, 6);
--
--	hws[IMXRT1050_CLK_PLL2_PFD0_352M] = imx_clk_hw_pfd("pll2_pfd0_352m", "pll2_sys", pll_base + 0x100, 0);
--	hws[IMXRT1050_CLK_PLL2_PFD1_594M] = imx_clk_hw_pfd("pll2_pfd1_594m", "pll2_sys", pll_base + 0x100, 1);
--	hws[IMXRT1050_CLK_PLL2_PFD2_396M] = imx_clk_hw_pfd("pll2_pfd2_396m", "pll2_sys", pll_base + 0x100, 2);
--	hws[IMXRT1050_CLK_PLL3_PFD1_664_62M] = imx_clk_hw_pfd("pll3_pfd1_664_62m", "pll3_usb_otg", pll_base + 0xf0, 1);
--	hws[IMXRT1050_CLK_PLL3_PFD3_454_74M] = imx_clk_hw_pfd("pll3_pfd3_454_74m", "pll3_usb_otg", pll_base + 0xf0, 3);
--
--	/* CCM clocks */
--	ccm_base = devm_platform_ioremap_resource(pdev, 0);
--	if (WARN_ON(IS_ERR(ccm_base))) {
--		ret = PTR_ERR(ccm_base);
--		goto unregister_hws;
--	}
--
--	hws[IMXRT1050_CLK_ARM_PODF] = imx_clk_hw_divider("arm_podf", "pll1_arm", ccm_base + 0x10, 0, 3);
--	hws[IMXRT1050_CLK_PRE_PERIPH_SEL] = imx_clk_hw_mux("pre_periph_sel", ccm_base + 0x18, 18, 2,
--		pre_periph_sels, ARRAY_SIZE(pre_periph_sels));
--	hws[IMXRT1050_CLK_PERIPH_SEL] = imx_clk_hw_mux("periph_sel", ccm_base + 0x14, 25, 1,
--		periph_sels, ARRAY_SIZE(periph_sels));
--	hws[IMXRT1050_CLK_USDHC1_SEL] = imx_clk_hw_mux("usdhc1_sel", ccm_base + 0x1c, 16, 1,
--		usdhc_sels, ARRAY_SIZE(usdhc_sels));
--	hws[IMXRT1050_CLK_USDHC2_SEL] = imx_clk_hw_mux("usdhc2_sel", ccm_base + 0x1c, 17, 1,
--		usdhc_sels, ARRAY_SIZE(usdhc_sels));
--	hws[IMXRT1050_CLK_LPUART_SEL] = imx_clk_hw_mux("lpuart_sel", ccm_base + 0x24, 6, 1,
--		lpuart_sels, ARRAY_SIZE(lpuart_sels));
--	hws[IMXRT1050_CLK_LCDIF_SEL] = imx_clk_hw_mux("lcdif_sel", ccm_base + 0x38, 15, 3,
--		lcdif_sels, ARRAY_SIZE(lcdif_sels));
--	hws[IMXRT1050_CLK_PER_CLK_SEL] = imx_clk_hw_mux("per_sel", ccm_base + 0x1C, 6, 1,
--		per_sels, ARRAY_SIZE(per_sels));
--	hws[IMXRT1050_CLK_SEMC_ALT_SEL] = imx_clk_hw_mux("semc_alt_sel", ccm_base + 0x14, 7, 1,
--		semc_alt_sels, ARRAY_SIZE(semc_alt_sels));
--	hws[IMXRT1050_CLK_SEMC_SEL] = imx_clk_hw_mux_flags("semc_sel", ccm_base + 0x14, 6, 1,
--		semc_sels, ARRAY_SIZE(semc_sels), CLK_IS_CRITICAL);
--
--	hws[IMXRT1050_CLK_AHB_PODF] = imx_clk_hw_divider("ahb", "periph_sel", ccm_base + 0x14, 10, 3);
--	hws[IMXRT1050_CLK_IPG_PDOF] = imx_clk_hw_divider("ipg", "ahb", ccm_base + 0x14, 8, 2);
--	hws[IMXRT1050_CLK_PER_PDOF] = imx_clk_hw_divider("per", "per_sel", ccm_base + 0x1C, 0, 5);
--
--	hws[IMXRT1050_CLK_USDHC1_PODF] = imx_clk_hw_divider("usdhc1_podf", "usdhc1_sel", ccm_base + 0x24, 11, 3);
--	hws[IMXRT1050_CLK_USDHC2_PODF] = imx_clk_hw_divider("usdhc2_podf", "usdhc2_sel", ccm_base + 0x24, 16, 3);
--	hws[IMXRT1050_CLK_LPUART_PODF] = imx_clk_hw_divider("lpuart_podf", "lpuart_sel", ccm_base + 0x24, 0, 6);
--	hws[IMXRT1050_CLK_LCDIF_PRED] = imx_clk_hw_divider("lcdif_pred", "lcdif_sel", ccm_base + 0x38, 12, 3);
--	hws[IMXRT1050_CLK_LCDIF_PODF] = imx_clk_hw_divider("lcdif_podf", "lcdif_pred", ccm_base + 0x18, 23, 3);
--
--	hws[IMXRT1050_CLK_USDHC1] = imx_clk_hw_gate2("usdhc1", "usdhc1_podf", ccm_base + 0x80, 2);
--	hws[IMXRT1050_CLK_USDHC2] = imx_clk_hw_gate2("usdhc2", "usdhc2_podf", ccm_base + 0x80, 4);
--	hws[IMXRT1050_CLK_LPUART1] = imx_clk_hw_gate2("lpuart1", "lpuart_podf", ccm_base + 0x7c, 24);
--	hws[IMXRT1050_CLK_LCDIF_APB] = imx_clk_hw_gate2("lcdif", "lcdif_podf", ccm_base + 0x70, 28);
--	hws[IMXRT1050_CLK_LCDIF_PIX] = imx_clk_hw_gate2("lcdif_pix", "lcdif", ccm_base + 0x74, 10);
--	hws[IMXRT1050_CLK_DMA] = imx_clk_hw_gate("dma", "ipg", ccm_base + 0x7C, 6);
--	hws[IMXRT1050_CLK_DMA_MUX] = imx_clk_hw_gate("dmamux0", "ipg", ccm_base + 0x7C, 7);
--	imx_check_clk_hws(hws, IMXRT1050_CLK_END);
--
--	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
--	if (ret < 0) {
--		dev_err(dev, "Failed to register clks for i.MXRT1050.\n");
--		goto unregister_hws;
--	}
--	return 0;
--
--unregister_hws:
--	imx_unregister_hw_clocks(hws, IMXRT1050_CLK_END);
--	return ret;
--}
--static const struct of_device_id imxrt1050_clk_of_match[] = {
--	{ .compatible = "fsl,imxrt1050-ccm" },
--	{ /* Sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, imxrt1050_clk_of_match);
--
--static struct platform_driver imxrt1050_clk_driver = {
--	.probe = imxrt1050_clocks_probe,
--	.driver = {
--		.name = "imxrt1050-ccm",
--		.of_match_table = imxrt1050_clk_of_match,
--	},
--};
--module_platform_driver(imxrt1050_clk_driver);
--
--MODULE_DESCRIPTION("NXP i.MX RT1050 clock driver");
--MODULE_LICENSE("Dual BSD/GPL");
--MODULE_AUTHOR("Jesse Taube <Mr.Bossman075@gmail.com>");
--MODULE_AUTHOR("Giulio Benetti <giulio.benetti@benettiengineering.com>");
-diff --git a/include/dt-bindings/clock/imxrt1050-clock.h b/include/dt-bindings/clock/imxrt1050-clock.h
-deleted file mode 100644
-index 93bef0832d16d..0000000000000
---- a/include/dt-bindings/clock/imxrt1050-clock.h
-+++ /dev/null
-@@ -1,72 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
--/*
-- * Copyright(C) 2019
+- * Copyright (C) 2020
 - * Author(s): Giulio Benetti <giulio.benetti@benettiengineering.com>
 - */
 -
--#ifndef __DT_BINDINGS_CLOCK_IMXRT1050_H
--#define __DT_BINDINGS_CLOCK_IMXRT1050_H
+-#include <linux/err.h>
+-#include <linux/init.h>
+-#include <linux/of.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/platform_device.h>
 -
--#define IMXRT1050_CLK_DUMMY			0
--#define IMXRT1050_CLK_CKIL			1
--#define IMXRT1050_CLK_CKIH			2
--#define IMXRT1050_CLK_OSC			3
--#define IMXRT1050_CLK_PLL2_PFD0_352M		4
--#define IMXRT1050_CLK_PLL2_PFD1_594M		5
--#define IMXRT1050_CLK_PLL2_PFD2_396M		6
--#define IMXRT1050_CLK_PLL3_PFD0_720M		7
--#define IMXRT1050_CLK_PLL3_PFD1_664_62M		8
--#define IMXRT1050_CLK_PLL3_PFD2_508_24M		9
--#define IMXRT1050_CLK_PLL3_PFD3_454_74M		10
--#define IMXRT1050_CLK_PLL2_198M			11
--#define IMXRT1050_CLK_PLL3_120M			12
--#define IMXRT1050_CLK_PLL3_80M			13
--#define IMXRT1050_CLK_PLL3_60M			14
--#define IMXRT1050_CLK_PLL1_BYPASS		15
--#define IMXRT1050_CLK_PLL2_BYPASS		16
--#define IMXRT1050_CLK_PLL3_BYPASS		17
--#define IMXRT1050_CLK_PLL5_BYPASS		19
--#define IMXRT1050_CLK_PLL1_REF_SEL		20
--#define IMXRT1050_CLK_PLL2_REF_SEL		21
--#define IMXRT1050_CLK_PLL3_REF_SEL		22
--#define IMXRT1050_CLK_PLL5_REF_SEL		23
--#define IMXRT1050_CLK_PRE_PERIPH_SEL		24
--#define IMXRT1050_CLK_PERIPH_SEL		25
--#define IMXRT1050_CLK_SEMC_ALT_SEL		26
--#define IMXRT1050_CLK_SEMC_SEL			27
--#define IMXRT1050_CLK_USDHC1_SEL		28
--#define IMXRT1050_CLK_USDHC2_SEL		29
--#define IMXRT1050_CLK_LPUART_SEL		30
--#define IMXRT1050_CLK_LCDIF_SEL			31
--#define IMXRT1050_CLK_VIDEO_POST_DIV_SEL	32
--#define IMXRT1050_CLK_VIDEO_DIV			33
--#define IMXRT1050_CLK_ARM_PODF			34
--#define IMXRT1050_CLK_LPUART_PODF		35
--#define IMXRT1050_CLK_USDHC1_PODF		36
--#define IMXRT1050_CLK_USDHC2_PODF		37
--#define IMXRT1050_CLK_SEMC_PODF			38
--#define IMXRT1050_CLK_AHB_PODF			39
--#define IMXRT1050_CLK_LCDIF_PRED		40
--#define IMXRT1050_CLK_LCDIF_PODF		41
--#define IMXRT1050_CLK_USDHC1			42
--#define IMXRT1050_CLK_USDHC2			43
--#define IMXRT1050_CLK_LPUART1			44
--#define IMXRT1050_CLK_SEMC			45
--#define IMXRT1050_CLK_LCDIF_APB			46
--#define IMXRT1050_CLK_PLL1_ARM			47
--#define IMXRT1050_CLK_PLL2_SYS			48
--#define IMXRT1050_CLK_PLL3_USB_OTG		49
--#define IMXRT1050_CLK_PLL4_AUDIO		50
--#define IMXRT1050_CLK_PLL5_VIDEO		51
--#define IMXRT1050_CLK_PLL6_ENET			52
--#define IMXRT1050_CLK_PLL7_USB_HOST		53
--#define IMXRT1050_CLK_LCDIF_PIX			54
--#define IMXRT1050_CLK_USBOH3			55
--#define IMXRT1050_CLK_IPG_PDOF			56
--#define IMXRT1050_CLK_PER_CLK_SEL		57
--#define IMXRT1050_CLK_PER_PDOF			58
--#define IMXRT1050_CLK_DMA			59
--#define IMXRT1050_CLK_DMA_MUX			60
--#define IMXRT1050_CLK_END			61
+-#include "pinctrl-imx.h"
 -
--#endif /* __DT_BINDINGS_CLOCK_IMXRT1050_H */
+-enum imxrt1050_pads {
+-	IMXRT1050_PAD_RESERVE0,
+-	IMXRT1050_PAD_RESERVE1,
+-	IMXRT1050_PAD_RESERVE2,
+-	IMXRT1050_PAD_RESERVE3,
+-	IMXRT1050_PAD_RESERVE4,
+-	IMXRT1050_PAD_EMC_00,
+-	IMXRT1050_PAD_EMC_01,
+-	IMXRT1050_PAD_EMC_02,
+-	IMXRT1050_PAD_EMC_03,
+-	IMXRT1050_PAD_EMC_04,
+-	IMXRT1050_PAD_EMC_05,
+-	IMXRT1050_PAD_EMC_06,
+-	IMXRT1050_PAD_EMC_07,
+-	IMXRT1050_PAD_EMC_08,
+-	IMXRT1050_PAD_EMC_09,
+-	IMXRT1050_PAD_EMC_10,
+-	IMXRT1050_PAD_EMC_11,
+-	IMXRT1050_PAD_EMC_12,
+-	IMXRT1050_PAD_EMC_13,
+-	IMXRT1050_PAD_EMC_14,
+-	IMXRT1050_PAD_EMC_15,
+-	IMXRT1050_PAD_EMC_16,
+-	IMXRT1050_PAD_EMC_17,
+-	IMXRT1050_PAD_EMC_18,
+-	IMXRT1050_PAD_EMC_19,
+-	IMXRT1050_PAD_EMC_20,
+-	IMXRT1050_PAD_EMC_21,
+-	IMXRT1050_PAD_EMC_22,
+-	IMXRT1050_PAD_EMC_23,
+-	IMXRT1050_PAD_EMC_24,
+-	IMXRT1050_PAD_EMC_25,
+-	IMXRT1050_PAD_EMC_26,
+-	IMXRT1050_PAD_EMC_27,
+-	IMXRT1050_PAD_EMC_28,
+-	IMXRT1050_PAD_EMC_29,
+-	IMXRT1050_PAD_EMC_30,
+-	IMXRT1050_PAD_EMC_31,
+-	IMXRT1050_PAD_EMC_32,
+-	IMXRT1050_PAD_EMC_33,
+-	IMXRT1050_PAD_EMC_34,
+-	IMXRT1050_PAD_EMC_35,
+-	IMXRT1050_PAD_EMC_36,
+-	IMXRT1050_PAD_EMC_37,
+-	IMXRT1050_PAD_EMC_38,
+-	IMXRT1050_PAD_EMC_39,
+-	IMXRT1050_PAD_EMC_40,
+-	IMXRT1050_PAD_EMC_41,
+-	IMXRT1050_PAD_AD_B0_00,
+-	IMXRT1050_PAD_AD_B0_01,
+-	IMXRT1050_PAD_AD_B0_02,
+-	IMXRT1050_PAD_AD_B0_03,
+-	IMXRT1050_PAD_AD_B0_04,
+-	IMXRT1050_PAD_AD_B0_05,
+-	IMXRT1050_PAD_AD_B0_06,
+-	IMXRT1050_PAD_AD_B0_07,
+-	IMXRT1050_PAD_AD_B0_08,
+-	IMXRT1050_PAD_AD_B0_09,
+-	IMXRT1050_PAD_AD_B0_10,
+-	IMXRT1050_PAD_AD_B0_11,
+-	IMXRT1050_PAD_AD_B0_12,
+-	IMXRT1050_PAD_AD_B0_13,
+-	IMXRT1050_PAD_AD_B0_14,
+-	IMXRT1050_PAD_AD_B0_15,
+-	IMXRT1050_PAD_AD_B1_00,
+-	IMXRT1050_PAD_AD_B1_01,
+-	IMXRT1050_PAD_AD_B1_02,
+-	IMXRT1050_PAD_AD_B1_03,
+-	IMXRT1050_PAD_AD_B1_04,
+-	IMXRT1050_PAD_AD_B1_05,
+-	IMXRT1050_PAD_AD_B1_06,
+-	IMXRT1050_PAD_AD_B1_07,
+-	IMXRT1050_PAD_AD_B1_08,
+-	IMXRT1050_PAD_AD_B1_09,
+-	IMXRT1050_PAD_AD_B1_10,
+-	IMXRT1050_PAD_AD_B1_11,
+-	IMXRT1050_PAD_AD_B1_12,
+-	IMXRT1050_PAD_AD_B1_13,
+-	IMXRT1050_PAD_AD_B1_14,
+-	IMXRT1050_PAD_AD_B1_15,
+-	IMXRT1050_PAD_B0_00,
+-	IMXRT1050_PAD_B0_01,
+-	IMXRT1050_PAD_B0_02,
+-	IMXRT1050_PAD_B0_03,
+-	IMXRT1050_PAD_B0_04,
+-	IMXRT1050_PAD_B0_05,
+-	IMXRT1050_PAD_B0_06,
+-	IMXRT1050_PAD_B0_07,
+-	IMXRT1050_PAD_B0_08,
+-	IMXRT1050_PAD_B0_09,
+-	IMXRT1050_PAD_B0_10,
+-	IMXRT1050_PAD_B0_11,
+-	IMXRT1050_PAD_B0_12,
+-	IMXRT1050_PAD_B0_13,
+-	IMXRT1050_PAD_B0_14,
+-	IMXRT1050_PAD_B0_15,
+-	IMXRT1050_PAD_B1_00,
+-	IMXRT1050_PAD_B1_01,
+-	IMXRT1050_PAD_B1_02,
+-	IMXRT1050_PAD_B1_03,
+-	IMXRT1050_PAD_B1_04,
+-	IMXRT1050_PAD_B1_05,
+-	IMXRT1050_PAD_B1_06,
+-	IMXRT1050_PAD_B1_07,
+-	IMXRT1050_PAD_B1_08,
+-	IMXRT1050_PAD_B1_09,
+-	IMXRT1050_PAD_B1_10,
+-	IMXRT1050_PAD_B1_11,
+-	IMXRT1050_PAD_B1_12,
+-	IMXRT1050_PAD_B1_13,
+-	IMXRT1050_PAD_B1_14,
+-	IMXRT1050_PAD_B1_15,
+-	IMXRT1050_PAD_SD_B0_00,
+-	IMXRT1050_PAD_SD_B0_01,
+-	IMXRT1050_PAD_SD_B0_02,
+-	IMXRT1050_PAD_SD_B0_03,
+-	IMXRT1050_PAD_SD_B0_04,
+-	IMXRT1050_PAD_SD_B0_05,
+-	IMXRT1050_PAD_SD_B1_00,
+-	IMXRT1050_PAD_SD_B1_01,
+-	IMXRT1050_PAD_SD_B1_02,
+-	IMXRT1050_PAD_SD_B1_03,
+-	IMXRT1050_PAD_SD_B1_04,
+-	IMXRT1050_PAD_SD_B1_05,
+-	IMXRT1050_PAD_SD_B1_06,
+-	IMXRT1050_PAD_SD_B1_07,
+-	IMXRT1050_PAD_SD_B1_08,
+-	IMXRT1050_PAD_SD_B1_09,
+-	IMXRT1050_PAD_SD_B1_10,
+-	IMXRT1050_PAD_SD_B1_11,
+-};
+-
+-/* Pad names for the pinmux subsystem */
+-static const struct pinctrl_pin_desc imxrt1050_pinctrl_pads[] = {
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE0),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE1),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE2),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE3),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE4),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_11),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_12),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_13),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_14),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_15),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_16),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_17),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_18),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_19),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_20),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_21),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_22),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_23),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_24),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_25),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_26),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_27),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_28),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_29),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_30),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_31),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_32),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_33),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_34),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_35),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_36),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_37),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_38),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_39),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_40),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_EMC_41),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_11),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_12),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_13),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_14),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B0_15),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_11),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_12),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_13),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_14),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_AD_B1_15),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_11),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_12),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_13),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_14),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B0_15),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_11),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_12),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_13),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_14),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_B1_15),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B0_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_06),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_07),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_08),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_09),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_10),
+-	IMX_PINCTRL_PIN(IMXRT1050_PAD_SD_B1_11),
+-};
+-
+-static const struct imx_pinctrl_soc_info imxrt1050_pinctrl_info = {
+-	.pins = imxrt1050_pinctrl_pads,
+-	.npins = ARRAY_SIZE(imxrt1050_pinctrl_pads),
+-	.gpr_compatible = "fsl,imxrt1050-iomuxc-gpr",
+-};
+-
+-static const struct of_device_id imxrt1050_pinctrl_of_match[] = {
+-	{ .compatible = "fsl,imxrt1050-iomuxc", .data = &imxrt1050_pinctrl_info, },
+-	{ /* sentinel */ }
+-};
+-
+-static int imxrt1050_pinctrl_probe(struct platform_device *pdev)
+-{
+-	return imx_pinctrl_probe(pdev, &imxrt1050_pinctrl_info);
+-}
+-
+-static struct platform_driver imxrt1050_pinctrl_driver = {
+-	.driver = {
+-		.name = "imxrt1050-pinctrl",
+-		.of_match_table = of_match_ptr(imxrt1050_pinctrl_of_match),
+-		.suppress_bind_attrs = true,
+-	},
+-	.probe = imxrt1050_pinctrl_probe,
+-};
+-
+-static int __init imxrt1050_pinctrl_init(void)
+-{
+-	return platform_driver_register(&imxrt1050_pinctrl_driver);
+-}
+-arch_initcall(imxrt1050_pinctrl_init);
+diff --git a/drivers/pinctrl/freescale/pinctrl-imxrt1170.c b/drivers/pinctrl/freescale/pinctrl-imxrt1170.c
+deleted file mode 100644
+index d8857f329e253..0000000000000
+--- a/drivers/pinctrl/freescale/pinctrl-imxrt1170.c
++++ /dev/null
+@@ -1,349 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (C) 2022
+- * Author(s): Jesse Taube <Mr.Bossman075@gmail.com>
+- */
+-
+-#include <linux/err.h>
+-#include <linux/init.h>
+-#include <linux/of.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/platform_device.h>
+-
+-#include "pinctrl-imx.h"
+-
+-enum imxrt1170_pads {
+-	IMXRT1170_PAD_RESERVE0,
+-	IMXRT1170_PAD_RESERVE1,
+-	IMXRT1170_PAD_RESERVE2,
+-	IMXRT1170_PAD_RESERVE3,
+-	IMXRT1170_PAD_EMC_B1_00,
+-	IMXRT1170_PAD_EMC_B1_01,
+-	IMXRT1170_PAD_EMC_B1_02,
+-	IMXRT1170_PAD_EMC_B1_03,
+-	IMXRT1170_PAD_EMC_B1_04,
+-	IMXRT1170_PAD_EMC_B1_05,
+-	IMXRT1170_PAD_EMC_B1_06,
+-	IMXRT1170_PAD_EMC_B1_07,
+-	IMXRT1170_PAD_EMC_B1_08,
+-	IMXRT1170_PAD_EMC_B1_09,
+-	IMXRT1170_PAD_EMC_B1_10,
+-	IMXRT1170_PAD_EMC_B1_11,
+-	IMXRT1170_PAD_EMC_B1_12,
+-	IMXRT1170_PAD_EMC_B1_13,
+-	IMXRT1170_PAD_EMC_B1_14,
+-	IMXRT1170_PAD_EMC_B1_15,
+-	IMXRT1170_PAD_EMC_B1_16,
+-	IMXRT1170_PAD_EMC_B1_17,
+-	IMXRT1170_PAD_EMC_B1_18,
+-	IMXRT1170_PAD_EMC_B1_19,
+-	IMXRT1170_PAD_EMC_B1_20,
+-	IMXRT1170_PAD_EMC_B1_21,
+-	IMXRT1170_PAD_EMC_B1_22,
+-	IMXRT1170_PAD_EMC_B1_23,
+-	IMXRT1170_PAD_EMC_B1_24,
+-	IMXRT1170_PAD_EMC_B1_25,
+-	IMXRT1170_PAD_EMC_B1_26,
+-	IMXRT1170_PAD_EMC_B1_27,
+-	IMXRT1170_PAD_EMC_B1_28,
+-	IMXRT1170_PAD_EMC_B1_29,
+-	IMXRT1170_PAD_EMC_B1_30,
+-	IMXRT1170_PAD_EMC_B1_31,
+-	IMXRT1170_PAD_EMC_B1_32,
+-	IMXRT1170_PAD_EMC_B1_33,
+-	IMXRT1170_PAD_EMC_B1_34,
+-	IMXRT1170_PAD_EMC_B1_35,
+-	IMXRT1170_PAD_EMC_B1_36,
+-	IMXRT1170_PAD_EMC_B1_37,
+-	IMXRT1170_PAD_EMC_B1_38,
+-	IMXRT1170_PAD_EMC_B1_39,
+-	IMXRT1170_PAD_EMC_B1_40,
+-	IMXRT1170_PAD_EMC_B1_41,
+-	IMXRT1170_PAD_EMC_B2_00,
+-	IMXRT1170_PAD_EMC_B2_01,
+-	IMXRT1170_PAD_EMC_B2_02,
+-	IMXRT1170_PAD_EMC_B2_03,
+-	IMXRT1170_PAD_EMC_B2_04,
+-	IMXRT1170_PAD_EMC_B2_05,
+-	IMXRT1170_PAD_EMC_B2_06,
+-	IMXRT1170_PAD_EMC_B2_07,
+-	IMXRT1170_PAD_EMC_B2_08,
+-	IMXRT1170_PAD_EMC_B2_09,
+-	IMXRT1170_PAD_EMC_B2_10,
+-	IMXRT1170_PAD_EMC_B2_11,
+-	IMXRT1170_PAD_EMC_B2_12,
+-	IMXRT1170_PAD_EMC_B2_13,
+-	IMXRT1170_PAD_EMC_B2_14,
+-	IMXRT1170_PAD_EMC_B2_15,
+-	IMXRT1170_PAD_EMC_B2_16,
+-	IMXRT1170_PAD_EMC_B2_17,
+-	IMXRT1170_PAD_EMC_B2_18,
+-	IMXRT1170_PAD_EMC_B2_19,
+-	IMXRT1170_PAD_EMC_B2_20,
+-	IMXRT1170_PAD_AD_00,
+-	IMXRT1170_PAD_AD_01,
+-	IMXRT1170_PAD_AD_02,
+-	IMXRT1170_PAD_AD_03,
+-	IMXRT1170_PAD_AD_04,
+-	IMXRT1170_PAD_AD_05,
+-	IMXRT1170_PAD_AD_06,
+-	IMXRT1170_PAD_AD_07,
+-	IMXRT1170_PAD_AD_08,
+-	IMXRT1170_PAD_AD_09,
+-	IMXRT1170_PAD_AD_10,
+-	IMXRT1170_PAD_AD_11,
+-	IMXRT1170_PAD_AD_12,
+-	IMXRT1170_PAD_AD_13,
+-	IMXRT1170_PAD_AD_14,
+-	IMXRT1170_PAD_AD_15,
+-	IMXRT1170_PAD_AD_16,
+-	IMXRT1170_PAD_AD_17,
+-	IMXRT1170_PAD_AD_18,
+-	IMXRT1170_PAD_AD_19,
+-	IMXRT1170_PAD_AD_20,
+-	IMXRT1170_PAD_AD_21,
+-	IMXRT1170_PAD_AD_22,
+-	IMXRT1170_PAD_AD_23,
+-	IMXRT1170_PAD_AD_24,
+-	IMXRT1170_PAD_AD_25,
+-	IMXRT1170_PAD_AD_26,
+-	IMXRT1170_PAD_AD_27,
+-	IMXRT1170_PAD_AD_28,
+-	IMXRT1170_PAD_AD_29,
+-	IMXRT1170_PAD_AD_30,
+-	IMXRT1170_PAD_AD_31,
+-	IMXRT1170_PAD_AD_32,
+-	IMXRT1170_PAD_AD_33,
+-	IMXRT1170_PAD_AD_34,
+-	IMXRT1170_PAD_AD_35,
+-	IMXRT1170_PAD_SD_B1_00,
+-	IMXRT1170_PAD_SD_B1_01,
+-	IMXRT1170_PAD_SD_B1_02,
+-	IMXRT1170_PAD_SD_B1_03,
+-	IMXRT1170_PAD_SD_B1_04,
+-	IMXRT1170_PAD_SD_B1_05,
+-	IMXRT1170_PAD_SD_B2_00,
+-	IMXRT1170_PAD_SD_B2_01,
+-	IMXRT1170_PAD_SD_B2_02,
+-	IMXRT1170_PAD_SD_B2_03,
+-	IMXRT1170_PAD_SD_B2_04,
+-	IMXRT1170_PAD_SD_B2_05,
+-	IMXRT1170_PAD_SD_B2_06,
+-	IMXRT1170_PAD_SD_B2_07,
+-	IMXRT1170_PAD_SD_B2_08,
+-	IMXRT1170_PAD_SD_B2_09,
+-	IMXRT1170_PAD_SD_B2_10,
+-	IMXRT1170_PAD_SD_B2_11,
+-	IMXRT1170_PAD_DISP_B1_00,
+-	IMXRT1170_PAD_DISP_B1_01,
+-	IMXRT1170_PAD_DISP_B1_02,
+-	IMXRT1170_PAD_DISP_B1_03,
+-	IMXRT1170_PAD_DISP_B1_04,
+-	IMXRT1170_PAD_DISP_B1_05,
+-	IMXRT1170_PAD_DISP_B1_06,
+-	IMXRT1170_PAD_DISP_B1_07,
+-	IMXRT1170_PAD_DISP_B1_08,
+-	IMXRT1170_PAD_DISP_B1_09,
+-	IMXRT1170_PAD_DISP_B1_10,
+-	IMXRT1170_PAD_DISP_B1_11,
+-	IMXRT1170_PAD_DISP_B2_00,
+-	IMXRT1170_PAD_DISP_B2_01,
+-	IMXRT1170_PAD_DISP_B2_02,
+-	IMXRT1170_PAD_DISP_B2_03,
+-	IMXRT1170_PAD_DISP_B2_04,
+-	IMXRT1170_PAD_DISP_B2_05,
+-	IMXRT1170_PAD_DISP_B2_06,
+-	IMXRT1170_PAD_DISP_B2_07,
+-	IMXRT1170_PAD_DISP_B2_08,
+-	IMXRT1170_PAD_DISP_B2_09,
+-	IMXRT1170_PAD_DISP_B2_10,
+-	IMXRT1170_PAD_DISP_B2_11,
+-	IMXRT1170_PAD_DISP_B2_12,
+-	IMXRT1170_PAD_DISP_B2_13,
+-	IMXRT1170_PAD_DISP_B2_14,
+-	IMXRT1170_PAD_DISP_B2_15,
+-};
+-
+-/* Pad names for the pinmux subsystem */
+-static const struct pinctrl_pin_desc imxrt1170_pinctrl_pads[] = {
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_RESERVE0),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_RESERVE1),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_RESERVE2),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_RESERVE3),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_12),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_13),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_14),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_15),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_16),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_17),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_18),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_19),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_20),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_21),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_22),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_23),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_24),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_25),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_26),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_27),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_28),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_29),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_30),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_31),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_32),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_33),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_34),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_35),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_36),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_37),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_38),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_39),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_40),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B1_41),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_12),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_13),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_14),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_15),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_16),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_17),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_18),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_19),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_EMC_B2_20),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_12),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_13),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_14),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_15),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_16),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_17),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_18),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_19),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_20),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_21),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_22),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_23),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_24),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_25),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_26),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_27),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_28),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_29),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_30),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_31),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_32),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_33),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_34),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_AD_35),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_SD_B2_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B1_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_00),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_01),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_02),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_03),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_04),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_05),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_06),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_07),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_08),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_09),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_10),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_11),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_12),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_13),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_14),
+-	IMX_PINCTRL_PIN(IMXRT1170_PAD_DISP_B2_15),
+-};
+-
+-static const struct imx_pinctrl_soc_info imxrt1170_pinctrl_info = {
+-	.pins = imxrt1170_pinctrl_pads,
+-	.npins = ARRAY_SIZE(imxrt1170_pinctrl_pads),
+-	.gpr_compatible = "fsl,imxrt1170-iomuxc-gpr",
+-};
+-
+-static const struct of_device_id imxrt1170_pinctrl_of_match[] = {
+-	{ .compatible = "fsl,imxrt1170-iomuxc", .data = &imxrt1170_pinctrl_info, },
+-	{ /* sentinel */ }
+-};
+-
+-static int imxrt1170_pinctrl_probe(struct platform_device *pdev)
+-{
+-	return imx_pinctrl_probe(pdev, &imxrt1170_pinctrl_info);
+-}
+-
+-static struct platform_driver imxrt1170_pinctrl_driver = {
+-	.driver = {
+-		.name = "imxrt1170-pinctrl",
+-		.of_match_table = of_match_ptr(imxrt1170_pinctrl_of_match),
+-		.suppress_bind_attrs = true,
+-	},
+-	.probe = imxrt1170_pinctrl_probe,
+-};
+-
+-static int __init imxrt1170_pinctrl_init(void)
+-{
+-	return platform_driver_register(&imxrt1170_pinctrl_driver);
+-}
+-arch_initcall(imxrt1170_pinctrl_init);
 
 -- 
 2.43.0
