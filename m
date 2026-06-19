@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-38718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38721-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id cLA0M2VkNWrhuwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38718-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:45 +0200
+	id VbznHfBjNWqnuwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38721-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:44:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E3076A6CE9
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1294F6A6CAE
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:44:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=SVnmmEDm;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38718-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38718-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=GS1y5wCH;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38721-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38721-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5572430E11BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:42:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8B9D430488D5
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:42:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C3D3B47D7;
-	Fri, 19 Jun 2026 15:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD4D39903A;
+	Fri, 19 Jun 2026 15:42:16 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010032.outbound.protection.outlook.com [52.101.84.32])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010050.outbound.protection.outlook.com [52.101.69.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F763B47F5;
-	Fri, 19 Jun 2026 15:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7D53B6C0A;
+	Fri, 19 Jun 2026 15:41:56 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781883715; cv=fail; b=PQhDvnslDOqhCJrNAWIlhX9z+SlbtVBoMpLFdrpa/ZJk18ej84Ea16B4NFo/kRQlSI/lv9ajifeFwPMhNmqHbRWx4cC0hdhs4Daw1vNVfXH00Kd66EYREc3w2fXRMBnjCM2lqIYEpdxwu8vWvW/MHwOQ8VBSkNrGtJ7pPVmbW90=
+	t=1781883735; cv=fail; b=a777SnoUqNqAReEyFjxIQbAWmzcFSsqVzkwkAsBs1mdxq3BZgS7Ye6VW+Q8nJZEpB527f2n5iYriTLQrte2IudT8NQlRG+KH6yvGJGJQBg82Wrrn0TkCy2bgyHznvYEHUTPyyxS0EkjyAWmzI0ajfm8biuoriBWfcqsjf7g0+FE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781883715; c=relaxed/simple;
-	bh=JCmlBUd1hOs2Ql7tP5Nd4u4S4zO64Tgj2qbXT6oeWPY=;
+	s=arc-20240116; t=1781883735; c=relaxed/simple;
+	bh=Wq+F256smgGBOZgeegQrEYeO+FW3oYAmSGhl3nsGjEg=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=QyddrAFaGuh+Oc5QCySoXBE90BcbaI5IsggjUJSTszq4C8dGwmjNVfqi6ZvH621tl3E54B/ZLhkoaGtCE8+6V17tbRjctGibIjwibYDZs6kIQxkVJgwRamz8RuOLqNrALRRWrIpHYLx6TsXZ3oLGSEyVrTLyLyvwe5VzaJAbbRM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=SVnmmEDm; arc=fail smtp.client-ip=52.101.84.32
+	 To:Cc:MIME-Version; b=RhRjqBAdeXVKKXeVQ3ciZpqw4WTCMErKcgBl4qhcMNt4AbiIOlyXiUoUK7xZ5ZUtwFWKCgOTPZDPlsd0dZe7XHjHOkRyxBFi4vYD/3p6t6Dc/gtWR7LLsM3XPRYDQVCnmWqKnYZLzODabNVrZeNcAJKleDeCjzOXqj6Eusgg/Fo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=GS1y5wCH; arc=fail smtp.client-ip=52.101.69.50
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uWJ3Trp80Qa7VXuMpOS/k7KPddmzeOEoF3fiLxBjJXjwisy8HNvjsNMGhflFrJ0Jm5lSGW7cbkpVVepnpI9udbHZ1Ql54iM33+8KwiLQxv+ulxLxfxEHKTl8I0EzG4HWtIixqol9ZhzqmkmWJcFoTsgiGAGuGM+PKHMznfaZndFZ92FtQr7NxLcfdq+ndkadPoCdD6odtgFYFKaDklWawjTHTHL3TlzdONYlCWNtA+qbNmnQT+w3RTLqkNtMkP1OzStpGUh1YuG8MdKhmD94bFMJab4D+x9VTaxkf+mCXfsQ5Id9tg4D4O5ispAoRbpAwjbWJgk5ZCkos4/X4EuVvw==
+ b=xQVTh+KoOy4bggwQHRi8a7JZ871LrU5/Rkp+nIzlSxUq+sTCJDYU1P8knmSYeNbIdPdN39tv2mW5dX8dPn6anTqhTCL3qk2kb09JSPmPXc3jRWpw9wsf6iuX2zWkKVahwVH12HKpPa/U1nIYl0DquE/NWBuCQW4FtD1i+Q1ApoNwoiTZ5+dATYcKmm9NcqaxcK1fMrqcFUsBIM8DfoBx1z0xziQ8NKfkczbInEEoVkB7GQ2k143Fclj7bON0eY9OUjMgpw2ExhtrPgFypFmoZclyUZa6l+W70iZASVydprnyLYnYPCwXq10UgdLvb742F5p9x6a2w4yywgchGxX4sg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2zeoyPgg1pLQy6SDUrpuRmPYHEZN6yNgpmetPoyyQoA=;
- b=Lsryca2g//XDqH0f1x6rq1qdXs6oBBaGwtKdJjP3FJHFf+cVdSYPa+hwh+Em7nSxfsuH5qAkpPp5meMK2KKKaE5s0f/xOI3fA78D5PG16rmLyh60/RgAg+QedsJC2zDYW5v/jwDZS6LVug0tRN3wnzH8mLNjoMn2OBgEGuOvKOtfT7C25uh3CjEBW6/rFnL6rrJvXSTk3eaIpBHqqpxAkQXghv7C+SV3kZqZbSr+Faiuk0PjhISh1dEgf5TmWbYVH/4ye7sJbMaMDBFydKrb+K+AnkzzbTSJAOhLRx7xUfTM6M3BAleEGTfOzjj8By0IEzfeQiWwQLWg9bsG7hmOlg==
+ bh=AtW8cEHNbctEQ/i0+Y4xwdS8b0u3IG8663IC9c7lJZc=;
+ b=m74oGgchqTN1MSF+nlrW3DU45fGqOF+7j8DztdV833Yo2zCegIqKpj+YZfEZUnlWiba+ny7jHjzqRa7grHD4QaLoUoxduiqyMmXaZV0rK5wUVp8VdUNdYeH6zeXn9YF+uA8GLMMOEzi/NQv8JnYv897I9y/CRMmGLvw4xmr+PuzADsdI2pxMZ+aAC4oTPiRf0Kr2u4EyoWn5k5kTCm2ATH6iaLIsEIIooT4WpnAI34I4pwMUmuc0DNDpdWqWE9NeN/UERBUVquFg6lUDNsF2OX77QsgaTBEKkWUuk+RZH0zxM/WsEmhvz2dE6+AZNEx82JIP9PNAv7FQFL2yZi5xqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2zeoyPgg1pLQy6SDUrpuRmPYHEZN6yNgpmetPoyyQoA=;
- b=SVnmmEDmkOgRff7asQy+GrbK5/DTt6sK7jEVBSQEpljC/3pgPXw/jMHC53ZDi8r1kETB/qxjR+AmPBy/X7aXZUBgX3Rzl29RBz/CNWhi+KRYv6DZ3ptBmlBW70DFfIoUXpuDpNEgQyyT+Vrs/BHg2iI8x9/U1IbcVcwC0pwOroh9cApNaCtYX5RpHYVtmrbUSLcn3XusXhVZprvS++3BjC4B6jOzecLoFe3aTJWO4S5cYFEFDXJaOnAMbUdRYcqqmYmh/ieY3GHI1dc+7dp/HpTb/OLi8++10Gfi497K/J+UjaoVxQde3Uv/zrNfAr+dua4YATJSUuDLL05eFtH8FA==
+ bh=AtW8cEHNbctEQ/i0+Y4xwdS8b0u3IG8663IC9c7lJZc=;
+ b=GS1y5wCHMjt7pUdenstaJHf48JseRHQKp7m7khx3cNkz3jwjsHURpSqpRxFu5IEnzjkInxMXTkIF37GhxkqJxHHleCRKJXvnFDCvJi8IZPQDCEHrs6uOirbLx8+9BAp1474UNcK6mwOzMCQggmcx43hWZDaaJooJaAUXZ5+qnqRdDveTobZhWTUogNuAqa1lm+ObehY+GVFj2yym21Ho6vTj2TDEii/GltECLC+Oqjy8Srfd9HH60i/PvvhQQyRmA6ps7oW3n9F/GCs7f1urEPZV++lCgyeluvr1n1d/D6o56ivamUc8dEuclcM9gelGiGRHcu+NxK2zyOmZujjRZA==
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PAWPR04MB11550.eurprd04.prod.outlook.com (2603:10a6:102:50b::17) with
+ by DB9PR04MB8430.eurprd04.prod.outlook.com (2603:10a6:10:24f::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.13; Fri, 19 Jun
- 2026 15:41:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Fri, 19 Jun
+ 2026 15:41:52 +0000
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Fri, 19 Jun 2026
- 15:41:48 +0000
+ 15:41:52 +0000
 From: Frank.Li@oss.nxp.com
-Date: Fri, 19 Jun 2026 11:41:03 -0400
-Subject: [PATCH 06/11] ARM: imxrt_defconfig: Remove NOMMU platform support
+Date: Fri, 19 Jun 2026 11:41:04 -0400
+Subject: [PATCH 07/11] ARM: dts: lpc: Remove NOMMU platform support
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260619-dts_cleanup_arm_mcore-v1-6-0101795a2662@nxp.com>
+Message-Id: <20260619-dts_cleanup_arm_mcore-v1-7-0101795a2662@nxp.com>
 References: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 In-Reply-To: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 To: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -84,15 +84,15 @@ Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
  linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=1530;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=84350;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=Fg2/EEkj9US4bov//rUzpLGGqwn+OjqVDgwWuLVahMk=;
- b=N3KcD9rYtWNAg/R7PlCb7Fx/XJiVDBIqcl5bNcQyCwbvQryquGJkFPrU2VuEOdqpFNACpkf3j
- KPI3Z/FVXk6CIj//jHE8XwYdTDXZGG/YLXlXUL/7UpN2y0JdTE931YQ
+ bh=OutcXdPDRBwc+y5V5Nmy5tE+c5PomKCZwOiLulnO+kQ=;
+ b=L6aBwwmJOMvI0nukHxmLwF16VfzwbRhymPWH1tPM7nLHpqRqtaBd7KtGkyVCOhSTXF4NS9rIu
+ cJKB6Fimro/CEPORgZmg5EKe2NrcvNaHKlefs4gaEvOJzko2DQuvMug
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SA1P222CA0116.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c5::20) To GV2PR04MB11799.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0077.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::22) To GV2PR04MB11799.eurprd04.prod.outlook.com
  (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -101,81 +101,81 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PAWPR04MB11550:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ce36b8d-9eb0-42f8-b4ed-08dece194608
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DB9PR04MB8430:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0f089b0-4055-489a-c913-08dece1948c8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|366016|19092799006|11063799006|56012099006|18002099003|22082099003|921020;
+	BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|7416014|19092799006|11063799006|3023799007|921020|56012099006|6133799003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	6VCgrxOPead6zXZpzkSG5AsVMKJRjVtrG5Nzy6aJLUCjo7FNEkCDqkmTZqPkWvOIAN5Sd6G4SMOO473x8kvU/P28nxWjtAqVh81y9zCJWzYrpJaIXuaeq7/xCZ8BNXi7ZWrey6eqz+GI1tiYL5a1/k4tNCXBxAWPwadQpmMiyouCe/L81WGSjfkuATfZ14fuKoFJiWEGKHiBNNBOjIW4tzn5IAhdK35oagcCxEWNZ7yt/cV1goev3+lEGkYaXFGnJRpvrSw86B9VIXCs2ZUmUiRJiY8+X87rWZWBxycstIFXSJ4dCeD9hhpN0wVOgVXv5g6GyzGY37hzY8CpElp23dXT7t7gwxde5tXq50QiA/Jw+UHeSHEPPQDakD7UBT03TFx3xeSKogO0CQcD7QjIRbO5K//NAy7A7KvoCsICCs9UJm78Ui+4gTPXR2RoXeBo447yDqs5oBG16BrwisBaP9KaRdgyYV8zdkencfJVc2NWYrpIa8bxUGHcJrPZst6RlPOxAAlDGFnwVxGfiXshQ2nrrcCRJg6qxmUfx2WkJu50Y3Qg931ATRGBf8O+OLZYVFUJ0Fyc7+Rt+R6uJ27MJ7I3Cmu8aYZQAg2RcDSpJkiBwhbaQssysLnOn/RH21jhQIOtJBOFqkNwH+uQDok/iuFGvlUB/B7DK6XOko34+IW5Jzduc1naJGacHrrgncAHCpbsRqZSIEVooMfspnyxbA==
+	SCH1qHrILDe+R5eb1xyLVyCLGPwxO92Z8iCnltZZPJ++wk/yIPl9JQVuQhon+jBXrOZ6D6hHAA95UPgdVNQQLEZEOpsF9aanfn8tWZqcHoIiVTxvOoH3/9wCvxG4llC9pVMZ8s4zjnWx5GRNZN9hBff2QIYxdx+Od8u6MlrVts/kl/4mrYxyqt482dJ3h7NF7LPsX6QcUOT11O77lkob/sEfwQ9WAbUOFlaBHHCpRFM9Hwlkx0p5aq8B0ppu8Ud6T/IruS2Wb8MHQoIKzwxStpfbASfz5Ap7ClkYTUdrJJvOSiXZid+Cvny9HwuiRrqmouLgn3Mi5h7vatY68iCe4m3Wj1RCwpOmhCpfhyEkif+lc8tYmQNv8thtV7EJB9ukVEMWI/4lQPP0jjoloQj4CKWRhZzKQYyA6M1JDTK3PJQmC7sHcxVbIAcZGhI8cXcZsNxp3oMg6Hx3mNAt6hUxZ+qGoYDW+7+r5WIHzyCS9SLS9Y+0UGeHQbfFSkdIVC49yhebP7OjzcqT/h5lX9Se/zIoNjKhY6beS+Flcs47Po1SN2BOSa+0e3usEzg2Te9rCf7fwYceXodjXW5OpczUMrr7sr2z88HPes5hCvJTeUPybKPCBCdTD+CFwo9D7IpWrqDUmuX5jiENhPVB9pSZTQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(366016)(19092799006)(11063799006)(56012099006)(18002099003)(22082099003)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(7416014)(19092799006)(11063799006)(3023799007)(921020)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y2hvZ3ZPaGVVUEpZSEpIcmU1NnZPSzVLKzlXT291M0s0OUovMEQ0d09VaGoz?=
- =?utf-8?B?VHVpWi83eHZBUWVzYWsza1h4OU93azZZOFY5a2RaZlpnSDNLU3Q0N2tsYU9G?=
- =?utf-8?B?dGluSUlkeXkvcXRrOVVseElaamRKYzNhaW9tSStIMVRtWmRJbSt3MmxNbUVk?=
- =?utf-8?B?VDRrUUhUSE1va3VJeGEweGY5cng0dkZ0YWZ1R2R1SnpSUDFiNDR4Y2FUY2Jo?=
- =?utf-8?B?aGFLaGlsbHFuTUpGVVhVRmlLcEdleWFNM01RMGp1SytlT1d5SVE2RzBmZFU2?=
- =?utf-8?B?eVhHcS9uenVKREYyVzJoVy9PbG1QWXRwYlYxeWFaaURXOHBzVGw3aTdXcjNE?=
- =?utf-8?B?SUdOUkpRNUNiZThUaVAvN2IyNmpCZlUzSFlZNHFNWjBqSlhiSysyczRDTHd2?=
- =?utf-8?B?aXBWbDk0dzlTdmtBc21aS1RsVTdnRFFqenNaTTlpY1ptMkNZTlJBSlVYT2oy?=
- =?utf-8?B?K0VFcWdwMHh2blEwWWFPM1NONDlVOHNEYkVSazFUb05nZUYrdFVvZ2pTem83?=
- =?utf-8?B?WER0NXVVUy9sTTNjN2RaemRTY29od1RlVGNSZmI1ZW43emNWZUdjSWw1NjBX?=
- =?utf-8?B?aXI2QXRvbWgrWWgzZTFEbWNMcU1LOWlhemFkdFo5SnV5MGhFdi9GMlgra01Y?=
- =?utf-8?B?NWVodWdML0phTlBGUXV1VzVJb3NlUHhNNzB4Uys1Zmo3ODhMU1VoOThzVnM3?=
- =?utf-8?B?YkVnM1F0QVJzemh4bWNjQnVuQ2svNThqL1Nickd1akNoUC9nbHN4bVdOWWlQ?=
- =?utf-8?B?cm9lSS8yWm1NVXBwa0IwcDc5dTZrazRaK21IenFjb21KRXhUS1JNdGpDZEM2?=
- =?utf-8?B?YlV1am9Sb3ZZZ1AyaFdERG1zbUVlYm9ReGxPUXlieDBFamlVRDdVRnpXZ0xk?=
- =?utf-8?B?ai9zL0QxSnRaMzBTSzlIVmpqVml0SlBVemhaK3phMnkyNjBPQTYyUEZLSnRh?=
- =?utf-8?B?UGpBSi94UllLb0p3ZzZEL2k0c3BzSHFIMUVROXROL1dwbHRWRVN6UEQrU0ZG?=
- =?utf-8?B?bXkxc3RwNjlpSGZ4OVk2WDdZR2Z0NkNqRFIvcFJBUVc2djIrS2NaQnpURU1L?=
- =?utf-8?B?NXhsTFBMSUxRdVpRUXlEZUZ5MC80UW5FZ1RZbTBsanV5bmF2UGpvbUk5bnk0?=
- =?utf-8?B?VDR0RTZkdURuZkk1ZWk2czlGT00wSVVISkZHZzhzYUx1eXpBTlVWV0NRT0dJ?=
- =?utf-8?B?MHdpZUNlUDgzRDRnT0JNOXBJRzZubWQvSkZZM2lSVEpmaWtpTVlSMktoaVQr?=
- =?utf-8?B?VVhjdEZMUnRmcTZMVUltUmt1bGsyd0dQNE5sREw1T2tLNExlOWM1L3ZuRjN3?=
- =?utf-8?B?clBTMGpHY0cvemVyeTRyS1AvYVRsbjRudHdqVU1LS205SXNLdW9jWC9QRkFH?=
- =?utf-8?B?UGxTS1pnQmVKYXRLS1hJbDhtVnVmcDZsNHpyRHpRd3F5Nkw4RFFvTENCREF5?=
- =?utf-8?B?eHdXZ3RJem9POU9FaHA4NEoxWmZvZUVoSWRiV2ZMKzlNMGd3dE5lcHNrOUFR?=
- =?utf-8?B?UDc3S2NzSVlJZDVCaEFqRE1Kb0NQMytsdWMwcm1uRFpwQlVIYWFmeGV5a0Nq?=
- =?utf-8?B?bkVET0w5STlYclMwRDJsU3lla2tvVjd2bDBMQTFzdHNjN0ZNZDFqbU14SDRK?=
- =?utf-8?B?NjVrRHV1UTRkRHF1WXlyanJ5TU5vd0paRFFsSkVESENCSS9VQkdDZFZWZGFx?=
- =?utf-8?B?SnlCSkNJbmdiRDRiUXRLOFl3UWduQ1YyMkFvS1FPeWt4aFRJbzlkYnUrRWhj?=
- =?utf-8?B?djdyY0pwRXJuMTFNa0NrQ3BaYVJrbTR0MVlvZ1J5WitNUDZGQTFkRWE0cHJp?=
- =?utf-8?B?bllFYnIyN2tRcW9jN0tUdXU5aW05b0w2TUk4Z2V6VTNBcDVwdzZ1R3RFQ0lO?=
- =?utf-8?B?dWdkTW1BMTk1SWJiV2Q1NFQ1RnBmOFhZQ3puYnF3cjZQZWZleCtjK0toVkUv?=
- =?utf-8?B?cjRyalgxZnJGb09VdHRxUUFCTVBsaHgvZkIxSTlkdGtuSmlqd0hOUXBPUWJk?=
- =?utf-8?B?bkdVWXcra2kxRlRqVVc4WWpmK0p6Uy83TktRSEFoNUViR1p3Sld5Q3RDQmY3?=
- =?utf-8?B?WU05UUlMZjVFZzllZytNUjhTcFh2MU5FbjJ2bmZLYmdPaWhPOWI0MkVCVVly?=
- =?utf-8?B?d3A2dElTWkV5UlZXUnJUWWJGVVEvVVNoVStzYnUvS05hOWxFQkFJUURidS9R?=
- =?utf-8?B?MElEWTkvQkx0TGdwdjV5NkM4OW11YjdLUjRUdU5ZL2RTa0ZMVTVScU03OExu?=
- =?utf-8?B?ZTltUnA4MXpSTytYczNZWHpxV1orNDY5MjNKaUdIc0ZzYTU5bitzcVM0TTdC?=
- =?utf-8?B?WEN2NWs3U2UyWldRNE81MkxUaFlxVVpZVmh4Vzl2QllPVGhhcEc3UmI1eEJV?=
- =?utf-8?Q?rL8q/JLIwDqKo3VwiVWCH74ZmGX+0FxcknDJf?=
+	=?utf-8?B?bGJERC94ZWtxWVROcWliT3RnV0dSUFRQY3htNUZsSWNvQ2VacEtEUWQ4YWtp?=
+ =?utf-8?B?YStrWnF5b0gyRExYOC9XdWI4bS80d2hHZlRoYW91VjhrSFVhelN1WkM1NU1Y?=
+ =?utf-8?B?YmV0SnJMMVd3WDYxZWZRYUwvUGc3LzNmSVFkaDhWQm11WCt4SUZxSHFDejdz?=
+ =?utf-8?B?aE91aWllQUJ0U2ZOQUwxRW5Hc2pWNXVST0lPMytUVGZCSnVTSVo0RFgyVEY2?=
+ =?utf-8?B?WDRHdE90UzZEYm5tUTZaZTZsMWxYQzJDbEtlL1FWeG5qYmVrZ0dWV3A2QVJP?=
+ =?utf-8?B?UzRsMk81clBmSXBLWG5hRmZwSk5XeEVFL2RmQVpVZFE2a282OGJYUU80Z0dJ?=
+ =?utf-8?B?Z0VaVi9RNjBBR012dEg1ZUdkYkdad3Z0OG1Dak54SzVaUXFnUjNJdnI1Y20x?=
+ =?utf-8?B?TW5MNVJuZGlKdDZONmxycXZ5U09CY3FWN0V4UlQvNHJnVVVNTVZYalJKb1NF?=
+ =?utf-8?B?U2VtM2toMllTeVUycmNIeDhlOW1sSXN6SEkzaDNzNlZQS2RFSHh5MFYzOVRr?=
+ =?utf-8?B?V1A1Vy9ldktTZnY5SnFhQUhKMTFONWN2TDVYbXJMbmZLRXFObi9oRGI4dTZl?=
+ =?utf-8?B?RGczeTNpWitBODhEZlhjcUxVTkZZUDgvd0VwNDZQSnRIb1IwUkdGZVZtSEs2?=
+ =?utf-8?B?YnFBT0MzUk01NTF2d1R1SFppYWJWQzNaaGdKSUJIb2REamMvU2lzd1VVSjAx?=
+ =?utf-8?B?ZnkzUkdhY21IUnJmLzE1N2tnQjFjQ09zMVBsZ2puNVZkdk1oM21hY251UVNj?=
+ =?utf-8?B?clJNMUFzbTAyWCt4QkwvZEFuZlNTNmdYd3pWUUtVZmhxM1JjTk9TcU9aclJw?=
+ =?utf-8?B?Q2p4Wkp4TWxNMklEMkVLVUNaaHZoU05UNlF5QW4wM01VeC9VN2VzRXRramhO?=
+ =?utf-8?B?OTZZbzZrUWNZaTNSN0JTdGRVVVl5eTFtOEJUWGltbUE4a3pCZDVsWHVYUnNu?=
+ =?utf-8?B?T01qaHVjcTI4Ky9XT1h5bENISXFFNStxWVN2YkpQdElIOWVSV2ZBQWVpdDBk?=
+ =?utf-8?B?dHg4VFZHVEllNHpLaU95dURwSHIvR0xoYW9mVGpmVlpUak4yWDNQMS9nZGZV?=
+ =?utf-8?B?QVZKYk85bmxGL202ZkFhN3l6Y1RoRktiMTN3S1F0TFdlQXZBNjBrdHhod1BM?=
+ =?utf-8?B?c2FrQzZUaXE2TUF6amduOWM4WE9DQ2xOdVBQc3lLQ1RHSTk4SmdwWmJ6K0pv?=
+ =?utf-8?B?WXZYRnhmUEwzUit2bEd6all6TkZFYlN4YTlXcDBVUU5OajFGdVRrazFORGVL?=
+ =?utf-8?B?eU5hRE9lSDJhbm05bktNalpqOVFxVlYyYXl0VVUzb1RwSDU2S2FPYWFZbStJ?=
+ =?utf-8?B?eGZqL1lMS3RJb09RYWZTdmFqUXpZNlhZOTBFSkRMakdVWDRjSk12NmhVUzRI?=
+ =?utf-8?B?Qk5WR2t0ZHE0cWJyRm55ZE1mcVc3VVZaM2xpemtSOXNyNnlKKzNCaGlKN0Vh?=
+ =?utf-8?B?RUF5MTU4WnhnRzl4UXRDNlZmallmQlkxZ3gzanV5T0ZHR2p3bDIvU1BLYXB6?=
+ =?utf-8?B?YmN6SFVmcER6bC9WN3pVQXAxTlN1aTJZSmhhOFdTRHFUSXo2NlN2WkcxRnZC?=
+ =?utf-8?B?c2FSdWdOSWR3bmdDb3Y0TXBVSFBxWXlaV1lPb3Z3NjM3YzU5T1M5R1p2WjZp?=
+ =?utf-8?B?eGJCTXZGR2l2UDdnN0c1WE45UXhub0hET3hJdGJ4OTdSUUdpbmpPVlNpbUV0?=
+ =?utf-8?B?Y2RPbWdsaDM5NSt4RFlXbUM0dWo5Z09ycmhwdWRldlI3RnlWQmh5KzllOU0x?=
+ =?utf-8?B?Ym9CUWdnWFA4cmRqSlZMcEJ0cHF0WDNIUjRWeTZXNEZjcGJRUktuUDdia0t3?=
+ =?utf-8?B?NGg0RlVkNjJjWmRqUGlxQmRxTTRiQlVrRW5yK3p2VlJ1bEt5ZTVVNDBwT0w2?=
+ =?utf-8?B?cC9zejdRRkxheDdIRlIrSzZlRzRGUk55NTRxYzRYU0ExWFo3S2NXd2dXbEpB?=
+ =?utf-8?B?Zmh5RS9YbnprQVFXaE81THJRV0JjcGo4bmdoN0Z6RzQwVktGejBpaERiM0lB?=
+ =?utf-8?B?SzFQN2x6VzJIMnNQeUF2dnFkVmQ2UlVqSFVBVEdsSHhleDJvTTNuNVRKcGJ3?=
+ =?utf-8?B?UTVaRVkzTnRUNmhaZXk3S1dkU2lFUS9Yb1FKcjVUQ3hCdnJnNHFPSXFLZVc5?=
+ =?utf-8?B?djUrVkFRVHRRQXhvLzdzL3F3bElzMnhYelBCdWl0SmZQV1pqQUltYzRsRzdn?=
+ =?utf-8?B?SGYrVUJTMEx2R1BVd2pyWFRBc0lGNU9DOTF6UjBnZmc4Zzl1Q0hjUWFjNlpC?=
+ =?utf-8?B?aE9sZGw4ak1GQmNqbzdGTjZNUVhQQW1QMTRhcS93M1lSQkgwNzRSeWlWQVdG?=
+ =?utf-8?B?NlM2b1pPNmRmK0lhTlM1L1IyWTd5czMycDNyQy9EbFBLZnBteS9laGxleGZw?=
+ =?utf-8?Q?CbCQJyNfnTZawwFLXMjOLXU8q5vNgjwvCjqA4?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ce36b8d-9eb0-42f8-b4ed-08dece194608
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0f089b0-4055-489a-c913-08dece1948c8
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:41:48.0264
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:41:52.8046
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g9/rrK5sCk4qswfnmPxtLCKT8Nv8DA4Nw1BgFOI/MSm0fBgfHqXyr27ouJDolHKwawMV2TtgTdhgHH6VI9qW7bajFItv4jurZtPSH0UAi8P1Zwn3hLthU6mutdY65Ljh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB11550
+X-MS-Exchange-CrossTenant-UserPrincipalName: kQrdYfEDdJ42nZNYoflW72QJRrb0VD2DZDNFO5q3WLxdrX1nU4kU2vrewX/vfT1C2KlgVuSmnVJOEbex3nUIvQzxNypnivqgfH+ah1Cpi3FUKl3RBdlPHXHm3rF0sGIp
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8430
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.94 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS(0.00)[m:arnd@arndb.de,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:stefan@agner.ch,m:festevam@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux@armlinux.org.uk,m:abelvesa@kernel.org,m:peng.fan@nxp.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:s32@nxp.com,m:linusw@kernel.org,m:vz@mleia.com,m:piotr.wojtaszczyk@timesys.com,m:kees@kernel.org,m:gustavoars@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:imx@lists.linux.dev,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:Frank.Li@nxp.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-38718-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38721-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -192,13 +192,13 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[i.mx:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:mid,nxp.com:email,vger.kernel.org:from_smtp,NXP1.onmicrosoft.com:dkim,oss.nxp.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[i.mx:url,antcom.de:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:mid,nxp.com:email,vanguardiasur.com.ar:url,oss.nxp.com:from_mime,NXP1.onmicrosoft.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2E3076A6CE9
+X-Rspamd-Queue-Id: 1294F6A6CAE
 
 From: Frank Li <Frank.Li@nxp.com>
 
@@ -211,50 +211,3749 @@ i.MX platform code.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/arm/configs/imxrt_defconfig | 35 -----------------------------------
- 1 file changed, 35 deletions(-)
+ arch/arm/boot/dts/nxp/Makefile                     |   1 -
+ arch/arm/boot/dts/nxp/lpc/Makefile                 |   9 -
+ arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi             | 543 ------------------
+ arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts       | 273 ---------
+ arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts      | 236 --------
+ arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi             | 540 ------------------
+ arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dts         | 221 --------
+ arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts   | 485 ----------------
+ arch/arm/boot/dts/nxp/lpc/lpc4350.dtsi             |  48 --
+ .../arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts | 624 ---------------------
+ arch/arm/boot/dts/nxp/lpc/lpc4357-myd-lpc4357.dts  | 621 --------------------
+ arch/arm/boot/dts/nxp/lpc/lpc4357.dtsi             |  52 --
+ 12 files changed, 3653 deletions(-)
 
-diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
+diff --git a/arch/arm/boot/dts/nxp/Makefile b/arch/arm/boot/dts/nxp/Makefile
+index db44e7a0a1983..3ca4c932f3a9c 100644
+--- a/arch/arm/boot/dts/nxp/Makefile
++++ b/arch/arm/boot/dts/nxp/Makefile
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-y += imx
+-subdir-y += lpc
+ subdir-y += ls
+ subdir-y += mxs
+ subdir-y += vf
+diff --git a/arch/arm/boot/dts/nxp/lpc/Makefile b/arch/arm/boot/dts/nxp/lpc/Makefile
 deleted file mode 100644
-index 52dba3762996c..0000000000000
---- a/arch/arm/configs/imxrt_defconfig
+index 56b9a0ebb9179..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/Makefile
 +++ /dev/null
-@@ -1,35 +0,0 @@
--# CONFIG_LOCALVERSION_AUTO is not set
--CONFIG_BPF_SYSCALL=y
--CONFIG_SCHED_AUTOGROUP=y
--# CONFIG_MMU is not set
--CONFIG_ARCH_MXC=y
--CONFIG_SOC_IMXRT=y
--CONFIG_SET_MEM_PARAM=y
--CONFIG_DRAM_BASE=0x80000000
--CONFIG_DRAM_SIZE=0x02000000
--CONFIG_BINFMT_FLAT=y
--CONFIG_UEVENT_HELPER=y
--CONFIG_DEVTMPFS=y
--CONFIG_DEVTMPFS_MOUNT=y
--CONFIG_IMX_WEIM=y
--CONFIG_LEGACY_PTY_COUNT=2
--CONFIG_SERIAL_FSL_LPUART=y
--CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
--CONFIG_SERIAL_DEV_BUS=y
--CONFIG_PINCTRL_IMXRT1050=y
--CONFIG_GPIO_MXC=y
--CONFIG_MMC=y
--CONFIG_MMC_SDHCI=y
--CONFIG_MMC_SDHCI_PLTFM=y
--CONFIG_MMC_SDHCI_ESDHC_IMX=y
--CONFIG_DMADEVICES=y
--CONFIG_FSL_EDMA=y
--CONFIG_CLK_IMXRT1050=y
--CONFIG_EXT4_FS=y
--CONFIG_EXT4_FS_POSIX_ACL=y
--CONFIG_EXT4_FS_SECURITY=y
--CONFIG_VFAT_FS=y
--CONFIG_FAT_DEFAULT_UTF8=y
--CONFIG_EXFAT_FS=y
--CONFIG_NLS_ASCII=y
--CONFIG_NLS_UTF8=y
+@@ -1,9 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-dtb-$(CONFIG_ARCH_LPC18XX) += \
+-	lpc4337-ciaa.dtb \
+-	lpc4350-hitex-eval.dtb \
+-	lpc4357-ea4357-devkit.dtb \
+-	lpc4357-myd-lpc4357.dtb
+-dtb-$(CONFIG_ARCH_LPC32XX) += \
+-	lpc3250-ea3250.dtb \
+-	lpc3250-phy3250.dtb
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi
+deleted file mode 100644
+index 152e98cf0c4e2..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi
++++ /dev/null
+@@ -1,543 +0,0 @@
+-/*
+- * Common base for NXP LPC18xx and LPC43xx devices.
+- *
+- * Copyright 2015 Joachim Eastwood <manabian@gmail.com>
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- *
+- */
+-
+-#include "../../armv7-m.dtsi"
+-
+-#include "dt-bindings/clock/lpc18xx-cgu.h"
+-#include "dt-bindings/clock/lpc18xx-ccu.h"
+-
+-#define LPC_PIN(port, pin)	(0x##port * 32 + pin)
+-#define LPC_GPIO(port, pin)	(port * 32 + pin)
+-
+-/ {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cpu@0 {
+-			compatible = "arm,cortex-m3";
+-			device_type = "cpu";
+-			reg = <0x0>;
+-			clocks = <&ccu1 CLK_CPU_CORE>;
+-		};
+-	};
+-
+-	clocks {
+-		xtal: xtal {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <12000000>;
+-		};
+-
+-		xtal32: xtal32 {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <32768>;
+-		};
+-
+-		enet_rx_clk: enet_rx_clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-			clock-output-names = "enet_rx_clk";
+-		};
+-
+-		enet_tx_clk: enet_tx_clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-			clock-output-names = "enet_tx_clk";
+-		};
+-
+-		gp_clkin: gp_clkin {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <0>;
+-			clock-output-names = "gp_clkin";
+-		};
+-	};
+-
+-	soc {
+-		sct_pwm: pwm@40000000 {
+-			compatible = "nxp,lpc1850-sct-pwm";
+-			reg = <0x40000000 0x1000>;
+-			clocks = <&ccu1 CLK_CPU_SCT>;
+-			clock-names = "pwm";
+-			resets = <&rgu 37>;
+-			#pwm-cells = <3>;
+-			status = "disabled";
+-		};
+-
+-		dmac: dma-controller@40002000 {
+-			compatible = "arm,pl080", "arm,primecell";
+-			arm,primecell-periphid = <0x00041080>;
+-			reg = <0x40002000 0x1000>;
+-			interrupts = <2>;
+-			clocks = <&ccu1 CLK_CPU_DMA>;
+-			clock-names = "apb_pclk";
+-			resets = <&rgu 19>;
+-			#dma-cells = <2>;
+-			dma-channels = <8>;
+-			dma-requests = <16>;
+-			lli-bus-interface-ahb1;
+-			lli-bus-interface-ahb2;
+-			mem-bus-interface-ahb1;
+-			mem-bus-interface-ahb2;
+-			memcpy-burst-size = <256>;
+-			memcpy-bus-width = <32>;
+-		};
+-
+-		spifi: spi@40003000 {
+-			compatible = "nxp,lpc1773-spifi";
+-			reg = <0x40003000 0x1000>, <0x14000000 0x4000000>;
+-			reg-names = "spifi", "flash";
+-			interrupts = <30>;
+-			clocks = <&ccu1 CLK_SPIFI>, <&ccu1 CLK_CPU_SPIFI>;
+-			clock-names = "spifi", "reg";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			resets = <&rgu 53>;
+-			status = "disabled";
+-		};
+-
+-		mmcsd: mmc@40004000 {
+-			compatible = "snps,dw-mshc";
+-			reg = <0x40004000 0x1000>;
+-			interrupts = <6>;
+-			clocks = <&ccu1 CLK_CPU_SDIO>, <&ccu2 CLK_SDIO>;
+-			clock-names = "biu", "ciu";
+-			resets = <&rgu 20>;
+-			status = "disabled";
+-		};
+-
+-		usb0: usb@40006100 {
+-			compatible = "nxp,lpc1850-ehci", "generic-ehci";
+-			reg = <0x40006100 0x100>;
+-			interrupts = <8>;
+-			clocks = <&ccu1 CLK_CPU_USB0>;
+-			resets = <&rgu 17>;
+-			phys = <&usb0_otg_phy>;
+-			phy-names = "usb";
+-			has-transaction-translator;
+-			status = "disabled";
+-		};
+-
+-		usb1: usb@40007100 {
+-			compatible = "nxp,lpc1850-ehci", "generic-ehci";
+-			reg = <0x40007100 0x100>;
+-			interrupts = <9>;
+-			clocks = <&ccu1 CLK_CPU_USB1>;
+-			resets = <&rgu 18>;
+-			status = "disabled";
+-		};
+-
+-		emc: memory-controller@40005000 {
+-			compatible = "arm,pl172", "arm,primecell";
+-			reg = <0x40005000 0x1000>;
+-			clocks = <&ccu1 CLK_CPU_EMCDIV>, <&ccu1 CLK_CPU_EMC>;
+-			clock-names = "mpmcclk", "apb_pclk";
+-			resets = <&rgu 21>;
+-			#address-cells = <2>;
+-			#size-cells = <1>;
+-			ranges = <0 0 0x1c000000 0x1000000
+-				  1 0 0x1d000000 0x1000000
+-				  2 0 0x1e000000 0x1000000
+-				  3 0 0x1f000000 0x1000000>;
+-			status = "disabled";
+-		};
+-
+-		lcdc: lcd-controller@40008000 {
+-			compatible = "arm,pl111", "arm,primecell";
+-			reg = <0x40008000 0x1000>;
+-			interrupts = <7>;
+-			interrupt-names = "combined";
+-			clocks = <&cgu BASE_LCD_CLK>, <&ccu1 CLK_CPU_LCD>;
+-			clock-names = "clcdclk", "apb_pclk";
+-			resets = <&rgu 16>;
+-			status = "disabled";
+-		};
+-
+-		eeprom: eeprom@4000e000 {
+-			compatible = "nxp,lpc1857-eeprom";
+-			reg = <0x4000e000 0x1000>, <0x20040000 0x4000>;
+-			reg-names = "reg", "mem";
+-			clocks = <&ccu1 CLK_CPU_EEPROM>;
+-			clock-names = "eeprom";
+-			resets = <&rgu 27>;
+-			interrupts = <4>;
+-			status = "disabled";
+-		};
+-
+-		mac: ethernet@40010000 {
+-			compatible = "nxp,lpc1850-dwmac", "snps,dwmac-3.611", "snps,dwmac";
+-			reg = <0x40010000 0x2000>;
+-			interrupts = <5>;
+-			interrupt-names = "macirq";
+-			clocks = <&ccu1 CLK_CPU_ETHERNET>;
+-			clock-names = "stmmaceth";
+-			resets = <&rgu 22>;
+-			reset-names = "stmmaceth";
+-			rx-fifo-depth = <256>;
+-			tx-fifo-depth = <256>;
+-			snps,pbl = <4>; /* 32 (8x mode) */
+-			snps,force_thresh_dma_mode;
+-			status = "disabled";
+-		};
+-
+-		creg: syscon@40043000 {
+-			compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
+-			reg = <0x40043000 0x1000>;
+-			clocks = <&ccu1 CLK_CPU_CREG>;
+-			resets = <&rgu 5>;
+-
+-			creg_clk: clock-controller {
+-				compatible = "nxp,lpc1850-creg-clk";
+-				clocks = <&xtal32>;
+-				#clock-cells = <1>;
+-			};
+-
+-			usb0_otg_phy: phy {
+-				compatible = "nxp,lpc1850-usb-otg-phy";
+-				clocks = <&ccu1 CLK_USB0>;
+-				#phy-cells = <0>;
+-			};
+-
+-			dmamux: dma-mux {
+-				compatible = "nxp,lpc1850-dmamux";
+-				#dma-cells = <3>;
+-				dma-requests = <64>;
+-				dma-masters = <&dmac>;
+-			};
+-		};
+-
+-		rtc: rtc@40046000 {
+-			compatible = "nxp,lpc1850-rtc", "nxp,lpc1788-rtc";
+-			reg = <0x40046000 0x1000>;
+-			interrupts = <47>;
+-			clocks = <&creg_clk 0>, <&ccu1 CLK_CPU_BUS>;
+-			clock-names = "rtc", "reg";
+-		};
+-
+-		cgu: clock-controller@40050000 {
+-			compatible = "nxp,lpc1850-cgu";
+-			reg = <0x40050000 0x1000>;
+-			#clock-cells = <1>;
+-			clocks = <&xtal>, <&creg_clk 1>, <&enet_rx_clk>, <&enet_tx_clk>, <&gp_clkin>;
+-		};
+-
+-		ccu1: clock-controller@40051000 {
+-			compatible = "nxp,lpc1850-ccu";
+-			reg = <0x40051000 0x1000>;
+-			#clock-cells = <1>;
+-			clocks = <&cgu BASE_APB3_CLK>,   <&cgu BASE_APB1_CLK>,
+-				 <&cgu BASE_SPIFI_CLK>,  <&cgu BASE_CPU_CLK>,
+-				 <&cgu BASE_PERIPH_CLK>, <&cgu BASE_USB0_CLK>,
+-				 <&cgu BASE_USB1_CLK>,   <&cgu BASE_SPI_CLK>;
+-			clock-names = "base_apb3_clk",   "base_apb1_clk",
+-				      "base_spifi_clk",  "base_cpu_clk",
+-				      "base_periph_clk", "base_usb0_clk",
+-				      "base_usb1_clk",   "base_spi_clk";
+-		};
+-
+-		ccu2: clock-controller@40052000 {
+-			compatible = "nxp,lpc1850-ccu";
+-			reg = <0x40052000 0x1000>;
+-			#clock-cells = <1>;
+-			clocks = <&cgu BASE_AUDIO_CLK>, <&cgu BASE_UART3_CLK>,
+-				 <&cgu BASE_UART2_CLK>, <&cgu BASE_UART1_CLK>,
+-				 <&cgu BASE_UART0_CLK>, <&cgu BASE_SSP1_CLK>,
+-				 <&cgu BASE_SSP0_CLK>,  <&cgu BASE_SDIO_CLK>;
+-			clock-names = "base_audio_clk", "base_uart3_clk",
+-				      "base_uart2_clk", "base_uart1_clk",
+-				      "base_uart0_clk", "base_ssp1_clk",
+-				      "base_ssp0_clk",  "base_sdio_clk";
+-		};
+-
+-		rgu: reset-controller@40053000 {
+-			compatible = "nxp,lpc1850-rgu";
+-			reg = <0x40053000 0x1000>;
+-			clocks = <&cgu BASE_SAFE_CLK>, <&ccu1 CLK_CPU_BUS>;
+-			clock-names = "delay", "reg";
+-			#reset-cells = <1>;
+-		};
+-
+-		watchdog@40080000 {
+-			compatible = "nxp,lpc1850-wwdt";
+-			reg = <0x40080000 0x24>;
+-			interrupts = <49>;
+-			clocks = <&cgu BASE_SAFE_CLK>, <&ccu1 CLK_CPU_WWDT>;
+-			clock-names = "wdtclk", "reg";
+-		};
+-
+-		uart0: serial@40081000 {
+-			compatible = "nxp,lpc1850-uart", "ns16550a";
+-			reg = <0x40081000 0x1000>;
+-			reg-shift = <2>;
+-			interrupts = <24>;
+-			clocks = <&ccu2 CLK_APB0_UART0>, <&ccu1 CLK_CPU_UART0>;
+-			clock-names = "uartclk", "reg";
+-			resets = <&rgu 44>;
+-			dmas = <&dmamux  1 1 2
+-				&dmamux  2 1 2
+-				&dmamux 11 2 2
+-				&dmamux 12 2 2>;
+-			dma-names = "tx", "rx", "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		uart1: serial@40082000 {
+-			compatible = "nxp,lpc1850-uart", "ns16550a";
+-			reg = <0x40082000 0x1000>;
+-			reg-shift = <2>;
+-			interrupts = <25>;
+-			clocks = <&ccu2 CLK_APB0_UART1>, <&ccu1 CLK_CPU_UART1>;
+-			clock-names = "uartclk", "reg";
+-			resets = <&rgu 45>;
+-			dmas = <&dmamux 3 1 2
+-				&dmamux 4 1 2>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		ssp0: spi@40083000 {
+-			compatible = "arm,pl022", "arm,primecell";
+-			reg = <0x40083000 0x1000>;
+-			interrupts = <22>;
+-			clocks = <&ccu2 CLK_APB0_SSP0>, <&ccu1 CLK_CPU_SSP0>;
+-			clock-names = "sspclk", "apb_pclk";
+-			resets = <&rgu 50>;
+-			dmas = <&dmamux  9 0 2
+-				&dmamux 10 0 2>;
+-			dma-names = "rx", "tx";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+-		timer0: timer@40084000 {
+-			compatible = "nxp,lpc3220-timer";
+-			reg = <0x40084000 0x1000>;
+-			interrupts = <12>;
+-			clocks = <&ccu1 CLK_CPU_TIMER0>;
+-			clock-names = "timerclk";
+-			resets = <&rgu 32>;
+-		};
+-
+-		timer1: timer@40085000 {
+-			compatible = "nxp,lpc3220-timer";
+-			reg = <0x40085000 0x1000>;
+-			interrupts = <13>;
+-			clocks = <&ccu1 CLK_CPU_TIMER1>;
+-			clock-names = "timerclk";
+-			resets = <&rgu 33>;
+-		};
+-
+-		pinctrl: pinctrl@40086000 {
+-			compatible = "nxp,lpc1850-scu";
+-			reg = <0x40086000 0x1000>;
+-			clocks = <&ccu1 CLK_CPU_SCU>;
+-		};
+-
+-		i2c0: i2c@400a1000 {
+-			compatible = "nxp,lpc1788-i2c";
+-			reg = <0x400a1000 0x1000>;
+-			interrupts = <18>;
+-			clocks = <&ccu1 CLK_APB1_I2C0>;
+-			resets = <&rgu 48>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+-		can1: can@400a4000 {
+-			compatible = "bosch,c_can";
+-			reg = <0x400a4000 0x1000>;
+-			interrupts = <43>;
+-			clocks = <&ccu1 CLK_APB1_CAN1>;
+-			resets = <&rgu 54>;
+-			status = "disabled";
+-		};
+-
+-		uart2: serial@400c1000 {
+-			compatible = "nxp,lpc1850-uart", "ns16550a";
+-			reg = <0x400c1000 0x1000>;
+-			reg-shift = <2>;
+-			interrupts = <26>;
+-			clocks = <&ccu2 CLK_APB2_UART2>, <&ccu1 CLK_CPU_UART2>;
+-			clock-names = "uartclk", "reg";
+-			resets = <&rgu 46>;
+-			dmas = <&dmamux 5 1 2
+-				&dmamux 6 1 2>;
+-			dma-names = "tx", "rx";
+-			status = "disabled";
+-		};
+-
+-		uart3: serial@400c2000 {
+-			compatible = "nxp,lpc1850-uart", "ns16550a";
+-			reg = <0x400c2000 0x1000>;
+-			reg-shift = <2>;
+-			interrupts = <27>;
+-			clocks = <&ccu2 CLK_APB2_UART3>, <&ccu1 CLK_CPU_UART3>;
+-			clock-names = "uartclk", "reg";
+-			resets = <&rgu 47>;
+-			dmas = <&dmamux  7 1 2
+-				&dmamux  8 1 2
+-				&dmamux 13 3 2
+-				&dmamux 14 3 2>;
+-			dma-names = "tx", "rx", "rx", "tx";
+-			status = "disabled";
+-		};
+-
+-		timer2: timer@400c3000 {
+-			compatible = "nxp,lpc3220-timer";
+-			reg = <0x400c3000 0x1000>;
+-			interrupts = <14>;
+-			clocks = <&ccu1 CLK_CPU_TIMER2>;
+-			clock-names = "timerclk";
+-			resets = <&rgu 34>;
+-		};
+-
+-		timer3: timer@400c4000 {
+-			compatible = "nxp,lpc3220-timer";
+-			reg = <0x400c4000 0x1000>;
+-			interrupts = <15>;
+-			clocks = <&ccu1 CLK_CPU_TIMER3>;
+-			clock-names = "timerclk";
+-			resets = <&rgu 35>;
+-		};
+-
+-		ssp1: spi@400c5000 {
+-			compatible = "arm,pl022", "arm,primecell";
+-			reg = <0x400c5000 0x1000>;
+-			interrupts = <23>;
+-			clocks = <&ccu2 CLK_APB2_SSP1>, <&ccu1 CLK_CPU_SSP1>;
+-			clock-names = "sspclk", "apb_pclk";
+-			resets = <&rgu 51>;
+-			dmas = <&dmamux 11 2 2
+-				&dmamux 12 2 2
+-				&dmamux  3 3 2
+-				&dmamux  4 3 2
+-				&dmamux  5 2 2
+-				&dmamux  6 2 2
+-				&dmamux 13 2 2
+-				&dmamux 14 2 2>;
+-			dma-names = "rx", "tx", "tx", "rx",
+-				    "tx", "rx", "rx", "tx";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+-		i2c1: i2c@400e0000 {
+-			compatible = "nxp,lpc1788-i2c";
+-			reg = <0x400e0000 0x1000>;
+-			interrupts = <19>;
+-			clocks = <&ccu1 CLK_APB3_I2C1>;
+-			resets = <&rgu 49>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			status = "disabled";
+-		};
+-
+-		dac: dac@400e1000 {
+-			compatible = "nxp,lpc1850-dac";
+-			reg = <0x400e1000 0x1000>;
+-			interrupts = <0>;
+-			clocks = <&ccu1 CLK_APB3_DAC>;
+-			resets = <&rgu 42>;
+-			status = "disabled";
+-		};
+-
+-		can0: can@400e2000 {
+-			compatible = "bosch,c_can";
+-			reg = <0x400e2000 0x1000>;
+-			interrupts = <51>;
+-			clocks = <&ccu1 CLK_APB3_CAN0>;
+-			resets = <&rgu 55>;
+-			status = "disabled";
+-		};
+-
+-		adc0: adc@400e3000 {
+-			compatible = "nxp,lpc1850-adc";
+-			reg = <0x400e3000 0x1000>;
+-			interrupts = <17>;
+-			clocks = <&ccu1 CLK_APB3_ADC0>;
+-			resets = <&rgu 40>;
+-			status = "disabled";
+-		};
+-
+-		adc1: adc@400e4000 {
+-			compatible = "nxp,lpc1850-adc";
+-			reg = <0x400e4000 0x1000>;
+-			interrupts = <21>;
+-			clocks = <&ccu1 CLK_APB3_ADC1>;
+-			resets = <&rgu 41>;
+-			status = "disabled";
+-		};
+-
+-		gpio: gpio@400f4000 {
+-			compatible = "nxp,lpc1850-gpio";
+-			reg = <0x400f4000 0x4000>;
+-			clocks = <&ccu1 CLK_CPU_GPIO>;
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-			gpio-ranges =	<&pinctrl LPC_GPIO(0,0)  LPC_PIN(0,0)  2>,
+-					<&pinctrl LPC_GPIO(0,4)  LPC_PIN(1,0)  1>,
+-					<&pinctrl LPC_GPIO(0,8)  LPC_PIN(1,1)  4>,
+-					<&pinctrl LPC_GPIO(1,8)  LPC_PIN(1,5)  2>,
+-					<&pinctrl LPC_GPIO(1,0)  LPC_PIN(1,7)  8>,
+-					<&pinctrl LPC_GPIO(0,2)  LPC_PIN(1,15) 2>,
+-					<&pinctrl LPC_GPIO(0,12) LPC_PIN(1,17) 2>,
+-					<&pinctrl LPC_GPIO(0,15) LPC_PIN(1,20) 1>,
+-					<&pinctrl LPC_GPIO(5,0)  LPC_PIN(2,0)  7>,
+-					<&pinctrl LPC_GPIO(0,7)  LPC_PIN(2,7)  1>,
+-					<&pinctrl LPC_GPIO(5,7)  LPC_PIN(2,8)  1>,
+-					<&pinctrl LPC_GPIO(1,10) LPC_PIN(2,9)  1>,
+-					<&pinctrl LPC_GPIO(0,14) LPC_PIN(2,10) 1>,
+-					<&pinctrl LPC_GPIO(1,11) LPC_PIN(2,11) 3>,
+-					<&pinctrl LPC_GPIO(5,8)  LPC_PIN(3,1)  2>,
+-					<&pinctrl LPC_GPIO(1,14) LPC_PIN(3,4)  2>,
+-					<&pinctrl LPC_GPIO(0,6)  LPC_PIN(3,6)  1>,
+-					<&pinctrl LPC_GPIO(5,10) LPC_PIN(3,7)  2>,
+-					<&pinctrl LPC_GPIO(2,0)  LPC_PIN(4,0)  7>,
+-					<&pinctrl LPC_GPIO(5,12) LPC_PIN(4,8)  3>,
+-					<&pinctrl LPC_GPIO(2,9)  LPC_PIN(5,0)  7>,
+-					<&pinctrl LPC_GPIO(2,7)  LPC_PIN(5,7)  1>,
+-					<&pinctrl LPC_GPIO(3,0)  LPC_PIN(6,1)  5>,
+-					<&pinctrl LPC_GPIO(0,5)  LPC_PIN(6,6)  1>,
+-					<&pinctrl LPC_GPIO(5,15) LPC_PIN(6,7)  2>,
+-					<&pinctrl LPC_GPIO(3,5)  LPC_PIN(6,9)  3>,
+-					<&pinctrl LPC_GPIO(2,8)  LPC_PIN(6,12) 1>,
+-					<&pinctrl LPC_GPIO(3,8)  LPC_PIN(7,0)  8>,
+-					<&pinctrl LPC_GPIO(4,0)  LPC_PIN(8,0)  8>,
+-					<&pinctrl LPC_GPIO(4,12) LPC_PIN(9,0)  4>,
+-					<&pinctrl LPC_GPIO(5,17) LPC_PIN(9,4)  2>,
+-					<&pinctrl LPC_GPIO(4,11) LPC_PIN(9,6)  1>,
+-					<&pinctrl LPC_GPIO(4,8)  LPC_PIN(a,1)  3>,
+-					<&pinctrl LPC_GPIO(5,19) LPC_PIN(a,4)  1>,
+-					<&pinctrl LPC_GPIO(5,20) LPC_PIN(b,0)  7>,
+-					<&pinctrl LPC_GPIO(6,0)  LPC_PIN(c,1) 14>,
+-					<&pinctrl LPC_GPIO(6,14) LPC_PIN(d,0) 17>,
+-					<&pinctrl LPC_GPIO(7,0)  LPC_PIN(e,0) 16>,
+-					<&pinctrl LPC_GPIO(7,16) LPC_PIN(f,1)  3>,
+-					<&pinctrl LPC_GPIO(7,19) LPC_PIN(f,5)  7>;
+-		};
+-	};
+-};
+-
+-&nvic {
+-	arm,num-irq-priority-bits = <3>;
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts b/arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts
+deleted file mode 100644
+index 837a3cfa8e7c8..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts
++++ /dev/null
+@@ -1,273 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * Embedded Artists LPC3250 board
+- *
+- * Copyright 2012 Roland Stigge <stigge@antcom.de>
+- */
+-
+-/dts-v1/;
+-#include "lpc32xx.dtsi"
+-
+-/ {
+-	model = "Embedded Artists LPC3250 board based on NXP LPC3250";
+-	compatible = "ea,ea3250", "nxp,lpc3250";
+-
+-	memory@80000000 {
+-		device_type = "memory";
+-		reg = <0x80000000 0x4000000>;
+-	};
+-
+-	gpio-keys {
+-		compatible = "gpio-keys";
+-		autorepeat;
+-
+-		button {
+-			label = "Interrupt Key";
+-			linux,code = <103>;
+-			gpios = <&gpio 4 1 0>; /* GPI_P3 1 */
+-		};
+-
+-		key-1 {
+-			label = "KEY1";
+-			linux,code = <1>;
+-			gpios = <&pca9532 0 0>;
+-		};
+-
+-		key-2 {
+-			label = "KEY2";
+-			linux,code = <2>;
+-			gpios = <&pca9532 1 0>;
+-		};
+-
+-		key-3 {
+-			label = "KEY3";
+-			linux,code = <3>;
+-			gpios = <&pca9532 2 0>;
+-		};
+-
+-		key-4 {
+-			label = "KEY4";
+-			linux,code = <4>;
+-			gpios = <&pca9532 3 0>;
+-		};
+-
+-		key-joy0 {
+-			label = "Joystick Key 0";
+-			linux,code = <10>;
+-			gpios = <&gpio 2 0 0>; /* P2.0 */
+-		};
+-
+-		key-joy1 {
+-			label = "Joystick Key 1";
+-			linux,code = <11>;
+-			gpios = <&gpio 2 1 0>; /* P2.1 */
+-		};
+-
+-		key-joy2 {
+-			label = "Joystick Key 2";
+-			linux,code = <12>;
+-			gpios = <&gpio 2 2 0>; /* P2.2 */
+-		};
+-
+-		key-joy3 {
+-			label = "Joystick Key 3";
+-			linux,code = <13>;
+-			gpios = <&gpio 2 3 0>; /* P2.3 */
+-		};
+-
+-		key-joy4 {
+-			label = "Joystick Key 4";
+-			linux,code = <14>;
+-			gpios = <&gpio 2 4 0>; /* P2.4 */
+-		};
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-
+-		/* LEDs on OEM Board */
+-
+-		led1 {
+-			gpios = <&gpio 5 14 1>; /* GPO_P3 14, GPIO 93, active low */
+-			linux,default-trigger = "timer";
+-			default-state = "off";
+-		};
+-
+-		led2 {
+-			gpios = <&gpio 2 10 1>; /* P2.10, active low */
+-			default-state = "off";
+-		};
+-
+-		led3 {
+-			gpios = <&gpio 2 11 1>; /* P2.11, active low */
+-			default-state = "off";
+-		};
+-
+-		led4 {
+-			gpios = <&gpio 2 12 1>; /* P2.12, active low */
+-			default-state = "off";
+-		};
+-
+-		/* LEDs on Base Board */
+-
+-		lede1 {
+-			gpios = <&pca9532 8 0>;
+-			default-state = "off";
+-		};
+-		lede2 {
+-			gpios = <&pca9532 9 0>;
+-			default-state = "off";
+-		};
+-		lede3 {
+-			gpios = <&pca9532 10 0>;
+-			default-state = "off";
+-		};
+-		lede4 {
+-			gpios = <&pca9532 11 0>;
+-			default-state = "off";
+-		};
+-		lede5 {
+-			gpios = <&pca9532 12 0>;
+-			default-state = "off";
+-		};
+-		lede6 {
+-			gpios = <&pca9532 13 0>;
+-			default-state = "off";
+-		};
+-		lede7 {
+-			gpios = <&pca9532 14 0>;
+-			default-state = "off";
+-		};
+-		lede8 {
+-			gpios = <&pca9532 15 0>;
+-			default-state = "off";
+-		};
+-	};
+-};
+-
+-/* 3-axis accelerometer X,Y,Z (or AD-IN instead of Z) */
+-&adc {
+-	status = "okay";
+-};
+-
+-&i2c1 {
+-	clock-frequency = <100000>;
+-
+-	uda1380: uda1380@18 {
+-		compatible = "nxp,uda1380";
+-		reg = <0x18>;
+-		power-gpio = <&gpio 3 10 0>;
+-		reset-gpio = <&gpio 3 2 0>;
+-		dac-clk = "wspll";
+-	};
+-
+-	eeprom@50 {
+-		compatible = "atmel,24c256";
+-		reg = <0x50>;
+-	};
+-
+-	eeprom@57 {
+-		compatible = "atmel,24c64";
+-		reg = <0x57>;
+-	};
+-
+-	pca9532: pca9532@60 {
+-		compatible = "nxp,pca9532";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		reg = <0x60>;
+-	};
+-};
+-
+-&i2c2 {
+-	clock-frequency = <100000>;
+-};
+-
+-&i2cusb {
+-	clock-frequency = <100000>;
+-
+-	isp1301: usb-transceiver@2d {
+-		compatible = "nxp,isp1301";
+-		reg = <0x2d>;
+-	};
+-};
+-
+-&mac {
+-	phy-mode = "rmii";
+-	use-iram;
+-	status = "okay";
+-};
+-
+-/* Here, choose exactly one from: ohci, usbd */
+-&ohci /* &usbd */ {
+-	transceiver = <&isp1301>;
+-	status = "okay";
+-};
+-
+-&sd {
+-	wp-gpios = <&pca9532 5 0>;
+-	cd-gpios = <&pca9532 4 0>;
+-	cd-inverted;
+-	bus-width = <4>;
+-	status = "okay";
+-};
+-
+-/* 128MB Flash via SLC NAND controller */
+-&slc {
+-	status = "okay";
+-
+-	nxp,wdr-clks = <14>;
+-	nxp,wwidth = <260000000>;
+-	nxp,whold = <104000000>;
+-	nxp,wsetup = <200000000>;
+-	nxp,rdr-clks = <14>;
+-	nxp,rwidth = <34666666>;
+-	nxp,rhold = <104000000>;
+-	nxp,rsetup = <200000000>;
+-	nand-on-flash-bbt;
+-	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
+-
+-	partitions {
+-		compatible = "fixed-partitions";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		mtd0@0 {
+-			label = "ea3250-boot";
+-			reg = <0x00000000 0x00080000>;
+-			read-only;
+-		};
+-
+-		mtd1@80000 {
+-			label = "ea3250-uboot";
+-			reg = <0x00080000 0x000c0000>;
+-			read-only;
+-		};
+-
+-		mtd2@140000 {
+-			label = "ea3250-kernel";
+-			reg = <0x00140000 0x00400000>;
+-		};
+-
+-		mtd3@540000 {
+-			label = "ea3250-rootfs";
+-			reg = <0x00540000 0x07ac0000>;
+-		};
+-	};
+-};
+-
+-&uart1 {
+-	status = "okay";
+-};
+-
+-&uart3 {
+-	status = "okay";
+-};
+-
+-&uart5 {
+-	status = "okay";
+-};
+-
+-&uart6 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts b/arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts
+deleted file mode 100644
+index 0f96ea0337a1f..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts
++++ /dev/null
+@@ -1,236 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * PHYTEC phyCORE-LPC3250 board
+- *
+- * Copyright (C) 2015-2019 Vladimir Zapolskiy <vz@mleia.com>
+- * Copyright 2012 Roland Stigge <stigge@antcom.de>
+- */
+-
+-/dts-v1/;
+-#include "lpc32xx.dtsi"
+-
+-/ {
+-	model = "PHYTEC phyCORE-LPC3250 board based on NXP LPC3250";
+-	compatible = "phytec,phy3250", "nxp,lpc3250";
+-
+-	memory@80000000 {
+-		device_type = "memory";
+-		reg = <0x80000000 0x4000000>;
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-
+-		led0 { /* red */
+-			gpios = <&gpio 5 1 0>; /* GPO_P3 1, GPIO 80, active high */
+-			default-state = "off";
+-		};
+-
+-		led1 { /* green */
+-			gpios = <&gpio 5 14 0>; /* GPO_P3 14, GPIO 93, active high */
+-			linux,default-trigger = "heartbeat";
+-		};
+-	};
+-
+-	panel: panel {
+-		compatible = "sharp,lq035q7db03";
+-		power-supply = <&reg_lcd>;
+-
+-		port {
+-			panel_input: endpoint {
+-				remote-endpoint = <&cldc_output>;
+-			};
+-		};
+-	};
+-
+-	reg_backlight: regulator-backlight {
+-		compatible = "regulator-fixed";
+-		regulator-name = "backlight";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		gpio = <&gpio 5 4 0>;
+-		enable-active-high;
+-		regulator-boot-on;
+-	};
+-
+-	reg_lcd: regulator-lcd {
+-		compatible = "regulator-fixed";
+-		regulator-name = "lcd";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		gpio = <&gpio 5 0 0>;
+-		enable-active-high;
+-		regulator-boot-on;
+-	};
+-
+-	reg_sd: regulator-sd {
+-		compatible = "regulator-fixed";
+-		regulator-name = "sd";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		gpio = <&gpio 5 5 0>;
+-		enable-active-high;
+-		regulator-boot-on;
+-	};
+-};
+-
+-&clcd {
+-	max-memory-bandwidth = <18710000>;
+-	status = "okay";
+-
+-	port {
+-		cldc_output: endpoint {
+-			remote-endpoint = <&panel_input>;
+-			arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
+-		};
+-	};
+-};
+-
+-&i2c1 {
+-	clock-frequency = <100000>;
+-
+-	uda1380: uda1380@18 {
+-		compatible = "nxp,uda1380";
+-		reg = <0x18>;
+-		power-gpio = <&gpio 3 10 0>;
+-		reset-gpio = <&gpio 3 2 0>;
+-		dac-clk = "wspll";
+-	};
+-
+-	pcf8563: rtc@51 {
+-		compatible = "nxp,pcf8563";
+-		reg = <0x51>;
+-	};
+-};
+-
+-&i2c2 {
+-	clock-frequency = <100000>;
+-};
+-
+-&i2cusb {
+-	clock-frequency = <100000>;
+-
+-	isp1301: usb-transceiver@2c {
+-		compatible = "nxp,isp1301";
+-		reg = <0x2c>;
+-	};
+-};
+-
+-&key {
+-	keypad,num-rows = <1>;
+-	keypad,num-columns = <1>;
+-	nxp,debounce-delay-ms = <3>;
+-	nxp,scan-delay-ms = <34>;
+-	linux,keymap = <0x00000002>;
+-	status = "okay";
+-};
+-
+-&mac {
+-	phy-mode = "rmii";
+-	use-iram;
+-	status = "okay";
+-};
+-
+-/* Here, choose exactly one from: ohci, usbd */
+-&ohci /* &usbd */ {
+-	transceiver = <&isp1301>;
+-	status = "okay";
+-};
+-
+-&sd {
+-	wp-gpios = <&gpio 3 0 0>;
+-	cd-gpios = <&gpio 3 1 0>;
+-	cd-inverted;
+-	bus-width = <4>;
+-	vmmc-supply = <&reg_sd>;
+-	status = "okay";
+-};
+-
+-/* 64MB Flash via SLC NAND controller */
+-&slc {
+-	status = "okay";
+-
+-	nxp,wdr-clks = <14>;
+-	nxp,wwidth = <40000000>;
+-	nxp,whold = <100000000>;
+-	nxp,wsetup = <100000000>;
+-	nxp,rdr-clks = <14>;
+-	nxp,rwidth = <40000000>;
+-	nxp,rhold = <66666666>;
+-	nxp,rsetup = <100000000>;
+-	nand-on-flash-bbt;
+-	gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
+-
+-	partitions {
+-		compatible = "fixed-partitions";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		mtd0@0 {
+-			label = "phy3250-boot";
+-			reg = <0x00000000 0x00064000>;
+-			read-only;
+-		};
+-
+-		mtd1@64000 {
+-			label = "phy3250-uboot";
+-			reg = <0x00064000 0x00190000>;
+-			read-only;
+-		};
+-
+-		mtd2@1f4000 {
+-			label = "phy3250-ubt-prms";
+-			reg = <0x001f4000 0x00010000>;
+-		};
+-
+-		mtd3@204000 {
+-			label = "phy3250-kernel";
+-			reg = <0x00204000 0x00400000>;
+-		};
+-
+-		mtd4@604000 {
+-			label = "phy3250-rootfs";
+-			reg = <0x00604000 0x039fc000>;
+-		};
+-	};
+-};
+-
+-&ssp0 {
+-	num-cs = <1>;
+-	cs-gpios = <&gpio 3 5 0>;
+-	status = "okay";
+-
+-	eeprom: eeprom@0 {
+-		compatible = "atmel,at25";
+-		reg = <0>;
+-		spi-max-frequency = <5000000>;
+-
+-		pl022,interface = <0>;
+-		pl022,com-mode = <0>;
+-		pl022,rx-level-trig = <1>;
+-		pl022,tx-level-trig = <1>;
+-		pl022,ctrl-len = <11>;
+-		pl022,wait-state = <0>;
+-		pl022,duplex = <0>;
+-
+-		size = <0x8000>;
+-		address-width = <16>;
+-		pagesize = <64>;
+-	};
+-};
+-
+-&tsc {
+-	status = "okay";
+-};
+-
+-&uart2 {
+-	status = "okay";
+-};
+-
+-&uart3 {
+-	status = "okay";
+-};
+-
+-&uart5 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
+deleted file mode 100644
+index e94df78def18a..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
++++ /dev/null
+@@ -1,540 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0+
+-/*
+- * NXP LPC32xx SoC
+- *
+- * Copyright (C) 2015-2019 Vladimir Zapolskiy <vz@mleia.com>
+- * Copyright 2012 Roland Stigge <stigge@antcom.de>
+- */
+-
+-#include <dt-bindings/clock/lpc32xx-clock.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
+-
+-/ {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	compatible = "nxp,lpc3220";
+-	interrupt-parent = <&mic>;
+-
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cpu@0 {
+-			compatible = "arm,arm926ej-s";
+-			device_type = "cpu";
+-			reg = <0x0>;
+-		};
+-	};
+-
+-	clocks {
+-		xtal_32k: xtal_32k {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <32768>;
+-			clock-output-names = "xtal_32k";
+-		};
+-
+-		xtal: xtal {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <13000000>;
+-			clock-output-names = "xtal";
+-		};
+-	};
+-
+-	ahb {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "simple-bus";
+-		ranges = <0x00000000 0x00000000 0x10000000>,
+-			 <0x20000000 0x20000000 0x30000000>,
+-			 <0xe0000000 0xe0000000 0x04000000>;
+-
+-		iram: sram@8000000 {
+-			compatible = "mmio-sram";
+-			reg = <0x08000000 0x20000>;
+-
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0x00000000 0x08000000 0x20000>;
+-		};
+-
+-		/*
+-		 * Enable either SLC or MLC
+-		 */
+-		slc: nand-controller@20020000 {
+-			compatible = "nxp,lpc3220-slc";
+-			reg = <0x20020000 0x1000>;
+-			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_SLC>;
+-			dmas = <&dma 1 1>;
+-			dma-names = "rx-tx";
+-			status = "disabled";
+-		};
+-
+-		mlc: nand-controller@200a8000 {
+-			compatible = "nxp,lpc3220-mlc";
+-			reg = <0x200a8000 0x11000>;
+-			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_MLC>;
+-			dmas = <&dma 12 1>;
+-			dma-names = "rx-tx";
+-			status = "disabled";
+-		};
+-
+-		dma: dma-controller@31000000 {
+-			compatible = "arm,pl080", "arm,primecell";
+-			reg = <0x31000000 0x1000>;
+-			interrupts = <28 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_DMA>;
+-			clock-names = "apb_pclk";
+-			dma-channels = <8>;
+-			dma-requests = <16>;
+-			lli-bus-interface-ahb1;
+-			lli-bus-interface-ahb2;
+-			mem-bus-interface-ahb1;
+-			mem-bus-interface-ahb2;
+-			memcpy-burst-size = <256>;
+-			memcpy-bus-width = <32>;
+-			#dma-cells = <2>;
+-		};
+-
+-		/*
+-		 * Enable either ohci or usbd (gadget)!
+-		 */
+-		ohci: usb@31020000 {
+-			compatible = "nxp,ohci-nxp", "usb-ohci";
+-			reg = <0x31020000 0x300>;
+-			interrupt-parent = <&sic1>;
+-			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&usbclk LPC32XX_USB_CLK_HOST>;
+-			status = "disabled";
+-		};
+-
+-		usbd: usbd@31020000 {
+-			compatible = "nxp,lpc3220-udc";
+-			reg = <0x31020000 0x300>;
+-			interrupt-parent = <&sic1>;
+-			interrupts = <29 IRQ_TYPE_LEVEL_HIGH>,
+-				     <30 IRQ_TYPE_LEVEL_HIGH>,
+-				     <28 IRQ_TYPE_LEVEL_HIGH>,
+-				     <26 IRQ_TYPE_LEVEL_LOW>;
+-			clocks = <&usbclk LPC32XX_USB_CLK_DEVICE>;
+-			status = "disabled";
+-		};
+-
+-		i2cusb: i2c@31020300 {
+-			compatible = "nxp,pnx-i2c";
+-			reg = <0x31020300 0x100>;
+-			interrupt-parent = <&sic1>;
+-			interrupts = <31 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&usbclk LPC32XX_USB_CLK_I2C>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		usbclk: clock-controller@31020f00 {
+-			compatible = "nxp,lpc3220-usb-clk";
+-			reg = <0x31020f00 0x100>;
+-			#clock-cells = <1>;
+-		};
+-
+-		clcd: clcd@31040000 {
+-			compatible = "arm,pl111", "arm,primecell";
+-			reg = <0x31040000 0x1000>;
+-			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_LCD>, <&clk LPC32XX_CLK_LCD>;
+-			clock-names = "clcdclk", "apb_pclk";
+-			status = "disabled";
+-		};
+-
+-		mac: ethernet@31060000 {
+-			compatible = "nxp,lpc-eth";
+-			reg = <0x31060000 0x1000>;
+-			interrupts = <29 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clk LPC32XX_CLK_MAC>;
+-			status = "disabled";
+-		};
+-
+-		emc: memory-controller@31080000 {
+-			compatible = "arm,pl175", "arm,primecell";
+-			reg = <0x31080000 0x1000>;
+-			clocks = <&clk LPC32XX_CLK_DDRAM>, <&clk LPC32XX_CLK_DDRAM>;
+-			clock-names = "mpmcclk", "apb_pclk";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
+-			ranges = <0 0xe0000000 0x01000000>,
+-				 <1 0xe1000000 0x01000000>,
+-				 <2 0xe2000000 0x01000000>,
+-				 <3 0xe3000000 0x01000000>;
+-			status = "disabled";
+-		};
+-
+-		apb {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			compatible = "simple-bus";
+-			ranges = <0x20000000 0x20000000 0x30000000>;
+-
+-			/*
+-			 * ssp0 and spi1 are shared pins;
+-			 * enable one in your board dts, as needed.
+-			 */
+-			ssp0: spi@20084000 {
+-				compatible = "arm,pl022", "arm,primecell";
+-				reg = <0x20084000 0x1000>;
+-				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_SSP0>, <&clk LPC32XX_CLK_SSP0>;
+-				clock-names = "sspclk", "apb_pclk";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			spi1: spi@20088000 {
+-				compatible = "nxp,lpc3220-spi";
+-				reg = <0x20088000 0x1000>;
+-				clocks = <&clk LPC32XX_CLK_SPI1>;
+-				dmas = <&dmamux 11 1 0>;
+-				dma-names = "rx-tx";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			/*
+-			 * ssp1 and spi2 are shared pins;
+-			 * enable one in your board dts, as needed.
+-			 */
+-			ssp1: spi@2008c000 {
+-				compatible = "arm,pl022", "arm,primecell";
+-				reg = <0x2008c000 0x1000>;
+-				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_SSP1>, <&clk LPC32XX_CLK_SSP1>;
+-				clock-names = "sspclk", "apb_pclk";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			spi2: spi@20090000 {
+-				compatible = "nxp,lpc3220-spi";
+-				reg = <0x20090000 0x1000>;
+-				clocks = <&clk LPC32XX_CLK_SPI2>;
+-				dmas = <&dmamux 3 1 0>;
+-				dma-names = "rx-tx";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			i2s0: i2s@20094000 {
+-				compatible = "nxp,lpc3220-i2s";
+-				reg = <0x20094000 0x1000>;
+-				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_I2S0>;
+-				dmas = <&dma 0 1>, <&dma 13 1>;
+-				dma-names = "rx", "tx";
+-				#sound-dai-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			sd: mmc@20098000 {
+-				compatible = "arm,pl180", "arm,primecell";
+-				reg = <0x20098000 0x1000>;
+-				interrupts = <15 IRQ_TYPE_LEVEL_HIGH>,
+-					     <13 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_SD>;
+-				clock-names = "apb_pclk";
+-				status = "disabled";
+-			};
+-
+-			i2s1: i2s@2009c000 {
+-				compatible = "nxp,lpc3220-i2s";
+-				reg = <0x2009c000 0x1000>;
+-				interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_I2S1>;
+-				dmas = <&dma 2 1>, <&dmamux 10 1 1>;
+-				dma-names = "rx", "tx";
+-				#sound-dai-cells = <0>;
+-				status = "disabled";
+-			};
+-
+-			/* UART5 first since it is the default console, ttyS0 */
+-			uart5: serial@40090000 {
+-				/* actually, ns16550a w/ 64 byte fifos! */
+-				compatible = "nxp,lpc3220-uart";
+-				reg = <0x40090000 0x1000>;
+-				interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
+-				reg-shift = <2>;
+-				clocks = <&clk LPC32XX_CLK_UART5>;
+-				status = "disabled";
+-			};
+-
+-			uart3: serial@40080000 {
+-				compatible = "nxp,lpc3220-uart";
+-				reg = <0x40080000 0x1000>;
+-				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+-				reg-shift = <2>;
+-				clocks = <&clk LPC32XX_CLK_UART3>;
+-				status = "disabled";
+-			};
+-
+-			uart4: serial@40088000 {
+-				compatible = "nxp,lpc3220-uart";
+-				reg = <0x40088000 0x1000>;
+-				interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+-				reg-shift = <2>;
+-				clocks = <&clk LPC32XX_CLK_UART4>;
+-				status = "disabled";
+-			};
+-
+-			uart6: serial@40098000 {
+-				compatible = "nxp,lpc3220-uart";
+-				reg = <0x40098000 0x1000>;
+-				interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+-				reg-shift = <2>;
+-				clocks = <&clk LPC32XX_CLK_UART6>;
+-				status = "disabled";
+-			};
+-
+-			i2c1: i2c@400a0000 {
+-				compatible = "nxp,pnx-i2c";
+-				reg = <0x400a0000 0x100>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				clocks = <&clk LPC32XX_CLK_I2C1>;
+-			};
+-
+-			i2c2: i2c@400a8000 {
+-				compatible = "nxp,pnx-i2c";
+-				reg = <0x400a8000 0x100>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <18 IRQ_TYPE_LEVEL_LOW>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				clocks = <&clk LPC32XX_CLK_I2C2>;
+-			};
+-
+-			mpwm: pwm@400e8000 {
+-				compatible = "nxp,lpc3220-motor-pwm";
+-				reg = <0x400e8000 0x78>;
+-				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_MCPWM>;
+-				#pwm-cells = <3>;
+-				status = "disabled";
+-			};
+-		};
+-
+-		fab {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			compatible = "simple-bus";
+-			ranges = <0x20000000 0x20000000 0x30000000>;
+-
+-			/* System Control Block */
+-			syscon@40004000 {
+-				compatible = "nxp,lpc3220-scb", "syscon", "simple-mfd";
+-				reg = <0x40004000 0x1000>;
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				ranges = <0 0x40004000 0x1000>;
+-
+-				clk: clock-controller@0 {
+-					compatible = "nxp,lpc3220-clk";
+-					reg = <0x00 0x114>;
+-					#clock-cells = <1>;
+-					clocks = <&xtal_32k>, <&xtal>;
+-					clock-names = "xtal_32k", "xtal";
+-				};
+-
+-				dmamux: dma-router@78 {
+-					compatible = "nxp,lpc3220-dmamux";
+-					reg = <0x78 0x8>;
+-					dma-masters = <&dma>;
+-					#dma-cells = <3>;
+-				};
+-			};
+-
+-			mic: interrupt-controller@40008000 {
+-				compatible = "nxp,lpc3220-mic";
+-				reg = <0x40008000 0x4000>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-			};
+-
+-			sic1: interrupt-controller@4000c000 {
+-				compatible = "nxp,lpc3220-sic";
+-				reg = <0x4000c000 0x4000>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-
+-				interrupt-parent = <&mic>;
+-				interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
+-					     <30 IRQ_TYPE_LEVEL_LOW>;
+-				};
+-
+-			sic2: interrupt-controller@40010000 {
+-				compatible = "nxp,lpc3220-sic";
+-				reg = <0x40010000 0x4000>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-
+-				interrupt-parent = <&mic>;
+-				interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
+-					     <31 IRQ_TYPE_LEVEL_LOW>;
+-			};
+-
+-			uart1: serial@40014000 {
+-				compatible = "nxp,lpc3220-hsuart";
+-				reg = <0x40014000 0x1000>;
+-				interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
+-				status = "disabled";
+-			};
+-
+-			uart2: serial@40018000 {
+-				compatible = "nxp,lpc3220-hsuart";
+-				reg = <0x40018000 0x1000>;
+-				interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
+-				status = "disabled";
+-			};
+-
+-			uart7: serial@4001c000 {
+-				compatible = "nxp,lpc3220-hsuart";
+-				reg = <0x4001c000 0x1000>;
+-				interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+-				status = "disabled";
+-			};
+-
+-			rtc: rtc@40024000 {
+-				compatible = "nxp,lpc3220-rtc";
+-				reg = <0x40024000 0x1000>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_RTC>;
+-			};
+-
+-			gpio: gpio@40028000 {
+-				compatible = "nxp,lpc3220-gpio";
+-				reg = <0x40028000 0x1000>;
+-				gpio-controller;
+-				#gpio-cells = <3>; /* bank, pin, flags */
+-			};
+-
+-			timer4: timer@4002c000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x4002c000 0x1000>;
+-				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_TIMER4>;
+-				clock-names = "timerclk";
+-				status = "disabled";
+-			};
+-
+-			timer5: timer@40030000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x40030000 0x1000>;
+-				interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_TIMER5>;
+-				clock-names = "timerclk";
+-				status = "disabled";
+-			};
+-
+-			watchdog: watchdog@4003c000 {
+-				compatible = "nxp,pnx4008-wdt";
+-				reg = <0x4003c000 0x1000>;
+-				clocks = <&clk LPC32XX_CLK_WDOG>;
+-			};
+-
+-			timer0: timer@40044000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x40044000 0x1000>;
+-				clocks = <&clk LPC32XX_CLK_TIMER0>;
+-				clock-names = "timerclk";
+-				interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+-			};
+-
+-			/*
+-			 * TSC vs. ADC: Since those two share the same
+-			 * hardware, you need to choose from one of the
+-			 * following two and do 'status = "okay";' for one of
+-			 * them
+-			 */
+-
+-			adc: adc@40048000 {
+-				compatible = "nxp,lpc3220-adc";
+-				reg = <0x40048000 0x1000>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_ADC>;
+-				status = "disabled";
+-			};
+-
+-			tsc: tsc@40048000 {
+-				compatible = "nxp,lpc3220-tsc";
+-				reg = <0x40048000 0x1000>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk LPC32XX_CLK_ADC>;
+-				status = "disabled";
+-			};
+-
+-			timer1: timer@4004c000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x4004c000 0x1000>;
+-				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_TIMER1>;
+-				clock-names = "timerclk";
+-			};
+-
+-			key: key@40050000 {
+-				compatible = "nxp,lpc3220-key";
+-				reg = <0x40050000 0x1000>;
+-				clocks = <&clk LPC32XX_CLK_KEY>;
+-				interrupt-parent = <&sic1>;
+-				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+-				status = "disabled";
+-			};
+-
+-			timer2: timer@40058000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x40058000 0x1000>;
+-				interrupts = <18 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_TIMER2>;
+-				clock-names = "timerclk";
+-				status = "disabled";
+-			};
+-
+-			pwm1: pwm@4005c000 {
+-				compatible = "nxp,lpc3220-pwm";
+-				reg = <0x4005c000 0x4>;
+-				clocks = <&clk LPC32XX_CLK_PWM1>;
+-				#pwm-cells = <3>;
+-				assigned-clocks = <&clk LPC32XX_CLK_PWM1>;
+-				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+-				status = "disabled";
+-			};
+-
+-			pwm2: pwm@4005c004 {
+-				compatible = "nxp,lpc3220-pwm";
+-				reg = <0x4005c004 0x4>;
+-				clocks = <&clk LPC32XX_CLK_PWM2>;
+-				#pwm-cells = <3>;
+-				assigned-clocks = <&clk LPC32XX_CLK_PWM2>;
+-				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+-				status = "disabled";
+-			};
+-
+-			timer3: timer@40060000 {
+-				compatible = "nxp,lpc3220-timer";
+-				reg = <0x40060000 0x1000>;
+-				interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
+-				clocks = <&clk LPC32XX_CLK_TIMER3>;
+-				clock-names = "timerclk";
+-				status = "disabled";
+-			};
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dts b/arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dts
+deleted file mode 100644
+index 5ff43c825944d..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dts
++++ /dev/null
+@@ -1,221 +0,0 @@
+-/*
+- * CIAA NXP LPC4337 (http://www.proyecto-ciaa.com.ar)
+- *
+- * Copyright (C) 2015 VanguardiaSur - www.vanguardiasur.com.ar
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- */
+-/dts-v1/;
+-
+-#include "lpc18xx.dtsi"
+-#include "lpc4357.dtsi"
+-
+-#include "dt-bindings/gpio/gpio.h"
+-
+-/ {
+-	model = "CIAA NXP LPC4337";
+-	compatible = "ciaa,lpc4337", "nxp,lpc4337", "nxp,lpc4350";
+-
+-	aliases {
+-		serial0 = &uart2;
+-		serial1 = &uart3;
+-	};
+-
+-	chosen {
+-		bootargs = "console=ttyS0,115200 earlyprintk";
+-		stdout-path = &uart2;
+-	};
+-
+-	memory@28000000 {
+-		device_type = "memory";
+-		reg = <0x28000000 0x0800000>; /* 8 MB */
+-	};
+-};
+-
+-&pinctrl {
+-	enet_rmii_pins: enet-rmii-pins {
+-		enet_rmii_rxd_cfg {
+-			pins = "p1_15", "p0_0";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_txd_cfg {
+-			pins = "p1_18", "p1_20";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_rx_dv_cfg {
+-			pins = "p1_16";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_tx_en_cfg {
+-			pins = "p0_1";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_ref_clk_cfg {
+-			pins = "p1_19";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_mdio_cfg {
+-			pins = "p1_17";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_mdc_cfg {
+-			pins = "p7_7";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-	};
+-
+-	i2c0_pins: i2c0-pins {
+-		i2c0_pins_cfg {
+-			pins = "i2c0_scl", "i2c0_sda";
+-			function = "i2c0";
+-			input-enable;
+-		};
+-	};
+-
+-	ssp_pins: ssp-pins {
+-		ssp1_cs_cfg {
+-			pins = "p6_7";
+-			function = "gpio";
+-			bias-pull-up;
+-			bias-disable;
+-		};
+-
+-		ssp1_miso_mosi_cfg {
+-			pins = "p1_3", "p1_4";
+-			function = "ssp1";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		ssp1_sck_cfg {
+-			pins = "pf_4";
+-			function = "ssp1";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-	};
+-
+-	uart2_pins: uart2-pins {
+-		uart2_rx_cfg {
+-			pins = "p7_2";
+-			function = "uart2";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		uart2_tx_cfg {
+-			pins = "p7_1";
+-			function = "uart2";
+-			bias-disable;
+-		};
+-	};
+-
+-	uart3_pins: uart3-pins {
+-		uart3_rx_cfg {
+-			pins = "p2_4";
+-			function = "uart3";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		uart3_tx_cfg {
+-			pins = "p2_3";
+-			function = "uart3";
+-			bias-disable;
+-		};
+-	};
+-};
+-
+-&enet_tx_clk {
+-	clock-frequency = <50000000>;
+-};
+-
+-&i2c0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+-	clock-frequency = <400000>;
+-
+-	eeprom@50 {
+-		compatible = "microchip,24c512", "atmel,24c512";
+-		reg = <0x50>;
+-	};
+-
+-	eeprom@51 {
+-		compatible = "microchip,24c02", "atmel,24c02";
+-		reg = <0x51>;
+-	};
+-
+-	eeprom@54 {
+-		compatible = "microchip,24c512", "atmel,24c512";
+-		reg = <0x54>;
+-	};
+-};
+-
+-&mac {
+-	status = "okay";
+-	phy-mode = "rmii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&enet_rmii_pins>;
+-};
+-
+-&sct_pwm {
+-	status = "okay";
+-};
+-
+-&ssp1 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&ssp_pins>;
+-	cs-gpios = <&gpio LPC_GPIO(5,15) GPIO_ACTIVE_HIGH>;
+-	num-cs = <1>;
+-};
+-
+-&uart2 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart2_pins>;
+-};
+-
+-&uart3 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart3_pins>;
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts
+deleted file mode 100644
+index 18f757c569057..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4350-hitex-eval.dts
++++ /dev/null
+@@ -1,485 +0,0 @@
+-/*
+- * Hitex LPC4350 Evaluation Board
+- *
+- * Copyright 2015 Ariel D'Alessandro <ariel.dalessandro@gmail.com>
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- *
+- */
+-/dts-v1/;
+-
+-#include "lpc18xx.dtsi"
+-#include "lpc4350.dtsi"
+-
+-#include "dt-bindings/input/input.h"
+-#include "dt-bindings/gpio/gpio.h"
+-
+-/ {
+-	model = "Hitex LPC4350 Evaluation Board";
+-	compatible = "hitex,lpc4350-eval-board", "nxp,lpc4350";
+-
+-	aliases {
+-		serial0 = &uart0;
+-		serial1 = &uart1;
+-		serial2 = &uart2;
+-		serial3 = &uart3;
+-	};
+-
+-	chosen {
+-		stdout-path = &uart0;
+-	};
+-
+-	memory@28000000 {
+-		device_type = "memory";
+-		reg = <0x28000000 0x800000>; /* 8 MB */
+-	};
+-
+-	pca_buttons {
+-		compatible = "gpio-keys-polled";
+-		poll-interval = <100>;
+-		autorepeat;
+-
+-		button-0 {
+-			label = "joy:right";
+-			linux,code = <KEY_RIGHT>;
+-			gpios = <&pca_gpio 8 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-1 {
+-			label = "joy:up";
+-			linux,code = <KEY_UP>;
+-			gpios = <&pca_gpio 9 GPIO_ACTIVE_LOW>;
+-		};
+-
+-
+-		button-2 {
+-			label = "joy:enter";
+-			linux,code = <KEY_ENTER>;
+-			gpios = <&pca_gpio 10 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-3 {
+-			label = "joy:left";
+-			linux,code = <KEY_LEFT>;
+-			gpios = <&pca_gpio 11 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-4 {
+-			label = "joy:down";
+-			linux,code = <KEY_DOWN>;
+-			gpios = <&pca_gpio 12 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-5 {
+-			label = "user:sw3";
+-			linux,code = <KEY_F1>;
+-			gpios = <&pca_gpio 13 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-6 {
+-			label = "user:sw4";
+-			linux,code = <KEY_F2>;
+-			gpios = <&pca_gpio 14 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-7 {
+-			label = "user:sw5";
+-			linux,code = <KEY_F3>;
+-			gpios = <&pca_gpio 15 GPIO_ACTIVE_LOW>;
+-		};
+-	};
+-
+-	pca_leds {
+-		compatible = "gpio-leds";
+-
+-		led0 {
+-			label = "ext:led0";
+-			gpios = <&pca_gpio 0 GPIO_ACTIVE_LOW>;
+-			linux,default-trigger = "heartbeat";
+-		};
+-
+-		led1 {
+-			label = "ext:led1";
+-			gpios = <&pca_gpio 1 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		led2 {
+-			label = "ext:led2";
+-			gpios = <&pca_gpio 2 GPIO_ACTIVE_LOW>;
+-		};
+-
+-		led3 {
+-			label = "ext:led3";
+-			gpios = <&pca_gpio 3 GPIO_ACTIVE_LOW>;
+-		};
+-	};
+-
+-	vcc: vcc_fixed {
+-		compatible = "regulator-fixed";
+-		regulator-name = "3v3io";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+-
+-&pinctrl {
+-	adc1_pins: adc1-pins {
+-		adc1_pins_cfg {
+-			pins = "pf_9";
+-			function = "adc";
+-			input-disable;
+-			bias-disable;
+-		};
+-	};
+-
+-	emc_pins: emc-pins {
+-		emc_addr0_23_cfg {
+-			pins =	"p2_9",  "p2_10", "p2_11", "p2_12",
+-				"p2_13", "p1_0",  "p1_1",  "p1_2",
+-				"p2_8",  "p2_7",  "p2_6",  "p2_2",
+-				"p2_1",  "p2_0",  "p6_8",  "p6_7",
+-				"pd_16", "pd_15", "pe_0",  "pe_1",
+-				"pe_2",  "pe_3",  "pe_4",  "pa_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_data0_15_cfg {
+-			pins =	"p1_7",  "p1_8",  "p1_9",  "p1_10",
+-				"p1_11", "p1_12", "p1_13", "p1_14",
+-				"p5_4",  "p5_5",  "p5_6",  "p5_7",
+-				"p5_0",  "p5_1",  "p5_2",  "p5_3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_we_oe_cfg {
+-			pins = "p1_6", "p1_3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_bls0_3_cfg {
+-			pins = "p1_4", "p6_6", "pd_13", "pd_10";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_cs0_cs2_cfg {
+-			pins = "p1_5", "pd_12";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_dqm0_3_cfg {
+-			pins = "p6_12", "p6_10", "pd_0", "pe_13";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_ras_cas_cfg {
+-			pins = "p6_5", "p6_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_dycs0_cfg {
+-			pins = "p6_9";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_cke_cfg {
+-			pins = "p6_11";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_clock_cfg {
+-			pins = "clk0", "clk1", "clk2", "clk3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-	};
+-
+-	enet_mii_pins: enet-mii-pins {
+-		enet_mii_rxd0_3_cfg {
+-			pins = "p1_15", "p0_0", "p9_3", "p9_2";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		enet_mii_txd0_3_cfg {
+-			pins = "p1_18", "p1_20", "p9_4", "p9_5";
+-			function = "enet";
+-			bias-disable;
+-		};
+-
+-		enet_mii_crs_col_cfg {
+-			pins = "p9_0", "p9_6";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		enet_mii_rx_clk_dv_er_cfg {
+-			pins = "pc_0", "p1_16", "p9_1";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		enet_mii_tx_clk_en_cfg {
+-			pins = "p1_19", "p0_1";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		enet_mdio_cfg {
+-			pins = "p1_17";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		enet_mdc_cfg {
+-			pins = "pc_1";
+-			function = "enet";
+-			bias-disable;
+-		};
+-	};
+-
+-	i2c0_pins: i2c0-pins {
+-		i2c0_pins_cfg {
+-			pins = "i2c0_scl", "i2c0_sda";
+-			function = "i2c0";
+-			input-enable;
+-		};
+-	};
+-
+-	spifi_pins: spifi-pins {
+-		spifi_clk_cfg {
+-			pins = "p3_3";
+-			function = "spifi";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		spifi_mosi_miso_sio2_3_cfg {
+-			pins = "p3_7", "p3_6", "p3_5", "p3_4";
+-			function = "spifi";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		spifi_cs_cfg {
+-			pins = "p3_8";
+-			function = "spifi";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-	};
+-
+-	uart0_pins: uart0-pins {
+-		uart0_rx_cfg {
+-			pins = "pf_11";
+-			function = "uart0";
+-			input-schmitt-disable;
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		uart0_tx_cfg {
+-			pins = "pf_10";
+-			function = "uart0";
+-			bias-pull-down;
+-		};
+-	};
+-};
+-
+-&adc1 {
+-	status = "okay";
+-	vref-supply = <&vcc>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&adc1_pins>;
+-};
+-
+-&emc {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&emc_pins>;
+-
+-	cs0 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		mpmc,cs = <0>;
+-		mpmc,memory-width = <16>;
+-		mpmc,byte-lane-low;
+-		mpmc,write-enable-delay = <0>;
+-		mpmc,output-enable-delay = <0>;
+-		mpmc,read-access-delay = <70>;
+-		mpmc,page-mode-read-delay = <70>;
+-
+-		flash@0,0 {
+-			compatible = "sst,sst39vf320", "cfi-flash";
+-			reg = <0 0 0x400000>;
+-			bank-width = <2>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
+-			partition@0 {
+-				label = "bootloader";
+-				reg = <0x000000 0x040000>; /* 256 KiB */
+-			};
+-
+-			partition@1 {
+-				label = "kernel";
+-				reg = <0x040000 0x2C0000>; /* 2.75 MiB */
+-			};
+-
+-			partition@2 {
+-				label = "rootfs";
+-				reg = <0x300000 0x100000>; /* 1 MiB */
+-			};
+-		};
+-	};
+-
+-	cs2 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		mpmc,cs = <2>;
+-		mpmc,memory-width = <16>;
+-		mpmc,byte-lane-low;
+-		mpmc,write-enable-delay = <0>;
+-		mpmc,output-enable-delay = <30>;
+-		mpmc,read-access-delay = <90>;
+-		mpmc,page-mode-read-delay = <55>;
+-		mpmc,write-access-delay = <55>;
+-		mpmc,turn-round-delay = <55>;
+-
+-		ext_sram: sram@2,0 {
+-			compatible = "mmio-sram";
+-			reg = <2 0 0x80000>; /* 512 KiB SRAM on IS62WV25616 */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0 2 0 0x80000>;
+-		};
+-	};
+-};
+-
+-&enet_tx_clk {
+-	clock-frequency = <25000000>;
+-};
+-
+-&i2c0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+-	clock-frequency = <400000>;
+-
+-	/* NXP SE97BTP with temperature sensor + eeprom */
+-	sensor@18 {
+-		compatible = "nxp,se97", "jedec,jc-42.4-temp";
+-		reg = <0x18>;
+-	};
+-
+-	eeprom@50 {
+-		compatible = "nxp,24c02", "atmel,24c02";
+-		reg = <0x50>;
+-	};
+-
+-	pca_gpio: gpio@24 {
+-		compatible = "nxp,pca9673";
+-		reg = <0x24>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+-};
+-
+-&mac {
+-	status = "okay";
+-	phy-mode = "mii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&enet_mii_pins>;
+-};
+-
+-&spifi {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&spifi_pins>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-rx-bus-width = <4>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "bootloader";
+-			reg = <0x000000 0x040000>; /* 256 KiB */
+-		};
+-
+-		partition@1 {
+-			label = "kernel";
+-			reg = <0x040000 0x2c0000>; /* 2.75 MiB */
+-		};
+-
+-		partition@2 {
+-			label = "rootfs";
+-			reg = <0x300000 0x500000>; /* 5 MiB */
+-		};
+-	};
+-};
+-
+-&uart0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins>;
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4350.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc4350.dtsi
+deleted file mode 100644
+index 707d22a219d83..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4350.dtsi
++++ /dev/null
+@@ -1,48 +0,0 @@
+-/*
+- * NXP LPC4350 and LPC4330 SoC
+- *
+- * Copyright 2015 Ariel D'Alessandro <ariel.dalessandro@gmail.com>
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- *
+- */
+-
+-/ {
+-	compatible = "nxp,lpc4350", "nxp,lpc4330";
+-
+-	cpus {
+-		cpu@0 {
+-			compatible = "arm,cortex-m4";
+-		};
+-	};
+-
+-	soc {
+-		sram0: sram@10000000 {
+-			compatible = "mmio-sram";
+-			reg = <0x10000000 0x20000>; /* 96 + 32 KiB local SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-
+-		sram1: sram@10080000 {
+-			compatible = "mmio-sram";
+-			reg = <0x10080000 0x12000>; /* 64 + 8 KiB local SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-
+-		sram2: sram@20000000 {
+-			compatible = "mmio-sram";
+-			reg = <0x20000000 0x10000>; /* 4 x 16 KiB AHB SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts
+deleted file mode 100644
+index 7ccb4c2ca5710..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4357-ea4357-devkit.dts
++++ /dev/null
+@@ -1,624 +0,0 @@
+-/*
+- * Embedded Artist LPC4357 Developer's Kit
+- *
+- * Copyright 2015 Joachim Eastwood <manabian@gmail.com>
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- *
+- */
+-/dts-v1/;
+-
+-#include "lpc18xx.dtsi"
+-#include "lpc4357.dtsi"
+-
+-#include "dt-bindings/input/input.h"
+-#include "dt-bindings/gpio/gpio.h"
+-
+-/ {
+-	model = "Embedded Artists' LPC4357 Developer's Kit";
+-	compatible = "ea,lpc4357-developers-kit", "nxp,lpc4357", "nxp,lpc4350";
+-
+-	aliases {
+-		serial0 = &uart0;
+-		serial1 = &uart1;
+-		serial2 = &uart2;
+-		serial3 = &uart3;
+-	};
+-
+-	chosen {
+-		stdout-path = &uart0;
+-	};
+-
+-	memory@28000000 {
+-		device_type = "memory";
+-		reg = <0x28000000 0x2000000>; /* 32 MB */
+-	};
+-
+-	vcc: vcc_fixed {
+-		compatible = "regulator-fixed";
+-		regulator-name = "3v3-supply";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	/* vmmc is controlled by sdmmc host internally */
+-	vmmc: vmmc_fixed {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vmmc-supply";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	gpio_joystick {
+-		compatible = "gpio-keys-polled";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&gpio_joystick_pins>;
+-		poll-interval = <100>;
+-		autorepeat;
+-
+-		button-0 {
+-			label = "joy_enter";
+-			linux,code = <KEY_ENTER>;
+-			gpios = <&gpio LPC_GPIO(4,8) GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-1 {
+-			label = "joy_left";
+-			linux,code = <KEY_LEFT>;
+-			gpios = <&gpio LPC_GPIO(4,9) GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-2 {
+-			label = "joy_up";
+-			linux,code = <KEY_UP>;
+-			gpios = <&gpio LPC_GPIO(4,10) GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-3 {
+-			label = "joy_right";
+-			linux,code = <KEY_RIGHT>;
+-			gpios = <&gpio LPC_GPIO(4,12) GPIO_ACTIVE_LOW>;
+-		};
+-
+-		button-4 {
+-			label = "joy_down";
+-			linux,code = <KEY_DOWN>;
+-			gpios = <&gpio LPC_GPIO(4,13) GPIO_ACTIVE_LOW>;
+-		};
+-	};
+-
+-	leds_mmio {
+-		compatible = "gpio-leds";
+-
+-		led1 {
+-			gpios = <&mmio_leds 15 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
+-		};
+-
+-		led2 {
+-			gpios = <&mmio_leds 14 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led3 {
+-			gpios = <&mmio_leds 13 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led4 {
+-			gpios = <&mmio_leds 12 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led5 {
+-			gpios = <&mmio_leds 11 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led6 {
+-			gpios = <&mmio_leds 10 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led7 {
+-			gpios = <&mmio_leds 9 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led8 {
+-			gpios = <&mmio_leds 8 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led9 {
+-			gpios = <&mmio_leds 7 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led10 {
+-			gpios = <&mmio_leds 6 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led11 {
+-			gpios = <&mmio_leds 5 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led12 {
+-			gpios = <&mmio_leds 4 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led13 {
+-			gpios = <&mmio_leds 3 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led14 {
+-			gpios = <&mmio_leds 2 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led15 {
+-			gpios = <&mmio_leds 1 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led16 {
+-			gpios = <&mmio_leds 0 GPIO_ACTIVE_HIGH>;
+-		};
+-	};
+-};
+-
+-&pinctrl {
+-	emc_pins: emc-pins {
+-		emc_addr0_23_cfg {
+-			pins =	"p2_9",  "p2_10", "p2_11", "p2_12",
+-				"p2_13", "p1_0",  "p1_1",  "p1_2",
+-				"p2_8",  "p2_7",  "p2_6",  "p2_2",
+-				"p2_1",  "p2_0",  "p6_8",  "p6_7",
+-				"pd_16", "pd_15", "pe_0",  "pe_1",
+-				"pe_2",  "pe_3",  "pe_4",  "pa_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_data0_31_cfg {
+-			pins =	"p1_7",  "p1_8",  "p1_9",  "p1_10",
+-				"p1_11", "p1_12", "p1_13", "p1_14",
+-				"p5_4",  "p5_5",  "p5_6",  "p5_7",
+-				"p5_0",  "p5_1",  "p5_2",  "p5_3",
+-				"pd_2",  "pd_3",  "pd_4",  "pd_5",
+-				"pd_6",  "pd_7",  "pd_8",  "pd_9",
+-				"pe_5",  "pe_6",  "pe_7",  "pe_8",
+-				"pe_9",  "pe_10", "pe_11", "pe_12";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_we_oe_cfg {
+-			pins = "p1_6", "p1_3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_bls0_3_cfg {
+-			pins = "p1_4", "p6_6", "pd_13", "pd_10";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_cs0_3_cfg {
+-			pins = "p1_5", "p6_3", "pd_12", "pd_11";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_dqm0_3_cfg {
+-			pins = "p6_12", "p6_10", "pd_0", "pe_13";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_ras_cas_cfg {
+-			pins = "p6_5", "p6_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_dycs0_cfg {
+-			pins = "p6_9";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_cke_cfg {
+-			pins = "p6_11";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		emc_sdram_clock_cfg {
+-			pins = "clk0", "clk1", "clk2", "clk3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-	};
+-
+-	enet_rmii_pins: enet-rmii-pins {
+-		enet_rmii_rxd_cfg {
+-			pins = "p1_15", "p0_0";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_txd_cfg {
+-			pins = "p1_18", "p1_20";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_rx_dv_cfg {
+-			pins = "p1_16";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_rmii_tx_en_cfg {
+-			pins = "p0_1";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_ref_clk_cfg {
+-			pins = "p1_19";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_mdio_cfg {
+-			pins = "p1_17";
+-			function = "enet";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		enet_mdc_cfg {
+-			pins = "pc_1";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-	};
+-
+-	gpio_joystick_pins: gpio-joystick-pins {
+-		gpio_joystick_cfg {
+-			pins =	"p9_0", "p9_1", "pa_1", "pa_2", "pa_3";
+-			function = "gpio";
+-			input-enable;
+-			bias-disable;
+-		};
+-	};
+-
+-	i2c0_pins: i2c0-pins {
+-		i2c0_pins_cfg {
+-			pins = "i2c0_scl", "i2c0_sda";
+-			function = "i2c0";
+-			input-enable;
+-		};
+-	};
+-
+-	sdmmc_pins: sdmmc-pins {
+-		sdmmc_clk_cfg {
+-			pins = "pc_0";
+-			function = "sdmmc";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-		};
+-
+-		sdmmc_cmd_dat0_3_cfg {
+-			pins = "pc_4", "pc_5", "pc_6", "pc_7", "pc_10";
+-			function = "sdmmc";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		sdmmc_cd_cfg {
+-			pins = "pc_8";
+-			function = "sdmmc";
+-			bias-pull-down;
+-			input-enable;
+-		};
+-
+-		sdmmc_pow_cfg {
+-			pins = "pc_9";
+-			function = "sdmmc";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	spifi_pins: spifi-pins {
+-		spifi_clk_cfg {
+-			pins = "p3_3";
+-			function = "spifi";
+-			slew-rate = <1>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		spifi_mosi_miso_sio2_3_cfg {
+-			pins = "p3_7", "p3_6", "p3_5", "p3_4";
+-			function = "spifi";
+-			slew-rate = <0>;
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		spifi_cs_cfg {
+-			pins = "p3_8";
+-			function = "spifi";
+-			bias-disable;
+-		};
+-	};
+-
+-	ssp0_pins: ssp0-pins {
+-		ssp0_sck_miso_mosi_cfg {
+-			pins = "pf_0", "pf_2", "pf_3";
+-			function = "ssp0";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		ssp0_ssel_cfg {
+-			pins = "pf_1";
+-			function = "ssp0";
+-			bias-pull-up;
+-		};
+-	};
+-
+-	uart0_pins: uart0-pins {
+-		uart0_rx_cfg {
+-			pins = "pf_11";
+-			function = "uart0";
+-			input-schmitt-disable;
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		uart0_tx_cfg {
+-			pins = "pf_10";
+-			function = "uart0";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	uart3_pins: uart3-pins {
+-		uart3_rx_cfg {
+-			pins = "p2_4";
+-			function = "uart3";
+-			input-schmitt-disable;
+-			bias-disable;
+-			input-enable;
+-		};
+-
+-		uart3_tx_cfg {
+-			pins = "p9_3";
+-			function = "uart3";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	usb0_pins: usb0-pins {
+-		usb0_pwr_enable_cfg {
+-			pins = "p2_3";
+-			function = "usb0";
+-		};
+-
+-		usb0_pwr_fault_cfg {
+-			pins = "p8_0";
+-			function = "usb0";
+-			bias-disable;
+-			input-enable;
+-		};
+-	};
+-};
+-
+-&adc0 {
+-	status = "okay";
+-	vref-supply = <&vcc>;
+-};
+-
+-&i2c0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+-	clock-frequency = <400000>;
+-
+-	mma7455@1d {
+-		compatible = "fsl,mma7455";
+-		reg = <0x1d>;
+-	};
+-
+-	temperature-sensor@48 {
+-		compatible = "national,lm75b";
+-		reg = <0x48>;
+-	};
+-
+-	eeprom@57 {
+-		compatible = "microchip,24c64", "atmel,24c64";
+-		reg = <0x57>;
+-	};
+-};
+-
+-&dac {
+-	status = "okay";
+-	vref-supply = <&vcc>;
+-};
+-
+-&emc {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&emc_pins>;
+-
+-	cs0 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		mpmc,cs = <0>;
+-		mpmc,memory-width = <16>;
+-		mpmc,byte-lane-low;
+-		mpmc,write-enable-delay = <0>;
+-		mpmc,output-enable-delay = <0>;
+-		mpmc,read-access-delay = <70>;
+-		mpmc,page-mode-read-delay = <70>;
+-
+-		flash@0,0 {
+-			compatible = "sst,sst39vf320", "cfi-flash";
+-			reg = <0 0 0x400000>;
+-			bank-width = <2>;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-
+-			partition@0 {
+-				label = "bootloader";
+-				reg = <0x000000 0x040000>; /* 256 KiB */
+-			};
+-
+-			partition@1 {
+-				label = "kernel";
+-				reg = <0x040000 0x2c0000>; /* 2.75 MiB */
+-			};
+-
+-			partition@2 {
+-				label = "rootfs";
+-				reg = <0x300000 0x100000>; /* 1 MiB */
+-			};
+-		};
+-	};
+-
+-	cs2 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		mpmc,cs = <2>;
+-		mpmc,memory-width = <16>;
+-
+-		mmio_leds: gpio@2,0 {
+-			compatible = "ti,7416374";
+-			reg = <2 0 0x2>;
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-		};
+-
+-	};
+-};
+-
+-&enet_tx_clk {
+-	clock-frequency = <50000000>;
+-};
+-
+-&mac {
+-	status = "okay";
+-	phy-mode = "rmii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&enet_rmii_pins>;
+-};
+-
+-&mmcsd {
+-	status = "okay";
+-	bus-width = <4>;
+-	vmmc-supply = <&vmmc>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_pins>;
+-};
+-
+-&spifi {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&spifi_pins>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-cpol;
+-		spi-cpha;
+-		spi-rx-bus-width = <4>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		partition@0 {
+-			label = "data";
+-			reg = <0 0x200000>;
+-		};
+-	};
+-};
+-
+-&ssp0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&ssp0_pins>;
+-	num-cs = <1>;
+-};
+-
+-&uart0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins>;
+-};
+-
+-&uart3 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart3_pins>;
+-};
+-
+-&usb0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&usb0_pins>;
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4357-myd-lpc4357.dts b/arch/arm/boot/dts/nxp/lpc/lpc4357-myd-lpc4357.dts
+deleted file mode 100644
+index d18f2b2caf687..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4357-myd-lpc4357.dts
++++ /dev/null
+@@ -1,621 +0,0 @@
+-// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+-/*
+- * MYIR Tech MYD-LPC4357 Development Board with 800x480 7" TFT panel
+- *
+- * Copyright (C) 2016-2018 Vladimir Zapolskiy <vz@mleia.com>
+- */
+-
+-/dts-v1/;
+-
+-#include "lpc18xx.dtsi"
+-#include "lpc4357.dtsi"
+-
+-#include <dt-bindings/gpio/gpio.h>
+-
+-/ {
+-	model = "MYIR Tech LPC4357 Development Board";
+-	compatible = "myir,myd-lpc4357", "nxp,lpc4357";
+-
+-	chosen {
+-		stdout-path = "serial3:115200n8";
+-	};
+-
+-	memory@28000000 {
+-		device_type = "memory";
+-		reg = <0x28000000 0x2000000>;
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&led_pins>;
+-
+-		led1 {
+-			gpios = <&gpio LPC_GPIO(6,15) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-
+-		led2 {
+-			gpios = <&gpio LPC_GPIO(6,16) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-
+-		led3 {
+-			gpios = <&gpio LPC_GPIO(6,17) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-
+-		led4 {
+-			gpios = <&gpio LPC_GPIO(6,10) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-
+-		led5 {
+-			gpios = <&gpio LPC_GPIO(7,14) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-
+-		led6 {
+-			gpios = <&gpio LPC_GPIO(6,14) GPIO_ACTIVE_LOW>;
+-			default-state = "off";
+-		};
+-	};
+-
+-	panel: panel {
+-		compatible = "innolux,at070tn92";
+-		power-supply = <&vcc>;
+-
+-		port {
+-			panel_input: endpoint {
+-				remote-endpoint = <&lcdc_output>;
+-			};
+-		};
+-	};
+-
+-	vcc: vcc_fixed {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc-supply";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	vmmc: vmmc_fixed {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vmmc-supply";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+-
+-&pinctrl {
+-	can0_pins: can0-pins {
+-		can_rd_cfg {
+-			pins = "p3_1";
+-			function = "can0";
+-			input-enable;
+-		};
+-
+-		can_td_cfg {
+-			pins = "p3_2";
+-			function = "can0";
+-		};
+-	};
+-
+-	can1_pins: can1-pins {
+-		can_rd_cfg {
+-			pins = "pe_1";
+-			function = "can1";
+-			input-enable;
+-		};
+-
+-		can_td_cfg {
+-			pins = "pe_0";
+-			function = "can1";
+-		};
+-	};
+-
+-	emc_pins: emc-pins {
+-		emc_addr0_22_cfg {
+-			pins = "p2_9",  "p2_10", "p2_11", "p2_12",
+-			       "p2_13", "p1_0",  "p1_1",  "p1_2",
+-			       "p2_8",  "p2_7",  "p2_6",  "p2_2",
+-			       "p2_1",  "p2_0",  "p6_8",  "p6_7",
+-			       "pd_16", "pd_15", "pe_0",  "pe_1",
+-			       "pe_2",  "pe_3",  "pe_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_data0_15_cfg {
+-			pins = "p1_7",  "p1_8",  "p1_9",  "p1_10",
+-			       "p1_11", "p1_12", "p1_13", "p1_14",
+-			       "p5_4",  "p5_5",  "p5_6",  "p5_7",
+-			       "p5_0",  "p5_1",  "p5_2",  "p5_3";
+-			function = "emc";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_we_oe_cfg {
+-			pins = "p1_6", "p1_3";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_cs0_cfg {
+-			pins = "p1_5";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_sdram_dqm0_1_cfg {
+-			pins = "p6_12", "p6_10";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_sdram_ras_cas_cfg {
+-			pins = "p6_5", "p6_4";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_sdram_dycs0_cfg {
+-			pins = "p6_9";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_sdram_cke_cfg {
+-			pins = "p6_11";
+-			function = "emc";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		emc_sdram_clock_cfg {
+-			pins = "clk0";
+-			function = "emc";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-	};
+-
+-	enet_rmii_pins: enet-rmii-pins {
+-		enet_rmii_rxd_cfg {
+-			pins = "p1_15", "p0_0";
+-			function = "enet";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		enet_rmii_txd_cfg {
+-			pins = "p1_18", "p1_20";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		enet_rmii_rx_dv_cfg {
+-			pins = "p1_16";
+-			function = "enet";
+-			input-enable;
+-			input-schmitt-disable;
+-			bias-disable;
+-		};
+-
+-		enet_mdio_cfg {
+-			pins = "p1_17";
+-			function = "enet";
+-			input-enable;
+-			input-schmitt-disable;
+-			bias-disable;
+-		};
+-
+-		enet_mdc_cfg {
+-			pins = "pc_1";
+-			function = "enet";
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		enet_rmii_tx_en_cfg {
+-			pins = "p0_1";
+-			function = "enet";
+-			bias-disable;
+-		};
+-
+-		enet_ref_clk_cfg {
+-			pins = "p1_19";
+-			function = "enet";
+-			slew-rate = <1>;
+-			input-enable;
+-			input-schmitt-disable;
+-			bias-disable;
+-		};
+-	};
+-
+-	i2c0_pins: i2c0-pins {
+-		i2c0_pins_cfg {
+-			pins = "i2c0_scl", "i2c0_sda";
+-			function = "i2c0";
+-			input-enable;
+-		};
+-	};
+-
+-	i2c1_pins: i2c1-pins {
+-		i2c1_pins_cfg {
+-			pins = "pe_15", "pe_13";
+-			function = "i2c1";
+-			input-enable;
+-		};
+-	};
+-
+-	lcd_pins: lcd-pins {
+-		lcd_vd0_23_cfg {
+-			pins = "p4_1", "p4_4", "p4_3",  "p4_2",
+-			       "p8_7", "p8_6", "p8_5",  "p8_4",
+-			       "p7_5", "p4_8", "p4_10", "p4_9",
+-			       "p8_3", "pb_6", "pb_5",  "pb_4",
+-			       "p7_4", "p7_3", "p7_2",  "p7_1",
+-			       "pb_3", "pb_2", "pb_1",  "pb_0";
+-			function = "lcd";
+-		};
+-
+-		lcd_vsync_en_dclk_lp_pwr_cfg {
+-			pins = "p4_5", "p4_6", "p4_7", "p7_6", "p7_7";
+-			function = "lcd";
+-		};
+-	};
+-
+-	led_pins: led-pins {
+-		led_1_6_cfg {
+-			pins = "pd_1", "pd_2", "pd_3", "pc_11", "pe_14", "pd_0";
+-			function = "gpio";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	sdmmc_pins: sdmmc-pins {
+-		sdmmc_clk_cfg {
+-			pins = "pc_0";
+-			function = "sdmmc";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-		};
+-
+-		sdmmc_cmd_dat0_3_cfg {
+-			pins = "pc_4", "pc_5", "pc_6", "pc_7", "pc_10";
+-			function = "sdmmc";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		sdmmc_cd_cfg {
+-			pins = "pc_8";
+-			function = "sdmmc";
+-			input-enable;
+-			bias-pull-down;
+-		};
+-	};
+-
+-	spifi_pins: spifi-pins {
+-		spifi_sck_cfg {
+-			pins = "p3_3";
+-			function = "spifi";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		spifi_mosi_miso_sio2_sio3_cfg {
+-			pins = "p3_7", "p3_6", "p3_5", "p3_4";
+-			function = "spifi";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-disable;
+-		};
+-
+-		spifi_cs_cfg {
+-			pins = "p3_8";
+-			function = "spifi";
+-			bias-disable;
+-		};
+-	};
+-
+-	ssp1_pins: ssp1-pins {
+-		ssp1_sck_cfg {
+-			pins = "pf_4";
+-			function = "ssp1";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-		};
+-
+-		ssp1_miso_cfg {
+-			pins = "pf_6";
+-			function = "ssp1";
+-			input-enable;
+-			input-schmitt-disable;
+-			slew-rate = <1>;
+-			bias-pull-down;
+-		};
+-
+-		ssp1_mosi_cfg {
+-			pins = "pf_7";
+-			function = "ssp1";
+-			slew-rate = <1>;
+-			bias-pull-down;
+-		};
+-
+-		ssp1_ssel_cfg {
+-			pins = "pf_5";
+-			function = "gpio";
+-			bias-disable;
+-		};
+-	};
+-
+-	uart0_pins: uart0-pins {
+-		uart0_rxd_cfg {
+-			pins = "pf_11";
+-			function = "uart0";
+-			input-enable;
+-			input-schmitt-disable;
+-			bias-disable;
+-		};
+-
+-		uart0_clk_dir_txd_cfg {
+-			pins = "pf_8", "pf_9", "pf_10";
+-			function = "uart0";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	uart1_pins: uart1-pins {
+-		uart1_rxd_cfg {
+-			pins = "pc_14";
+-			function = "uart1";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		uart1_dtr_txd_cfg {
+-			pins = "pc_12", "pc_13";
+-			function = "uart1";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	uart2_pins: uart2-pins {
+-		uart2_rxd_cfg {
+-			pins = "pa_2";
+-			function = "uart2";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		uart2_txd_cfg {
+-			pins = "pa_1";
+-			function = "uart2";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	uart3_pins: uart3-pins {
+-		uart3_rx_cfg {
+-			pins = "p2_4";
+-			function = "uart3";
+-			bias-disable;
+-			input-enable;
+-			input-schmitt-disable;
+-		};
+-
+-		uart3_tx_cfg {
+-			pins = "p2_3";
+-			function = "uart3";
+-			bias-pull-down;
+-		};
+-	};
+-
+-	usb0_pins: usb0-pins {
+-		usb0_pwr_enable_cfg {
+-			pins = "p6_3";
+-			function = "usb0";
+-		};
+-
+-		usb0_pwr_fault_cfg {
+-			pins = "p8_0";
+-			function = "usb0";
+-			bias-disable;
+-			input-enable;
+-		};
+-	};
+-};
+-
+-&adc1 {
+-	status = "okay";
+-	vref-supply = <&vcc>;
+-};
+-
+-&can0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&can0_pins>;
+-};
+-
+-/* Pin conflict with EMC, muxed by JP5 and JP6 */
+-&can1 {
+-	status = "disabled";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&can1_pins>;
+-};
+-
+-&emc {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&emc_pins>;
+-
+-	cs0 {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		mpmc,cs = <0>;
+-		mpmc,memory-width = <16>;
+-		mpmc,byte-lane-low;
+-		mpmc,write-enable-delay = <0>;
+-		mpmc,output-enable-delay = <0>;
+-		mpmc,read-access-delay = <70>;
+-		mpmc,page-mode-read-delay = <70>;
+-
+-		/* SST/Microchip SST39VF1601 */
+-		flash@0,0 {
+-			compatible = "cfi-flash";
+-			reg = <0 0 0x400000>;
+-			bank-width = <2>;
+-		};
+-	};
+-};
+-
+-&enet_tx_clk {
+-	clock-frequency = <50000000>;
+-};
+-
+-&i2c0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+-	clock-frequency = <400000>;
+-};
+-
+-&i2c1 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+-	clock-frequency = <400000>;
+-
+-	sensor@49 {
+-		compatible = "national,lm75";
+-		reg = <0x49>;
+-	};
+-
+-	eeprom@50 {
+-		compatible = "atmel,24c512";
+-		reg = <0x50>;
+-	};
+-};
+-
+-&lcdc {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&lcd_pins>;
+-
+-	max-memory-bandwidth = <92240000>;
+-
+-	port {
+-		lcdc_output: endpoint {
+-			remote-endpoint = <&panel_input>;
+-			arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
+-		};
+-	};
+-};
+-
+-&mac {
+-	status = "okay";
+-	phy-mode = "rmii";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&enet_rmii_pins>;
+-	phy-handle = <&phy1>;
+-
+-	mdio {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		compatible = "snps,dwmac-mdio";
+-
+-		phy1: ethernet-phy@1 {
+-			reg = <1>;
+-		};
+-	};
+-};
+-
+-&mmcsd {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_pins>;
+-	bus-width = <4>;
+-	vmmc-supply = <&vmmc>;
+-};
+-
+-/* Pin conflict with SSP0, the latter is routed to J17 pin header */
+-&spifi {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&spifi_pins>;
+-
+-	/* Atmel AT25DF321A */
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-max-frequency = <51000000>;
+-		spi-cpol;
+-		spi-cpha;
+-	};
+-};
+-
+-&ssp1 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&ssp1_pins>;
+-	num-cs = <1>;
+-	cs-gpios = <&gpio LPC_GPIO(7,19) GPIO_ACTIVE_LOW>;
+-};
+-
+-/* Routed to J17 pin header */
+-&uart0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins>;
+-};
+-
+-/* RS485 */
+-&uart1 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart1_pins>;
+-};
+-
+-/* Routed to J17 pin header */
+-&uart2 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart2_pins>;
+-};
+-
+-&uart3 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart3_pins>;
+-};
+-
+-&usb0 {
+-	status = "okay";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&usb0_pins>;
+-};
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc4357.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc4357.dtsi
+deleted file mode 100644
+index d138ee7869ff3..0000000000000
+--- a/arch/arm/boot/dts/nxp/lpc/lpc4357.dtsi
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/*
+- * NXP LPC435x, LPC433x, LPC4327, LPC4325, LPC4317 and LPC4315 SoC
+- *
+- * Copyright 2015 Joachim Eastwood <manabian@gmail.com>
+- *
+- * This code is released using a dual license strategy: BSD/GPL
+- * You can choose the licence that better fits your requirements.
+- *
+- * Released under the terms of 3-clause BSD License
+- * Released under the terms of GNU General Public License Version 2.0
+- *
+- */
+-
+-/ {
+-	compatible = "nxp,lpc4357";
+-
+-	cpus {
+-		cpu@0 {
+-			compatible = "arm,cortex-m4";
+-		};
+-	};
+-
+-	soc {
+-		sram0: sram@10000000 {
+-			compatible = "mmio-sram";
+-			reg = <0x10000000 0x8000>; /* 32 KiB local SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-
+-		sram1: sram@10080000 {
+-			compatible = "mmio-sram";
+-			reg = <0x10080000 0xa000>; /* 32 + 8 KiB local SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-
+-		sram2: sram@20000000 {
+-			compatible = "mmio-sram";
+-			reg = <0x20000000 0x10000>; /* 4 x 16 KiB AHB SRAM */
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-		};
+-	};
+-};
+-
+-&eeprom {
+-	status = "okay";
+-};
 
 -- 
 2.43.0
