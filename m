@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-38724-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38723-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BGS3A2tkNWrnuwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38724-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:51 +0200
+	id Pxx6CDJkNWrFuwYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38723-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:45:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 536396A6CF6
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78F766A6CCB
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 17:45:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=I3wn8GZs;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38724-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38724-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=XLHszsLr;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38723-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38723-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9D30A3040DA1
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:43:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 11FC33054CD4
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 15:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7E83B7742;
-	Fri, 19 Jun 2026 15:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B4CA3BAD93;
+	Fri, 19 Jun 2026 15:42:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010050.outbound.protection.outlook.com [52.101.69.50])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012029.outbound.protection.outlook.com [52.101.66.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BA338757B;
-	Fri, 19 Jun 2026 15:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0E23B8D7E;
+	Fri, 19 Jun 2026 15:42:14 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781883768; cv=fail; b=F1CFKBk8VayqLu/PGoODdHalo98Qpz0Xvp4WLpFy3XdRaW3Ay7QqRPhWAfP+qzKctPvIIw9L0eVaCToIbUDgF7SUCR3MhSwfSI8dMfGBen5C0nhW4IJ26S9+Bj3gn6F/V77c8XkLHs9U1U5CX8m3mgu/izIugpMVmOLfpwoiQn4=
+	t=1781883753; cv=fail; b=H8LeuY+zAZbLgB58JHhW6cVWni9usxXEjv1OvtnAHikCck2zCQeIR0FYz55k4X0djkECIrHWZ4LPsHq6iyMsZPbTs/kt6l4wmVYXSx+iN8M8Ho4rxjIPeZHsOHjtPwkidJRfsqKUqVSjfZDg2PiJuc2/e82UBj5Ly1qhrzon1e4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781883768; c=relaxed/simple;
-	bh=Qm/Y4/fFRajXCdq71jlogUqJf6yp6x68KzCJX/S30tI=;
+	s=arc-20240116; t=1781883753; c=relaxed/simple;
+	bh=z+x+YdRFkphb7UzaT9e/blNFcw26f5hPl19SX5QjTFg=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=Yrh4RQfYPyxStwHKg7YtDWMIqSQPDmjpat03+zuLQSXI5YmbQl7d0J+bKkguXwYtPVhhb2PMI/J6kVotoPEu8LCG/0Dhdbo8wGkboAVwI8iZf00GwWDF8rzt0y+K3dWV7mICORFS86XLHW/iknuacWSKVU0k7BLEiS8WvoV68eU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=I3wn8GZs; arc=fail smtp.client-ip=52.101.69.50
+	 To:Cc:MIME-Version; b=jkVCdqjQlUVzsR67lFJX04IrNsvEmSKPQVDb5qNXPUigA/cYXfLlwCjwO2WBMkshlkY2qxslaz7oWqnLesk3DlIgPXFdSHGBrqDc8fzXfzt5lbpOogdQ+u56M6N7BGl+mevLWj/p9J+zHJ7+LAVUMUg5qvpQziXlsPe5zNu+A1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=XLHszsLr; arc=fail smtp.client-ip=52.101.66.29
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gn8isgz93Xcyurz9o24XOMjdlNibkXR4UwMwrYyEZ3ZNpkLuZUd1x/RCjrolMTdQjAXuZcudumf/1mbOeHlWtVjcKBxdaYSEMKtkIVarI/wTjVCK+oy1H5dqDDJj6rE1p9zLFEd8S4nqBMbL31o8ztfB9A6kwTZzJcEH7+v4cg+SYtXTdTp/xyY6c3fi/1dma6XwnQIudwRH3ZEl//bxgafaRrx2uWE1nTScItKGy5Yi/gGslQxeNdM/nVUd97cUYJ/iWS+Zif0AOkK+YHFJk7zsKyJ1gjf7WRFbg1JNJHKJmg6EP1hcyuaStaizFelZQlalYFYMWfe+JubDTZbw3w==
+ b=OJztp/t3Et1+tRPBNWHcKUVMhHwUF+pK0oZIeerkIzA7iAdA8hA5+8YlvHFepd3stzWXjOOWTWZGC+jzjBNO9OjXMRR/H431/eGgCiMVR62cCY47McRvwhmuIk4U94NBz3ofjt6msl9Z5lBAHjSnt0Y/WGtrCl36C91Gyk10od4V8LufxDHZtvWirQFN7Sn7v+WwTzHYkXN9fZGM0ch3zv7uHd+ji3h7Vqhju2vogt59e8uz7Ft3+3VDIzCECA5q5h20AGGrulAPhT7Dm4XjXf72YTo/Wz6+/IcgDcCWBhCu+9nZKMo3EZ6O1DqCPWtv0szjoiQAeG9ppmdMkt3Cnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rKvlQb/pOert8MH39+xTm+zNdaJwqhCIqaWlmr4YMNk=;
- b=cRYwEUy8R1GXmiMvzw2vIXsMM6vfG7RxZaXQ/E2l/grfbM6qnNTAiQ6vg+YxITRBH9xD5ZjpVJqRbTy/d7ZZdxdy6DW4RsL25O6aIzhzu/Oqda+aKzu46cgPuFrq08Y4FWIbNWOCRPmfqtkMXrnjuKpnTi3egleTkpKRSUe53LdS7ktrSiTWke/Abn5mOqN9t5M8WEmoXd9KLx48uWlnOdtCjC8Ss2p2WY4lU3FhYhX0ZQpi2VXZuOwbDFvl9dIgK1iy4U80OdXL4ol5KwDMzHAwHSklZFs/qfSGUa/11P2ViaJXP5xYiCELgKbITRB206v8dI+89O8CBkut8ZVnPg==
+ bh=+4WhbTZZo3X+4TKjJJPXy/vP2X7pOmkBnU+JauptuDY=;
+ b=AgBg/aVdnwELsdwA0hq2ykbESIdzEahOJKs71Ygm8U+jiXdIWFBuixDu8zmmx1FZhdktecbo/bKChWbLBnJjCDPFSC3SnBfZ38nXyWWZL2QStYQTgLlWSMi+ZU2ExjJuHFFYTWQif7i1yxPHSupiMQde1HOycA7HVSbyj3wKtTF0gg5NLPzdimQTgELV/c2oo+Yly480Re5L4sHtmBJ0GgHOSE21Ni9y9UFLYy/k/Y1dSmlgGe91LcmsESiRil6I3mqttTccdsZVdLjsFaDHb5AefJ12XO3FFedZqQfq4+Zwegv1pep8PiuRNTwVHwkIsKcmhm+2B20YsB9ehyeAzw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rKvlQb/pOert8MH39+xTm+zNdaJwqhCIqaWlmr4YMNk=;
- b=I3wn8GZssjWLzG8uaK7E49Auavd5w9Uq+O5lpE60Qju/OJnBcCMNf2x0gdQeiWUTzCReHCspLW9fQS1RTg1JV3x5JNDPDIBvhLfQzco9ySldiVwwva0dpOPoBssALi7aiLmOA5JgEvXttAxGJL8DiiypK7IV1CrFAQhCJe4KdUYz1A9uROiJTag2h3J6nionrbkOKuo0OR2+tDt+36Ur9vnaGpLq1yop6IjLq3JCOJHkEW3aBmq26i1cweXCFferDXY/Fk/bfyJgKuZRCz9l+M7SCwZ4STtz69bSPgBjgTNA1/siUMlQjgVNjavqSTv1jqgNmwRFi3ZoIQmF1/riBg==
+ bh=+4WhbTZZo3X+4TKjJJPXy/vP2X7pOmkBnU+JauptuDY=;
+ b=XLHszsLr/GqI8dYX2AfW7Hv4y3907k2ngnkihEB4BheUR8NWACVsWl67obyar5+CSACYtDm5PQLSRshwAXvHKhKbFBztWD0bZHgZYohMd6mDoI/Fdiv6Dh3X5ZZ2ec73v9xlAS05R69jV74u2Z03EgVpuExV5/5AArIO8BmDZtl2A1oeHm/LT1Gm3Pncw+qdXSLgS6mrtPpVYctumTdGfvADqGRhuux/fpRkKvgWB8lfRKGM/PTvxgeRBZNbmsezNu8+kTXMAmbZDVn2miZQ54AQ7JfzBQFyAaghzGPX3kIMin8/B6yabfWdagxfCxFREWQsfqI7CvLkzrjUBlbh0g==
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by DB9PR04MB8430.eurprd04.prod.outlook.com (2603:10a6:10:24f::10) with
+ by AS1PR04MB9333.eurprd04.prod.outlook.com (2603:10a6:20b:4df::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Fri, 19 Jun
- 2026 15:42:06 +0000
+ 2026 15:42:10 +0000
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Fri, 19 Jun 2026
- 15:42:06 +0000
+ 15:42:10 +0000
 From: Frank.Li@oss.nxp.com
-Date: Fri, 19 Jun 2026 11:41:07 -0400
-Subject: [PATCH 10/11] clk: nxp: lpc: Remove NOMMU platform support
+Date: Fri, 19 Jun 2026 11:41:08 -0400
+Subject: [PATCH 11/11] pinctrl: nxp: lpc: Remove NOMMU platform support
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260619-dts_cleanup_arm_mcore-v1-10-0101795a2662@nxp.com>
+Message-Id: <20260619-dts_cleanup_arm_mcore-v1-11-0101795a2662@nxp.com>
 References: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 In-Reply-To: <20260619-dts_cleanup_arm_mcore-v1-0-0101795a2662@nxp.com>
 To: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -84,15 +84,15 @@ Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
  linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=87115;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781883675; l=48004;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=/mfF3Vus3EW4g3a0OUCH1I14icrrBFWCfVIHmHh5n5Q=;
- b=5sZ4+ht9igZE0lM26qU4sHvoBAZS3ZJ04ur+QIZLPMRDxddvnLddY1iRNfw5ByIY7lgLx5sq1
- Qg1MSJF+075C3Ofzs3/k+dyhwf0VHWwXJLl0QXcT1507ms1Pj8muaXx
+ bh=YQakxEhvpIT03Ykri03OSg/Yg9U1XdVk9vhXKGG66aM=;
+ b=Ja3B6tV6BFNzGtmOrtbXGUGcLq416EvdPrDhunBy7sLyzbRfV2Q+Qzs5ScmAHJyWoiuIFO1G4
+ yOvDCuW3Be4ByP+e9Vr+Msbn46L7/yJDcggR2EjfW555bo4mEE8F4p7
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SA0PR13CA0030.namprd13.prod.outlook.com
- (2603:10b6:806:130::35) To GV2PR04MB11799.eurprd04.prod.outlook.com
+X-ClientProxiedBy: SA1P222CA0144.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c2::22) To GV2PR04MB11799.eurprd04.prod.outlook.com
  (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -101,69 +101,69 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DB9PR04MB8430:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0db317ab-2911-494e-b658-08dece1950c3
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|AS1PR04MB9333:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d2626e2-7f34-4084-e4e4-08dece19539b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|366016|7416014|19092799006|11063799006|3023799007|921020|56012099006|6133799003|22082099003|18002099003;
+	BCL:0;ARA:13230040|23010399003|366016|7416014|19092799006|376014|1800799024|18002099003|921020|22082099003|5023799004|11063799006|56012099006|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	I0cJQgnxdlFgQh8Uzl4CdZC3ozbYohrClLGkKWKLDdkoO4t4fon330m9H4LhUz/tt+4A0J1UE2II+SxR6CzmHe0r18cSN8AvDlkBDfbUlyKN+jlLDZxwQKmuvepkRYgvUbpZPGnbPA2z7Pt5riMtgWsv1suu3goGXOPBVl+6spKs66AR+DDbJr/SydpbLiN8iCZ3c777Qw3SC/sn96v6hJAsJzRiqJhMPm79P/f5BCRuqkVAT1HvATXt6D8dPs0mNG7VCgQkJUjVs4dtb3yd6eKIcz8wVN+pzwz7qD6jxUj9zkI5DiverKMLkdg8IW2OygOjsU8Nr+lfjeLcYXt9WXx/2KYdMqdSU9pan9AHaslfnUSd7DdwCWtcro70RzYBJEvNzRjSL0MoqWOkyGvUVEmzmYUL7lYegebQKAwjYj89s4LRHfuXl3hM8vD/cJdRBoEY14IGz3Zfw+woV5ZEwCDAz85wJVchRnM1p60qs+zJEOf/TRSUOHrR+yn2nNcYz21pWVSsQh+gyNP5YNYPj7atSLykXdUqF4QLiYHdhMHZvbjdEpkDwnke69gzqjJyf8H9DKkTR2BBvFgoaluaoFXFD0k1gYCPwhqlyKIpJUTajs2USA6cm51ADQwYlNUCZIO3BHjH5hVvTCDBIMcEfQNsuxRoUUbZ4eNdraZdbhAOMCtS/l4t4ddMgMJas7nwakqMcqqC5plFC8WAW+KiXg==
+	uNfEgnRetHkWyHAra0Km96duv/unih+7v++S4WrTWonBURDHXXUPXP9CcP88NxtcZ29dcpLqcvShA0Q7t2mSad0QYSH1T9ozEC42eguf4IIkwddLQ7OgkHL9Fv0kb4FFvdXKQyfW0SaIuWrpaTbWei4t9WLwEKe0ZdT8mUpFBP1nlyOWExkyvJNxUz24L1CEYKBdv+LmaXEb+1P7fhQDG4pCplrYGf8D3xTA0zJWwEpOiiNMPB+ZAlwdSpUfVagiWLqu3f7Ewa3sF+yDu93522bySTQA2pPTSd56enV3xW8MxZLUIxTU9hnRhMNzs/4dnhRRyED96pHP9TshdN2w/lmffGYvSwdLrq4ybz64PR8zE6j3rXVrtXhjebLyY0/PL6f4yJ9R4DduzansPrhJj6PWjh0w/FLLxX5bHaF0ih/qSaeGnqXmGwB9pxv7kfs7eRe5vqYM69ljWx2OmmaYNUu3YesvKTaPhUqyx8lc45AUBj3LtBD66MtBOY/Ra6jvO2YyidiZgIuEJI7EWDMVsTevTwgRDb/TIMC5+MDaDrg5VOKmqjULQ5aSqdyqBjSOHSSqggPo2VYj1bDJ4OkUB89cBBPrza18SlI59mPsgxphUmT9SmTJWvmBgX10rLbyFSw0hBZK9aus8vnaanQxADXygA92sd2P9V/J7BtKBTG29z0EUBmwKbdlWeUMVDAxs4s3oY5JH6jmsS/7tCcNjA==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(366016)(7416014)(19092799006)(11063799006)(3023799007)(921020)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(7416014)(19092799006)(376014)(1800799024)(18002099003)(921020)(22082099003)(5023799004)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YnR4U1VJYmNaa0dHNG4vd1YrR3phSkVuZDdiUXNqcjhaanBzUXNhZ1FERkMv?=
- =?utf-8?B?RlpCb2t4US9KV2g4a2I3SnRCUmxRN1BvcXpzZzcvc0UvQVlGaXA2TllEcnUx?=
- =?utf-8?B?NjRiNWRDZktwZ0Z5dmZCRHZrT2FiMEtIU04xTExzYmZaU0pEZ1h5dzk2cCtL?=
- =?utf-8?B?YWZ6VGFYR2E1endSellseW1MbkMwRGd0QmNmeVNMMm5GUDBXZFkxMHpSNGcw?=
- =?utf-8?B?SHg2OElhT1M0dWhNSlJnS1hEeWdWeEJISVNJM0l1Sk1MWmE4bXRJYkZEZXBo?=
- =?utf-8?B?amM0cTVIMFhza3VjQTdwaDI4dmo2STN4NHZkTTB1TDNIY1JqcmN3MXRPVVdR?=
- =?utf-8?B?R0pXcUNGdGNZTFFRajNiSktwMnlVN3ZvQnBTMmdYajVvTlhJYytTSlpUa3Mr?=
- =?utf-8?B?OFZmM1pLaE95cTFGWFRzVmlKZXN1U1hwMExSUk13SEhYUU85WnMxam5kQmVr?=
- =?utf-8?B?NWtrQkVhK0dYTjFHdGlJYUVtWi9kcEVHUmVEM2pmZEZscW9Xd3pNZjNwd2VU?=
- =?utf-8?B?ZUpOc0lPZ3dweHJ5S0FjRGhXRjJPUndGQjk2dHhnV1NkN3NoaDc3Skc1elVi?=
- =?utf-8?B?Wk8waEo4M0tJbWFVUXhSNGNtMVM1RmZJSEJOT210SlpueTB1YUdrU0Mvckxk?=
- =?utf-8?B?S1BsM0lQV0xoUFNoT0hnM2FaNzJ6eXRFTDQ3ekE5VjJQeTRaaE43MWlySkFr?=
- =?utf-8?B?bFRIRlpiaGxRVFFvcjJZaElDTDZKTmFsRUhvcGtXOGtZNDMzK3JmUjB2WFVD?=
- =?utf-8?B?bFlXM3c3OWlNY0g0UkNJRkNSOUJPb1RubzJHK0xMRzhXdnl6TjNKYzBETGUw?=
- =?utf-8?B?NUh6Vm9xWG9ZNlBGS09iZE91RkkxK2Q1UGJ1VXBZbmpPM3l0MG8yT0FjQVJE?=
- =?utf-8?B?cmVNYVVWMmgrbzF6QkhzaXNTNHIvSEZCd3JwNGNBZkFPUXVVcTE1UnNJRWtQ?=
- =?utf-8?B?RjE4NE1MUDhkdFFiR2E1Wm9FS0xZcUxuS0lyUHNNbGZBVFQ0bFZGSWk4NHFJ?=
- =?utf-8?B?Sm9KVXYveWV1K250T3EzS0x5U0pXUTdyWm1oUkliK0U3TXRkdDNtZm93WVJY?=
- =?utf-8?B?RnhXR00vVDViamJPVEZWSFhCU085dUxWcGZmY0FuYzZpejQ4aVg2aFZaTzZl?=
- =?utf-8?B?NmdRZHl4U3J2WWhPOVRLTEJwTDlUa09hMGJJR1E1TVBMTnQyZ2pxUTBKMGU4?=
- =?utf-8?B?UHZSc3JjRHZUMFI5YW5nOGJGNzkwZyt0bXJ2dDVSNUdkMXViMHQvYU42WGZ4?=
- =?utf-8?B?cWpXUjY3OXAvaUVrZHZWYUpRQXhBYmtJRWh3M0VHeWx1YWVHN01NV0NPMGVK?=
- =?utf-8?B?L1pTTnZFU3ZBaXRHUHh0d2lXVVhkR3hxMHBWV1lJelFReEVIMU9QcFQwKzVx?=
- =?utf-8?B?cFoyMkorQ004YUhEdFRKZmRIcmV2ZHpTN0dWYkF4ZE1nWFcyS3IrTCs5VUNI?=
- =?utf-8?B?MGVWakdxbDVCOTcyTFNhdS8wcUpXbEh0WDRqb3I4M0hXRmE4MkpIdDcza09z?=
- =?utf-8?B?LysvUStLb216V21EaFp0dUhpNHY2cENuSG5MaXZ3VGZqdDZyTWlLVStpMGJx?=
- =?utf-8?B?R1RmelpFdFA5d0VRckMzdG9oaCtmaUduZ0pjV3lxcTBBbGdySy9mcG9xbG1L?=
- =?utf-8?B?Zml6VVhSeU9rQVc0QlZKWkZLSk9uOTVxSk1WSW5RVUFmN290Q3FhREJ4bkF4?=
- =?utf-8?B?R2xYT0JCNjJwZXhrUW94NXR6dlF5Njd3OHZlc3gwL2dnOGJpay9uN094amxE?=
- =?utf-8?B?czh1cWk4M1RZRlZDdkFKaXdrZFdmc3lkZldyamloRUwvZXQyU3pTc0xrQXIw?=
- =?utf-8?B?cEhPamdhd1c0OS8vanF2Vld3elBYaVpBalkxOXF5Q2UvZFF4YUlaSUdLRnRs?=
- =?utf-8?B?M09EZzRXMEkxQ2phSGlrWFZUenNrZi8rSjN4UFQ5cUxOYVBnRW1RQVgxZUk3?=
- =?utf-8?B?YU8yMFFVT0RNdjhrZUJnWUp3NnFiaXFzeENROG1YcDlpQk1hUzBKZko3Q2Vn?=
- =?utf-8?B?SEdJdzVnR1lObWRYL0lRb01pai9IVlRydzVRckpaM2VyTEU2QmJpMGxyWHIv?=
- =?utf-8?B?WEU5b2Y5Vk5ncVVwNllHTUpTNFBMNkY1V3VHNHBLb3pwY1NiSXNSRk1zZjhq?=
- =?utf-8?B?U0t0WlNvYS9aYWVWdTZ2dk1RdENMNFpQaG15RU9rN2pSVWFwclJTSUJhRHFE?=
- =?utf-8?B?R25QaUQyS2l0dlhnbnpoNXRFWjJZVEhYMTI2cExiMi8zY3RpY1VERmFzNWZq?=
- =?utf-8?B?b2hXYWhySnpXdU1jVTgwZDZvMEtWMnNoQUFaMFJpR285TFhaUUdWaHV2alRE?=
- =?utf-8?B?RGYrb2FQM01WbkJJeFNkU1JyRzVFNXRlZXdDZzJkMlRIbVc0ZmJpWnd5WkRp?=
- =?utf-8?Q?1Uk0VHlMBUT0xnBqsWze+DDCQ/riZCy1uUzb8?=
+	=?utf-8?B?K2h2K1JwTCtqUkxRTDV2QXRtaGl2YXlrcGdLTFZzQjRuckR6dU9JUE1ac1c3?=
+ =?utf-8?B?ZDlSZFlROWtCd2c1bURvcDVzQWxldG1OcVA5aTQrZ25UOXFBMmJORGtrVVlD?=
+ =?utf-8?B?QlMyd21WT0RlNGc5UnNjaGJSR2tGQ2F1cTRSUlZCM1JweXl3a3ZqOUJ5R2xv?=
+ =?utf-8?B?eUhRQ2I2UkVCUzhlYTRLK1RObFl0bDJ0OXBIc08wNmJ1eUZkbWV1aXUwc0Fl?=
+ =?utf-8?B?UHpwWVM0VVdQRDJzOElXRis3N3ludkFoZ0hJUWpyMWZKMDdIZzNDUitSUmk1?=
+ =?utf-8?B?VTBtNjh3aTU4MTZpTkVLMm5Bb25QVW1aVTlxWCtIVXBtUWN4ZXBScWV6R01Z?=
+ =?utf-8?B?UlIrdUJUejYwZ2NRRCs5NXFFa01hcktNdWtlNyt5RGx4ZS9qLzNwdXp0MTBr?=
+ =?utf-8?B?NzVkM2JKUThsMFhDTFVIdTJWR25PMFhUdzBKc3NqWHlHRGdEQ3BzbUxVd3NL?=
+ =?utf-8?B?WU1OOXdka01jaDA2VUFacjNrL282Tmc1NHZmYnhUcU9yeXFPb2hGclgvd09r?=
+ =?utf-8?B?VE5seDhYaXpTNmlkcVUzSGQ4TDg5eE1leXR5cFBtN3lIVFRGRnBwOXUvd0kz?=
+ =?utf-8?B?dk9XbkpqZldXaVhLNjUyU1BMeDYxVGRDaXp0MWExMDJicWVhOUFsNVBtdWtP?=
+ =?utf-8?B?enV0L3ZPS2NPMzhCUTE4NExaSUp0MjNTcTVaaUtBNnF0TVAzam5vVW83VHYy?=
+ =?utf-8?B?dVZXaEdBMGZsbnRsSmhJR053YmtDc2V5NU11dmV5VEhYUDNkRnVjY25LTWlq?=
+ =?utf-8?B?UHpaOUdFNGxtV01QNVBxb0lkSG40d1FFSVdkZlBBLzhlbGhKSkYrVU1Talgr?=
+ =?utf-8?B?Und1emtsdXh5WnQyYlZ0NGVCc3BFTi8wdnpZNDQrcHM2UnpsV3lwbTIvTXMy?=
+ =?utf-8?B?bnN5YkpYMmpvSTJwclIwdkVnU0Y5elNtY0NKeEhNeFBpWFo1TVVrbFp5eFM0?=
+ =?utf-8?B?c2dBb2E5Vlg3UlFoV3k4bmlkeGRVenYzY0ppd0tOMjB4Y1BnVjBmdmhiaDhY?=
+ =?utf-8?B?SE9wNmp1YmhzM1g0dzZSU25XMy84Q0hsdkVYM0E4S2lUNzM2TWtmV29mTFVj?=
+ =?utf-8?B?c3EzZUl2czNWa0VvRktLSUVabHBlWFU2VUJuejBic2hnU2VoZmtnRkNCb1k5?=
+ =?utf-8?B?OVI2Z245RC91NXBTSitFNVF3OS9OekJjOEVmOG5Hb3N6MHhKcXcxUUhzQ0x3?=
+ =?utf-8?B?OERxaHRWR2NRM3pIV1BYRDFqdHF5MUZPb3IrUk5DZVcwekVkWnZxUENzeHNS?=
+ =?utf-8?B?NExOMnlZd0NCVUtKQkF0aHFLZkNyRU9sbXVWc09jK2t4RXRqK0lvTnhMN1VQ?=
+ =?utf-8?B?Z0FQazg5K3FKK1d0T3pGZlFLaC9ZZ0RPWDE2VTRYNHROVktwTUNjbVRDLzRu?=
+ =?utf-8?B?ZUJJM3l0dlM2ZHlGNEx4RTlhK3NkV3NXVUZDVDUvY2k0ZzFlSnNsZU1KYjIw?=
+ =?utf-8?B?YSswLzVhTzBaUWtseGt3T3RwYUhtNUpDbWtJdVFjQkpxSGZnMjluSlBKcFFs?=
+ =?utf-8?B?bE9qWk5Bc1R5bllpMjFvc3BBTzhsMFlqRlNBQ0J5ZytDd0JLZHQ5VU9NOGVB?=
+ =?utf-8?B?aUF6N2Noenp2bkJiZmlLLzBYTWtKZEtGNy9mQkhabTBhWnNWOVB1UnRSaXBN?=
+ =?utf-8?B?Q0xBbU9seVFjVHdTK1BJT1VGY2JyTm10dkxObVFmS2dUdUw4ejBPUHIxRFdJ?=
+ =?utf-8?B?Q2t4ZzJaNFF3bVBEei9iS1dtNTBUUkRsUGVXRXlIS1BjZ0tJRDJEaVdDdTNw?=
+ =?utf-8?B?TWpENW9DRWRPNXJSVXlMM2VUYVVNU2R6OUxyQ2xuVisybUtqdk5meUd4Qkdn?=
+ =?utf-8?B?ZGJ2dmVuRDNYcCtnZHR5NW1NekV1WjgyMlR1OHFzNE1KWTJjQW5mZEJmUzhx?=
+ =?utf-8?B?YmRlamFPdEh6UHV1LzRGaVBZbzlxV2dRNnY4ay82ck5UMHJYT0duOVdUQnh4?=
+ =?utf-8?B?K0hNTFJZb1NKUVlvZWlhMk9VamtSRFdHTmZteWpjUjZSaGpkMU9ydU5waFFT?=
+ =?utf-8?B?ekxtT1JVR2pGMjNCc1YwV1M2TTVWRnB2MXJaQlpCdFdDeTdLbzFubDZjeFJR?=
+ =?utf-8?B?UWlna0hnV0Q3ZEdtWDVKeUMxZDlaclYwSU8vWkNweDhjM3hlSDFSL0dibmlB?=
+ =?utf-8?B?NFZwd0lzWm9Jb25zV1FFc01HaU9TZzFSK3kyZEZYcHlyZW5KcktsWm94NXRQ?=
+ =?utf-8?B?cjkxMUVNdVYrWk80L0l1T0lwN0RoTlFmVC9PYjVyNzZJblJRbkp4NDNyVk50?=
+ =?utf-8?B?aUwvbjhub3JRSTBBY2V4ZUo5NjltenhpZ2JhTmJ4UUl2T2xKQXIxelcrNHlC?=
+ =?utf-8?B?UEU2dUVsQ0Jsc3ZOTnlVVkh5aFpDMk9UNkMzZjF4VFJFcTdJWUJIRDZXNHcz?=
+ =?utf-8?Q?w//PxnUEJex/exd+eGaqE5Q6cCuQZTd94uReg?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0db317ab-2911-494e-b658-08dece1950c3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2626e2-7f34-4084-e4e4-08dece19539b
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:42:06.1910
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:42:10.8051
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4yflUBKnkP+sdQyRHV7wVzkQGsYhIYrEF7eIHS4Mw2jNJmuqTDGPyAV5c6hFgZqVrzEGZXZneVnJVkmL405DTgkAVB4Lt88cTjSqExQ3U0q3uYLQnd41oOMfC3DLCsJ2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8430
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5WRNXdEo559jQbiKehBJTL0ilq1hjfY0A6XivbuHLHXKxvK4SacwQ0x84FCIaFQfw9KN6B0xFsD0OIzUl824jbWLnduhD0WYZ+OQxqFcrHNvRkx9bK/0ZaTNCrAZx5ch
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9333
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.94 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -175,7 +175,7 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS(0.00)[m:arnd@arndb.de,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:stefan@agner.ch,m:festevam@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux@armlinux.org.uk,m:abelvesa@kernel.org,m:peng.fan@nxp.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:s32@nxp.com,m:linusw@kernel.org,m:vz@mleia.com,m:piotr.wojtaszczyk@timesys.com,m:kees@kernel.org,m:gustavoars@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:imx@lists.linux.dev,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:Frank.Li@nxp.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-38724-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38723-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -196,9 +196,9 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:mid,nxp.com:email,oss.nxp.com:from_mime,NXP1.onmicrosoft.com:dkim,init.name:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:mid,nxp.com:email,oss.nxp.com:from_mime,NXP1.onmicrosoft.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 536396A6CF6
+X-Rspamd-Queue-Id: 78F766A6CCB
 
 From: Frank Li <Frank.Li@nxp.com>
 
@@ -209,2870 +209,1436 @@ unused and unmaintained.
 Remove the obsolete support to reduce maintenance burden and simplify the
 NXP/Freescale platform code.
 
-The clock driver is highly SoC-specific and provides little opportunity
-for reuse on future hardware.
+The pinctrl driver is highly SoC-specific and provides little opportunity
+for reuse on future hardware
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/clk/Kconfig                |    7 -
- drivers/clk/Makefile               |    1 -
- drivers/clk/nxp/Makefile           |    5 -
- drivers/clk/nxp/clk-lpc18xx-ccu.c  |  301 -------
- drivers/clk/nxp/clk-lpc18xx-cgu.c  |  668 ---------------
- drivers/clk/nxp/clk-lpc18xx-creg.c |  225 -----
- drivers/clk/nxp/clk-lpc32xx.c      | 1591 ------------------------------------
- 7 files changed, 2798 deletions(-)
+ drivers/pinctrl/Kconfig           |    9 -
+ drivers/pinctrl/Makefile          |    1 -
+ drivers/pinctrl/pinctrl-lpc18xx.c | 1382 -------------------------------------
+ 3 files changed, 1392 deletions(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 1717ce75a907e..5e98cd8425851 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -367,13 +367,6 @@ config COMMON_CLK_LOONGSON2
-           peripherals within the SoC.
-           Say Y here to support Loongson-2 SoC clock driver.
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index c2cdd7b2c49b0..35a379570becd 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -364,15 +364,6 @@ config PINCTRL_XWAY
+ 	depends on SOC_TYPE_XWAY
+ 	depends on PINCTRL_LANTIQ
  
--config COMMON_CLK_NXP
--	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
--	select REGMAP_MMIO if ARCH_LPC32XX
--	select MFD_SYSCON if ARCH_LPC18XX
+-config PINCTRL_LPC18XX
+-	bool "NXP LPC18XX/43XX SCU pinctrl driver"
+-	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
+-	default ARCH_LPC18XX
+-	select PINMUX
+-	select GENERIC_PINCONF
 -	help
--	  Support for clock providers on NXP platforms.
+-	  Pinctrl driver for NXP LPC18xx/43xx System Control Unit (SCU).
 -
- config COMMON_CLK_PALMAS
- 	tristate "Clock driver for TI Palmas devices"
- 	depends on MFD_PALMAS
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index cc108a75a9008..23b14a934635d 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -136,7 +136,6 @@ obj-y					+= mstar/
- obj-y					+= mvebu/
- obj-$(CONFIG_ARCH_MXS)			+= mxs/
- obj-$(CONFIG_ARCH_MA35)			+= nuvoton/
--obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
- obj-$(CONFIG_COMMON_CLK_PISTACHIO)	+= pistachio/
- obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
- obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
-diff --git a/drivers/clk/nxp/Makefile b/drivers/clk/nxp/Makefile
+ config PINCTRL_MAX7360
+ 	tristate "MAX7360 Pincontrol support"
+ 	depends on MFD_MAX7360
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index a35d71135abfb..2176baf2ec3fc 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -38,7 +38,6 @@ obj-$(CONFIG_PINCTRL_LANTIQ)	+= pinctrl-lantiq.o
+ obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
+ obj-$(CONFIG_PINCTRL_LOONGSON2) += pinctrl-loongson2.o
+ obj-$(CONFIG_PINCTRL_XWAY)	+= pinctrl-xway.o
+-obj-$(CONFIG_PINCTRL_LPC18XX)	+= pinctrl-lpc18xx.o
+ obj-$(CONFIG_PINCTRL_MAX7360)	+= pinctrl-max7360.o
+ obj-$(CONFIG_PINCTRL_MAX77620)	+= pinctrl-max77620.o
+ obj-$(CONFIG_PINCTRL_MCP23S08_I2C)	+= pinctrl-mcp23s08_i2c.o
+diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
 deleted file mode 100644
-index 2cf6317d28531..0000000000000
---- a/drivers/clk/nxp/Makefile
+index 5e02017683235..0000000000000
+--- a/drivers/pinctrl/pinctrl-lpc18xx.c
 +++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-cgu.o
--obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-ccu.o
--obj-$(CONFIG_ARCH_LPC18XX)	+= clk-lpc18xx-creg.o
--obj-$(CONFIG_ARCH_LPC32XX)	+= clk-lpc32xx.o
-diff --git a/drivers/clk/nxp/clk-lpc18xx-ccu.c b/drivers/clk/nxp/clk-lpc18xx-ccu.c
-deleted file mode 100644
-index 3793e701835ff..0000000000000
---- a/drivers/clk/nxp/clk-lpc18xx-ccu.c
-+++ /dev/null
-@@ -1,301 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
+@@ -1,1382 +0,0 @@
 -/*
-- * Clk driver for NXP LPC18xx/LPC43xx Clock Control Unit (CCU)
+- * Pinctrl driver for NXP LPC18xx/LPC43xx System Control Unit (SCU)
 - *
 - * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
 - */
 -
+-#include <linux/bitops.h>
 -#include <linux/clk.h>
--#include <linux/clk-provider.h>
+-#include <linux/init.h>
 -#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/slab.h>
--#include <linux/string.h>
+-#include <linux/mod_devicetable.h>
+-#include <linux/platform_device.h>
 -
--#include <dt-bindings/clock/lpc18xx-ccu.h>
+-#include <linux/pinctrl/pinconf-generic.h>
+-#include <linux/pinctrl/pinconf.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/pinctrl/pinmux.h>
 -
--/* Bit defines for CCU branch configuration register */
--#define LPC18XX_CCU_RUN		BIT(0)
--#define LPC18XX_CCU_AUTO	BIT(1)
--#define LPC18XX_CCU_DIV		BIT(5)
--#define LPC18XX_CCU_DIVSTAT	BIT(27)
+-#include "core.h"
+-#include "pinctrl-utils.h"
 -
--/* CCU branch feature bits */
--#define CCU_BRANCH_IS_BUS	BIT(0)
--#define CCU_BRANCH_HAVE_DIV2	BIT(1)
+-/* LPC18XX SCU analog function registers */
+-#define LPC18XX_SCU_REG_ENAIO0		0xc88
+-#define LPC18XX_SCU_REG_ENAIO1		0xc8c
+-#define LPC18XX_SCU_REG_ENAIO2		0xc90
+-#define LPC18XX_SCU_REG_ENAIO2_DAC	BIT(0)
 -
--struct lpc18xx_branch_clk_data {
--	int num;
--	const char *name[] __counted_by(num);
--};
+-/* LPC18XX SCU pin register definitions */
+-#define LPC18XX_SCU_PIN_MODE_MASK	0x7
+-#define LPC18XX_SCU_PIN_EPD		BIT(3)
+-#define LPC18XX_SCU_PIN_EPUN		BIT(4)
+-#define LPC18XX_SCU_PIN_EHS		BIT(5)
+-#define LPC18XX_SCU_PIN_EZI		BIT(6)
+-#define LPC18XX_SCU_PIN_ZIF		BIT(7)
+-#define LPC18XX_SCU_PIN_EHD_MASK	0x300
+-#define LPC18XX_SCU_PIN_EHD_POS		8
 -
--struct lpc18xx_clk_branch {
--	const char *base_name;
--	const char *name;
--	u16 offset;
--	u16 flags;
--	struct clk *clk;
--	struct clk_gate gate;
--};
+-#define LPC18XX_SCU_USB1_EPD		BIT(2)
+-#define LPC18XX_SCU_USB1_EPWR		BIT(4)
 -
--static struct lpc18xx_clk_branch clk_branches[] = {
--	{"base_apb3_clk", "apb3_bus",		CLK_APB3_BUS,		CCU_BRANCH_IS_BUS},
--	{"base_apb3_clk", "apb3_i2c1",		CLK_APB3_I2C1,		0},
--	{"base_apb3_clk", "apb3_dac",		CLK_APB3_DAC,		0},
--	{"base_apb3_clk", "apb3_adc0",		CLK_APB3_ADC0,		0},
--	{"base_apb3_clk", "apb3_adc1",		CLK_APB3_ADC1,		0},
--	{"base_apb3_clk", "apb3_can0",		CLK_APB3_CAN0,		0},
+-#define LPC18XX_SCU_I2C0_EFP		BIT(0)
+-#define LPC18XX_SCU_I2C0_EHD		BIT(2)
+-#define LPC18XX_SCU_I2C0_EZI		BIT(3)
+-#define LPC18XX_SCU_I2C0_ZIF		BIT(7)
+-#define LPC18XX_SCU_I2C0_SCL_SHIFT	0
+-#define LPC18XX_SCU_I2C0_SDA_SHIFT	8
 -
--	{"base_apb1_clk", "apb1_bus",		CLK_APB1_BUS,		CCU_BRANCH_IS_BUS},
--	{"base_apb1_clk", "apb1_mc_pwm",	CLK_APB1_MOTOCON_PWM,	0},
--	{"base_apb1_clk", "apb1_i2c0",		CLK_APB1_I2C0,		0},
--	{"base_apb1_clk", "apb1_i2s",		CLK_APB1_I2S,		0},
--	{"base_apb1_clk", "apb1_can1",		CLK_APB1_CAN1,		0},
+-#define LPC18XX_SCU_FUNC_PER_PIN	8
 -
--	{"base_spifi_clk", "spifi",		CLK_SPIFI,		0},
+-/* LPC18XX SCU pin interrupt select registers */
+-#define LPC18XX_SCU_PINTSEL0		0xe00
+-#define LPC18XX_SCU_PINTSEL1		0xe04
+-#define LPC18XX_SCU_PINTSEL_VAL_MASK	0xff
+-#define LPC18XX_SCU_PINTSEL_PORT_SHIFT	5
+-#define LPC18XX_SCU_IRQ_PER_PINTSEL	4
+-#define LPC18XX_GPIO_PINS_PER_PORT	32
+-#define LPC18XX_GPIO_PIN_INT_MAX	8
 -
--	{"base_cpu_clk", "cpu_bus",		CLK_CPU_BUS,		CCU_BRANCH_IS_BUS},
--	{"base_cpu_clk", "cpu_spifi",		CLK_CPU_SPIFI,		0},
--	{"base_cpu_clk", "cpu_gpio",		CLK_CPU_GPIO,		0},
--	{"base_cpu_clk", "cpu_lcd",		CLK_CPU_LCD,		0},
--	{"base_cpu_clk", "cpu_ethernet",	CLK_CPU_ETHERNET,	0},
--	{"base_cpu_clk", "cpu_usb0",		CLK_CPU_USB0,		0},
--	{"base_cpu_clk", "cpu_emc",		CLK_CPU_EMC,		0},
--	{"base_cpu_clk", "cpu_sdio",		CLK_CPU_SDIO,		0},
--	{"base_cpu_clk", "cpu_dma",		CLK_CPU_DMA,		0},
--	{"base_cpu_clk", "cpu_core",		CLK_CPU_CORE,		0},
--	{"base_cpu_clk", "cpu_sct",		CLK_CPU_SCT,		0},
--	{"base_cpu_clk", "cpu_usb1",		CLK_CPU_USB1,		0},
--	{"base_cpu_clk", "cpu_emcdiv",		CLK_CPU_EMCDIV,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_flasha",		CLK_CPU_FLASHA,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_flashb",		CLK_CPU_FLASHB,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_m0app",		CLK_CPU_M0APP,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_adchs",		CLK_CPU_ADCHS,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_eeprom",		CLK_CPU_EEPROM,		CCU_BRANCH_HAVE_DIV2},
--	{"base_cpu_clk", "cpu_wwdt",		CLK_CPU_WWDT,		0},
--	{"base_cpu_clk", "cpu_uart0",		CLK_CPU_UART0,		0},
--	{"base_cpu_clk", "cpu_uart1",		CLK_CPU_UART1,		0},
--	{"base_cpu_clk", "cpu_ssp0",		CLK_CPU_SSP0,		0},
--	{"base_cpu_clk", "cpu_timer0",		CLK_CPU_TIMER0,		0},
--	{"base_cpu_clk", "cpu_timer1",		CLK_CPU_TIMER1,		0},
--	{"base_cpu_clk", "cpu_scu",		CLK_CPU_SCU,		0},
--	{"base_cpu_clk", "cpu_creg",		CLK_CPU_CREG,		0},
--	{"base_cpu_clk", "cpu_ritimer",		CLK_CPU_RITIMER,	0},
--	{"base_cpu_clk", "cpu_uart2",		CLK_CPU_UART2,		0},
--	{"base_cpu_clk", "cpu_uart3",		CLK_CPU_UART3,		0},
--	{"base_cpu_clk", "cpu_timer2",		CLK_CPU_TIMER2,		0},
--	{"base_cpu_clk", "cpu_timer3",		CLK_CPU_TIMER3,		0},
--	{"base_cpu_clk", "cpu_ssp1",		CLK_CPU_SSP1,		0},
--	{"base_cpu_clk", "cpu_qei",		CLK_CPU_QEI,		0},
+-#define LPC18XX_SCU_PINTSEL_VAL(val, n) \
+-	((val) << (((n) % LPC18XX_SCU_IRQ_PER_PINTSEL) * 8))
 -
--	{"base_periph_clk", "periph_bus",	CLK_PERIPH_BUS,		CCU_BRANCH_IS_BUS},
--	{"base_periph_clk", "periph_core",	CLK_PERIPH_CORE,	0},
--	{"base_periph_clk", "periph_sgpio",	CLK_PERIPH_SGPIO,	0},
--
--	{"base_usb0_clk",  "usb0",		CLK_USB0,		0},
--	{"base_usb1_clk",  "usb1",		CLK_USB1,		0},
--	{"base_spi_clk",   "spi",		CLK_SPI,		0},
--	{"base_adchs_clk", "adchs",		CLK_ADCHS,		0},
--
--	{"base_audio_clk", "audio",		CLK_AUDIO,		0},
--	{"base_uart3_clk", "apb2_uart3",	CLK_APB2_UART3,		0},
--	{"base_uart2_clk", "apb2_uart2",	CLK_APB2_UART2,		0},
--	{"base_uart1_clk", "apb0_uart1",	CLK_APB0_UART1,		0},
--	{"base_uart0_clk", "apb0_uart0",	CLK_APB0_UART0,		0},
--	{"base_ssp1_clk",  "apb2_ssp1",		CLK_APB2_SSP1,		0},
--	{"base_ssp0_clk",  "apb0_ssp0",		CLK_APB0_SSP0,		0},
--	{"base_sdio_clk",  "sdio",		CLK_SDIO,		0},
--};
--
--static struct clk *lpc18xx_ccu_branch_clk_get(struct of_phandle_args *clkspec,
--					      void *data)
--{
--	struct lpc18xx_branch_clk_data *clk_data = data;
--	unsigned int offset = clkspec->args[0];
--	int i, j;
--
--	for (i = 0; i < ARRAY_SIZE(clk_branches); i++) {
--		if (clk_branches[i].offset != offset)
--			continue;
--
--		for (j = 0; j < clk_data->num; j++) {
--			if (!strcmp(clk_branches[i].base_name, clk_data->name[j]))
--				return clk_branches[i].clk;
--		}
--	}
--
--	pr_err("%s: invalid clock offset %d\n", __func__, offset);
--
--	return ERR_PTR(-EINVAL);
--}
--
--static int lpc18xx_ccu_gate_endisable(struct clk_hw *hw, bool enable)
--{
--	struct clk_gate *gate = to_clk_gate(hw);
--	u32 val;
--
--	/*
--	 * Divider field is write only, so divider stat field must
--	 * be read so divider field can be set accordingly.
--	 */
--	val = readl(gate->reg);
--	if (val & LPC18XX_CCU_DIVSTAT)
--		val |= LPC18XX_CCU_DIV;
--
--	if (enable) {
--		val |= LPC18XX_CCU_RUN;
--	} else {
--		/*
--		 * To safely disable a branch clock a sequence of two separate
--		 * writes must be used. First write should set the AUTO bit
--		 * and the next write should clear the RUN bit.
--		 */
--		val |= LPC18XX_CCU_AUTO;
--		writel(val, gate->reg);
--
--		val &= ~LPC18XX_CCU_RUN;
--	}
--
--	writel(val, gate->reg);
--
--	return 0;
--}
--
--static int lpc18xx_ccu_gate_enable(struct clk_hw *hw)
--{
--	return lpc18xx_ccu_gate_endisable(hw, true);
--}
--
--static void lpc18xx_ccu_gate_disable(struct clk_hw *hw)
--{
--	lpc18xx_ccu_gate_endisable(hw, false);
--}
--
--static int lpc18xx_ccu_gate_is_enabled(struct clk_hw *hw)
--{
--	const struct clk_hw *parent;
--
--	/*
--	 * The branch clock registers are only accessible
--	 * if the base (parent) clock is enabled. Register
--	 * access with a disabled base clock will hang the
--	 * system.
--	 */
--	parent = clk_hw_get_parent(hw);
--	if (!parent)
--		return 0;
--
--	if (!clk_hw_is_enabled(parent))
--		return 0;
--
--	return clk_gate_ops.is_enabled(hw);
--}
--
--static const struct clk_ops lpc18xx_ccu_gate_ops = {
--	.enable		= lpc18xx_ccu_gate_enable,
--	.disable	= lpc18xx_ccu_gate_disable,
--	.is_enabled	= lpc18xx_ccu_gate_is_enabled,
--};
--
--static void lpc18xx_ccu_register_branch_gate_div(struct lpc18xx_clk_branch *branch,
--						 void __iomem *reg_base,
--						 const char *parent)
--{
--	const struct clk_ops *div_ops = NULL;
--	struct clk_divider *div = NULL;
--	struct clk_hw *div_hw = NULL;
--
--	if (branch->flags & CCU_BRANCH_HAVE_DIV2) {
--		div = kzalloc_obj(*div);
--		if (!div)
--			return;
--
--		div->reg = branch->offset + reg_base;
--		div->flags = CLK_DIVIDER_READ_ONLY;
--		div->shift = 27;
--		div->width = 1;
--
--		div_hw = &div->hw;
--		div_ops = &clk_divider_ro_ops;
--	}
--
--	branch->gate.reg = branch->offset + reg_base;
--	branch->gate.bit_idx = 0;
--
--	branch->clk = clk_register_composite(NULL, branch->name, &parent, 1,
--					     NULL, NULL,
--					     div_hw, div_ops,
--					     &branch->gate.hw, &lpc18xx_ccu_gate_ops, 0);
--	if (IS_ERR(branch->clk)) {
--		kfree(div);
--		pr_warn("%s: failed to register %s\n", __func__, branch->name);
--		return;
--	}
--
--	/* Grab essential branch clocks for CPU and SDRAM */
--	switch (branch->offset) {
--	case CLK_CPU_EMC:
--	case CLK_CPU_CORE:
--	case CLK_CPU_CREG:
--	case CLK_CPU_EMCDIV:
--		clk_prepare_enable(branch->clk);
--	}
--}
--
--static void lpc18xx_ccu_register_branch_clks(void __iomem *reg_base,
--					     const char *base_name)
--{
--	const char *parent = base_name;
--	int i;
--
--	for (i = 0; i < ARRAY_SIZE(clk_branches); i++) {
--		if (strcmp(clk_branches[i].base_name, base_name))
--			continue;
--
--		lpc18xx_ccu_register_branch_gate_div(&clk_branches[i], reg_base,
--						     parent);
--
--		if (clk_branches[i].flags & CCU_BRANCH_IS_BUS)
--			parent = clk_branches[i].name;
--	}
--}
--
--static void __init lpc18xx_ccu_init(struct device_node *np)
--{
--	struct lpc18xx_branch_clk_data *clk_data;
--	void __iomem *reg_base;
--	size_t size;
--	int i, ret;
--
--	reg_base = of_iomap(np, 0);
--	if (!reg_base) {
--		pr_warn("%s: failed to map address range\n", __func__);
--		return;
--	}
--
--	size = of_property_count_strings(np, "clock-names");
--	clk_data = kzalloc_flex(*clk_data, name, size);
--	if (!clk_data) {
--		iounmap(reg_base);
--		return;
--	}
--
--	clk_data->num = size;
--
--	for (i = 0; i < clk_data->num; i++) {
--		ret = of_property_read_string_index(np, "clock-names", i,
--						    &clk_data->name[i]);
--		if (ret) {
--			pr_warn("%s: failed to get clock name at idx %d\n",
--				__func__, i);
--			continue;
--		}
--
--		lpc18xx_ccu_register_branch_clks(reg_base, clk_data->name[i]);
--	}
--
--	of_clk_add_provider(np, lpc18xx_ccu_branch_clk_get, clk_data);
--}
--CLK_OF_DECLARE(lpc18xx_ccu, "nxp,lpc1850-ccu", lpc18xx_ccu_init);
-diff --git a/drivers/clk/nxp/clk-lpc18xx-cgu.c b/drivers/clk/nxp/clk-lpc18xx-cgu.c
-deleted file mode 100644
-index b9e204d63a972..0000000000000
---- a/drivers/clk/nxp/clk-lpc18xx-cgu.c
-+++ /dev/null
-@@ -1,668 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Clk driver for NXP LPC18xx/LPC43xx Clock Generation Unit (CGU)
-- *
-- * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
-- */
--
--#include <linux/clk-provider.h>
--#include <linux/delay.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--
--#include <dt-bindings/clock/lpc18xx-cgu.h>
--
--/* Clock Generation Unit (CGU) registers */
--#define LPC18XX_CGU_XTAL_OSC_CTRL	0x018
--#define LPC18XX_CGU_PLL0USB_STAT	0x01c
--#define LPC18XX_CGU_PLL0USB_CTRL	0x020
--#define LPC18XX_CGU_PLL0USB_MDIV	0x024
--#define LPC18XX_CGU_PLL0USB_NP_DIV	0x028
--#define LPC18XX_CGU_PLL0AUDIO_STAT	0x02c
--#define LPC18XX_CGU_PLL0AUDIO_CTRL	0x030
--#define LPC18XX_CGU_PLL0AUDIO_MDIV	0x034
--#define LPC18XX_CGU_PLL0AUDIO_NP_DIV	0x038
--#define LPC18XX_CGU_PLL0AUDIO_FRAC	0x03c
--#define LPC18XX_CGU_PLL1_STAT		0x040
--#define LPC18XX_CGU_PLL1_CTRL		0x044
--#define  LPC18XX_PLL1_CTRL_FBSEL	BIT(6)
--#define  LPC18XX_PLL1_CTRL_DIRECT	BIT(7)
--#define LPC18XX_CGU_IDIV_CTRL(n)	(0x048 + (n) * sizeof(u32))
--#define LPC18XX_CGU_BASE_CLK(id)	(0x05c + (id) * sizeof(u32))
--#define LPC18XX_CGU_PLL_CTRL_OFFSET	0x4
--
--/* PLL0 bits common to both audio and USB PLL */
--#define LPC18XX_PLL0_STAT_LOCK		BIT(0)
--#define LPC18XX_PLL0_CTRL_PD		BIT(0)
--#define LPC18XX_PLL0_CTRL_BYPASS	BIT(1)
--#define LPC18XX_PLL0_CTRL_DIRECTI	BIT(2)
--#define LPC18XX_PLL0_CTRL_DIRECTO	BIT(3)
--#define LPC18XX_PLL0_CTRL_CLKEN		BIT(4)
--#define LPC18XX_PLL0_MDIV_MDEC_MASK	0x1ffff
--#define LPC18XX_PLL0_MDIV_SELP_SHIFT	17
--#define LPC18XX_PLL0_MDIV_SELI_SHIFT	22
--#define LPC18XX_PLL0_MSEL_MAX		BIT(15)
--
--/* Register value that gives PLL0 post/pre dividers equal to 1 */
--#define LPC18XX_PLL0_NP_DIVS_1		0x00302062
--
+-/* LPC18xx pin types */
 -enum {
--	CLK_SRC_OSC32,
--	CLK_SRC_IRC,
--	CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK,
--	CLK_SRC_GP_CLKIN,
--	CLK_SRC_RESERVED1,
--	CLK_SRC_OSC,
--	CLK_SRC_PLL0USB,
--	CLK_SRC_PLL0AUDIO,
--	CLK_SRC_PLL1,
--	CLK_SRC_RESERVED2,
--	CLK_SRC_RESERVED3,
--	CLK_SRC_IDIVA,
--	CLK_SRC_IDIVB,
--	CLK_SRC_IDIVC,
--	CLK_SRC_IDIVD,
--	CLK_SRC_IDIVE,
--	CLK_SRC_MAX
+-	TYPE_ND,	/* Normal-drive */
+-	TYPE_HD,	/* High-drive */
+-	TYPE_HS,	/* High-speed */
+-	TYPE_I2C0,
+-	TYPE_USB1,
 -};
 -
--static const char *clk_src_names[CLK_SRC_MAX] = {
--	[CLK_SRC_OSC32]		= "osc32",
--	[CLK_SRC_IRC]		= "irc",
--	[CLK_SRC_ENET_RX_CLK]	= "enet_rx_clk",
--	[CLK_SRC_ENET_TX_CLK]	= "enet_tx_clk",
--	[CLK_SRC_GP_CLKIN]	= "gp_clkin",
--	[CLK_SRC_OSC]		= "osc",
--	[CLK_SRC_PLL0USB]	= "pll0usb",
--	[CLK_SRC_PLL0AUDIO]	= "pll0audio",
--	[CLK_SRC_PLL1]		= "pll1",
--	[CLK_SRC_IDIVA]		= "idiva",
--	[CLK_SRC_IDIVB]		= "idivb",
--	[CLK_SRC_IDIVC]		= "idivc",
--	[CLK_SRC_IDIVD]		= "idivd",
--	[CLK_SRC_IDIVE]		= "idive",
+-/* LPC18xx pin functions */
+-enum {
+-	FUNC_R,		/* Reserved */
+-	FUNC_ADC,
+-	FUNC_ADCTRIG,
+-	FUNC_CAN0,
+-	FUNC_CAN1,
+-	FUNC_CGU_OUT,
+-	FUNC_CLKIN,
+-	FUNC_CLKOUT,
+-	FUNC_CTIN,
+-	FUNC_CTOUT,
+-	FUNC_DAC,
+-	FUNC_EMC,
+-	FUNC_EMC_ALT,
+-	FUNC_ENET,
+-	FUNC_ENET_ALT,
+-	FUNC_GPIO,
+-	FUNC_I2C0,
+-	FUNC_I2C1,
+-	FUNC_I2S0_RX_MCLK,
+-	FUNC_I2S0_RX_SCK,
+-	FUNC_I2S0_RX_SDA,
+-	FUNC_I2S0_RX_WS,
+-	FUNC_I2S0_TX_MCLK,
+-	FUNC_I2S0_TX_SCK,
+-	FUNC_I2S0_TX_SDA,
+-	FUNC_I2S0_TX_WS,
+-	FUNC_I2S1,
+-	FUNC_LCD,
+-	FUNC_LCD_ALT,
+-	FUNC_MCTRL,
+-	FUNC_NMI,
+-	FUNC_QEI,
+-	FUNC_SDMMC,
+-	FUNC_SGPIO,
+-	FUNC_SPI,
+-	FUNC_SPIFI,
+-	FUNC_SSP0,
+-	FUNC_SSP0_ALT,
+-	FUNC_SSP1,
+-	FUNC_TIMER0,
+-	FUNC_TIMER1,
+-	FUNC_TIMER2,
+-	FUNC_TIMER3,
+-	FUNC_TRACE,
+-	FUNC_UART0,
+-	FUNC_UART1,
+-	FUNC_UART2,
+-	FUNC_UART3,
+-	FUNC_USB0,
+-	FUNC_USB1,
+-	FUNC_MAX
 -};
 -
--static const char *clk_base_names[BASE_CLK_MAX] = {
--	[BASE_SAFE_CLK]		= "base_safe_clk",
--	[BASE_USB0_CLK]		= "base_usb0_clk",
--	[BASE_PERIPH_CLK]	= "base_periph_clk",
--	[BASE_USB1_CLK]		= "base_usb1_clk",
--	[BASE_CPU_CLK]		= "base_cpu_clk",
--	[BASE_SPIFI_CLK]	= "base_spifi_clk",
--	[BASE_SPI_CLK]		= "base_spi_clk",
--	[BASE_PHY_RX_CLK]	= "base_phy_rx_clk",
--	[BASE_PHY_TX_CLK]	= "base_phy_tx_clk",
--	[BASE_APB1_CLK]		= "base_apb1_clk",
--	[BASE_APB3_CLK]		= "base_apb3_clk",
--	[BASE_LCD_CLK]		= "base_lcd_clk",
--	[BASE_ADCHS_CLK]	= "base_adchs_clk",
--	[BASE_SDIO_CLK]		= "base_sdio_clk",
--	[BASE_SSP0_CLK]		= "base_ssp0_clk",
--	[BASE_SSP1_CLK]		= "base_ssp1_clk",
--	[BASE_UART0_CLK]	= "base_uart0_clk",
--	[BASE_UART1_CLK]	= "base_uart1_clk",
--	[BASE_UART2_CLK]	= "base_uart2_clk",
--	[BASE_UART3_CLK]	= "base_uart3_clk",
--	[BASE_OUT_CLK]		= "base_out_clk",
--	[BASE_AUDIO_CLK]	= "base_audio_clk",
--	[BASE_CGU_OUT0_CLK]	= "base_cgu_out0_clk",
--	[BASE_CGU_OUT1_CLK]	= "base_cgu_out1_clk",
+-static const char *const lpc18xx_function_names[] = {
+-	[FUNC_R]		= "reserved",
+-	[FUNC_ADC]		= "adc",
+-	[FUNC_ADCTRIG]		= "adctrig",
+-	[FUNC_CAN0]		= "can0",
+-	[FUNC_CAN1]		= "can1",
+-	[FUNC_CGU_OUT]		= "cgu_out",
+-	[FUNC_CLKIN]		= "clkin",
+-	[FUNC_CLKOUT]		= "clkout",
+-	[FUNC_CTIN]		= "ctin",
+-	[FUNC_CTOUT]		= "ctout",
+-	[FUNC_DAC]		= "dac",
+-	[FUNC_EMC]		= "emc",
+-	[FUNC_EMC_ALT]		= "emc_alt",
+-	[FUNC_ENET]		= "enet",
+-	[FUNC_ENET_ALT]		= "enet_alt",
+-	[FUNC_GPIO]		= "gpio",
+-	[FUNC_I2C0]		= "i2c0",
+-	[FUNC_I2C1]		= "i2c1",
+-	[FUNC_I2S0_RX_MCLK]	= "i2s0_rx_mclk",
+-	[FUNC_I2S0_RX_SCK]	= "i2s0_rx_sck",
+-	[FUNC_I2S0_RX_SDA]	= "i2s0_rx_sda",
+-	[FUNC_I2S0_RX_WS]	= "i2s0_rx_ws",
+-	[FUNC_I2S0_TX_MCLK]	= "i2s0_tx_mclk",
+-	[FUNC_I2S0_TX_SCK]	= "i2s0_tx_sck",
+-	[FUNC_I2S0_TX_SDA]	= "i2s0_tx_sda",
+-	[FUNC_I2S0_TX_WS]	= "i2s0_tx_ws",
+-	[FUNC_I2S1]		= "i2s1",
+-	[FUNC_LCD]		= "lcd",
+-	[FUNC_LCD_ALT]		= "lcd_alt",
+-	[FUNC_MCTRL]		= "mctrl",
+-	[FUNC_NMI]		= "nmi",
+-	[FUNC_QEI]		= "qei",
+-	[FUNC_SDMMC]		= "sdmmc",
+-	[FUNC_SGPIO]		= "sgpio",
+-	[FUNC_SPI]		= "spi",
+-	[FUNC_SPIFI]		= "spifi",
+-	[FUNC_SSP0]		= "ssp0",
+-	[FUNC_SSP0_ALT]		= "ssp0_alt",
+-	[FUNC_SSP1]		= "ssp1",
+-	[FUNC_TIMER0]		= "timer0",
+-	[FUNC_TIMER1]		= "timer1",
+-	[FUNC_TIMER2]		= "timer2",
+-	[FUNC_TIMER3]		= "timer3",
+-	[FUNC_TRACE]		= "trace",
+-	[FUNC_UART0]		= "uart0",
+-	[FUNC_UART1]		= "uart1",
+-	[FUNC_UART2]		= "uart2",
+-	[FUNC_UART3]		= "uart3",
+-	[FUNC_USB0]		= "usb0",
+-	[FUNC_USB1]		= "usb1",
 -};
 -
--static u32 lpc18xx_cgu_pll0_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL1, CLK_SRC_IDIVA, CLK_SRC_IDIVB, CLK_SRC_IDIVC,
--	CLK_SRC_IDIVD, CLK_SRC_IDIVE,
+-struct lpc18xx_pmx_func {
+-	const char **groups;
+-	unsigned ngroups;
 -};
 -
--static u32 lpc18xx_cgu_pll1_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL0USB, CLK_SRC_PLL0AUDIO, CLK_SRC_IDIVA,
--	CLK_SRC_IDIVB, CLK_SRC_IDIVC, CLK_SRC_IDIVD, CLK_SRC_IDIVE,
+-struct lpc18xx_scu_data {
+-	struct pinctrl_dev *pctl;
+-	void __iomem *base;
+-	struct clk *clk;
+-	struct lpc18xx_pmx_func func[FUNC_MAX];
 -};
 -
--static u32 lpc18xx_cgu_idiva_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL0USB, CLK_SRC_PLL0AUDIO, CLK_SRC_PLL1
+-struct lpc18xx_pin_caps {
+-	unsigned int offset;
+-	unsigned char functions[LPC18XX_SCU_FUNC_PER_PIN];
+-	unsigned char analog;
+-	unsigned char type;
 -};
 -
--static u32 lpc18xx_cgu_idivbcde_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL0AUDIO, CLK_SRC_PLL1, CLK_SRC_IDIVA,
--};
+-/* Analog pins are required to have both bias and input disabled */
+-#define LPC18XX_SCU_ANALOG_PIN_CFG	0x10
 -
--static u32 lpc18xx_cgu_base_irc_src_ids[] = {CLK_SRC_IRC};
+-/* Macros to maniupluate analog member in lpc18xx_pin_caps */
+-#define LPC18XX_ANALOG_PIN		BIT(7)
+-#define LPC18XX_ANALOG_ADC(a)		((a >> 5) & 0x3)
+-#define LPC18XX_ANALOG_BIT_MASK		0x1f
+-#define ADC0				(LPC18XX_ANALOG_PIN | (0x00 << 5))
+-#define ADC1				(LPC18XX_ANALOG_PIN | (0x01 << 5))
+-#define DAC				LPC18XX_ANALOG_PIN
 -
--static u32 lpc18xx_cgu_base_usb0_src_ids[] = {CLK_SRC_PLL0USB};
--
--static u32 lpc18xx_cgu_base_common_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL0AUDIO, CLK_SRC_PLL1, CLK_SRC_IDIVA,
--	CLK_SRC_IDIVB, CLK_SRC_IDIVC, CLK_SRC_IDIVD, CLK_SRC_IDIVE,
--};
--
--static u32 lpc18xx_cgu_base_all_src_ids[] = {
--	CLK_SRC_OSC32, CLK_SRC_IRC, CLK_SRC_ENET_RX_CLK,
--	CLK_SRC_ENET_TX_CLK, CLK_SRC_GP_CLKIN, CLK_SRC_OSC,
--	CLK_SRC_PLL0USB, CLK_SRC_PLL0AUDIO, CLK_SRC_PLL1,
--	CLK_SRC_IDIVA, CLK_SRC_IDIVB, CLK_SRC_IDIVC,
--	CLK_SRC_IDIVD, CLK_SRC_IDIVE,
--};
--
--struct lpc18xx_cgu_src_clk_div {
--	u8 clk_id;
--	u8 n_parents;
--	struct clk_divider	div;
--	struct clk_mux		mux;
--	struct clk_gate		gate;
--};
--
--#define LPC1XX_CGU_SRC_CLK_DIV(_id, _width, _table)	\
--{							\
--	.clk_id = CLK_SRC_ ##_id,			\
--	.n_parents = ARRAY_SIZE(lpc18xx_cgu_ ##_table),	\
--	.div = {					\
--		.shift = 2,				\
--		.width = _width,			\
--	},						\
--	.mux = {					\
--		.mask = 0x1f,				\
--		.shift = 24,				\
--		.table = lpc18xx_cgu_ ##_table,		\
--	},						\
--	.gate = {					\
--		.bit_idx = 0,				\
--		.flags = CLK_GATE_SET_TO_DISABLE,	\
--	},						\
+-#define LPC_P(port, pin, f0, f1, f2, f3, f4, f5, f6, f7, a, t)	\
+-static struct lpc18xx_pin_caps lpc18xx_pin_p##port##_##pin = {	\
+-	.offset = 0x##port * 32 * 4 + pin * 4,			\
+-	.functions = {						\
+-			FUNC_##f0, FUNC_##f1, FUNC_##f2,	\
+-			FUNC_##f3, FUNC_##f4, FUNC_##f5,	\
+-			FUNC_##f6, FUNC_##f7,			\
+-	},							\
+-	.analog = a,						\
+-	.type = TYPE_##t,					\
 -}
 -
--static struct lpc18xx_cgu_src_clk_div lpc18xx_cgu_src_clk_divs[] = {
--	LPC1XX_CGU_SRC_CLK_DIV(IDIVA, 2, idiva_src_ids),
--	LPC1XX_CGU_SRC_CLK_DIV(IDIVB, 4, idivbcde_src_ids),
--	LPC1XX_CGU_SRC_CLK_DIV(IDIVC, 4, idivbcde_src_ids),
--	LPC1XX_CGU_SRC_CLK_DIV(IDIVD, 4, idivbcde_src_ids),
--	LPC1XX_CGU_SRC_CLK_DIV(IDIVE, 8, idivbcde_src_ids),
--};
--
--struct lpc18xx_cgu_base_clk {
--	u8 clk_id;
--	u8 n_parents;
--	struct clk_mux mux;
--	struct clk_gate gate;
--};
--
--#define LPC1XX_CGU_BASE_CLK(_id, _table, _flags)	\
--{							\
--	.clk_id = BASE_ ##_id ##_CLK,			\
--	.n_parents = ARRAY_SIZE(lpc18xx_cgu_ ##_table),	\
--	.mux = {					\
--		.mask = 0x1f,				\
--		.shift = 24,				\
--		.table = lpc18xx_cgu_ ##_table,		\
--		.flags = _flags,			\
--	},						\
--	.gate = {					\
--		.bit_idx = 0,				\
--		.flags = CLK_GATE_SET_TO_DISABLE,	\
--	},						\
+-#define LPC_N(pname, off, f0, f1, f2, f3, f4, f5, f6, f7, a, t)	\
+-static struct lpc18xx_pin_caps lpc18xx_pin_##pname = {		\
+-	.offset = off,						\
+-	.functions = {						\
+-			FUNC_##f0, FUNC_##f1, FUNC_##f2,	\
+-			FUNC_##f3, FUNC_##f4, FUNC_##f5,	\
+-			FUNC_##f6, FUNC_##f7,			\
+-	},							\
+-	.analog = a,						\
+-	.type = TYPE_##t,					\
 -}
 -
--static struct lpc18xx_cgu_base_clk lpc18xx_cgu_base_clks[] = {
--	LPC1XX_CGU_BASE_CLK(SAFE,	base_irc_src_ids, CLK_MUX_READ_ONLY),
--	LPC1XX_CGU_BASE_CLK(USB0,	base_usb0_src_ids,   0),
--	LPC1XX_CGU_BASE_CLK(PERIPH,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(USB1,	base_all_src_ids,    0),
--	LPC1XX_CGU_BASE_CLK(CPU,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(SPIFI,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(SPI,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(PHY_RX,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(PHY_TX,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(APB1,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(APB3,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(LCD,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(ADCHS,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(SDIO,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(SSP0,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(SSP1,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(UART0,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(UART1,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(UART2,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(UART3,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(OUT,	base_all_src_ids,    0),
--	{ /* 21 reserved */ },
--	{ /* 22 reserved */ },
--	{ /* 23 reserved */ },
--	{ /* 24 reserved */ },
--	LPC1XX_CGU_BASE_CLK(AUDIO,	base_common_src_ids, 0),
--	LPC1XX_CGU_BASE_CLK(CGU_OUT0,	base_all_src_ids,    0),
--	LPC1XX_CGU_BASE_CLK(CGU_OUT1,	base_all_src_ids,    0),
--};
 -
--struct lpc18xx_pll {
--	struct		clk_hw hw;
--	void __iomem	*reg;
--	u8		flags;
--};
+-/* Pinmuxing table taken from data sheet */
+-/*    Pin    FUNC0  FUNC1  FUNC2  FUNC3   FUNC4   FUNC5   FUNC6    FUNC7 ANALOG TYPE */
+-LPC_P(0,0,   GPIO,  SSP1,  ENET,  SGPIO,      R,      R, I2S0_TX_WS,I2S1,     0, ND);
+-LPC_P(0,1,   GPIO,  SSP1,ENET_ALT,SGPIO,      R,      R,   ENET,    I2S1,     0, ND);
+-LPC_P(1,0,   GPIO,  CTIN,   EMC,      R,      R,   SSP0,  SGPIO,       R,     0, ND);
+-LPC_P(1,1,   GPIO, CTOUT,   EMC,  SGPIO,      R,   SSP0,      R,       R,     0, ND);
+-LPC_P(1,2,   GPIO, CTOUT,   EMC,  SGPIO,      R,   SSP0,      R,       R,     0, ND);
+-LPC_P(1,3,   GPIO, CTOUT, SGPIO,    EMC,   USB0,   SSP1,      R,   SDMMC,     0, ND);
+-LPC_P(1,4,   GPIO, CTOUT, SGPIO,    EMC,   USB0,   SSP1,      R,   SDMMC,     0, ND);
+-LPC_P(1,5,   GPIO, CTOUT,     R,    EMC,   USB0,   SSP1,  SGPIO,   SDMMC,     0, ND);
+-LPC_P(1,6,   GPIO,  CTIN,     R,    EMC,      R,      R,  SGPIO,   SDMMC,     0, ND);
+-LPC_P(1,7,   GPIO, UART1, CTOUT,    EMC,   USB0,      R,      R,       R,     0, ND);
+-LPC_P(1,8,   GPIO, UART1, CTOUT,    EMC,      R,      R,      R,   SDMMC,     0, ND);
+-LPC_P(1,9,   GPIO, UART1, CTOUT,    EMC,      R,      R,      R,   SDMMC,     0, ND);
+-LPC_P(1,10,  GPIO, UART1, CTOUT,    EMC,      R,      R,      R,   SDMMC,     0, ND);
+-LPC_P(1,11,  GPIO, UART1, CTOUT,    EMC,      R,      R,      R,   SDMMC,     0, ND);
+-LPC_P(1,12,  GPIO, UART1,     R,    EMC, TIMER0,      R,  SGPIO,   SDMMC,     0, ND);
+-LPC_P(1,13,  GPIO, UART1,     R,    EMC, TIMER0,      R,  SGPIO,   SDMMC,     0, ND);
+-LPC_P(1,14,  GPIO, UART1,     R,    EMC, TIMER0,      R,  SGPIO,       R,     0, ND);
+-LPC_P(1,15,  GPIO, UART2, SGPIO,   ENET, TIMER0,      R,      R,       R,     0, ND);
+-LPC_P(1,16,  GPIO, UART2, SGPIO,ENET_ALT,TIMER0,      R,      R,    ENET,     0, ND);
+-LPC_P(1,17,  GPIO, UART2,     R,   ENET, TIMER0,   CAN1,  SGPIO,       R,     0, HD);
+-LPC_P(1,18,  GPIO, UART2,     R,   ENET, TIMER0,   CAN1,  SGPIO,       R,     0, ND);
+-LPC_P(1,19,  ENET,  SSP1,     R,      R, CLKOUT,      R, I2S0_RX_MCLK,I2S1,   0, ND);
+-LPC_P(1,20,  GPIO,  SSP1,     R,   ENET, TIMER0,      R,  SGPIO,       R,     0, ND);
+-LPC_P(2,0,  SGPIO, UART0,   EMC,   USB0,   GPIO,      R, TIMER3,    ENET,     0, ND);
+-LPC_P(2,1,  SGPIO, UART0,   EMC,   USB0,   GPIO,      R, TIMER3,       R,     0, ND);
+-LPC_P(2,2,  SGPIO, UART0,   EMC,   USB0,   GPIO,   CTIN, TIMER3,       R,     0, ND);
+-LPC_P(2,3,  SGPIO,  I2C1, UART3,   CTIN,   GPIO,      R, TIMER3,    USB0,     0, HD);
+-LPC_P(2,4,  SGPIO,  I2C1, UART3,   CTIN,   GPIO,      R, TIMER3,    USB0,     0, HD);
+-LPC_P(2,5,  SGPIO,  CTIN,  USB1, ADCTRIG,  GPIO,      R, TIMER3,    USB0,     0, HD);
+-LPC_P(2,6,  SGPIO, UART0,   EMC,   USB0,   GPIO,   CTIN, TIMER3,       R,     0, ND);
+-LPC_P(2,7,   GPIO, CTOUT, UART3,    EMC,      R,      R, TIMER3,       R,     0, ND);
+-LPC_P(2,8,  SGPIO, CTOUT, UART3,    EMC,   GPIO,      R,      R,       R,     0, ND);
+-LPC_P(2,9,   GPIO, CTOUT, UART3,    EMC,      R,      R,      R,       R,     0, ND);
+-LPC_P(2,10,  GPIO, CTOUT, UART2,    EMC,      R,      R,      R,       R,     0, ND);
+-LPC_P(2,11,  GPIO, CTOUT, UART2,    EMC,      R,      R,      R,       R,     0, ND);
+-LPC_P(2,12,  GPIO, CTOUT,     R,    EMC,      R,      R,      R,   UART2,     0, ND);
+-LPC_P(2,13,  GPIO,  CTIN,     R,    EMC,      R,      R,      R,   UART2,     0, ND);
+-LPC_P(3,0,  I2S0_RX_SCK, I2S0_RX_MCLK, I2S0_TX_SCK, I2S0_TX_MCLK,SSP0,R,R,R,  0, ND);
+-LPC_P(3,1,  I2S0_TX_WS, I2S0_RX_WS,CAN0,USB1,GPIO,    R,    LCD,       R,     0, ND);
+-LPC_P(3,2,  I2S0_TX_SDA, I2S0_RX_SDA,CAN0,USB1,GPIO,  R,    LCD,      R,      0, ND);
+-LPC_P(3,3,      R,   SPI,  SSP0,  SPIFI, CGU_OUT,R, I2S0_TX_MCLK,  I2S1,      0, HS);
+-LPC_P(3,4,   GPIO,     R,     R,  SPIFI,  UART1, I2S0_TX_WS, I2S1,  LCD,      0, ND);
+-LPC_P(3,5,   GPIO,     R,     R,  SPIFI,  UART1, I2S0_TX_SDA,I2S1,  LCD,      0, ND);
+-LPC_P(3,6,   GPIO,   SPI,  SSP0,  SPIFI,      R,  SSP0_ALT,   R,      R,      0, ND);
+-LPC_P(3,7,      R,   SPI,  SSP0,  SPIFI,   GPIO,  SSP0_ALT,   R,      R,      0, ND);
+-LPC_P(3,8,      R,   SPI,  SSP0,  SPIFI,   GPIO,  SSP0_ALT,   R,      R,      0, ND);
+-LPC_P(4,0,   GPIO, MCTRL,   NMI,      R,      R,    LCD,  UART3,      R,      0, ND);
+-LPC_P(4,1,   GPIO, CTOUT,   LCD,      R,      R, LCD_ALT, UART3,   ENET, ADC0|1, ND);
+-LPC_P(4,2,   GPIO, CTOUT,   LCD,      R,      R, LCD_ALT, UART3,  SGPIO,      0, ND);
+-LPC_P(4,3,   GPIO, CTOUT,   LCD,      R,      R, LCD_ALT, UART3,  SGPIO, ADC0|0, ND);
+-LPC_P(4,4,   GPIO, CTOUT,   LCD,      R,      R, LCD_ALT, UART3,  SGPIO,    DAC, ND);
+-LPC_P(4,5,   GPIO, CTOUT,   LCD,      R,      R,      R,      R,  SGPIO,      0, ND);
+-LPC_P(4,6,   GPIO, CTOUT,   LCD,      R,      R,      R,      R,  SGPIO,      0, ND);
+-LPC_P(4,7,    LCD, CLKIN,     R,      R,      R,      R,   I2S1,I2S0_TX_SCK,  0, ND);
+-LPC_P(4,8,      R,  CTIN,   LCD,      R,   GPIO, LCD_ALT,  CAN1,  SGPIO,      0, ND);
+-LPC_P(4,9,      R,  CTIN,   LCD,      R,   GPIO, LCD_ALT,  CAN1,  SGPIO,      0, ND);
+-LPC_P(4,10,     R,  CTIN,   LCD,      R,   GPIO, LCD_ALT,     R,  SGPIO,      0, ND);
+-LPC_P(5,0,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,1,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,2,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,3,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,4,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,5,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,6,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(5,7,   GPIO, MCTRL,   EMC,      R,  UART1, TIMER1,      R,      R,      0, ND);
+-LPC_P(6,0,      R, I2S0_RX_MCLK,R,    R, I2S0_RX_SCK, R,      R,      R,      0, ND);
+-LPC_P(6,1,   GPIO,   EMC, UART0, I2S0_RX_WS,  R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,2,   GPIO,   EMC, UART0, I2S0_RX_SDA, R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,3,   GPIO,  USB0, SGPIO,    EMC,      R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,4,   GPIO,  CTIN, UART0,    EMC,      R,      R,      R,      R,      0, ND);
+-LPC_P(6,5,   GPIO, CTOUT, UART0,    EMC,      R,      R,      R,      R,      0, ND);
+-LPC_P(6,6,   GPIO,   EMC, SGPIO,   USB0,      R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,7,      R,   EMC, SGPIO,   USB0,   GPIO, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,8,      R,   EMC, SGPIO,   USB0,   GPIO, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,9,   GPIO,     R,     R,    EMC,      R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,10,  GPIO, MCTRL,     R,    EMC,      R,      R,      R,      R,      0, ND);
+-LPC_P(6,11,  GPIO,     R,     R,    EMC,      R, TIMER2,      R,      R,      0, ND);
+-LPC_P(6,12,  GPIO, CTOUT,     R,    EMC,      R,      R,      R,      R,      0, ND);
+-LPC_P(7,0,   GPIO, CTOUT,     R,    LCD,      R,      R,      R,  SGPIO,      0, ND);
+-LPC_P(7,1,   GPIO, CTOUT,I2S0_TX_WS,LCD,LCD_ALT,      R,  UART2,  SGPIO,      0, ND);
+-LPC_P(7,2,   GPIO, CTIN,I2S0_TX_SDA,LCD,LCD_ALT,      R,  UART2,  SGPIO,      0, ND);
+-LPC_P(7,3,   GPIO, CTIN,      R,    LCD,LCD_ALT,      R,      R,      R,      0, ND);
+-LPC_P(7,4,   GPIO, CTOUT,     R,    LCD,LCD_ALT,  TRACE,      R,      R, ADC0|4, ND);
+-LPC_P(7,5,   GPIO, CTOUT,     R,    LCD,LCD_ALT,  TRACE,      R,      R, ADC0|3, ND);
+-LPC_P(7,6,   GPIO, CTOUT,     R,    LCD,      R,  TRACE,      R,      R,      0, ND);
+-LPC_P(7,7,   GPIO, CTOUT,     R,    LCD,      R,  TRACE,   ENET,  SGPIO, ADC1|6, ND);
+-LPC_P(8,0,   GPIO,  USB0,     R,  MCTRL,  SGPIO,      R,      R, TIMER0,      0, HD);
+-LPC_P(8,1,   GPIO,  USB0,     R,  MCTRL,  SGPIO,      R,      R, TIMER0,      0, HD);
+-LPC_P(8,2,   GPIO,  USB0,     R,  MCTRL,  SGPIO,      R,      R, TIMER0,      0, HD);
+-LPC_P(8,3,   GPIO,  USB1,     R,    LCD, LCD_ALT,     R,      R, TIMER0,      0, ND);
+-LPC_P(8,4,   GPIO,  USB1,     R,    LCD, LCD_ALT,     R,      R, TIMER0,      0, ND);
+-LPC_P(8,5,   GPIO,  USB1,     R,    LCD, LCD_ALT,     R,      R, TIMER0,      0, ND);
+-LPC_P(8,6,   GPIO,  USB1,     R,    LCD, LCD_ALT,     R,      R, TIMER0,      0, ND);
+-LPC_P(8,7,   GPIO,  USB1,     R,    LCD, LCD_ALT,     R,      R, TIMER0,      0, ND);
+-LPC_P(8,8,      R,  USB1,     R,      R,      R,      R,CGU_OUT,   I2S1,      0, ND);
+-LPC_P(9,0,   GPIO, MCTRL,     R,      R,      R,   ENET,  SGPIO,   SSP0,      0, ND);
+-LPC_P(9,1,   GPIO, MCTRL,     R,      R, I2S0_TX_WS,ENET, SGPIO,   SSP0,      0, ND);
+-LPC_P(9,2,   GPIO, MCTRL,     R,      R, I2S0_TX_SDA,ENET,SGPIO,   SSP0,      0, ND);
+-LPC_P(9,3,   GPIO, MCTRL,  USB1,      R,      R,   ENET,  SGPIO,  UART3,      0, ND);
+-LPC_P(9,4,      R, MCTRL,  USB1,      R,   GPIO,   ENET,  SGPIO,  UART3,      0, ND);
+-LPC_P(9,5,      R, MCTRL,  USB1,      R,   GPIO,   ENET,  SGPIO,  UART0,      0, ND);
+-LPC_P(9,6,   GPIO, MCTRL,  USB1,      R,      R,   ENET,  SGPIO,  UART0,      0, ND);
+-LPC_P(a,0,      R,     R,     R,      R,      R,   I2S1, CGU_OUT,     R,      0, ND);
+-LPC_P(a,1,   GPIO,   QEI,     R,  UART2,      R,      R,      R,      R,      0, HD);
+-LPC_P(a,2,   GPIO,   QEI,     R,  UART2,      R,      R,      R,      R,      0, HD);
+-LPC_P(a,3,   GPIO,   QEI,     R,      R,      R,      R,      R,      R,      0, HD);
+-LPC_P(a,4,      R, CTOUT,     R,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(b,0,      R, CTOUT,   LCD,      R,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(b,1,      R,  USB1,   LCD,      R,   GPIO,  CTOUT,      R,      R,      0, ND);
+-LPC_P(b,2,      R,  USB1,   LCD,      R,   GPIO,  CTOUT,      R,      R,      0, ND);
+-LPC_P(b,3,      R,  USB1,   LCD,      R,   GPIO,  CTOUT,      R,      R,      0, ND);
+-LPC_P(b,4,      R,  USB1,   LCD,      R,   GPIO,   CTIN,      R,      R,      0, ND);
+-LPC_P(b,5,      R,  USB1,   LCD,      R,   GPIO,   CTIN, LCD_ALT,     R,      0, ND);
+-LPC_P(b,6,      R,  USB1,   LCD,      R,   GPIO,   CTIN, LCD_ALT,     R, ADC0|6, ND);
+-LPC_P(c,0,      R,  USB1,     R,   ENET,    LCD,      R,      R,  SDMMC, ADC1|1, ND);
+-LPC_P(c,1,   USB1,     R, UART1,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,2,   USB1,     R, UART1,   ENET,   GPIO,      R,      R,  SDMMC,      0, ND);
+-LPC_P(c,3,   USB1,     R, UART1,   ENET,   GPIO,      R,      R,  SDMMC, ADC1|0, ND);
+-LPC_P(c,4,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,5,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,6,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,7,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,8,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,9,      R,  USB1,     R,   ENET,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,10,     R,  USB1, UART1,      R,   GPIO,      R, TIMER3,  SDMMC,      0, ND);
+-LPC_P(c,11,     R,  USB1, UART1,      R,   GPIO,      R,      R,  SDMMC,      0, ND);
+-LPC_P(c,12,     R,     R, UART1,      R,   GPIO,  SGPIO, I2S0_TX_SDA,SDMMC,   0, ND);
+-LPC_P(c,13,     R,     R, UART1,      R,   GPIO,  SGPIO, I2S0_TX_WS, SDMMC,   0, ND);
+-LPC_P(c,14,     R,     R, UART1,      R,   GPIO,  SGPIO,   ENET,  SDMMC,      0, ND);
+-LPC_P(d,0,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,1,      R,     R,   EMC,      R,   GPIO,  SDMMC,      R,  SGPIO,      0, ND);
+-LPC_P(d,2,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,3,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,4,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,5,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,6,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,7,      R,  CTIN,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,8,      R,  CTIN,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,9,      R, CTOUT,   EMC,      R,   GPIO,      R,      R,  SGPIO,      0, ND);
+-LPC_P(d,10,     R,  CTIN,   EMC,      R,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(d,11,     R,     R,   EMC,      R,   GPIO,   USB1,  CTOUT,      R,      0, ND);
+-LPC_P(d,12,     R,     R,   EMC,      R,   GPIO,      R,  CTOUT,      R,      0, ND);
+-LPC_P(d,13,     R,  CTIN,   EMC,      R,   GPIO,      R,  CTOUT,      R,      0, ND);
+-LPC_P(d,14,     R,     R,   EMC,      R,   GPIO,      R,  CTOUT,      R,      0, ND);
+-LPC_P(d,15,     R,     R,   EMC,      R,   GPIO,  SDMMC,  CTOUT,      R,      0, ND);
+-LPC_P(d,16,     R,     R,   EMC,      R,   GPIO,  SDMMC,  CTOUT,      R,      0, ND);
+-LPC_P(e,0,      R,     R,     R,    EMC,   GPIO,   CAN1,      R,      R,      0, ND);
+-LPC_P(e,1,      R,     R,     R,    EMC,   GPIO,   CAN1,      R,      R,      0, ND);
+-LPC_P(e,2,ADCTRIG,  CAN0,     R,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,3,      R,  CAN0,ADCTRIG,   EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,4,      R,   NMI,     R,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,5,      R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,6,      R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,7,      R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,8,      R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,9,      R,  CTIN, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,10,     R,  CTIN, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,11,     R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,12,     R, CTOUT, UART1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,13,     R, CTOUT,  I2C1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,14,     R,     R,     R,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(e,15,     R, CTOUT,  I2C1,    EMC,   GPIO,      R,      R,      R,      0, ND);
+-LPC_P(f,0,   SSP0, CLKIN,     R,      R,      R,      R,      R,   I2S1,      0, ND);
+-LPC_P(f,1,      R,     R,  SSP0,      R,   GPIO,      R,  SGPIO,      R,      0, ND);
+-LPC_P(f,2,      R, UART3,  SSP0,      R,   GPIO,      R,  SGPIO,      R,      0, ND);
+-LPC_P(f,3,      R, UART3,  SSP0,      R,   GPIO,      R,  SGPIO,      R,      0, ND);
+-LPC_P(f,4,   SSP1, CLKIN, TRACE,      R,      R, R, I2S0_TX_MCLK,I2S0_RX_SCK, 0, ND);
+-LPC_P(f,5,      R, UART3,  SSP1,  TRACE,   GPIO,      R,  SGPIO,      R, ADC1|4, ND);
+-LPC_P(f,6,      R, UART3,  SSP1,  TRACE,   GPIO,      R,  SGPIO,   I2S1, ADC1|3, ND);
+-LPC_P(f,7,      R, UART3,  SSP1,  TRACE,   GPIO,      R,  SGPIO,   I2S1, ADC1|7, ND);
+-LPC_P(f,8,      R, UART0,  CTIN,  TRACE,   GPIO,      R,  SGPIO,      R, ADC0|2, ND);
+-LPC_P(f,9,      R, UART0, CTOUT,      R,   GPIO,      R,  SGPIO,      R, ADC1|2, ND);
+-LPC_P(f,10,     R, UART0,     R,      R,   GPIO,      R,  SDMMC,      R, ADC0|5, ND);
+-LPC_P(f,11,     R, UART0,     R,      R,   GPIO,      R,  SDMMC,      R, ADC1|5, ND);
 -
--#define to_lpc_pll(hw) container_of(hw, struct lpc18xx_pll, hw)
+-/*    Pin      Offset FUNC0  FUNC1  FUNC2  FUNC3  FUNC4    FUNC5   FUNC6      FUNC7 ANALOG TYPE */
+-LPC_N(clk0,     0xc00, EMC, CLKOUT,   R,     R,  SDMMC,   EMC_ALT,  SSP1,      ENET,  0, HS);
+-LPC_N(clk1,     0xc04, EMC, CLKOUT,   R,     R,      R,   CGU_OUT,   R,        I2S1,  0, HS);
+-LPC_N(clk2,     0xc08, EMC, CLKOUT,   R,     R,  SDMMC,   EMC_ALT,I2S0_TX_MCLK,I2S1,  0, HS);
+-LPC_N(clk3,     0xc0c, EMC, CLKOUT,   R,     R,      R,   CGU_OUT,   R,        I2S1,  0, HS);
+-LPC_N(usb1_dm,  0xc80, R,      R,     R,     R,      R,      R,      R,          R,   0, USB1);
+-LPC_N(usb1_dp,  0xc80, R,      R,     R,     R,      R,      R,      R,          R,   0, USB1);
+-LPC_N(i2c0_scl, 0xc84, R,      R,     R,     R,      R,      R,      R,          R,   0, I2C0);
+-LPC_N(i2c0_sda, 0xc84, R,      R,     R,     R,      R,      R,      R,          R,   0, I2C0);
 -
--struct lpc18xx_cgu_pll_clk {
--	u8 clk_id;
--	u8 n_parents;
--	u8 reg_offset;
--	struct clk_mux mux;
--	struct clk_gate gate;
--	struct lpc18xx_pll pll;
--	const struct clk_ops *pll_ops;
--};
--
--#define LPC1XX_CGU_CLK_PLL(_id, _table, _pll_ops)	\
--{							\
--	.clk_id = CLK_SRC_ ##_id,			\
--	.n_parents = ARRAY_SIZE(lpc18xx_cgu_ ##_table),	\
--	.reg_offset = LPC18XX_CGU_ ##_id ##_STAT,	\
--	.mux = {					\
--		.mask = 0x1f,				\
--		.shift = 24,				\
--		.table = lpc18xx_cgu_ ##_table,		\
--	},						\
--	.gate = {					\
--		.bit_idx = 0,				\
--		.flags = CLK_GATE_SET_TO_DISABLE,	\
--	},						\
--	.pll_ops = &lpc18xx_ ##_pll_ops,		\
+-#define LPC18XX_PIN_P(port, pin) {			\
+-	.number = 0x##port * 32 + pin,			\
+-	.name = "p"#port"_"#pin,			\
+-	.drv_data = &lpc18xx_pin_p##port##_##pin 	\
 -}
 -
--/*
-- * PLL0 uses a special register value encoding. The compute functions below
-- * are taken or derived from the LPC1850 user manual (section 12.6.3.3).
-- */
+-/* Pin numbers for special pins */
+-enum {
+-	PIN_CLK0 = 600,
+-	PIN_CLK1,
+-	PIN_CLK2,
+-	PIN_CLK3,
+-	PIN_USB1_DM,
+-	PIN_USB1_DP,
+-	PIN_I2C0_SCL,
+-	PIN_I2C0_SDA,
+-};
 -
--/* Compute PLL0 multiplier from decoded version */
--static u32 lpc18xx_pll0_mdec2msel(u32 x)
+-#define LPC18XX_PIN(pname, n) {				\
+-	.number = n,					\
+-	.name = #pname,					\
+-	.drv_data = &lpc18xx_pin_##pname 		\
+-}
+-
+-static const struct pinctrl_pin_desc lpc18xx_pins[] = {
+-	LPC18XX_PIN_P(0,0),
+-	LPC18XX_PIN_P(0,1),
+-	LPC18XX_PIN_P(1,0),
+-	LPC18XX_PIN_P(1,1),
+-	LPC18XX_PIN_P(1,2),
+-	LPC18XX_PIN_P(1,3),
+-	LPC18XX_PIN_P(1,4),
+-	LPC18XX_PIN_P(1,5),
+-	LPC18XX_PIN_P(1,6),
+-	LPC18XX_PIN_P(1,7),
+-	LPC18XX_PIN_P(1,8),
+-	LPC18XX_PIN_P(1,9),
+-	LPC18XX_PIN_P(1,10),
+-	LPC18XX_PIN_P(1,11),
+-	LPC18XX_PIN_P(1,12),
+-	LPC18XX_PIN_P(1,13),
+-	LPC18XX_PIN_P(1,14),
+-	LPC18XX_PIN_P(1,15),
+-	LPC18XX_PIN_P(1,16),
+-	LPC18XX_PIN_P(1,17),
+-	LPC18XX_PIN_P(1,18),
+-	LPC18XX_PIN_P(1,19),
+-	LPC18XX_PIN_P(1,20),
+-	LPC18XX_PIN_P(2,0),
+-	LPC18XX_PIN_P(2,1),
+-	LPC18XX_PIN_P(2,2),
+-	LPC18XX_PIN_P(2,3),
+-	LPC18XX_PIN_P(2,4),
+-	LPC18XX_PIN_P(2,5),
+-	LPC18XX_PIN_P(2,6),
+-	LPC18XX_PIN_P(2,7),
+-	LPC18XX_PIN_P(2,8),
+-	LPC18XX_PIN_P(2,9),
+-	LPC18XX_PIN_P(2,10),
+-	LPC18XX_PIN_P(2,11),
+-	LPC18XX_PIN_P(2,12),
+-	LPC18XX_PIN_P(2,13),
+-	LPC18XX_PIN_P(3,0),
+-	LPC18XX_PIN_P(3,1),
+-	LPC18XX_PIN_P(3,2),
+-	LPC18XX_PIN_P(3,3),
+-	LPC18XX_PIN_P(3,4),
+-	LPC18XX_PIN_P(3,5),
+-	LPC18XX_PIN_P(3,6),
+-	LPC18XX_PIN_P(3,7),
+-	LPC18XX_PIN_P(3,8),
+-	LPC18XX_PIN_P(4,0),
+-	LPC18XX_PIN_P(4,1),
+-	LPC18XX_PIN_P(4,2),
+-	LPC18XX_PIN_P(4,3),
+-	LPC18XX_PIN_P(4,4),
+-	LPC18XX_PIN_P(4,5),
+-	LPC18XX_PIN_P(4,6),
+-	LPC18XX_PIN_P(4,7),
+-	LPC18XX_PIN_P(4,8),
+-	LPC18XX_PIN_P(4,9),
+-	LPC18XX_PIN_P(4,10),
+-	LPC18XX_PIN_P(5,0),
+-	LPC18XX_PIN_P(5,1),
+-	LPC18XX_PIN_P(5,2),
+-	LPC18XX_PIN_P(5,3),
+-	LPC18XX_PIN_P(5,4),
+-	LPC18XX_PIN_P(5,5),
+-	LPC18XX_PIN_P(5,6),
+-	LPC18XX_PIN_P(5,7),
+-	LPC18XX_PIN_P(6,0),
+-	LPC18XX_PIN_P(6,1),
+-	LPC18XX_PIN_P(6,2),
+-	LPC18XX_PIN_P(6,3),
+-	LPC18XX_PIN_P(6,4),
+-	LPC18XX_PIN_P(6,5),
+-	LPC18XX_PIN_P(6,6),
+-	LPC18XX_PIN_P(6,7),
+-	LPC18XX_PIN_P(6,8),
+-	LPC18XX_PIN_P(6,9),
+-	LPC18XX_PIN_P(6,10),
+-	LPC18XX_PIN_P(6,11),
+-	LPC18XX_PIN_P(6,12),
+-	LPC18XX_PIN_P(7,0),
+-	LPC18XX_PIN_P(7,1),
+-	LPC18XX_PIN_P(7,2),
+-	LPC18XX_PIN_P(7,3),
+-	LPC18XX_PIN_P(7,4),
+-	LPC18XX_PIN_P(7,5),
+-	LPC18XX_PIN_P(7,6),
+-	LPC18XX_PIN_P(7,7),
+-	LPC18XX_PIN_P(8,0),
+-	LPC18XX_PIN_P(8,1),
+-	LPC18XX_PIN_P(8,2),
+-	LPC18XX_PIN_P(8,3),
+-	LPC18XX_PIN_P(8,4),
+-	LPC18XX_PIN_P(8,5),
+-	LPC18XX_PIN_P(8,6),
+-	LPC18XX_PIN_P(8,7),
+-	LPC18XX_PIN_P(8,8),
+-	LPC18XX_PIN_P(9,0),
+-	LPC18XX_PIN_P(9,1),
+-	LPC18XX_PIN_P(9,2),
+-	LPC18XX_PIN_P(9,3),
+-	LPC18XX_PIN_P(9,4),
+-	LPC18XX_PIN_P(9,5),
+-	LPC18XX_PIN_P(9,6),
+-	LPC18XX_PIN_P(a,0),
+-	LPC18XX_PIN_P(a,1),
+-	LPC18XX_PIN_P(a,2),
+-	LPC18XX_PIN_P(a,3),
+-	LPC18XX_PIN_P(a,4),
+-	LPC18XX_PIN_P(b,0),
+-	LPC18XX_PIN_P(b,1),
+-	LPC18XX_PIN_P(b,2),
+-	LPC18XX_PIN_P(b,3),
+-	LPC18XX_PIN_P(b,4),
+-	LPC18XX_PIN_P(b,5),
+-	LPC18XX_PIN_P(b,6),
+-	LPC18XX_PIN_P(c,0),
+-	LPC18XX_PIN_P(c,1),
+-	LPC18XX_PIN_P(c,2),
+-	LPC18XX_PIN_P(c,3),
+-	LPC18XX_PIN_P(c,4),
+-	LPC18XX_PIN_P(c,5),
+-	LPC18XX_PIN_P(c,6),
+-	LPC18XX_PIN_P(c,7),
+-	LPC18XX_PIN_P(c,8),
+-	LPC18XX_PIN_P(c,9),
+-	LPC18XX_PIN_P(c,10),
+-	LPC18XX_PIN_P(c,11),
+-	LPC18XX_PIN_P(c,12),
+-	LPC18XX_PIN_P(c,13),
+-	LPC18XX_PIN_P(c,14),
+-	LPC18XX_PIN_P(d,0),
+-	LPC18XX_PIN_P(d,1),
+-	LPC18XX_PIN_P(d,2),
+-	LPC18XX_PIN_P(d,3),
+-	LPC18XX_PIN_P(d,4),
+-	LPC18XX_PIN_P(d,5),
+-	LPC18XX_PIN_P(d,6),
+-	LPC18XX_PIN_P(d,7),
+-	LPC18XX_PIN_P(d,8),
+-	LPC18XX_PIN_P(d,9),
+-	LPC18XX_PIN_P(d,10),
+-	LPC18XX_PIN_P(d,11),
+-	LPC18XX_PIN_P(d,12),
+-	LPC18XX_PIN_P(d,13),
+-	LPC18XX_PIN_P(d,14),
+-	LPC18XX_PIN_P(d,15),
+-	LPC18XX_PIN_P(d,16),
+-	LPC18XX_PIN_P(e,0),
+-	LPC18XX_PIN_P(e,1),
+-	LPC18XX_PIN_P(e,2),
+-	LPC18XX_PIN_P(e,3),
+-	LPC18XX_PIN_P(e,4),
+-	LPC18XX_PIN_P(e,5),
+-	LPC18XX_PIN_P(e,6),
+-	LPC18XX_PIN_P(e,7),
+-	LPC18XX_PIN_P(e,8),
+-	LPC18XX_PIN_P(e,9),
+-	LPC18XX_PIN_P(e,10),
+-	LPC18XX_PIN_P(e,11),
+-	LPC18XX_PIN_P(e,12),
+-	LPC18XX_PIN_P(e,13),
+-	LPC18XX_PIN_P(e,14),
+-	LPC18XX_PIN_P(e,15),
+-	LPC18XX_PIN_P(f,0),
+-	LPC18XX_PIN_P(f,1),
+-	LPC18XX_PIN_P(f,2),
+-	LPC18XX_PIN_P(f,3),
+-	LPC18XX_PIN_P(f,4),
+-	LPC18XX_PIN_P(f,5),
+-	LPC18XX_PIN_P(f,6),
+-	LPC18XX_PIN_P(f,7),
+-	LPC18XX_PIN_P(f,8),
+-	LPC18XX_PIN_P(f,9),
+-	LPC18XX_PIN_P(f,10),
+-	LPC18XX_PIN_P(f,11),
+-
+-	LPC18XX_PIN(clk0, PIN_CLK0),
+-	LPC18XX_PIN(clk1, PIN_CLK1),
+-	LPC18XX_PIN(clk2, PIN_CLK2),
+-	LPC18XX_PIN(clk3, PIN_CLK3),
+-	LPC18XX_PIN(usb1_dm,  PIN_USB1_DM),
+-	LPC18XX_PIN(usb1_dp,  PIN_USB1_DP),
+-	LPC18XX_PIN(i2c0_scl, PIN_I2C0_SCL),
+-	LPC18XX_PIN(i2c0_sda, PIN_I2C0_SDA),
+-};
+-
+-/* PIN_CONFIG_GPIO_PIN_INT: route gpio to the gpio pin interrupt controller */
+-#define PIN_CONFIG_GPIO_PIN_INT		(PIN_CONFIG_END + 1)
+-
+-static const struct pinconf_generic_params lpc18xx_params[] = {
+-	{"nxp,gpio-pin-interrupt", PIN_CONFIG_GPIO_PIN_INT, 0},
+-};
+-
+-#ifdef CONFIG_DEBUG_FS
+-static const struct pin_config_item lpc18xx_conf_items[ARRAY_SIZE(lpc18xx_params)] = {
+-	PCONFDUMP(PIN_CONFIG_GPIO_PIN_INT, "gpio pin int", NULL, true),
+-};
+-#endif
+-
+-static int lpc18xx_pconf_get_usb1(enum pin_config_param param, int *arg, u32 reg)
 -{
+-	switch (param) {
+-	case PIN_CONFIG_MODE_LOW_POWER:
+-		if (reg & LPC18XX_SCU_USB1_EPWR)
+-			*arg = 0;
+-		else
+-			*arg = 1;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_DISABLE:
+-		if (reg & LPC18XX_SCU_USB1_EPD)
+-			return -EINVAL;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_DOWN:
+-		if (reg & LPC18XX_SCU_USB1_EPD)
+-			*arg = 1;
+-		else
+-			return -EINVAL;
+-		break;
+-
+-	default:
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_get_i2c0(enum pin_config_param param, int *arg, u32 reg,
+-				  unsigned pin)
+-{
+-	u8 shift;
+-
+-	if (pin == PIN_I2C0_SCL)
+-		shift = LPC18XX_SCU_I2C0_SCL_SHIFT;
+-	else
+-		shift = LPC18XX_SCU_I2C0_SDA_SHIFT;
+-
+-	switch (param) {
+-	case PIN_CONFIG_INPUT_ENABLE:
+-		if (reg & (LPC18XX_SCU_I2C0_EZI << shift))
+-			*arg = 1;
+-		else
+-			return -EINVAL;
+-		break;
+-
+-	case PIN_CONFIG_SLEW_RATE:
+-		if (reg & (LPC18XX_SCU_I2C0_EHD << shift))
+-			*arg = 1;
+-		else
+-			*arg = 0;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT:
+-		if (reg & (LPC18XX_SCU_I2C0_EFP << shift))
+-			*arg = 3;
+-		else
+-			*arg = 50;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+-		if (reg & (LPC18XX_SCU_I2C0_ZIF << shift))
+-			return -EINVAL;
+-		else
+-			*arg = 1;
+-		break;
+-
+-	default:
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pin_to_gpio(struct pinctrl_dev *pctldev, unsigned pin)
+-{
+-	struct pinctrl_gpio_range *range;
+-
+-	range = pinctrl_find_gpio_range_from_pin_nolock(pctldev, pin);
+-	if (!range)
+-		return -EINVAL;
+-
+-	return pin - range->pin_base + range->base;
+-}
+-
+-static int lpc18xx_get_pintsel(void __iomem *addr, u32 val, int *arg)
+-{
+-	u32 reg_val;
 -	int i;
 -
--	switch (x) {
--	case 0x18003: return 1;
--	case 0x10003: return 2;
--	default:
--		for (i = LPC18XX_PLL0_MSEL_MAX + 1; x != 0x4000 && i > 0; i--)
--			x = ((x ^ x >> 14) & 1) | (x << 1 & 0x7fff);
--		return i;
--	}
--}
--/* Compute PLL0 decoded multiplier from binary version */
--static u32 lpc18xx_pll0_msel2mdec(u32 msel)
--{
--	u32 i, x = 0x4000;
--
--	switch (msel) {
--	case 0: return 0;
--	case 1: return 0x18003;
--	case 2: return 0x10003;
--	default:
--		for (i = msel; i <= LPC18XX_PLL0_MSEL_MAX; i++)
--			x = ((x ^ x >> 1) & 1) << 14 | (x >> 1 & 0xffff);
--		return x;
--	}
--}
--
--/* Compute PLL0 bandwidth SELI reg from multiplier */
--static u32 lpc18xx_pll0_msel2seli(u32 msel)
--{
--	u32 tmp;
--
--	if (msel > 16384) return 1;
--	if (msel >  8192) return 2;
--	if (msel >  2048) return 4;
--	if (msel >=  501) return 8;
--	if (msel >=   60) {
--		tmp = 1024 / (msel + 9);
--		return ((1024 == (tmp * (msel + 9))) == 0) ? tmp * 4 : (tmp + 1) * 4;
--	}
--
--	return (msel & 0x3c) + 4;
--}
--
--/* Compute PLL0 bandwidth SELP reg from multiplier */
--static u32 lpc18xx_pll0_msel2selp(u32 msel)
--{
--	if (msel < 60)
--		return (msel >> 1) + 1;
--
--	return 31;
--}
--
--static unsigned long lpc18xx_pll0_recalc_rate(struct clk_hw *hw,
--					      unsigned long parent_rate)
--{
--	struct lpc18xx_pll *pll = to_lpc_pll(hw);
--	u32 ctrl, mdiv, msel, npdiv;
--
--	ctrl = readl(pll->reg + LPC18XX_CGU_PLL0USB_CTRL);
--	mdiv = readl(pll->reg + LPC18XX_CGU_PLL0USB_MDIV);
--	npdiv = readl(pll->reg + LPC18XX_CGU_PLL0USB_NP_DIV);
--
--	if (ctrl & LPC18XX_PLL0_CTRL_BYPASS)
--		return parent_rate;
--
--	if (npdiv != LPC18XX_PLL0_NP_DIVS_1) {
--		pr_warn("%s: pre/post dividers not supported\n", __func__);
--		return 0;
--	}
--
--	msel = lpc18xx_pll0_mdec2msel(mdiv & LPC18XX_PLL0_MDIV_MDEC_MASK);
--	if (msel)
--		return 2 * msel * parent_rate;
--
--	pr_warn("%s: unable to calculate rate\n", __func__);
--
--	return 0;
--}
--
--static int lpc18xx_pll0_determine_rate(struct clk_hw *hw,
--				       struct clk_rate_request *req)
--{
--	unsigned long m;
--
--	if (req->best_parent_rate < req->rate) {
--		pr_warn("%s: pll dividers not supported\n", __func__);
--		return -EINVAL;
--	}
--
--	m = DIV_ROUND_UP_ULL(req->best_parent_rate, req->rate * 2);
--	if (m == 0 || m > LPC18XX_PLL0_MSEL_MAX) {
--		pr_warn("%s: unable to support rate %lu\n", __func__, req->rate);
--		return -EINVAL;
--	}
--
--	req->rate = 2 * req->best_parent_rate * m;
--
--	return 0;
--}
--
--static int lpc18xx_pll0_set_rate(struct clk_hw *hw, unsigned long rate,
--				 unsigned long parent_rate)
--{
--	struct lpc18xx_pll *pll = to_lpc_pll(hw);
--	u32 ctrl, stat, m;
--	int retry = 3;
--
--	if (parent_rate < rate) {
--		pr_warn("%s: pll dividers not supported\n", __func__);
--		return -EINVAL;
--	}
--
--	m = DIV_ROUND_UP_ULL(parent_rate, rate * 2);
--	if (m == 0 || m > LPC18XX_PLL0_MSEL_MAX) {
--		pr_warn("%s: unable to support rate %lu\n", __func__, rate);
--		return -EINVAL;
--	}
--
--	m  = lpc18xx_pll0_msel2mdec(m);
--	m |= lpc18xx_pll0_msel2selp(m) << LPC18XX_PLL0_MDIV_SELP_SHIFT;
--	m |= lpc18xx_pll0_msel2seli(m) << LPC18XX_PLL0_MDIV_SELI_SHIFT;
--
--	/* Power down PLL, disable clk output and dividers */
--	ctrl = readl(pll->reg + LPC18XX_CGU_PLL0USB_CTRL);
--	ctrl |= LPC18XX_PLL0_CTRL_PD;
--	ctrl &= ~(LPC18XX_PLL0_CTRL_BYPASS | LPC18XX_PLL0_CTRL_DIRECTI |
--		  LPC18XX_PLL0_CTRL_DIRECTO | LPC18XX_PLL0_CTRL_CLKEN);
--	writel(ctrl, pll->reg + LPC18XX_CGU_PLL0USB_CTRL);
--
--	/* Configure new PLL settings */
--	writel(m, pll->reg + LPC18XX_CGU_PLL0USB_MDIV);
--	writel(LPC18XX_PLL0_NP_DIVS_1, pll->reg + LPC18XX_CGU_PLL0USB_NP_DIV);
--
--	/* Power up PLL and wait for lock */
--	ctrl &= ~LPC18XX_PLL0_CTRL_PD;
--	writel(ctrl, pll->reg + LPC18XX_CGU_PLL0USB_CTRL);
--	do {
--		udelay(10);
--		stat = readl(pll->reg + LPC18XX_CGU_PLL0USB_STAT);
--		if (stat & LPC18XX_PLL0_STAT_LOCK) {
--			ctrl |= LPC18XX_PLL0_CTRL_CLKEN;
--			writel(ctrl, pll->reg + LPC18XX_CGU_PLL0USB_CTRL);
--
+-	reg_val = readl(addr);
+-	for (i = 0; i < LPC18XX_SCU_IRQ_PER_PINTSEL; i++) {
+-		if ((reg_val & LPC18XX_SCU_PINTSEL_VAL_MASK) == val)
 -			return 0;
--		}
--	} while (retry--);
 -
--	pr_warn("%s: unable to lock pll\n", __func__);
+-		reg_val >>= BITS_PER_BYTE;
+-		*arg += 1;
+-	}
 -
 -	return -EINVAL;
 -}
 -
--static const struct clk_ops lpc18xx_pll0_ops = {
--	.recalc_rate	= lpc18xx_pll0_recalc_rate,
--	.determine_rate = lpc18xx_pll0_determine_rate,
--	.set_rate	= lpc18xx_pll0_set_rate,
--};
--
--static unsigned long lpc18xx_pll1_recalc_rate(struct clk_hw *hw,
--					      unsigned long parent_rate)
+-static u32 lpc18xx_gpio_to_pintsel_val(int gpio)
 -{
--	struct lpc18xx_pll *pll = to_lpc_pll(hw);
--	u16 msel, nsel, psel;
--	bool direct, fbsel;
--	u32 ctrl;
+-	unsigned int gpio_port, gpio_pin;
 -
--	ctrl = readl(pll->reg + LPC18XX_CGU_PLL1_CTRL);
+-	gpio_port = gpio / LPC18XX_GPIO_PINS_PER_PORT;
+-	gpio_pin  = gpio % LPC18XX_GPIO_PINS_PER_PORT;
 -
--	direct = (ctrl & LPC18XX_PLL1_CTRL_DIRECT) ? true : false;
--	fbsel = (ctrl & LPC18XX_PLL1_CTRL_FBSEL) ? true : false;
--
--	msel = ((ctrl >> 16) & 0xff) + 1;
--	nsel = ((ctrl >> 12) & 0x3) + 1;
--
--	if (direct || fbsel)
--		return msel * (parent_rate / nsel);
--
--	psel = (ctrl >>  8) & 0x3;
--	psel = 1 << psel;
--
--	return (msel / (2 * psel)) * (parent_rate / nsel);
+-	return gpio_pin | (gpio_port << LPC18XX_SCU_PINTSEL_PORT_SHIFT);
 -}
 -
--static const struct clk_ops lpc18xx_pll1_ops = {
--	.recalc_rate = lpc18xx_pll1_recalc_rate,
--};
--
--static int lpc18xx_cgu_gate_enable(struct clk_hw *hw)
+-static int lpc18xx_pconf_get_gpio_pin_int(struct pinctrl_dev *pctldev,
+-					  int *arg, unsigned pin)
 -{
--	return clk_gate_ops.enable(hw);
--}
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-	int gpio, ret;
+-	u32 val;
 -
--static void lpc18xx_cgu_gate_disable(struct clk_hw *hw)
--{
--	clk_gate_ops.disable(hw);
--}
+-	gpio = lpc18xx_pin_to_gpio(pctldev, pin);
+-	if (gpio < 0)
+-		return -ENOTSUPP;
 -
--static int lpc18xx_cgu_gate_is_enabled(struct clk_hw *hw)
--{
--	const struct clk_hw *parent;
+-	val = lpc18xx_gpio_to_pintsel_val(gpio);
 -
 -	/*
--	 * The consumer of base clocks needs know if the
--	 * base clock is really enabled before it can be
--	 * accessed. It is therefore necessary to verify
--	 * this all the way up.
+-	 * Check if this pin has been enabled as a interrupt in any of the two
+-	 * PINTSEL registers. *arg indicates which interrupt number (0-7).
 -	 */
--	parent = clk_hw_get_parent(hw);
--	if (!parent)
+-	*arg = 0;
+-	ret = lpc18xx_get_pintsel(scu->base + LPC18XX_SCU_PINTSEL0, val, arg);
+-	if (ret == 0)
+-		return ret;
+-
+-	return lpc18xx_get_pintsel(scu->base + LPC18XX_SCU_PINTSEL1, val, arg);
+-}
+-
+-static int lpc18xx_pconf_get_pin(struct pinctrl_dev *pctldev, unsigned param,
+-				 int *arg, u32 reg, unsigned pin,
+-				 struct lpc18xx_pin_caps *pin_cap)
+-{
+-	switch (param) {
+-	case PIN_CONFIG_BIAS_DISABLE:
+-		if ((!(reg & LPC18XX_SCU_PIN_EPD)) && (reg & LPC18XX_SCU_PIN_EPUN))
+-			;
+-		else
+-			return -EINVAL;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_UP:
+-		if (reg & LPC18XX_SCU_PIN_EPUN)
+-			return -EINVAL;
+-		else
+-			*arg = 1;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_DOWN:
+-		if (reg & LPC18XX_SCU_PIN_EPD)
+-			*arg = 1;
+-		else
+-			return -EINVAL;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_ENABLE:
+-		if (reg & LPC18XX_SCU_PIN_EZI)
+-			*arg = 1;
+-		else
+-			return -EINVAL;
+-		break;
+-
+-	case PIN_CONFIG_SLEW_RATE:
+-		if (pin_cap->type == TYPE_HD)
+-			return -ENOTSUPP;
+-
+-		if (reg & LPC18XX_SCU_PIN_EHS)
+-			*arg = 1;
+-		else
+-			*arg = 0;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+-		if (reg & LPC18XX_SCU_PIN_ZIF)
+-			return -EINVAL;
+-		else
+-			*arg = 1;
+-		break;
+-
+-	case PIN_CONFIG_DRIVE_STRENGTH:
+-		if (pin_cap->type != TYPE_HD)
+-			return -ENOTSUPP;
+-
+-		*arg = (reg & LPC18XX_SCU_PIN_EHD_MASK) >> LPC18XX_SCU_PIN_EHD_POS;
+-		switch (*arg) {
+-		case 3: *arg += 5;
+-			fallthrough;
+-		case 2: *arg += 5;
+-			fallthrough;
+-		case 1: *arg += 3;
+-			fallthrough;
+-		case 0: *arg += 4;
+-		}
+-		break;
+-
+-	case PIN_CONFIG_GPIO_PIN_INT:
+-		return lpc18xx_pconf_get_gpio_pin_int(pctldev, arg, pin);
+-
+-	default:
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static struct lpc18xx_pin_caps *lpc18xx_get_pin_caps(unsigned pin)
+-{
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(lpc18xx_pins); i++) {
+-		if (lpc18xx_pins[i].number == pin)
+-			return lpc18xx_pins[i].drv_data;
+-	}
+-
+-	return NULL;
+-}
+-
+-static int lpc18xx_pconf_get(struct pinctrl_dev *pctldev, unsigned pin,
+-			     unsigned long *config)
+-{
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-	enum pin_config_param param = pinconf_to_config_param(*config);
+-	struct lpc18xx_pin_caps *pin_cap;
+-	int ret, arg = 0;
+-	u32 reg;
+-
+-	pin_cap = lpc18xx_get_pin_caps(pin);
+-	if (!pin_cap)
+-		return -EINVAL;
+-
+-	reg = readl(scu->base + pin_cap->offset);
+-
+-	if (pin_cap->type == TYPE_I2C0)
+-		ret = lpc18xx_pconf_get_i2c0(param, &arg, reg, pin);
+-	else if (pin_cap->type == TYPE_USB1)
+-		ret = lpc18xx_pconf_get_usb1(param, &arg, reg);
+-	else
+-		ret = lpc18xx_pconf_get_pin(pctldev, param, &arg, reg, pin, pin_cap);
+-
+-	if (ret < 0)
+-		return ret;
+-
+-	*config = pinconf_to_config_packed(param, (u16)arg);
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_set_usb1(struct pinctrl_dev *pctldev,
+-				  enum pin_config_param param,
+-				  u32 param_val, u32 *reg)
+-{
+-	switch (param) {
+-	case PIN_CONFIG_MODE_LOW_POWER:
+-		if (param_val)
+-			*reg &= ~LPC18XX_SCU_USB1_EPWR;
+-		else
+-			*reg |= LPC18XX_SCU_USB1_EPWR;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_DISABLE:
+-		*reg &= ~LPC18XX_SCU_USB1_EPD;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_DOWN:
+-		*reg |= LPC18XX_SCU_USB1_EPD;
+-		break;
+-
+-	default:
+-		dev_err(pctldev->dev, "Property not supported\n");
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_set_i2c0(struct pinctrl_dev *pctldev,
+-				  enum pin_config_param param,
+-				  u32 param_val, u32 *reg,
+-				  unsigned pin)
+-{
+-	u8 shift;
+-
+-	if (pin == PIN_I2C0_SCL)
+-		shift = LPC18XX_SCU_I2C0_SCL_SHIFT;
+-	else
+-		shift = LPC18XX_SCU_I2C0_SDA_SHIFT;
+-
+-	switch (param) {
+-	case PIN_CONFIG_INPUT_ENABLE:
+-		if (param_val)
+-			*reg |= (LPC18XX_SCU_I2C0_EZI << shift);
+-		else
+-			*reg &= ~(LPC18XX_SCU_I2C0_EZI << shift);
+-		break;
+-
+-	case PIN_CONFIG_SLEW_RATE:
+-		if (param_val)
+-			*reg |= (LPC18XX_SCU_I2C0_EHD << shift);
+-		else
+-			*reg &= ~(LPC18XX_SCU_I2C0_EHD << shift);
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT:
+-		if (param_val == 3)
+-			*reg |= (LPC18XX_SCU_I2C0_EFP << shift);
+-		else if (param_val == 50)
+-			*reg &= ~(LPC18XX_SCU_I2C0_EFP << shift);
+-		else
+-			return -ENOTSUPP;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+-		if (param_val)
+-			*reg &= ~(LPC18XX_SCU_I2C0_ZIF << shift);
+-		else
+-			*reg |= (LPC18XX_SCU_I2C0_ZIF << shift);
+-		break;
+-
+-	default:
+-		dev_err(pctldev->dev, "Property not supported\n");
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_set_gpio_pin_int(struct pinctrl_dev *pctldev,
+-					  u32 param_val, unsigned pin)
+-{
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-	u32 val, reg_val, reg_offset = LPC18XX_SCU_PINTSEL0;
+-	int gpio;
+-
+-	if (param_val >= LPC18XX_GPIO_PIN_INT_MAX)
+-		return -EINVAL;
+-
+-	gpio = lpc18xx_pin_to_gpio(pctldev, pin);
+-	if (gpio < 0)
+-		return -ENOTSUPP;
+-
+-	val = lpc18xx_gpio_to_pintsel_val(gpio);
+-
+-	reg_offset += (param_val / LPC18XX_SCU_IRQ_PER_PINTSEL) * sizeof(u32);
+-
+-	reg_val = readl(scu->base + reg_offset);
+-	reg_val &= ~LPC18XX_SCU_PINTSEL_VAL(LPC18XX_SCU_PINTSEL_VAL_MASK, param_val);
+-	reg_val |= LPC18XX_SCU_PINTSEL_VAL(val, param_val);
+-	writel(reg_val, scu->base + reg_offset);
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_set_pin(struct pinctrl_dev *pctldev, unsigned param,
+-				 u32 param_val, u32 *reg, unsigned pin,
+-				 struct lpc18xx_pin_caps *pin_cap)
+-{
+-	switch (param) {
+-	case PIN_CONFIG_BIAS_DISABLE:
+-		*reg &= ~LPC18XX_SCU_PIN_EPD;
+-		*reg |= LPC18XX_SCU_PIN_EPUN;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_UP:
+-		*reg &= ~LPC18XX_SCU_PIN_EPUN;
+-		break;
+-
+-	case PIN_CONFIG_BIAS_PULL_DOWN:
+-		*reg |= LPC18XX_SCU_PIN_EPD;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_ENABLE:
+-		if (param_val)
+-			*reg |= LPC18XX_SCU_PIN_EZI;
+-		else
+-			*reg &= ~LPC18XX_SCU_PIN_EZI;
+-		break;
+-
+-	case PIN_CONFIG_SLEW_RATE:
+-		if (pin_cap->type == TYPE_HD) {
+-			dev_err(pctldev->dev, "Slew rate unsupported on high-drive pins\n");
+-			return -ENOTSUPP;
+-		}
+-
+-		if (param_val == 0)
+-			*reg &= ~LPC18XX_SCU_PIN_EHS;
+-		else
+-			*reg |= LPC18XX_SCU_PIN_EHS;
+-		break;
+-
+-	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+-		if (param_val)
+-			*reg &= ~LPC18XX_SCU_PIN_ZIF;
+-		else
+-			*reg |= LPC18XX_SCU_PIN_ZIF;
+-		break;
+-
+-	case PIN_CONFIG_DRIVE_STRENGTH:
+-		if (pin_cap->type != TYPE_HD) {
+-			dev_err(pctldev->dev, "Drive strength available only on high-drive pins\n");
+-			return -ENOTSUPP;
+-		}
+-		*reg &= ~LPC18XX_SCU_PIN_EHD_MASK;
+-
+-		switch (param_val) {
+-		case 20: param_val -= 5;
+-			fallthrough;
+-		case 14: param_val -= 5;
+-			fallthrough;
+-		case  8: param_val -= 3;
+-			fallthrough;
+-		case  4: param_val -= 4;
+-			 break;
+-		default:
+-			dev_err(pctldev->dev, "Drive strength %u unsupported\n", param_val);
+-			return -ENOTSUPP;
+-		}
+-		*reg |= param_val << LPC18XX_SCU_PIN_EHD_POS;
+-		break;
+-
+-	case PIN_CONFIG_GPIO_PIN_INT:
+-		return lpc18xx_pconf_set_gpio_pin_int(pctldev, param_val, pin);
+-
+-	default:
+-		dev_err(pctldev->dev, "Property not supported\n");
+-		return -ENOTSUPP;
+-	}
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pconf_set(struct pinctrl_dev *pctldev, unsigned pin,
+-			     unsigned long *configs, unsigned num_configs)
+-{
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-	struct lpc18xx_pin_caps *pin_cap;
+-	enum pin_config_param param;
+-	u32 param_val;
+-	u32 reg;
+-	int ret;
+-	int i;
+-
+-	pin_cap = lpc18xx_get_pin_caps(pin);
+-	if (!pin_cap)
+-		return -EINVAL;
+-
+-	reg = readl(scu->base + pin_cap->offset);
+-
+-	for (i = 0; i < num_configs; i++) {
+-		param = pinconf_to_config_param(configs[i]);
+-		param_val = pinconf_to_config_argument(configs[i]);
+-
+-		if (pin_cap->type == TYPE_I2C0)
+-			ret = lpc18xx_pconf_set_i2c0(pctldev, param, param_val, &reg, pin);
+-		else if (pin_cap->type == TYPE_USB1)
+-			ret = lpc18xx_pconf_set_usb1(pctldev, param, param_val, &reg);
+-		else
+-			ret = lpc18xx_pconf_set_pin(pctldev, param, param_val, &reg, pin, pin_cap);
+-
+-		if (ret)
+-			return ret;
+-	}
+-
+-	writel(reg, scu->base + pin_cap->offset);
+-
+-	return 0;
+-}
+-
+-static const struct pinconf_ops lpc18xx_pconf_ops = {
+-	.is_generic	= true,
+-	.pin_config_get	= lpc18xx_pconf_get,
+-	.pin_config_set	= lpc18xx_pconf_set,
+-};
+-
+-static int lpc18xx_pmx_get_funcs_count(struct pinctrl_dev *pctldev)
+-{
+-	return ARRAY_SIZE(lpc18xx_function_names);
+-}
+-
+-static const char *lpc18xx_pmx_get_func_name(struct pinctrl_dev *pctldev,
+-					     unsigned function)
+-{
+-	return lpc18xx_function_names[function];
+-}
+-
+-static int lpc18xx_pmx_get_func_groups(struct pinctrl_dev *pctldev,
+-				       unsigned function,
+-				       const char *const **groups,
+-				       unsigned *const num_groups)
+-{
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-
+-	*groups  = scu->func[function].groups;
+-	*num_groups = scu->func[function].ngroups;
+-
+-	return 0;
+-}
+-
+-static int lpc18xx_pmx_set(struct pinctrl_dev *pctldev, unsigned function,
+-			   unsigned group)
+-{
+-	struct lpc18xx_scu_data *scu = pinctrl_dev_get_drvdata(pctldev);
+-	struct lpc18xx_pin_caps *pin = lpc18xx_pins[group].drv_data;
+-	int func;
+-	u32 reg;
+-
+-	/* Dedicated USB1 and I2C0 pins doesn't support muxing */
+-	if (pin->type == TYPE_USB1) {
+-		if (function == FUNC_USB1)
+-			return 0;
+-
+-		goto fail;
+-	}
+-
+-	if (pin->type == TYPE_I2C0) {
+-		if (function == FUNC_I2C0)
+-			return 0;
+-
+-		goto fail;
+-	}
+-
+-	if (function == FUNC_ADC && (pin->analog & LPC18XX_ANALOG_PIN)) {
+-		u32 offset;
+-
+-		writel(LPC18XX_SCU_ANALOG_PIN_CFG, scu->base + pin->offset);
+-
+-		if (LPC18XX_ANALOG_ADC(pin->analog) == 0)
+-			offset = LPC18XX_SCU_REG_ENAIO0;
+-		else
+-			offset = LPC18XX_SCU_REG_ENAIO1;
+-
+-		reg = readl(scu->base + offset);
+-		reg |= pin->analog & LPC18XX_ANALOG_BIT_MASK;
+-		writel(reg, scu->base + offset);
+-
 -		return 0;
+-	}
 -
--	if (!clk_hw_is_enabled(parent))
+-	if (function == FUNC_DAC && (pin->analog & LPC18XX_ANALOG_PIN)) {
+-		writel(LPC18XX_SCU_ANALOG_PIN_CFG, scu->base + pin->offset);
+-
+-		reg = readl(scu->base + LPC18XX_SCU_REG_ENAIO2);
+-		reg |= LPC18XX_SCU_REG_ENAIO2_DAC;
+-		writel(reg, scu->base + LPC18XX_SCU_REG_ENAIO2);
+-
 -		return 0;
+-	}
 -
--	return clk_gate_ops.is_enabled(hw);
+-	for (func = 0; func < LPC18XX_SCU_FUNC_PER_PIN; func++) {
+-		if (function == pin->functions[func])
+-			break;
+-	}
+-
+-	if (func >= LPC18XX_SCU_FUNC_PER_PIN)
+-		goto fail;
+-
+-	reg = readl(scu->base + pin->offset);
+-	reg &= ~LPC18XX_SCU_PIN_MODE_MASK;
+-	writel(reg | func, scu->base + pin->offset);
+-
+-	return 0;
+-fail:
+-	dev_err(pctldev->dev, "Pin %s can't be %s\n", lpc18xx_pins[group].name,
+-						      lpc18xx_function_names[function]);
+-	return -EINVAL;
 -}
 -
--static const struct clk_ops lpc18xx_gate_ops = {
--	.enable = lpc18xx_cgu_gate_enable,
--	.disable = lpc18xx_cgu_gate_disable,
--	.is_enabled = lpc18xx_cgu_gate_is_enabled,
+-static const struct pinmux_ops lpc18xx_pmx_ops = {
+-	.get_functions_count	= lpc18xx_pmx_get_funcs_count,
+-	.get_function_name	= lpc18xx_pmx_get_func_name,
+-	.get_function_groups	= lpc18xx_pmx_get_func_groups,
+-	.set_mux		= lpc18xx_pmx_set,
 -};
 -
--static struct lpc18xx_cgu_pll_clk lpc18xx_cgu_src_clk_plls[] = {
--	LPC1XX_CGU_CLK_PLL(PLL0USB,	pll0_src_ids, pll0_ops),
--	LPC1XX_CGU_CLK_PLL(PLL0AUDIO,	pll0_src_ids, pll0_ops),
--	LPC1XX_CGU_CLK_PLL(PLL1,	pll1_src_ids, pll1_ops),
--};
--
--static void lpc18xx_fill_parent_names(const char **parent, const u32 *id, int size)
+-static int lpc18xx_pctl_get_groups_count(struct pinctrl_dev *pctldev)
 -{
+-	return ARRAY_SIZE(lpc18xx_pins);
+-}
+-
+-static const char *lpc18xx_pctl_get_group_name(struct pinctrl_dev *pctldev,
+-					       unsigned group)
+-{
+-	return lpc18xx_pins[group].name;
+-}
+-
+-static int lpc18xx_pctl_get_group_pins(struct pinctrl_dev *pctldev,
+-				       unsigned group,
+-				       const unsigned **pins,
+-				       unsigned *num_pins)
+-{
+-	*pins = &lpc18xx_pins[group].number;
+-	*num_pins = 1;
+-
+-	return 0;
+-}
+-
+-static const struct pinctrl_ops lpc18xx_pctl_ops = {
+-	.get_groups_count	= lpc18xx_pctl_get_groups_count,
+-	.get_group_name		= lpc18xx_pctl_get_group_name,
+-	.get_group_pins		= lpc18xx_pctl_get_group_pins,
+-	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
+-	.dt_free_map		= pinctrl_utils_free_map,
+-};
+-
+-static const struct pinctrl_desc lpc18xx_scu_desc = {
+-	.name = "lpc18xx/43xx-scu",
+-	.pins = lpc18xx_pins,
+-	.npins = ARRAY_SIZE(lpc18xx_pins),
+-	.pctlops = &lpc18xx_pctl_ops,
+-	.pmxops = &lpc18xx_pmx_ops,
+-	.confops = &lpc18xx_pconf_ops,
+-	.num_custom_params = ARRAY_SIZE(lpc18xx_params),
+-	.custom_params = lpc18xx_params,
+-#ifdef CONFIG_DEBUG_FS
+-	.custom_conf_items = lpc18xx_conf_items,
+-#endif
+-	.owner = THIS_MODULE,
+-};
+-
+-static bool lpc18xx_valid_pin_function(unsigned pin, unsigned function)
+-{
+-	struct lpc18xx_pin_caps *p = lpc18xx_pins[pin].drv_data;
 -	int i;
 -
--	for (i = 0; i < size; i++)
--		parent[i] = clk_src_names[id[i]];
--}
+-	if (function == FUNC_DAC && p->analog == DAC)
+-		return true;
 -
--static struct clk *lpc18xx_cgu_register_div(struct lpc18xx_cgu_src_clk_div *clk,
--					    void __iomem *base, int n)
--{
--	void __iomem *reg = base + LPC18XX_CGU_IDIV_CTRL(n);
--	const char *name = clk_src_names[clk->clk_id];
--	const char *parents[CLK_SRC_MAX];
+-	if (function == FUNC_ADC && p->analog)
+-		return true;
 -
--	clk->div.reg = reg;
--	clk->mux.reg = reg;
--	clk->gate.reg = reg;
+-	if (function == FUNC_I2C0 && p->type == TYPE_I2C0)
+-		return true;
 -
--	lpc18xx_fill_parent_names(parents, clk->mux.table, clk->n_parents);
+-	if (function == FUNC_USB1 && p->type == TYPE_USB1)
+-		return true;
 -
--	return clk_register_composite(NULL, name, parents, clk->n_parents,
--				      &clk->mux.hw, &clk_mux_ops,
--				      &clk->div.hw, &clk_divider_ops,
--				      &clk->gate.hw, &lpc18xx_gate_ops, 0);
--}
--
--
--static struct clk *lpc18xx_register_base_clk(struct lpc18xx_cgu_base_clk *clk,
--					     void __iomem *reg_base, int n)
--{
--	void __iomem *reg = reg_base + LPC18XX_CGU_BASE_CLK(n);
--	const char *name = clk_base_names[clk->clk_id];
--	const char *parents[CLK_SRC_MAX];
--
--	if (clk->n_parents == 0)
--		return ERR_PTR(-ENOENT);
--
--	clk->mux.reg = reg;
--	clk->gate.reg = reg;
--
--	lpc18xx_fill_parent_names(parents, clk->mux.table, clk->n_parents);
--
--	/* SAFE_CLK can not be turned off */
--	if (n == BASE_SAFE_CLK)
--		return clk_register_composite(NULL, name, parents, clk->n_parents,
--					      &clk->mux.hw, &clk_mux_ops,
--					      NULL, NULL, NULL, NULL, 0);
--
--	return clk_register_composite(NULL, name, parents, clk->n_parents,
--				      &clk->mux.hw, &clk_mux_ops,
--				      NULL,  NULL,
--				      &clk->gate.hw, &lpc18xx_gate_ops, 0);
--}
--
--
--static struct clk *lpc18xx_cgu_register_pll(struct lpc18xx_cgu_pll_clk *clk,
--					    void __iomem *base)
--{
--	const char *name = clk_src_names[clk->clk_id];
--	const char *parents[CLK_SRC_MAX];
--
--	clk->pll.reg  = base;
--	clk->mux.reg  = base + clk->reg_offset + LPC18XX_CGU_PLL_CTRL_OFFSET;
--	clk->gate.reg = base + clk->reg_offset + LPC18XX_CGU_PLL_CTRL_OFFSET;
--
--	lpc18xx_fill_parent_names(parents, clk->mux.table, clk->n_parents);
--
--	return clk_register_composite(NULL, name, parents, clk->n_parents,
--				      &clk->mux.hw, &clk_mux_ops,
--				      &clk->pll.hw, clk->pll_ops,
--				      &clk->gate.hw, &lpc18xx_gate_ops, 0);
--}
--
--static void __init lpc18xx_cgu_register_source_clks(struct device_node *np,
--						    void __iomem *base)
--{
--	const char *parents[CLK_SRC_MAX];
--	struct clk *clk;
--	int i;
--
--	/* Register the internal 12 MHz RC oscillator (IRC) */
--	clk = clk_register_fixed_rate(NULL, clk_src_names[CLK_SRC_IRC],
--				      NULL, 0, 12000000);
--	if (IS_ERR(clk))
--		pr_warn("%s: failed to register irc clk\n", __func__);
--
--	/* Register crystal oscillator controller */
--	parents[0] = of_clk_get_parent_name(np, 0);
--	clk = clk_register_gate(NULL, clk_src_names[CLK_SRC_OSC], parents[0],
--				0, base + LPC18XX_CGU_XTAL_OSC_CTRL,
--				0, CLK_GATE_SET_TO_DISABLE, NULL);
--	if (IS_ERR(clk))
--		pr_warn("%s: failed to register osc clk\n", __func__);
--
--	/* Register all PLLs */
--	for (i = 0; i < ARRAY_SIZE(lpc18xx_cgu_src_clk_plls); i++) {
--		clk = lpc18xx_cgu_register_pll(&lpc18xx_cgu_src_clk_plls[i],
--						   base);
--		if (IS_ERR(clk))
--			pr_warn("%s: failed to register pll (%d)\n", __func__, i);
+-	for (i = 0; i < LPC18XX_SCU_FUNC_PER_PIN; i++) {
+-		if (function == p->functions[i])
+-			return true;
 -	}
 -
--	/* Register all clock dividers A-E */
--	for (i = 0; i < ARRAY_SIZE(lpc18xx_cgu_src_clk_divs); i++) {
--		clk = lpc18xx_cgu_register_div(&lpc18xx_cgu_src_clk_divs[i],
--					       base, i);
--		if (IS_ERR(clk))
--			pr_warn("%s: failed to register div %d\n", __func__, i);
--	}
+-	return false;
 -}
 -
--static struct clk *clk_base[BASE_CLK_MAX];
--static struct clk_onecell_data clk_base_data = {
--	.clks = clk_base,
--	.clk_num = BASE_CLK_MAX,
--};
--
--static void __init lpc18xx_cgu_register_base_clks(void __iomem *reg_base)
+-static int lpc18xx_create_group_func_map(struct device *dev,
+-					 struct lpc18xx_scu_data *scu)
 -{
--	int i;
+-	u16 pins[ARRAY_SIZE(lpc18xx_pins)];
+-	int func, ngroups, i;
 -
--	for (i = BASE_SAFE_CLK; i < BASE_CLK_MAX; i++) {
--		clk_base[i] = lpc18xx_register_base_clk(&lpc18xx_cgu_base_clks[i],
--							reg_base, i);
--		if (IS_ERR(clk_base[i]) && PTR_ERR(clk_base[i]) != -ENOENT)
--			pr_warn("%s: register base clk %d failed\n", __func__, i);
--	}
--}
+-	for (func = 0; func < FUNC_MAX; func++) {
+-		for (ngroups = 0, i = 0; i < ARRAY_SIZE(lpc18xx_pins); i++) {
+-			if (lpc18xx_valid_pin_function(i, func))
+-				pins[ngroups++] = i;
+-		}
 -
--static void __init lpc18xx_cgu_init(struct device_node *np)
--{
--	void __iomem *reg_base;
+-		scu->func[func].ngroups = ngroups;
+-		scu->func[func].groups = devm_kcalloc(dev,
+-						      ngroups, sizeof(char *),
+-						      GFP_KERNEL);
+-		if (!scu->func[func].groups)
+-			return -ENOMEM;
 -
--	reg_base = of_iomap(np, 0);
--	if (!reg_base) {
--		pr_warn("%s: failed to map address range\n", __func__);
--		return;
+-		for (i = 0; i < ngroups; i++)
+-			scu->func[func].groups[i] = lpc18xx_pins[pins[i]].name;
 -	}
 -
--	lpc18xx_cgu_register_source_clks(np, reg_base);
--	lpc18xx_cgu_register_base_clks(reg_base);
--
--	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
--}
--CLK_OF_DECLARE(lpc18xx_cgu, "nxp,lpc1850-cgu", lpc18xx_cgu_init);
-diff --git a/drivers/clk/nxp/clk-lpc18xx-creg.c b/drivers/clk/nxp/clk-lpc18xx-creg.c
-deleted file mode 100644
-index 3d3982e9c661a..0000000000000
---- a/drivers/clk/nxp/clk-lpc18xx-creg.c
-+++ /dev/null
-@@ -1,225 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Clk driver for NXP LPC18xx/43xx Configuration Registers (CREG)
-- *
-- * Copyright (C) 2015 Joachim Eastwood <manabian@gmail.com>
-- */
--
--#include <linux/clk-provider.h>
--#include <linux/delay.h>
--#include <linux/kernel.h>
--#include <linux/mfd/syscon.h>
--#include <linux/of.h>
--#include <linux/platform_device.h>
--#include <linux/regmap.h>
--
--#define LPC18XX_CREG_CREG0			0x004
--#define  LPC18XX_CREG_CREG0_EN1KHZ		BIT(0)
--#define  LPC18XX_CREG_CREG0_EN32KHZ		BIT(1)
--#define  LPC18XX_CREG_CREG0_RESET32KHZ		BIT(2)
--#define  LPC18XX_CREG_CREG0_PD32KHZ		BIT(3)
--
--#define to_clk_creg(_hw) container_of(_hw, struct clk_creg_data, hw)
--
--enum {
--	CREG_CLK_1KHZ,
--	CREG_CLK_32KHZ,
--	CREG_CLK_MAX,
--};
--
--struct clk_creg_data {
--	struct clk_hw hw;
--	const char *name;
--	struct regmap *reg;
--	unsigned int en_mask;
--	const struct clk_ops *ops;
--};
--
--#define CREG_CLK(_name, _emask, _ops)		\
--{						\
--	.name = _name,				\
--	.en_mask = LPC18XX_CREG_CREG0_##_emask,	\
--	.ops = &_ops,				\
+-	return 0;
 -}
 -
--static int clk_creg_32k_prepare(struct clk_hw *hw)
+-static int lpc18xx_scu_probe(struct platform_device *pdev)
 -{
--	struct clk_creg_data *creg = to_clk_creg(hw);
+-	struct lpc18xx_scu_data *scu;
 -	int ret;
 -
--	ret = regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
--				 LPC18XX_CREG_CREG0_PD32KHZ |
--				 LPC18XX_CREG_CREG0_RESET32KHZ, 0);
+-	scu = devm_kzalloc(&pdev->dev, sizeof(*scu), GFP_KERNEL);
+-	if (!scu)
+-		return -ENOMEM;
 -
--	/*
--	 * Powering up the 32k oscillator takes a long while
--	 * and sadly there aren't any status bit to poll.
--	 */
--	msleep(2500);
+-	scu->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(scu->base))
+-		return PTR_ERR(scu->base);
 -
--	return ret;
--}
--
--static void clk_creg_32k_unprepare(struct clk_hw *hw)
--{
--	struct clk_creg_data *creg = to_clk_creg(hw);
--
--	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
--			   LPC18XX_CREG_CREG0_PD32KHZ,
--			   LPC18XX_CREG_CREG0_PD32KHZ);
--}
--
--static int clk_creg_32k_is_prepared(struct clk_hw *hw)
--{
--	struct clk_creg_data *creg = to_clk_creg(hw);
--	u32 reg;
--
--	regmap_read(creg->reg, LPC18XX_CREG_CREG0, &reg);
--
--	return !(reg & LPC18XX_CREG_CREG0_PD32KHZ) &&
--	       !(reg & LPC18XX_CREG_CREG0_RESET32KHZ);
--}
--
--static unsigned long clk_creg_1k_recalc_rate(struct clk_hw *hw,
--					     unsigned long parent_rate)
--{
--	return parent_rate / 32;
--}
--
--static int clk_creg_enable(struct clk_hw *hw)
--{
--	struct clk_creg_data *creg = to_clk_creg(hw);
--
--	return regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
--				  creg->en_mask, creg->en_mask);
--}
--
--static void clk_creg_disable(struct clk_hw *hw)
--{
--	struct clk_creg_data *creg = to_clk_creg(hw);
--
--	regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
--			   creg->en_mask, 0);
--}
--
--static int clk_creg_is_enabled(struct clk_hw *hw)
--{
--	struct clk_creg_data *creg = to_clk_creg(hw);
--	u32 reg;
--
--	regmap_read(creg->reg, LPC18XX_CREG_CREG0, &reg);
--
--	return !!(reg & creg->en_mask);
--}
--
--static const struct clk_ops clk_creg_32k = {
--	.enable		= clk_creg_enable,
--	.disable	= clk_creg_disable,
--	.is_enabled	= clk_creg_is_enabled,
--	.prepare	= clk_creg_32k_prepare,
--	.unprepare	= clk_creg_32k_unprepare,
--	.is_prepared	= clk_creg_32k_is_prepared,
--};
--
--static const struct clk_ops clk_creg_1k = {
--	.enable		= clk_creg_enable,
--	.disable	= clk_creg_disable,
--	.is_enabled	= clk_creg_is_enabled,
--	.recalc_rate	= clk_creg_1k_recalc_rate,
--};
--
--static struct clk_creg_data clk_creg_clocks[] = {
--	[CREG_CLK_1KHZ]  = CREG_CLK("1khz_clk",  EN1KHZ,  clk_creg_1k),
--	[CREG_CLK_32KHZ] = CREG_CLK("32khz_clk", EN32KHZ, clk_creg_32k),
--};
--
--static struct clk *clk_register_creg_clk(struct device *dev,
--					 struct clk_creg_data *creg_clk,
--					 const char **parent_name,
--					 struct regmap *syscon)
--{
--	struct clk_init_data init;
--
--	init.ops = creg_clk->ops;
--	init.name = creg_clk->name;
--	init.parent_names = parent_name;
--	init.num_parents = 1;
--	init.flags = 0;
--
--	creg_clk->reg = syscon;
--	creg_clk->hw.init = &init;
--
--	if (dev)
--		return devm_clk_register(dev, &creg_clk->hw);
--
--	return clk_register(NULL, &creg_clk->hw);
--}
--
--static struct clk *clk_creg_early[CREG_CLK_MAX];
--static struct clk_onecell_data clk_creg_early_data = {
--	.clks = clk_creg_early,
--	.clk_num = CREG_CLK_MAX,
--};
--
--static void __init lpc18xx_creg_clk_init(struct device_node *np)
--{
--	const char *clk_32khz_parent;
--	struct regmap *syscon;
--
--	syscon = syscon_node_to_regmap(np->parent);
--	if (IS_ERR(syscon)) {
--		pr_err("%s: syscon lookup failed\n", __func__);
--		return;
+-	scu->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(scu->clk)) {
+-		dev_err(&pdev->dev, "Input clock not found.\n");
+-		return PTR_ERR(scu->clk);
 -	}
 -
--	clk_32khz_parent = of_clk_get_parent_name(np, 0);
--
--	clk_creg_early[CREG_CLK_32KHZ] =
--		clk_register_creg_clk(NULL, &clk_creg_clocks[CREG_CLK_32KHZ],
--				      &clk_32khz_parent, syscon);
--	clk_creg_early[CREG_CLK_1KHZ] = ERR_PTR(-EPROBE_DEFER);
--
--	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_creg_early_data);
--}
--CLK_OF_DECLARE_DRIVER(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk",
--		      lpc18xx_creg_clk_init);
--
--static struct clk *clk_creg[CREG_CLK_MAX];
--static struct clk_onecell_data clk_creg_data = {
--	.clks = clk_creg,
--	.clk_num = CREG_CLK_MAX,
--};
--
--static int lpc18xx_creg_clk_probe(struct platform_device *pdev)
--{
--	struct device_node *np = pdev->dev.of_node;
--	struct regmap *syscon;
--
--	syscon = syscon_node_to_regmap(np->parent);
--	if (IS_ERR(syscon)) {
--		dev_err(&pdev->dev, "syscon lookup failed\n");
--		return PTR_ERR(syscon);
+-	ret = lpc18xx_create_group_func_map(&pdev->dev, scu);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Unable to create group func map.\n");
+-		return ret;
 -	}
 -
--	clk_creg[CREG_CLK_32KHZ] = clk_creg_early[CREG_CLK_32KHZ];
--	clk_creg[CREG_CLK_1KHZ] =
--		clk_register_creg_clk(NULL, &clk_creg_clocks[CREG_CLK_1KHZ],
--				      &clk_creg_clocks[CREG_CLK_32KHZ].name,
--				      syscon);
+-	ret = clk_prepare_enable(scu->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Unable to enable clock.\n");
+-		return ret;
+-	}
 -
--	return of_clk_add_provider(np, of_clk_src_onecell_get, &clk_creg_data);
+-	platform_set_drvdata(pdev, scu);
+-
+-	scu->pctl = devm_pinctrl_register(&pdev->dev, &lpc18xx_scu_desc, scu);
+-	if (IS_ERR(scu->pctl)) {
+-		dev_err(&pdev->dev, "Could not register pinctrl driver\n");
+-		clk_disable_unprepare(scu->clk);
+-		return PTR_ERR(scu->pctl);
+-	}
+-
+-	return 0;
 -}
 -
--static const struct of_device_id lpc18xx_creg_clk_of_match[] = {
--	{ .compatible = "nxp,lpc1850-creg-clk" },
+-static const struct of_device_id lpc18xx_scu_match[] = {
+-	{ .compatible = "nxp,lpc1850-scu" },
 -	{},
 -};
 -
--static struct platform_driver lpc18xx_creg_clk_driver = {
--	.probe = lpc18xx_creg_clk_probe,
+-static struct platform_driver lpc18xx_scu_driver = {
+-	.probe		= lpc18xx_scu_probe,
 -	.driver = {
--		.name = "lpc18xx-creg-clk",
--		.of_match_table = lpc18xx_creg_clk_of_match,
+-		.name		= "lpc18xx-scu",
+-		.of_match_table	= lpc18xx_scu_match,
+-		.suppress_bind_attrs = true,
 -	},
 -};
--builtin_platform_driver(lpc18xx_creg_clk_driver);
-diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
-deleted file mode 100644
-index ae2fa5341a2e4..0000000000000
---- a/drivers/clk/nxp/clk-lpc32xx.c
-+++ /dev/null
-@@ -1,1591 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Copyright 2015 Vladimir Zapolskiy <vz@mleia.com>
-- */
--
--#include <linux/clk.h>
--#include <linux/clk-provider.h>
--#include <linux/io.h>
--#include <linux/of_address.h>
--#include <linux/regmap.h>
--
--#include <dt-bindings/clock/lpc32xx-clock.h>
--
--#undef pr_fmt
--#define pr_fmt(fmt) "%s: " fmt, __func__
--
--/* Common bitfield definitions for x397 PLL (lock), USB PLL and HCLK PLL */
--#define PLL_CTRL_ENABLE			BIT(16)
--#define PLL_CTRL_BYPASS			BIT(15)
--#define PLL_CTRL_DIRECT			BIT(14)
--#define PLL_CTRL_FEEDBACK		BIT(13)
--#define PLL_CTRL_POSTDIV		(BIT(12)|BIT(11))
--#define PLL_CTRL_PREDIV			(BIT(10)|BIT(9))
--#define PLL_CTRL_FEEDDIV		(0xFF << 1)
--#define PLL_CTRL_LOCK			BIT(0)
--
--/* Clock registers on System Control Block */
--#define LPC32XX_CLKPWR_DEBUG_CTRL	0x00
--#define LPC32XX_CLKPWR_USB_DIV		0x1C
--#define LPC32XX_CLKPWR_HCLKDIV_CTRL	0x40
--#define LPC32XX_CLKPWR_PWR_CTRL		0x44
--#define LPC32XX_CLKPWR_PLL397_CTRL	0x48
--#define LPC32XX_CLKPWR_OSC_CTRL		0x4C
--#define LPC32XX_CLKPWR_SYSCLK_CTRL	0x50
--#define LPC32XX_CLKPWR_LCDCLK_CTRL	0x54
--#define LPC32XX_CLKPWR_HCLKPLL_CTRL	0x58
--#define LPC32XX_CLKPWR_ADCCLK_CTRL1	0x60
--#define LPC32XX_CLKPWR_USB_CTRL		0x64
--#define LPC32XX_CLKPWR_SSP_CTRL		0x78
--#define LPC32XX_CLKPWR_I2S_CTRL		0x7C
--#define LPC32XX_CLKPWR_MS_CTRL		0x80
--#define LPC32XX_CLKPWR_MACCLK_CTRL	0x90
--#define LPC32XX_CLKPWR_TEST_CLK_CTRL	0xA4
--#define LPC32XX_CLKPWR_I2CCLK_CTRL	0xAC
--#define LPC32XX_CLKPWR_KEYCLK_CTRL	0xB0
--#define LPC32XX_CLKPWR_ADCCLK_CTRL	0xB4
--#define LPC32XX_CLKPWR_PWMCLK_CTRL	0xB8
--#define LPC32XX_CLKPWR_TIMCLK_CTRL	0xBC
--#define LPC32XX_CLKPWR_TIMCLK_CTRL1	0xC0
--#define LPC32XX_CLKPWR_SPI_CTRL		0xC4
--#define LPC32XX_CLKPWR_FLASHCLK_CTRL	0xC8
--#define LPC32XX_CLKPWR_UART3_CLK_CTRL	0xD0
--#define LPC32XX_CLKPWR_UART4_CLK_CTRL	0xD4
--#define LPC32XX_CLKPWR_UART5_CLK_CTRL	0xD8
--#define LPC32XX_CLKPWR_UART6_CLK_CTRL	0xDC
--#define LPC32XX_CLKPWR_IRDA_CLK_CTRL	0xE0
--#define LPC32XX_CLKPWR_UART_CLK_CTRL	0xE4
--#define LPC32XX_CLKPWR_DMA_CLK_CTRL	0xE8
--
--/* Clock registers on USB controller */
--#define LPC32XX_USB_CLK_CTRL		0xF4
--#define LPC32XX_USB_CLK_STS		0xF8
--
--static const struct regmap_config lpc32xx_scb_regmap_config = {
--	.name = "scb",
--	.reg_bits = 32,
--	.val_bits = 32,
--	.reg_stride = 4,
--	.val_format_endian = REGMAP_ENDIAN_LITTLE,
--	.max_register = 0x114,
--};
--
--static struct regmap *clk_regmap;
--static void __iomem *usb_clk_vbase;
--
--enum {
--	LPC32XX_USB_CLK_OTG = LPC32XX_USB_CLK_HOST + 1,
--	LPC32XX_USB_CLK_AHB,
--
--	LPC32XX_USB_CLK_MAX = LPC32XX_USB_CLK_AHB + 1,
--};
--
--enum {
--	/* Start from the last defined clock in dt bindings */
--	LPC32XX_CLK_ADC_DIV = LPC32XX_CLK_PERIPH + 1,
--	LPC32XX_CLK_ADC_RTC,
--	LPC32XX_CLK_TEST1,
--	LPC32XX_CLK_TEST2,
--
--	/* System clocks, PLL 397x and HCLK PLL clocks */
--	LPC32XX_CLK_OSC,
--	LPC32XX_CLK_SYS,
--	LPC32XX_CLK_PLL397X,
--	LPC32XX_CLK_HCLK_DIV_PERIPH,
--	LPC32XX_CLK_HCLK_DIV,
--	LPC32XX_CLK_HCLK,
--	LPC32XX_CLK_ARM,
--	LPC32XX_CLK_ARM_VFP,
--
--	/* USB clocks */
--	LPC32XX_CLK_USB_PLL,
--	LPC32XX_CLK_USB_DIV,
--	LPC32XX_CLK_USB,
--
--	/* Only one control PWR_CTRL[10] for both muxes */
--	LPC32XX_CLK_PERIPH_HCLK_MUX,
--	LPC32XX_CLK_PERIPH_ARM_MUX,
--
--	/* Only one control PWR_CTRL[2] for all three muxes */
--	LPC32XX_CLK_SYSCLK_PERIPH_MUX,
--	LPC32XX_CLK_SYSCLK_HCLK_MUX,
--	LPC32XX_CLK_SYSCLK_ARM_MUX,
--
--	/* Two clock sources external to the driver */
--	LPC32XX_CLK_XTAL_32K,
--	LPC32XX_CLK_XTAL,
--
--	/* Renumbered USB clocks, may have a parent from SCB table */
--	LPC32XX_CLK_USB_OFFSET,
--	LPC32XX_CLK_USB_I2C = LPC32XX_USB_CLK_I2C + LPC32XX_CLK_USB_OFFSET,
--	LPC32XX_CLK_USB_DEV = LPC32XX_USB_CLK_DEVICE + LPC32XX_CLK_USB_OFFSET,
--	LPC32XX_CLK_USB_HOST = LPC32XX_USB_CLK_HOST + LPC32XX_CLK_USB_OFFSET,
--	LPC32XX_CLK_USB_OTG = LPC32XX_USB_CLK_OTG + LPC32XX_CLK_USB_OFFSET,
--	LPC32XX_CLK_USB_AHB = LPC32XX_USB_CLK_AHB + LPC32XX_CLK_USB_OFFSET,
--
--	/* Stub for composite clocks */
--	LPC32XX_CLK__NULL,
--
--	/* Subclocks of composite clocks, clocks above are for CCF */
--	LPC32XX_CLK_PWM1_MUX,
--	LPC32XX_CLK_PWM1_DIV,
--	LPC32XX_CLK_PWM1_GATE,
--	LPC32XX_CLK_PWM2_MUX,
--	LPC32XX_CLK_PWM2_DIV,
--	LPC32XX_CLK_PWM2_GATE,
--	LPC32XX_CLK_UART3_MUX,
--	LPC32XX_CLK_UART3_DIV,
--	LPC32XX_CLK_UART3_GATE,
--	LPC32XX_CLK_UART4_MUX,
--	LPC32XX_CLK_UART4_DIV,
--	LPC32XX_CLK_UART4_GATE,
--	LPC32XX_CLK_UART5_MUX,
--	LPC32XX_CLK_UART5_DIV,
--	LPC32XX_CLK_UART5_GATE,
--	LPC32XX_CLK_UART6_MUX,
--	LPC32XX_CLK_UART6_DIV,
--	LPC32XX_CLK_UART6_GATE,
--	LPC32XX_CLK_TEST1_MUX,
--	LPC32XX_CLK_TEST1_GATE,
--	LPC32XX_CLK_TEST2_MUX,
--	LPC32XX_CLK_TEST2_GATE,
--	LPC32XX_CLK_USB_DIV_DIV,
--	LPC32XX_CLK_USB_DIV_GATE,
--	LPC32XX_CLK_SD_DIV,
--	LPC32XX_CLK_SD_GATE,
--	LPC32XX_CLK_LCD_DIV,
--	LPC32XX_CLK_LCD_GATE,
--
--	LPC32XX_CLK_HW_MAX,
--	LPC32XX_CLK_MAX = LPC32XX_CLK_SYSCLK_ARM_MUX + 1,
--	LPC32XX_CLK_CCF_MAX = LPC32XX_CLK_USB_AHB + 1,
--};
--
--static struct clk *clk[LPC32XX_CLK_MAX];
--static struct clk_onecell_data clk_data = {
--	.clks = clk,
--	.clk_num = LPC32XX_CLK_MAX,
--};
--
--static struct clk *usb_clk[LPC32XX_USB_CLK_MAX];
--static struct clk_onecell_data usb_clk_data = {
--	.clks = usb_clk,
--	.clk_num = LPC32XX_USB_CLK_MAX,
--};
--
--#define LPC32XX_CLK_PARENTS_MAX			5
--
--struct clk_proto_t {
--	const char *name;
--	const u8 parents[LPC32XX_CLK_PARENTS_MAX];
--	u8 num_parents;
--	unsigned long flags;
--};
--
--#define CLK_PREFIX(LITERAL)		LPC32XX_CLK_ ## LITERAL
--#define NUMARGS(...)	(sizeof((int[]){__VA_ARGS__})/sizeof(int))
--
--#define LPC32XX_CLK_DEFINE(_idx, _name, _flags, ...)		\
--	[CLK_PREFIX(_idx)] = {					\
--		.name = _name,					\
--		.flags = _flags,				\
--		.parents = { __VA_ARGS__ },			\
--		.num_parents = NUMARGS(__VA_ARGS__),		\
--	 }
--
--static const struct clk_proto_t clk_proto[LPC32XX_CLK_CCF_MAX] __initconst = {
--	LPC32XX_CLK_DEFINE(XTAL, "xtal", 0x0),
--	LPC32XX_CLK_DEFINE(XTAL_32K, "xtal_32k", 0x0),
--
--	LPC32XX_CLK_DEFINE(RTC, "rtc", 0x0, LPC32XX_CLK_XTAL_32K),
--	LPC32XX_CLK_DEFINE(OSC, "osc", CLK_IGNORE_UNUSED, LPC32XX_CLK_XTAL),
--	LPC32XX_CLK_DEFINE(SYS, "sys", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_OSC, LPC32XX_CLK_PLL397X),
--	LPC32XX_CLK_DEFINE(PLL397X, "pll_397x", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_RTC),
--	LPC32XX_CLK_DEFINE(HCLK_PLL, "hclk_pll", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYS),
--	LPC32XX_CLK_DEFINE(HCLK_DIV_PERIPH, "hclk_div_periph",
--		CLK_IGNORE_UNUSED, LPC32XX_CLK_HCLK_PLL),
--	LPC32XX_CLK_DEFINE(HCLK_DIV, "hclk_div", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_HCLK_PLL),
--	LPC32XX_CLK_DEFINE(HCLK, "hclk", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_PERIPH_HCLK_MUX),
--	LPC32XX_CLK_DEFINE(PERIPH, "pclk", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYSCLK_PERIPH_MUX),
--	LPC32XX_CLK_DEFINE(ARM, "arm", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_PERIPH_ARM_MUX),
--
--	LPC32XX_CLK_DEFINE(PERIPH_HCLK_MUX, "periph_hclk_mux",
--		CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYSCLK_HCLK_MUX, LPC32XX_CLK_SYSCLK_PERIPH_MUX),
--	LPC32XX_CLK_DEFINE(PERIPH_ARM_MUX, "periph_arm_mux", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYSCLK_ARM_MUX, LPC32XX_CLK_SYSCLK_PERIPH_MUX),
--	LPC32XX_CLK_DEFINE(SYSCLK_PERIPH_MUX, "sysclk_periph_mux",
--		CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYS, LPC32XX_CLK_HCLK_DIV_PERIPH),
--	LPC32XX_CLK_DEFINE(SYSCLK_HCLK_MUX, "sysclk_hclk_mux",
--		CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYS, LPC32XX_CLK_HCLK_DIV),
--	LPC32XX_CLK_DEFINE(SYSCLK_ARM_MUX, "sysclk_arm_mux", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_SYS, LPC32XX_CLK_HCLK_PLL),
--
--	LPC32XX_CLK_DEFINE(ARM_VFP, "vfp9", CLK_IGNORE_UNUSED,
--		LPC32XX_CLK_ARM),
--	LPC32XX_CLK_DEFINE(USB_PLL, "usb_pll",
--		CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT, LPC32XX_CLK_USB_DIV),
--	LPC32XX_CLK_DEFINE(USB_DIV, "usb_div", 0x0, LPC32XX_CLK_OSC),
--	LPC32XX_CLK_DEFINE(USB, "usb", 0x0, LPC32XX_CLK_USB_PLL),
--	LPC32XX_CLK_DEFINE(DMA, "dma", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(MLC, "mlc", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(SLC, "slc", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(LCD, "lcd", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(MAC, "mac", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(SD, "sd", 0x0, LPC32XX_CLK_ARM),
--	LPC32XX_CLK_DEFINE(DDRAM, "ddram", CLK_GET_RATE_NOCACHE,
--		LPC32XX_CLK_SYSCLK_ARM_MUX),
--	LPC32XX_CLK_DEFINE(SSP0, "ssp0", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(SSP1, "ssp1", 0x0, LPC32XX_CLK_HCLK),
--
--	/*
--	 * CLK_GET_RATE_NOCACHE is needed, if UART clock is disabled, its
--	 * divider register does not contain information about selected rate.
--	 */
--	LPC32XX_CLK_DEFINE(UART3, "uart3", CLK_GET_RATE_NOCACHE,
--		LPC32XX_CLK_PERIPH, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(UART4, "uart4", CLK_GET_RATE_NOCACHE,
--		LPC32XX_CLK_PERIPH, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(UART5, "uart5", CLK_GET_RATE_NOCACHE,
--		LPC32XX_CLK_PERIPH, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(UART6, "uart6", CLK_GET_RATE_NOCACHE,
--		LPC32XX_CLK_PERIPH, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(IRDA, "irda", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(I2C1, "i2c1", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(I2C2, "i2c2", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(TIMER0, "timer0", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(TIMER1, "timer1", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(TIMER2, "timer2", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(TIMER3, "timer3", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(TIMER4, "timer4", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(TIMER5, "timer5", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(WDOG, "watchdog", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(I2S0, "i2s0", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(I2S1, "i2s1", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(SPI1, "spi1", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(SPI2, "spi2", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(MCPWM, "mcpwm", 0x0, LPC32XX_CLK_HCLK),
--	LPC32XX_CLK_DEFINE(HSTIMER, "hstimer", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(KEY, "key", 0x0, LPC32XX_CLK_RTC),
--	LPC32XX_CLK_DEFINE(PWM1, "pwm1", 0x0,
--		LPC32XX_CLK_RTC, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(PWM2, "pwm2", 0x0,
--		LPC32XX_CLK_RTC, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(ADC, "adc", 0x0,
--		LPC32XX_CLK_ADC_RTC, LPC32XX_CLK_ADC_DIV),
--	LPC32XX_CLK_DEFINE(ADC_DIV, "adc_div", 0x0, LPC32XX_CLK_PERIPH),
--	LPC32XX_CLK_DEFINE(ADC_RTC, "adc_rtc", 0x0, LPC32XX_CLK_RTC),
--	LPC32XX_CLK_DEFINE(TEST1, "test1", 0x0,
--		LPC32XX_CLK_PERIPH, LPC32XX_CLK_RTC, LPC32XX_CLK_OSC),
--	LPC32XX_CLK_DEFINE(TEST2, "test2", 0x0,
--		LPC32XX_CLK_HCLK, LPC32XX_CLK_PERIPH, LPC32XX_CLK_USB,
--		LPC32XX_CLK_OSC, LPC32XX_CLK_PLL397X),
--
--	/* USB controller clocks */
--	LPC32XX_CLK_DEFINE(USB_AHB, "usb_ahb", 0x0, LPC32XX_CLK_USB),
--	LPC32XX_CLK_DEFINE(USB_OTG, "usb_otg", 0x0, LPC32XX_CLK_USB_AHB),
--	LPC32XX_CLK_DEFINE(USB_I2C, "usb_i2c", 0x0, LPC32XX_CLK_USB_AHB),
--	LPC32XX_CLK_DEFINE(USB_DEV, "usb_dev", 0x0, LPC32XX_CLK_USB_OTG),
--	LPC32XX_CLK_DEFINE(USB_HOST, "usb_host", 0x0, LPC32XX_CLK_USB_OTG),
--};
--
--struct lpc32xx_clk {
--	struct clk_hw hw;
--	u32 reg;
--	u32 enable;
--	u32 enable_mask;
--	u32 disable;
--	u32 disable_mask;
--	u32 busy;
--	u32 busy_mask;
--};
--
--enum clk_pll_mode {
--	PLL_UNKNOWN,
--	PLL_DIRECT,
--	PLL_BYPASS,
--	PLL_DIRECT_BYPASS,
--	PLL_INTEGER,
--	PLL_NON_INTEGER,
--};
--
--struct lpc32xx_pll_clk {
--	struct clk_hw hw;
--	u32 reg;
--	u32 enable;
--	unsigned long m_div;
--	unsigned long n_div;
--	unsigned long p_div;
--	enum clk_pll_mode mode;
--};
--
--struct lpc32xx_usb_clk {
--	struct clk_hw hw;
--	u32 ctrl_enable;
--	u32 ctrl_disable;
--	u32 ctrl_mask;
--	u32 enable;
--	u32 busy;
--};
--
--struct lpc32xx_clk_mux {
--	struct clk_hw	hw;
--	u32		reg;
--	u32		mask;
--	u8		shift;
--	u32		*table;
--	u8		flags;
--};
--
--struct lpc32xx_clk_div {
--	struct clk_hw	hw;
--	u32		reg;
--	u8		shift;
--	u8		width;
--	const struct clk_div_table	*table;
--	u8		flags;
--};
--
--struct lpc32xx_clk_gate {
--	struct clk_hw	hw;
--	u32		reg;
--	u8		bit_idx;
--	u8		flags;
--};
--
--#define to_lpc32xx_clk(_hw)	container_of(_hw, struct lpc32xx_clk, hw)
--#define to_lpc32xx_pll_clk(_hw)	container_of(_hw, struct lpc32xx_pll_clk, hw)
--#define to_lpc32xx_usb_clk(_hw)	container_of(_hw, struct lpc32xx_usb_clk, hw)
--#define to_lpc32xx_mux(_hw)	container_of(_hw, struct lpc32xx_clk_mux, hw)
--#define to_lpc32xx_div(_hw)	container_of(_hw, struct lpc32xx_clk_div, hw)
--#define to_lpc32xx_gate(_hw)	container_of(_hw, struct lpc32xx_clk_gate, hw)
--
--static inline bool pll_is_valid(u64 val0, u64 val1, u64 min, u64 max)
--{
--	return (val0 >= (val1 * min) && val0 <= (val1 * max));
--}
--
--static inline u32 lpc32xx_usb_clk_read(struct lpc32xx_usb_clk *clk)
--{
--	return readl(usb_clk_vbase + LPC32XX_USB_CLK_STS);
--}
--
--static inline void lpc32xx_usb_clk_write(struct lpc32xx_usb_clk *clk, u32 val)
--{
--	writel(val, usb_clk_vbase + LPC32XX_USB_CLK_CTRL);
--}
--
--static int clk_mask_enable(struct clk_hw *hw)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--
--	if (clk->busy_mask && (val & clk->busy_mask) == clk->busy)
--		return -EBUSY;
--
--	return regmap_update_bits(clk_regmap, clk->reg,
--				  clk->enable_mask, clk->enable);
--}
--
--static void clk_mask_disable(struct clk_hw *hw)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--
--	regmap_update_bits(clk_regmap, clk->reg,
--			   clk->disable_mask, clk->disable);
--}
--
--static int clk_mask_is_enabled(struct clk_hw *hw)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--
--	return ((val & clk->enable_mask) == clk->enable);
--}
--
--static const struct clk_ops clk_mask_ops = {
--	.enable = clk_mask_enable,
--	.disable = clk_mask_disable,
--	.is_enabled = clk_mask_is_enabled,
--};
--
--static int clk_pll_enable(struct clk_hw *hw)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	u32 val, count;
--
--	regmap_update_bits(clk_regmap, clk->reg, clk->enable, clk->enable);
--
--	for (count = 0; count < 1000; count++) {
--		regmap_read(clk_regmap, clk->reg, &val);
--		if (val & PLL_CTRL_LOCK)
--			break;
--	}
--
--	if (val & PLL_CTRL_LOCK)
--		return 0;
--
--	return -ETIMEDOUT;
--}
--
--static void clk_pll_disable(struct clk_hw *hw)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--
--	regmap_update_bits(clk_regmap, clk->reg, clk->enable, 0x0);
--}
--
--static int clk_pll_is_enabled(struct clk_hw *hw)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	u32 val;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--
--	val &= clk->enable | PLL_CTRL_LOCK;
--	if (val == (clk->enable | PLL_CTRL_LOCK))
--		return 1;
--
--	return 0;
--}
--
--static unsigned long clk_pll_397x_recalc_rate(struct clk_hw *hw,
--					      unsigned long parent_rate)
--{
--	return parent_rate * 397;
--}
--
--static unsigned long clk_pll_recalc_rate(struct clk_hw *hw,
--					 unsigned long parent_rate)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	bool is_direct, is_bypass, is_feedback;
--	unsigned long rate, cco_rate, ref_rate;
--	u32 val;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	is_direct = val & PLL_CTRL_DIRECT;
--	is_bypass = val & PLL_CTRL_BYPASS;
--	is_feedback = val & PLL_CTRL_FEEDBACK;
--
--	clk->m_div = ((val & PLL_CTRL_FEEDDIV) >> 1) + 1;
--	clk->n_div = ((val & PLL_CTRL_PREDIV) >> 9) + 1;
--	clk->p_div = ((val & PLL_CTRL_POSTDIV) >> 11) + 1;
--
--	if (is_direct && is_bypass) {
--		clk->p_div = 0;
--		clk->mode = PLL_DIRECT_BYPASS;
--		return parent_rate;
--	}
--	if (is_bypass) {
--		clk->mode = PLL_BYPASS;
--		return parent_rate / (1 << clk->p_div);
--	}
--	if (is_direct) {
--		clk->p_div = 0;
--		clk->mode = PLL_DIRECT;
--	}
--
--	ref_rate = parent_rate / clk->n_div;
--	rate = cco_rate = ref_rate * clk->m_div;
--
--	if (!is_direct) {
--		if (is_feedback) {
--			cco_rate *= (1 << clk->p_div);
--			clk->mode = PLL_INTEGER;
--		} else {
--			rate /= (1 << clk->p_div);
--			clk->mode = PLL_NON_INTEGER;
--		}
--	}
--
--	pr_debug("%s: %lu: 0x%x: %d/%d/%d, %lu/%lu/%d => %lu\n",
--		 clk_hw_get_name(hw),
--		 parent_rate, val, is_direct, is_bypass, is_feedback,
--		 clk->n_div, clk->m_div, (1 << clk->p_div), rate);
--
--	if (clk_pll_is_enabled(hw) &&
--	    !(pll_is_valid(parent_rate, 1, 1000000, 20000000)
--	      && pll_is_valid(cco_rate, 1, 156000000, 320000000)
--	      && pll_is_valid(ref_rate, 1, 1000000, 27000000)))
--		pr_err("%s: PLL clocks are not in valid ranges: %lu/%lu/%lu\n",
--		       clk_hw_get_name(hw),
--		       parent_rate, cco_rate, ref_rate);
--
--	return rate;
--}
--
--static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
--			    unsigned long parent_rate)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	u32 val;
--	unsigned long new_rate;
--
--	/* Validate PLL clock parameters computed on round rate stage */
--	switch (clk->mode) {
--	case PLL_DIRECT:
--		val = PLL_CTRL_DIRECT;
--		val |= (clk->m_div - 1) << 1;
--		val |= (clk->n_div - 1) << 9;
--		new_rate = (parent_rate * clk->m_div) / clk->n_div;
--		break;
--	case PLL_BYPASS:
--		val = PLL_CTRL_BYPASS;
--		val |= (clk->p_div - 1) << 11;
--		new_rate = parent_rate / (1 << (clk->p_div));
--		break;
--	case PLL_DIRECT_BYPASS:
--		val = PLL_CTRL_DIRECT | PLL_CTRL_BYPASS;
--		new_rate = parent_rate;
--		break;
--	case PLL_INTEGER:
--		val = PLL_CTRL_FEEDBACK;
--		val |= (clk->m_div - 1) << 1;
--		val |= (clk->n_div - 1) << 9;
--		val |= (clk->p_div - 1) << 11;
--		new_rate = (parent_rate * clk->m_div) / clk->n_div;
--		break;
--	case PLL_NON_INTEGER:
--		val = 0x0;
--		val |= (clk->m_div - 1) << 1;
--		val |= (clk->n_div - 1) << 9;
--		val |= (clk->p_div - 1) << 11;
--		new_rate = (parent_rate * clk->m_div) /
--				(clk->n_div * (1 << clk->p_div));
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	/* Sanity check that round rate is equal to the requested one */
--	if (new_rate != rate)
--		return -EINVAL;
--
--	return regmap_update_bits(clk_regmap, clk->reg, 0x1FFFF, val);
--}
--
--static int clk_hclk_pll_determine_rate(struct clk_hw *hw,
--				       struct clk_rate_request *req)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	u64 m_i, o = req->rate, i = req->best_parent_rate, d = (u64)req->rate << 6;
--	u64 m = 0, n = 0, p = 0;
--	int p_i, n_i;
--
--	pr_debug("%s: %lu/%lu\n", clk_hw_get_name(hw), req->best_parent_rate, req->rate);
--
--	if (req->rate > 266500000)
--		return -EINVAL;
--
--	/* Have to check all 20 possibilities to find the minimal M */
--	for (p_i = 4; p_i >= 0; p_i--) {
--		for (n_i = 4; n_i > 0; n_i--) {
--			m_i = div64_u64(o * n_i * (1 << p_i), i);
--
--			/* Check for valid PLL parameter constraints */
--			if (!(m_i && m_i <= 256
--			      && pll_is_valid(i, n_i, 1000000, 27000000)
--			      && pll_is_valid(i * m_i * (1 << p_i), n_i,
--					      156000000, 320000000)))
--				continue;
--
--			/* Store some intermediate valid parameters */
--			if (o * n_i * (1 << p_i) - i * m_i <= d) {
--				m = m_i;
--				n = n_i;
--				p = p_i;
--				d = o * n_i * (1 << p_i) - i * m_i;
--			}
--		}
--	}
--
--	if (d == (u64)req->rate << 6) {
--		pr_err("%s: %lu: no valid PLL parameters are found\n",
--		       clk_hw_get_name(hw), req->rate);
--		return -EINVAL;
--	}
--
--	clk->m_div = m;
--	clk->n_div = n;
--	clk->p_div = p;
--
--	/* Set only direct or non-integer mode of PLL */
--	if (!p)
--		clk->mode = PLL_DIRECT;
--	else
--		clk->mode = PLL_NON_INTEGER;
--
--	o = div64_u64(i * m, n * (1 << p));
--
--	if (!d)
--		pr_debug("%s: %lu: found exact match: %llu/%llu/%llu\n",
--			 clk_hw_get_name(hw), req->rate, m, n, p);
--	else
--		pr_debug("%s: %lu: found closest: %llu/%llu/%llu - %llu\n",
--			 clk_hw_get_name(hw), req->rate, m, n, p, o);
--
--	req->rate = o;
--
--	return 0;
--}
--
--static int clk_usb_pll_determine_rate(struct clk_hw *hw,
--				      struct clk_rate_request *req)
--{
--	struct lpc32xx_pll_clk *clk = to_lpc32xx_pll_clk(hw);
--	struct clk_hw *usb_div_hw, *osc_hw;
--	u64 d_i, n_i, m, o;
--
--	pr_debug("%s: %lu/%lu\n", clk_hw_get_name(hw), req->best_parent_rate,
--		 req->rate);
--
--	/*
--	 * The only supported USB clock is 48MHz, with PLL internal constraints
--	 * on Fclkin, Fcco and Fref this implies that Fcco must be 192MHz
--	 * and post-divider must be 4, this slightly simplifies calculation of
--	 * USB divider, USB PLL N and M parameters.
--	 */
--	if (req->rate != 48000000)
--		return -EINVAL;
--
--	/* USB divider clock */
--	usb_div_hw = clk_hw_get_parent_by_index(hw, 0);
--	if (!usb_div_hw)
--		return -EINVAL;
--
--	/* Main oscillator clock */
--	osc_hw = clk_hw_get_parent_by_index(usb_div_hw, 0);
--	if (!osc_hw)
--		return -EINVAL;
--	o = clk_hw_get_rate(osc_hw);	/* must be in range 1..20 MHz */
--
--	/* Check if valid USB divider and USB PLL parameters exists */
--	for (d_i = 16; d_i >= 1; d_i--) {
--		for (n_i = 1; n_i <= 4; n_i++) {
--			m = div64_u64(192000000 * d_i * n_i, o);
--			if (!(m && m <= 256
--			      && m * o == 192000000 * d_i * n_i
--			      && pll_is_valid(o, d_i, 1000000, 20000000)
--			      && pll_is_valid(o, d_i * n_i, 1000000, 27000000)))
--				continue;
--
--			clk->n_div = n_i;
--			clk->m_div = m;
--			clk->p_div = 2;
--			clk->mode = PLL_NON_INTEGER;
--			req->best_parent_rate = div64_u64(o, d_i);
--
--			return 0;
--		}
--	}
--
--	return -EINVAL;
--}
--
--#define LPC32XX_DEFINE_PLL_OPS(_name, _rc, _sr, _dr)			\
--	static const struct clk_ops clk_ ##_name ## _ops = {		\
--		.enable = clk_pll_enable,				\
--		.disable = clk_pll_disable,				\
--		.is_enabled = clk_pll_is_enabled,			\
--		.recalc_rate = _rc,					\
--		.set_rate = _sr,					\
--		.determine_rate = _dr,					\
--	}
--
--LPC32XX_DEFINE_PLL_OPS(pll_397x, clk_pll_397x_recalc_rate, NULL, NULL);
--LPC32XX_DEFINE_PLL_OPS(hclk_pll, clk_pll_recalc_rate,
--		       clk_pll_set_rate, clk_hclk_pll_determine_rate);
--LPC32XX_DEFINE_PLL_OPS(usb_pll,  clk_pll_recalc_rate,
--		       clk_pll_set_rate, clk_usb_pll_determine_rate);
--
--static int clk_ddram_is_enabled(struct clk_hw *hw)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	val &= clk->enable_mask | clk->busy_mask;
--
--	return (val == (BIT(7) | BIT(0)) ||
--		val == (BIT(8) | BIT(1)));
--}
--
--static int clk_ddram_enable(struct clk_hw *hw)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val, hclk_div;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	hclk_div = val & clk->busy_mask;
--
--	/*
--	 * DDRAM clock must be 2 times higher than HCLK,
--	 * this implies DDRAM clock can not be enabled,
--	 * if HCLK clock rate is equal to ARM clock rate
--	 */
--	if (hclk_div == 0x0 || hclk_div == (BIT(1) | BIT(0)))
--		return -EINVAL;
--
--	return regmap_update_bits(clk_regmap, clk->reg,
--				  clk->enable_mask, hclk_div << 7);
--}
--
--static unsigned long clk_ddram_recalc_rate(struct clk_hw *hw,
--					   unsigned long parent_rate)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val;
--
--	if (!clk_ddram_is_enabled(hw))
--		return 0;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	val &= clk->enable_mask;
--
--	return parent_rate / (val >> 7);
--}
--
--static const struct clk_ops clk_ddram_ops = {
--	.enable = clk_ddram_enable,
--	.disable = clk_mask_disable,
--	.is_enabled = clk_ddram_is_enabled,
--	.recalc_rate = clk_ddram_recalc_rate,
--};
--
--static unsigned long lpc32xx_clk_uart_recalc_rate(struct clk_hw *hw,
--						  unsigned long parent_rate)
--{
--	struct lpc32xx_clk *clk = to_lpc32xx_clk(hw);
--	u32 val, x, y;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	x = (val & 0xFF00) >> 8;
--	y = val & 0xFF;
--
--	if (x && y)
--		return (parent_rate * x) / y;
--	else
--		return 0;
--}
--
--static const struct clk_ops lpc32xx_uart_div_ops = {
--	.recalc_rate = lpc32xx_clk_uart_recalc_rate,
--};
--
--static const struct clk_div_table clk_hclk_div_table[] = {
--	{ .val = 0, .div = 1 },
--	{ .val = 1, .div = 2 },
--	{ .val = 2, .div = 4 },
--	{ },
--};
--
--static u32 test1_mux_table[] = { 0, 1, 2, };
--static u32 test2_mux_table[] = { 0, 1, 2, 5, 7, };
--
--static int clk_usb_enable(struct clk_hw *hw)
--{
--	struct lpc32xx_usb_clk *clk = to_lpc32xx_usb_clk(hw);
--	u32 val, ctrl_val, count;
--
--	pr_debug("%s: 0x%x\n", clk_hw_get_name(hw), clk->enable);
--
--	if (clk->ctrl_mask) {
--		regmap_read(clk_regmap, LPC32XX_CLKPWR_USB_CTRL, &ctrl_val);
--		regmap_update_bits(clk_regmap, LPC32XX_CLKPWR_USB_CTRL,
--				   clk->ctrl_mask, clk->ctrl_enable);
--	}
--
--	val = lpc32xx_usb_clk_read(clk);
--	if (clk->busy && (val & clk->busy) == clk->busy) {
--		if (clk->ctrl_mask)
--			regmap_write(clk_regmap, LPC32XX_CLKPWR_USB_CTRL,
--				     ctrl_val);
--		return -EBUSY;
--	}
--
--	val |= clk->enable;
--	lpc32xx_usb_clk_write(clk, val);
--
--	for (count = 0; count < 1000; count++) {
--		val = lpc32xx_usb_clk_read(clk);
--		if ((val & clk->enable) == clk->enable)
--			break;
--	}
--
--	if ((val & clk->enable) == clk->enable)
--		return 0;
--
--	if (clk->ctrl_mask)
--		regmap_write(clk_regmap, LPC32XX_CLKPWR_USB_CTRL, ctrl_val);
--
--	return -ETIMEDOUT;
--}
--
--static void clk_usb_disable(struct clk_hw *hw)
--{
--	struct lpc32xx_usb_clk *clk = to_lpc32xx_usb_clk(hw);
--	u32 val = lpc32xx_usb_clk_read(clk);
--
--	val &= ~clk->enable;
--	lpc32xx_usb_clk_write(clk, val);
--
--	if (clk->ctrl_mask)
--		regmap_update_bits(clk_regmap, LPC32XX_CLKPWR_USB_CTRL,
--				   clk->ctrl_mask, clk->ctrl_disable);
--}
--
--static int clk_usb_is_enabled(struct clk_hw *hw)
--{
--	struct lpc32xx_usb_clk *clk = to_lpc32xx_usb_clk(hw);
--	u32 ctrl_val, val;
--
--	if (clk->ctrl_mask) {
--		regmap_read(clk_regmap, LPC32XX_CLKPWR_USB_CTRL, &ctrl_val);
--		if ((ctrl_val & clk->ctrl_mask) != clk->ctrl_enable)
--			return 0;
--	}
--
--	val = lpc32xx_usb_clk_read(clk);
--
--	return ((val & clk->enable) == clk->enable);
--}
--
--static unsigned long clk_usb_i2c_recalc_rate(struct clk_hw *hw,
--					     unsigned long parent_rate)
--{
--	return clk_get_rate(clk[LPC32XX_CLK_PERIPH]);
--}
--
--static const struct clk_ops clk_usb_ops = {
--	.enable = clk_usb_enable,
--	.disable = clk_usb_disable,
--	.is_enabled = clk_usb_is_enabled,
--};
--
--static const struct clk_ops clk_usb_i2c_ops = {
--	.enable = clk_usb_enable,
--	.disable = clk_usb_disable,
--	.is_enabled = clk_usb_is_enabled,
--	.recalc_rate = clk_usb_i2c_recalc_rate,
--};
--
--static int lpc32xx_clk_gate_enable(struct clk_hw *hw)
--{
--	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
--	u32 mask = BIT(clk->bit_idx);
--	u32 val = (clk->flags & CLK_GATE_SET_TO_DISABLE ? 0x0 : mask);
--
--	return regmap_update_bits(clk_regmap, clk->reg, mask, val);
--}
--
--static void lpc32xx_clk_gate_disable(struct clk_hw *hw)
--{
--	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
--	u32 mask = BIT(clk->bit_idx);
--	u32 val = (clk->flags & CLK_GATE_SET_TO_DISABLE ? mask : 0x0);
--
--	regmap_update_bits(clk_regmap, clk->reg, mask, val);
--}
--
--static int lpc32xx_clk_gate_is_enabled(struct clk_hw *hw)
--{
--	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
--	u32 val;
--	bool is_set;
--
--	regmap_read(clk_regmap, clk->reg, &val);
--	is_set = val & BIT(clk->bit_idx);
--
--	return (clk->flags & CLK_GATE_SET_TO_DISABLE ? !is_set : is_set);
--}
--
--static const struct clk_ops lpc32xx_clk_gate_ops = {
--	.enable = lpc32xx_clk_gate_enable,
--	.disable = lpc32xx_clk_gate_disable,
--	.is_enabled = lpc32xx_clk_gate_is_enabled,
--};
--
--#define div_mask(width)	((1 << (width)) - 1)
--
--static unsigned int _get_table_div(const struct clk_div_table *table,
--							unsigned int val)
--{
--	const struct clk_div_table *clkt;
--
--	for (clkt = table; clkt->div; clkt++)
--		if (clkt->val == val)
--			return clkt->div;
--	return 0;
--}
--
--static unsigned int _get_div(const struct clk_div_table *table,
--			     unsigned int val, unsigned long flags, u8 width)
--{
--	if (flags & CLK_DIVIDER_ONE_BASED)
--		return val;
--	if (table)
--		return _get_table_div(table, val);
--	return val + 1;
--}
--
--static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
--		unsigned long parent_rate)
--{
--	struct lpc32xx_clk_div *divider = to_lpc32xx_div(hw);
--	unsigned int val;
--
--	regmap_read(clk_regmap, divider->reg, &val);
--
--	val >>= divider->shift;
--	val &= div_mask(divider->width);
--
--	return divider_recalc_rate(hw, parent_rate, val, divider->table,
--				   divider->flags, divider->width);
--}
--
--static int clk_divider_determine_rate(struct clk_hw *hw,
--				      struct clk_rate_request *req)
--{
--	struct lpc32xx_clk_div *divider = to_lpc32xx_div(hw);
--	unsigned int bestdiv;
--
--	/* if read only, just return current value */
--	if (divider->flags & CLK_DIVIDER_READ_ONLY) {
--		regmap_read(clk_regmap, divider->reg, &bestdiv);
--		bestdiv >>= divider->shift;
--		bestdiv &= div_mask(divider->width);
--		bestdiv = _get_div(divider->table, bestdiv, divider->flags,
--			divider->width);
--		req->rate = DIV_ROUND_UP(req->best_parent_rate, bestdiv);
--
--		return 0;
--	}
--
--	return divider_determine_rate(hw, req, divider->table, divider->width,
--				      divider->flags);
--}
--
--static int clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
--				unsigned long parent_rate)
--{
--	struct lpc32xx_clk_div *divider = to_lpc32xx_div(hw);
--	unsigned int value;
--
--	value = divider_get_val(rate, parent_rate, divider->table,
--				divider->width, divider->flags);
--
--	return regmap_update_bits(clk_regmap, divider->reg,
--				  div_mask(divider->width) << divider->shift,
--				  value << divider->shift);
--}
--
--static const struct clk_ops lpc32xx_clk_divider_ops = {
--	.recalc_rate = clk_divider_recalc_rate,
--	.determine_rate = clk_divider_determine_rate,
--	.set_rate = clk_divider_set_rate,
--};
--
--static u8 clk_mux_get_parent(struct clk_hw *hw)
--{
--	struct lpc32xx_clk_mux *mux = to_lpc32xx_mux(hw);
--	u32 num_parents = clk_hw_get_num_parents(hw);
--	u32 val;
--
--	regmap_read(clk_regmap, mux->reg, &val);
--	val >>= mux->shift;
--	val &= mux->mask;
--
--	if (mux->table) {
--		u32 i;
--
--		for (i = 0; i < num_parents; i++)
--			if (mux->table[i] == val)
--				return i;
--		return -EINVAL;
--	}
--
--	if (val >= num_parents)
--		return -EINVAL;
--
--	return val;
--}
--
--static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
--{
--	struct lpc32xx_clk_mux *mux = to_lpc32xx_mux(hw);
--
--	if (mux->table)
--		index = mux->table[index];
--
--	return regmap_update_bits(clk_regmap, mux->reg,
--			  mux->mask << mux->shift, index << mux->shift);
--}
--
--static const struct clk_ops lpc32xx_clk_mux_ro_ops = {
--	.get_parent = clk_mux_get_parent,
--};
--
--static const struct clk_ops lpc32xx_clk_mux_ops = {
--	.get_parent = clk_mux_get_parent,
--	.set_parent = clk_mux_set_parent,
--	.determine_rate = __clk_mux_determine_rate,
--};
--
--enum lpc32xx_clk_type {
--	CLK_FIXED,
--	CLK_MUX,
--	CLK_DIV,
--	CLK_GATE,
--	CLK_COMPOSITE,
--	CLK_LPC32XX,
--	CLK_LPC32XX_PLL,
--	CLK_LPC32XX_USB,
--};
--
--struct clk_hw_proto0 {
--	const struct clk_ops *ops;
--	union {
--		struct lpc32xx_pll_clk pll;
--		struct lpc32xx_clk clk;
--		struct lpc32xx_usb_clk usb_clk;
--		struct lpc32xx_clk_mux mux;
--		struct lpc32xx_clk_div div;
--		struct lpc32xx_clk_gate gate;
--	};
--};
--
--struct clk_hw_proto1 {
--	struct clk_hw_proto0 *mux;
--	struct clk_hw_proto0 *div;
--	struct clk_hw_proto0 *gate;
--};
--
--struct clk_hw_proto {
--	enum lpc32xx_clk_type type;
--
--	union {
--		struct clk_fixed_rate f;
--		struct clk_hw_proto0 hw0;
--		struct clk_hw_proto1 hw1;
--	};
--};
--
--#define LPC32XX_DEFINE_FIXED(_idx, _rate)			\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_FIXED,						\
--	{								\
--		.f = {							\
--			.fixed_rate = (_rate),				\
--		},							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_PLL(_idx, _name, _reg, _enable)			\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_LPC32XX_PLL,					\
--	{								\
--		.hw0 = {						\
--			.ops = &clk_ ##_name ## _ops,			\
--			{						\
--				.pll = {				\
--					.reg = LPC32XX_CLKPWR_ ## _reg,	\
--					.enable = (_enable),		\
--				},					\
--			},						\
--		},							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_MUX(_idx, _reg, _shift, _mask, _table, _flags)	\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_MUX,						\
--	{								\
--		.hw0 = {						\
--			.ops = (_flags & CLK_MUX_READ_ONLY ?		\
--				&lpc32xx_clk_mux_ro_ops :		\
--				&lpc32xx_clk_mux_ops),			\
--			{						\
--				.mux = {				\
--					.reg = LPC32XX_CLKPWR_ ## _reg,	\
--					.mask = (_mask),		\
--					.shift = (_shift),		\
--					.table = (_table),		\
--					.flags = (_flags),		\
--				},					\
--			},						\
--		},							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_DIV(_idx, _reg, _shift, _width, _table, _flags)	\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_DIV,						\
--	{								\
--		.hw0 = {						\
--			.ops = &lpc32xx_clk_divider_ops,		\
--			{						\
--				.div = {				\
--					.reg = LPC32XX_CLKPWR_ ## _reg,	\
--					.shift = (_shift),		\
--					.width = (_width),		\
--					.table = (_table),		\
--					.flags = (_flags),		\
--				 },					\
--			},						\
--		 },							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_GATE(_idx, _reg, _bit, _flags)			\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_GATE,						\
--	{								\
--		.hw0 = {						\
--			.ops = &lpc32xx_clk_gate_ops,			\
--			{						\
--				.gate = {				\
--					.reg = LPC32XX_CLKPWR_ ## _reg,	\
--					.bit_idx = (_bit),		\
--					.flags = (_flags),		\
--				},					\
--			},						\
--		},							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_CLK(_idx, _reg, _e, _em, _d, _dm, _b, _bm, _ops)	\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_LPC32XX,						\
--	{								\
--		.hw0 = {						\
--			.ops = &(_ops),					\
--			{						\
--				.clk = {				\
--					.reg = LPC32XX_CLKPWR_ ## _reg,	\
--					.enable = (_e),			\
--					.enable_mask = (_em),		\
--					.disable = (_d),		\
--					.disable_mask = (_dm),		\
--					.busy = (_b),			\
--					.busy_mask = (_bm),		\
--				},					\
--			},						\
--		},							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_USB(_idx, _ce, _cd, _cm, _e, _b, _ops)		\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_LPC32XX_USB,					\
--	{								\
--		.hw0 = {						\
--			.ops = &(_ops),					\
--			{						\
--				.usb_clk = {				\
--					.ctrl_enable = (_ce),		\
--					.ctrl_disable = (_cd),		\
--					.ctrl_mask = (_cm),		\
--					.enable = (_e),			\
--					.busy = (_b),			\
--				}					\
--			},						\
--		}							\
--	},								\
--}
--
--#define LPC32XX_DEFINE_COMPOSITE(_idx, _mux, _div, _gate)		\
--[CLK_PREFIX(_idx)] = {							\
--	.type = CLK_COMPOSITE,						\
--	{								\
--		.hw1 = {						\
--		.mux = (CLK_PREFIX(_mux) == LPC32XX_CLK__NULL ? NULL :	\
--			&clk_hw_proto[CLK_PREFIX(_mux)].hw0),		\
--		.div = (CLK_PREFIX(_div) == LPC32XX_CLK__NULL ? NULL :	\
--			&clk_hw_proto[CLK_PREFIX(_div)].hw0),		\
--		.gate = (CLK_PREFIX(_gate) == LPC32XX_CLK__NULL ? NULL :\
--			 &clk_hw_proto[CLK_PREFIX(_gate)].hw0),		\
--		},							\
--	},								\
--}
--
--static struct clk_hw_proto clk_hw_proto[LPC32XX_CLK_HW_MAX] = {
--	LPC32XX_DEFINE_FIXED(RTC, 32768),
--	LPC32XX_DEFINE_PLL(PLL397X, pll_397x, HCLKPLL_CTRL, BIT(1)),
--	LPC32XX_DEFINE_PLL(HCLK_PLL, hclk_pll, HCLKPLL_CTRL, PLL_CTRL_ENABLE),
--	LPC32XX_DEFINE_PLL(USB_PLL, usb_pll, USB_CTRL, PLL_CTRL_ENABLE),
--	LPC32XX_DEFINE_GATE(OSC, OSC_CTRL, 0, CLK_GATE_SET_TO_DISABLE),
--	LPC32XX_DEFINE_GATE(USB, USB_CTRL, 18, 0),
--
--	LPC32XX_DEFINE_DIV(HCLK_DIV_PERIPH, HCLKDIV_CTRL, 2, 5, NULL,
--			   CLK_DIVIDER_READ_ONLY),
--	LPC32XX_DEFINE_DIV(HCLK_DIV, HCLKDIV_CTRL, 0, 2, clk_hclk_div_table,
--			   CLK_DIVIDER_READ_ONLY),
--
--	/* Register 3 read-only muxes with a single control PWR_CTRL[2] */
--	LPC32XX_DEFINE_MUX(SYSCLK_PERIPH_MUX, PWR_CTRL, 2, 0x1, NULL,
--			   CLK_MUX_READ_ONLY),
--	LPC32XX_DEFINE_MUX(SYSCLK_HCLK_MUX, PWR_CTRL, 2, 0x1, NULL,
--			   CLK_MUX_READ_ONLY),
--	LPC32XX_DEFINE_MUX(SYSCLK_ARM_MUX, PWR_CTRL, 2, 0x1, NULL,
--			   CLK_MUX_READ_ONLY),
--	/* Register 2 read-only muxes with a single control PWR_CTRL[10] */
--	LPC32XX_DEFINE_MUX(PERIPH_HCLK_MUX, PWR_CTRL, 10, 0x1, NULL,
--			   CLK_MUX_READ_ONLY),
--	LPC32XX_DEFINE_MUX(PERIPH_ARM_MUX, PWR_CTRL, 10, 0x1, NULL,
--			   CLK_MUX_READ_ONLY),
--
--	/* 3 always on gates with a single control PWR_CTRL[0] same as OSC */
--	LPC32XX_DEFINE_GATE(PERIPH, PWR_CTRL, 0, CLK_GATE_SET_TO_DISABLE),
--	LPC32XX_DEFINE_GATE(HCLK, PWR_CTRL, 0, CLK_GATE_SET_TO_DISABLE),
--	LPC32XX_DEFINE_GATE(ARM, PWR_CTRL, 0, CLK_GATE_SET_TO_DISABLE),
--
--	LPC32XX_DEFINE_GATE(ARM_VFP, DEBUG_CTRL, 4, 0),
--	LPC32XX_DEFINE_GATE(DMA, DMA_CLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_CLK(DDRAM, HCLKDIV_CTRL, 0x0, BIT(8) | BIT(7),
--		   0x0, BIT(8) | BIT(7), 0x0, BIT(1) | BIT(0), clk_ddram_ops),
--
--	LPC32XX_DEFINE_GATE(TIMER0, TIMCLK_CTRL1, 2, 0),
--	LPC32XX_DEFINE_GATE(TIMER1, TIMCLK_CTRL1, 3, 0),
--	LPC32XX_DEFINE_GATE(TIMER2, TIMCLK_CTRL1, 4, 0),
--	LPC32XX_DEFINE_GATE(TIMER3, TIMCLK_CTRL1, 5, 0),
--	LPC32XX_DEFINE_GATE(TIMER4, TIMCLK_CTRL1, 0, 0),
--	LPC32XX_DEFINE_GATE(TIMER5, TIMCLK_CTRL1, 1, 0),
--
--	LPC32XX_DEFINE_GATE(SSP0, SSP_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(SSP1, SSP_CTRL, 1, 0),
--	LPC32XX_DEFINE_GATE(SPI1, SPI_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(SPI2, SPI_CTRL, 4, 0),
--	LPC32XX_DEFINE_GATE(I2S0, I2S_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(I2S1, I2S_CTRL, 1, 0),
--	LPC32XX_DEFINE_GATE(I2C1, I2CCLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(I2C2, I2CCLK_CTRL, 1, 0),
--	LPC32XX_DEFINE_GATE(WDOG, TIMCLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(HSTIMER, TIMCLK_CTRL, 1, 0),
--
--	LPC32XX_DEFINE_GATE(KEY, KEYCLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_GATE(MCPWM, TIMCLK_CTRL1, 6, 0),
--
--	LPC32XX_DEFINE_MUX(PWM1_MUX, PWMCLK_CTRL, 1, 0x1, NULL, 0),
--	LPC32XX_DEFINE_DIV(PWM1_DIV, PWMCLK_CTRL, 4, 4, NULL,
--			   CLK_DIVIDER_ONE_BASED),
--	LPC32XX_DEFINE_GATE(PWM1_GATE, PWMCLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_COMPOSITE(PWM1, PWM1_MUX, PWM1_DIV, PWM1_GATE),
--
--	LPC32XX_DEFINE_MUX(PWM2_MUX, PWMCLK_CTRL, 3, 0x1, NULL, 0),
--	LPC32XX_DEFINE_DIV(PWM2_DIV, PWMCLK_CTRL, 8, 4, NULL,
--			   CLK_DIVIDER_ONE_BASED),
--	LPC32XX_DEFINE_GATE(PWM2_GATE, PWMCLK_CTRL, 2, 0),
--	LPC32XX_DEFINE_COMPOSITE(PWM2, PWM2_MUX, PWM2_DIV, PWM2_GATE),
--
--	LPC32XX_DEFINE_MUX(UART3_MUX, UART3_CLK_CTRL, 16, 0x1, NULL, 0),
--	LPC32XX_DEFINE_CLK(UART3_DIV, UART3_CLK_CTRL,
--			   0, 0, 0, 0, 0, 0, lpc32xx_uart_div_ops),
--	LPC32XX_DEFINE_GATE(UART3_GATE, UART_CLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_COMPOSITE(UART3, UART3_MUX, UART3_DIV, UART3_GATE),
--
--	LPC32XX_DEFINE_MUX(UART4_MUX, UART4_CLK_CTRL, 16, 0x1, NULL, 0),
--	LPC32XX_DEFINE_CLK(UART4_DIV, UART4_CLK_CTRL,
--			   0, 0, 0, 0, 0, 0, lpc32xx_uart_div_ops),
--	LPC32XX_DEFINE_GATE(UART4_GATE, UART_CLK_CTRL, 1, 0),
--	LPC32XX_DEFINE_COMPOSITE(UART4, UART4_MUX, UART4_DIV, UART4_GATE),
--
--	LPC32XX_DEFINE_MUX(UART5_MUX, UART5_CLK_CTRL, 16, 0x1, NULL, 0),
--	LPC32XX_DEFINE_CLK(UART5_DIV, UART5_CLK_CTRL,
--			   0, 0, 0, 0, 0, 0, lpc32xx_uart_div_ops),
--	LPC32XX_DEFINE_GATE(UART5_GATE, UART_CLK_CTRL, 2, 0),
--	LPC32XX_DEFINE_COMPOSITE(UART5, UART5_MUX, UART5_DIV, UART5_GATE),
--
--	LPC32XX_DEFINE_MUX(UART6_MUX, UART6_CLK_CTRL, 16, 0x1, NULL, 0),
--	LPC32XX_DEFINE_CLK(UART6_DIV, UART6_CLK_CTRL,
--			   0, 0, 0, 0, 0, 0, lpc32xx_uart_div_ops),
--	LPC32XX_DEFINE_GATE(UART6_GATE, UART_CLK_CTRL, 3, 0),
--	LPC32XX_DEFINE_COMPOSITE(UART6, UART6_MUX, UART6_DIV, UART6_GATE),
--
--	LPC32XX_DEFINE_CLK(IRDA, IRDA_CLK_CTRL,
--			   0, 0, 0, 0, 0, 0, lpc32xx_uart_div_ops),
--
--	LPC32XX_DEFINE_MUX(TEST1_MUX, TEST_CLK_CTRL, 5, 0x3,
--			   test1_mux_table, 0),
--	LPC32XX_DEFINE_GATE(TEST1_GATE, TEST_CLK_CTRL, 4, 0),
--	LPC32XX_DEFINE_COMPOSITE(TEST1, TEST1_MUX, _NULL, TEST1_GATE),
--
--	LPC32XX_DEFINE_MUX(TEST2_MUX, TEST_CLK_CTRL, 1, 0x7,
--			   test2_mux_table, 0),
--	LPC32XX_DEFINE_GATE(TEST2_GATE, TEST_CLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_COMPOSITE(TEST2, TEST2_MUX, _NULL, TEST2_GATE),
--
--	LPC32XX_DEFINE_MUX(SYS, SYSCLK_CTRL, 0, 0x1, NULL, CLK_MUX_READ_ONLY),
--
--	LPC32XX_DEFINE_DIV(USB_DIV_DIV, USB_DIV, 0, 4, NULL, 0),
--	LPC32XX_DEFINE_GATE(USB_DIV_GATE, USB_CTRL, 17, 0),
--	LPC32XX_DEFINE_COMPOSITE(USB_DIV, _NULL, USB_DIV_DIV, USB_DIV_GATE),
--
--	LPC32XX_DEFINE_DIV(SD_DIV, MS_CTRL, 0, 4, NULL, CLK_DIVIDER_ONE_BASED),
--	LPC32XX_DEFINE_CLK(SD_GATE, MS_CTRL, BIT(5) | BIT(9), BIT(5) | BIT(9),
--			   0x0, BIT(5) | BIT(9), 0x0, 0x0, clk_mask_ops),
--	LPC32XX_DEFINE_COMPOSITE(SD, _NULL, SD_DIV, SD_GATE),
--
--	LPC32XX_DEFINE_DIV(LCD_DIV, LCDCLK_CTRL, 0, 5, NULL, 0),
--	LPC32XX_DEFINE_GATE(LCD_GATE, LCDCLK_CTRL, 5, 0),
--	LPC32XX_DEFINE_COMPOSITE(LCD, _NULL, LCD_DIV, LCD_GATE),
--
--	LPC32XX_DEFINE_CLK(MAC, MACCLK_CTRL,
--			   BIT(2) | BIT(1) | BIT(0), BIT(2) | BIT(1) | BIT(0),
--			   BIT(2) | BIT(1) | BIT(0), BIT(2) | BIT(1) | BIT(0),
--			   0x0, 0x0, clk_mask_ops),
--	LPC32XX_DEFINE_CLK(SLC, FLASHCLK_CTRL,
--			   BIT(2) | BIT(0), BIT(2) | BIT(0), 0x0,
--			   BIT(0), BIT(1), BIT(2) | BIT(1), clk_mask_ops),
--	LPC32XX_DEFINE_CLK(MLC, FLASHCLK_CTRL,
--			   BIT(1), BIT(2) | BIT(1), 0x0, BIT(1),
--			   BIT(2) | BIT(0), BIT(2) | BIT(0), clk_mask_ops),
--	/*
--	 * ADC/TS clock unfortunately cannot be registered as a composite one
--	 * due to a different connection of gate, div and mux, e.g. gating it
--	 * won't mean that the clock is off, if peripheral clock is its parent:
--	 *
--	 * rtc-->[gate]-->|     |
--	 *                | mux |--> adc/ts
--	 * pclk-->[div]-->|     |
--	 *
--	 * Constraints:
--	 * ADC --- resulting clock must be <= 4.5 MHz
--	 * TS  --- resulting clock must be <= 400 KHz
--	 */
--	LPC32XX_DEFINE_DIV(ADC_DIV, ADCCLK_CTRL1, 0, 8, NULL, 0),
--	LPC32XX_DEFINE_GATE(ADC_RTC, ADCCLK_CTRL, 0, 0),
--	LPC32XX_DEFINE_MUX(ADC, ADCCLK_CTRL1, 8, 0x1, NULL, 0),
--
--	/* USB controller clocks */
--	LPC32XX_DEFINE_USB(USB_AHB,
--			   BIT(24), 0x0, BIT(24), BIT(4), 0, clk_usb_ops),
--	LPC32XX_DEFINE_USB(USB_OTG,
--			   0x0, 0x0, 0x0, BIT(3), 0, clk_usb_ops),
--	LPC32XX_DEFINE_USB(USB_I2C,
--			   0x0, BIT(23), BIT(23), BIT(2), 0, clk_usb_i2c_ops),
--	LPC32XX_DEFINE_USB(USB_DEV,
--			   BIT(22), 0x0, BIT(22), BIT(1), BIT(0), clk_usb_ops),
--	LPC32XX_DEFINE_USB(USB_HOST,
--			   BIT(21), 0x0, BIT(21), BIT(0), BIT(1), clk_usb_ops),
--};
--
--static struct clk * __init lpc32xx_clk_register(u32 id)
--{
--	const struct clk_proto_t *lpc32xx_clk = &clk_proto[id];
--	struct clk_hw_proto *clk_hw = &clk_hw_proto[id];
--	const char *parents[LPC32XX_CLK_PARENTS_MAX];
--	struct clk *clk;
--	unsigned int i;
--
--	for (i = 0; i < lpc32xx_clk->num_parents; i++)
--		parents[i] = clk_proto[lpc32xx_clk->parents[i]].name;
--
--	pr_debug("%s: derived from '%s', clock type %d\n", lpc32xx_clk->name,
--		 parents[0], clk_hw->type);
--
--	switch (clk_hw->type) {
--	case CLK_LPC32XX:
--	case CLK_LPC32XX_PLL:
--	case CLK_LPC32XX_USB:
--	case CLK_MUX:
--	case CLK_DIV:
--	case CLK_GATE:
--	{
--		struct clk_init_data clk_init = {
--			.name = lpc32xx_clk->name,
--			.parent_names = parents,
--			.num_parents = lpc32xx_clk->num_parents,
--			.flags = lpc32xx_clk->flags,
--			.ops = clk_hw->hw0.ops,
--		};
--		struct clk_hw *hw;
--
--		if (clk_hw->type == CLK_LPC32XX)
--			hw = &clk_hw->hw0.clk.hw;
--		else if (clk_hw->type == CLK_LPC32XX_PLL)
--			hw = &clk_hw->hw0.pll.hw;
--		else if (clk_hw->type == CLK_LPC32XX_USB)
--			hw = &clk_hw->hw0.usb_clk.hw;
--		else if (clk_hw->type == CLK_MUX)
--			hw = &clk_hw->hw0.mux.hw;
--		else if (clk_hw->type == CLK_DIV)
--			hw = &clk_hw->hw0.div.hw;
--		else if (clk_hw->type == CLK_GATE)
--			hw = &clk_hw->hw0.gate.hw;
--		else
--			return ERR_PTR(-EINVAL);
--
--		hw->init = &clk_init;
--		clk = clk_register(NULL, hw);
--		break;
--	}
--	case CLK_COMPOSITE:
--	{
--		struct clk_hw *mux_hw = NULL, *div_hw = NULL, *gate_hw = NULL;
--		const struct clk_ops *mops = NULL, *dops = NULL, *gops = NULL;
--		struct clk_hw_proto0 *mux0, *div0, *gate0;
--
--		mux0 = clk_hw->hw1.mux;
--		div0 = clk_hw->hw1.div;
--		gate0 = clk_hw->hw1.gate;
--		if (mux0) {
--			mops = mux0->ops;
--			mux_hw = &mux0->clk.hw;
--		}
--		if (div0) {
--			dops = div0->ops;
--			div_hw = &div0->clk.hw;
--		}
--		if (gate0) {
--			gops = gate0->ops;
--			gate_hw = &gate0->clk.hw;
--		}
--
--		clk = clk_register_composite(NULL, lpc32xx_clk->name,
--				parents, lpc32xx_clk->num_parents,
--				mux_hw, mops, div_hw, dops,
--				gate_hw, gops, lpc32xx_clk->flags);
--		break;
--	}
--	case CLK_FIXED:
--	{
--		struct clk_fixed_rate *fixed = &clk_hw->f;
--
--		clk = clk_register_fixed_rate(NULL, lpc32xx_clk->name,
--			parents[0], 0, fixed->fixed_rate);
--		break;
--	}
--	default:
--		clk = ERR_PTR(-EINVAL);
--	}
--
--	return clk;
--}
--
--static void __init lpc32xx_clk_div_quirk(u32 reg, u32 div_mask, u32 gate)
--{
--	u32 val;
--
--	regmap_read(clk_regmap, reg, &val);
--
--	if (!(val & div_mask)) {
--		val &= ~gate;
--		val |= BIT(__ffs(div_mask));
--	}
--
--	regmap_update_bits(clk_regmap, reg, gate | div_mask, val);
--}
--
--static void __init lpc32xx_clk_init(struct device_node *np)
--{
--	unsigned int i;
--	struct clk *clk_osc, *clk_32k;
--	void __iomem *base = NULL;
--
--	/* Ensure that parent clocks are available and valid */
--	clk_32k = of_clk_get_by_name(np, clk_proto[LPC32XX_CLK_XTAL_32K].name);
--	if (IS_ERR(clk_32k)) {
--		pr_err("failed to find external 32KHz clock: %ld\n",
--		       PTR_ERR(clk_32k));
--		return;
--	}
--	if (clk_get_rate(clk_32k) != 32768) {
--		pr_err("invalid clock rate of external 32KHz oscillator\n");
--		return;
--	}
--
--	clk_osc = of_clk_get_by_name(np, clk_proto[LPC32XX_CLK_XTAL].name);
--	if (IS_ERR(clk_osc)) {
--		pr_err("failed to find external main oscillator clock: %ld\n",
--		       PTR_ERR(clk_osc));
--		return;
--	}
--
--	base = of_iomap(np, 0);
--	if (!base) {
--		pr_err("failed to map system control block registers\n");
--		return;
--	}
--
--	clk_regmap = regmap_init_mmio(NULL, base, &lpc32xx_scb_regmap_config);
--	if (IS_ERR(clk_regmap)) {
--		pr_err("failed to regmap system control block: %ld\n",
--			PTR_ERR(clk_regmap));
--		iounmap(base);
--		return;
--	}
--
--	/*
--	 * Divider part of PWM and MS clocks requires a quirk to avoid
--	 * a misinterpretation of formally valid zero value in register
--	 * bitfield, which indicates another clock gate. Instead of
--	 * adding complexity to a gate clock ensure that zero value in
--	 * divider clock is never met in runtime.
--	 */
--	lpc32xx_clk_div_quirk(LPC32XX_CLKPWR_PWMCLK_CTRL, 0xf0, BIT(0));
--	lpc32xx_clk_div_quirk(LPC32XX_CLKPWR_PWMCLK_CTRL, 0xf00, BIT(2));
--	lpc32xx_clk_div_quirk(LPC32XX_CLKPWR_MS_CTRL, 0xf, BIT(5) | BIT(9));
--
--	for (i = 1; i < LPC32XX_CLK_MAX; i++) {
--		clk[i] = lpc32xx_clk_register(i);
--		if (IS_ERR(clk[i])) {
--			pr_err("failed to register %s clock: %ld\n",
--				clk_proto[i].name, PTR_ERR(clk[i]));
--			clk[i] = NULL;
--		}
--	}
--
--	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
--
--	/* Set 48MHz rate of USB PLL clock */
--	clk_set_rate(clk[LPC32XX_CLK_USB_PLL], 48000000);
--
--	/* These two clocks must be always on independently on consumers */
--	clk_prepare_enable(clk[LPC32XX_CLK_ARM]);
--	clk_prepare_enable(clk[LPC32XX_CLK_HCLK]);
--
--	/* Enable ARM VFP by default */
--	clk_prepare_enable(clk[LPC32XX_CLK_ARM_VFP]);
--
--	/* Disable enabled by default clocks for NAND MLC and SLC */
--	clk_mask_disable(&clk_hw_proto[LPC32XX_CLK_SLC].hw0.clk.hw);
--	clk_mask_disable(&clk_hw_proto[LPC32XX_CLK_MLC].hw0.clk.hw);
--}
--CLK_OF_DECLARE(lpc32xx_clk, "nxp,lpc3220-clk", lpc32xx_clk_init);
--
--static void __init lpc32xx_usb_clk_init(struct device_node *np)
--{
--	unsigned int i;
--
--	usb_clk_vbase = of_iomap(np, 0);
--	if (!usb_clk_vbase) {
--		pr_err("failed to map address range\n");
--		return;
--	}
--
--	for (i = 1; i < LPC32XX_USB_CLK_MAX; i++) {
--		usb_clk[i] = lpc32xx_clk_register(i + LPC32XX_CLK_USB_OFFSET);
--		if (IS_ERR(usb_clk[i])) {
--			pr_err("failed to register %s clock: %ld\n",
--				clk_proto[i].name, PTR_ERR(usb_clk[i]));
--			usb_clk[i] = NULL;
--		}
--	}
--
--	of_clk_add_provider(np, of_clk_src_onecell_get, &usb_clk_data);
--}
--CLK_OF_DECLARE(lpc32xx_usb_clk, "nxp,lpc3220-usb-clk", lpc32xx_usb_clk_init);
+-builtin_platform_driver(lpc18xx_scu_driver);
 
 -- 
 2.43.0
