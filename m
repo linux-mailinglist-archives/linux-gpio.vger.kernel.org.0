@@ -1,79 +1,81 @@
-Return-Path: <linux-gpio+bounces-38740-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38741-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SXM2K4PxNmp1GwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38740-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 22:01:07 +0200
+	id Oz0oIprxNmp7GwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38741-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 22:01:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A1DF6A99AD
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 22:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2EBC6A99C4
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 22:01:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=I5Ra+fP2;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38740-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38740-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=T783SSeZ;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38741-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38741-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C78CF301C169
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 20:00:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80A38301A1E1
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 20:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC23282F0A;
-	Sat, 20 Jun 2026 20:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88F736AB5E;
+	Sat, 20 Jun 2026 20:01:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E231B2F0C79
-	for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2026 20:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A8635A385
+	for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2026 20:01:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781985648; cv=none; b=SGZft3JE5yeJTKxZL3P75IF7hMXMHh2ugVgm2uz8uY5lzjCazuhLTvQzcTm8lOw+YlHR/iKGd4dcYtvxlqr5KG6e8CeudXUDZj8fi8oM36PvDwsHWOMUHcVtprSaSIuTeE5lC68GEXWBHX1+hQ9vMllRtxkTkfUt9QW7rpieAS4=
+	t=1781985662; cv=none; b=he8xUNgUSv1SI7CrZdfvAveMs2ULiOLxuDVa75Q7s7Gvwoa/HJ4qCGgWKvY01qPJtx7zsltWfqKcCuH2Nmexibor5XMf+ZNnmlH49bi+35m972+roreu2KmsclIip1wVRyYj0vH5pupuKq3yWAvEgBpT0IquM4+sIjE176kMh24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781985648; c=relaxed/simple;
-	bh=D5wiJHXN4VMCPb9AryAfo92/6R00Yh2A1Qg2GNP/pVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vc/olZCKzsZ0LZdAC3PLiQsx6QfzQ7u3gQkkVmknwGas4GmQBSk+5A/B0Z4ZvZug6sg9EJ2XyT7YsOE/f/FVgRI47TsAIEgjS+aWtjZBh9i1g1whyHBNkzxAkK8J2cojW+xAQdRpLe+3PhO4V4jtBJkLQz5HSs+dZVNi6KuflSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5Ra+fP2; arc=none smtp.client-ip=209.85.221.52
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-4601949975dso439411f8f.0
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2026 13:00:45 -0700 (PDT)
+	s=arc-20240116; t=1781985662; c=relaxed/simple;
+	bh=C2RPz9317K2x8HNeQWBbIdy3Fw2SwyRLehH0arAHRro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZORjFtzPYjQjx8mDPkfcgZp0AF0gEMHNI8/+kSf5uLrraykXBrPEzqf4sueYQD27ic9GKRKwTamt+vNHhkCG86t4+Vo801UgJsxRc2Qqki7+sLBmktJm16QMLi12QyNZf26ZZHiIsGnuiZtPlzuHxJlnyATqAdXuLedhK6iHtcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T783SSeZ; arc=none smtp.client-ip=209.85.128.54
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490b64c8311so29984475e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2026 13:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781985644; x=1782590444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YuckR/NZ8exY6f/XTl1lDY68jOPxEhNdZ4x63rZXPCE=;
-        b=I5Ra+fP2qJNz637wuQ681uKVMZRPUtRLvuqU7DwJlIykbWkt9E3/Rl3CRx8/wDgHgH
-         aXgOn5iLxOqlgIlxU6srpYnwtcHNYZuk9LfR5SAaGe4vkcMobVMjaQXWoKVSavmIIOe3
-         TmR57IeErB2gxaPLeNo7sbwJYvHDUMfEQz9NhRDAlaCLvedN0HNcRl5YYNi1pG01dCGK
-         T9Hvvu25nRSnWTXIMD7Q9v2KgNe/aWZm7/pTigo4GX9b/0wKjApHnt23kF04cwDHzfCx
-         PpudN8OsPa5pHQBhP6gNqf9zGxeVeHaImBA/dRq1/7/YEirbHkp17wRrcAtMJ5fl6q/l
-         uKAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781985644; x=1782590444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1781985659; x=1782590459; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YuckR/NZ8exY6f/XTl1lDY68jOPxEhNdZ4x63rZXPCE=;
-        b=FHvrY8qNkciBM93igp2cpWQwFUeRsUruQ7RnHoOPEJ43VjqhTtV/fUJuBctcx1RO8j
-         siwK/x2idk2Dss0gCFWEa7h6HNje85aQs0iq12cizDcHCj+yga+wwqCahx4+vQIcV2QX
-         KWTu9lqM0/x9s4RKZxzC13WIBPIVsf4vtqtB5ybhu0UxcBhVQfzyyBXvrAobuKKVUUU9
-         grEtV37phH+BEJr0qC2rNfhfXR7uJU3L0Ncq0t49MaT5HC/tvIQjC2GPP+RD4HRxLGRz
-         pnHxqmdaMpRqRIG56cL9dJwTsY9MOlvLfsWuz4WSp9ETTMQcABKdLFctD9g1lEm34ZkD
-         kHXQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrhFqQDWTmn9pmgm4cFyLTR+3w9e7SSysq5fP/WP9FKsNVViEevyLoM0IPQv7IEGcKZIIFWDiV20lNv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKMz6NYyH0d26TvMF/QxTZ4g9RN3eNMCxCTutappiNh6KPSAlJ
-	gcjhWY6DJ1n8dJz6TghHCPfyXr9RjW1JZnSiZP2XpEkFO4GpwEHZiFq4
-X-Gm-Gg: AfdE7cnEpajIZMjGJjwJEHjA4D32e03PYmZ5SI/fpvzyq0GxlcW9F7zip0Py5fXaQHS
-	2GwCI+19hZCxAHk9e4UX7e2foKAbccekotR5uZl6aLsSkXEaXtO0BGxGTQ9xSN+K8xlbE0xPp10
-	wxCu61BSV3lq6ipHz1whitSMxLauves2yquE9nWn2Uy6iaNe3Nm+JaJoAqVb8IkLjX4b7+2daAJ
-	/ki13AbUOfLuHS5rnohniBtYnC6V6vfvEGThoVyk4WK+qHlmTOYsEy83eVBxjMA4AkHhZxK7+bB
-	7wG+0giK24AO1C0jCyWwGKehgwoOAfTPkraX/ZqCFUvIqo61MTvF9Q9ySFoIUHXThQVilFlV++6
-	3G/E1EkdxVjAPEbCExwId3K503fLr2JGeBZconfkcASoFSFyUNOmeN9dgWZeLKo589Bmfv5ULNG
-	iiFhX01Q==
-X-Received: by 2002:a05:6000:4902:b0:463:a7e3:9f71 with SMTP id ffacd0b85a97d-4656dd09554mr11611148f8f.15.1781985644072;
-        Sat, 20 Jun 2026 13:00:44 -0700 (PDT)
+        bh=OKF7GqpNUTdJMAXxQG18bCaWMljaCNKHwPc7AyjKQ9w=;
+        b=T783SSeZ/wVUkpbMJvQ9kCaXYcEIj2tCZlhli5cmMzUBy7jLWS0o2wvmSsGRCAtfCn
+         IDUDz4nHzI3aaYlY6f2PLz1glUCQmsAqkEqTCSifvY80/5Pizg/xXNuZ3F/g0SOJ3kuJ
+         d4E+2nNdr1bauGXGpSW2HA7XJMxQfryVmlf595AOL/Np9Cqa5IyregArb3kgWo/n5loU
+         Lg7Y+WQTqHIoEz6T+HNhlNvA2wUhy7vEelvxtWjZ1iAX9YlKT+0DdQNrQ03qKvHFNJ7M
+         G1H1lBOE/MtnQhj+m3thvV3A3yFtWuSzo+wvF8/RedF9CiPA65WChteBNM/U4UG8oRdL
+         /2IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781985659; x=1782590459;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=OKF7GqpNUTdJMAXxQG18bCaWMljaCNKHwPc7AyjKQ9w=;
+        b=AcrJrcKZ4UUTZCtvdQSmRWRJjpsk/ukXvLBWeZVhV24k4f8eH3mBVzVpnN/R5vPnjD
+         OWkEL1xn8HnSc4wYnGUy+SEL2CCpCQ0wkalD1Avdu2QpNtWftVodqc3RXolreDmuQAIb
+         dHcibeen+aV4nFeUr2UU0sTAyVfKLrhOwFGOfpsp7AtsEpBUXLj0w6DwQfbTDrAa1lX8
+         mJsDxjf6WKswd4qojAnti/cIMumAExSn+xHS/hJBa/Lfr+GfBcnYHLfq87MjKlm2lBiR
+         TA0Fpkx2wRnZYrMnnwyAyoHODTy9Eg+W4UJ2hDYhjhYsACEjn3uL02cO/NXgIxRURIvY
+         ehLA==
+X-Forwarded-Encrypted: i=1; AFNElJ+14n6PhzJJFTNR/piIb+uU7hHUwjZYn4e1C4WBc8pfqEw/skUnu62Xjv+ho4HkEEq8CcIyhIFklOhe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+2TCtKmq5/2+qnMmYqj1hbHeBzUkE17kFoQ2QJi/ngh087ekb
+	TLBmfBqcvNiGq8lkkVolFO0PD7/KQQgajaG0V6XV0ltciQS9rjYiv6CP
+X-Gm-Gg: AfdE7ckKk2c6gaf+cS+cCYBPVId4fDSp31jIHouNKc+0ONzTjVmsDDxm+pfsX00LhJa
+	wcQvyRVkAQ9t6ltJrB8gcymOg23yw/4a58N+osibMfZzoEwZwOtJNz2/js6eBPcOoRYjNMf8oDC
+	jYUUWeGvjhQ/iVlenwPR9pRPsKKraT/ODdgj2+D5BSiZj2XQCDH9qKCLO+9YCUjY+bfx0M9DWIs
+	aM0KQdimfkO3aJAaiuZlsOfSV00Z8KNSj5K+iRjPG2HQVacEwZ7+19UESvSQobkWc6exbvvQvZH
+	NDuXrLPB5yzvoBzDawJ1zLHj3o+aFUnn+ryqlRR7BnNK8WPjboIfI7W15j+UVRt8fVA44F+k6wr
+	7hS78NJ1XGvyEVcOLoEC3HT7epq3myGIeL2u6aRHmnxt0vO4u185rwC7RiKaqxFBWYPr16zdp14
+	YEa5AeCg==
+X-Received: by 2002:a05:600c:3112:b0:492:450c:57cf with SMTP id 5b1f17b1804b1-492450c5d26mr106314955e9.31.1781985659503;
+        Sat, 20 Jun 2026 13:00:59 -0700 (PDT)
 Received: from luca-vm.. ([81.56.18.151])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666788226sm10708354f8f.23.2026.06.20.13.00.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666788226sm10708354f8f.23.2026.06.20.13.00.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2026 13:00:43 -0700 (PDT)
+        Sat, 20 Jun 2026 13:00:58 -0700 (PDT)
 From: Luca Leonardo Scorcia <l.scorcia@gmail.com>
 To: linux-mediatek@lists.infradead.org
 Cc: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
@@ -90,9 +92,9 @@ Cc: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
 	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
 	Linus Walleij <linusw@kernel.org>,
-	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
 	Val Packett <val@packett.cool>,
 	Julien Massot <julien.massot@collabora.com>,
+	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
 	Fabien Parent <parent.f@gmail.com>,
 	Akari Tsuyukusa <akkun11.open@gmail.com>,
 	Chen Zhong <chen.zhong@mediatek.com>,
@@ -102,10 +104,12 @@ Cc: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
 	linux-pm@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v8 0/9] Add support for MT6392 PMIC
-Date: Sat, 20 Jun 2026 21:56:46 +0200
-Message-ID: <20260620200032.334192-1-l.scorcia@gmail.com>
+Subject: [PATCH v8 1/9] dt-bindings: mfd: mt6397: Add MT6392 PMIC
+Date: Sat, 20 Jun 2026 21:56:47 +0200
+Message-ID: <20260620200032.334192-2-l.scorcia@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260620200032.334192-1-l.scorcia@gmail.com>
+References: <20260620200032.334192-1-l.scorcia@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -123,13 +127,13 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38740-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38741-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[27];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FREEMAIL_CC(0.00)[gmail.com,kernel.org,mediatek.com,collabora.com,packett.cool,vger.kernel.org,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-mediatek@lists.infradead.org,m:l.scorcia@gmail.com,m:dmitry.torokhov@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:sen.chu@mediatek.com,m:sean.wang@mediatek.com,m:macpaul.lin@mediatek.com,m:lee@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:linusw@kernel.org,m:louisalexis.eyraud@collabora.com,m:val@packett.cool,m:julien.massot@collabora.com,m:parent.f@gmail.com,m:akkun11.open@gmail.com,m:chen.zhong@mediatek.com,m:linux-input@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:lscorcia@gmail.com,m:dmitrytorokhov@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,m:parentf@gmail.com,m:akkun11open@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-mediatek@lists.infradead.org,m:l.scorcia@gmail.com,m:dmitry.torokhov@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:sen.chu@mediatek.com,m:sean.wang@mediatek.com,m:macpaul.lin@mediatek.com,m:lee@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:linusw@kernel.org,m:val@packett.cool,m:julien.massot@collabora.com,m:louisalexis.eyraud@collabora.com,m:parent.f@gmail.com,m:akkun11.open@gmail.com,m:chen.zhong@mediatek.com,m:linux-input@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:lscorcia@gmail.com,m:dmitrytorokhov@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,m:parentf@gmail.com,m:akkun11open@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER(0.00)[lscorcia@gmail.com,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -147,171 +151,122 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0A1DF6A99AD
+X-Rspamd-Queue-Id: F2EBC6A99C4
 
-The MediaTek MT6392 PMIC is usually found on devices powered by
-the MT8516/MT8167 SoC and is yet another MT6323/MT6397 variant.
+Describe the MT6392 PMIC and its RTC and regulator devices. This device
+is mostly based on MT6323 with some similarities to MT6397 and is usually
+found on boards using the MT8516/MT8167 SoC.
 
-This series is mostly based around patches submitted a couple
-years ago by Fabien Parent and not merged and from Val Packett's
-submission from Jan 2025 that included extra cleanups, fixes, and a
-new dtsi file similar to ones that exist for other PMICs. Some
-comments weren't addressed and the series was ultimately not merged.
+Signed-off-by: Luca Leonardo Scorcia <l.scorcia@gmail.com>
+---
+ .../bindings/mfd/mediatek,mt6397.yaml         | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-These patches enable four functions: keys, regulator, pinctrl and RTC.
-Mono speaker amp will follow later as I need to work further on the
-audio codec.
-
-I added a handful of device tree improvements to fix some dtbs_check
-errors, added support for the pinctrl device and addressed the comments
-from last year's reviews.
-
-Please note that patch 0006 and 0008 depend on patch 0005 as they need the
-registers.h file, but belong to different driver areas. I'm not sure if
-I'm supposed to squash them even if they belong to different driver
-areas of if it's fine like this. Any advice is welcome.
-
-Patch 0009 also depends on patch 0003 because of mt6392-regulator.h.
-
-The series has been tested on Xiaomi Mi Smart Clock X04G and on the
-Lenovo Smart Clock 2 CD-24502F.
-
-Changes in v8:
-From reviewers:
-- Added example code to the MFD device binding, removed it from the
-  regulators docs.
-- Added minItems/maxItems constraints on the regulator mode definitions,
-  improved the mode constants.
-- Fixed formatting issues in the regulator binding.
-- Import the mt6392.dtsi file in pumpkin-common.dtsi, as it was originally
-  meant in [8].
-
-From sashiko:
-- Added more explicit constraints on the regulator modes definitions.
-- Use the appropriate modeget register for LDO regulators, Buck registers
-  don't have the corresponding register according to the data sheet.
-- Added the missing of_map_mode function.
-- Removed some debugging code that had no use and masked error codes.
-
-Changes in v7 [7]:
-- Removed patch 0008 dependency on patch 0003.
-- Reintroduced the regulator driver. In earlier revisions of this series,
-  it was proposed to remove the dedicated compatible for the regulator
-  device [3]. The driver does not use actually it, but it is not possible
-  at this time to remove it from the bindings since it's a required
-  property.
-
-  Making the regulator-required property conditional was NACKed in [5],
-  with the suggestion to create a separate binding altogether for devices
-  that do not require the compatible property. I tried implementing this,
-  but since the parent device needs to be declared as compatible with
-  mt6323, it leads to a warning in dt_binding_check since mt6323 would
-  be declared as a compatible in both mt6392 and mt6397.
-
-  In the end the only regulator driver from the mt6397 documentation that
-  still declares an of_match is mt6397-regulator and it does not seem
-  to be necessary, so it should be possible to remove it and make the
-  regulator compatible optional for all regulators, but that change would
-  probably deserve its own separate patch series.
-
-Changes in v6 [6]:
-- Dropped the regulators driver for the moment
-- Explained the FCHR key name origin in the commit message
-- Introduced the MFD_CELL_* macro in the sub-devices definitions.
-  A separate, independent commit introduced MFD_CELL_* to all the
-  subdevices in the mt6397-core.c file for consistency
-- Replaced of_device_get_match_data with device_get_match_data
-- Removed the mfd_match_data enum in favor of the preexisting
-  chip_id enum
-- Adjusted the error message if the device is unsupported
-
-Changes in v5 [5]:
-- Double checked regulator driver with data sheet and Android sources.
-  The data sheet I have misses a lot of register descriptions, but
-  Android sources have been helpful to fill the gaps
-- Reintroduced the required attribute for the regulator compatible
-  in the bindings
-- Fixed the missing reference to the MT6392 schema
-- Fixed casts/unused vars reported by kernel test robot
-- Removed Reviewed-by tags from the regulator patches as they have been
-  modified in this version
-
-Changes in v4 [4]:
-- Dropped usage of the regulator compatible
-- Fixed commit messages text to properly reference the target subsystem
-- Added supply rails to the regulator
-- Reworked the regulator schema and PMIC dtsi. Now all supplies are
-  documented and the schema no longer includes voltage information
-- Removed redundant ldo- / buck- prefixes
-- Renamed the pinfunc header to mediatek,mt6392-pinfunc.h
-- Modified the MFD driver to use a simple identifier in the of_match
-  data properties
-
-Changes in v3 [3]:
-- Added pinctrl device
-- Changed mt6397-rtc fallback to mt6323-rtc
-- Added schema for regulators
-- Fixed checkpatch issues
-
-Changes in v2 [2]:
-- Replaced explicit compatibles with fallbacks
-
-Initial version: [1]
-
-[1] https://lore.kernel.org/linux-mediatek/cover.1771865014.git.l.scorcia@gmail.com/
-[2] https://lore.kernel.org/linux-mediatek/20260306120521.163654-1-l.scorcia@gmail.com/
-[3] https://lore.kernel.org/linux-mediatek/20260317184507.523060-1-l.scorcia@gmail.com/
-[4] https://lore.kernel.org/linux-mediatek/20260330083429.359819-1-l.scorcia@gmail.com/
-[5] https://lore.kernel.org/linux-mediatek/20260420213529.1645560-1-l.scorcia@gmail.com/
-[6] https://lore.kernel.org/linux-mediatek/20260612200717.361018-1-l.scorcia@gmail.com/
-[7] https://lore.kernel.org/linux-mediatek/20260615071836.362883-1-l.scorcia@gmail.com/
-[8] https://lore.kernel.org/linux-mediatek/20190323211612.860-25-fparent@baylibre.com/
-
-Fabien Parent (3):
-  dt-bindings: input: mtk-pmic-keys: Add MT6392 PMIC keys
-  mfd: mt6397: Add support for MT6392 PMIC
-  regulator: Add MediaTek MT6392 regulator
-
-Luca Leonardo Scorcia (4):
-  dt-bindings: mfd: mt6397: Add MT6392 PMIC
-  regulator: dt-bindings: Add MediaTek MT6392 PMIC
-  mfd: mt6397: Use MFD_CELL_* to describe sub-devices
-  pinctrl: mediatek: mt6397: Add MediaTek MT6392
-
-Val Packett (2):
-  input: keyboard: mtk-pmic-keys: Add MT6392 support
-  arm64: dts: mediatek: Add MediaTek MT6392 PMIC dtsi
-
- .../bindings/input/mediatek,pmic-keys.yaml    |   1 +
- .../bindings/mfd/mediatek,mt6397.yaml         |  74 ++
- .../regulator/mediatek,mt6392-regulator.yaml  | 118 +++
- arch/arm64/boot/dts/mediatek/mt6392.dtsi      | 148 ++++
- .../boot/dts/mediatek/pumpkin-common.dtsi     |   2 +
- drivers/input/keyboard/mtk-pmic-keys.c        |  17 +
- drivers/mfd/mt6397-core.c                     | 295 ++++---
- drivers/mfd/mt6397-irq.c                      |   8 +
- drivers/pinctrl/mediatek/pinctrl-mt6397.c     |  37 +-
- drivers/pinctrl/mediatek/pinctrl-mtk-mt6392.h |  64 ++
- drivers/regulator/Kconfig                     |   9 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/mt6392-regulator.c          | 764 ++++++++++++++++++
- .../regulator/mediatek,mt6392-regulator.h     |  23 +
- include/linux/mfd/mt6392/core.h               |  43 +
- include/linux/mfd/mt6392/registers.h          | 488 +++++++++++
- include/linux/mfd/mt6397/core.h               |   1 +
- include/linux/regulator/mt6392-regulator.h    |  42 +
- 18 files changed, 1973 insertions(+), 162 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6392-regulator.yaml
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6392.h
- create mode 100644 drivers/regulator/mt6392-regulator.c
- create mode 100644 include/dt-bindings/regulator/mediatek,mt6392-regulator.h
- create mode 100644 include/linux/mfd/mt6392/core.h
- create mode 100644 include/linux/mfd/mt6392/registers.h
- create mode 100644 include/linux/regulator/mt6392-regulator.h
-
+diff --git a/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml b/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
+index 3cbc0dc12c31..927df823d640 100644
+--- a/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
++++ b/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
+@@ -40,6 +40,10 @@ properties:
+           - mediatek,mt6358
+           - mediatek,mt6359
+           - mediatek,mt6397
++      - items:
++          - enum:
++              - mediatek,mt6392
++          - const: mediatek,mt6323
+       - items:
+           - enum:
+               - mediatek,mt6366
+@@ -72,6 +76,10 @@ properties:
+               - mediatek,mt6331-rtc
+               - mediatek,mt6358-rtc
+               - mediatek,mt6397-rtc
++          - items:
++              - enum:
++                  - mediatek,mt6392-rtc
++              - const: mediatek,mt6323-rtc
+           - items:
+               - enum:
+                   - mediatek,mt6359-rtc
+@@ -99,6 +107,7 @@ properties:
+               - mediatek,mt6331-regulator
+               - mediatek,mt6358-regulator
+               - mediatek,mt6359-regulator
++              - mediatek,mt6392-regulator
+               - mediatek,mt6397-regulator
+           - items:
+               - enum:
+@@ -663,3 +672,68 @@ examples:
+             compatible = "mediatek,mt6397-rtc";
+         };
+     };
++
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    pmic {
++        compatible = "mediatek,mt6392", "mediatek,mt6323";
++
++        interrupts-extended = <&pio 28 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        keys {
++          compatible = "mediatek,mt6392-keys";
++
++          key-power {
++            linux,keycodes = <KEY_POWER>;
++            wakeup-source;
++          };
++
++          key-home {
++            linux,keycodes = <KEY_HOME>;
++            wakeup-source;
++          };
++        };
++
++        pinctrl {
++          compatible = "mediatek,mt6392-pinctrl";
++
++          gpio-controller;
++          #gpio-cells = <2>;
++        };
++
++        regulators {
++          compatible = "mediatek,mt6392-regulator";
++
++          vproc {
++            regulator-allowed-modes = <0 1>;
++            regulator-initial-mode = <0>;
++            regulator-min-microvolt = < 700000>;
++            regulator-max-microvolt = <1350000>;
++            regulator-always-on;
++            regulator-boot-on;
++          };
++
++          // ...
++
++          vadc18 {
++            regulator-allowed-modes = <0 2>;
++            regulator-initial-mode = <0>;
++            regulator-min-microvolt = <1800000>;
++            regulator-max-microvolt = <1800000>;
++            regulator-boot-on;
++            regulator-always-on;
++          };
++
++          vefuse {
++            regulator-min-microvolt = <1800000>;
++            regulator-max-microvolt = <2000000>;
++          };
++        };
++
++        rtc {
++          compatible = "mediatek,mt6392-rtc", "mediatek,mt6323-rtc";
++        };
++    };
 -- 
 2.43.0
 
