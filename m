@@ -1,59 +1,60 @@
-Return-Path: <linux-gpio+bounces-38736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +XZTGdaaNmrjBgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38736-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 15:51:18 +0200
+	id AIhZJdOaNmrcBgcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38737-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 15:51:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAC166A8F7D
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 15:51:17 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A216A8F6C
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 15:51:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=BOzkNT0J;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38736-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38736-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=LVuiQ2f6;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38737-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38737-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=bootlin.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 34ED330252B5
+	by tor.lore.kernel.org (Postfix) with ESMTP id A44E63012CEF
 	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 13:51:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B9F394EAD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCA9394464;
 	Sat, 20 Jun 2026 13:51:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B440E394464;
-	Sat, 20 Jun 2026 13:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAA8394499;
+	Sat, 20 Jun 2026 13:51:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781963472; cv=none; b=ahhgzNXeP7m8476n/WX/ka/KYOHlBNv3xQViSYxSsyqcmC7kCyAqUadtgpld71CCVoC13BnXBwZe2EEusgW8oLxfQmlXmLY1AVyTRZlKlyX4a2Axvkf/BF4NyX7SdNUryLtveIFoLyUKDYP/pdgq0xVtdrh6usU9s6Fy1F2SqfM=
+	t=1781963472; cv=none; b=Jf8JqwRcrNg0EGvhc71BYAnGS56NZcekoWJ86kPCPcaPhpqambZurGyzGYmS3wvQ+R89U4Ct36wfw7wrSVxUqQR6ebALfAN+HtT1uomh0sEba+GBPYhiBFcsrB6290+x2gKL7iXWkk+g/iy5HtPEQqjXtCEoICo3SNPIfUC8v5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781963472; c=relaxed/simple;
-	bh=DPqATaI18HFkcFiUsa9K01otCxHAFMKWGVMOaOREY9U=;
+	bh=CDvojPxVpOM+sEeIqGqmH822Kv7W5mWFKE1eek8OHmc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qRKKE3G5MKJRtQO9gq8DQyTnb3+8acaHbM4HNmYGcJaof2w1jm6xtKpaAvT895zOFLiivXyZSwziX2Zowro8/xKMCzKNhoPUxmlxaSuNsFNRo5hZ15j7vJ51oVRZU9YfCHtzJZXOPC6I5bps8wyX37GhiN8h7iXqJTrtb52mrM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BOzkNT0J; arc=none smtp.client-ip=185.171.202.116
+	 In-Reply-To:To:Cc; b=Ml5O4nCO32jTiE0ncVenVQwLevhhtlXF1S05L2M31dSD+ZmQ0sOMoDyhbXbR99lUriNP4x7bey8KExDpMEJC8TeBGpo0Bg62x+r1oD+WIBBeCpFiHgmBYNDShklhGCxl6aSeISS1mMnTN2wRsAp/gcaTVwJLniw93G5X08BNXUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LVuiQ2f6; arc=none smtp.client-ip=185.246.85.4
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 34E97C63A0E;
-	Sat, 20 Jun 2026 13:51:09 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 500B34E40293;
+	Sat, 20 Jun 2026 13:51:04 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id DAF14601B7;
-	Sat, 20 Jun 2026 13:51:02 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 493CF106C8914;
-	Sat, 20 Jun 2026 15:51:01 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2466C601B7;
+	Sat, 20 Jun 2026 13:51:04 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 97D89106C8906;
+	Sat, 20 Jun 2026 15:51:02 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1781963462; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1781963463; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Xfsmo6PiCavI8stl/2hjj1vilvlmofUOfbnJ0djbbiU=;
-	b=BOzkNT0JeUViEech6D5ad6+ieK9ppBRSye3anacWwyPzpj72dITkgQHzq880Kw3Q4SiE+L
-	VKmcY5uoBp1xb9k4z8adUmetjtxjOFJFvoI522Mzn1pAOSXKwxYf+IkNQQ7Bob/wSSSLiX
-	fMLu+fco+b6+rAUWwoAmXhPXzrHL29CStZSQev4fEHkdGHZx2kZS7qbE3/CxfYvkcM551o
-	rlb4QTp5SFbba2fa7exxVcwmOeyV6C4D2/tMxm/PxpwNdJMbRi8RnTVRDEtWB0GpIZcT19
-	UbZHLJGlBctEBFx+dppv+Np5ObGMpkeXBHbO4PdnQL66taxia+Giw0NCdXJi+w==
+	bh=HPl4CSgoMUUpfbJy08uK5TPTqnyk/iDusqQS0vClhZg=;
+	b=LVuiQ2f6k4IP1W/F8r/2B40yXSTsDXfz876Sluz4FecnC2oL+DSNYgBvAPJ6V1+sgDwtto
+	fvCE5g8QmetItB1xVLXmLpbxeHWX0ys3FkQkx9/yQfsXPNBzuVserPs7gof9PBDL+adF31
+	9Nj0meoeKowEOmY9aTU464uI8z8Gpn/EdB4xf5lTuHcF1sH6bLJ9IliyKKiN8oUvYRy+OB
+	hUCltFoChGXqOe1cvzQwhBc5ZJ445LO83oe5vIJwzst98cbGolEkI9v0rh7DHRwZaOKqSP
+	e4CG7QN1jFH+sEVkBN8YDcSNbgvo0WKIne1/jyGp2LvS6KDWXEaAxk5qVesvYg==
 From: Diogo Ivo <diogo.ivo@bootlin.com>
-Date: Sat, 20 Jun 2026 15:50:58 +0200
-Subject: [PATCH 1/2] ASoC: rt5677: Add GPIO .get_direction() callback
+Date: Sat, 20 Jun 2026 15:50:59 +0200
+Subject: [PATCH 2/2] ASoC: rt5677: Enable standalone compilation for
+ generic card use
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +63,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260620-smaug-audio-v1-1-e318acdf5abd@bootlin.com>
+Message-Id: <20260620-smaug-audio-v1-2-e318acdf5abd@bootlin.com>
 References: <20260620-smaug-audio-v1-0-e318acdf5abd@bootlin.com>
 In-Reply-To: <20260620-smaug-audio-v1-0-e318acdf5abd@bootlin.com>
 To: Oder Chiou <oder_chiou@realtek.com>, 
@@ -72,20 +73,20 @@ To: Oder Chiou <oder_chiou@realtek.com>,
 Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, Diogo Ivo <diogo.ivo@bootlin.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=diogo.ivo@bootlin.com;
- h=from:subject:message-id; bh=DPqATaI18HFkcFiUsa9K01otCxHAFMKWGVMOaOREY9U=;
- b=owEBbQKS/ZANAwAKAQa+fFtWXslFAcsmYgBqNprN5v+y7u6XY1o4/eeA8lxXhrx4MqnQwoTKW
- lCKhvwPD/eJAjMEAAEKAB0WIQTma35o1i1081e8B2UGvnxbVl7JRQUCajaazQAKCRAGvnxbVl7J
- RVMvD/9IKuRqP6sTN6aY2xxAv7tQtDvzX0m8bh1T7BdVBhjw7bn7fKN2Hp+oiqfEbY6udS3qHzD
- gBe0t5mazc0UOTEawf5atGin9BZaRGyi6OVIJJFd+2o3PUz5i2TiyBeayS9sXvVS+6V6iE2K7lv
- vIPkv4/b6c8G3xU1nlEApHP0uX59EKk5qhBtAl+SAiGkqZ8KxFmzUKi0O4X6VGXzd49ORSNkjTH
- tWf3DS/AGtjwhlVBySkjgPv/TuOwESB+OlTG3Lb+Nut/mscP/pNxL+Idww9Q6afBJt9oZq9aP0A
- hayC/DnlIQdjwNRTePDlh2YTtNvJpL1gQjcsMAMqx7xBqQr+pCQEodtdxoTaXBiK68yjn7VuPFJ
- xeBK75CdtpusBswDxXO5U+yyPRmtA30/ah13qdBLUS9CzVh/Lkzizpo4v1WzNC0ofJt/j0wfn3v
- 5dTVMZqu19iBTsKEFmGRyR6LGwWHlAZD1gVOBqumonh5n2OvQPZYH2vdGK8aAtjjGnDwIh5EoLt
- jVGkByNbZDEuT6xhZnVIZRPyNIqEybTaYgDXyG5up9TV1xpcdKhJ9C5KnMxHKdQ9r+Vyi5X6QQ6
- pG52tEfu7EmRR/mLFFwoDwPS9YVHGsRP9ZS0hJcQB1Ot+WRV5J+FU/yqvwv6XwH1HX9cLgZJaPR
- 2Xe/mrr6s5eokQg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=669; i=diogo.ivo@bootlin.com;
+ h=from:subject:message-id; bh=CDvojPxVpOM+sEeIqGqmH822Kv7W5mWFKE1eek8OHmc=;
+ b=owEBbQKS/ZANAwAKAQa+fFtWXslFAcsmYgBqNprNRIRmUbYX7IL6LJOiMwmFmayQqoKru/osT
+ yhDmD1g2uGJAjMEAAEKAB0WIQTma35o1i1081e8B2UGvnxbVl7JRQUCajaazQAKCRAGvnxbVl7J
+ RUypEACOxC6GoIH0VjF/b107YUfI66eDA3fDEchXeyb6gMGdF0/qSg9BaPa84mYkhwRoQcVV00T
+ BHHpOSrGs9Q6352vorW4SopwY1rpxmoAQkPZpml7ti9e14QvwaSPZ+gXTvmYdGQl1jwOpqZxUgN
+ M8WaZQfdnyNrMl8UvYfKLZoGgvbq85miQE8FI5y7nTGU7hhWMFP9Tn0vGsyntnZLoTQWGlth0eQ
+ 1nxwxOKZ+92vg6hZoW/MqhnAHaDgZ8RIJXMwj5i/iDz+y57e6AoRbJj+g4ouBoiyPsxRyibkccd
+ YpLvd3Fcib15B80JCIupq+TDlBTcDbEMOJfWeDBLdKXV9aqUNRZsxg2HLwmaa8JJSo+ysZRP1k1
+ /RJx2qQpNe/QFpqvZoUPTVcxzV7QCck+IBMCbD0SLy7XZHSQ/1dPB0sErjjfLUUDYm3bGTuAyJ8
+ e/U1VQX4I0wYiig2zLrOH+jGnAwsSbPgKmGkNI5XawgB59e9l4id6Cg4S4V4W+Oadw9hIErrgiW
+ /C3/3Ltx9ydSq+ohc5zuLI3l17kVAJ2WSnS4hDwy1RoKJppg7X9YE8evj3aC5wTRqcMabl9A27o
+ HxgxPOsImYgzXXKHSPGb2P/tYXRpsR2L0gjTGQ7l/FfaeS42ADCYlIT9iAu49KGch4PRx51aff8
+ dEI7czDrvcHoqNQ==
 X-Developer-Key: i=diogo.ivo@bootlin.com; a=openpgp;
  fpr=E66B7E68D62D74F357BC076506BE7C5B565EC945
 X-Last-TLS-Session-Version: TLSv1.3
@@ -94,13 +95,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38736-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38737-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FREEMAIL_TO(0.00)[realtek.com,gmail.com,kernel.org,perex.cz,suse.com];
 	MIME_TRACE(0.00)[0:+];
@@ -109,7 +110,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER(0.00)[diogo.ivo@bootlin.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
@@ -122,60 +123,31 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,bootlin.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,bootlin.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EAC166A8F7D
+X-Rspamd-Queue-Id: F0A216A8F6C
 
-Implement the get_direction callback for the GPIO controller to allow
-consumers to query the direction of GPIO pins.
+Add a prompt string to make the RT5677 driver user-selectable, allowing
+it to be built independently for use with generic sound card bindings.
 
 Signed-off-by: Diogo Ivo <diogo.ivo@bootlin.com>
 ---
- sound/soc/codecs/rt5677.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ sound/soc/codecs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index ac084ca008f3..73fc008d558a 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -6,6 +6,7 @@
-  * Author: Oder Chiou <oder_chiou@realtek.com>
-  */
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 252f683be3c1..e9de333c5c8a 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1888,7 +1888,7 @@ config SND_SOC_RT5670
+ 	depends on I2C
  
-+#include <linux/bits.h>
- #include <linux/delay.h>
- #include <linux/firmware.h>
- #include <linux/fs.h>
-@@ -4767,6 +4768,21 @@ static int rt5677_gpio_direction_in(struct gpio_chip *chip, unsigned offset)
- 	return rt5677_update_gpio_bits(rt5677, offset, m, v);
- }
- 
-+static int rt5677_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct rt5677_priv *rt5677 = gpiochip_get_data(chip);
-+	unsigned int shift = RT5677_GPIOx_DIR_SFT + (offset % 5) * 3;
-+	unsigned int bank = offset / 5;
-+	unsigned int reg = bank ? RT5677_GPIO_CTRL3 : RT5677_GPIO_CTRL2;
-+	int ret;
-+
-+	ret = regmap_test_bits(rt5677->regmap, reg, BIT(shift));
-+	if (ret < 0)
-+		return ret;
-+
-+	return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-+}
-+
- /*
-  * Configures the GPIO as
-  *   0 - floating
-@@ -4834,6 +4850,7 @@ static int rt5677_to_irq(struct gpio_chip *chip, unsigned offset)
- static const struct gpio_chip rt5677_template_chip = {
- 	.label			= RT5677_DRV_NAME,
- 	.owner			= THIS_MODULE,
-+	.get_direction		= rt5677_gpio_get_direction,
- 	.direction_output	= rt5677_gpio_direction_out,
- 	.set			= rt5677_gpio_set,
- 	.direction_input	= rt5677_gpio_direction_in,
+ config SND_SOC_RT5677
+-	tristate
++	tristate "Realtek RT5677 Codec"
+ 	depends on I2C
+ 	select REGMAP_I2C
+ 	select REGMAP_IRQ
 
 -- 
 2.54.0
