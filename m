@@ -1,156 +1,164 @@
-Return-Path: <linux-gpio+bounces-38727-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38728-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ykw7O+6vNWoU3QYAu9opvQ
-	(envelope-from <linux-gpio+bounces-38727-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 23:09:02 +0200
+	id QMsOHbg4Nmqn8gYAu9opvQ
+	(envelope-from <linux-gpio+bounces-38728-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 08:52:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 484186A7C54
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 23:09:02 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDFE16A8741
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 08:52:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cMmbUbYf;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38727-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38727-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=intel.com header.s=Intel header.b=eIY8XxC5;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38728-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38728-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A3FB530580BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2026 21:08:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 170553018C36
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2026 06:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0CBC3CF673;
-	Fri, 19 Jun 2026 21:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37510374A14;
+	Sat, 20 Jun 2026 06:52:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17153CF692
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Jun 2026 21:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B39374A00;
+	Sat, 20 Jun 2026 06:52:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781903327; cv=none; b=Xaf2ACabZQEsMGObyksI4xieQzD0psIVHvZF9U5x4VVa+FUbQhEm0PAM2UJDpzC+0qwf7Ecr7yRpub+GoYMoYK6LDU3A0+SJq4iAO49/e0iuMxL/bVJq8EZ0cV9GPuZoqHpYSHBCtRx7sAJ3jyvO22LulZLTOfdWDKPFAmTA93k=
+	t=1781938355; cv=none; b=tZkcoLBMYr44Zryoct5TtDWlHA7GCoxblA4asyOkeJPHZ/NUKQ4GUuluCJHwGTsjd/Fa3ESzYYFhl6T/URW0qfY5sXVb1w44PigssJ6/deInl/0MdC/hwgkW3f7gdJ39OOgJY/pceWoXtDT4Qdkr/REIJ4lqpuhP4JG/5AZflKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781903327; c=relaxed/simple;
-	bh=FMSWI+gloufB0h0HTiPPqBp7P4ZIS2lTWu/Igajet9s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KK8Sc3TQLNEAMwLwULIPgdshr9u4S+JmJ6rbX4hCp0UF/LNf7ejM3EjJr9/N78CoH8WQuuOujJIIETrFsxLgupm6QxdrU/DVS8+6r7bK3SyCA2qvJL+B18C9d1ePN0s9fLjmzKpe68BqeWQkxljeHfwHc8YGTBM2tKYL+hNeLwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMmbUbYf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612C61F0155D
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Jun 2026 21:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781903324;
-	bh=FMSWI+gloufB0h0HTiPPqBp7P4ZIS2lTWu/Igajet9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=cMmbUbYfwQO5CI8iSeh+6t2SUNKHya5glLSJCb8DV6CntMMsxIktcwYeUmvlKQvmO
-	 ybB8ISM0w+kC9HyTbwLa3hR8N8oPyCXMMxYGJGAiV7pG7cRvGlNmk/oM+gZQ0C7IqG
-	 VFgAGvVR0MMXgLVZKqm2tfLtf7KYNqnzBOd6lNvphwkuSLkrZuKbfwzhVKfDWh8Jin
-	 +qFWl5S01GulWeCaSveSolV7YyO8Mm4k8Zqag5H1SPHluISqIep7t8/+5DRRKL5u8R
-	 HD0uaF/HZibyqylXS6ZVwDwDuUOnQSO+bUVjQvD+rNyE50XfyOX95o1K9oWDnB4LpI
-	 ZAwBSrYj+sajw==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5aa68d9d56fso3070441e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Jun 2026 14:08:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9vtzBRz+Fx+4QNFhH1K66k3rk7pwU11xFA92tfuk+Nhht1Z7Ru7iAayzegJeXO9/2u3GIP6htTa4IJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws4A0Zk3XcTMN/TCBa06NqvNNEHxLkOokvlQvyOXns1JKQ3Fs9
-	M7PFjanPcmV/2ZkdX0Ax8D/CX4WQ8XbOW73CrSR4VAI4MLV3QzGKYCDLaiejwLv4I1FgiubAXyu
-	PHVeFv9IzgJgRk18CCfTnXxWmZtyGMjI=
-X-Received: by 2002:a05:6512:239d:b0:5ad:4eac:f6d2 with SMTP id
- 2adb3069b0e04-5ad58f3506amr1312078e87.23.1781903323139; Fri, 19 Jun 2026
- 14:08:43 -0700 (PDT)
+	s=arc-20240116; t=1781938355; c=relaxed/simple;
+	bh=rw+LPnWaKArLuvicHtNdXrulX5vE0qdcS856Yxu/JEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=end2yitofYKUBPygrZbFgs8SWtW+rjBlTD+K1r7hFUsXM5rL2TYX+nPXiLJ4NdXj1YOwbkHm/MjmEjmD6KWTosHFccyV0tJHBmB2Hc2BTYNRYbZBuQ0BKybB7jBeA8nO43uRL6acb9oz87t9uZh40BCRUETnABvg8NTpFkw09/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIY8XxC5; arc=none smtp.client-ip=198.175.65.13
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781938353; x=1813474353;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=rw+LPnWaKArLuvicHtNdXrulX5vE0qdcS856Yxu/JEQ=;
+  b=eIY8XxC5x/s8inTTpKhKtVmDdQNyKtASXxLBZ2mspD1Xsw5oKfhs7JTF
+   AqvqPvqec3tjMV2+iZh7BRF5VT5wcdhOQxTvi6HV79Z8t5yo4GanHXC1c
+   a7z+DHgwP0hieXMChrcDkaM6q17VUtOUlaYl3p5Om+PDcYVUIVLPekwRM
+   lI3El+QojDmCTSc8mKq3Qda+yLBuFKbIs5vcGFH/sSasqNtChBLBOqz71
+   Z5u+IpP/mwkRnub7F6rMXgPiUIuqJgFGVkqFVAZpOCyUuxThWHQZqkund
+   ZF+fPgLLPXpBklBU7JsHQh1uhKkeb0baYfxD1A0DuXUj1ITr6Vdu4gbk3
+   w==;
+X-CSE-ConnectionGUID: ZKiDiFH7R5+3pL2zzPjZTw==
+X-CSE-MsgGUID: 774AQQeERlqq2OflSXITOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11822"; a="93873288"
+X-IronPort-AV: E=Sophos;i="6.24,214,1774335600"; 
+   d="scan'208";a="93873288"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2026 23:52:33 -0700
+X-CSE-ConnectionGUID: xlOlVF2+QOyxcAyyzRRPng==
+X-CSE-MsgGUID: Qo+nH3ZmSp++z000wUK41A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,214,1774335600"; 
+   d="scan'208";a="272847588"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.0])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2026 23:52:30 -0700
+Date: Sat, 20 Jun 2026 09:52:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Marco Scardovi <scardracs@disroot.org>
+Cc: Basavaraj Natikar <bnatikar@amd.com>, w_armin@gmx.de, brgl@kernel.org,
+	linusw@kernel.org, linux-acpi@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mario.limonciello@amd.com, westeri@kernel.org
+Subject: Re: [PATCH v2 0/1] gpiolib: acpi: Add quirk for ASUS ROG Strix G16
+ G614 series
+Message-ID: <ajY4q8o4wXvGMSZj@ashevche-desk.local>
+References: <0e6ea9d5-68ac-4d18-b40a-25e70216b288@gmx.de>
+ <_tDfR2zvSRyshOH99j8NCA@disroot.org>
+ <9643455e-f4ce-4496-bcdf-1122420c18eb@amd.com>
+ <P9sY7IKaQumFwq7UGDqIPA@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512033317.1602537-1-eleanor.lin@realtek.com>
- <20260512033317.1602537-3-eleanor.lin@realtek.com> <agMM9soiqpG-TRSb@ashevche-desk.local>
- <adff3a2d21a64d3ea3b408d62157ee1e@realtek.com> <ah92oEavMu4QRn8y@ashevche-desk.local>
- <CAMRc=MdA24z-tB_D8CTw68Di8e4OVQJ1QH4+rDskFzq=xjJ5BQ@mail.gmail.com> <DJ3QVMZ6XLW9.1M9W541O92QWJ@kernel.org>
-In-Reply-To: <DJ3QVMZ6XLW9.1M9W541O92QWJ@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 19 Jun 2026 23:08:30 +0200
-X-Gmail-Original-Message-ID: <CAD++jLncD2ZjH3aedOkGNYP3FyZ=i7Pb0OcKKZKuMOPGNjM_nQ@mail.gmail.com>
-X-Gm-Features: AVVi8CciIShnYrkvWiar3ZeR88iI32EVeKlpP07bMr3Ga2S3qThBGTGjlcJfumA
-Message-ID: <CAD++jLncD2ZjH3aedOkGNYP3FyZ=i7Pb0OcKKZKuMOPGNjM_nQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] gpio: regmap: add gpio_regmap_get_gpiochip() accessor
-To: Michael Walle <mwalle@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "afaerber@suse.com" <afaerber@suse.com>, 
-	"wbg@kernel.org" <wbg@kernel.org>, 
-	"mathieu.dubois-briand@bootlin.com" <mathieu.dubois-briand@bootlin.com>, "lars@metafoo.de" <lars@metafoo.de>, 
-	"Michael.Hennerich@analog.com" <Michael.Hennerich@analog.com>, "jic23@kernel.org" <jic23@kernel.org>, 
-	"nuno.sa@analog.com" <nuno.sa@analog.com>, "andy@kernel.org" <andy@kernel.org>, 
-	"dlechner@baylibre.com" <dlechner@baylibre.com>, =?UTF-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-realtek-soc@lists.infradead.org" <linux-realtek-soc@lists.infradead.org>, 
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, =?UTF-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>, 
-	=?UTF-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>, 
-	=?UTF-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>, 
-	=?UTF-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <P9sY7IKaQumFwq7UGDqIPA@disroot.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38727-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FORGED_RECIPIENTS(0.00)[m:mwalle@kernel.org,m:brgl@kernel.org,m:andriy.shevchenko@intel.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:afaerber@suse.com,m:wbg@kernel.org,m:mathieu.dubois-briand@bootlin.com,m:lars@metafoo.de,m:Michael.Hennerich@analog.com,m:jic23@kernel.org,m:nuno.sa@analog.com,m:andy@kernel.org,m:dlechner@baylibre.com,m:tychang@realtek.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-realtek-soc@lists.infradead.org,m:linux-iio@vger.kernel.org,m:cy.huang@realtek.com,m:stanley_chang@realtek.com,m:james.tai@realtek.com,m:eleanor.lin@realtek.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38728-lists,linux-gpio=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:scardracs@disroot.org,m:bnatikar@amd.com,m:w_armin@gmx.de,m:brgl@kernel.org,m:linusw@kernel.org,m:linux-acpi@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:mario.limonciello@amd.com,m:westeri@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[amd.com,gmx.de,kernel.org,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,mail.gmail.com:mid]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,intel.com:dkim,linux.intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 484186A7C54
+X-Rspamd-Queue-Id: DDFE16A8741
 
-On Mon, Jun 8, 2026 at 4:41=E2=80=AFPM Michael Walle <mwalle@kernel.org> wr=
-ote:
+On Fri, Jun 19, 2026 at 12:28:49PM +0200, Marco Scardovi wrote:
+> In data venerdì 19 giugno 2026 12:17:17 Ora legale dell’Europa centrale, Basavaraj Natikar ha scritto:
+> > On 6/18/2026 11:37 PM, Marco Scardovi wrote:
+> > > In data giovedì 18 giugno 2026 20:01:40 Ora legale dell’Europa centrale, Andy Shevchenko ha scritto:
+> > >> On Thu, Jun 18, 2026 at 06:59:15PM +0200, Marco Scardovi wrote:
+> > >>> On Thu, Jun 18, 2026 at 16:35:37 CEST, Andy Shevchenko wrote:
+> > >>>> On Thu, Jun 18, 2026 at 06:46:28PM +0530, Basavaraj Natikar wrote:
+> > >>>>> On 6/18/2026 4:44 AM, Marco Scardovi wrote:
+> > >>>>>> On Wed, Jun 17, 2026 at 10:33 PM, Armin Wolf wrote:
 
-> >>> Without an accessor like gpio_regmap_get_gpiochip(), we cannot retrie=
-ve the
-> >>> gpio_chip instantiated inside gpio-regmap.c to fulfill these requirem=
-ents in our
-> >>> map() function.
->
-> Why is gpiochip_irq_reqres() called in the first place? Isn't that
-> only called if the irq handling is set up via gc->irq.chip and not
-> via gpiochip_irqchip_add_domain() like in gpio-regmap?
+...
 
-Not really, the gpiochip_irq_reqres() is called to mark that a
-GPIO line is used for IRQ, so the gpiolib cannot turn this
-GPIO into an output line, gpiod_direction_out() will fail
-on lines used for IRQ. So it's a failsafe.
+> > I also checked the BIOS 316 ACPI dump — the stalling path is byte‑for‑byte identical
+> > to 315, so the AML is unchanged and it'll still stall if pin 21 boots low.
+> > 
+> > On the OEM side, I'm connecting internally with our AMD contact for ASUS to report
+> > this behavior and follow up on a firmware fix.
+> 
+> Thank you. Does that mean that my patch will not be required anymore?
+> If that's the case you can consider it as null. I don't mind having the boot
+> flag added until it's completely fixed on ASUS' side. BTW I have the suspect
+> that my model is not the only one with the long boot bug on ASUS [1] [2]
+> but actually the only one who came up with an actual patch on the kernel.
 
-You can live without it of course, but then you don't get
-this failsafe.
+I believe your patch is still needed. Not every model might get a BIOS update,
+and no guarantee that everybody who possesses the problematic platforms
+actually *will* update the BIOS. But it's AMD's call. I will happily accept
+the changes acknowledged by AMD.
 
-Yours,
-Linus Walleij
+> [1] https://bbs.archlinux.org/viewtopic.php?id=307251
+> [2] https://rog-forum.asus.com/t5/rog-strix-series/linux-boot-is-very-slow-at-this-moment/td-p/1138746
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
