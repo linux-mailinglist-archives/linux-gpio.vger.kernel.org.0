@@ -1,234 +1,328 @@
-Return-Path: <linux-gpio+bounces-38751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ABLJKK2ZN2rJPAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38751-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 09:58:37 +0200
+	id accvLP6dN2pbPQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38752-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 10:17:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 130EB6AA606
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 09:58:37 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F6C6AA645
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 10:17:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b="v/XuKpCo";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38751-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38751-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=R1x84vdm;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38752-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38752-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B4BC9300B77B
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 07:58:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2ABA23004DD9
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2026 08:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01AE6271A94;
-	Sun, 21 Jun 2026 07:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A3EF27E1DC;
+	Sun, 21 Jun 2026 08:16:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010014.outbound.protection.outlook.com [52.101.61.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB09B640;
-	Sun, 21 Jun 2026 07:58:30 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782028711; cv=fail; b=UxkOsc+vXg0qfeC6RWHsdjL+omDusEx6gFgxGCHbrYKWJgoR8HStt7bSbu22t4sIufHPX+KE7cJf9Nq23JRWt5kJ17zrzS4nfLk/dKFpN8/IC8Sn7Xot8LBDf8ny9ZLZO9d5zgNDYOnqp8sjmKu2JLATzSibp4iwk/Fw4c27YlU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782028711; c=relaxed/simple;
-	bh=dNDAPd54WfHx7xaYqqdrTghAGIQ7BF3jYMD0VijTCpE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CXUQSXh0AQ6HDlHPoPxAe8x8bHcvbZgKCMymaEYu/9EljjyH4v1uGI+iG+i9jE1Gx6duxnZO52pjcvDq1bYf3vq4m7DumQKH75Yc6zRrhYbDrbShxByL253yf6alWSidwOkIp3swoyRWnbV7oH/8gTdIytmXFuWlNWRMRm9PBBU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=v/XuKpCo; arc=fail smtp.client-ip=52.101.61.14
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hSv2+W0a2tf1NPgMeE3nCf8TPYCQIevgCunDj9Mijbf95CmtkmKeP8dM0k3OqSMDJmwZbi8WX5CeOO9gjba/0ji8r1K84hXDfzqBsJMfjXxRFasFD2yQoNX90VYV4EhY9KDELBE/HXSh7f63mmDPEcaYxgJoVNeEQPsUiVRm2dUxZIxIrU6zEfAcjiPxeaCKeVaAUCYEsHfYagMR8vTzdDr0E1uiHMaUzOuwKbygb2PrsLsSZ5jRLwPBbQV/Ps3v/xpnKC37DgU8Ac8et7dZsRN+oD3RPzimTiHt4st37xeZTZBCT72ptcd+Iz+cP7kOZHeOZPja/pySkAMcmf3BCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OQJ05/6A62BMN6q9HXx94f8ohKOXtzeFvORZmG1C2pg=;
- b=R3ft1Wz0pcB7VGCkDA30FyEfZcrLOSsa6xCF22Asb08ifskN+ZQEm1xcMHngws03ZCEsiGPQwzTR2AfUWVosxIb1oDrvcwbFNe13ASx/hW9T3rYyzpJmrA8B7SwVNTWGKBIBRxZsHb8198KRLmqdHzqkWW2svpmPtZa98pZ72Pv6QlF43pJD/qtam6hyAyw3Owc3s7q95sArqRqhAmy4TQSmUz7dVzdfwu4R6ALoeHOhWGZ58zkf4bxbNpP7W7BXHET3clQ2W8GpZqUWxZlWOxfCmdUHq92TXMJi6r5mHTvTgfpf3xS5u9GUqDCjrxFxuIIY6lS20cp7dbAJr/w9Nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQJ05/6A62BMN6q9HXx94f8ohKOXtzeFvORZmG1C2pg=;
- b=v/XuKpColZLSAjFkONMP3JghjGYBgRLOs4oiXOMc0JWutm33IyECh6m2hEXZQr5eIXoOZyDW6VrA/WPJ4XfR/dVkBsvlFy4HGrQJClvSUH3t/aP1fPcBqPq7oNT6X+S8TcMUOwD62uA8Jh5Y/+iB6SG09z2FL4pqGKjA1i2RKbA=
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by PH7PR12MB6787.namprd12.prod.outlook.com (2603:10b6:510:1ad::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Sun, 21 Jun
- 2026 07:58:24 +0000
-Received: from PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
- ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0139.009; Sun, 21 Jun 2026
- 07:58:24 +0000
-Message-ID: <fc25f967-ab71-499c-8e50-ac74286bdf2d@amd.com>
-Date: Sun, 21 Jun 2026 00:58:22 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/1] gpiolib: acpi: Add quirk for ASUS ROG Strix G16
- G614 series
-Content-Language: en-US
-To: Marco Scardovi <scardracs@disroot.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Basavaraj Natikar <bnatikar@amd.com>, w_armin@gmx.de, brgl@kernel.org,
- linusw@kernel.org, linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, westeri@kernel.org
-References: <0e6ea9d5-68ac-4d18-b40a-25e70216b288@gmx.de>
- <P9sY7IKaQumFwq7UGDqIPA@disroot.org> <ajY4q8o4wXvGMSZj@ashevche-desk.local>
- <JL9AWbK0SzeIHPRy6K6QhA@disroot.org>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <JL9AWbK0SzeIHPRy6K6QhA@disroot.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BY3PR10CA0024.namprd10.prod.outlook.com
- (2603:10b6:a03:255::29) To PH8PR12MB6914.namprd12.prod.outlook.com
- (2603:10b6:510:1cb::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036D826F293
+	for <linux-gpio@vger.kernel.org>; Sun, 21 Jun 2026 08:16:53 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782029816; cv=none; b=kwbzptTJjgJwhC5jZNNb0ZlhUjpvKEmprpbkQ+2gBv9/tp8YU0EFC//pMo36nEffPd8d79Pcm+It3fDkj1E0fFFDeg808Htxg5EgyyMW8NtLRwF1vDGJhP51/XvdRTrALy7EaLijtjibmzopRgWY/t2VUr7Grk5I0oftMn7WMOM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782029816; c=relaxed/simple;
+	bh=mm9/6qnPZ0Z6edR40uEiZkQ551sUHUOzqcsCjUcuak4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RElhLiL09pY90rjcOQ4bI/i9T2TLoq9KisVTC2Ssm6BM62ufaqjGUjcV49BgqwNEqvWGOG9XVEcq7sxDxpqswKsfmlmzfpx+qnMDZo36smqinQwiBF7C80V/CymADUryHJvr/PXTp81tRf2PcBmri4jpSkywhF9m2Lef5z4Stc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1x84vdm; arc=none smtp.client-ip=209.85.128.42
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so32971785e9.1
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Jun 2026 01:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782029812; x=1782634612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0do6nWQen4Q8AfnwI9dVctfBuX6Xn6Ib8Ug5wHHiVE=;
+        b=R1x84vdmLoGCKFo9MxlJaAu6wXQoL/mOe2n7iz5BOKD9ExdzkEIED5CP9FmXkdTrK8
+         3UQykcgpaBFhnHe4o6202G6VSLIFb7p1+MoHO+/1DK4pYk8BjsXSru/bGMn9fYfGpyqJ
+         BfMwNUEQ37Wq0ubyGFe9fo4I3sTmh1XfgHIn438RDcW+O2Ng5OzRlsXqGWc7RO+Zt80n
+         mwxl9rXHs5SPTV0lboHdG1/28//F6olBl0Grl9Ud1qciswBfEl4T+4me2Q8ceVhzBkN+
+         GZlXU/PI4ZeLN7X5tsC5T2MhZ3sEGSYA46go30z7GOw0k75k1QNhWSYCWmww71zPSwMn
+         /wNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782029812; x=1782634612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0do6nWQen4Q8AfnwI9dVctfBuX6Xn6Ib8Ug5wHHiVE=;
+        b=V7NQuNIn3bf83mQKlAZB30ae/cqfD1Gem4vaxXOn/Qmhga1ac3J1fvbBAbnN3z5PRZ
+         sO0eerNf0/mzNiH1OjP4XQCDgcCH5My8dDmOCrYSk9mIsLsLca/1oIbTAwEqaCA8xA9G
+         2NdEie8bf8jvLhyQxWVmBJVLFDWYp/Luvk5L7WX2eDoUS+8rEYh06x01TBU2Fd/aBjaX
+         5uhwbzjsedWYJ+M4UcEF+cdks5Myo/RfXtOA/0kKg1h7C8U+gQWsUTG2GirS92tsXf62
+         1LbY8JQfpXIVH5yW6+YbJdmRCgOn5YNJSulV7ZgMCH86V1uZnHONuJNZfav49RzKMBP6
+         sl9A==
+X-Forwarded-Encrypted: i=1; AFNElJ9g784trKVhCj546goDQXxggZ0+et9LW4gw5HbxN3s/sDpp/ee6wA2Wtei0/Kvi7AZjdtloa99RuJ2w@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe5jgTlwpFgvB6mkwZpaeJipeC0R9X/KPb4Y71FuE41a9ncWcE
+	lPyhdWdJ3dLAqEmR/u2Nfs/CqplHoVBPbA42Tp+Y2Wv+e5WnoZ+lgLJd
+X-Gm-Gg: AfdE7cmLABffbdzicVlkpWOt1gx+i4Di1b7yWNlD6qDUhA8ywgQbXimakI3jisIiByv
+	IvEY5nrqulucL13pf1FZw2oRRhn2Md/KDSenSnZWuFkPbi7HjPU9SJzI28nly2glE5cDX9uUJA5
+	HAt1RzU4Cm7jdq9sK8A4Um/uuV7lk4GtR+7msyOsAxfAAFBZz8UBZBHh/4QC6tiOlBepSJFORK2
+	r53yAVebMfj9caon0FAldS/PvUVlcT48gN2Zl+rnhgbqByHjMlk9mYdE+4wcrS9b1aXP/GtDgGC
+	O+S4GF1io/yNF66fxhqjor0Q2xpd0LPqZgJgJr8EzFI0PoHHOBOkyfiPIBCiUZ3YPcoJnsxjalm
+	zZwtphcsZdVV5yvsvZ4/MBLfan1vgTIlEpLJggb578L9+9MDLJAfv+Uy3wT3dzntlIOXTMHeHGA
+	F/A32mv6rjQPjKi8tY
+X-Received: by 2002:a05:600c:1f8c:b0:492:4889:3d18 with SMTP id 5b1f17b1804b1-49248893e53mr82283635e9.9.1782029812062;
+        Sun, 21 Jun 2026 01:16:52 -0700 (PDT)
+Received: from luca-vm.. ([81.56.18.151])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fe7b9e5sm194100445e9.10.2026.06.21.01.16.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2026 01:16:50 -0700 (PDT)
+From: Luca Leonardo Scorcia <l.scorcia@gmail.com>
+To: linux-mediatek@lists.infradead.org
+Cc: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sen Chu <sen.chu@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Macpaul Lin <macpaul.lin@mediatek.com>,
+	Lee Jones <lee@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
+	Val Packett <val@packett.cool>,
+	Julien Massot <julien.massot@collabora.com>,
+	Fabien Parent <parent.f@gmail.com>,
+	Akari Tsuyukusa <akkun11.open@gmail.com>,
+	Chen Zhong <chen.zhong@mediatek.com>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v9 0/9] Add support for MT6392 PMIC
+Date: Sun, 21 Jun 2026 10:13:25 +0200
+Message-ID: <20260621081634.467858-1-l.scorcia@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|PH7PR12MB6787:EE_
-X-MS-Office365-Filtering-Correlation-Id: 809e68fa-e22d-4cae-d450-08decf6adeb4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|18002099003|22082099003|6133799003|4143699003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	q2CaxE1XK8uuQBy/eJrKo9DVsAPL779SM991VL/CwJz132giaGhXNEvBnuqLFOtOcdm2hZmhGg1nSIs5YF34Qf4dKxgUboJE+u6s/CKvdt7CmFwbI9fqrzhdPPv0zpByvsGtssO+V4hUX3w1TXPKGw5s6c5HzaPPB9hQcM3RL5bKor95mVdCMOyRgiIBxaQ42A/M0ISKVftcthmjgoAU6onePUwbIDXruBnfdELEAXK/5G6weo6DljILPcnASyRFG4pFIsWMCTbQ91xK7mVK1ek40N2/rXsl5fKon01rL4NjKtQWd+r2lB+nHlwiA7wRvtfzRzlCgNa5wl6n3r2i4JSfSiZ+Q4Uw6dy8I2VMhOvqxuM8oeOaXW7nyAtnw7b32GzEdgK3KWKPCCJsT5V1jJTZL5hX+7EwHSwPKVZxW+BOOOw3TfD++Ym2MGW3qy/cO7Mu7+lg+FTb4Hvub0aP02yvMShzUmF++anafFZ+ufLYINhPLGFpnU3jOUtmeoEGTRJcH9KZFV29D+9tz86NZ81b2kT8XfjPA9NbCjrxhfjs06TN41q34oWu3obMx1+ihChkt4K5s7QVz1VAdMqjsPGTb6kdeiVDd8qbNOWetBxB/+tQXYRbvlhf1zy67+nQV7iM4Z1ug+pseMNTkOIEEc6Ub56ulo5fU9f2Mzgm+xU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(18002099003)(22082099003)(6133799003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MktCSDB5czRBUDdEMXBHem11eWFrV2xhMDUwNHhmeXBZcDRsV05IcWNRVDNU?=
- =?utf-8?B?aFhjR1pyYzN6V1phd3EyaEQ4UFZrbDcvMERlU3VsVHk4NzY1aEVOelBVWWpx?=
- =?utf-8?B?bWZDTGhIMk9TaENDbmVzSFdxQ3dkWUJqajVONk1pTVJBZlhVTDJVVk4xajVw?=
- =?utf-8?B?cGZhYk9BMGxBdGk3WFg3dFY0ZUQ0S1hWQ0RYdktwdWNFc2NJT3ZaYU1kYmxP?=
- =?utf-8?B?R3d0dXBZQU04VCtlQTcrRDRBd0VaNDRaSXNWVFZBTzNOcEhnSnRZVk9xZStM?=
- =?utf-8?B?SHA3R3h2aENwY1ZaMHBqdVV0bjQ1Y21Eb0tPVzlTTGVBOWlqSEU4dFpYRFBD?=
- =?utf-8?B?YUYrc0pvWnVUQ09xL3F4blF4eHFEVzZDSU1SKzJ4TFNja1hrbWVFV3BPWFBa?=
- =?utf-8?B?V2I4VWVRVCtpRG1IMnIwaVFBdkZLNGc0d0k0UlRLemFCZXZMYUJ4dkVzNW8v?=
- =?utf-8?B?clUyM3M2a0ZNeFJxMWNyRDZBSTEraUV4NnFIOWYwLzhKNW1tTTYrbUUwcG1a?=
- =?utf-8?B?Uk1PWFE1TU5wSWZPVWUxZURZVXgwbUtuMVVlT1I5blhWdjBLU2lEa0RQeFZR?=
- =?utf-8?B?V2d3Sm9qNndHUmczU0VQMFlzOHBWSXQ5V0lPRWhRR1lsbEpKQXEwYmFDNHpm?=
- =?utf-8?B?czNXMWUwYURQbU9PS1pLL1ZjaWlhbzh6a0hFZXI1STZMS09JRFo4emY4YmpN?=
- =?utf-8?B?NjhVUHljNnpDT0xLcTBGTnluOGZYTXpmWnhyVmRXMjhUVjNoendLeGdiakFU?=
- =?utf-8?B?WHlMMjN3dnFWakRoOElnU0QyU3lhVkZFMmJWd1BjYUk5d0p2ZXlvRFNyZGE4?=
- =?utf-8?B?YkVEUGVkelVxb0s0UFJlNloyNFZyVjZHTHl6enEvQXl3aGlXeFI0MEUzaW5T?=
- =?utf-8?B?NlhNT21HeGJ1NlpiaUJPVXhjYXRWTnlnUXFiWTIzREdjSkJtSHdJd1ZDUXFz?=
- =?utf-8?B?cjlNdjNhZVBSR0tjSDI3VTRHM0NhRzFKUWNMVWEydEJndm5ERGlYN25XaVVl?=
- =?utf-8?B?M2VJSmsyYmgwUzlEdjNjYWVYRUdFcFFQMlB6dU9Oa3NkUTlVZjVwVEZlRENa?=
- =?utf-8?B?K2w4TDB6Z2JHa2wrbyt1bEtTOVNMVndQeDUvVEVxMDZ4bThHVGVLZ0RtTjB2?=
- =?utf-8?B?VU92ZEpnaVBKaGQ0TDBxcVpic3dlM1JkOCtPak5oNW9pV0p0ZDB1UjBqYnZ5?=
- =?utf-8?B?UlJNMEluRHhTLzN6b0gvRlFVVVJLaFFNQXo5QmRGWWtySEp4WHhyRFVDKzZp?=
- =?utf-8?B?b3QwR1J3T3BGaVljbmxSbGRDWW4zZ1drNEJzd3pCNmZPMkNwbVVBM0tYU0Jr?=
- =?utf-8?B?WXNRaTg1N0x1TVlBN2RzUm9qTFpCMDJTWlNJZ25Nd011d3V4T21pbnY1OHpL?=
- =?utf-8?B?ZHFrR3lvTzJyRkpkcVdJM2MwQlBNMGxNKzUxNWM0VHRNSXc1R1QwdzhTcVQ5?=
- =?utf-8?B?Z3JBQ2xFSHhRSytsSXY0b2swamFuWmhZdW9YbzFuenNJWEpubHdkaTVQdlUx?=
- =?utf-8?B?amRuS3VleHpmRWorc1VNbnRBcHZLWE92amN6N2pOZ0FROWVyT2xnaWpJbDhQ?=
- =?utf-8?B?elJ4eVQwVHRxWUYzam9hSUJxNDhFM0FoTFd5K1lua2VsSHBoS0U0MkV5dDhC?=
- =?utf-8?B?eDBnMDJ5T2ZHbVhwSGphcFUyOFAyVDFoeDgzdUtJa1VMRVRqU2p1MER0dFZ1?=
- =?utf-8?B?WEdQdSs3M1VKQ1BTZDliZkc5V2ZvaHlXVUhxZU9Na0d5S2hPN0xacVZtMUZl?=
- =?utf-8?B?Sk4weFg1eGZCRWxQVzhzbkgrMk4yOUxhWTJFZ2Rjc1UxYkN2bEpPSHhVa1lX?=
- =?utf-8?B?VWNRQW94UEZDR1hRMjdxWEh5R2xnaDhhZzQra0hLbXNIYlhIT2QrdDhQV3Q4?=
- =?utf-8?B?M2NLL1ZuU1BwTDFrT1E3WkNYcit3azVCS2RXemNBK081SFJCUGFrbUFqZFlo?=
- =?utf-8?B?b3Q4YkpqMm4yUXJBTnhWdGNyNlVqc1FXaHBpcGlLNU1ncFRpRWtxWlpKTnR5?=
- =?utf-8?B?NHJzT3hZbEgxNytZT2NMQjE0T3gvYWJSZTJJNGxwUU1BdnkvMzZtY0xZQ3p1?=
- =?utf-8?B?K3pFWlpoenUvMlZyMFlQYUhlSjlmSElEK3o2MSt0VTlxTUMrYXVteG01bnRn?=
- =?utf-8?B?SlZHSmRtMjBkclY5WkZzZHZTcHhaVkNlR2FkT09pSStDKzdpbXVGY2VKOWpB?=
- =?utf-8?B?aUtqSE5ldUtNMXU4c3VQODR6TGdMcFRlYW9UdGhpbmExUEdYRC8zeXE2S0Rv?=
- =?utf-8?B?QXpMWUM5dzhSeHJ0Z2tPeEJsTmdpbGc2RFdHTHkvMmhPcGFYaXdFMDltWUpV?=
- =?utf-8?Q?nX3SoHrRB8yYK14JQ1?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 809e68fa-e22d-4cae-d450-08decf6adeb4
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2026 07:58:24.4326
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +ttZ/eiz1PrWmDdHoBpSuP8mrJkw3TH7PuIW6Ea3em42EUFEjdJ8jMum7E2tjbUKU777CLNWb2aPtHj1lgk2nA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6787
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[amd.com,gmx.de,kernel.org,vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38751-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[mario.limonciello@amd.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:scardracs@disroot.org,m:andriy.shevchenko@linux.intel.com,m:bnatikar@amd.com,m:w_armin@gmx.de,m:brgl@kernel.org,m:linusw@kernel.org,m:linux-acpi@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:westeri@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38752-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,mediatek.com,collabora.com,packett.cool,vger.kernel.org,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-mediatek@lists.infradead.org,m:l.scorcia@gmail.com,m:dmitry.torokhov@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:sen.chu@mediatek.com,m:sean.wang@mediatek.com,m:macpaul.lin@mediatek.com,m:lee@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:linusw@kernel.org,m:louisalexis.eyraud@collabora.com,m:val@packett.cool,m:julien.massot@collabora.com,m:parent.f@gmail.com,m:akkun11.open@gmail.com,m:chen.zhong@mediatek.com,m:linux-input@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:lscorcia@gmail.com,m:dmitrytorokhov@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,m:parentf@gmail.com,m:akkun11open@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[lscorcia@gmail.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mario.limonciello@amd.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lscorcia@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,amd.com:dkim,amd.com:mid,amd.com:from_mime]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 130EB6AA606
+X-Rspamd-Queue-Id: 55F6C6AA645
 
+The MediaTek MT6392 PMIC is usually found on devices powered by
+the MT8516/MT8167 SoC and is yet another MT6323/MT6397 variant.
 
+This series is mostly based around patches submitted a couple
+years ago by Fabien Parent and not merged and from Val Packett's
+submission from Jan 2025 that included extra cleanups, fixes, and a
+new dtsi file similar to ones that exist for other PMICs. Some
+comments weren't addressed and the series was ultimately not merged.
 
-On 6/20/26 00:20, Marco Scardovi wrote:
-> In data sabato 20 giugno 2026 08:52:27 Ora legale dell’Europa centrale, Andy Shevchenko ha scritto:
->> On Fri, Jun 19, 2026 at 12:28:49PM +0200, Marco Scardovi wrote:
->>> In data venerdì 19 giugno 2026 12:17:17 Ora legale dell’Europa centrale, Basavaraj Natikar ha scritto:
->>>> On 6/18/2026 11:37 PM, Marco Scardovi wrote:
->>>>> In data giovedì 18 giugno 2026 20:01:40 Ora legale dell’Europa centrale, Andy Shevchenko ha scritto:
->>>>>> On Thu, Jun 18, 2026 at 06:59:15PM +0200, Marco Scardovi wrote:
->>>>>>> On Thu, Jun 18, 2026 at 16:35:37 CEST, Andy Shevchenko wrote:
->>>>>>>> On Thu, Jun 18, 2026 at 06:46:28PM +0530, Basavaraj Natikar wrote:
->>>>>>>>> On 6/18/2026 4:44 AM, Marco Scardovi wrote:
->>>>>>>>>> On Wed, Jun 17, 2026 at 10:33 PM, Armin Wolf wrote:
->>
->> ...
->>
->>>> I also checked the BIOS 316 ACPI dump — the stalling path is byte‑for‑byte identical
->>>> to 315, so the AML is unchanged and it'll still stall if pin 21 boots low.
->>>>
->>>> On the OEM side, I'm connecting internally with our AMD contact for ASUS to report
->>>> this behavior and follow up on a firmware fix.
->>>
->>> Thank you. Does that mean that my patch will not be required anymore?
->>> If that's the case you can consider it as null. I don't mind having the boot
->>> flag added until it's completely fixed on ASUS' side. BTW I have the suspect
->>> that my model is not the only one with the long boot bug on ASUS [1] [2]
->>> but actually the only one who came up with an actual patch on the kernel.
->>
->> I believe your patch is still needed. Not every model might get a BIOS update,
->> and no guarantee that everybody who possesses the problematic platforms
->> actually *will* update the BIOS. But it's AMD's call. I will happily accept
->> the changes acknowledged by AMD.
->>
-> Uhm, right. Not everyone are crazy over updating everything.
-> 
-> As soon as I have a complete response from AMD and Asus I'll proceed
-> with a proper patch.
-> 
-> For now, thank you all for checking it out and giving your time for feedback.
+These patches enable four functions: keys, regulator, pinctrl and RTC.
+Mono speaker amp will follow later as I need to work further on the
+audio codec.
 
-Maybe it's clear to everyone else but me; but if this is ASL used for 
-the dGPU shouldn't we get someone from NVIDIA to add their 2¢?
+I added a handful of device tree improvements to fix some dtbs_check
+errors, added support for the pinctrl device and addressed the comments
+from last year's reviews.
 
-Maybe *they* had intended this to be both edge triggered and that's how 
-it got here.
+Please note that patch 0006 and 0008 depend on patch 0005 as they need the
+registers.h file, but belong to different driver areas. I'm not sure if
+I'm supposed to squash them even if they belong to different driver
+areas of if it's fine like this. Any advice is welcome.
 
-I can't imagine this is going to be the only case we see of this.  So 
-before we go down that quirk path can we get them to weigh in?  Maybe 
-send to dri-devel and CC the nvidia folks that work on the kernel.
+Patch 0009 also depends on patch 0003 because of mt6392-regulator.h.
+
+The series has been tested on Xiaomi Mi Smart Clock X04G and on the
+Lenovo Smart Clock 2 CD-24502F.
+
+Changes in v9:
+- Correct binding for vrtc as it does not support mode setting.
+
+From sashiko:
+- Added missing include in MFD documentation example.
+- Fixed constraints for regulator-initial-mode in regulator binding.
+- Fixed wrong register write while setting LDO standby mode.
+- Added missing pmic interrupt definition in the pumpkin-common include.
+
+Changes in v8 [9]:
+From reviewers:
+- Added example code to the MFD device binding, removed it from the
+  regulators docs.
+- Added minItems/maxItems constraints on the regulator mode definitions,
+  improved the mode constants.
+- Fixed formatting issues in the regulator binding.
+- Import the mt6392.dtsi file in pumpkin-common.dtsi, as it was originally
+  meant in [8].
+
+From sashiko:
+- Added more explicit constraints on the regulator modes definitions.
+- Use the appropriate modeget register for LDO regulators, Buck registers
+  don't have the corresponding register according to the data sheet.
+- Added the missing of_map_mode function.
+- Removed some debugging code that had no use and masked error codes.
+
+Changes in v7 [7]:
+- Removed patch 0008 dependency on patch 0003.
+- Reintroduced the regulator driver. In earlier revisions of this series,
+  it was proposed to remove the dedicated compatible for the regulator
+  device [3]. The driver does not use actually it, but it is not possible
+  at this time to remove it from the bindings since it's a required
+  property.
+
+  Making the regulator-required property conditional was NACKed in [5],
+  with the suggestion to create a separate binding altogether for devices
+  that do not require the compatible property. I tried implementing this,
+  but since the parent device needs to be declared as compatible with
+  mt6323, it leads to a warning in dt_binding_check since mt6323 would
+  be declared as a compatible in both mt6392 and mt6397.
+
+  In the end the only regulator driver from the mt6397 documentation that
+  still declares an of_match is mt6397-regulator and it does not seem
+  to be necessary, so it should be possible to remove it and make the
+  regulator compatible optional for all regulators, but that change would
+  probably deserve its own separate patch series.
+
+Changes in v6 [6]:
+- Dropped the regulators driver for the moment
+- Explained the FCHR key name origin in the commit message
+- Introduced the MFD_CELL_* macro in the sub-devices definitions.
+  A separate, independent commit introduced MFD_CELL_* to all the
+  subdevices in the mt6397-core.c file for consistency
+- Replaced of_device_get_match_data with device_get_match_data
+- Removed the mfd_match_data enum in favor of the preexisting
+  chip_id enum
+- Adjusted the error message if the device is unsupported
+
+Changes in v5 [5]:
+- Double checked regulator driver with data sheet and Android sources.
+  The data sheet I have misses a lot of register descriptions, but
+  Android sources have been helpful to fill the gaps
+- Reintroduced the required attribute for the regulator compatible
+  in the bindings
+- Fixed the missing reference to the MT6392 schema
+- Fixed casts/unused vars reported by kernel test robot
+- Removed Reviewed-by tags from the regulator patches as they have been
+  modified in this version
+
+Changes in v4 [4]:
+- Dropped usage of the regulator compatible
+- Fixed commit messages text to properly reference the target subsystem
+- Added supply rails to the regulator
+- Reworked the regulator schema and PMIC dtsi. Now all supplies are
+  documented and the schema no longer includes voltage information
+- Removed redundant ldo- / buck- prefixes
+- Renamed the pinfunc header to mediatek,mt6392-pinfunc.h
+- Modified the MFD driver to use a simple identifier in the of_match
+  data properties
+
+Changes in v3 [3]:
+- Added pinctrl device
+- Changed mt6397-rtc fallback to mt6323-rtc
+- Added schema for regulators
+- Fixed checkpatch issues
+
+Changes in v2 [2]:
+- Replaced explicit compatibles with fallbacks
+
+Initial version: [1]
+
+[1] https://lore.kernel.org/linux-mediatek/cover.1771865014.git.l.scorcia@gmail.com/
+[2] https://lore.kernel.org/linux-mediatek/20260306120521.163654-1-l.scorcia@gmail.com/
+[3] https://lore.kernel.org/linux-mediatek/20260317184507.523060-1-l.scorcia@gmail.com/
+[4] https://lore.kernel.org/linux-mediatek/20260330083429.359819-1-l.scorcia@gmail.com/
+[5] https://lore.kernel.org/linux-mediatek/20260420213529.1645560-1-l.scorcia@gmail.com/
+[6] https://lore.kernel.org/linux-mediatek/20260612200717.361018-1-l.scorcia@gmail.com/
+[7] https://lore.kernel.org/linux-mediatek/20260615071836.362883-1-l.scorcia@gmail.com/
+[8] https://lore.kernel.org/linux-mediatek/20190323211612.860-25-fparent@baylibre.com/
+[9] https://lore.kernel.org/linux-mediatek/20260620200032.334192-1-l.scorcia@gmail.com/
+
+Fabien Parent (3):
+  dt-bindings: input: mtk-pmic-keys: Add MT6392 PMIC keys
+  mfd: mt6397: Add support for MT6392 PMIC
+  regulator: Add MediaTek MT6392 regulator
+
+Luca Leonardo Scorcia (4):
+  dt-bindings: mfd: mt6397: Add MT6392 PMIC
+  regulator: dt-bindings: Add MediaTek MT6392 PMIC
+  mfd: mt6397: Use MFD_CELL_* to describe sub-devices
+  pinctrl: mediatek: mt6397: Add MediaTek MT6392
+
+Val Packett (2):
+  input: keyboard: mtk-pmic-keys: Add MT6392 support
+  arm64: dts: mediatek: Add MediaTek MT6392 PMIC dtsi
+
+ .../bindings/input/mediatek,pmic-keys.yaml    |   1 +
+ .../bindings/mfd/mediatek,mt6397.yaml         |  75 ++
+ .../regulator/mediatek,mt6392-regulator.yaml  | 112 +++
+ arch/arm64/boot/dts/mediatek/mt6392.dtsi      | 145 ++++
+ .../boot/dts/mediatek/pumpkin-common.dtsi     |   7 +
+ drivers/input/keyboard/mtk-pmic-keys.c        |  17 +
+ drivers/mfd/mt6397-core.c                     | 295 ++++---
+ drivers/mfd/mt6397-irq.c                      |   8 +
+ drivers/pinctrl/mediatek/pinctrl-mt6397.c     |  37 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6392.h |  64 ++
+ drivers/regulator/Kconfig                     |   9 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mt6392-regulator.c          | 764 ++++++++++++++++++
+ .../regulator/mediatek,mt6392-regulator.h     |  23 +
+ include/linux/mfd/mt6392/core.h               |  43 +
+ include/linux/mfd/mt6392/registers.h          | 488 +++++++++++
+ include/linux/mfd/mt6397/core.h               |   1 +
+ include/linux/regulator/mt6392-regulator.h    |  42 +
+ 18 files changed, 1970 insertions(+), 162 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6392-regulator.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6392.h
+ create mode 100644 drivers/regulator/mt6392-regulator.c
+ create mode 100644 include/dt-bindings/regulator/mediatek,mt6392-regulator.h
+ create mode 100644 include/linux/mfd/mt6392/core.h
+ create mode 100644 include/linux/mfd/mt6392/registers.h
+ create mode 100644 include/linux/regulator/mt6392-regulator.h
+
+-- 
+2.43.0
+
 
