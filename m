@@ -1,130 +1,97 @@
-Return-Path: <linux-gpio+bounces-38825-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38809-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kal8C9X5OWp9zgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38825-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 05:13:25 +0200
+	id u9Y5LMgiOWpmnQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38809-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 13:55:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E35B46B3C02
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 05:13:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05B4B6AF3E6
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 13:55:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=dNfxF4M3;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38825-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38825-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=samsung.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ihKj47iK;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38809-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38809-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 55150300E161
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 03:13:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9A64030262D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 11:55:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0016538D687;
-	Tue, 23 Jun 2026 03:13:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA642DE6E3;
+	Mon, 22 Jun 2026 11:55:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD6938D3E6;
-	Tue, 23 Jun 2026 03:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378012DC32A
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 11:55:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782184395; cv=none; b=ppPjLOsdfmP+Vk8us8Ganw6O0FuP1awjXyoMFfCwul+HGdcLFqHZAI7dQLCG3yTmMGA8dOLnNOOiHbGN4QRT8lq2OD9mBqLRSjhXQ4O5mZ8+ApuhjiC/h15eLG9mWa6BfFCubIpc2lzXnTpMJCae8Qk+HO6lGdEFR/M0OzBwXuQ=
+	t=1782129342; cv=none; b=iXawSv9zZXqksTzbiCh1atac3Aa35CN6pKkrlyfnkKVh43Zk+hdre42SQi1fDU+z5bzCKiSvkRcVFSke3MaRcZrzq3MFwMGIB07btHMfuZ7tclAQQKONhj9QHEBf1pze+3aAP7qTJIwy8oNCvW5r/oj4HBEce93FbWkItXKfKzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782184395; c=relaxed/simple;
-	bh=tatdd/Q7QE0upqPJVjWgLFwHUzQQq+izQdPrwXLkDtk=;
-	h=From:To:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=Z9oS3eMmT4mzR5aLybFEz4wVeD2LPT9udgVHrMxRAp1o0WywAZezKeIe44q45ucCrX8Ta3KZpUTKpcM02trQmcTCKdhEeKdqYEdEZK84gvaIP6xD8CKl494dUQmTaMpREfnXgPF1oodc+IT7In9YbohfvNrwz+evUEe6Mu0/sUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dNfxF4M3; arc=none smtp.client-ip=203.254.224.34
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260623031304epoutp04b58205b658a8fc7f7458a882a18eaba2~7l0FFYfm41880418804epoutp04a;
-	Tue, 23 Jun 2026 03:13:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260623031304epoutp04b58205b658a8fc7f7458a882a18eaba2~7l0FFYfm41880418804epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1782184384;
-	bh=tatdd/Q7QE0upqPJVjWgLFwHUzQQq+izQdPrwXLkDtk=;
-	h=From:To:In-Reply-To:Subject:Date:References:From;
-	b=dNfxF4M3fyZDfW3CRh3lyZWqMNYsOP4XtAdUT1p5ZJqUeSRRx63y6bFC8gBFnYGJ/
-	 2PA9S3WitCXE5BiEd84kDRmhjRFpItBmgmC2TWVubBHDJLlGmnyl63bz1zTjkIX2Mn
-	 UkknWAWYwpil1XaCsoKvzcmVN65+WOpAu9nWyWc0=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20260623031303epcas5p378f6b175e3e88956e96fb88e6537bcf9~7l0EthhRN0685906859epcas5p39;
-	Tue, 23 Jun 2026 03:13:03 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4gkqrb4vT0z2SSKX; Tue, 23 Jun
-	2026 03:13:03 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260622114525epcas5p2654a56b123110dea3b2fb97739d9a92b~7ZKI1GCT00255802558epcas5p2L;
-	Mon, 22 Jun 2026 11:45:25 +0000 (GMT)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20260622114503epsmtip205edc6f0281b21bca275e7401267a8a1~7ZJ05N0KR2405124051epsmtip2Y;
-	Mon, 22 Jun 2026 11:45:03 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@oss.qualcomm.com>, "'Bjorn
- Andersson'" <andersson@kernel.org>, "'Konrad Dybcio'"
-	<konradybcio@kernel.org>, "'Rob Herring'" <robh@kernel.org>, "'Krzysztof
- Kozlowski'" <krzk+dt@kernel.org>, "'Conor Dooley'" <conor+dt@kernel.org>,
-	"'Peter Griffin'" <peter.griffin@linaro.org>, "'Michael	Turquette'"
-	<mturquette@baylibre.com>, "'Stephen Boyd'" <sboyd@kernel.org>, "'Brian
- Masney'" <bmasney@redhat.com>, "'Sylwester Nawrocki'"
-	<s.nawrocki@samsung.com>, "'Chanwoo Choi'" <cw00.choi@samsung.com>, "'Sam
- Protsenko'" <semen.protsenko@linaro.org>, "'Rob Clark'"
-	<robin.clark@oss.qualcomm.com>, "'Dmitry Baryshkov'" <lumag@kernel.org>,
-	"'Abhinav Kumar'" <abhinav.kumar@linux.dev>, "'Jessica Zhang'"
-	<jesszhan0024@gmail.com>, "'Sean Paul'" <sean@poorly.run>, "'Marijn
-	Suijten'" <marijn.suijten@somainline.org>, "'David	Airlie'"
- <airlied@gmail.com>, "'Simona Vetter'" <simona@ffwll.ch>, "'Maarten
-	Lankhorst'" <maarten.lankhorst@linux.intel.com>, "'Maxime Ripard'"
- <mripard@kernel.org>, "'Thomas Zimmermann'" <tzimmermann@suse.de>, "'Inki
-	Dae'" <inki.dae@samsung.com>, "'Seung-Woo Kim'" <sw0312.kim@samsung.com>,
-	"'Kyungmin	Park'" <kyungmin.park@samsung.com>, "'Andi Shyti'"
-	<andi.shyti@kernel.org>, "'Georgi	Djakov'" <djakov@kernel.org>, "'Lee
-	Jones'" <lee@kernel.org>, "'Pavel Machek'" <pavel@kernel.org>, "'Hans
-	Verkuil'" <hverkuil@kernel.org>, "'Mauro Carvalho	Chehab'"
- <mchehab@kernel.org>, "'Ulf Hansson'" <ulfh@kernel.org>, "'Peter Rosin'"
- <peda@lysator.liu.se>, "'Vinod Koul'" <vkoul@kernel.org>, "'Neil Armstrong'"
- <neil.armstrong@linaro.org>, "'Linus Walleij'" <linusw@kernel.org>, "'Geert
-	Uytterhoeven'" <geert+renesas@glider.be>, "'Magnus Damm'"
- <magnus.damm@gmail.com>, "'Sebastian Reichel'" <sre@kernel.org>, "'Javier
-	Martinez Canillas'" <javier@dowhile0.org>, "'Liam Girdwood'"
- <lgirdwood@gmail.com>, "'Mark Brown'" <broonie@kernel.org>, "'Greg
-	Kroah-Hartman'" <gregkh@linuxfoundation.org>, "'Jiri	Slaby'"
- <jirislaby@kernel.org>, "'Srinivas Kandagatla'" <srini@kernel.org>,
-	"'Bartlomiej Zolnierkiewicz'" <bzolnier@gmail.com>, "'Rafael J. Wysocki'"
-	<rafael@kernel.org>, "'Daniel Lezcano'" <daniel.lezcano@kernel.org>, "'Zhang
- Rui'" <rui.zhang@intel.com>, "'Lukasz Luba'" <lukasz.luba@arm.com>,
-	"'Jonathan Marek'" <jonathan@marek.ca>, "'Taniya Das'"
-	<quic_tdas@quicinc.com>, "'Robert Marko'" <robimarko@gmail.com>, "'Christian
- Marangi'" <ansuelsmth@gmail.com>, "'Stephan	Gerhold'" <stephan@gerhold.net>,
-	"'Adam Skladowski'" <a_skl39@protonmail.com>, "'Sireesh Kodali'"
-	<sireeshkodali@protonmail.com>, "'Barnabas Czeman'"
-	<barnabas.czeman@mainlining.org>, "'Imran Shaik'"
-	<quic_imrashai@quicinc.com>, "'Sricharan Ramabadhran'"
-	<quic_srichara@quicinc.com>, "'Anusha Rao'" <quic_anusha@quicinc.com>, "'Luo
- Jie'" <quic_luoj@quicinc.com>, "'Tomasz Figa'" <tomasz.figa@gmail.com>,
-	"'Chanho Park'" <chanho61.park@samsung.com>, "'Sunyeal	Hong'"
-	<sunyeal.hong@samsung.com>, "'Shin Son'" <shin.son@samsung.com>, "'Krishna
- Manikandan'" <quic_mkrishn@quicinc.com>, "'Jacek Anaszewski'"
-	<jacek.anaszewski@gmail.com>, "'Jaehoon Chung'" <jh80.chung@samsung.com>,
-	"'Marek	Szyprowski'" <m.szyprowski@samsung.com>, "'Alina Yu'"
-	<alina_yu@richtek.com>, "'Andy	Gross'" <agross@kernel.org>,
-	=?UTF-8?Q?'Niklas_S=C3=B6derlund'?= <niklas.soderlund@ragnatech.se>,
-	"'Wesley Cheng'" <quic_wcheng@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<freedreno@lists.freedesktop.org>, <linux-i2c@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-	<linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-	<cpgs@samsung.com>
-In-Reply-To: <20260622101606.485961-4-krzysztof.kozlowski@oss.qualcomm.com>
-Subject: RE: [PATCH 2/2] dt-bindings: Drop incorrect usage of double '::'
-Date: Mon, 22 Jun 2026 17:15:00 +0530
-Message-ID: <373928166.21782184383679.JavaMail.epsvc@epcpadp2new>
+	s=arc-20240116; t=1782129342; c=relaxed/simple;
+	bh=XT8rZON3uno2HhYM3tpoEU+Ats9CQBPjrBdwm8kbSgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YptYVVByILiZq/EwyrvMq1OQtx1p5EltBHxYTaEMUEMmagzY+ZqS2Ek48L0PixtROKx9LFL+xqyZtyty8MKHwcbHDZA7jAjnPM7MVKa/OK2320siEWQqteKiKVcXwZo47EYJUsPtg8y/TddsZq83Hq7KYiXg/LBFNv2KH+xB+9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihKj47iK; arc=none smtp.client-ip=209.85.222.176
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-920fbdffa31so218229785a.3
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 04:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782129340; x=1782734140; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+QfWqJpMHzqjlN+uo9udP0Tr71dK+AMMQweieefzuM=;
+        b=ihKj47iKmq7xKb+N054W00P60mCNadtjvc/7SLo9obMHEDfSwXQKJsU2XMiq25BL+g
+         XoYvKWcMR4epCVqZXwvlD4K8ho96PELeKDT+UTSysuPSSSeDIWGE6x0lgbW0e+gOiXee
+         cTr3HH4BRuZeRwnScSrac/yw4eRWOlRSrzU7jLkajuF75UJDzkT/v8Hwd0NNzFD3DMR7
+         Nqa7FAUvMMGkdZL3q2/MqwB8r7h7wG9jdea1dhjbEizRPs9B31fa14J/rSJD/5rwYAeT
+         DIoq/A5c+R3XFelqo+rlud/K9xRItVJj3fDOoqkXil/WGq3ysM9FrU52rED5jxzJ9LJf
+         mcIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782129340; x=1782734140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=o+QfWqJpMHzqjlN+uo9udP0Tr71dK+AMMQweieefzuM=;
+        b=kko87a4QsUGlT73obQ+9gVJ3QPt7xz5Q/W+mXd7juY+QoQCCkUJN1bsCm/axaSCbm/
+         PiJDG+99Mi1W5igwNs41vw83yWy/QXc70uRHeDQNbiMU2QMRzAPKsFsQN3e3ryypRL/p
+         Fc95AjUHa8TGNiinrfRqhAt1Cg+B1IP+7CDEaFLt1THkAnWTpLuRHs9W38+557QBtWnf
+         dDcIVOO0PKOfnSGymA9tZLzJ+PYJAjRik+Qb2eRhTcNUfY6m+aXLbYYwhljVGL4KYuDZ
+         tgC/RKflfxM7lk8BYpDDkBJ+RKdPHRnKK/mw847rF5Wh/wQUbHNQGod9QEMu4nkbl8e/
+         2gGg==
+X-Forwarded-Encrypted: i=1; AFNElJ9O+1KqPXyHQTRTIlzG0lb8Ea2gp5OSYyFYqA7IXIE9t1zHPpqtxlnHoO+G6iugeRP5FO8M31s8cgUu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvHPHzW0/6ERqjqCXY2ZLoMlbLXc1PyoNSSoBQp8n5N9hqm1RZ
+	xbaX2qqnyl7dogFNjw7X6V68yGBmdZm+NqrzUtMft7kR/RH8gkEhFw4=
+X-Gm-Gg: AfdE7cmBdqIXrpLuUfst7otBMVgXmTNgXOM9oLQYDsM35UC2p+R5hVCJ6ObestOScDz
+	sTEEYnG1H/kFOMNNFiiHbrxN7hhSx6j1/9p2sYVX72g4PV7qKdTtudcb6ysYK2BCcerTqeRPYHf
+	vS2Jg+dCH6II+HQ6H7gIVxIkGrheVs4Alep4x3V9pK2+L0NSd8ERm+35khKj43dKuzlzmeQKMsa
+	csvm1wWlHGuBCO01Ao2xK7DJnC3nAKI1cyLOEqMOWTykOHWgGF6JQmgsdWcabVUdOxzHEeez610
+	YG6dwX1J6c6MJNLUvR2c3H4mow2DLmpt+lmssltvpD4kEYdp047CWUzyjg1Oh05FKAyVVZzA146
+	dE9YhS3APipnV6hHMfAK057F6fq2RczisfzGUab/PHmY5cA1sCMm4kb7k6SKI2ShOaSWeC4KKkz
+	p2XJpmbUtg0d5aaAuaFtK3C4UODgb7nGcb41WYsKwKbg==
+X-Received: by 2002:a05:620a:2419:20b0:922:e670:9e83 with SMTP id af79cd13be357-922e6709ff3mr777571185a.42.1782129340108;
+        Mon, 22 Jun 2026 04:55:40 -0700 (PDT)
+Received: from matheus-note.localnet ([2804:7f0:bac3:7a3e:53ef:6965:d89d:38da])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-921db06174dsm903425485a.33.2026.06.22.04.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 04:55:39 -0700 (PDT)
+From: Matheus Sampaio Queiroga <srherobrine20@gmail.com>
+To: Linus Walleij <linusw@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Christian Marangi <ansuelsmth@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Larsson <benjamin.larsson@genexis.eu>, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ Markus Gothe <markus.gothe@genexis.eu>,
+ Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
+Cc: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
+Subject: Re: [PATCH v5 16/16] pinctrl: airoha: add support of an7563 SoC
+Date: Mon, 22 Jun 2026 08:55:33 -0300
+Message-ID: <kNxYkw2WQ92M6zgbpnkZ0w@gmail.com>
+In-Reply-To: <20260622113046.3619139-17-mikhail.kshevetskiy@iopsys.eu>
+References:
+ <20260622113046.3619139-1-mikhail.kshevetskiy@iopsys.eu>
+ <20260622113046.3619139-17-mikhail.kshevetskiy@iopsys.eu>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -132,96 +99,363 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI6ZcaYiR7zkv7wowZwd71jplyCqgLGmQzlAevIaT+1ahn2EA==
-Content-Language: en-us
-X-CMS-MailID: 20260622114525epcas5p2654a56b123110dea3b2fb97739d9a92b
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260622101634epcas5p1137f33cd1e53341e3d7600eb105cd859
-References: <20260622101606.485961-3-krzysztof.kozlowski@oss.qualcomm.com>
-	<CGME20260622101634epcas5p1137f33cd1e53341e3d7600eb105cd859@epcas5p1.samsung.com>
-	<20260622101606.485961-4-krzysztof.kozlowski@oss.qualcomm.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-38825-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,kernel.org,linaro.org,baylibre.com,redhat.com,samsung.com,linux.dev,gmail.com,poorly.run,somainline.org,ffwll.ch,linux.intel.com,suse.de,lysator.liu.se,glider.be,dowhile0.org,linuxfoundation.org,intel.com,arm.com,marek.ca,quicinc.com,gerhold.net,protonmail.com,mainlining.org,richtek.com,ragnatech.se,vger.kernel.org,lists.infradead.org,lists.freedesktop.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:krzysztof.kozlowski@oss.qualcomm.com,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:peter.griffin@linaro.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:s.nawrocki@samsung.com,m:cw00.choi@samsung.com,m:semen.protsenko@linaro.org,m:robin.clark@oss.qualcomm.com,m:lumag@kernel.org,m:abhinav.kumar@linux.dev,m:jesszhan0024@gmail.com,m:sean@poorly.run,m:marijn.suijten@somainline.org,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:inki.dae@samsung.com,m:sw0312.kim@samsung.com,m:kyungmin.park@samsung.com,m:andi.shyti@kernel.org,m:djakov@kernel.org,m:lee@kernel.org,m:pavel@kernel.org,m:hverkuil@kernel.org,m:mchehab@kernel.org,m:ulfh@kernel.org,m:peda@lysator.liu.se,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:linusw@kernel.org,m:geert+renesas@glider.be,m:magnus.damm@gmail.com,m:sre@kernel.org,m:javier@dowh
- ile0.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:gregkh@linuxfoundation.org,m:jirislaby@kernel.org,m:srini@kernel.org,m:bzolnier@gmail.com,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jonathan@marek.ca,m:quic_tdas@quicinc.com,m:robimarko@gmail.com,m:ansuelsmth@gmail.com,m:stephan@gerhold.net,m:a_skl39@protonmail.com,m:sireeshkodali@protonmail.com,m:barnabas.czeman@mainlining.org,m:quic_imrashai@quicinc.com,m:quic_srichara@quicinc.com,m:quic_anusha@quicinc.com,m:quic_luoj@quicinc.com,m:tomasz.figa@gmail.com,m:chanho61.park@samsung.com,m:sunyeal.hong@samsung.com,m:shin.son@samsung.com,m:quic_mkrishn@quicinc.com,m:jacek.anaszewski@gmail.com,m:jh80.chung@samsung.com,m:m.szyprowski@samsung.com,m:alina_yu@richtek.com,m:agross@kernel.org,m:niklas.soderlund@ragnatech.se,m:quic_wcheng@quicinc.com,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-samsu
- ng-soc@vger.kernel.org,m:linux-clk@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:freedreno@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-phy@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-serial@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-usb@vger.kernel.org,m:cpgs@samsung.com,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,vger.kernel.org:from_smtp,qualcomm.com:email,fireeye.com:url,samsung.com:dkim,samsung.com:email,samsung.com:from_mime,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	RCPT_COUNT_GT_50(0.00)[96];
+	TAGGED_FROM(0.00)[bounces-38809-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:lorenzo@kernel.org,m:ansuelsmth@gmail.com,m:angelogioacchino.delregno@collabora.com,m:benjamin.larsson@genexis.eu,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-mediatek@lists.infradead.org,m:markus.gothe@genexis.eu,m:mikhail.kshevetskiy@iopsys.eu,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com,genexis.eu,vger.kernel.org,lists.infradead.org,iopsys.eu];
+	FORGED_SENDER(0.00)[srherobrine20@gmail.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[srherobrine20@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E35B46B3C02
+X-Rspamd-Queue-Id: 05B4B6AF3E6
 
+Em segunda-feira, 22 de junho de 2026, =C3=A0s 08:30:46 Hor=C3=A1rio Padr=
+=C3=A3o de Bras=C3=ADlia,=20
+Mikhail Kshevetskiy escreveu:
+> +/*
+> + * shared - named RG_SW_TOD_1PPS_MODE on AN7563. Only the LAN LED mode
+> + * bits and GSW_TOD_1PPS exist on AN7563 (no 2nd I2C, I2S or PON 1PPS).
+> + */
+> +#define REG_GPIO_2ND_I2C_MODE                  0x0214
+> +#define GPIO_LAN3_LED1_MODE_MASK               BIT(10)
+> +#define GPIO_LAN3_LED0_MODE_MASK               BIT(9)
+> +#define GPIO_LAN2_LED1_MODE_MASK               BIT(8)
+> +#define GPIO_LAN2_LED0_MODE_MASK               BIT(7)
+> +#define GPIO_LAN1_LED1_MODE_MASK               BIT(6)
+> +#define GPIO_LAN1_LED0_MODE_MASK               BIT(5)
+> +#define GPIO_LAN0_LED1_MODE_MASK               BIT(4)
+> +#define GPIO_LAN0_LED0_MODE_MASK               BIT(3)
+> +#define GSW_TOD_1PPS_MODE_MASK                 BIT(1)
+> +
+> +/* shared */
+> +#define REG_GPIO_SPI_CS1_MODE                  0x0218
+> +#define GPIO_PCM_SPI_CS4_MODE_MASK             BIT(21)
+> +#define GPIO_PCM_SPI_CS3_MODE_MASK             BIT(20)
+> +#define GPIO_PCM_SPI_CS2_MODE_MASK             BIT(18)
+> +#define GPIO_PCM_SPI_CS1_MODE_MASK             BIT(17)
+> +#define GPIO_PCM_SPI_MODE_MASK                 BIT(16)
+> +#define GPIO_PCM2_MODE_MASK                    BIT(13)
+> +#define GPIO_PCM1_MODE_MASK                    BIT(12)
+> +#define GPIO_PCM_INT_MODE_MASK                 BIT(9)
+> +#define GPIO_PCM_RESET_MODE_MASK               BIT(8)
+> +#define GPIO_SPI_QUAD_MODE_MASK                        BIT(4)
+> +#define GPIO_SPI_CS4_MODE_MASK                 BIT(3)
+> +#define GPIO_SPI_CS3_MODE_MASK                 BIT(2)
+> +#define GPIO_SPI_CS2_MODE_MASK                 BIT(1)
+> +#define GPIO_SPI_CS1_MODE_MASK                 BIT(0)
+> +
+> +#define REG_GPIO_PON_MODE                      0x021c
+> +/*
+> + * AN7563 specific: route the standalone pads to their GPIO function.
+> + * 0: pad keeps its base function, 1: pad is GPIO<n>.
+> + */
+> +#define UART_RXD_GPIO_MODE_MASK                        BIT(22) /* GPIO37=
+ */
+> +#define UART_TXD_GPIO_MODE_MASK                        BIT(21) /* GPIO36
+> */ +#define SPI_MISO_GPIO_MODE_MASK                        BIT(20) /*
+> GPIO35 */ +#define SPI_MOSI_GPIO_MODE_MASK                        BIT(19)
+> /* GPIO34 */ +#define SPI_CS_GPIO_MODE_MASK                  BIT(18) /*
+> GPIO33 */ +#define SPI_CLK_GPIO_MODE_MASK                 BIT(17) /* GPIO=
+32
+> */ +#define I2C_SDA_GPIO_MODE_MASK                 BIT(16) /* GPIO31 */
+> +#define I2C_SCL_GPIO_MODE_MASK                 BIT(15) /* GPIO30 */ +/*
+> shared */
+> +#define GPIO_PARALLEL_NAND_MODE_MASK           BIT(14)
+> +#define GPIO_SGMII_MDIO_MODE_MASK              BIT(13)
+> +#define SIPO_RCLK_MODE_MASK                    BIT(11)
+> +/*
+> + * Note: on AN7563 GPIO_PCIE_RESET{0,1} select the GPIO function of the
+> + * PCIE_RESET pads (0: PCIe reset, 1: GPIO28/GPIO29).
+> + */
+> +#define GPIO_PCIE_RESET1_MASK                  BIT(10) /* GPIO29 */
+> +#define GPIO_PCIE_RESET0_MASK                  BIT(9)  /* GPIO28 */
+> +#define GPIO_HSUART_CTS_RTS_MODE_MASK          BIT(6)
+> +#define GPIO_HSUART_MODE_MASK                  BIT(5)
+> +#define GPIO_SIPO_MODE_MASK                    BIT(2)
+> +#define GPIO_PON_MODE_MASK                     BIT(0)
+> +
+> +/* shared */
+> +#define REG_NPU_UART_EN                                0x0224
+> +#define JTAG_UDI_EN_MASK                       BIT(4)
+> +#define JTAG_DFD_EN_MASK                       BIT(3)
+> +
+> +/* LED MAP - shared */
+> +#define REG_LAN_LED0_MAPPING                   0x027c
+> +#define REG_LAN_LED1_MAPPING                   0x0280
+> +
+> +#define LAN3_LED_MAPPING_MASK                  GENMASK(14, 12)
+> +#define LAN3_PHY_LED_MAP(_n)                 =20
+> FIELD_PREP_CONST(LAN3_LED_MAPPING_MASK, (_n)) +
+> +#define LAN2_LED_MAPPING_MASK                  GENMASK(10, =F0=9F=98=8E
+> +#define LAN2_PHY_LED_MAP(_n)                 =20
+> FIELD_PREP_CONST(LAN2_LED_MAPPING_MASK, (_n)) +
+> +#define LAN1_LED_MAPPING_MASK                  GENMASK(6, 4)
+> +#define LAN1_PHY_LED_MAP(_n)                 =20
+> FIELD_PREP_CONST(LAN1_LED_MAPPING_MASK, (_n)) +
+> +#define LAN0_LED_MAPPING_MASK                  GENMASK(2, 0)
+> +#define LAN0_PHY_LED_MAP(_n)                 =20
+> FIELD_PREP_CONST(LAN0_LED_MAPPING_MASK, (_n)) +
+> +/*
+> + * CONF - shared.
+> + * The AN7563 standalone IO conf registers use the same bit layout as
+> + * EN7581 (UART1_TXD/RXD are named UART_TXD/RXD on AN7563).
+> + */
+> +#define REG_I2C_SDA_E2                         0x001c
+> +#define SPI_MISO_E2_MASK                       BIT(14)
+> +#define SPI_MOSI_E2_MASK                       BIT(13)
+> +#define SPI_CLK_E2_MASK                                BIT(12)
+> +#define SPI_CS0_E2_MASK                                BIT(11)
+> +#define PCIE1_RESET_E2_MASK                    BIT(9)
+> +#define PCIE0_RESET_E2_MASK                    BIT(8)
+> +#define UART1_RXD_E2_MASK                      BIT(3)
+> +#define UART1_TXD_E2_MASK                      BIT(2)
+> +#define I2C_SCL_E2_MASK                                BIT(1)
+> +#define I2C_SDA_E2_MASK                                BIT(0)
+> +
+> +#define REG_I2C_SDA_E4                         0x0020
+> +#define SPI_MISO_E4_MASK                       BIT(14)
+> +#define SPI_MOSI_E4_MASK                       BIT(13)
+> +#define SPI_CLK_E4_MASK                                BIT(12)
+> +#define SPI_CS0_E4_MASK                                BIT(11)
+> +#define PCIE1_RESET_E4_MASK                    BIT(9)
+> +#define PCIE0_RESET_E4_MASK                    BIT(8)
+> +#define UART1_RXD_E4_MASK                      BIT(3)
+> +#define UART1_TXD_E4_MASK                      BIT(2)
+> +#define I2C_SCL_E4_MASK                                BIT(1)
+> +#define I2C_SDA_E4_MASK                                BIT(0)
+> +
+> +#define REG_GPIO_L_E2                          0x0024
+> +#define REG_GPIO_L_E4                          0x0028
+> +
+> +#define REG_I2C_SDA_PU                         0x0044
+> +#define SPI_MISO_PU_MASK                       BIT(14)
+> +#define SPI_MOSI_PU_MASK                       BIT(13)
+> +#define SPI_CLK_PU_MASK                                BIT(12)
+> +#define SPI_CS0_PU_MASK                                BIT(11)
+> +#define PCIE1_RESET_PU_MASK                    BIT(9)
+> +#define PCIE0_RESET_PU_MASK                    BIT(8)
+> +#define UART1_RXD_PU_MASK                      BIT(3)
+> +#define UART1_TXD_PU_MASK                      BIT(2)
+> +#define I2C_SCL_PU_MASK                                BIT(1)
+> +#define I2C_SDA_PU_MASK                                BIT(0)
+> +
+> +#define REG_I2C_SDA_PD                         0x0048
+> +#define SPI_MISO_PD_MASK                       BIT(14)
+> +#define SPI_MOSI_PD_MASK                       BIT(13)
+> +#define SPI_CLK_PD_MASK                                BIT(12)
+> +#define SPI_CS0_PD_MASK                                BIT(11)
+> +#define PCIE1_RESET_PD_MASK                    BIT(9)
+> +#define PCIE0_RESET_PD_MASK                    BIT(8)
+> +#define UART1_RXD_PD_MASK                      BIT(3)
+> +#define UART1_TXD_PD_MASK                      BIT(2)
+> +#define I2C_SCL_PD_MASK                                BIT(1)
+> +#define I2C_SDA_PD_MASK                                BIT(0)
+> +
+> +#define REG_GPIO_L_PU                          0x004c
+> +#define REG_GPIO_L_PD                          0x0050
+> +
+> +#define REG_PCIE_RESET_OD                      0x018c
+> +#define PCIE1_RESET_OD_MASK                    BIT(1)
+> +#define PCIE0_RESET_OD_MASK                    BIT(0)
+> +
+> +/*
+> + * PWM MODE CONF - shared.
+> + * The AN7563 GPIO flash mode registers use the same layout as EN7581:
+> + * REG_GPIO_FLASH_MODE_CFG covers GPIO0-15, REG_GPIO_FLASH_MODE_CFG_EXT
+> + * covers GPIO16-31 (bits 0-15) and GPIO36+ (bits 16+). The SPI pads
+> + * (GPIO32-35) have no flash mode configuration bit.
+> + */
+> +#define REG_GPIO_FLASH_MODE_CFG                        0x0034
+> +#define GPIO15_FLASH_MODE_CFG                  BIT(15)
+> +#define GPIO14_FLASH_MODE_CFG                  BIT(14)
+> +#define GPIO13_FLASH_MODE_CFG                  BIT(13)
+> +#define GPIO12_FLASH_MODE_CFG                  BIT(12)
+> +#define GPIO11_FLASH_MODE_CFG                  BIT(11)
+> +#define GPIO10_FLASH_MODE_CFG                  BIT(10)
+> +#define GPIO9_FLASH_MODE_CFG                   BIT(9)
+> +#define GPIO8_FLASH_MODE_CFG                   BIT(8)
+> +#define GPIO7_FLASH_MODE_CFG                   BIT(7)
+> +#define GPIO6_FLASH_MODE_CFG                   BIT(6)
+> +#define GPIO5_FLASH_MODE_CFG                   BIT(5)
+> +#define GPIO4_FLASH_MODE_CFG                   BIT(4)
+> +#define GPIO3_FLASH_MODE_CFG                   BIT(3)
+> +#define GPIO2_FLASH_MODE_CFG                   BIT(2)
+> +#define GPIO1_FLASH_MODE_CFG                   BIT(1)
+> +#define GPIO0_FLASH_MODE_CFG                   BIT(0)
+> +
+> +#define REG_GPIO_FLASH_MODE_CFG_EXT            0x0068
+> +#define GPIO37_FLASH_MODE_CFG                  BIT(17)
+> +#define GPIO36_FLASH_MODE_CFG                  BIT(16)
+> +#define GPIO31_FLASH_MODE_CFG                  BIT(15)
+> +#define GPIO30_FLASH_MODE_CFG                  BIT(14)
+> +#define GPIO29_FLASH_MODE_CFG                  BIT(13)
+> +#define GPIO28_FLASH_MODE_CFG                  BIT(12)
+> +#define GPIO27_FLASH_MODE_CFG                  BIT(11)
+> +#define GPIO26_FLASH_MODE_CFG                  BIT(10)
+> +#define GPIO25_FLASH_MODE_CFG                  BIT(9)
+> +#define GPIO24_FLASH_MODE_CFG                  BIT(8)
+> +#define GPIO23_FLASH_MODE_CFG                  BIT(7)
+> +#define GPIO22_FLASH_MODE_CFG                  BIT(6)
+> +#define GPIO21_FLASH_MODE_CFG                  BIT(5)
+> +#define GPIO20_FLASH_MODE_CFG                  BIT(4)
+> +#define GPIO19_FLASH_MODE_CFG                  BIT(3)
+> +#define GPIO18_FLASH_MODE_CFG                  BIT(2)
+> +#define GPIO17_FLASH_MODE_CFG                  BIT(1)
+> +#define GPIO16_FLASH_MODE_CFG                  BIT(0)
+> +
+> +#define AIROHA_PINCTRL_GPIO(gpio, mux_val)                     \
+> +       {                                                       \
+> +               .name =3D (gpio),                                 \
+> +               .regmap[0] =3D {                                  \
+> +                       AIROHA_FUNC_MUX,                        \
+> +                       REG_GPIO_PON_MODE,                      \
+> +                       (mux_val),                              \
+> +                       (mux_val)                               \
+> +               },                                              \
+> +               .regmap_size =3D 1,                               \
+> +       }
+> +
+> +#define AIROHA_PINCTRL_GPIO_EXT(gpio, mux_val, smux_val)       \
+> +       {                                                       \
+> +               .name =3D (gpio),                                 \
+> +               .regmap[0] =3D {                                  \
+> +                       AIROHA_FUNC_PWM_EXT_MUX,                \
+> +                       REG_GPIO_FLASH_MODE_CFG_EXT,            \
+> +                       (mux_val),                              \
+> +                       0                                       \
+> +               },                                              \
+> +               .regmap[1] =3D {                                  \
+> +                       AIROHA_FUNC_MUX,                        \
+> +                       REG_GPIO_PON_MODE,                      \
+> +                       (smux_val),                             \
+> +                       (smux_val)                              \
+> +               },                                              \
+> +               .regmap_size =3D 2,                               \
+> +       }
+> +
+> +/* PWM */
+> +#define AIROHA_PINCTRL_PWM(gpio, mux_val)                      \
+> +       {                                                       \
+> +               .name =3D (gpio),                                 \
+> +               .regmap[0] =3D {                                  \
+> +                       AIROHA_FUNC_PWM_MUX,                    \
+> +                       REG_GPIO_FLASH_MODE_CFG,                \
+> +                       (mux_val),                              \
+> +                       (mux_val)                               \
+> +               },                                              \
+> +               .regmap_size =3D 1,                               \
+> +       }
+> +
+> +#define AIROHA_PINCTRL_PWM_EXT(gpio, mux_val)                  \
+> +       {                                                       \
+> +               .name =3D (gpio),                                 \
+> +               .regmap[0] =3D {                                  \
+> +                       AIROHA_FUNC_PWM_EXT_MUX,                \
+> +                       REG_GPIO_FLASH_MODE_CFG_EXT,            \
+> +                       (mux_val),                              \
+> +                       (mux_val)                               \
+> +               },                                              \
+> +               .regmap_size =3D 1,                               \
+> +       }
+> +
+> +#define AIROHA_PINCTRL_PWM_EXT_SEC(gpio, mux_val, smux_val)    \
+> +       {                                                       \
+> +               .name =3D (gpio),                                 \
+> +               .regmap[0] =3D {                                  \
+> +                       AIROHA_FUNC_PWM_EXT_MUX,                \
+> +                       REG_GPIO_FLASH_MODE_CFG_EXT,            \
+> +                       (mux_val),                              \
+> +                       (mux_val)                               \
+> +               },                                              \
+> +               .regmap[1] =3D {                                  \
+> +                       AIROHA_FUNC_MUX,                        \
+> +                       REG_GPIO_PON_MODE,                      \
+> +                       (smux_val),                             \
+> +                       (smux_val)                              \
+> +               },                                              \
+> +               .regmap_size =3D 2,                               \
+> +       }
+> +
+> +#define AIROHA_PINCTRL_PHY_LED0(gpio, mux_val, map_mask, map_val)      \
+> +       {                                                               \
+> +               .name =3D (gpio),                                        =
+ \
+> +               .regmap[0] =3D {                                         =
+ \
+> +                       AIROHA_FUNC_MUX,                                \
+> +                       REG_GPIO_2ND_I2C_MODE,                          \
+> +                       (mux_val),                                      \
+> +                       (mux_val),                                      \
+> +               },                                                      \
+> +               .regmap[1] =3D {                                         =
+ \
+> +                       AIROHA_FUNC_MUX,                                \
+> +                       REG_LAN_LED0_MAPPING,                           \
+> +                       (map_mask),                                     \
+> +                       (map_val),                                      \
+> +               },                                                      \
+> +               .regmap_size =3D 2,                                      =
+ \
+> +       }
+> +
+> +#define AIROHA_PINCTRL_PHY_LED1(gpio, mux_val, map_mask, map_val)      \
+> +       {                                                               \
+> +               .name =3D (gpio),                                        =
+ \
+> +               .regmap[0] =3D {                                         =
+ \
+> +                       AIROHA_FUNC_MUX,                                \
+> +                       REG_GPIO_2ND_I2C_MODE,                          \
+> +                       (mux_val),                                      \
+> +                       (mux_val),                                      \
+> +               },                                                      \
+> +               .regmap[1] =3D {                                         =
+ \
+> +                       AIROHA_FUNC_MUX,                                \
+> +                       REG_LAN_LED1_MAPPING,                           \
+> +                       (map_mask),                                     \
+> +                       (map_val),                                      \
+> +               },                                                      \
+> +               .regmap_size =3D 2,                                      =
+ \
+> +       }
 
-
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> Sent: Monday, June 22, 2026 3:46 PM
-> To: Bjorn Andersson <andersson@kernel.org>; Konrad Dybcio
-> <konradybcio@kernel.org>; Rob Herring <robh@kernel.org>; Krzysztof
-> Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
-> Peter Griffin <peter.griffin@linaro.org>; Alim Akhtar
-> <alim.akhtar@samsung.com>; Michael Turquette
-> <mturquette@baylibre.com>; Stephen Boyd <sboyd@kernel.org>; Brian
-> Masney <bmasney@redhat.com>; Sylwester Nawrocki
-[Snip]
-> soc@vger.kernel.org; linux-serial@vger.kernel.org; linux-
-> sound@vger.kernel.org; linux-usb@vger.kernel.org
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> Subject: [PATCH 2/2] dt-bindings: Drop incorrect usage of double '::'
->=20
-> There is no use of double colon '::' in YAML. OTOH, the literal style blo=
-ck, e.g.
-> using '|' treats all characters as content [1] therefore single use of ':=
-' in
-> descriptions is perfectly fine, whenever '|' is used.
->=20
-> Cleanup existing code, so the confusing style won't be re-used in new
-> contributions.
->=20
-> Link: https://protect2.fireeye.com/v1/url?k=3D20b000b4-490b6806-20b18bfb-
-> 905a08a8515a-b42887ea7482314e&q=3D1&e=3D9fffcc8f-6266-432d-a638-
-> 208efe86c9d7&u=3Dhttps%3A%2F%2Fyaml.org%2Fspec%2F1.2.2%2F%23literal-
-> style [1]
-> Signed-off-by: Krzysztof Kozlowski
-> <krzysztof.kozlowski@oss.qualcomm.com>
->=20
-For Samsung IPs related
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-
+These defines are similar to what we have in airoha-common.h, whatever is n=
+ot=20
+the same add the define with the prefix and the defines that exist only hav=
+e a=20
+different regmap, move to the add in the define parameter, do as was done i=
+n=20
+en7523
 
 
 
