@@ -1,268 +1,172 @@
-Return-Path: <linux-gpio+bounces-38819-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38820-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hbVUHQBmOWqnrgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38819-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:42:40 +0200
+	id yidSBednOWqFrwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38820-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:50:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 131A46B136D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:42:40 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 829446B1447
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:50:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=baylibre.com header.s=google header.b=XkfXOoDo;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38819-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38819-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=QaPwKAS1;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38820-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38820-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5BD613023AD4
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 16:42:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 60FC03031B68
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 16:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3829F33B6FC;
-	Mon, 22 Jun 2026 16:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB1B533D4F8;
+	Mon, 22 Jun 2026 16:48:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209372BCF4C
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 16:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA5E310779
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 16:48:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782146555; cv=none; b=A/Cp5YAuFAXkjqFB3xigVEt9aMROEvvGNeeUhH3L/zoZTM2yr/Az6uQYpvavSnxdsquWG09kF/pxJD/D9ImQYGMr+DYBqhJkx+B6tNVBkFHisyHXRq3cYAkSApi02s9KNJq5zrhYwzDBiPOn2xPSUKRuAvomozuGLufZQ7Mywfo=
+	t=1782146906; cv=none; b=TmiwR3lqtRaV4TXv7+R08W/D0ehCM+1zeTqbIu8pG8M7ZqSLLJdNGcslDoSDhHpsA2W/KnNk3691LPpvyWdgw+zzvXhs2vYk5dpZQHfcnDHrX4sOFjOyZtc7i1rp653JtfPYFyb6WCywqflaFzIbcaL49tq+vAjcM4DEDIs6yO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782146555; c=relaxed/simple;
-	bh=J6WjMdiSmsSd4l6O9aOiDfddho9ZkXNG7JRLQmJEDtM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwBZHSS1HZgePcqFTS+wHx1+R3hoYr+YpRiwBmduiyg/CpbDVsDcS8PegPSrtgGL/M3Jg1CQtyuZZlgWuH/jHJVr0LL0YssEwYnrcpAQ2K6stMakYOm2a/r41/27ju+gRfhNKFfrnDqr8MF5mjAO9sIYPxLGLMvU1BwDqRhPaVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=XkfXOoDo; arc=none smtp.client-ip=209.85.210.45
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7e93d1dd156so1101647a34.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 09:42:32 -0700 (PDT)
+	s=arc-20240116; t=1782146906; c=relaxed/simple;
+	bh=nPl4d20ypHqRDJbFSq6hvNUyePGiVLKN2Be7HpMX6HI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ze2L4MlQh6EM+iyBH2A/Ex+pXfLKc4RKf4vRWo68Qj+UjUVxGVhkHyKcyeZ99O68JE8gR8zcwQpNFQ+DRv+bvOO5gko3Ib7x6cpFPS1cLqiKszlWe1LR2u+Ppo0NnBQ/iregs62RWZyJ8C6KrwSjzVeJhAjJhd98qP+/x64pubM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaPwKAS1; arc=none smtp.client-ip=209.85.128.42
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49222fb062bso49140155e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 09:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782146552; x=1782751352; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CxdyTp9jzcdAMNgLpztr1n4tuC5ymiq5XeXtaFtDt5o=;
-        b=XkfXOoDoIeHeOYHz5SunNd3ooJzqJMDsD296/xrp4hTwsH2opgLKzXGzdLl1AOlJTC
-         6o/pq5jpRmblqhyeVj/Q3yG+xWB55IBklzNh/1fjf9SRODUFE4pjLECBNeM6VMFM36FT
-         E963Wu1n5tkO7JL4ReUF87s8Z2mm4OfhqGdW8xQD/w2x1Ok0QgknZu2FzITuZhDJ3PEP
-         LHSs4PveSeZkJFgh+nnlUTBFCkoSdTYHxDZuhdSCa3+YpIOodQ+E05VHhi3Ze7kNkUBk
-         U17yNPTfRLDsjJJLU8Xr7FNnfSDWG88Q4NHl4y/+Lzvx67jD1013fDT1aWe/U3jARBDv
-         +7Tg==
+        d=gmail.com; s=20251104; t=1782146903; x=1782751703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KqoLcS7itfev/Efa5/B6w/5mWvavLBCsHyG9p4Lb/70=;
+        b=QaPwKAS1cL08WJltSvhB8ga9uKDyysheeedZdLy2B7NOeKx8MVhA6iUkgB7IQ3Ykgn
+         4Z7MxtmWnz/BC5OcBk6QgB/+lXlUZ9o8YQ6DryS3+P/wlZNuFb7ab8ix/uE3P+6SEuTp
+         3Y8qjLo2tE55batdH9vCAgvMoVousxHrrGFtCyliCSjkIjsaILkMsY/NCA+FW/kON3DJ
+         VEGLGleS0NFBiLebuaRs3XfFthd7i2s/wdF88PPyakft3qfKGxKAjk9cCGFpagjW0cIz
+         sD5ac+T4MmcfMJIuh+EWjjl9ZP1p/XvpiPCupOKhLDzVfiW1zpmgJOSOWfxfZ4T4aKB7
+         Zq1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782146552; x=1782751352;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CxdyTp9jzcdAMNgLpztr1n4tuC5ymiq5XeXtaFtDt5o=;
-        b=Pj+jbH2mgQkuotZbgxaDhjn4Ulv0YwV64fs0Fe6pT2etuwRpqAMs8pK6GgpJ0IBeEg
-         inMGQ5L4t4caT4Dd/1CK+uok5chqRkSE6XtrpQAkGXX8Nbuc7WdNVIo2khU6vYSWqDaC
-         osqRnbjTWDgCH4UuPinY/L5fb5OJIA9bIrTIHe0qHoQL6OQibjf/Ukuv7FCZeS44Pkwi
-         c7QMaMquySuFGq1prJ4W8OD1QbdJbZgxWywgRYSVFku1IcdeGR2UvLcPqZy3xfcUFD2D
-         N4op8uWXQhKYMSRvd4TeUCP3+G21NEEOfCWWUnB0/IOZCNuaqwDFyzyo6EGX/klBXbc9
-         6tTw==
-X-Forwarded-Encrypted: i=1; AFNElJ+0vUkf6/jEnkrk9lSDEvbDmsOce5Qi4dHfHZpKxPxa+P/WvzRrOlRqTAt3Qx+YWLV2655HKeqwqCh3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY9SHFM9J5VwOHnoq/pbaNXkc2mfrQeBUzoCP20+pV0haZEzr1
-	jzn4SF1DelRHKy2vZfVmb5YZ53Pa/zs3O8y/dOEMsWYc8O18PEKCYo6LPquUP4YjNAU=
-X-Gm-Gg: AfdE7cnotVJ515W38CDNmGDJV+i8ZqHlznxbfzRKU6ZmStsCC85TjnMgs0edqQdHz1+
-	E5gjh1QElG6YLq9ytgA2uM9EdKNiD2hIPoVOEeY0AaRbb5g7iL3WLwYhzQFIg2efdevV9T/mAsf
-	71SdnAsNn30o32vFRhmvQaZvkYWpOuLMqLMRgwTRAEeXj1S/tgFemO8aAvI/Bcf12SzLK4wqHVg
-	6NiQq8wRbI1Wm6g6RjgVLPJ5zMJpFA+xNEwruhb6S5A9WF2SM56kUPkuc4krjHCI50FFZNm7UDd
-	sPOBNKvXzp4C0QovJcvfQQ48q1YxQxu4xxu6oBep1PVucrlLnUemACNNrAjWL+Lz31fXPbdo8uZ
-	5PoDm/+st7dPlZZvnCDiKXX1puQqZT7Ci+aGZXKD+RcNrBos7meclXDB/NHTvDmr7JU1rs4Ut8i
-	ymgn8EIqPU6QWkDLfTt+rWUlUDWSPbVsBhpmj7n6Zao8FlNpWwgB11DBL+8ovxk/A=
-X-Received: by 2002:a05:6830:718d:b0:7d7:ea9f:c0f9 with SMTP id 46e09a7af769-7e92d37a1efmr11978490a34.0.1782146552063;
-        Mon, 22 Jun 2026 09:42:32 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf? ([2600:8803:e7e4:500:b69c:5a77:b8fb:a5cf])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7e9442e98c4sm6502970a34.26.2026.06.22.09.42.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2026 09:42:31 -0700 (PDT)
-Message-ID: <4980824f-070d-4da9-a291-5563aec6dd09@baylibre.com>
-Date: Mon, 22 Jun 2026 11:42:30 -0500
+        d=1e100.net; s=20251104; t=1782146903; x=1782751703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KqoLcS7itfev/Efa5/B6w/5mWvavLBCsHyG9p4Lb/70=;
+        b=EvWzKMqgbKXu/KYi+EtVgBtFLQ1OT54FQw4nxfZ3W84rLM3eOHFUgIRHHdwjyOMggl
+         RF/csfg5vcLGPxSQNtvRC+pLCFkluO6ukqD7G6yLaj2a0yUPMUh9k62WdgV/1fywVbN+
+         mGFOmgo1w+QNb9zPXwG10gIh1b7JKxhh4CICxMt3IdwL7C85HIB8C/LsJQe8wKLKLUqJ
+         cISpfsAivKx1wRXWyhqaZmnG1iwHaJeXW7pMKh+oueA6X8aW+J24d+/SL26QPMJC8dnO
+         fbDcrbhD/f/wZbql+ggT0jpk9YnvqGqrGF/jJr6J2j2dk/mOsWub8dOwWjY6Rx5ohw8T
+         qg8w==
+X-Forwarded-Encrypted: i=1; AFNElJ9VVz7LiIoE8naEyzHSvkR3Z12jpi3T8byYK/Kl+jQWVHXzaIbxaJ1HEW4N+WRRveNCeopNtVnls3v9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe+YgsSABWSpADmlsCiuE8KdxvQtCnqn+Px+tEvEpA53NL8Z1Q
+	IRo7dBFDMewT07Vqx9LDpGe2rDwIJgGbi336HSMZpha+dbyKSWKn/27f
+X-Gm-Gg: AfdE7clme/n2I/JHvsbh2Tv+W5/xIoPKcRBvwKSFS4966lo7gL7Rmbiks08X+Ra/qIE
+	GgNyFdA1HeNtXwUB+0UUfKmO4YjGtlN3oDH9OuYnVBS3221lrK9CuhjRMcxprnHTPnJZnGsrO8b
+	sVoGvVtjXIqaDV6TyTfDcTZEPYGgkCZq7BezyHGkjh+VdTBB5qdZg22Mojx++C68ujPRplWOxzQ
+	ZIUzzjI6wOhO8rZfHsptktfAiC3rLHn4V+xVzLb6CGjZnqYdDHgWWDl9LYSkyIzqszWs/C3pLUO
+	4VP6/tGFrW/tON+Y/9OJrSKhVmRsiLDpDsrArIyDHxyMp43dittojJXG9cxiweDBIqhUFQog7j0
+	6EXNvhpbF5ID4nS8AhmL9i9z6KuQQ6eJI0RBfSMWyG6gphiJ099UKWqhGIsaNK5+6JoW1qGEuwv
+	34HgUr92oUAr2cafytJbpt
+X-Received: by 2002:a7b:cb56:0:b0:490:b65f:8b1 with SMTP id 5b1f17b1804b1-49240e22ed1mr166874405e9.5.1782146902628;
+        Mon, 22 Jun 2026 09:48:22 -0700 (PDT)
+Received: from biju.lan ([2a00:23c4:a702:d301:fdf9:c68d:5fce:b1ef])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-466643f56aasm27433872f8f.6.2026.06.22.09.48.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 09:48:21 -0700 (PDT)
+From: Biju <biju.das.au@gmail.com>
+X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH v18 0/4] Add SDHI support for RZ/G3L SoC
+Date: Mon, 22 Jun 2026 17:48:10 +0100
+Message-ID: <20260622164819.184674-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] iio: adc: Add ti-ads1262 driver
-To: Jonathan Cameron <jic23@kernel.org>, Kurt Borja <kuurtb@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20260612-ads126x-v1-0-894c788d03ed@gmail.com>
- <20260612-ads126x-v1-2-894c788d03ed@gmail.com>
- <20260613-sparkling-naughty-tuna-3e9bf1@quoll>
- <DJ92M0ZMSI2C.2I39LHFRNQS7W@gmail.com>
- <a994993e-7459-48a2-a8d7-823c1b0c9545@kernel.org>
- <20260621153318.4a723e3b@jic23-huawei> <DJF5ATR2RPDJ.3LSN8DY58E6RO@gmail.com>
- <20260622104728.039a5ea2@jic23-huawei>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260622104728.039a5ea2@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-38820-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:geert+renesas@glider.be,m:linusw@kernel.org,m:magnus.damm@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:biju.das.jz@bp.renesas.com,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:biju.das.au@gmail.com,m:geert@glider.be,m:magnusdamm@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:bijudasau@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com];
+	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:jic23@kernel.org,m:kuurtb@gmail.com,m:krzk@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:nuno.sa@analog.com,m:andy@kernel.org,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
-	DMARC_NA(0.00)[baylibre.com];
-	FORGED_SENDER(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-38819-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_SENDER(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,bp.renesas.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 131A46B136D
+X-Rspamd-Queue-Id: 829446B1447
 
-On 6/22/26 4:47 AM, Jonathan Cameron wrote:
-> On Sun, 21 Jun 2026 19:18:33 -0500
-> "Kurt Borja" <kuurtb@gmail.com> wrote:
-> 
->> On Sun Jun 21, 2026 at 9:33 AM -05, Jonathan Cameron wrote:
->>> On Mon, 15 Jun 2026 06:30:28 +0200
->>> Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>  
->>>> On 14/06/2026 22:56, Kurt Borja wrote:  
->>>>> On Sat Jun 13, 2026 at 1:59 PM -05, Krzysztof Kozlowski wrote:
->>>>>
->>>>> [...]
->>>>>     
->>>>>> Functions used by probe() should be before probe(), not somewhere in the
->>>>>> middle of the code. IOW, entire probe is together.    
->>>>>
->>>>> I they all are, it's just that regmap stuff takes a huge chunk. I'll
->>>>> check how to reorganize.
->>>>>
->>>>> [...]
->>>>>     
->>>>>>> +static const struct of_device_id ads1262_of_match[] = {
->>>>>>> +	{ .compatible = "ti,ads1262" },
->>>>>>> +	{ .compatible = "ti,ads1263" },    
->>>>>>
->>>>>> So devices are fully compatible? Then it should be expressed in the
->>>>>> binding and drop one entry here.    
->>>>>
->>>>> Not fully compatible as Jonathan said. One is a subset of the other.    
->>>>
->>>> This is THE meaning of compatible!  
->>>
->>> This one I'm in agreement with. It is a strict subset, so should be
->>> using a fallback.  If the fallback is used, you just get support of the
->>> stuff in the simpler chip (or if you can override it with a chip ID
->>> you might still 'upgrade' to the more complex driver support).
->>> If you do end up with properties that only apply to 'new' parts of
->>> the more complex chip then they should be verified as part of the
->>> binding (assuming you can do that without the verifier complaining
->>> - I haven't checked!)  
->>
->> In v1 I had the "adc" subnode which was specific to ADS1263. Then I
->> agreed to drop the subnode but I'm having second thoughts...
->>
->> If we dropped it, then we would still have some specific stuff.
->> #io-channel-cells would be "const: 2" in ADS1263 chips. Also ADS1263's
->> channels would have an extra ti,vref-adc2 prop, for ADC2 voltage
->> reference selection. I should maybe also add a vref-adc2-supply.
->>
->> Maybe it's better to keep the subnode or, again, go for something like:
->>
->>     spi {
->>         multi-adc@0 {
->>             adc@0 {
->>                 ...
->>                 vref-suppy = <&adc1-vref>;
->>
->>                 channel@0 {
->>                     ...
->>                     reference-source = <ADS1262_VREF_AIN0_AIN1>;
->>                 };
->>             };
->>             adc@1 {
->>                 ...
->>                 vref-suppy = <&adc2-vref>;
->>
->>                 channel@0 {
->>                     ...
->>                     reference-source = <ADS1262_VREF_AIN2_AIN3>;
->>                 };
->>             };
->>         };
->>     };
->>
->> In this case we would have to kinda duplicate channel description, but I
->> don't think it's that bad.
->>
->> Jonathan, Krzysztof, David, thoughts?
->>
->> IMO the ADC2 specific voltage reference stuff is a strong argument for a
->> subnode or the above solution.
-> 
-> Given you end up with channel specific stuff that differs I think it probably
-> makes sense - though I do wonder a bit if that is real.  What's the use case
-> for using a different reference for the monitoring / debug than the main one?
-> I could imagine some dynamic use where you want to sanity check against
-> a wider reference range, but maybe that needs userspace control rather than
-> in here?  
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
+This series adds pin control and device tree support for the three
+SDHI (SD/MMC host interface) controllers on the Renesas RZ/G3L SoC
+(r9a08g046), and enables them on the RZ/G3L SMARC EVK platform.
 
-I think is is going to mostly be the same, so could be simpler to just
-add extra channel properties on an as-needed basis if things do actually
-differ between ADC1 and ADC2 rather than having to define all channels
-twice.
+This patch series depend on [1]
+[1] https://lore.kernel.org/all/20260622155610.184271-1-biju.das.jz@bp.renesas.com/
 
-This seems pretty similar to the discussion of how to handle e.g. measuring
-the same inputs with and without the burn-out current enabled in the
-ti,ads112c14 series and I think you have convinced me that we should not
-be having a separate channel in the devicetree for that either.
+v18:
+ * Split from patch series [2]
+ * Moved sd_ch2 variable near to sd_ch[].
+ 
+[2] https://lore.kernel.org/all/20260603065731.93243-1-biju.das.jz@bp.renesas.com/
 
-> 
-> Jonathan
-> 
-> 
->>
->>>
->>> The SLF3F discussion is about (to me) less obvious case of not a strict
->>> subset, but rather being detectable parts with different channel related
->>> properties.  In that case the ID match is necessary for anything to work.
->>> Anyhow, that discussion is in a different thread and not really relevant
->>> here.
->>>
->>> Jonathan
->>>  
->>>>
->>>>
->>>> Best regards,
->>>> Krzysztof  
->>
-> 
+Biju Das (4):
+  pinctrl: renesas: rzg2l: Add SD channel POC support for RZ/G3L
+  arm64: dts: renesas: r9a08g046: Add SDHI nodes for RZ/G3L SoC and
+    SDHI1 pincontrol on SMARC EVK
+  arm64: dts: renesas: rzg3l-smarc-som: Enable SD/eMMC on SDHI0
+  arm64: dts: renesas: rzg3l-smarc-som: Enable SDHI2
+
+ arch/arm64/boot/dts/renesas/r9a08g046.dtsi    |  73 ++++++-
+ .../boot/dts/renesas/r9a08g046l48-smarc.dts   |  89 ++++++++
+ .../boot/dts/renesas/rzg3l-smarc-som.dtsi     | 199 ++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       |  74 ++++---
+ 4 files changed, 410 insertions(+), 25 deletions(-)
+
+-- 
+2.43.0
 
 
