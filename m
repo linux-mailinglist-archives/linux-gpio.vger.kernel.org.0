@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-38816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38817-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id WqdNFmNVOWr/qgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38816-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 17:31:47 +0200
+	id NoP6J4FVOWoFqwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38817-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 17:32:17 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEE3F6B0BF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 17:31:46 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30E676B0C06
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 17:32:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38816-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38816-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38817-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38817-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4724E3015878
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 15:31:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 73658300CD95
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 15:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642143921D8;
-	Mon, 22 Jun 2026 15:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 391C5395AEE;
+	Mon, 22 Jun 2026 15:32:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715B91F151C;
-	Mon, 22 Jun 2026 15:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF492FBE1F;
+	Mon, 22 Jun 2026 15:32:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782142304; cv=none; b=a23oJ67tFCLmKhpRDU9Ick0glEOMYMn6J6y5QP/rgy9y5TMBWzYWI1GqsKC4sIHSFsGHAGgKO1oF+27aKxCfck/cmZzV8FIr1dtMePpBVJAYhka+s5PWHRxtY2KY+XATBH15iTwQa8J2JVHi9ms6okaK5+0IaDsj16ej+l5Lrbo=
+	t=1782142331; cv=none; b=FLH/JfI9F4GstQoCudkoT5S1uU1T/kzCrWPhPW9XDeeSIWh9bslY5FZ9z8WemXLAKoxY7OUo6QSrTCdHmSQYhxyrFQ+s4kk2rQN9AAImb1l46izsKVEhJ2sJUpAJ5a4RMCKBvy7oablykPdb96IXsqsD67hm/IocLgNF088HsMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782142304; c=relaxed/simple;
-	bh=GSie2a2FMZOEVltZWnoQtKvlxe6+GFi5uktRFEVucMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LVdcZRiMGRATOqE5/KjSaWeWkQBq9pMFZLxKWkHLTH4mCSnzLEuEeqVhRWwycSxO1Sar0yBJr5UUIj224Vh/0Uv65zHdBFtple0TEgd/6gqx9OSHChqrPhYySSPXUKl5WxNqHBk0QDZCXKAEsEX92wxxJwEmLebUMARWta9IA8A=
+	s=arc-20240116; t=1782142331; c=relaxed/simple;
+	bh=Ieu1iimoY94xI4dMflraDhRZbBklcAzRW07CGtPdvmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WpKznlPyOvYhCXk4vvLTUrhmcs+/kfvbKLqCkDlyNwYhrhRHbd5rNikROK82uCq0JEuHJuIfbjM0ldvAisfy99iPGfpaAEw0O3Z9gUor5CFvNvHpDBplWzyfxEDx0I7jjWLTwvclFwSPu8p5+AL71fJxEBE5WN5z3n7uA5yVdMI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
 Received: from localhost.localdomain (unknown [111.196.245.140])
-	by APP-01 (Coremail) with SMTP id qwCowABnCdJcVTlqcrrBAg--.27136S2;
-	Mon, 22 Jun 2026 23:31:40 +0800 (CST)
+	by APP-01 (Coremail) with SMTP id qwCowACnQMl2VTlqILzBAg--.32362S2;
+	Mon, 22 Jun 2026 23:32:06 +0800 (CST)
 From: Pengpeng Hou <pengpeng@iscas.ac.cn>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	pengpeng@iscas.ac.cn
-Subject: [PATCH v2] gpio: mvebu: fail probe if gpiochip registration fails
-Date: Mon, 22 Jun 2026 23:31:37 +0800
-Message-ID: <20260622153137.69065-1-pengpeng@iscas.ac.cn>
+Subject: [PATCH v2] gpio: htc-egpio: use managed gpiochip registration
+Date: Mon, 22 Jun 2026 23:32:04 +0800
+Message-ID: <20260622153204.72071-1-pengpeng@iscas.ac.cn>
 X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -53,29 +53,29 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABnCdJcVTlqcrrBAg--.27136S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4UCr4UXFWfKw1UGr18Grg_yoWktrg_uw
-	1FkrWUKw1DKF4DXw17A3ySvr4Svr1DuFn7ur4kKw45AryUurn5uFZF9FsxGr4UXws7Kr98
-	Cr45uF4fAwnxCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
-	Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUDpnQUUUUU=
+X-CM-TRANSID:qwCowACnQMl2VTlqILzBAg--.32362S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw45ArW8ur15uFy8tw18Zrb_yoW8Wr4xpa
+	ykW3yrKrWjgw42q3yUAFs5Ca4F9a42qr47trykKw48Zr15K34ktF4rAayUXryUJrWkCa13
+	tF40vrW8CF4kZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5oGQDUUUU
 X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [0.04 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	DMARC_NA(0.00)[iscas.ac.cn];
 	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:pengpeng@iscas.ac.cn,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-38816-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38817-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[pengpeng@iscas.ac.cn,linux-gpio@vger.kernel.org];
@@ -98,44 +98,53 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	R_DKIM_NA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,iscas.ac.cn:email,iscas.ac.cn:mid,iscas.ac.cn:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CEE3F6B0BF8
+X-Rspamd-Queue-Id: 30E676B0C06
 
-mvebu_gpio_probe() registers the GPIO chip with devm_gpiochip_add_data()
-but ignores the return value.  If registration fails, probe continues and
-leaves later code operating on a GPIO chip that was never published to
-gpiolib.
+egpio_probe() registers each nested gpio_chip with gpiochip_add_data()
+but ignores the return value.  If one registration fails, probe still
+returns success even though one of the chips was not published to gpiolib.
 
-Return the registration error so the device fails probe cleanly.
+Use devm_gpiochip_add_data() and fail probe if any chip registration
+fails.  This lets devres unwind already registered chips and prevents the
+driver from publishing a partially initialized device.
 
 Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
 ---
 Changes since v1:
 - Use dev_err_probe() for the gpiochip registration failure as requested by
-  Linus Walleij.
+  Bartosz Golaszewski.
 
- drivers/gpio/gpio-mvebu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-htc-egpio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 31d880fd7b87..e92f499e3201 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -1217,7 +1217,10 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 		BUG();
+diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
+index 6b54474dc81c..17ca04b389cf 100644
+--- a/drivers/gpio/gpio-htc-egpio.c
++++ b/drivers/gpio/gpio-htc-egpio.c
+@@ -263,6 +263,7 @@ static int __init egpio_probe(struct platform_device *pdev)
+ 	struct gpio_chip  *chip;
+ 	unsigned int      irq, irq_end;
+ 	int               i;
++	int               ret;
+ 
+ 	/* Initialize ei data structure. */
+ 	ei = devm_kzalloc(&pdev->dev, sizeof(*ei), GFP_KERNEL);
+@@ -340,7 +341,10 @@ static int __init egpio_probe(struct platform_device *pdev)
+ 		chip->base            = pdata->chip[i].gpio_base;
+ 		chip->ngpio           = pdata->chip[i].num_gpios;
+ 
+-		gpiochip_add_data(chip, &ei->chip[i]);
++		ret = devm_gpiochip_add_data(&pdev->dev, chip, &ei->chip[i]);
++		if (ret)
++			return dev_err_probe(&pdev->dev, ret,
++					     "failed to register gpiochip %d\n", i);
  	}
  
--	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
-+	err = devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err,
-+				     "failed to register gpiochip\n");
- 
- 	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
- 	if (IS_REACHABLE(CONFIG_PWM)) {
+ 	/* Set initial pin values */
 -- 
 2.50.1
 
