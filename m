@@ -1,340 +1,218 @@
-Return-Path: <linux-gpio+bounces-38821-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38822-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id o/2ABvxnOWqUrwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38821-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:51:08 +0200
+	id MJeZMvFnOWqOrwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38822-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:50:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E1036B147B
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:51:07 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E78D6B146E
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 18:50:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=DgzVwnJT;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38821-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38821-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TdiEOuR3;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38822-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38822-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E446030451D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 16:48:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5A1B0302BB82
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 16:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97BF733E37C;
-	Mon, 22 Jun 2026 16:48:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 869AA33D6EA;
+	Mon, 22 Jun 2026 16:50:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B5E33A9CB
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 16:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3042C21C7;
+	Mon, 22 Jun 2026 16:50:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782146908; cv=none; b=Y2MCzFvFDBAFCCFdw8aleWL76cQQaGxk4JwINjnXyCpqSds9jgCk6HAs09uiTWcqx4lY5SckBIFDFBQSNrEYPAEt8WqYtTUiJ8NAutqZeCwqpDVrn5xYiYLorx5x8t8dDWa2Bm0TUwBpZ51ZRBEncONAVrc/keAvkbaFkxjUCVg=
+	t=1782147041; cv=none; b=eqIBiaG/mG2MTj1hGJ5SZP4DdwYkcuiglX+WXSrQr0tqkSw1dKALFMpxQPoQ5CC+zYsy1D9txG5dQB2gcVkLmMN0jrQtZ4gFfeULofcYq87ZAFe8i/w+sTqhSuHSHzbkbPpprDNqOPgoCUP2UKAp3psGlJLQ/D5CxeRXN4yn4YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782146908; c=relaxed/simple;
-	bh=xUNQIjnSZppBkS+lS4ZuH5bYQreeyckf9JRy/kIPlvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=riOw6mDFadurCAFRvROh6OO74/ZE7u/fxOzjbj7PxGbnWWquvu2pPf8IYYZyU8n8QPxM1aBtjAurRX8alFamBH17dZUs3P6/mdgnroJboiAL9HX3vrLxu5rhqvCqVt/IO0a2JupUHvnlm1ovIu2BcOoXHVCirCBpccI1MPW+VbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgzVwnJT; arc=none smtp.client-ip=209.85.221.51
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-460166910e6so2608498f8f.2
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2026 09:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782146904; x=1782751704; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=THfROfJGs5QY5jEt58vDISmT0BK25AYjx+848LeMMAs=;
-        b=DgzVwnJTpprg3Sls15Uziiy/yQa/AVhaLVpg5gG0e032gCu5QTkdjJZwBYvAUYdqUP
-         2IUQ9jGAazCjNq9L6fgED/q/lv6kUg68jYv46HnGD+4YmwHlk8VhEAZneRe7+rWyQhAl
-         9bnlDZD3BtOflQh1OLU42Wtdlb87XSjNeVu+8Sfr524upDBDhx4QNMuoRKGKXfIdCzkp
-         /ZY7UkJMzMJlfpnVsAqPpK4JpuhMQpreDqWOAWVQYja4Bi4sg0iIKIZsExugxqADrXsW
-         0X4TFAWSgEebRkz0D/5nd+viLgoqic+6dtN/ut2GcWt51vGQdyfl7OuL2DvBZToX0vyW
-         zK+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782146904; x=1782751704;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=THfROfJGs5QY5jEt58vDISmT0BK25AYjx+848LeMMAs=;
-        b=VzAdOXNLpgsDHbP8WQZ5Pg2poFALd5WUSe6Mz6++B/CdtK/9ze64xRVK47K0tSLMiV
-         qeHKCiCMKxrIC3KdjpZt/xK7H1Wq0DeYwD+mNOqa2IKaTYgxzWUPW3AG1RSkwXFqrsH7
-         Jck/K3EXqURgihR5Ko2cYNEA+fSgiYow3FjXNWM/kMbcPWcskxVcccEDu92m6jhbv+Bo
-         vDIvFUq2Xi71ZNlSyHj6XrnMzR2JMPk4mmhgeGj0eA9Rs+gBBzH4lnJHdGCfi/CDXF8c
-         PU44HbNnsF24H9yIGgd6nGcm25Po6Lkn+2UUebPVmMDuqwwi2kkmlLwRj9MtYY9TDnZx
-         BfkA==
-X-Forwarded-Encrypted: i=1; AHgh+RppOVd4vjOFVS9o3C8BNkrtwDjV6bQTXOd7dj12e8oaZLaU487hXbil9VyNh437Tgz3wJE5VpU3bx8n@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdSjgzMjJvWkqkpdp7xHE0XAVzQqxJdxkpehpFN8Q6HHomHn4U
-	3naJNw2Sc9vSeN1rLXl9JQAsCUC7DmBjSlRYYY5XB3JEawwaIjv1ToS6
-X-Gm-Gg: AfdE7cl2EhLgXVJ141GYI9O7XbtEzwEG+bit9hIHOqnJwEjOPVKR56sd3lkLWCPkNVj
-	Ju+/ZaDXytIEk7Yj3df/7DsHSdNofl/du+EobJck9O8XVi4AlAuB1C4R78kg9YBitIVJF72XxAv
-	jks9dASRX6xBPiXo8e8E06HAqNBxm5qMnYe3eErGdwHuls34VxOUXc07JtxiQfSqfe12vpPY2cH
-	k5Z/hm5z2ni9dooGOFvttzqeKsMR+8mTs665P4Ik3r67/H+o8+CINYNQlUjqrRM7TxaCC4mXoba
-	cBx+CBzk9p5gQuSsCjuj14BSx21W/iUaB4p2OLMGj+zL8F6qg9cH2dlB7Xx4EDdJzcgkq+i/ova
-	9tw0ziSbEiqpRsv/zkqtaJvvb7I1fmxdReGF6FddmsnrXxWhBf6Zjkn3KTFD00T2c1rKDbSogD8
-	onJUmmTFt0YVOPzY4umPEC
-X-Received: by 2002:a5d:64e7:0:b0:460:edd:ca89 with SMTP id ffacd0b85a97d-46502baf740mr24475241f8f.26.1782146903828;
-        Mon, 22 Jun 2026 09:48:23 -0700 (PDT)
-Received: from biju.lan ([2a00:23c4:a702:d301:fdf9:c68d:5fce:b1ef])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-466643f56aasm27433872f8f.6.2026.06.22.09.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2026 09:48:23 -0700 (PDT)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v18 1/4] pinctrl: renesas: rzg2l: Add SD channel POC support for RZ/G3L
-Date: Mon, 22 Jun 2026 17:48:11 +0100
-Message-ID: <20260622164819.184674-2-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260622164819.184674-1-biju.das.jz@bp.renesas.com>
-References: <20260622164819.184674-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1782147041; c=relaxed/simple;
+	bh=JCsAnCKSCGIzOul+9K7QDhmU/8+tMp4yJTDsnabDyPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jJizMnPe9e3vaK9+r/JgvwU0+sIiZSkwKc1L2V1zptolKZ0JfSMmlrVqFyEIuN9hXfFz01WvBwCghrkfmUblgG4t4C+CeNLS/p7fRQJVnlQ9zZEcKsLFfXMbZxPmUwogDFMWtqbU4SdrMm9ll6Yh9gmzRy1ztHJxlz/jTLSgyDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdiEOuR3; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A898E1F000E9;
+	Mon, 22 Jun 2026 16:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782147039;
+	bh=JCsAnCKSCGIzOul+9K7QDhmU/8+tMp4yJTDsnabDyPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=TdiEOuR38PfO/JHs84E85gCdwBYKdEwvGwn64x1QP3HF3u3b4f9/yczqdqAUPRAKj
+	 0N54McxrC1CqIkz+RB/iKUMdq4r+3nagg7bu5NO0mrFF8QCB85dhID2TvQmeOhAgzD
+	 feLz+1l7UD8MQHh4Pgnqo2bob7WoBedV8/HuVNjHzrAYvlizZpsYI4GLCaVX58LDu5
+	 61fqs0E/c1KgBRA1Y6OBgPHrFeNGZ4VJ/YuEnxsbWhNbFPvWiz9A9MckTXn+xz0QEs
+	 lfquX/fHU9mENWGrPxgWasMlwzELb5AqiWdewxzyfFJ65y6N4dcnWJPBQ7J9MnU+HL
+	 +NMAXZJ7MqSXg==
+Date: Mon, 22 Jun 2026 17:50:21 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Brian Masney <bmasney@redhat.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Inki Dae <inki.dae@samsung.com>,
+	Seung-Woo Kim <sw0312.kim@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Georgi Djakov <djakov@kernel.org>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Hans Verkuil <hverkuil@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Ulf Hansson <ulfh@kernel.org>, Peter Rosin <peda@lysator.liu.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Javier Martinez Canillas <javier@dowhile0.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Jonathan Marek <jonathan@marek.ca>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Robert Marko <robimarko@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Stephan Gerhold <stephan@gerhold.net>,
+	Adam Skladowski <a_skl39@protonmail.com>,
+	Sireesh Kodali <sireeshkodali@protonmail.com>,
+	Barnabas Czeman <barnabas.czeman@mainlining.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	Anusha Rao <quic_anusha@quicinc.com>,
+	Luo Jie <quic_luoj@quicinc.com>,
+	Tomasz Figa <tomasz.figa@gmail.com>,
+	Chanho Park <chanho61.park@samsung.com>,
+	Sunyeal Hong <sunyeal.hong@samsung.com>,
+	Shin Son <shin.son@samsung.com>,
+	Krishna Manikandan <quic_mkrishn@quicinc.com>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alina Yu <alina_yu@richtek.com>, Andy Gross <agross@kernel.org>,
+	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Drop incorrect usage of double
+ '::'
+Message-ID: <20260622-awkward-superman-77c1820980fd@spud>
+References: <20260622101606.485961-3-krzysztof.kozlowski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ekjFkzmEIYkrCPca"
+Content-Disposition: inline
+In-Reply-To: <20260622101606.485961-3-krzysztof.kozlowski@oss.qualcomm.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.26 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38821-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38822-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:geert+renesas@glider.be,m:linusw@kernel.org,m:biju.das.jz@bp.renesas.com,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:biju.das.au@gmail.com,m:geert@glider.be,m:bijudasau@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:krzysztof.kozlowski@oss.qualcomm.com,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:peter.griffin@linaro.org,m:alim.akhtar@samsung.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:s.nawrocki@samsung.com,m:cw00.choi@samsung.com,m:semen.protsenko@linaro.org,m:robin.clark@oss.qualcomm.com,m:lumag@kernel.org,m:abhinav.kumar@linux.dev,m:jesszhan0024@gmail.com,m:sean@poorly.run,m:marijn.suijten@somainline.org,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:inki.dae@samsung.com,m:sw0312.kim@samsung.com,m:kyungmin.park@samsung.com,m:andi.shyti@kernel.org,m:djakov@kernel.org,m:lee@kernel.org,m:pavel@kernel.org,m:hverkuil@kernel.org,m:mchehab@kernel.org,m:ulfh@kernel.org,m:peda@lysator.liu.se,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:linusw@kernel.org,m:geert+renesas@glider.be,m:magnus.damm@gmail.com,m:sr
+ e@kernel.org,m:javier@dowhile0.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:gregkh@linuxfoundation.org,m:jirislaby@kernel.org,m:srini@kernel.org,m:bzolnier@gmail.com,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jonathan@marek.ca,m:quic_tdas@quicinc.com,m:robimarko@gmail.com,m:ansuelsmth@gmail.com,m:stephan@gerhold.net,m:a_skl39@protonmail.com,m:sireeshkodali@protonmail.com,m:barnabas.czeman@mainlining.org,m:quic_imrashai@quicinc.com,m:quic_srichara@quicinc.com,m:quic_anusha@quicinc.com,m:quic_luoj@quicinc.com,m:tomasz.figa@gmail.com,m:chanho61.park@samsung.com,m:sunyeal.hong@samsung.com,m:shin.son@samsung.com,m:quic_mkrishn@quicinc.com,m:jacek.anaszewski@gmail.com,m:jh80.chung@samsung.com,m:m.szyprowski@samsung.com,m:alina_yu@richtek.com,m:agross@kernel.org,m:niklas.soderlund@ragnatech.se,m:quic_wcheng@quicinc.com,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.i
+ nfradead.org,m:linux-samsung-soc@vger.kernel.org,m:linux-clk@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:freedreno@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-phy@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-serial@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-usb@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linaro.org,samsung.com,baylibre.com,redhat.com,oss.qualcomm.com,linux.dev,gmail.com,poorly.run,somainline.org,ffwll.ch,linux.intel.com,suse.de,lysator.liu.se,glider.be,dowhile0.org,linuxfoundation.org,intel.com,arm.com,marek.ca,quicinc.com,gerhold.net,protonmail.com,mainlining.org,richtek.com,ragnatech.se,vger.kernel.org,lists.infradead.org,lists.freedesktop.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[96];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,bp.renesas.com:mid,renesas.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,microchip.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,spud:mid,yaml.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7E1036B147B
+X-Rspamd-Queue-Id: 6E78D6B146E
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
 
-Add power-on control (POC) support for SD channels 1 and 2 on the RZ/G3L
-SoC (r9a08g046).
+--ekjFkzmEIYkrCPca
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Introduce PIN_CFG_IO_VMC_SD2 capability flag (bit 22) and SD_CH2_POC
-register offset (0x3024). Extend rzg2l_caps_to_pwr_reg() to return
-SD_CH2_POC when PIN_CFG_IO_VMC_SD2 is set.
+On Mon, Jun 22, 2026 at 12:16:07PM +0200, Krzysztof Kozlowski wrote:
+> There is no use of double colon '::' in YAML. OTOH, the literal style
+> block, e.g. using '|' treats all characters as content [1] therefore
+> single use of ':' in descriptions is perfectly fine, whenever '|' is
+> used.
+>=20
+> Cleanup existing code, so the confusing style won't be re-used in new
+> contributions.
+>=20
+> Link: https://yaml.org/spec/1.2.2/#literal-style [1]
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Replace RZG3L_MPXED_PIN_FUNCS() with RZG2L_MPXED_COMMON_PIN_FUNCS() for
-port PG and PH pins, dropping PIN_CFG_SOFT_PS which is inappropriate for
-SD pins, and annotate them with PIN_CFG_IO_VMC_SD1 and PIN_CFG_IO_VMC_SD2
-respectively.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Annotate all RZ/G3L SD0 dedicated pins (CLK, CMD, RST#, DS, DAT0–DAT7)
-with PIN_CFG_IO_VMC_SD0 so that power-source register lookups work
-correctly for those pins.
+--ekjFkzmEIYkrCPca
+Content-Type: application/pgp-signature; name=signature.asc
 
-Add sd_ch2 field to rzg2l_register_offsets and rzg2l_pinctrl_reg_cache to
-save and restore the SD_CH2_POC register across suspend/resume cycles.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v17->v18:
- * Moved sd_ch2 variable near to sd_ch[].
-v1->v17:
- * No change.
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 74 +++++++++++++++++--------
- 1 file changed, 50 insertions(+), 24 deletions(-)
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCajlnzQAKCRB4tDGHoIJi
+0pm4AQDVA6W42Jd2yOWiv511GaumWdq9efHBBIFcwF+PLR8AcQD/U21p7Opovpsk
+KXGBfmks88NdCaBeEYOnPhOQGN7PYwA=
+=rDEr
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index be52d47d77ae..e3e24ce917c9 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -69,6 +69,7 @@
- #define PIN_CFG_PVDD1833_OTH_AWO_POC	BIT(19) /* known on RZ/G3L only */
- #define PIN_CFG_PVDD1833_OTH_ISO_POC	BIT(20) /* known on RZ/G3L only */
- #define PIN_CFG_WDTOVF_N_POC		BIT(21) /* known on RZ/G3L only */
-+#define PIN_CFG_IO_VMC_SD2		BIT(22) /* known on RZ/G3L only */
- 
- #define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
- #define RZG2L_VARIABLE_CFG		BIT_ULL(62)	/* Variable cfg for port pins */
-@@ -254,6 +255,7 @@ static const struct pin_config_item renesas_rzv2h_conf_items[] = {
-  * struct rzg2l_register_offsets - specific register offsets
-  * @pwpr: PWPR register offset
-  * @sd_ch: SD_CH register offset
-+ * @sd_ch2: SD_CH2_POC register offset
-  * @eth_poc: ETH_POC register offset
-  * @oen: OEN register offset
-  * @qspi: QSPI register offset
-@@ -262,6 +264,7 @@ static const struct pin_config_item renesas_rzv2h_conf_items[] = {
- struct rzg2l_register_offsets {
- 	u16 pwpr;
- 	u16 sd_ch;
-+	u16 sd_ch2;
- 	u16 eth_poc;
- 	u16 oen;
- 	u16 qspi;
-@@ -368,6 +371,7 @@ struct rzg2l_pinctrl_pin_settings {
-  * @nod: NOD registers cache
-  * @clone: Clone register cache
-  * @sd_ch: SD_CH registers cache
-+ * @sd_ch2: SD_CH2_POC registers cache
-  * @eth_poc: ET_POC registers cache
-  * @oen: Output Enable register cache
-  * @other_poc: OTHER_POC register cache
-@@ -386,6 +390,7 @@ struct rzg2l_pinctrl_reg_cache {
- 	u32	*nod[2];
- 	u32	clone;
- 	u8	sd_ch[2];
-+	u8	sd_ch2;
- 	u8	eth_poc[2];
- 	u8	oen;
- 	u8	other_poc;
-@@ -474,20 +479,32 @@ static const u64 r9a08g046_variable_pin_cfg[] = {
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 5, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 6, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PE, 7, RZG3L_MPXED_ETH_PIN_FUNCS(ETH1)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 0, RZG3L_MPXED_PIN_FUNCS(B)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 1, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 2, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 3, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 4, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 5, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 0, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 1, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 2, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 3, RZG2L_MPXED_COMMON_PIN_FUNCS(B) | PIN_CFG_IEN |
-+				    PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 4, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 5, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 6, RZG3L_MPXED_PIN_FUNCS_POC(B, ISO)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PG, 7, RZG3L_MPXED_PIN_FUNCS_POC(B, ISO)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 0, RZG3L_MPXED_PIN_FUNCS(B)),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 1, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 2, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 3, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 4, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
--	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 5, RZG3L_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 0, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 1, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 2, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 3, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 4, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
-+	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PH, 5, RZG2L_MPXED_COMMON_PIN_FUNCS(B) |
-+				    PIN_CFG_IEN | PIN_CFG_IO_VMC_SD2),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 0, RZG3L_MPXED_PIN_FUNCS(A) | PIN_CFG_IEN),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 1, RZG3L_MPXED_PIN_FUNCS(A)),
- 	RZG2L_VARIABLE_PIN_CFG_PACK(RZG3L_PJ, 2, RZG3L_MPXED_PIN_FUNCS(A)),
-@@ -1053,6 +1070,8 @@ static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs,
- 		return SD_CH(regs->sd_ch, 0);
- 	if (caps & PIN_CFG_IO_VMC_SD1)
- 		return SD_CH(regs->sd_ch, 1);
-+	if (caps & PIN_CFG_IO_VMC_SD2)
-+		return regs->sd_ch2;
- 	if (caps & PIN_CFG_IO_VMC_ETH0)
- 		return ETH_POC(regs->eth_poc, 0);
- 	if (caps & PIN_CFG_IO_VMC_ETH1)
-@@ -2677,28 +2696,28 @@ static const struct rzg2l_dedicated_configs rzg3l_dedicated_pins[] = {
- 	  (PIN_CFG_IOLH_A | PIN_CFG_PUPD | PIN_CFG_PVDD1833_OTH_AWO_POC)) },
- 	{ "SCIF0_TXD", RZG2L_SINGLE_PIN_PACK(0x6, 1,
- 	  (PIN_CFG_IOLH_A | PIN_CFG_PUPD | PIN_CFG_PVDD1833_OTH_AWO_POC)) },
--	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0, PIN_CFG_IOLH_B) },
-+	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0, PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0) },
- 	{ "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x9, 1,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
--	{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x9, 2, PIN_CFG_IOLH_B) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
-+	{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x9, 2, PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0) },
- 	{ "SD0_DS", RZG2L_SINGLE_PIN_PACK(0x9, 5,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT0", RZG2L_SINGLE_PIN_PACK(0x0a, 0,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT1", RZG2L_SINGLE_PIN_PACK(0x0a, 1,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT2", RZG2L_SINGLE_PIN_PACK(0x0a, 2,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT3", RZG2L_SINGLE_PIN_PACK(0x0a, 3,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT4", RZG2L_SINGLE_PIN_PACK(0x0a, 4,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT5", RZG2L_SINGLE_PIN_PACK(0x0a, 5,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT6", RZG2L_SINGLE_PIN_PACK(0x0a, 6,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- 	{ "SD0_DAT7", RZG2L_SINGLE_PIN_PACK(0x0a, 7,
--	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	  (PIN_CFG_IOLH_B | PIN_CFG_IEN | PIN_CFG_PUPD | PIN_CFG_IO_VMC_SD0)) },
- };
- 
- static const u32 r9a08g046_clone_channel_data[] = {
-@@ -3672,6 +3691,9 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
- 			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
- 	}
- 
-+	if (regs->sd_ch2)
-+		cache->sd_ch2 = readb(pctrl->base + regs->sd_ch2);
-+
- 	if (regs->qspi)
- 		cache->qspi = readb(pctrl->base + regs->qspi);
- 	cache->oen = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
-@@ -3724,6 +3746,9 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
- 	rzg2l_oen_write_with_pwpr(pctrl, cache->oen);
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-+	if (regs->sd_ch2)
-+		writeb(cache->sd_ch2, pctrl->base + regs->sd_ch2);
-+
- 	for (u8 i = 0; i < 2; i++) {
- 		if (regs->sd_ch)
- 			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
-@@ -3791,6 +3816,7 @@ static const struct rzg2l_hwcfg rzg3l_hwcfg = {
- 	.regs = {
- 		.pwpr = 0x3000,
- 		.sd_ch = 0x3004,
-+		.sd_ch2 = 0x3024,
- 		.eth_poc = 0x3010,
- 		.oen = 0x3018,
- 		.other_poc = OTHER_POC,
--- 
-2.43.0
-
+--ekjFkzmEIYkrCPca--
 
