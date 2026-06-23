@@ -1,223 +1,145 @@
-Return-Path: <linux-gpio+bounces-38823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EXBlKmidOWqevgcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38823-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 22:39:04 +0200
+	id SmnrNgXwOWq0zAcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38824-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 04:31:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 097516B2510
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 22:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1AF86B38C9
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 04:31:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=collabora.com header.s=zohomail header.b=ftenAF2p;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38823-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38823-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=collabora.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=163.com header.s=s110527 header.b=R5SfRqwH;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38824-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38824-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=163.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E12F303CC1E
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2026 20:38:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 456443027B45
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 02:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24ED358373;
-	Mon, 22 Jun 2026 20:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EF230E853;
+	Tue, 23 Jun 2026 02:31:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3389B33B6CC;
-	Mon, 22 Jun 2026 20:38:03 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782160684; cv=pass; b=dEWCxhcSPuFGjV5I31Hld3/evmZrknGQzrqJpt7F08Y9C/DTJ4B4xnwzFVweZFUdejQQ3yvRdOdyEOsGZoagj0P6PsWTiCpFAXtv1/j3lPuahzrv50iJW6pKt59vcqjoRSjK5V2IVZMvMgfUXeogHjx4VmNYFjnhlUCNpJrC+PE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782160684; c=relaxed/simple;
-	bh=WsDcKuA1gvo2wPOxdvdHPc1d4sATgEmk4SH3WC2S+lA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AuHfawblQAsmmC2AS2ckOmnyll1we17CddoDP43mjee5zU4gwFUbOAS32xEbvuPlfRFBKn+iyPasQnVz5E/dOp1Jmubztoq7L9s/s7Wf7wvGxY9hL2JUhzlYVHEL0H4H1lO02i4GsRzZmKt1ZRbNbTlEEgtWYPM7RH5k/qNUpJo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=ftenAF2p; arc=pass smtp.client-ip=136.143.188.11
-ARC-Seal: i=1; a=rsa-sha256; t=1782160644; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NbZ03RwDUpsPUGMBrvUdLdu9YwvBtwbJnzp1KGgnOw8bmxFm308mN3AT9TQxGf0hTvg6NQG4C2vMqEG28Kk9TYtSAwUBIsPuLMENiboDJ821z6UtEvkeDwz5+Jcm+re9M7ZFaWtEkR9uOKdar4YVHKXBp3rQHmkoCuJ+yoWpc4o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1782160644; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mN91JuTXlP9yH/fF2WAYmfPvIPkIj7NLhNIGrphtGFQ=; 
-	b=cdn/QOUYXHEVxnnOG0Xz+v5hgIFdWmFnUWGGBrXE0BkN+/Y/SSTnkF8DIdXeHmsun1N1bTnfVSATEUntE3qlia7Tu2OXutygr1K/pScuMkRUqb8jzru748kl9eSG9NgAF6EAKY/Eq7kqq5AHGgy4zYxnRNwUhOnHfiaIKQmZ7Ec=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1782160644;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=mN91JuTXlP9yH/fF2WAYmfPvIPkIj7NLhNIGrphtGFQ=;
-	b=ftenAF2pLAzRlyNVRan8mKVLwnie2DhUAR+YqxoXAcc93rbXBpyH//u6VQz6uvu5
-	NVnB16FfAhcMzP72FH86ULWAFvMa3rYocIFntWDDFHxLa7uuG26U7HA2MLbmUYNgfOb
-	uJogOLlRuf0JNK3ahPODVSRWU84ISRiZWge9esxY=
-Received: by mx.zohomail.com with SMTPS id 1782160642430172.91971762131618;
-	Mon, 22 Jun 2026 13:37:22 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 6EF1E1824A2; Mon, 22 Jun 2026 22:37:11 +0200 (CEST)
-Date: Mon, 22 Jun 2026 22:37:11 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Peter Griffin <peter.griffin@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Brian Masney <bmasney@redhat.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang <jesszhan0024@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Inki Dae <inki.dae@samsung.com>, 
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Georgi Djakov <djakov@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Pavel Machek <pavel@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Ulf Hansson <ulfh@kernel.org>, Peter Rosin <peda@lysator.liu.se>, 
-	Vinod Koul <vkoul@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Linus Walleij <linusw@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Jonathan Marek <jonathan@marek.ca>, Taniya Das <quic_tdas@quicinc.com>, 
-	Robert Marko <robimarko@gmail.com>, Christian Marangi <ansuelsmth@gmail.com>, 
-	Stephan Gerhold <stephan@gerhold.net>, Adam Skladowski <a_skl39@protonmail.com>, 
-	Sireesh Kodali <sireeshkodali@protonmail.com>, Barnabas Czeman <barnabas.czeman@mainlining.org>, 
-	Imran Shaik <quic_imrashai@quicinc.com>, Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
-	Anusha Rao <quic_anusha@quicinc.com>, Luo Jie <quic_luoj@quicinc.com>, 
-	Tomasz Figa <tomasz.figa@gmail.com>, Chanho Park <chanho61.park@samsung.com>, 
-	Sunyeal Hong <sunyeal.hong@samsung.com>, Shin Son <shin.son@samsung.com>, 
-	Krishna Manikandan <quic_mkrishn@quicinc.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Alina Yu <alina_yu@richtek.com>, Andy Gross <agross@kernel.org>, 
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Wesley Cheng <quic_wcheng@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: Drop incorrect usage of double '::'
-Message-ID: <ajmcsfEXiTfFh-XH@venus>
-References: <20260622101606.485961-3-krzysztof.kozlowski@oss.qualcomm.com>
- <20260622101606.485961-4-krzysztof.kozlowski@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D63FBA7;
+	Tue, 23 Jun 2026 02:31:25 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782181890; cv=none; b=r6mMh1y7lcdCFm7tjOztGrrS0nBvh202RkaiOwBx15JjAjOqo/XCsnlyXmdC4f9ZCpA0nsE82eRoNp14mR4qhcDoB9+fgJjAwPJmCdeEezvnwT4Ne/ef0U6d4jZP75cxwZZ8pNbQF5F9MC0X41Dk6CKqLGaMCKVohTEcfsqSVDo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782181890; c=relaxed/simple;
+	bh=hkRMpuSN6I1eZGusONc5HQWkaf+G6SvfelKfwFyQmlk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pp2vOz74vWGNjFcukmVWzm853yLIqekEL6cIju7Nc6D+0jv/ddFeDZgCdmGz+Hqw+0juSd/NPtYc50nET5pH+eW06BlXMv6eo8B+KtlEp8NwhyO571vuDrMUp3t4S6H2qIEh2fVkwnnCpRnvB6sl782oN15ZjzKzrPRGJEj0e/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=R5SfRqwH; arc=none smtp.client-ip=220.197.31.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=i5
+	Ewf7MuI3qiU3DcpcF/NumyI1REpGyWSLVifhCuXCE=; b=R5SfRqwHymalblZIIP
+	7XKnwj8LH9aznpBvd4yaqlbn21yTbHRAHojvmzKLxY6cOQgiVB+J3ZPvj5DDfKqu
+	YGjr92B/xrCGIJM6uUoSfs00p4ELabcj5mQm4Pscc8aG+x96KnD1AmHt3TwXZy6D
+	NSVFVthWE9NmnDweBgVNcRAMo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wAHQWvs7zlqy3r4Ew--.668S2;
+	Tue, 23 Jun 2026 10:31:09 +0800 (CST)
+From: fffsqian@163.com
+To: Keerthy <j-keerthy@ti.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Qingshuang Fu <fuqingshuang@kylinos.cn>
+Subject: [PATCH 1/1] gpio: davinci: fix IRQ domain leak on devm_kzalloc failure
+Date: Tue, 23 Jun 2026 10:31:06 +0800
+Message-Id: <20260623023106.117229-1-fffsqian@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="he6mgtsui5z5w5dr"
-Content-Disposition: inline
-In-Reply-To: <20260622101606.485961-4-krzysztof.kozlowski@oss.qualcomm.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-0.2.10.1.5.2/282.152.77
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHQWvs7zlqy3r4Ew--.668S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uw4rCry5tw1xtrW3Jw4Utwb_yoW8Jw4xpF
+	srG34Y9rWUJw42qF18Ca15Za4aka4UtrW2yFyjgwn29r15twsYyr4Yva4qvFyqvrWrJw4a
+	qan7X3WUXa4DuFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jO9N3UUUUU=
+X-CM-SenderInfo: 5iii21xldqqiywtou0bp/xtbCwg0g6mo57+29fwAA3W
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[163.com,none];
+	R_DKIM_ALLOW(-0.20)[163.com:s=s110527];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TAGGED_FROM(0.00)[bounces-38823-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:krzysztof.kozlowski@oss.qualcomm.com,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:peter.griffin@linaro.org,m:alim.akhtar@samsung.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:s.nawrocki@samsung.com,m:cw00.choi@samsung.com,m:semen.protsenko@linaro.org,m:robin.clark@oss.qualcomm.com,m:lumag@kernel.org,m:abhinav.kumar@linux.dev,m:jesszhan0024@gmail.com,m:sean@poorly.run,m:marijn.suijten@somainline.org,m:airlied@gmail.com,m:simona@ffwll.ch,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:inki.dae@samsung.com,m:sw0312.kim@samsung.com,m:kyungmin.park@samsung.com,m:andi.shyti@kernel.org,m:djakov@kernel.org,m:lee@kernel.org,m:pavel@kernel.org,m:hverkuil@kernel.org,m:mchehab@kernel.org,m:ulfh@kernel.org,m:peda@lysator.liu.se,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:linusw@kernel.org,m:geert+renesas@glider.be,m:magnus.damm@gmail.com,m:ja
- vier@dowhile0.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:gregkh@linuxfoundation.org,m:jirislaby@kernel.org,m:srini@kernel.org,m:bzolnier@gmail.com,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jonathan@marek.ca,m:quic_tdas@quicinc.com,m:robimarko@gmail.com,m:ansuelsmth@gmail.com,m:stephan@gerhold.net,m:a_skl39@protonmail.com,m:sireeshkodali@protonmail.com,m:barnabas.czeman@mainlining.org,m:quic_imrashai@quicinc.com,m:quic_srichara@quicinc.com,m:quic_anusha@quicinc.com,m:quic_luoj@quicinc.com,m:tomasz.figa@gmail.com,m:chanho61.park@samsung.com,m:sunyeal.hong@samsung.com,m:shin.son@samsung.com,m:quic_mkrishn@quicinc.com,m:jacek.anaszewski@gmail.com,m:jh80.chung@samsung.com,m:m.szyprowski@samsung.com,m:alina_yu@richtek.com,m:agross@kernel.org,m:niklas.soderlund@ragnatech.se,m:quic_wcheng@quicinc.com,m:linux-arm-msm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:li
- nux-samsung-soc@vger.kernel.org,m:linux-clk@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:freedreno@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-leds@vger.kernel.org,m:linux-media@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-phy@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-serial@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-usb@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sebastian.reichel@collabora.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:j-keerthy@ti.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:fuqingshuang@kylinos.cn,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linaro.org,samsung.com,baylibre.com,redhat.com,oss.qualcomm.com,linux.dev,gmail.com,poorly.run,somainline.org,ffwll.ch,linux.intel.com,suse.de,lysator.liu.se,glider.be,dowhile0.org,linuxfoundation.org,intel.com,arm.com,marek.ca,quicinc.com,gerhold.net,protonmail.com,mainlining.org,richtek.com,ragnatech.se,vger.kernel.org,lists.infradead.org,lists.freedesktop.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER(0.00)[fffsqian@163.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_FROM(0.00)[163.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-38824-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[163.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sebastian.reichel@collabora.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	RCPT_COUNT_GT_50(0.00)[95];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[fffsqian@163.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_NO_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,collabora.com:dkim,collabora.com:email,collabora.com:from_mime,qualcomm.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,venus:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 097516B2510
+X-Rspamd-Queue-Id: B1AF86B38C9
 
+From: Qingshuang Fu <fuqingshuang@kylinos.cn>
 
---he6mgtsui5z5w5dr
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] dt-bindings: Drop incorrect usage of double '::'
-MIME-Version: 1.0
+In davinci_gpio_irq_setup(), after successfully creating an IRQ domain
+with irq_domain_create_legacy(), a subsequent devm_kzalloc() failure
+in the bank loop causes the function to return -ENOMEM without
+removing the IRQ domain.
 
-Hi,
+Unlike devm-managed resources, irq_domain_create_legacy() does not
+auto-clean up on probe failure, so the domain is leaked.
 
-On Mon, Jun 22, 2026 at 12:16:08PM +0200, Krzysztof Kozlowski wrote:
-> There is no use of double colon '::' in YAML. OTOH, the literal style
-> block, e.g. using '|' treats all characters as content [1] therefore
-> single use of ':' in descriptions is perfectly fine, whenever '|' is
-> used.
->=20
-> Cleanup existing code, so the confusing style won't be re-used in new
-> contributions.
->=20
-> Link: https://yaml.org/spec/1.2.2/#literal-style [1]
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
->=20
-> ---
->=20
-> Intention for this patch is to go via Rob's tree.
-> ---
+Fix by calling irq_domain_remove() before returning on allocation
+failure.
 
-[...]
+Fixes: b5cf3fd827d2 ("gpio: davinci: Redesign driver to accommodate ngpios in one gpio chip")
+Signed-off-by: Qingshuang Fu <fuqingshuang@kylinos.cn>
+---
+ drivers/gpio/gpio-davinci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->  .../bindings/power/reset/restart-handler.yaml |  8 ++++----
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 97780f27ce5b..270cd7c88812 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -568,8 +568,10 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 				       sizeof(struct
+ 					      davinci_gpio_irq_data),
+ 					      GFP_KERNEL);
+-		if (!irqdata)
++		if (!irqdata) {
++			irq_domain_remove(chips->irq_domain);
+ 			return -ENOMEM;
++		}
+ 
+ 		irqdata->regs = g;
+ 		irqdata->bank_num = bank;
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+base-commit: 4708cac0e22cfd217f48f7cec3c35e5922efcccd
+-- 
+2.25.1
 
-[...]
-
-Greetings,
-
--- Sebastian
-
---he6mgtsui5z5w5dr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmo5nPIACgkQ2O7X88g7
-+pqv2Q/+LMhPKKkmgsVnMejKBphG4p2N/zVrnMgxmg8lVO8rwgA7Kxo2wlLqu2H5
-iapTV4a2dMXB0SUw8UGbt9Lt6JjHaORZnybu95mZEZMS+G7HRl5M8DE+LWMJXLX0
-S+G43Cv1O/d5dV/rM2nJqOItOK+KIbHQI4+oY/O8P7ENnU2h3X2HxOtWxtg6+9gz
-UNPZgoZdEE38SJVzhHrCO1+NfGikbo7vUZC0BmyxiNuVTK9eFjie/eIS3ST4W5T9
-3v2n+F2fD7+xsfSzUyjRc3p+zLyweImjiS6J5GAmTf4qxL9hQ3nXEW2gtRQQvB2l
-W62s4eZt9jFlQjhXVjUeIkEPkORE4RrDInyktgSc6BKm/D5SylQgwytebDtJC2s4
-QceoYrV7CHNsQ0vr9oITDlBN4Ik2TTsqhK2Sw0/2P0W7VU7y8uoHsm2xHPkf17l+
-svy9/UvPf4f5kyBIPwySRFS4IUXcdP8MhscNstvyw1GJqxtCNNRfDX6z0isLIU6Q
-yfIbxBsgCdHQMyM3HekxaofPcGx9LRJtbbNt2YA4SbqEKnzci/ToUY+z8a2svvDM
-Ko5OrYJ/yAjPYjcoQ7ajynJC+BxvFRMTtfCEQmDLiaxN9+ueXJJMXe26hLYClF9g
-ADHM+PuYvQrF2GfU9DgvPXkJHh3yEtyPk1rE6O1f4Q9xvKZMblg=
-=cVKh
------END PGP SIGNATURE-----
-
---he6mgtsui5z5w5dr--
 
