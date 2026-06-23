@@ -1,104 +1,104 @@
-Return-Path: <linux-gpio+bounces-38838-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9G51M8VNOmqm5gcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38838-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:11:33 +0200
+	id GeFNLlJPOmoo5wcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:18:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39AB36B5A38
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:11:33 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 179A66B5B70
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:18:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=Mgp0G0dF;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=jK9W367I;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38838-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38838-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=A4mS7UH9;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=FTrE63RZ;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 454CF302AF29
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 09:07:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 528DD3026178
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 09:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6247030C366;
-	Tue, 23 Jun 2026 09:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E76348C5D;
+	Tue, 23 Jun 2026 09:14:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3802D4B68
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF130C37A
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782205636; cv=none; b=m8pKjkwB0C7ZJJ2pv1UyTAyfp+9BZzzBYLHBkRrNjK3l4qZouiVCy+U2tLVKv96P7r4Uy6/rYOzEBL6ivuLyjl9od0tAcJrl/nMvevuDecA+cz9aX/EeEb1f3V62L6h4yhTuMqYIXYwdUA8COvH/LUA6/aasuxvTeqUm4X3aVDI=
+	t=1782206043; cv=none; b=urW9kNRA3EYk4RaMjo0RJPxPLxXj/gu93tg77GyNWGP31ljSMJCQ4AV5WWoqbW/9CaE93F8/REzhTmNNRYSgEMkH54ADGw/6AM2XheLpsyD5aaQLAviZQjb/J398PTZH++zvt+Q4Rn7BzHVL8FdS8btFsm9HOm8zC/dXldPETfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782205636; c=relaxed/simple;
-	bh=WukhzqxNcZwMEQXcGdz89FN159EkYgGHDb4TCOJ19SU=;
+	s=arc-20240116; t=1782206043; c=relaxed/simple;
+	bh=cQKjFSMQE+XeYyiWc+t1WYLYYKCy4O9bStOxNKaGyvM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S7dHiZpO+kYuAh9g8RP/57Mkz1HZrfIKQ0SUt0xK2EYPbMoR4hiIqimt+/ZS4IQKhHf/mJwslKvutFSx7lSHuIdG1cXt/FtMSxIx+HYh70HKbJ1UMc0J959OfMw4OcaU3qv3N9GoNKm9gOa0sd4mAY3/Oedze/DaEvwnAx3zMJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Mgp0G0dF; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jK9W367I; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65N6ckNr3564025
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:07:13 GMT
+	 In-Reply-To:Content-Type; b=tJ9kKFya56TubRE51s6d6b4t22+wXoWaaaw/ePzakgU8fjNcMQdnkfgBJ9TkUHSnFgwrNq/bTR8r0Bm2zSIajk8GE8JaVTSyju98yHJIKmZy0a2WpT1QQVtaf4QdO+VyLIk6e1zFN+T+tuV8AEw8VMuRwOsYih0S7qHrNqDUrk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A4mS7UH9; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=FTrE63RZ; arc=none smtp.client-ip=205.220.180.131
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65N6cWkN3338322
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ynNpB9XvAD6eSLMQywfDBUNke/Uf1A8kYmXY2NhjcL8=; b=Mgp0G0dFB8pbwVk0
-	wj9ryNpuqJbsNfD0LfJuCfFhYshjeTITf8942Z2YbyqEF5QhWqpEwGzz96VTF5dr
-	94Jo07mIDrkXisOOUXKwyJby7AXRU0CmqX5D9jNg3s4mC9Fp7YfqFxycjZWSfGu/
-	r3NWrAyJ0z9oVnlvnOXV9mo1HabYIYRwipKYtFhASmM5A1he1pjWjsZiakVYqYi1
-	R966iBcb0fUwcrWgxIRuygV+GYFFsXiankjWL+6MLton7ac+q9ag6Zc8HR80NiRZ
-	ARFbUttYAfJOJNxr5Fl1LB5tjUc0sDxsNzs2gWnx3R952Dei1U4GRC57Bjq7/m/8
-	n0YvCg==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ey5n43ww0-1
+	24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=; b=A4mS7UH9cMUAFje6
+	A0r8LqRcNxoAq7P0nSPp7j7UH+rGGDrFJ6XHXWLsqzS+YWI3HvZiMZwWJqIkrA4I
+	AoUVIo+2n0Qks0KtLcggUx9+rPxok5ME4EiHCtEk3HdOU+C8Lmt1GEyZNUEVXqSy
+	5/P5OL7cE/GhGd8rVLAzZcGLTrIMJHqoMFRJze7Ct6AVBGTG+ccWCdIKO3/dnITf
+	ElE4W8bwg7Kjx8ZgIM3IgyM9+8LgzyJljD54Q1/TLJj/VZjuxKGw8ouZpleqURJX
+	RQToHzvomedlloJJZ8sdKpIPQZpqSpH2pw0tm+apD02wy8kNm07e9Bwfe8Frpqd5
+	4KmKbw==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eygkjhg8h-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:07:13 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2bf1dece2ecso60347455ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 02:07:13 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:01 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-845317fa7e6so7697295b3a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 02:14:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782205633; x=1782810433; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1782206041; x=1782810841; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ynNpB9XvAD6eSLMQywfDBUNke/Uf1A8kYmXY2NhjcL8=;
-        b=jK9W367IT4DOi3pyzW+JYy/woyV2Wm33NodipDAnQlRd00M7DuSa0epui4mZumwKJX
-         pI3DQPjcvy3iv4K4oicOiRoSEefO8JEFJbGIrGHVrlg7jMztS/xWqQ6vIAznQ77o7Lde
-         rcRfSJkb+fAHLogFu1O+/E3gns/OFHhXOBYaxkfzYexlqNl6xYic27tFShT/fns59xso
-         /oZCsdF72v1uVPUCYrhh//Kc2IlMsp+0Ve1AA/yGVLmYKgEHmQuA3KFYebJhIZdCS1+F
-         LpSFe+l/Tzt5kigYnHWEKBxRlF2z+o/vgtofGsd/ihUjMIKgG2ANIDLf0h39/dW++RET
-         j6YA==
+        bh=24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=;
+        b=FTrE63RZTZXpWOmNB5p4G7awUJHn2DDWLB1S2RIeAGtDG9m06+eVvMCWB5Oug6Way6
+         jcOEjD8FYkuuvADjHK8nesOsEJTJ8lTLV1S8SFYwSlJeVcqe/bcn/Uzv71AyaP2eVAFK
+         mEXpQ5KaBOD2xSwVp80BFdJUU/RXGsAJaN+cXddqIj7tvNx61Xn81E5m3HEXJNVFxcoI
+         y3Tmw3h9vU7gGdYLdxbqVfizlxOF+UpLrgON2arpGA6fF7nnfLAJFfRTNXiEXAKia3cf
+         yk271TUgK80oWLPZNfId95M4Snr7VagYFpo/Ao2cND78ECxYfMXY36HmVfBtaLJl6fBJ
+         kV/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782205633; x=1782810433;
+        d=1e100.net; s=20251104; t=1782206041; x=1782810841;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ynNpB9XvAD6eSLMQywfDBUNke/Uf1A8kYmXY2NhjcL8=;
-        b=lBCbIDU74jrQeSDTovM4flaHz5ufszrSKijD4IEC/TpI1F16QmruATsBxshxS/waut
-         +m0O0c7LRGXg0I5F6zOZ9q6f97S+KM/2r34SdEo7/oTAfvY32SOiwY+BKn5OgfJZVf13
-         i152BM/As8peMWmJOMH+Vzn9xgpEbmx7d2XTl2zbCL8tFQ99UaysUE7z6q2hU98UOcdl
-         q7DPMlJw2T47qWS2dXx2jbXjL9zL5MzK0eXMDeI8XENocQmXQgN4cymWmDK77Pd+GczD
-         40nQ9SqiU52BQieujdvElH4qXnd08ZXfqsgCT4hEk4LYkdpVCBPZy7qgIk/Qns+L8GC6
-         FdzA==
-X-Forwarded-Encrypted: i=1; AHgh+RonjQn5z9ua62wE8ixmDBvAdGQAvVGlRJz1xV70zQ2D3bxLs2+rL8nlsDMPtu937d3oQUkClEi+Pucu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws3pzUDFXqyUagyZQAkce0BEzPpXd62DOtlhkas3rWBs6Tp4Gp
-	egXd28omOBXK+hvQ6M+4NUDtblyNwovJZlMIlogG5HGqF/kG6jfMljmHQe1xYP0wvxqws5Wkl08
-	xidRO9yb89h+V84QcMb33M1nr9EoCr2gUjozbaf1JI9Umonh+yNwLOjSlWy+3bDNg
-X-Gm-Gg: AfdE7cmewvYEhKN+PeegirtEHoxQ8awoun/ZzI0D5ugp5fLjHsZwDVzkriQUqn8EiYc
-	Kq5br7+1bIV7OVctfr9DOwNiN+QJoSzmBZt35e+4p5L0CTUDaGPdznWbjBY3lRjGMV2j9UhZc40
-	99QwTJdsHzEtRx7kF1+R529CPllgIkl5Ihvv0SpJDgFdRubFqST0AJH77b6tSJWdBnb9X7rZRQJ
-	p7md22KSj+ccXBz7lcr6S++IcFnQ32kmgDihfMWe/PhEikisnyicDAwFSPRFc8x1J1LCHWsE0bv
-	DXFEAyGScW3LfUoAJtzbSz8dxKpFYBrbbnGD5q0+/5soPICuSebsMRuS+odbDQtZxku/GuIAiLE
-	OVObuUyfa7LinJsVBykioahVftNJ8CsfHExh4cXnW/WQA
-X-Received: by 2002:a17:903:1a68:b0:2c0:b19b:ef0d with SMTP id d9443c01a7336-2c7c99de67dmr14775825ad.19.1782205632591;
-        Tue, 23 Jun 2026 02:07:12 -0700 (PDT)
-X-Received: by 2002:a17:903:1a68:b0:2c0:b19b:ef0d with SMTP id d9443c01a7336-2c7c99de67dmr14775255ad.19.1782205631977;
-        Tue, 23 Jun 2026 02:07:11 -0700 (PDT)
+        bh=24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=;
+        b=G/L53BBGLpJWHfAZzp5Q+VpMozX2X9Mu9soUiq3GMmXRYIgQj6NPby36QbW6g/wiaV
+         js42TR36OySisNKNC58fkhUCgx1JYcP20DjqO4sbPtKG0s7z2LL4sfsdgtx65jbGLLU4
+         BZng29Uh7GUc5cVD7cvmn2MhJkirQHdJ9EEaboL4GTQAbMZzkQn1Hg2AmrRSKUVNOuPe
+         xFzHPHc0129j0zWdw9B5RqN36XzELMG/sDif0bCItptw1WpYDehI2kKRBOAScRV1Dg9j
+         El1rJwZjbvBT9WHNmeHH17nlzAZoDONu7NInWmyvGxLlGTI9SN+r3z+bZn8uT2flDSvL
+         241A==
+X-Forwarded-Encrypted: i=1; AFNElJ+gZky8gPS5LESZz9i8rr/ukjOilK91yjfXxMogBn6CO5pZSE5qNCOKU4oGZiDoyVOGV0CvEtQmx2h+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL6SQPOnOggfU1twRUuhIiBU4bZgfnVtM+x6iOTfl2hq7bnn1V
+	GF1MpQI1asGf0kyaPjqKRxc2LUJiz6RHS/OBL+qPrTqdzQEDfp/qg0qubPiBgU3UKeLwm63xu3N
+	qCsqmGPB2eDOrOKAcSKv15dc9K1zX305lqugXOjC6QgC9SpOmugAqtCN8u7em0wEQ
+X-Gm-Gg: AfdE7cmSK9HaussIkG4s1YjlXLAQjy1XH7X+Hk2hszArWJSaYIjKafxg+dPtRTFghaz
+	aTX+LNyWaTCWXu2FMUYLdT7Gruvac/Vqvo7ljIkNVwCK5XMEnaKqqAaVspI2A6mZvrPuw3jBuGK
+	pippCj9pbwMA4BijWMNpcgA7QsrS12eBwOGqGSetNX0qc+aQ7qAKNs9SdIvQ31kDxGMCPYXkZwZ
+	qR0/bDiqRx4kcnmMdB76KgBm69LXTy5yOv6yuuwDJlC8ZOmlKEqaH3C0dIXnA8FmkyenaXzHp4e
+	4hKiV5A8XF8Kh823gSK9nhexNll7rX9LkrXUWC2ua0CDJ9ZuzUEmoEfbCSPCIN1+VjAAHlLrOYe
+	dF+4pvAZJBo9Myd35TGM4axxd1aL6UD3SesC79CkuebCJ
+X-Received: by 2002:a05:6a00:14c4:b0:82c:b808:4c59 with SMTP id d2e1a72fcca58-845970ff8e1mr1946819b3a.46.1782206040619;
+        Tue, 23 Jun 2026 02:14:00 -0700 (PDT)
+X-Received: by 2002:a05:6a00:14c4:b0:82c:b808:4c59 with SMTP id d2e1a72fcca58-845970ff8e1mr1946786b3a.46.1782206040140;
+        Tue, 23 Jun 2026 02:14:00 -0700 (PDT)
 Received: from [172.20.10.7] ([106.192.20.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7436d3505sm102101125ad.19.2026.06.23.02.07.02
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564ed3bd8sm9568565b3a.56.2026.06.23.02.13.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2026 02:07:11 -0700 (PDT)
-Message-ID: <89dad28f-c691-488c-bfc2-6ca3bd2068a8@oss.qualcomm.com>
-Date: Tue, 23 Jun 2026 14:37:01 +0530
+        Tue, 23 Jun 2026 02:13:59 -0700 (PDT)
+Message-ID: <81f10859-b7b9-4a37-a260-b77e36f0267a@oss.qualcomm.com>
+Date: Tue, 23 Jun 2026 14:43:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -106,7 +106,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: sound: add qcom,wsa885x-i2c
+Subject: Re: [PATCH v1 2/2] ASoC: codecs: add Qualcomm WSA885X I2C codec
+ driver
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Srinivas Kandagatla <srini@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -120,63 +121,61 @@ Cc: Srinivas Kandagatla <srini@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
 References: <20260610155708.151067-1-prasad.kumpatla@oss.qualcomm.com>
- <20260610155708.151067-2-prasad.kumpatla@oss.qualcomm.com>
- <20260611-debonair-barnacle-of-action-ee9d22@quoll>
+ <20260610155708.151067-3-prasad.kumpatla@oss.qualcomm.com>
+ <20260611-straight-refined-beetle-e2c934@quoll>
 Content-Language: en-US
 From: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
-In-Reply-To: <20260611-debonair-barnacle-of-action-ee9d22@quoll>
+In-Reply-To: <20260611-straight-refined-beetle-e2c934@quoll>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDA3MiBTYWx0ZWRfX2x3A16H8M1O8
- VkZKLmXa2DDMytRyAM2fQq2hCO4txo7r+EIvZsUOcgRwBNSrhWwtwns7th7wtkN5xVfjzSzNy+j
- UM7ueyZGJ0BjfHnuteaKQYQq+Dk2xmA=
-X-Authority-Analysis: v=2.4 cv=R8Uz39RX c=1 sm=1 tr=0 ts=6a3a4cc1 cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=GtHFPjVsJ1z6j8OeKiQY1g==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDA3NCBTYWx0ZWRfX9gzU2+kh0yhe
+ +8cE+IRJ/+0Ua8boyXaPNBJQu2joDfkCzCzYGXBspyVnyITwWZi+jVKT71rbRf+RPym/xRHZHhu
+ H4Y1KLqEL/hVT3X/OI42VQy460xInbT05Y7XfU971ejOc0ndr3Ak5NhmkRGFcw3TGI9uR2xY1dT
+ gjkTolhgK6brxPKPxgyQz6fpKDnEuAalFiw13vFLAZhtaJT4XKOWs3p9BlufIR/PZuN2YKK1Rtc
+ Yes32Pge9ZhWoMDFzRkrA+5uz8Cq0Gb5EVvSB1vgZE5SfQ3E9qNS+rwqV+IojqDGLkqUeoKj+jI
+ sRrJwFwlFFHCM+41FnMaQgQmd6+Ganf8GeZisQhp17g5RtU4sqfHS8JU+tQwS8BrM7emh5CLib9
+ GGRBLMOscLj5ms6dXhNRrWn7FsB0ALx9wrediYg3IoFAFS0BqzYc87LmOvOe5/RGMBicwKG3RxU
+ Kyjnpz/jMNIV8UtTTZQ==
+X-Proofpoint-GUID: pXIV20vZ5jgDbUCP24A6tT-1AWSu2Lep
+X-Authority-Analysis: v=2.4 cv=SoKgLvO0 c=1 sm=1 tr=0 ts=6a3a4e59 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=GtHFPjVsJ1z6j8OeKiQY1g==:17
  a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=1GWs3Cmanii3QIT9qZoA:9 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
- a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 0loI8vYr9dRHPS3O9EbQ9fNCTcdvGDSN
-X-Proofpoint-GUID: 0loI8vYr9dRHPS3O9EbQ9fNCTcdvGDSN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDA3MiBTYWx0ZWRfX3Zgl2+XwGZZ4
- KII449rx8B3Xv6TZ2OEDNodamskS72K83mbAo3yCvp32eZdgvGzI51LToNEB99GAHWvqC2A7zFx
- XMIVcRjqS/scPnzHhdwT2nVMil16wFjvTR4iHtDmG/FaZP+PBABe5q1F+nHDvgprY8CFKqN9Tq+
- rWr0deif/BT8ZzLGmggl4ltQHllv0tQCl3NI0vwvPcMpaNaidyHFX9ZiJAhV1dj97gpnskilweH
- P7wHr44ByjQYjCVcrT6SmUdYkvTncuyMGIXN66PHGsFSmA0OuCwBbt+d8Lpz290wAYaI2VwUNOJ
- HncCr/7ELYWQnLb7ui2sn9CPFUDf6fDYG0yDU3A3vII6chfZwm248Tra5cQHLsyTEoG+LGqg9+5
- T/nbP4xqaQD6ZL3BLc5VoYwDsuaApvzrPduBl8PjqK7Swb7xlrrqPYV3t7nRbD4uafXmYL9dt4O
- ZuraTMu3jf8tf5i3cTw==
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=YAGGjYiUH1UqZGlMsp0A:9 a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDA3NCBTYWx0ZWRfX5Aq2V4RvGt5l
+ 9nqy80BA288PRunHEyfIMEGUTPoqCbVpeFtuTisUiEAjSs0SEAN2FRdHLajFWm3MRlg+vJjdv09
+ FO1EIn6Uz49jBJjeeFCPMrhHAIBhi5U=
+X-Proofpoint-ORIG-GUID: pXIV20vZ5jgDbUCP24A6tT-1AWSu2Lep
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-23_02,2026-06-22_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606230072
+ definitions=main-2606230074
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-38838-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38839-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:srini@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linusw@kernel.org,m:brgl@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-sound@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,oss.qualcomm.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,qualcomm.com:dkim,qualcomm.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,devicetree.org:url];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:dkim,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,vger.kernel.org:from_smtp];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -191,167 +190,174 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 39AB36B5A38
+X-Rspamd-Queue-Id: 179A66B5B70
 
 
-On 6/11/2026 3:04 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 10, 2026 at 09:27:07PM +0530, Prasad Kumpatla wrote:
->> Document the Qualcomm WSA885X I2C smart amplifier binding.
->>
->> Describe the required supplies, powerdown and interrupt GPIOs, the
->> optional battery configuration, and the optional init-table property
->> used to program the device during codec initialization.
->>
->> This matches the driver programming model and documents the DT data
-> Binding matches hardware, not driver. Please describe the hardware.
+On 6/11/2026 3:09 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 10, 2026 at 09:27:08PM +0530, Prasad Kumpatla wrote:
+>> +};
+>> +
+>> +static void wsa885x_gpio_set(struct wsa885x_i2c_priv *wsa885x, bool val)
+>> +{
+>> +	if (!wsa885x || !wsa885x->sd_n)
+> How wsa885x can be NULL?
+>
+> This wrapper is pointless. Avoid creating abstraction layers over single
+> call to standard kernel interfaces.
 
 Hi Krzysztof,
 
-Thanks for reviewing the patch and for the feedback.
+Thanks for reviewing and comments on patch.
 
-Ack, Will add more HW details in next version.
+Agree. The NULL check is unnecessary, and the helper does not add any 
+meaningful abstraction.
 
->
->> needed to use the codec on platforms with Audio IF playback.
->>
->> Signed-off-by: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
->> ---
->>   .../bindings/sound/qcom,wsa885x-i2c.yaml      | 89 +++++++++++++++++++
->>   1 file changed, 89 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
->> new file mode 100644
->> index 000000000..1069f470d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa885x-i2c.yaml
-> There is no I2C in device name.
-
-Ack, Will remove.
+I'll remove the wrapper and use the GPIO API directly in the next revision.
 
 >
->> @@ -0,0 +1,89 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/qcom,wsa885x-i2c.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +		return;
 >> +
->> +title: Qualcomm WSA885x I2C smart speaker amplifier
+>> +	gpiod_set_value_cansleep(wsa885x->sd_n, val);
+>> +}
 >> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
->> +  - Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
+> ...
+>
 >> +
->> +description: |
-> Do not need '|' unless you need to preserve formatting.
-Ack, Will Update.
->
->> +  WSA885x is a Qualcomm Aqstic smart speaker amplifier with an I2C control
->> +  interface and a digital audio interface exposed through ASoC DAI callbacks.
+>> +static void wsa885x_gpio_powerdown(void *data)
+>> +{
+>> +	struct wsa885x_i2c_priv *wsa885x = data;
 >> +
->> +allOf:
->> +  - $ref: dai-common.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,wsa885x-i2c
-> Same here
->
-> Also, incorrect usage of wildcard. Look at other bindings how this is
-> written, so you will not repeat the same comments:
-> https://lore.kernel.org/all/20250522-rb2_audio_v3-v3-3-9eeb08cab9dc@linaro.org/
->
-> Read writing bindings before posting next version.
->
-> I also cannot find traces of internal review of this. Did it happen? Did
-> you receive toolset comments?
+>> +	if (!wsa885x)
+>> +		return;
+> How is this possible?
 
-Ack, Thanks for the reference link, will cross check and update the 
-bindings.
+No, I will remove all the unnecessary checks in the next version of patch.
 
-No, there is o internal review done for this patch due to timelines.
 
 >
 >> +
->> +  reg:
->> +    maxItems: 1
+>> +	wsa885x_gpio_set(wsa885x, true);
+>> +}
 >> +
->> +  '#sound-dai-cells':
->> +    const: 0
->> +
->> +  powerdown-gpios:
->> +    description: GPIO controlling the SD_N powerdown pin.
->> +    maxItems: 1
->> +
->> +  interrupt-gpios:
-> No, interrupts are never written as GPIOs.
+> ...
 >
-> Where is this binding coming from?
-
-
-Agree, Will remove this and come up standard interrupt bindings in next 
-version.
-
+>> +	if (count > 0) {
+>> +		if (count % 2) {
+>> +			dev_err(dev, "%s: Invalid number of elements in %s (%d)\n",
+>> +				__func__, init_table_prop, count);
+>> +			return -EINVAL;
+>> +		}
+>> +		if (count > WSA885X_INIT_TABLE_MAX_ITEMS) {
+>> +			dev_err(dev, "%s: %s has too many elements (%d > %u)\n",
+>> +				__func__, init_table_prop, count,
+>> +				WSA885X_INIT_TABLE_MAX_ITEMS);
+>> +			return -EINVAL;
+>> +		}
+>> +		wsa885x->init_table_size = count;
+>> +
+>> +		wsa885x->init_table = devm_kcalloc(dev, wsa885x->init_table_size,
+>> +						   sizeof(*wsa885x->init_table), GFP_KERNEL);
+>> +		if (!wsa885x->init_table)
+>> +			return -ENOMEM;
+>> +
+>> +		if (device_property_read_u32_array(dev, init_table_prop,
+>> +						   wsa885x->init_table,
+>> +						   wsa885x->init_table_size)) {
+>> +			dev_err(dev, "%s: Failed to read %s\n",
+>> +				__func__, init_table_prop);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	ret = device_property_read_u32(dev, "qcom,battery-config",
+>> +				       &wsa885x->batt_conf);
+>> +	if (ret) {
+>> +		wsa885x->batt_conf = WSA885X_BATT_1S;
+>> +	} else if (wsa885x->batt_conf != WSA885X_BATT_1S &&
+>> +		   wsa885x->batt_conf != WSA885X_BATT_2S) {
+>> +		return dev_err_probe(dev, -EINVAL,
+>> +				     "Invalid battery config %u (expected 1S or 2S)\n",
+>> +				     wsa885x->batt_conf);
+>> +	}
+>> +
+>> +	for (i = 0; i < WSA885X_SUPPLIES_NUM; i++)
+>> +		wsa885x->supplies[i].supply = wsa885x_supply_name[i];
+>> +
+>> +	ret = devm_regulator_bulk_get(dev, WSA885X_SUPPLIES_NUM, wsa885x->supplies);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+>> +
+>> +	ret = regulator_bulk_enable(WSA885X_SUPPLIES_NUM, wsa885x->supplies);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+>> +
+>> +	ret = devm_add_action_or_reset(dev, wsa885x_regulator_disable, wsa885x);
+> Why you cannot simply use devm_regulator_get_enable?
+Ack, will use.
 >
->> +    description: GPIO used for the codec interrupt output.
->> +    maxItems: 1
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
 >> +
->> +  vdd-1p8-supply: true
->> +
->> +  vdd-io-supply: true
->> +
->> +  qcom,battery-config:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: Speaker battery configuration, 1 for 1S and 2 for 2S.
-> Use string
-Ack.
+>> +	wsa885x->sd_n = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(wsa885x->sd_n))
+>> +		return dev_err_probe(dev, PTR_ERR(wsa885x->sd_n),
+>> +							 "Shutdown Control GPIO not found\n");
+> Messed/misaligned indentation.
+Ack, Will update
 >
->> +    default: 1
->> +    enum: [1, 2]
 >> +
->> +  qcom,wsa885x-init-table:
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 2
->> +    maxItems: 256
->> +    description: |
->> +      Sequence of register/value pairs applied during codec hardware
-> No, we don't store register values usually.
-
-
-Ack,I'll move them into the driver as a register table,
-
-making them easier to maintain and avoiding opaque DT data.
-
->> +      initialization. Entries are encoded as alternating register address and
->> +      register value cells. The number of entries must be even (register/value
->> +      pairs); maxItems is 256 (128 pairs).
+>> +	wsa885x_gpio_set(wsa885x, false);
 >> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#sound-dai-cells'
->> +  - powerdown-gpios
->> +  - interrupt-gpios
->> +  - vdd-1p8-supply
->> +  - vdd-io-supply
+>> +	ret = devm_add_action_or_reset(dev, wsa885x_gpio_powerdown, wsa885x);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
 >> +
->> +additionalProperties: false
-> unevaluated instead. Again, OPEN other existing bindings. Why doing
-> something completely different? Is there any WSA88xx binding with
-> additionalProperties? No.
+>> +	i2c_set_clientdata(client, wsa885x);
+>> +
+>> +	wsa885x->intr_pin = devm_gpiod_get(dev, "interrupt", GPIOD_IN);
+>> +	if (IS_ERR(wsa885x->intr_pin))
+>> +		return dev_err_probe(dev, PTR_ERR(wsa885x->intr_pin),
+>> +							 "Interrupt GPIO not found\n");
+>> +
+>> +	ret = wsa885x_register_irq(wsa885x);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "wsa885x irq registration failed\n");
+>> +
+>> +	ret = devm_snd_soc_register_component(dev, component_driver,
+>> +					      wsa885x_i2c_dai,
+>> +					      ARRAY_SIZE(wsa885x_i2c_dai));
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Codec component registration failed\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id wsa885x_i2c_dt_match[] = {
+>> +	{
+>> +		.compatible = "qcom,wsa885x-i2c",
+>> +	},
+>> +	{}
+>> +};
+>> +
+>> +static const struct i2c_device_id wsa885x_id_i2c[] = {
+>> +	{"wsa885x_i2c", 0},
+> Used named initializers.
+Ack, Will update
+>
+>> +	{}
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(i2c, wsa885x_id_i2c);
+>> +MODULE_DEVICE_TABLE(of, wsa885x_i2c_dt_match);
+> Don't come with own coding style. Each above goes IMMEDIATELY after the table.
 
-Thanks for pointing this out. I'll align the schema with the existing 
-WSA88xx
-
-bindings and replace additionalProperties: false with 
-unevaluatedProperties: false
-
-in the next revision.
+Agreed. I'll place each MODULE_DEVICE_TABLE() immediately after its 
+associated table to match the existing kernel style.
 
 Thanks,
 
 Prasad
+
 
 >
 > Best regards,
