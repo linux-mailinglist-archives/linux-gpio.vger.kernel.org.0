@@ -1,104 +1,104 @@
-Return-Path: <linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38840-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id GeFNLlJPOmoo5wcAu9opvQ
-	(envelope-from <linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:18:10 +0200
+	id kcsWJDpQOmqA5wcAu9opvQ
+	(envelope-from <linux-gpio+bounces-38840-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:22:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 179A66B5B70
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:18:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBB886B5C0D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 11:22:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=A4mS7UH9;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=FTrE63RZ;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38839-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=nAKwn+ZX;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=HBmi4rvT;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38840-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38840-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 528DD3026178
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 09:14:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 76EFD3016C91
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2026 09:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E76348C5D;
-	Tue, 23 Jun 2026 09:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CCF360EDE;
+	Tue, 23 Jun 2026 09:21:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF130C37A
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AE33546FC
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:21:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782206043; cv=none; b=urW9kNRA3EYk4RaMjo0RJPxPLxXj/gu93tg77GyNWGP31ljSMJCQ4AV5WWoqbW/9CaE93F8/REzhTmNNRYSgEMkH54ADGw/6AM2XheLpsyD5aaQLAviZQjb/J398PTZH++zvt+Q4Rn7BzHVL8FdS8btFsm9HOm8zC/dXldPETfY=
+	t=1782206467; cv=none; b=d6808zmLTNJd2KB4rlrzxi0RVSJpp3JDKaK+oQyqQQWsttZbKWSwy6sVODdH4JvOjAXhcOGdDLsxf8qp2l89EpnVdzmGgW3GsPWlBthIYOcQO2odzc4/FIICO1hk3bRgcoiZ63qH6zZM2l40L3oak/9lKznUnuTYHxdpblu9Pr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782206043; c=relaxed/simple;
-	bh=cQKjFSMQE+XeYyiWc+t1WYLYYKCy4O9bStOxNKaGyvM=;
+	s=arc-20240116; t=1782206467; c=relaxed/simple;
+	bh=mj+L6fNIend4DPnJIWWfjOMaq1nQkDBZqomFXdwOlsQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tJ9kKFya56TubRE51s6d6b4t22+wXoWaaaw/ePzakgU8fjNcMQdnkfgBJ9TkUHSnFgwrNq/bTR8r0Bm2zSIajk8GE8JaVTSyju98yHJIKmZy0a2WpT1QQVtaf4QdO+VyLIk6e1zFN+T+tuV8AEw8VMuRwOsYih0S7qHrNqDUrk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A4mS7UH9; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=FTrE63RZ; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65N6cWkN3338322
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:01 GMT
+	 In-Reply-To:Content-Type; b=PIsKFS0zqgPYh9HPEEuZwh08Lca+YaDhFjEwR5nqT+MmGU0BtBlFAtO5V+j8IhgD8rn8qDvhAeBIqhJ6cXjm7vs+w20CYYmTBsQg96oxtCQd44GimCOgAhD6LLulw3Kk1wzrASmxN+UnXRnG3URPnUmwPYj8lIJ0NDPQqTbD0bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nAKwn+ZX; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HBmi4rvT; arc=none smtp.client-ip=205.220.180.131
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65N9KUU43918982
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:21:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=; b=A4mS7UH9cMUAFje6
-	A0r8LqRcNxoAq7P0nSPp7j7UH+rGGDrFJ6XHXWLsqzS+YWI3HvZiMZwWJqIkrA4I
-	AoUVIo+2n0Qks0KtLcggUx9+rPxok5ME4EiHCtEk3HdOU+C8Lmt1GEyZNUEVXqSy
-	5/P5OL7cE/GhGd8rVLAzZcGLTrIMJHqoMFRJze7Ct6AVBGTG+ccWCdIKO3/dnITf
-	ElE4W8bwg7Kjx8ZgIM3IgyM9+8LgzyJljD54Q1/TLJj/VZjuxKGw8ouZpleqURJX
-	RQToHzvomedlloJJZ8sdKpIPQZpqSpH2pw0tm+apD02wy8kNm07e9Bwfe8Frpqd5
-	4KmKbw==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eygkjhg8h-1
+	rYS6OZjyyZJEvXuWC0yUGIwHhaWz1fNCfLFi8IntxzA=; b=nAKwn+ZXk1196PFZ
+	62hTEwsBtBMuZdf9QbH23aty2LfHEJxmTepY+JnfQ0VyVCRZbK57dtLlf+nNxuB7
+	SjKMRsO3iySjudL95lHivhjopYdqwoMa/Ub69VrPTR2UV780RSndEXU8F2nnz4C5
+	ZwsdJtahJYjI9CtwfiSowmmjF4fJBimJXawPI4GKGYVtzojFQL2uYUTkzVNlAVEf
+	1F/rKL+RvRUkPRmCfwKKkgY6enQZPZd/cU6F7Y71LMJyf2shbkAB8sfS6GCYJtOo
+	tWG5M1AK2JBtC/Fcv4aZc75t76f4RwrwKJ3nTpbfNSf/cfBuLRW017JLS2GgiN9+
+	7OqcQQ==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eyqe6804c-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:14:01 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-845317fa7e6so7697295b3a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 02:14:01 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 09:21:04 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-845317fa7e6so7706289b3a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2026 02:21:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782206041; x=1782810841; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1782206463; x=1782811263; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=;
-        b=FTrE63RZTZXpWOmNB5p4G7awUJHn2DDWLB1S2RIeAGtDG9m06+eVvMCWB5Oug6Way6
-         jcOEjD8FYkuuvADjHK8nesOsEJTJ8lTLV1S8SFYwSlJeVcqe/bcn/Uzv71AyaP2eVAFK
-         mEXpQ5KaBOD2xSwVp80BFdJUU/RXGsAJaN+cXddqIj7tvNx61Xn81E5m3HEXJNVFxcoI
-         y3Tmw3h9vU7gGdYLdxbqVfizlxOF+UpLrgON2arpGA6fF7nnfLAJFfRTNXiEXAKia3cf
-         yk271TUgK80oWLPZNfId95M4Snr7VagYFpo/Ao2cND78ECxYfMXY36HmVfBtaLJl6fBJ
-         kV/A==
+        bh=rYS6OZjyyZJEvXuWC0yUGIwHhaWz1fNCfLFi8IntxzA=;
+        b=HBmi4rvT0tAFFO1P8HdHiqMy95cHAe81LLx8NTSMu4YLIOfDlxn6kjFNVnuAws8JBL
+         PK5JEQkelmpZdx6OsIrj/IbzQYalblqEElYt6tg4lpklxtAjMqrMJi2nrxCaSbi9TwnH
+         n7oj4ZqetNUNWFTvL9BS57P1P3BrqeRwJjRepm4j5CKjKunGq6hj1Q9yuG1jM1F3Jmex
+         WFMh7cL+8JVqdC1eBmznqqWgrMZzrQh6LDx/BL/8qCUbOsietBrgHEwKv1S2fo0OmHGt
+         Y31Gv17ELMDZuGTteVWnwOAXWiLsI4jr1xMIjhu4eiTNJnEVgMKH/sJ8V8gwO9NkOrLt
+         i5jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782206041; x=1782810841;
+        d=1e100.net; s=20251104; t=1782206463; x=1782811263;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=24B/vWc0OHfdLJwPCzXWYKyFsXHSMgBg7admOM5KrsU=;
-        b=G/L53BBGLpJWHfAZzp5Q+VpMozX2X9Mu9soUiq3GMmXRYIgQj6NPby36QbW6g/wiaV
-         js42TR36OySisNKNC58fkhUCgx1JYcP20DjqO4sbPtKG0s7z2LL4sfsdgtx65jbGLLU4
-         BZng29Uh7GUc5cVD7cvmn2MhJkirQHdJ9EEaboL4GTQAbMZzkQn1Hg2AmrRSKUVNOuPe
-         xFzHPHc0129j0zWdw9B5RqN36XzELMG/sDif0bCItptw1WpYDehI2kKRBOAScRV1Dg9j
-         El1rJwZjbvBT9WHNmeHH17nlzAZoDONu7NInWmyvGxLlGTI9SN+r3z+bZn8uT2flDSvL
-         241A==
-X-Forwarded-Encrypted: i=1; AFNElJ+gZky8gPS5LESZz9i8rr/ukjOilK91yjfXxMogBn6CO5pZSE5qNCOKU4oGZiDoyVOGV0CvEtQmx2h+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL6SQPOnOggfU1twRUuhIiBU4bZgfnVtM+x6iOTfl2hq7bnn1V
-	GF1MpQI1asGf0kyaPjqKRxc2LUJiz6RHS/OBL+qPrTqdzQEDfp/qg0qubPiBgU3UKeLwm63xu3N
-	qCsqmGPB2eDOrOKAcSKv15dc9K1zX305lqugXOjC6QgC9SpOmugAqtCN8u7em0wEQ
-X-Gm-Gg: AfdE7cmSK9HaussIkG4s1YjlXLAQjy1XH7X+Hk2hszArWJSaYIjKafxg+dPtRTFghaz
-	aTX+LNyWaTCWXu2FMUYLdT7Gruvac/Vqvo7ljIkNVwCK5XMEnaKqqAaVspI2A6mZvrPuw3jBuGK
-	pippCj9pbwMA4BijWMNpcgA7QsrS12eBwOGqGSetNX0qc+aQ7qAKNs9SdIvQ31kDxGMCPYXkZwZ
-	qR0/bDiqRx4kcnmMdB76KgBm69LXTy5yOv6yuuwDJlC8ZOmlKEqaH3C0dIXnA8FmkyenaXzHp4e
-	4hKiV5A8XF8Kh823gSK9nhexNll7rX9LkrXUWC2ua0CDJ9ZuzUEmoEfbCSPCIN1+VjAAHlLrOYe
-	dF+4pvAZJBo9Myd35TGM4axxd1aL6UD3SesC79CkuebCJ
-X-Received: by 2002:a05:6a00:14c4:b0:82c:b808:4c59 with SMTP id d2e1a72fcca58-845970ff8e1mr1946819b3a.46.1782206040619;
-        Tue, 23 Jun 2026 02:14:00 -0700 (PDT)
-X-Received: by 2002:a05:6a00:14c4:b0:82c:b808:4c59 with SMTP id d2e1a72fcca58-845970ff8e1mr1946786b3a.46.1782206040140;
-        Tue, 23 Jun 2026 02:14:00 -0700 (PDT)
+        bh=rYS6OZjyyZJEvXuWC0yUGIwHhaWz1fNCfLFi8IntxzA=;
+        b=SBUtzdjx7x2xv34rG2hcJj7MEcZddTMraXD5RllL+GM5nbMSmSkjQEuo2tooDUm4gF
+         J+b/Y1EH3dx24Fq9XQiVUBa2rI1DnKDhN24d1ON3xBQXrA5sWPZZblyMZsvXH3oUx8kP
+         AhD6EJ6GW1MeeG+m1t81iBuwYIo37IVBdYr/8I2JnDT+yuT/yhF+8buAYq88+aqMWm4X
+         D/AdQRpHE/O/TSxg+Lq9COUyuIXZ5BH4f5r+TFs6Q2g+2atawrZpQv+gTGr/SzBIArrD
+         ATp16whrb2FC3uKFQ8sX5vXVD63VP1kZkwXe+C2vqA0g+ykiMB/zm9HzJsR5LsEh0Bqj
+         /z+w==
+X-Forwarded-Encrypted: i=1; AFNElJ+Nl1BZyBl723oCPGTtFlTPYZD+pMRuESBTSRUQy0/S0zJSMVkIYoXmj0hodGj5E1RVCd1KM9Y8+Pdi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5agTGt9LVjVlqsIjdEsU9eOAARTiXIboa1fBzDtyBf0FrWnQN
+	7eaFUuCmDH0TA4gxputqoLBW9MSjNRXDpTSsaEWcyIkE/43mi2d8fNhtr+tGbcyNBKhzDVlvd8w
+	Nqj+BDp7teq4De0TwG/Gz2QcQtpwKpvGABgKBRSCag+bCaEt7/kA2RzLQRd5qksL9
+X-Gm-Gg: AfdE7cnvcWDoICnff3dWlbhqcZnORvk+dDIRQv9PzIRsSwrzPaI/98ROkAaTr/kHezZ
+	SczQic+nPF5pHfKpQo/Or3/Wh88hrIukzy87XCa3n97fPJQyhy2cFhUNqGwVwwY66etxpIsHq2v
+	hNhEGPMUhPqSToyoMgjZwEW9IJ17gyMasdsdnLeDHFoV8hCGhJWsK0ZAnPeMXqz69fxNa7WsCVl
+	mIRxGu8g83KvrLCeGRAt+xPgbmVrC+vTGIZ3gjBmpdR1fUeIbiPWeGLFF4OeVm5+V+uAdfsgCzk
+	hZFURgMTqagyClAbx0G8Mib10eyDqzVnfg6ZMSDLzOiag/9O0eDGJFYSyfFBAbrN9uEanuwPoXV
+	GvmB/xCyWrPFLyA80s2GoEYclhSwVpNszvb1UbbBxJMb4
+X-Received: by 2002:a05:6a00:990:b0:845:36a0:9eb2 with SMTP id d2e1a72fcca58-845970cc9b4mr2598660b3a.34.1782206462976;
+        Tue, 23 Jun 2026 02:21:02 -0700 (PDT)
+X-Received: by 2002:a05:6a00:990:b0:845:36a0:9eb2 with SMTP id d2e1a72fcca58-845970cc9b4mr2598603b3a.34.1782206462359;
+        Tue, 23 Jun 2026 02:21:02 -0700 (PDT)
 Received: from [172.20.10.7] ([106.192.20.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564ed3bd8sm9568565b3a.56.2026.06.23.02.13.51
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564da57a0sm11428820b3a.26.2026.06.23.02.20.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2026 02:13:59 -0700 (PDT)
-Message-ID: <81f10859-b7b9-4a37-a260-b77e36f0267a@oss.qualcomm.com>
-Date: Tue, 23 Jun 2026 14:43:49 +0530
+        Tue, 23 Jun 2026 02:21:01 -0700 (PDT)
+Message-ID: <47a9053f-2153-43ed-9e6f-21f0153a2f04@oss.qualcomm.com>
+Date: Tue, 23 Jun 2026 14:50:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -108,74 +108,73 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 2/2] ASoC: codecs: add Qualcomm WSA885X I2C codec
  driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+        Takashi Iwai <tiwai@suse.com>, Linus Walleij <linusw@kernel.org>
 References: <20260610155708.151067-1-prasad.kumpatla@oss.qualcomm.com>
  <20260610155708.151067-3-prasad.kumpatla@oss.qualcomm.com>
- <20260611-straight-refined-beetle-e2c934@quoll>
+ <CAMRc=Mf2oujn6MstGqKg1JCu3hbPD5zHhCB-Zke_hu8LYCz-Xg@mail.gmail.com>
 Content-Language: en-US
 From: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
-In-Reply-To: <20260611-straight-refined-beetle-e2c934@quoll>
+In-Reply-To: <CAMRc=Mf2oujn6MstGqKg1JCu3hbPD5zHhCB-Zke_hu8LYCz-Xg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDA3NCBTYWx0ZWRfX9gzU2+kh0yhe
- +8cE+IRJ/+0Ua8boyXaPNBJQu2joDfkCzCzYGXBspyVnyITwWZi+jVKT71rbRf+RPym/xRHZHhu
- H4Y1KLqEL/hVT3X/OI42VQy460xInbT05Y7XfU971ejOc0ndr3Ak5NhmkRGFcw3TGI9uR2xY1dT
- gjkTolhgK6brxPKPxgyQz6fpKDnEuAalFiw13vFLAZhtaJT4XKOWs3p9BlufIR/PZuN2YKK1Rtc
- Yes32Pge9ZhWoMDFzRkrA+5uz8Cq0Gb5EVvSB1vgZE5SfQ3E9qNS+rwqV+IojqDGLkqUeoKj+jI
- sRrJwFwlFFHCM+41FnMaQgQmd6+Ganf8GeZisQhp17g5RtU4sqfHS8JU+tQwS8BrM7emh5CLib9
- GGRBLMOscLj5ms6dXhNRrWn7FsB0ALx9wrediYg3IoFAFS0BqzYc87LmOvOe5/RGMBicwKG3RxU
- Kyjnpz/jMNIV8UtTTZQ==
-X-Proofpoint-GUID: pXIV20vZ5jgDbUCP24A6tT-1AWSu2Lep
-X-Authority-Analysis: v=2.4 cv=SoKgLvO0 c=1 sm=1 tr=0 ts=6a3a4e59 cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=GtHFPjVsJ1z6j8OeKiQY1g==:17
+X-Proofpoint-GUID: a8CvckTHIDaNZnl3Ip7WOV8QLrNCFJC-
+X-Proofpoint-ORIG-GUID: a8CvckTHIDaNZnl3Ip7WOV8QLrNCFJC-
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDA3NSBTYWx0ZWRfX5bCy9sgXItmk
+ f2UObQ5lpmsh1FBmVkJwMnNVZ08Y/aTGnjd3m2WDiLMtEdu0oI8SAFMnbcRV6+NITgtB8Odsebb
+ MSw5hebd7I5GCpjACOqeRbaZ9uK44E0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjIzMDA3NSBTYWx0ZWRfX39CdCFOs4OKe
+ iY03j5gbsQ6DeBmQO9ewwe6TGsXkL/ey5mqO6kqY9FXrBecTjkfSHBEpOA3eNWhDeebM+cMM6wX
+ 5wh3YQQDrWWR6F/iwMGNzcAikY8MKACngAaRSGRBa8Nm5A2Kmrf/9IG94Ez4Obu+sDZNxxz7HJU
+ KaLR6O13ad0j7lzohoieCY154p130u8Rn66DbPpm1ptLEOWeG9+yL3musdyqqW6y5SSKM4stjFn
+ c6c77UZEOaQ/3Jitw1IzjRjj9rgWUFqz1Ac4Yu/U5XZOGnL/AnRIOpiqTQREmGPA64e6HlbFbSz
+ GK82s9+jAtf9N6ltOSjFAF7zwLk/rTeOmSZSSjKgux7ZdVG03Oji4llNUtGFrnw9H2DalOgjgiP
+ rtz2RXP5EWgGS4sB2EGc4sOFpGK6kgy0ZrVwiDumwkb6Nsvfl3nvI9dVbi91XM/M+H/S6Ea4s/P
+ 12t1o4HwhAHGK5M6Kgg==
+X-Authority-Analysis: v=2.4 cv=OeKoyBTY c=1 sm=1 tr=0 ts=6a3a5000 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=GtHFPjVsJ1z6j8OeKiQY1g==:17
  a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=YAGGjYiUH1UqZGlMsp0A:9 a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjIzMDA3NCBTYWx0ZWRfX5Aq2V4RvGt5l
- 9nqy80BA288PRunHEyfIMEGUTPoqCbVpeFtuTisUiEAjSs0SEAN2FRdHLajFWm3MRlg+vJjdv09
- FO1EIn6Uz49jBJjeeFCPMrhHAIBhi5U=
-X-Proofpoint-ORIG-GUID: pXIV20vZ5jgDbUCP24A6tT-1AWSu2Lep
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
+ a=EUspDBNiAAAA:8 a=xkAQp0t9iyHIzJGVLTQA:9 a=QEXdDO2ut3YA:10
+ a=OpyuDcXvxspvyRM73sMx:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-23_02,2026-06-22_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606230074
+ phishscore=0 impostorscore=0 spamscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2606230075
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-38839-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-38840-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:srini@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linusw@kernel.org,m:brgl@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-sound@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-sound@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:srini@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:linusw@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,oss.qualcomm.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:dkim,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,vger.kernel.org:from_smtp];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,vger.kernel.org,kernel.org,gmail.com,perex.cz,suse.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -190,177 +189,417 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 179A66B5B70
+X-Rspamd-Queue-Id: DBB886B5C0D
 
 
-On 6/11/2026 3:09 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 10, 2026 at 09:27:08PM +0530, Prasad Kumpatla wrote:
->> +};
->> +
->> +static void wsa885x_gpio_set(struct wsa885x_i2c_priv *wsa885x, bool val)
->> +{
->> +	if (!wsa885x || !wsa885x->sd_n)
-> How wsa885x can be NULL?
->
-> This wrapper is pointless. Avoid creating abstraction layers over single
-> call to standard kernel interfaces.
-
-Hi Krzysztof,
-
-Thanks for reviewing and comments on patch.
-
-Agree. The NULL check is unnecessary, and the helper does not add any 
-meaningful abstraction.
-
-I'll remove the wrapper and use the GPIO API directly in the next revision.
-
->
->> +		return;
->> +
->> +	gpiod_set_value_cansleep(wsa885x->sd_n, val);
->> +}
->> +
+On 6/11/2026 3:19 PM, Bartosz Golaszewski wrote:
+> On Wed, 10 Jun 2026 17:57:08 +0200, Prasad Kumpatla
+> <prasad.kumpatla@oss.qualcomm.com> said:
+>> Add an ASoC codec driver for the Qualcomm WSA885X smart speaker
+>> amplifier accessed over I2C.
+>>
+>> The driver provides the control-side support needed for playback
+>> bring-up, including register programming, serial interface setup, clock
+>> handling, mute and gain control, reset handling and interrupt support.
+>>
+>> Program the init table during codec initialization and reapply it only
+>> after an explicit device reset so the static device configuration is
+>> not rewritten on every playback start. Also program the TDM control
+>> slot-count field from the runtime slot configuration so the same codec
+>> path can be used with 2-slot, 4-slot, or 8-slot Audio IF backends.
+>>
+>> Keep the stream-time power-state sequencing in the DAI callbacks and
+>> use normal regmap access for the control path.
+>>
+>> Signed-off-by: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
+>> ---
 > ...
 >
+>> diff --git a/sound/soc/codecs/wsa885x-i2c.c b/sound/soc/codecs/wsa885x-i2c.c
+>> new file mode 100644
+>> index 000000000..a7d8f8d48
+>> --- /dev/null
+>> +++ b/sound/soc/codecs/wsa885x-i2c.c
+>> @@ -0,0 +1,1643 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+>> + */
 >> +
->> +static void wsa885x_gpio_powerdown(void *data)
->> +{
->> +	struct wsa885x_i2c_priv *wsa885x = data;
+>> +/* WSA885X I2C codec driver */
 >> +
->> +	if (!wsa885x)
->> +		return;
-> How is this possible?
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/property.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/slab.h>
+>> +#include <sound/core.h>
+>> +#include <sound/pcm.h>
+>> +#include <sound/pcm_params.h>
+>> +#include <sound/soc-dapm.h>
+>> +#include <sound/soc.h>
+>> +#include <sound/tlv.h>
+>> +#include <linux/interrupt.h>
+> Can you keep the headers in alphabetical order?
 
-No, I will remove all the unnecessary checks in the next version of patch.
+Hi Bart,
 
+Thanks for review the patch and the feedback.
 
->
->> +
->> +	wsa885x_gpio_set(wsa885x, true);
->> +}
->> +
-> ...
->
->> +	if (count > 0) {
->> +		if (count % 2) {
->> +			dev_err(dev, "%s: Invalid number of elements in %s (%d)\n",
->> +				__func__, init_table_prop, count);
->> +			return -EINVAL;
->> +		}
->> +		if (count > WSA885X_INIT_TABLE_MAX_ITEMS) {
->> +			dev_err(dev, "%s: %s has too many elements (%d > %u)\n",
->> +				__func__, init_table_prop, count,
->> +				WSA885X_INIT_TABLE_MAX_ITEMS);
->> +			return -EINVAL;
->> +		}
->> +		wsa885x->init_table_size = count;
->> +
->> +		wsa885x->init_table = devm_kcalloc(dev, wsa885x->init_table_size,
->> +						   sizeof(*wsa885x->init_table), GFP_KERNEL);
->> +		if (!wsa885x->init_table)
->> +			return -ENOMEM;
->> +
->> +		if (device_property_read_u32_array(dev, init_table_prop,
->> +						   wsa885x->init_table,
->> +						   wsa885x->init_table_size)) {
->> +			dev_err(dev, "%s: Failed to read %s\n",
->> +				__func__, init_table_prop);
->> +			return -EINVAL;
->> +		}
->> +	}
->> +
->> +	ret = device_property_read_u32(dev, "qcom,battery-config",
->> +				       &wsa885x->batt_conf);
->> +	if (ret) {
->> +		wsa885x->batt_conf = WSA885X_BATT_1S;
->> +	} else if (wsa885x->batt_conf != WSA885X_BATT_1S &&
->> +		   wsa885x->batt_conf != WSA885X_BATT_2S) {
->> +		return dev_err_probe(dev, -EINVAL,
->> +				     "Invalid battery config %u (expected 1S or 2S)\n",
->> +				     wsa885x->batt_conf);
->> +	}
->> +
->> +	for (i = 0; i < WSA885X_SUPPLIES_NUM; i++)
->> +		wsa885x->supplies[i].supply = wsa885x_supply_name[i];
->> +
->> +	ret = devm_regulator_bulk_get(dev, WSA885X_SUPPLIES_NUM, wsa885x->supplies);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
->> +
->> +	ret = regulator_bulk_enable(WSA885X_SUPPLIES_NUM, wsa885x->supplies);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
->> +
->> +	ret = devm_add_action_or_reset(dev, wsa885x_regulator_disable, wsa885x);
-> Why you cannot simply use devm_regulator_get_enable?
-Ack, will use.
->
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
->> +
->> +	wsa885x->sd_n = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
->> +	if (IS_ERR(wsa885x->sd_n))
->> +		return dev_err_probe(dev, PTR_ERR(wsa885x->sd_n),
->> +							 "Shutdown Control GPIO not found\n");
-> Messed/misaligned indentation.
 Ack, Will update
+
+>
+> ...
 >
 >> +
->> +	wsa885x_gpio_set(wsa885x, false);
+>> +#define WSA885X_FU21_VOL_STEPS 124
+>> +#define WSA885X_USAGE_MODE_MAX 8
+>> +#define WSA885X_INIT_TABLE_MAX_ITEMS 256
+> Add newline.
+Ack, Will update.
+>
+> ...
+>
 >> +
+>> +static int wsa885x_apply_init_table(struct wsa885x_i2c_priv *wsa885x)
+>> +{
+>> +	int i;
+>> +	int ret;
+> I'd put it on the same line (elsewhere too) but that's personal preference.
+Ack, I will make them to a single line.
+>
+>> +
+>> +	if (!wsa885x || !wsa885x->regmap)
+>> +		return -EINVAL;
+>
+> You have a lot of these checks but this can't really happen, can it?
+Ack, I will cleanup and remove the all unnecessary checks and update in 
+next version
+>
+>> +
+>> +	if (!wsa885x->init_table_size)
+>> +		return 0;
+>> +
+>> +	if (!wsa885x->init_table)
+>> +		return -EINVAL;
+>> +
+>> +	for (i = 0; i < wsa885x->init_table_size / 2; i++) {
+>> +		u32 reg = wsa885x->init_table[2 * i];
+>> +		u32 val = wsa885x->init_table[2 * i + 1];
+>> +
+>> +		if (wsa885x->batt_conf == WSA885X_BATT_2S && reg == WSA885X_SPK_TOP_LF_CH1_CTRL11)
+>> +			continue;
+>> +
+>> +		if (wsa885x->batt_conf == WSA885X_BATT_2S && reg == WSA885X_SPK_TOP_LF_CH2_CTRL11)
+>> +			continue;
+>> +
+>> +		ret = regmap_write(wsa885x->regmap, reg, val);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_hw_init(struct wsa885x_i2c_priv *wsa885x)
+>> +{
+>> +	static const struct reg_sequence regs[] = {
+>> +		{ WSA885X_DIG_CTRL1_SPMI_PAD_GPIO2_CTL, 0x2e },
+>> +		{ WSA885X_DIG_CTRL1_INTR_MODE, 0x01 },
+>> +		{ WSA885X_DIG_CTRL1_PIN_CT, 0x04 },
+>> +	};
+>> +	int ret;
+>> +
+>> +	if (!wsa885x || !wsa885x->regmap)
+>> +		return -EINVAL;
+>> +
+>> +	ret = wsa885x_apply_init_table(wsa885x);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (wsa885x->batt_conf == WSA885X_BATT_2S) {
+>> +		ret = wsa885x_2s_conf(wsa885x);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return regmap_multi_reg_write(wsa885x->regmap, regs, ARRAY_SIZE(regs));
+>> +}
+>> +
+>> +static int wsa885x_unmask_interrupts(struct wsa885x_i2c_priv *wsa885x)
+>> +{
+>> +	static const struct reg_sequence regs[] = {
+>> +		{ WSA885X_INTR_MASK0, 0x00 },
+>> +		{ WSA885X_INTR_MASK0 + 1, 0x00 },
+>> +		{ WSA885X_INTR_MASK0 + 2, 0xf8 },
+>> +	};
+>> +
+>> +	if (!wsa885x || !wsa885x->regmap)
+>> +		return -EINVAL;
+>> +
+>> +	return regmap_multi_reg_write(wsa885x->regmap, regs, ARRAY_SIZE(regs));
+>> +}
+>> +
+>> +static int wsa885x_wait_for_pde_state(struct wsa885x_i2c_priv *wsa885x, int ps)
+>> +{
+>> +	int act_ps = -1, cnt = 0, clock_valid = -1;
+>> +	int rc = 0;
+>> +
+>> +	if (!wsa885x || !wsa885x->regmap)
+>> +		return -EINVAL;
+>> +
+>> +	if (ps < 0 || ps > 3)
+>> +		return -EINVAL;
+>> +
+>> +	do {
+>> +		usleep_range(1000, 1500);
+>> +		rc = regmap_read(wsa885x->regmap,
+>> +				 WSA885X_SMP_AMP_CTRL_STEREO_PDE23_ACT_PS,
+>> +				 &act_ps);
+>> +		if (rc) {
+>> +			dev_err(wsa885x->dev, "PDE state read failed: %d\n", rc);
+>> +			return rc;
+>> +		}
+>> +		if (act_ps == ps)
+>> +			return 0;
+>> +	} while (++cnt < 5);
+> Newline.
+Ack.
+>
+>> +	if (regmap_read(wsa885x->regmap,
+>> +			WSA885X_SMP_AMP_CTRL_STEREO_CS21_CLOCK_VALID,
+>> +			&clock_valid))
+>> +		dev_err(wsa885x->dev,
+>> +			"PDE power state %d request failed, actual_ps %d, clock_valid read failed\n",
+>> +			ps, act_ps);
+>> +	else
+>> +		dev_err(wsa885x->dev,
+>> +			"PDE power state %d request failed, actual_ps %d, clock_valid:%d\n",
+>> +			ps, act_ps, clock_valid);
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
+>> +
+>> +static int wsa885x_codec_hw_params(struct snd_pcm_substream *substream,
+>> +				   struct snd_pcm_hw_params *params,
+>> +				   struct snd_soc_dai *dai)
+>> +{
+>> +	struct wsa885x_i2c_priv *wsa885x;
+>> +	u8 pcm_rate, cs21_sample_rate_idx, cs24_sample_rate_idx;
+>> +
+>> +	(void)substream;
+> Do we warn about unused arguments in the kernel now?
+
+Right, this is unnecessary. I'll drop the unused parameter cast.
+
+Ack.
+
+>
+> ...
+>
+>> +
+>> +static int wsa885x_stereo_gain_offset_get(struct snd_kcontrol *kcontrol,
+>> +					  struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x;
+>> +	int val;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x)
+>> +		return -EINVAL;
+>> +
+>> +	val = wsa885x->stereo_vol_db + 84;
+>> +	if (val < 0 || val > WSA885X_FU21_VOL_STEPS)
+>> +		return -ERANGE;
+>> +
+>> +	ucontrol->value.integer.value[0] = val;
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_stereo_gain_offset_put(struct snd_kcontrol *kcontrol,
+>> +					  struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x;
+>> +	long val;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x)
+>> +		return -EINVAL;
+>> +
+>> +	val = ucontrol->value.integer.value[0];
+>> +
+>> +	if (val < 0 || val > WSA885X_FU21_VOL_STEPS) {
+>> +		dev_err(component->dev, "%s: Invalid range, Val: %ld\n", __func__, val);
+>> +		return -EINVAL;
+>> +	}
+>> +	wsa885x->stereo_vol_db = (int)val - 84;
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_i2c_usage_modes_get(struct snd_kcontrol *kcontrol,
+>> +				       struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x_i2c;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x_i2c)
+>> +		return -EINVAL;
+>> +
+>> +	if (wsa885x_i2c->usage_mode > WSA885X_USAGE_MODE_MAX)
+>> +		return -ERANGE;
+>> +
+>> +	ucontrol->value.integer.value[0] = wsa885x_i2c->usage_mode;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_i2c_usage_modes_put(struct snd_kcontrol *kcontrol,
+>> +				       struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x_i2c;
+>> +	long val;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x_i2c)
+>> +		return -EINVAL;
+>> +
+> You seem to be repeating the same sequence in multiple functions just to get
+> the address of wsa885x_i2c. Can you factor it out into a separate helper and
+> save some lines?
+Ack.
+>
+>> +	val = ucontrol->value.integer.value[0];
+>> +
+>> +	if (val < 0 || val > WSA885X_USAGE_MODE_MAX)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c->usage_mode = val;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_i2c_rx_slot_mask_get(struct snd_kcontrol *kcontrol,
+>> +					struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x_i2c;
+>> +	u32 mask;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x_i2c)
+>> +		return -EINVAL;
+>> +
+>> +	mask = wsa885x_i2c->rx_slot_mask;
+>> +	if (!wsa885x_is_valid_rx_slot_mask(mask))
+>> +		return -ERANGE;
+>> +
+>> +	ucontrol->value.integer.value[0] = mask;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wsa885x_i2c_rx_slot_mask_put(struct snd_kcontrol *kcontrol,
+>> +					struct snd_ctl_elem_value *ucontrol)
+>> +{
+>> +	struct snd_soc_component *component;
+>> +	struct wsa885x_i2c_priv *wsa885x_i2c;
+>> +	long mask;
+>> +
+>> +	if (!kcontrol || !ucontrol)
+>> +		return -EINVAL;
+>> +
+>> +	component = snd_kcontrol_chip(kcontrol);
+>> +	if (!component)
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c = snd_soc_component_get_drvdata(component);
+>> +	if (!wsa885x_i2c)
+>> +		return -EINVAL;
+>> +
+>> +	mask = ucontrol->value.integer.value[0];
+>> +
+>> +	if (!wsa885x_is_valid_rx_slot_mask(mask))
+>> +		return -EINVAL;
+>> +
+>> +	wsa885x_i2c->rx_slot_mask = mask;
+>> +
+>> +	return 0;
+>> +}
+>> +
+> ...
+>
+>> +				/* INTR_CLEAR registers are write-only; use regmap_write
+>> +				 * instead of regmap_update_bits to avoid the read-modify-write
+>> +				 * that regmap_update_bits performs on non-readable registers.
+>> +				 */
+> /*
+>   */
+>
+> style comments please
+Ack. will update
+>
+> ...
+>
 >> +	ret = devm_add_action_or_reset(dev, wsa885x_gpio_powerdown, wsa885x);
 >> +	if (ret)
 >> +		return dev_err_probe(dev, ret, "devm_add_action_or_reset failed\n");
 >> +
 >> +	i2c_set_clientdata(client, wsa885x);
->> +
->> +	wsa885x->intr_pin = devm_gpiod_get(dev, "interrupt", GPIOD_IN);
->> +	if (IS_ERR(wsa885x->intr_pin))
->> +		return dev_err_probe(dev, PTR_ERR(wsa885x->intr_pin),
->> +							 "Interrupt GPIO not found\n");
->> +
->> +	ret = wsa885x_register_irq(wsa885x);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "wsa885x irq registration failed\n");
->> +
->> +	ret = devm_snd_soc_register_component(dev, component_driver,
->> +					      wsa885x_i2c_dai,
->> +					      ARRAY_SIZE(wsa885x_i2c_dai));
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "Codec component registration failed\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id wsa885x_i2c_dt_match[] = {
->> +	{
->> +		.compatible = "qcom,wsa885x-i2c",
->> +	},
->> +	{}
->> +};
->> +
->> +static const struct i2c_device_id wsa885x_id_i2c[] = {
->> +	{"wsa885x_i2c", 0},
-> Used named initializers.
-Ack, Will update
->
->> +	{}
->> +};
->> +
->> +MODULE_DEVICE_TABLE(i2c, wsa885x_id_i2c);
->> +MODULE_DEVICE_TABLE(of, wsa885x_i2c_dt_match);
-> Don't come with own coding style. Each above goes IMMEDIATELY after the table.
+> I don't see a corresponding i2c_get_clientdata(). Do you really need it?
 
-Agreed. I'll place each MODULE_DEVICE_TABLE() immediately after its 
-associated table to match the existing kernel style.
+It is currently not being used, so storing the client data is unnecessary.
+
+I'll either remove it or add it together with the code that requires 
+i2c_get_clientdata() in a future versions.
 
 Thanks,
 
 Prasad
 
-
 >
-> Best regards,
-> Krzysztof
+> ...
 >
+> Bart
 
