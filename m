@@ -1,41 +1,41 @@
-Return-Path: <linux-gpio+bounces-38894-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38895-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EzF/MJ0ePWoQxQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-38894-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 14:27:09 +0200
+	id 1+s6AkofPWpCxQgAu9opvQ
+	(envelope-from <linux-gpio+bounces-38895-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 14:30:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 264506C58FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 14:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BFB56C5952
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 14:30:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38894-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38894-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38895-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38895-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4BAAD30E916C
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 12:20:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 64DCE3162AF5
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2026 12:20:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02D543E2764;
-	Thu, 25 Jun 2026 12:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5647E3E2754;
+	Thu, 25 Jun 2026 12:19:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D897B3E274C;
-	Thu, 25 Jun 2026 12:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F91E3E2ABA;
+	Thu, 25 Jun 2026 12:19:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389991; cv=none; b=UW8I+COx1cyGi9ggGBx+QBH4j+xBFW5MrqEpAbFpPYB1XTlQ/s6MvQc7G1H/Lo+pemK2rKXyYoaAQ726kGXar4w3YER4PAouDg+Le8+AfkAcQrcmMDWOkm2yLFnvgA+rjAnfkuvbvSVXqUl2avdQLpRBEHdff3KU9ExmF7BOHGY=
+	t=1782389994; cv=none; b=YvHFk/U8HK2zl+Gd5E9Z8/j/kjzaPF5L6+Ftn8RLkX6SbxjVgZ6aWr/AE+OO6YKyBsnKH2HLvn26tfY58DGbyLEuXLZqOV6pP917aDtuHTbrZb600J47GzI58xsev9KsyuzXTqsNdXBCnFqfT0q+b5mU4lM2fIB0n8kYzrDj8ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389991; c=relaxed/simple;
-	bh=6dqD6ETq6rf6eGqzglaK3mOpvAmac9L9znTSja474N4=;
+	s=arc-20240116; t=1782389994; c=relaxed/simple;
+	bh=PnfudNjWm8jbHktxtpdI1nxUjxyRgZL3bwZiew9uRko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AyWFd/cpwTBKgUw2q9zXzDfQn4U1WmUr8/kbRavN2Lr1wBEsH3BPCfnhqdRtFBdgQCMinap004Ddr/LLyoup7m4Ee/BIU7IIg96S06bjm+5mdTWMOKCbTMfmgKKhyS1RS/j35z1tTbFZAO71QBpqvNvyYje/mRFtHQCYrf2TXnc=
+	 MIME-Version; b=i0omGjJFDYqOPSxl3fOOtKmLNTanpFp9u7Pqqptg/AmIcTChb24zIgVoB4WvPXpWKi3BMj4q3F8Q7h8Re0Gg84vrIlxIQA0ZjjHwzuya2/o/JG+uzlFjGVgwAhhD+smogPF7IlJYdMDZhPk7+2qk/JanU0nc43myNmVlGyDG8XA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 121F91F000E9;
-	Thu, 25 Jun 2026 12:19:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C93B1F00A3A;
+	Thu, 25 Jun 2026 12:19:51 +0000 (UTC)
 From: Geert Uytterhoeven <geert@linux-m68k.org>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Linus Walleij <linusw@kernel.org>,
@@ -45,9 +45,9 @@ Cc: linux-mips@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 6/9] MIPS: TXX9: Use GPIO lookup table for iocled LEDs
-Date: Thu, 25 Jun 2026 14:19:27 +0200
-Message-ID: <239f96934a9bbd4bb93e0130e9adb00f466e9135.1782389357.git.geert@linux-m68k.org>
+Subject: [PATCH 7/9] MIPS: TXX9: Drop GPIOLIB_LEGACY select
+Date: Thu, 25 Jun 2026 14:19:28 +0200
+Message-ID: <970cff4598382874ec4a59cee5f51c131b82a0a4.1782389357.git.geert@linux-m68k.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1782389357.git.geert@linux-m68k.org>
 References: <cover.1782389357.git.geert@linux-m68k.org>
@@ -74,7 +74,7 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-38894-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38895-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -91,64 +91,27 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,linux-m68k.org:mid,linux-m68k.org:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 264506C58FC
+X-Rspamd-Queue-Id: 6BFB56C5952
 
-Convert iocled LED description from legacy GPIO numbers to GPIO
-descriptors using a GPIO lookup table.
-
-For now, just ignore the "lowactive" parameter, and force
-GPIO_ACTIVE_LOW, as that is what the sole caller wants.
+TXx has been converted away from the old-style gpiolib interfaces.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- arch/mips/txx9/generic/setup.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/mips/txx9/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
-index 611ccbe429cfe7e1..32246f5f78f5070c 100644
---- a/arch/mips/txx9/generic/setup.c
-+++ b/arch/mips/txx9/generic/setup.c
-@@ -19,6 +19,7 @@
- #include <linux/clkdev.h>
- #include <linux/err.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/machine.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/txx9/ndfmc.h>
- #include <linux/serial_core.h>
-@@ -615,6 +616,15 @@ static int txx9_iocled_dir_out(struct gpio_chip *chip, unsigned int offset,
- 	return 0;
- }
+diff --git a/arch/mips/txx9/Kconfig b/arch/mips/txx9/Kconfig
+index 92b759a434c0eedf..7335efa4d52801dc 100644
+--- a/arch/mips/txx9/Kconfig
++++ b/arch/mips/txx9/Kconfig
+@@ -37,7 +37,6 @@ config SOC_TX4927
+ 	select IRQ_TXX9
+ 	select PCI_TX4927
+ 	select GPIO_TXX9
+-	select GPIOLIB_LEGACY
  
-+static struct gpiod_lookup_table txx9_iocled_table = {
-+	.table = {
-+		GPIO_LOOKUP_IDX("iocled", 0, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("iocled", 1, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("iocled", 2, NULL, 2, GPIO_ACTIVE_LOW),
-+		{ },
-+	},
-+};
-+
- void __init txx9_iocled_init(unsigned long baseaddr,
- 			     int basenum, unsigned int num, int lowactive,
- 			     const char *color, char **deftriggers)
-@@ -659,14 +669,14 @@ void __init txx9_iocled_init(unsigned long baseaddr,
- 		snprintf(iocled->names[i], sizeof(iocled->names[i]),
- 			 "iocled:%s:%u", color, i);
- 		led->name = iocled->names[i];
--		led->gpio = basenum + i;
--		led->active_low = lowactive;
- 		if (deftriggers && *deftriggers)
- 			led->default_trigger = *deftriggers++;
- 	}
- 	pdev->dev.platform_data = &iocled->pdata;
- 	if (platform_device_add(pdev))
- 		goto out_pdev;
-+	txx9_iocled_table.dev_id = dev_name(&pdev->dev);
-+	gpiod_add_lookup_table(&txx9_iocled_table);
- 	return;
- 
- out_pdev:
+ config SOC_TX4938
+ 	bool
 -- 
 2.43.0
 
