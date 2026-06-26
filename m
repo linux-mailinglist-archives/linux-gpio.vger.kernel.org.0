@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-38990-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-38988-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Po3WD3L6PWpD9wgAu9opvQ
-	(envelope-from <linux-gpio+bounces-38990-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:05:06 +0200
+	id lOWrAkn6PWon9wgAu9opvQ
+	(envelope-from <linux-gpio+bounces-38988-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:04:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F34A6CA05A
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:05:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 699386CA041
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:04:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=mediatek.com header.s=dk header.b=nkCTdnGn;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38990-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38990-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=mediatek.com header.s=dk header.b=dtvO4WEV;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-38988-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-38988-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=mediatek.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C68A730E1206
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 04:01:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 92D2E30C0AD6
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 04:01:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A7B3A3E91;
-	Fri, 26 Jun 2026 04:01:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACBB3A782D;
+	Fri, 26 Jun 2026 04:01:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE3F3A451E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792ED3A3E7A;
 	Fri, 26 Jun 2026 04:01:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782446487; cv=none; b=udlzkwitwRc7ouwnakONIXpFGaoKT3PKO+X9r0CslU0E26CpMNM4u70RZh7jAQCdko17J3l+iOKzrO+dHV6W/U/5Sl+EvOcClzKfm09fxlpwSmDIdUJy5oRHMyFMhHe+2ce4DEDeTKL+fnfneGfyM8L8/3GY2plgq/SJs6ZtPHo=
+	t=1782446486; cv=none; b=VDgWxAl8ShZtE5+E9YeMEChMDrhYJLstqwxpV1AtDAGIKX8LkomEJ5eZsRGZ/xV3lXlXS2NOhFGA+IBW+sqY2GcGYyoa/8yOIReN9UoaeM1TBihSxdIV/ajSk1mNgywmgcll1xL8WPQsftF5VGY0hiz6NrM/wL/xjdZpwSKQ3WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782446487; c=relaxed/simple;
-	bh=QnIAKnqxOJ8EUMSu6CHaKDtB+IoocWbuThi/2blQUNE=;
+	s=arc-20240116; t=1782446486; c=relaxed/simple;
+	bh=PDp5fynquOAt//4m9dzD/xSVkHLzzYv8fGyTCp1uABA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eNylia5Y1f6TOthRaoxb+siCam5PPSGKRleYhLCN3b5XAqL8uirnlB5kZDz6xOpd8sm7sGZgzglb73cliLjOx5M5lGWEmgheyWJCSEEuz1fIySuQV9oPEdXhy7mxbZdBTpo28nWX1JGxQQEZOK13bNgxrgQZ8f/nTjWsYkstdkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=nkCTdnGn; arc=none smtp.client-ip=210.61.82.184
-X-UUID: af6b8d26711311f18dc8c9802ae25ab1-20260626
+	 MIME-Version:Content-Type; b=X1pZNgg/M4DsK5KOMXgWxARgQM4fKSQ4f+Kw3I0iTvuig1rgryCCSVmDGKHk79WJA8aTjbwAhcPAsogx1Qog6UkUuRO7WDhhYTVs5v0PBXdCwisc03Hv/UFn4L0W1+RvLoS3hEpZEI7ZwKBIO11gbWFS267A8cXzisiuHMaDKHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=dtvO4WEV; arc=none smtp.client-ip=210.61.82.184
+X-UUID: af867118711311f18dc8c9802ae25ab1-20260626
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xbl7f5md47G7Dw/QJ8cPg5cC7TRcHXXWw44HoVM+GR8=;
-	b=nkCTdnGnEszCsrCdZG3hHOSnL/ZGKS9j6mEUloIPrYDFSfS2U4kVUIOyDRTbwwtzlYovttyusK3MtVyk281MxFXgVo7rQFRGpNmmPaXAx2zqUAGwZ2lCxvYLRFIJmIAPP/8xuAJ/5QH5hJs9J30kQmX6wVOWi9p3BSqYU+kag5Y=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UT7wqsRjD9O1LpK4Logrib3X9WeGeA+3JF/MX+WrNtc=;
+	b=dtvO4WEV/Gas/swc+eLk4QPdQhCCmKHsDTkKlV/0DHDuqZKoc2N/FC3GXkN14NSdmtcPjRf8c02KiQUp6tZHbWm0HOWGDRHc6yu0l+w+Y11xXNFMHJVJyxzgb1pSm4TrsWNGZSC8Jh3kyQumZAzxhvF1Zog3L5nBbIXB1hbhXPA=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.17,REQID:e537a270-ecb5-4bef-8ae4-a938da8a50eb,IP:0,U
+X-CID-O-INFO: VERSION:1.3.17,REQID:8592d5f2-6421-49d9-831c-2479ea90a21a,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:d497b38,CLOUDID:cbdd476c-fcbe-4ae1-b366-24fa403b735d,B
+X-CID-META: VersionHash:d497b38,CLOUDID:9562ae57-8329-46f3-8be7-5acaf04e0995,B
 	ulkID:nil,BulkQuantity:0,SF:81|82|102|136|836|865|888|898,TC:-5,Content:0|
 	15|50,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:-1,COL:0,OSI:0
 	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -50,15 +50,15 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: af6b8d26711311f18dc8c9802ae25ab1-20260626
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+X-UUID: af867118711311f18dc8c9802ae25ab1-20260626
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
 	(envelope-from <justin.yeh@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1681911228; Fri, 26 Jun 2026 12:01:18 +0800
+	with ESMTP id 2080819035; Fri, 26 Jun 2026 12:01:18 +0800
 Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.29; Fri, 26 Jun 2026 12:01:17 +0800
+ 15.2.2562.29; Fri, 26 Jun 2026 12:01:18 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
  mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
  15.2.2562.29 via Frontend Transport; Fri, 26 Jun 2026 12:01:18 +0800
@@ -70,9 +70,9 @@ CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
 	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	Justin Yeh <justin.yeh@mediatek.com>
-Subject: [PATCH v4 23/32] pinctrl: mediatek: mt7620: Enable module build support
-Date: Fri, 26 Jun 2026 12:00:52 +0800
-Message-ID: <20260626040112.2436185-24-justin.yeh@mediatek.com>
+Subject: [PATCH v4 24/32] pinctrl: mediatek: mt7621: Enable module build support
+Date: Fri, 26 Jun 2026 12:00:53 +0800
+Message-ID: <20260626040112.2436185-25-justin.yeh@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20260626040112.2436185-1-justin.yeh@mediatek.com>
 References: <20260626040112.2436185-1-justin.yeh@mediatek.com>
@@ -92,11 +92,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[mediatek.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[mediatek.com:s=dk];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-38990-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-38988-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:sean.wang@kernel.org,m:linusw@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:Project_Global_Chrome_Upstream_Group@mediatek.com,m:linux-mediatek@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:justin.yeh@mediatek.com,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[justin.yeh@mediatek.com,linux-gpio@vger.kernel.org];
@@ -105,7 +105,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[mediatek.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -119,7 +119,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mediatek.com:dkim,mediatek.com:email,mediatek.com:mid,mediatek.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9F34A6CA05A
+X-Rspamd-Queue-Id: 699386CA041
 
 Add MODULE_LICENSE("GPL v2") macro and change Kconfig option from
 bool to tristate to allow building as a loadable kernel module.
@@ -131,32 +131,32 @@ Fixes: dc6ae2057c9c ("pinctrl: ralink: move to mediatek as mtmips")
 Signed-off-by: Justin Yeh <justin.yeh@mediatek.com>
 ---
  drivers/pinctrl/mediatek/Kconfig          | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt7620.c | 3 +++
+ drivers/pinctrl/mediatek/pinctrl-mt7621.c | 3 +++
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-index 4a6bcea05dbb..dc066ce2ed0c 100644
+index dc066ce2ed0c..5b762dbc10dc 100644
 --- a/drivers/pinctrl/mediatek/Kconfig
 +++ b/drivers/pinctrl/mediatek/Kconfig
-@@ -48,7 +48,7 @@ config PINCTRL_MTK_PARIS
+@@ -55,7 +55,7 @@ config PINCTRL_MT7620
+ 	select PINCTRL_MTK_MTMIPS
  
- # For MIPS SoCs
- config PINCTRL_MT7620
--	bool "MediaTek MT7620 pin control"
-+	tristate "MediaTek MT7620 pin control"
- 	depends on SOC_MT7620 || COMPILE_TEST
+ config PINCTRL_MT7621
+-	bool "MediaTek MT7621 pin control"
++	tristate "MediaTek MT7621 pin control"
+ 	depends on SOC_MT7621 || COMPILE_TEST
  	depends on RALINK
- 	default SOC_MT7620
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7620.c b/drivers/pinctrl/mediatek/pinctrl-mt7620.c
-index d2624b9b5bc4..8d08a2e2dbb0 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt7620.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt7620.c
-@@ -135,3 +135,6 @@ static int __init mt7620_pinctrl_init(void)
- 	return platform_driver_register(&mt7620_pinctrl_driver);
+ 	default SOC_MT7621
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7621.c b/drivers/pinctrl/mediatek/pinctrl-mt7621.c
+index b18c1a47bbeb..3300d085a748 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7621.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7621.c
+@@ -115,3 +115,6 @@ static int __init mt7621_pinctrl_init(void)
+ 	return platform_driver_register(&mt7621_pinctrl_driver);
  }
- core_initcall_sync(mt7620_pinctrl_init);
+ core_initcall_sync(mt7621_pinctrl_init);
 +
-+MODULE_DESCRIPTION("MediaTek MT7620 Pinctrl Driver");
++MODULE_DESCRIPTION("MediaTek MT7621 Pinctrl Driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.45.2
