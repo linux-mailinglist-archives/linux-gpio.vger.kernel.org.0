@@ -1,93 +1,93 @@
-Return-Path: <linux-gpio+bounces-39040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39041-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bL7zLqqQPmplIAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39040-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 16:46:02 +0200
+	id ae4GMs+TPmqEIQkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39041-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 16:59:27 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 376946CE128
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 16:46:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E4D36CE3CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 16:59:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=YtFPFR86;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39040-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39040-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=PsD6lXOX;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39041-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39041-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 88393308D403
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 14:44:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 86BCA3156A96
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 14:50:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C7A3F99F4;
-	Fri, 26 Jun 2026 14:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECB23FBB72;
+	Fri, 26 Jun 2026 14:48:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323563F99E6
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 14:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176123F9F2B
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 14:48:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782485080; cv=none; b=BNoLk/Qu9VNc6Qfeu02b83UV3rn17v6spfMXv0fBz3o4XwseZ4OhfoFS132994P4jwuSx27f7i8Y95gCJOMxtx3uqCfPDaFNXk3e0v0IXqoCeevderrfeAVo4HSSi36vUIW+zUe2fM1A+evcBC3HRlhsZ36stJLxM/cjmoqH+YA=
+	t=1782485288; cv=none; b=KYbuPfNWukWpYkfmk5lbjqdQj9HBMj0xs2NaS19s0IuDkOw9Ob4frGOpKV/f1CPNEzfZSGuduWb0H0KJqpu/GVcKuan9tPkxz8/lKobf8xr1s+xDggdUM6+NjN2nZ92rt2/H3I61En3uis7kzfK1OwKsYBnBJro10zYI+T4+u0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782485080; c=relaxed/simple;
-	bh=wo7pqiPSksjfBjenX/Wxro0deCHdEvK5J0TuZLF/5UY=;
+	s=arc-20240116; t=1782485288; c=relaxed/simple;
+	bh=q4L5tEc11ihfQ9ESEXTsBG7QsSTcgbOiW5gpcNQ/xug=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DlLjknkJz0MU9YI/4wr4tUBjK13MQNflNzFWD9fo+uXOWGWFrTUbgz2QW4zxGeT+ASTIcK9ylTAIxzFtCGCXjw6LNoec6Lf5f9hYfCdMgLhRHklMbr3guDn5GZoMmbbvnD+y0EUspH2eew9YVJpy/l7BVVA5YGHzcXpzHoa5RUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtFPFR86; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3A01F00AC4
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 14:44:39 +0000 (UTC)
+	 To:Cc:Content-Type; b=NSGXid16Ec7Rl3c41yNyd4zOjLWvY5cDFIdRt3viuVpqynToeYn2dYhD4KuPGaANdCbvleOMWKOfT67k593gdBYE8Nb5hjaGOODqM9D2dHGj3FMESX0F5t9Kd8IWdmZcr6uFomMjM5pOB5xk+I4NKMgwQcbf3eYebsCCFOPcle4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsD6lXOX; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1AE1F00A3E
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 14:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782485079;
-	bh=wo7pqiPSksjfBjenX/Wxro0deCHdEvK5J0TuZLF/5UY=;
+	s=k20260515; t=1782485285;
+	bh=UdRpwrOaaRjrnQHkn8gCCooh0xVjwEaGW5EGRqe/Jv8=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=YtFPFR86jlEfPinvTKPO7Xo3Q6Pn6lfCRb4oZkeiDpFCN/D9mtc4Lfcxbv/D7oPaR
-	 58UssOuuRrEHnPGYkn4D76RRI7KpSuZ0S8y2i5Z1zBdD8Sy/dRepuxmjdF8Y6i1WEg
-	 zZK14SsSHAiPl+cha1o773qyZnPFafIWYkSojb+kQk2mPYHf+iBdqhRRdSz88VYHw2
-	 twuY6MDayMn7HLSVUkFRYhzwi7xG99ZqOx8pw99SVBRNtXEqNmEEOAT+nHpYwMulRZ
-	 57+/tXEJfpv338WK2zKdWRyYKAsC+fpdrKZVAf3mOtbTIwkQXBIklFkmOlKO4gDkBP
-	 TkDkyagASTcCw==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5aa2c25c632so875237e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 07:44:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoSyYv6QlCbFWOIg94KzgGRnzYAf65LNfHMTYKQToqoC+m6uSRKcjvok4JqNISIyDrx1SFiVUxXTeJD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDG48a28YNyT/C1UKgURwcJ1aF/OKT6EyUyaOOJovUMBtazF7T
-	rvZ8+1XgdXb9qkewHWRBiyimi3IEGRvQ5wWT6ijl+LhHpAieUNnTKEbEKFII3T4tywACRSETzcl
-	gRUOXjWHSBjM8qltvACvcTZclcqZE2p/r6l5+IBZbSA==
-X-Received: by 2002:a05:6512:1325:b0:5a8:8db6:b3d with SMTP id
- 2adb3069b0e04-5aea1f4b9aamr2215524e87.24.1782485077659; Fri, 26 Jun 2026
- 07:44:37 -0700 (PDT)
+	b=PsD6lXOXa07iSRlcfwt8MDmhOsq1zZs4pkUUikDl28aq06rppi4t88izrAU10T4lC
+	 KVXuLEMmxxEjupNQ5Ibpsyb0SxpNJmIKXaafPjPnLLccPYmreRD73K2tBlpoG7j5sd
+	 RDoiyKfJ/OxDgmgFPVtOgPTKiiMaWeNLAMyNPCUEsj9zRx5o0QxyiIe+Ko0axh8iOk
+	 6BefI4hV4M89G54NmQyl/RtSNe9BOT9tfxxtzWRmgANAewbcN71SYxepB9m8tepwhw
+	 lVZkraEX7O+9TvVVdYyAP5nrvqj2qqY8M6XGohNaq+YMHGnIiJtVI8icyJdJToiyTE
+	 b8FJICHsaKuAQ==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39957d210f4so11242471fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 07:48:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RrbrgX5K8g4RI+50xceceFhksLc8tiZdm0YyysV5IWZUYolVFdHj7eMcKObIfxbbcEulc1VdsOHHY4+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza/0Sz3XRg1k23FoYo2cB6ZEGi4d8J0QW43nIQhULV2JmDDk3T
+	ljUEwjMbDzRFda8SWfgvX329ZJkWbpTZVjGnQ0dtMMYIvsYqLbyJWNXz5z62aBGufzDDUzQmLSZ
+	EpUJFVt24qhEQXIQ4fzxrxlfjUXRc96pGfrRIDUzf3g==
+X-Received: by 2002:a2e:bd03:0:b0:39a:e1c5:6f38 with SMTP id
+ 38308e7fff4ca-39ae1c570d3mr2163391fa.24.1782485284112; Fri, 26 Jun 2026
+ 07:48:04 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 26 Jun 2026 07:44:35 -0700
+ HTTPREST; Fri, 26 Jun 2026 10:48:02 -0400
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 26 Jun 2026 07:44:35 -0700
+ HTTPREST; Fri, 26 Jun 2026 10:48:02 -0400
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <CAD++jL=_27BOr28Pi_UqjDpJSuRztYGKO2CXynOvwSVpe1-uBA@mail.gmail.com>
+In-Reply-To: <20260625115718.1678991-1-v@baodeep.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260610-pmg1110-gpio-v1-0-a9c50cd8b5d9@oss.qualcomm.com>
- <20260610-pmg1110-gpio-v1-2-a9c50cd8b5d9@oss.qualcomm.com> <CAD++jL=_27BOr28Pi_UqjDpJSuRztYGKO2CXynOvwSVpe1-uBA@mail.gmail.com>
-Date: Fri, 26 Jun 2026 07:44:35 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Me+ZBSMaOYGRUKonA=dbNkHY3Ovag0J4E8rr8oESSkGdA@mail.gmail.com>
-X-Gm-Features: AVVi8CdivKvRCew0jR-PMn3z_xAGV9V8TCmmlzMbwwdMXjc2U3bvSB-7dauR6_Q
-Message-ID: <CAMRc=Me+ZBSMaOYGRUKonA=dbNkHY3Ovag0J4E8rr8oESSkGdA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: spmi-gpio: Add PMG1110 GPIO support
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	David Collins <david.collins@oss.qualcomm.com>, 
-	Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>, 
-	Kamal Wadhwa <kamal.wadhwa@oss.qualcomm.com>, kernel@oss.qualcomm.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Fenglin Wu <fenglin.wu@oss.qualcomm.com>, Bartosz Golaszewski <brgl@kernel.org>
+References: <20260625115718.1678991-1-v@baodeep.com>
+Date: Fri, 26 Jun 2026 10:48:02 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Mcz=GPrjnvQ0Q6VxfqHDO0W3yq7FpRb=bPi-Jxu-GFuqA@mail.gmail.com>
+X-Gm-Features: AVVi8Ccrn34D3j7CJ9eL5y0B-K12ypG8-rk1rDfezPbvQfjSrS7D45oeqSJjK0Q
+Message-ID: <CAMRc=Mcz=GPrjnvQ0Q6VxfqHDO0W3yq7FpRb=bPi-Jxu-GFuqA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: fix sleeping-in-atomic in shared-proxy;
+ restore meson non-sleeping
+To: Viacheslav Bocharov <v@baodeep.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Diederik de Haas <diederik@cknow-tech.com>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
@@ -95,51 +95,99 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39040-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:linux-arm-msm@vger.kernel.org,m:andersson@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:david.collins@oss.qualcomm.com,m:subbaraman.narayanamurthy@oss.qualcomm.com,m:kamal.wadhwa@oss.qualcomm.com,m:kernel@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:konrad.dybcio@oss.qualcomm.com,m:fenglin.wu@oss.qualcomm.com,m:brgl@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,qualcomm.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39041-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:v@baodeep.com,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,samsung.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org,kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 376946CE128
+X-Rspamd-Queue-Id: 3E4D36CE3CE
 
-On Fri, 26 Jun 2026 15:00:36 +0200, Linus Walleij <linusw@kernel.org> said:
-> On Wed, Jun 10, 2026 at 9:05=E2=80=AFAM Fenglin Wu <fenglin.wu@oss.qualco=
-mm.com> wrote:
+On Thu, 25 Jun 2026 13:57:16 +0200, Viacheslav Bocharov <v@baodeep.com> said:
+> gpio-shared-proxy chooses its descriptor lock (mutex vs spinlock) from
+> the underlying chip's can_sleep, but under that lock it calls config and
+> direction ops that reach sleeping pinctrl paths. On a controller with
+> non-sleeping MMIO value ops the lock is a spinlock, so a sleeping call
+> runs from atomic context:
+>
+>   BUG: sleeping function called from invalid context
+>     ... pinctrl_gpio_set_config <- gpiochip_generic_config
+>     <- gpio_shared_proxy_set_config (voting spinlock held)
+>     <- ... <- mmc_pwrseq_simple_probe
+>
+> This was reported on Khadas VIM3 and worked around for Amlogic by
+> commit 28f240683871 ("pinctrl: meson: mark the GPIO controller as
+> sleeping"), which marked the whole meson controller sleeping. That
+> workaround broke atomic value-path consumers: w1-gpio (1-Wire bitbang)
+> no longer detects devices, because its IRQ-disabled read slot calls the
+> non-cansleep gpiod_*_value() and now hits WARN_ON(can_sleep) per bit.
+>
+> Patch 1 fixes the proxy locking generically (always a sleeping mutex).
+> Patch 2 then restores meson can_sleep=false, fixing 1-Wire.
+>
+> Patch 1 has a trade-off: a proxied GPIO becomes sleeping, so consumers
+> gating on gpiod_cansleep() change behaviour. No current device needs
+> atomic (non-cansleep) value access on a shared GPIO -- every report
+> (Khadas VIM3, ODROID-M1, my test on JetHub D1+) is a shared reset line
+> (eMMC/SDIO pwrseq or PCIe reset) driven through the cansleep accessors,
+> which is what the proxy exists to vote on; bit-banging that needs atomic
+> access cannot work through voting anyway. An alternative that keeps
+> atomic value access (split locking) is possible but adds a second lock
+> and new race windows, so this series takes the simpler mutex-only
+> approach.
+>
+> The two are a unit: patch 2 must not be applied without patch 1,
+> otherwise the original VIM3 splat returns on boards that share a meson
+> GPIO -- please keep the order. I have not Cc'd stable; I will request
+> stable backports separately once both patches have landed.
+>
+> Changes since v1:
+> - gpio: shared-proxy: open-code the descriptor mutex; drop the
+>   gpio_shared_desc_lock guard and the gpio_shared_lockdep_assert()
+>   helper, move the mutex rationale to the can_sleep assignment. No
+>   functional change.
+>
+> v1: https://lore.kernel.org/linux-gpio/20260610153329.937833-1-v@baodeep.com/
+>
+> Viacheslav Bocharov (2):
+>   gpio: shared-proxy: always serialize with a sleeping mutex
+>   pinctrl: meson: restore non-sleeping GPIO access
+>
+>  drivers/gpio/gpio-shared-proxy.c      | 66 +++++++++++----------------
+>  drivers/gpio/gpiolib-shared.c         |  9 +---
+>  drivers/gpio/gpiolib-shared.h         | 28 +-----------
+>  drivers/pinctrl/meson/pinctrl-meson.c |  2 +-
+>  4 files changed, 30 insertions(+), 75 deletions(-)
 >
 >
->> Add PMG1110 GPIO support with its compatible string and match data.
->>
->> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+> base-commit: 840ef6c78e6a2f694b578ecb9063241c992aaa9e
+> --
+> 2.54.0
 >
-> Acked-by: Linus Walleij <linusw@kernel.org>
->
-> Bartosz will queue the patch, I think.
->
-> Yours,
-> Linus Walleij
 >
 
-I will go through the pending patches next week. Thanks.
+I have no idea what's wrong but I'm still getting two copies of each email
+as separate messages to my inbox. I'm not seeing it with anyone else. I think
+there's some issue with your setup.
 
 Bart
 
