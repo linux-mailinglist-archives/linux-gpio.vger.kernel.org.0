@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-39014-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39015-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vhn9I/kVPmqy/ggAu9opvQ
-	(envelope-from <linux-gpio+bounces-39014-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 08:02:33 +0200
+	id EE4eGh4WPmq2/ggAu9opvQ
+	(envelope-from <linux-gpio+bounces-39015-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 08:03:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E17136CA8A6
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 08:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E6D96CA8B1
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 08:03:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=Agc00TWD;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39014-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39014-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=hEu0MBbR;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39015-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39015-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 51FA43089D52
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:01:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3702E30AADCF
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2026 06:01:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704283D1CBE;
-	Fri, 26 Jun 2026 06:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E912633F8A5;
+	Fri, 26 Jun 2026 06:01:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC013D301F
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 06:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E293D3CEC
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2026 06:01:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782453682; cv=none; b=X0Y1YnABJX3Yn1jxnfvDH7Rf7MiNDZC2e4byzkph4nKLq7QT/TPX1dcq3ivjWTWrCpi6LDfXznM/BkYwn+ZqYa7hKMsnnfZMke5b6Mz1h4zi39fCnY7Gd3DhfRjt9jcvL7r9hpZ2xrRqtoGqWvQqlQf3qPugMoIJ2O+pkFKmmC0=
+	t=1782453683; cv=none; b=K0yyHXoI+A1J1j1PRTaHVWZGSbgCxsCv3BLH4O+N17PmvtYT0xNFPG+wSZLHXzvU+lgHwZKsCbzIhhx9ZPsb0WJVSQM1WYQylQZ9z/Ueq7DN0sfF0Ft0M4zx9jjCxq/miJfAmgM81yW0/ZIGzulfP9Z3F7H5CFfD4CjUoPp5aAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782453682; c=relaxed/simple;
-	bh=7L0JJKkBkRDuegs9xTZqxl2sH5BEOplN9Sw0ybDh2QA=;
+	s=arc-20240116; t=1782453683; c=relaxed/simple;
+	bh=m+LYu4JehDqB5qW0PDlMYvYoWovIUAqNI1Hb+p8fYAQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2IILFT/xpCszFYX/CXoLth8OFiydCHssEVogp+mT9SSVpoTivBlKOaqIzAVA1fOgTnUpScJLAk1SNtGK1IRn5uKMdG/4FPzg3RfOTbNZ1Yk5i46gmONPi0YymNscqo/kP7UFJ7gauRZXhXqaK54lcBY5CHZnCF/pG6YWhqV4aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Agc00TWD; arc=none smtp.client-ip=209.85.221.52
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-46e30429b10so283504f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Jun 2026 23:01:20 -0700 (PDT)
+	 MIME-Version; b=M/UquG/YtK+WpxOvjO9zCjkS0rg3qX53q0cVXcwpwHqgU011NvNGrrJaFGb8Cs5PqhvIk/CNfzwJB1zAOPRKb/0wPHW5fxJjxgSVSov1zMHxbtUx1fO9unY3WovXxv9F0XOEl8OqS2J3Ym4L84r8/LEnPZPxlKwEahkuptbgWLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hEu0MBbR; arc=none smtp.client-ip=209.85.221.52
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-4627adcf4d6so294173f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Jun 2026 23:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782453679; x=1783058479; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782453681; x=1783058481; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/IdsNMSUNjjiL5bhyJQItc/JX8qMKncxtCJvcADiPv4=;
-        b=Agc00TWDbqUWZek+FeRAGCjt3bMdh7HdS4clsMhVMEO+ZqsQ0GD+YOAKKZBI3rFCDj
-         A3vZO8QtXTN9R3NlpDkuoJopTfnIouaAFsSoeO6twVFqq62DL4BB5zRS5rkNFSsEK5Xc
-         I98W+0TYPVvYH9jOEnbemr8Fmfld0uNInB6Fn3McgqC9g6/NAjTqyiQdgyXUqeDnF2XK
-         vcpw+Rz0OSwkWfyuiO+Y5+518ZKeYK9Fmv2gztlokcWcElJiPHPjwAS5+fCQPDxAS2RE
-         bvGrtriKc6BDA53HlvxsRYB2j8zqcPwh0uFR3y0IwQGUSCbZHpR1PfmQF2UN4QthmMoH
-         akyQ==
+        bh=/BomNSlobdw16KsyTDdkpLrFE3caPS+V2Wnh8kZXiEc=;
+        b=hEu0MBbRzZRgdimmdYGFKnQjBtsdcD7lTnyFEBvx+6Sq1uK5LanbQlxtbRWUfw+IcC
+         XhIRpZqrHNp9mHibbnQR7wsUacIA8VRYPLJwN1AEQUBTWBzlyK581iUu6ZowiEG8k68O
+         49maZfxZL64wsj5eBzS9KRrX+Y8RQhWGJ2xNIoLgiV2G5yPOrEFD+L04JOE5EThLp4Of
+         G4hqd0wkDcFfWXOtBSRh+7snwIBPgepPobEE4KiP/3Yc8YgVwwVQtxNpWYEi05G4/0o2
+         1chrDGBN+L84KLg3SjtMIqqI7mCnPqXT/uVLeMSVYCmlNRCbFvZGS27/dV8XTsJ6ozBd
+         zpog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782453679; x=1783058479;
+        d=1e100.net; s=20251104; t=1782453681; x=1783058481;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/IdsNMSUNjjiL5bhyJQItc/JX8qMKncxtCJvcADiPv4=;
-        b=LkenWtX2yXSmw9cj+5GU7GWg/gwY7JqqixtSsx1wWfddr4eE3N4qhBP7K7Frt+pHYj
-         3l2wL3eY4xOpBT3vAhAUf4QqCRVjK83N1oHMN2mujjL+rJX+lNlvkliR9GPkgF9r1dfr
-         r4BcRk0+oPVk0aPUDSlxeRg6jw6WE9iNIqL4NcZWsZa6CQ2VKIlMxJaCAk1Q9ZKpDVmE
-         hBIc+4rmjYbf0mNe7P+RI/rt/fVW2ng28i3LIpC/MpBQ7r4xkO/yRsLMLHH1Fxd9LZx2
-         njVVnLxvqjqY+B3KXZHx3Z+HBLeJlfcNiQgg1WaXn3uE203uqisezL0b1U60TpF/rwOQ
-         TQMw==
-X-Gm-Message-State: AOJu0YzY3XgpDvypIk2sr2E32u2vFSQz30Uqp26u/8E0DX3YrY3PcQQ4
-	Q4ZFVZ16RDpQviww9RME2zVNNNKarumZ0v9qUjF2H+gdVBREdmzo96szdvqgMQ==
-X-Gm-Gg: AfdE7cnndXtM8DJLwnXdszp/+BS5E6Asl4PpCT4fOM7h96bTYinO+QBVqsd9J6zQCt6
-	5hoda6huReLisTYov81Dd00Pr04ISlnG5UJRxWQWimipWRABiAUXw/UraSJ6B2z15gMkf/EFy0r
-	L8Y9rLm/i+RyXWg0t5GUESB0jwmKzx0tgKfkfmZ9DaO2+8arwfdFM6h1MyS/GwjZ6XO8tEcFFeV
-	95VrTooe9GqMkZkRQNyiIqiQ6FZLyyMbq9tSOiLzwqToqRnBgOye0z3gxxYByrxvQvtgHVZSy9k
-	xGpoDNzmfwYKh33cUNoNBXKm0plFk31OWkt80+J5CA+iBqwKgaUh9Ts0NXLt0OA6vjY2OwV2wwv
-	vPaF+bfGRFW/wy26KzkwXDv9Hpbqdn9Nzrq0qTKXZw6ANJNyGzvJBrvEDR1jVwAwz7ELtdZqVIb
-	a3A8SXb6u9KLNECzGJ4x1e4dyliLslQMKx4CwZII5iW9NdD3hg0KaUtOUQbNk=
-X-Received: by 2002:a05:6000:2581:b0:46e:7a27:98cf with SMTP id ffacd0b85a97d-46e7a279bc8mr5287263f8f.25.1782453679003;
-        Thu, 25 Jun 2026 23:01:19 -0700 (PDT)
+        bh=/BomNSlobdw16KsyTDdkpLrFE3caPS+V2Wnh8kZXiEc=;
+        b=Xdi2OSaOf1vTows/0SMeB8LbfWB2o61XgVSWmtcxkM14JhGx7kTRvaKiOVkG0IWiKS
+         Z3jRreTjttgJ6OL2NrODCusE+Xey0K165CgjlxKOkUPqJPPQiYwQi66ofCf/7lQZ9MpY
+         UJmn0QlUzlG2SWIaBTZUOzWJxkkd2+clJrRBaPGRe9x5xT0KgXXRUvQf5uLY7I8xuc1r
+         5HG2PAZ0Kab+GTG39BYFfL0AwBmm2SEteddlboNnQnBfQMtqQ1Q7NgA0hIKxpteWk/ag
+         KMwILKVb9pABnzGou7207/zSqHJg0ygsFvv2RFYQgC8Ap2WGtiSaz6gMEPolSxepFbPp
+         k8Hg==
+X-Gm-Message-State: AOJu0YxmBV7LNZxeM7wn8Ub14wSc95HI7jggJ/Y4pXXBFqEpr3NnwJQP
+	MzReq3bYtuv2cpB2VHBpswfQfgfaEsinQRf3JH+lq5lRyW7RxNY0VsGVEZ3kZw==
+X-Gm-Gg: AfdE7cnbmTXOBrNjTN73Nm9PDeuTrc1yX1cDdfglzYeREAOts5ljIc2nj0whdNbwHqQ
+	Z4PidxCOmUndLRfIJQZXGsO5nzOCuVbYflY+rAtyprvGTeL/CVKcazgeIMmrpG+x827ICJDnwni
+	Sn1uWiq5qIVqbJ5jrYulen2afueX6d7V0zpTboO0fQGcosNGYzMmXVHv7OJ2HRjCImqQD/3B3y8
+	rmagHefQ5fLbcLLF1mlkSB8WtnzckZb+sv8vOMivA5tCJ/qOlWfROcuqCGd3SM+JRyufcQDpC7d
+	C/vTaxzLKoA5MyVRiA73rsr7bR2n7XxOti+jE9aTj6z2PCLIcNf2Pjtu4CvwMyTPky73GWLq+kj
+	SL7rel5pIB3+RCw+QBgyuQuA51Pt3IUhnMT1rQ//MFMYuxreyNhjOv9ACSRQUdznEbhQkHuMOQu
+	4pPo1k4owkrm8+DXh4FHED5YHhnCciSOb7dp0rqG/3KcmMB/M4LdRvamI2qwo=
+X-Received: by 2002:a05:6000:24c2:b0:464:28e3:a09b with SMTP id ffacd0b85a97d-46dc18a5a2dmr8936974f8f.37.1782453680405;
+        Thu, 25 Jun 2026 23:01:20 -0700 (PDT)
 Received: from camaron.. (147.red-88-9-50.dynamicip.rima-tde.net. [88.9.50.147])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46f0db007b3sm2767936f8f.2.2026.06.25.23.01.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46f0db007b3sm2767936f8f.2.2026.06.25.23.01.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 23:01:18 -0700 (PDT)
+        Thu, 25 Jun 2026 23:01:19 -0700 (PDT)
 From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: linusw@kernel.org,
@@ -83,9 +83,9 @@ Cc: linusw@kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
 	Sashiko <sashiko-bot@kernel.org>
-Subject: [PATCH v2 2/4] gpio: mt7621: more robust management of IRQ domain teardown
-Date: Fri, 26 Jun 2026 08:01:10 +0200
-Message-ID: <20260626060112.2498324-3-sergio.paracuellos@gmail.com>
+Subject: [PATCH v2 3/4] gpio: mt7621: be sure IRQ domain is created before exposing GPIO chips
+Date: Fri, 26 Jun 2026 08:01:11 +0200
+Message-ID: <20260626060112.2498324-4-sergio.paracuellos@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260626060112.2498324-1-sergio.paracuellos@gmail.com>
 References: <20260626060112.2498324-1-sergio.paracuellos@gmail.com>
@@ -111,7 +111,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39014-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39015-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:vicencb@gmail.com,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,m:sashiko-bot@kernel.org,s:lists@lfdr.de];
@@ -132,69 +132,55 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E17136CA8A6
+X-Rspamd-Queue-Id: 0E6D96CA8B1
 
-The driver uses devm_gpiochip_add_data() to register the GPIO chips which
-means the devres subsystem will unregister them only after the function
-'mt7621_gpio_remove()' returns. During the window between domain destruction
-and devres unregistering the GPIO chips, the chips are still fully active.
-If a consumer or userspace invokes gpiod_to_irq() during this window,
-'mt7621_gpio_to_irq()' can dereference the already-freed irq domain pointer.
-Thus, manage the IRQ domain teardown using 'devm_add_action_or_reset()' to
-guarantee it is destroyed strictly after the GPIO chips are removed.
+Function 'mediatek_gpio_bank_probe()' registers three GPIO chips using
+'devm_gpiochip_add_data()'. At this point, the chips become live and visible
+to consumers. However, the IRQ domain isn't allocated and set up until
+'mt7621_gpio_irq_setup()' is called after the GPIO chips setup finishes.
+If a consumer requests a GPIO IRQ concurrently 'mt7621_gpio_to_irq()' can
+be called and pass a NULL irq domain pointer irq_create_mapping(), that can
+corrupt the mappings or cause a crash. Fix this possible problem seting up
+irq domain before GPIO chips setup is performed.
 
 Cc: stable@vger.kernel.org
 Reported-by: Sashiko <sashiko-bot@kernel.org>
 Fixes: a46f2e5720f5 ("gpio: mt7621: fix interrupt banks mapping on gpio chips")
 Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 ---
- drivers/gpio/gpio-mt7621.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/gpio/gpio-mt7621.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-index ceb99641baee..57384ef74703 100644
+index 57384ef74703..1b0b5247d3c9 100644
 --- a/drivers/gpio/gpio-mt7621.c
 +++ b/drivers/gpio/gpio-mt7621.c
-@@ -272,9 +272,9 @@ static const struct irq_chip mt7621_irq_chip = {
- };
+@@ -466,12 +466,6 @@ mediatek_gpio_probe(struct platform_device *pdev)
+ 	mtk->num_gpios = MTK_BANK_WIDTH * MTK_BANK_CNT;
+ 	platform_set_drvdata(pdev, mtk);
  
- static void
--mt7621_gpio_remove(struct platform_device *pdev)
-+mt7621_gpio_remove(void *data)
- {
--	struct mtk *priv = platform_get_drvdata(pdev);
-+	struct mtk *priv = data;
- 	int offset, virq;
- 
- 	if (priv->gpio_irq > 0)
-@@ -475,14 +475,14 @@ mediatek_gpio_probe(struct platform_device *pdev)
+-	for (i = 0; i < MTK_BANK_CNT; i++) {
+-		ret = mediatek_gpio_bank_probe(dev, i);
+-		if (ret)
+-			return ret;
+-	}
+-
  	if (mtk->gpio_irq > 0) {
  		ret = mt7621_gpio_irq_setup(pdev, mtk);
  		if (ret)
--			goto fail;
+@@ -482,6 +476,12 @@ mediatek_gpio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	for (i = 0; i < MTK_BANK_CNT; i++) {
++		ret = mediatek_gpio_bank_probe(dev, i);
++		if (ret)
 +			return ret;
- 	}
- 
--	return 0;
-+	ret = devm_add_action_or_reset(dev, mt7621_gpio_remove, mtk);
-+	if (ret)
-+		return ret;
- 
--fail:
--	mt7621_gpio_remove(pdev);
--	return ret;
-+	return 0;
++	}
++
+ 	return 0;
  }
  
- static const struct of_device_id mediatek_gpio_match[] = {
-@@ -493,7 +493,6 @@ MODULE_DEVICE_TABLE(of, mediatek_gpio_match);
- 
- static struct platform_driver mediatek_gpio_driver = {
- 	.probe = mediatek_gpio_probe,
--	.remove = mt7621_gpio_remove,
- 	.driver = {
- 		.name = "mt7621_gpio",
- 		.of_match_table = mediatek_gpio_match,
 -- 
 2.43.0
 
