@@ -1,153 +1,249 @@
-Return-Path: <linux-gpio+bounces-39080-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YPe9NWiJQWqxrwkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39080-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 22:51:52 +0200
+	id fJx3EVeoQWq2tAkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 01:03:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 178696D4EA8
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 22:51:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96E9A6D539B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 01:03:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=H11eCqCw;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39080-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39080-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=IMWgbM9D;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B293301B71F
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 20:51:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 52A2D301CA64
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 23:02:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4EC37757C;
-	Sun, 28 Jun 2026 20:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 190F3374195;
+	Sun, 28 Jun 2026 23:02:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718EE2FFDE3;
-	Sun, 28 Jun 2026 20:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CAD3559F8
+	for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2026 23:02:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782679891; cv=none; b=LzMNSBD0KgsjMXPVCYJfuexlTGQGlYEB50eVxPUmV9iXSavK2mBserFPGQr5CkKk0eT3Yi+9w6t9KB3uMoxammbX27qU2LfjBawD+2dg67Uhz9SuO4XGs0akWE629amrxmAElGBuj6MWoatwU3wr22Fi6IhdutS+m1+4Y0WH1wA=
+	t=1782687727; cv=none; b=SrUL2FkhrhgR/72rcISpB7vJocK9f98B4Feh4KgbgNZE/6U9jsI5G80fYG8ao6lnFHkQyWgK+8ZDuYZMgsiGoI9akFUZA2fzopHsGsxynle0MRnsG8UfYxNPwvpfaHi6FREjt+pd7yPsHRcBTaSqsWwke/1Ugj3x8MdHBAWYGBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782679891; c=relaxed/simple;
-	bh=/Psvts4bK0De9buR/Tb14Gff3P1NfGViWnpQhQj3bbg=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tbcR/WgD+sYtJrBXQZmTLuabxesVTMcD8jnY07bnhwX+bIs1DQclbaWLHYFfergdMKbCaEcaT/ZYqkBexa38yeH68FZTdEHXk+fEYXc+8j1lx6y6yamQ+1aR+fUKXkOJquOkgJpNU+FDN1CoZc9ZQVeXNXeALYkKYIDpm4C/G+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H11eCqCw; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF13A1F00A3A;
-	Sun, 28 Jun 2026 20:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782679890;
-	bh=cV5nLM46V6v/htc0lFctV0QauB6Y72+YuHxfHLCch3w=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject;
-	b=H11eCqCwY1jc/+hlN4DaU9CVWUaM5QBNrKK6D7zyITL8TzgdMVTvM0Ta6kjU13c/Q
-	 KRKDZe7OQZytTmS/I/KD7V+2XB4+E7+PIMzEtHhgQOqwMZ0HMWA60f8gJTHng+35Rh
-	 aX/qNg9SuiN7MYnS+etDBgMXQ2UnxFiPNOQoxb8gd7Wrmxnf9seeiaHRvwCGkMOoiQ
-	 yB0gVqIqI7vKsh8FKItB0VepxKqaM+BzKpWvmyQynuLdef30/6KnQKoT4SnC0eUjtJ
-	 EdDIXkD/lgjHGy6hQ8OBBgsHeLlpzTbZI55P64RAFovUc1OzIKpEi1jkE3kGkQIC36
-	 tEPq2zOItg+BA==
-Date: Sun, 28 Jun 2026 15:51:29 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1782687727; c=relaxed/simple;
+	bh=CNHUAK/S24oDKcBpryQESBqdNmm6Qn/xKxs0WrC9iSA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qev23YF8DdKJ/irTVyjDNN3OhXgYhdbc2scf+T3ROdI6rBdouDU13INOjvpanjz0Eq3QTVk7W5X/lwsSB+wWKdDhsLfcO7APjMiRsYyvxTylaxT2R0SB0QfMUEtJSMUhIUrOJ+vf87A9tM8OwAvzYzsKgmzlqryazpGNKpjUO5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMWgbM9D; arc=none smtp.client-ip=74.125.82.48
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-13809223fd4so3218409c88.1
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2026 16:02:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782687724; x=1783292524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YMZ10IYFKNLnYKr+gx1rVCyYcTm3FWyqJhOk5IPgR8w=;
+        b=IMWgbM9D92XEq7+Dx6g4tATkmly/LJiEElhHkb4X1CERuG+1Gs7V48pKBtWmtzaCRs
+         UYIo7HuuiqnSR3MnG8SLqUxzN7ruon7+qMmLGmPHkSdZFdjqw73ton4VswwMdnGApeOp
+         vAQUDcjYLM2FyePggCZ7yj76CMTjh77iz/KQnWx10zDAXwVHoWFmFrusZV7uxIxUqRbB
+         9Zmw02wIhdzuBBKSMcqY7VrHwyjzV9wP5Br6pxEJf/BtrkDO00q3JDmWV622ZiRZ6WqI
+         9efHmhxloaE0BTIqZg975XLUjsrHaNnMa+x2DvKHfQMglaah8xSD7fJ4gh4+ry4TeCz8
+         BBCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782687724; x=1783292524;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YMZ10IYFKNLnYKr+gx1rVCyYcTm3FWyqJhOk5IPgR8w=;
+        b=K2ObhmhSoL+InlRq3j0ijWfvOD9QmNpO3E1j5aaBCeQXv395QnP+H8U9hDI3w/MCeA
+         1QMbm1XCeaoGtBzp/sSFR0PI4xZC46QbiFJSmyIE/n4r1pk+iUCX72qhxaB4AHQzb8VD
+         GNLYR2rWn2m8pn1TYl/O6yZvKSMofTpEqwWfk065TDDvN2nHUZONkJF3SvqtE+f81pFh
+         1RGBHMqr3h47DJAbEjVL1jOSnxAM0VtXIRss8zJyqXqQPsKm0VIb5demWEezfXplYgSO
+         giVrFjewPQzndH8sMh1ihYsAKDk5gJKj8TM5AH76uWf9N3TlsI2qI77J4Dk55Gb70252
+         2kFg==
+X-Gm-Message-State: AOJu0Yylz2nCXyGxgsJOFr7KYxAYCkPAKSS72vTG78CsmuAbXg3ISqqQ
+	sEgooqEEvxB/vsS/wZ9Iy7rLFy39WEnfMZbLGX4HBibSfjZxwMsm2a/vkRYaUA==
+X-Gm-Gg: AfdE7cnPYCTTMzbCyJheBJ8PotkdS7kP5+GdQ5T0dhbvMPs+Dl9dC9jjCqVsQI4OJ0+
+	NtFtglLHwaxTH221mrKnwqrzJWKsPYXo/oOirYlZ6RBhjSkO/rCtvpLUv4Air/UIV1Dri7zigtf
+	/kiMCwxMhyFKFW8cUq9m5YZ19dWgKhMbNzvRHFQt6yr7AAUaXNMswYP+sqY9eaCQwQHEZU4cweP
+	47WaCjE4eGY+4DCd6cZuTQGFmGTfmeqSq7FO6sB8TeyIVhSwcKYzyTWJFp86ZoMG76vIKrDxh6w
+	raQ4jBn4N7okYU+c585hzFXGjbxAQ8BxdFHRUJS+d5fOH/m6JcRNtptBa3P36ujc2feyDWGHnuI
+	UVHLwr7MrfhQzt576YNyozJM8zaV+lZh4g7P34BFVtshcoyHPo4BsSTJ7TjOMM1RdDW+3Ep/70Q
+	UB3L+XJcqqy3j9WN+W37m1cI4N2/0bY009SfMC/dywf4XvJKYlzYbjw+djsQKILlOUHsyUCSwQN
+	1keakTkIg==
+X-Received: by 2002:a05:7022:e0e:b0:139:c724:79e5 with SMTP id a92af1059eb24-139dbac7a8cmr11480937c88.35.1782687724240;
+        Sun, 28 Jun 2026 16:02:04 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8000:7a86::e34])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139d8f318e7sm41365965c88.3.2026.06.28.16.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2026 16:02:03 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] gpio: mvebu: add wake-up interrupt support
+Date: Sun, 28 Jun 2026 16:02:02 -0700
+Message-ID: <20260628230202.1209991-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Matheus Sampaio Queiroga <srherobrine20@gmail.com>, 
- devicetree@vger.kernel.org, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
- Christian Marangi <ansuelsmth@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, linux-mediatek@lists.infradead.org, 
- Markus Gothe <markus.gothe@genexis.eu>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Linus Walleij <linusw@kernel.org>
-To: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-In-Reply-To: <20260628143733.273651-16-mikhail.kshevetskiy@iopsys.eu>
-References: <20260628143733.273651-1-mikhail.kshevetskiy@iopsys.eu>
- <20260628143733.273651-16-mikhail.kshevetskiy@iopsys.eu>
-Message-Id: <178267988796.4168242.2437491560145176405.robh@kernel.org>
-Subject: Re: [PATCH v6 15/17] pinctrl: airoha: add support of en7523 SoC
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39080-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:srherobrine20@gmail.com,m:devicetree@vger.kernel.org,m:benjamin.larsson@genexis.eu,m:ansuelsmth@gmail.com,m:conor+dt@kernel.org,m:linux-mediatek@lists.infradead.org,m:markus.gothe@genexis.eu,m:krzk+dt@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lorenzo@kernel.org,m:angelogioacchino.delregno@collabora.com,m:linusw@kernel.org,m:mikhail.kshevetskiy@iopsys.eu,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,genexis.eu,kernel.org,lists.infradead.org,collabora.com];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39081-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 178696D4EA8
+X-Rspamd-Queue-Id: 96E9A6D539B
 
+Implement wake IRQ support for the mvebu GPIO controller:
 
-On Sun, 28 Jun 2026 17:37:31 +0300, Mikhail Kshevetskiy wrote:
-> This patch adds support of Airoha en7523 SoC pin controller.
-> Also it adds corresponding device tree binding schema.
-> 
-> Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-> ---
->  .../pinctrl/airoha,en7523-pinctrl.yaml        |  375 ++++++
->  drivers/pinctrl/airoha/Kconfig                |    6 +
->  drivers/pinctrl/airoha/Makefile               |    1 +
->  drivers/pinctrl/airoha/pinctrl-en7523.c       | 1124 +++++++++++++++++
->  4 files changed, 1506 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/airoha,en7523-pinctrl.yaml
->  create mode 100644 drivers/pinctrl/airoha/pinctrl-en7523.c
-> 
+- Replace unused irqbase field with bank_irq[4] to store per-bank
+  IRQ numbers for use in the wake-up callback.
+- Add mvebu_gpio_set_wake_irq() that forwards enable_irq_wake /
+  disable_irq_wake to the correct parent IRQ based on hwirq.
+- Set IRQCHIP_SET_TYPE_MASKED and IRQCHIP_MASK_ON_SUSPEND flags
+  on both level and edge chip types.
+- Set IRQ_GC_INIT_NESTED_LOCK for the nested irq domain.
+- Add missing <linux/interrupt.h> include.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Assisted-by: opencode:big-pickle
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/gpio/gpio-mvebu.c | 40 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 37 insertions(+), 3 deletions(-)
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/airoha,en7523-pinctrl.example.dtb: /example-0/pinctrl: failed to match any schema with compatible: ['airoha,en7521-pinctrl']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260628143733.273651-16-mikhail.kshevetskiy@iopsys.eu
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index c030d1f00abc..26092b223be5 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -37,6 +37,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/machine.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip/chained_irq.h>
+@@ -114,7 +115,7 @@ struct mvebu_gpio_chip {
+ 	struct regmap     *regs;
+ 	u32		   offset;
+ 	struct regmap     *percpu_regs;
+-	int		   irqbase;
++	int		   bank_irq[4];
+ 	struct irq_domain *domain;
+ 	int		   soc_variant;
+ 
+@@ -603,6 +604,34 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
+ 	.val_bits = 32,
+ };
+ 
++/*
++ * Forward wake-up configuration to the parent bank IRQ.
++ * @d:		interrupt data
++ * @enable:	enable as wake-up if non-zero
++ *
++ * Return: 0 on success, or a negative error code.
++ */
++static int mvebu_gpio_set_wake_irq(struct irq_data *d, unsigned int enable)
++{
++	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
++	struct mvebu_gpio_chip *mvchip = gc->private;
++	int bank;
++	int irq;
++
++	bank = d->hwirq / 8;
++	if (bank >= ARRAY_SIZE(mvchip->bank_irq))
++		return -EINVAL;
++
++	irq = mvchip->bank_irq[bank];
++	if (irq <= 0)
++		return -EINVAL;
++
++	if (enable)
++		return enable_irq_wake(irq);
++
++	return disable_irq_wake(irq);
++}
++
+ /*
+  * Functions implementing the pwm_chip methods
+  */
+@@ -1249,7 +1278,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 
+ 	err = irq_alloc_domain_generic_chips(
+ 	    mvchip->domain, ngpios, 2, np->name, handle_level_irq,
+-	    IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_LEVEL, 0, 0);
++	    IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_LEVEL, 0, IRQ_GC_INIT_NESTED_LOCK);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "couldn't allocate irq chips %s (DT).\n",
+ 			mvchip->chip.label);
+@@ -1267,6 +1296,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	ct->chip.irq_mask = mvebu_gpio_level_irq_mask;
+ 	ct->chip.irq_unmask = mvebu_gpio_level_irq_unmask;
+ 	ct->chip.irq_set_type = mvebu_gpio_irq_set_type;
++	ct->chip.irq_set_wake = mvebu_gpio_set_wake_irq;
++	ct->chip.flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+ 	ct->chip.name = mvchip->chip.label;
+ 
+ 	ct = &gc->chip_types[1];
+@@ -1275,6 +1306,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	ct->chip.irq_mask = mvebu_gpio_edge_irq_mask;
+ 	ct->chip.irq_unmask = mvebu_gpio_edge_irq_unmask;
+ 	ct->chip.irq_set_type = mvebu_gpio_irq_set_type;
++	ct->chip.irq_set_wake = mvebu_gpio_set_wake_irq;
++	ct->chip.flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+ 	ct->handler = handle_edge_irq;
+ 	ct->chip.name = mvchip->chip.label;
+ 
+@@ -1283,13 +1316,14 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	 * interrupt handlers, with each handler dealing with 8 GPIO
+ 	 * pins.
+ 	 */
+-	for (i = 0; i < 4; i++) {
++	for (i = 0; i < ARRAY_SIZE(mvchip->bank_irq); i++) {
+ 		int irq = platform_get_irq_optional(pdev, i);
+ 
+ 		if (irq < 0)
+ 			continue;
+ 		irq_set_chained_handler_and_data(irq, mvebu_gpio_irq_handler,
+ 						 mvchip);
++		mvchip->bank_irq[i] = irq;
+ 	}
+ 
+ 	return 0;
+-- 
+2.54.0
 
 
