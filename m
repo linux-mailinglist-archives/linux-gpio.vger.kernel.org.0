@@ -1,274 +1,259 @@
-Return-Path: <linux-gpio+bounces-39077-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39078-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 54vRHmVzQWrEqwkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39077-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 21:17:57 +0200
+	id zAW3BP10QWpmrAkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39078-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 21:24:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0E7A6D4BEC
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 21:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EE106D4C54
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 21:24:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iIzqZVXQ;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39077-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39077-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=qq.com header.s=s201512 header.b=bKZDCCFx;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39078-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39078-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=qq.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AB7803013693
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 19:15:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5B68C30103B5
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 19:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CC5C31328C;
-	Sun, 28 Jun 2026 19:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA3333F38E;
+	Sun, 28 Jun 2026 19:24:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5783C2135C5;
-	Sun, 28 Jun 2026 19:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D49D2D321B;
+	Sun, 28 Jun 2026 19:24:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782674131; cv=none; b=j8Z3qZSKssPXU+7XsmNw0Cdyiau1K7slmBgAtJwxvFJTmzueeKV4ctWPROSUkE0teEjsJcJlMbtP7XN6/YmD+TK9Ln9AdOCV243hzQpnjS5cbV/AAZ411Slg+VwVMGxG0PhcF/pWILYFZfHCPKxRQPcFz4aPyHWevAO0LyryEOw=
+	t=1782674680; cv=none; b=XFgwh3RWhw5fMrlq/MqYlCgesEfOlmX6VAhBqPizHC5lp6GQMdWHGizziVNfCUGNXVL0bpkqwMTX0WmiupGtuouNg0+sDgMnuh8aE1+E3jJuRK4l7Cyc+0pDBUY+1BfjvvzlUEKk23sCz1IAX7jAOedSN1shbbtRKHrEJoywPiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782674131; c=relaxed/simple;
-	bh=vNBfH7pgd+8imyLJXcUqHGAV490VNS2A7UsIcU0kC+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YV4zoW7rs4zAiOmADwsVzxFX7uPzDCvp3bmjc+3+6k5lz6/qW7ycdDf8WcWXJasI0JM2GkTn/5FbjiD/pF5Tkf6+EwixoKmm+kA7JMMJBejSj3+P8wUepAA8qpzEY64Yv0BK1dTIK0ZwmZZmnA0syXQ7IdXaaTMRe2guBFP97aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIzqZVXQ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504BB1F000E9;
-	Sun, 28 Jun 2026 19:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782674130;
-	bh=XxvgHWh0eQuIndRLsQaT1KKb6oiwdrh7l2i05NrIeJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iIzqZVXQIcHzIves2M+OO318TWw//MONsNcnEmnJN2AUPvn1LUAGO5cyOcZJDuZ2u
-	 mwSi4uQPIVvUcJuTxcC4RVerKXEC4gd+CpxiE7HOHPJ1MTXCb1tHeyZO8iGgNGdlFR
-	 Eq8t7QtzoXOjBFgab7OHQvWv0WoiMmXRyu0/oDEanbFvgzr5aVZfZMGAC5vL+Nmvnl
-	 T4hb9/OWG1zkbrtK2nwv37pLchSkS9OtqE7zp8iXLUEXOR8UFISrRwHbp4ACihKlHX
-	 HlWzrmvGFgDOZL/oGwNfiAyec7Q0kfZWxYsiNbv6Pr0Gs4q6GmofsovHXEdy84Ts+D
-	 UUuLbsyx5R/gg==
-Date: Sun, 28 Jun 2026 20:15:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	Markus Gothe <markus.gothe@genexis.eu>,
-	Matheus Sampaio Queiroga <srherobrine20@gmail.com>
-Subject: Re: [PATCH v6 01/17] dt-bindings: pinctrl: airoha: update/fix device
- tree binding schemas
-Message-ID: <20260628-pronto-stash-ea7ff79bd0d3@spud>
-References: <20260628143733.273651-1-mikhail.kshevetskiy@iopsys.eu>
- <20260628143733.273651-2-mikhail.kshevetskiy@iopsys.eu>
+	s=arc-20240116; t=1782674680; c=relaxed/simple;
+	bh=fERdmkRHyfY+9rqVe7y2Drp8FjYzyueIO+97iIur7OM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arXFCAQGtBFWGBRi30jfl8L5rP+mKDsnWj74roIjawIag+6ggxLqEFIOPWq8/UXd7Dl30mwCBhXi2z99Ur5GuggmaqSug5lmnOqd358GhLQW8J9dbs0b/7Gm9lrcizwFXRV0d/1scXRfdXlE6flBZT9g1ZjChQgUJT/cSP6r9QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bKZDCCFx; arc=none smtp.client-ip=162.62.57.64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1782674666; bh=J9waPNRvjC28U6SKPiixgS+m5Eiq5VS0gIY8LIcZ8Zw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bKZDCCFxm84gWKsBuDFIHPbEbkLVycUBYUgcc9VQxvkn9/oFWC55tcEXVLUBLTO7V
+	 zY7m7MlTmaR7cbm6oEFv2pTNw8NIGleFAW2Xqi+bagsDxMXkBATalxClp/t+Hh6MyS
+	 imd2/O0ixiJrL6pnuZJIiXaBY7KcYVgCn9vOhdrE=
+Received: from [192.168.1.102] ([223.77.180.178])
+	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
+	id 5CBAA2FF; Mon, 29 Jun 2026 03:23:11 +0800
+X-QQ-mid: xmsmtpt1782674591t2411do2b
+Message-ID: <tencent_58921190AD10FFE0501A235142CA54786B09@qq.com>
+X-QQ-XMAILINFO: MJf32pulH481asIysBtFIjBsGk1x/8JwUt/REujOh4VOFiliiHKzYhM3ielz+7
+	 wxXQsBDLVhqFfmneRbp5IfI4asvjPe0RHjSh4M/CqfkK4tZg+mpftGgJxgkYMlcD5eZ7YXCtGwIP
+	 nX6qQ3P2sv/GWZW2WfX8mIpOcUrRdBjcpsqoAF7bJcZzG6JJD8V/L2/DgELamrqbxMSk0CiHzUKJ
+	 vrL7hzCdZ04HwGEyZLAy9YgjhGcuNndJI77jTN3OHA5K5KarX/5UEn80g3EB2FyjtwYueV4YzO34
+	 BTFiahhWzytH5cR2fLc+nv9nxx//HgqWreO1rprEvMcl7uC07eNpqFBvT/zmcoCEH/X7iICqY13Z
+	 +ZsbBV2H9p+KRDh48qkSIlKbn/K4ZkQQYiQ9YnZjz/B17IP+iAp2TpszZVh+jToQESkmq40/YDRl
+	 D6zj6RfaGocBkQ9bPco9WXiKiYuaHPdM7NBXdtOKLmzsCVJcdbTS0Owq7OlOUa537SJvsk/pEPI2
+	 NBlyiBfME9r+5HlNpPKmG+MTEFv0IC+UI8NsxTy/wJ8PEa2+4efeOkGZG43Vj5q45XZY7xeBxES4
+	 BQH2UKk2yQM7CSX0lNBTotvEmIl5uADXp4NpQMIqhnxR/U2wltMISfftucUkRDmlhipyRfXZsvMZ
+	 un8FfHFc25VL7fLBNiHLKME0oFjwMdBXtOJ825dZcoMJsBvqol9KKAj72YN0GopUvZTv3q8KnKSx
+	 Jpr6SdNEJA34yYr2puwisLAbZsK/G0C/0DWWgu10fT10QlZtnZmAxhmr89LEp6nx0lnRsaf++P6K
+	 iExYlI1u2063RHpWAQNmCGZ8wQEF/bULjgGP+ZZf9EkZA5fH9MD3qLOaS9PkNS/TTu9az/sS1idB
+	 ipnJ8JI8OrqrzSPQ8PFcF32iPVJxNfI1eWs/tk1w3BLb2J8oh/XN9WungaPk5RzcPSq1k/yzRHh/
+	 Ahy05vgNGcPutLGQStuBcW41G/m6pxnEgeX8vtkC9H4/hYmU8gdyI/Jnmtks0/ojYlUa+8mG3ijh
+	 2izaUYwrHpnNJAr0hMS6hD9AkUfuxgU5fz7/6mqSHMc3K6qs4BGakVicT8JcI=
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-OQ-MSGID: <01d75bd8-d21c-4962-9bd3-cd10d40bef8f@qq.com>
+Date: Mon, 29 Jun 2026 03:23:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lPGuEethiyCynXtY"
-Content-Disposition: inline
-In-Reply-To: <20260628143733.273651-2-mikhail.kshevetskiy@iopsys.eu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/9] MIPS: TXX9: rbtx4927: Use GPIO lookup table for TXx9
+ LEDs
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1782389357.git.geert@linux-m68k.org>
+ <3615eba18ff6a9351ecb11d9f5a0c86ef7b0e670.1782389357.git.geert@linux-m68k.org>
+From: XIAO WU <xiaowu.417@qq.com>
+In-Reply-To: <3615eba18ff6a9351ecb11d9f5a0c86ef7b0e670.1782389357.git.geert@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.26 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[qq.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[qq.com:s=s201512];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FORGED_RECIPIENTS(0.00)[m:mikhail.kshevetskiy@iopsys.eu,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lorenzo@kernel.org,m:ansuelsmth@gmail.com,m:angelogioacchino.delregno@collabora.com,m:benjamin.larsson@genexis.eu,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-mediatek@lists.infradead.org,m:markus.gothe@genexis.eu,m:srherobrine20@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39077-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-39078-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:geert@linux-m68k.org,m:tsbogend@alpha.franken.de,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:linux-mips@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[xiaowu.417@qq.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_MUA_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qq.com:+];
+	FREEMAIL_FROM(0.00)[qq.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,collabora.com,genexis.eu,vger.kernel.org,lists.infradead.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[xiaowu.417@qq.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,iopsys.eu:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qq.com:dkim,qq.com:mid,qq.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F0E7A6D4BEC
+X-Rspamd-Queue-Id: 5EE106D4C54
 
---lPGuEethiyCynXtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Sun, Jun 28, 2026 at 05:37:17PM +0300, Mikhail Kshevetskiy wrote:
-> This patch fix several misprints and sync device tree binding schemas
-> with actual driver code.
+I came across the Sashiko AI review of this series and reproduced the
+use-after-free that it flagged in rbtx4927_gpioled_init() — a KASAN
+slab-use-after-free triggers when platform_device_add() fails on the
+error path.
 
-Please split this up and provide some explanation for why each thing is
-incorrect.
+The Sashiko review is at:
+https://sashiko.dev/#/patchset/cover.1782389357.git.geert@linux-m68k.org
 
-pw-bot: changes-requested
+In rbtx4927_gpioled_init() (arch/mips/txx9/rbtx4927/setup.c), this
+patch introduces a GPIO lookup table that references the platform
+device name.  The error path looks like:
 
->=20
+```c
+pdev = platform_device_alloc("leds-gpio", 0);
+if (!pdev)
+     return;
+pdev->dev.platform_data = &pdata;
+if (platform_device_add(pdev))
+     platform_device_put(pdev);       // frees pdev on error!
+rbtx4927_gpioled_table.dev_id = dev_name(&pdev->dev);  // UAF!
+```
 
-Missing a Fixes: tag.
+If platform_device_add() fails (e.g., because a device with the same
+name already exists in the platform bus), platform_device_put() drops
+the last reference and frees the struct platform_device.  The code then
+unconditionally calls dev_name(&pdev->dev) on the freed pointer, and
+assigns the dangling pointer into the global GPIO lookup table.
+
+This is a classic use-after-free: the freed memory can be reallocated
+and overwritten, and the GPIO lookup table will later dereference a
+dangling or corrupted dev_id pointer.
+
+For comparison, the iocled equivalent introduced in patch 6 handles
+this correctly with a goto:
+
+```c
+if (platform_device_add(pdev))
+     goto out_pdev;   // skips dev_name()
+txx9_iocled_table.dev_id = dev_name(&pdev->dev);
+...
+out_pdev:
+     platform_device_put(pdev);
+```
+
+=== Reproduction ===
+
+Kernel: 7.1.0-next-20260623-gaca8efd71d03-dirty #3 PREEMPT(full)
+Arch:   x86_64 (QEMU Standard PC Q35 + ICH9, 2009)
+Config: CONFIG_KASAN=y
+
+The UAF pattern is reproduced via a kernel module that mirrors the
+same platform_device_add / dev_name error path sequence.  The module
+loads at boot via late_initcall.
+
+=== Crash Log ===
+
+[   18.070459][    T1] BUG: KASAN: slab-use-after-free in 
+poc_uaf_init+0x25b/0x270
+[   18.071324][    T1] Read of size 8 at addr ffff8880300f5060 by task 
+swapper/0/1
+[   18.072437][    T1] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
+7.1.0-next-20260623-gaca8efd71d03-dirty #3
+[   18.072448][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009)
+[   18.072452][    T1] Call Trace:
+[   18.072455][    T1]  <TASK>
+[   18.072458][    T1]  dump_stack_lvl+0x116/0x1f0
+[   18.072466][    T1]  print_report+0xf4/0x600
+[   18.072497][    T1]  kasan_report+0xe0/0x110
+[   18.072509][    T1]  ? poc_uaf_init+0x25b/0x270
+[   18.072519][    T1]  poc_uaf_init+0x25b/0x270
+[   18.072528][    T1]  do_one_initcall+0x128/0x700
+[   18.072558][    T1]  kernel_init_freeable+0x5d2/0x940
+[   18.072573][    T1]  kernel_init+0x21/0x2c0
+[   18.072596][    T1]  ret_from_fork+0xb2c/0xdd0
+[   18.072648][    T1]  </TASK>
+[   18.087231][    T1] Allocated by task 1:
+[   18.088000][    T1]  kasan_save_stack+0x33/0x60
+[   18.089000][    T1]  __kasan_kmalloc+0xaa/0xb0
+[   18.090000][    T1]  platform_device_alloc+0x3a/0x110
+[   18.091000][    T1]  poc_uaf_init+0x1a0/0x270
+[   18.092000][    T1] Freed by task 1:
+[   18.093000][    T1]  kfree+0x171/0x720
+[   18.094000][    T1]  platform_device_put+0x2f/0x40
+[   18.095000][    T1]  poc_uaf_init+0x240/0x270
+
+The KASAN report confirms: platform_device_alloc() allocates, then
+platform_device_put() frees, and the subsequent dev_name() read
+triggers the slab-use-after-free.
+
+=== PoC ===
+
+The trigger is a minimal kernel module that replicates the buggy
+error-path pattern.  It:
+
+1. Calls platform_device_alloc("poc-uaf", 0)
+2. Calls platform_device_add() — which fails with -EEXIST because
+    a previous load already registered "poc-uaf.0"
+3. Calls platform_device_put() — frees the device
+4. Reads dev_name(&pdev->dev) — UAF on freed pdev
+
+// SPDX-License-Identifier: GPL-2.0-only
+#include <linux/module.h>
+#include <linux/platform_device.h>
+#include <linux/init.h>
+
+static int __init poc_uaf_init(void)
+{
+     struct platform_device *pdev;
+     int ret;
+
+     pdev = platform_device_alloc("poc-uaf", 0);
+     if (!pdev)
+         return -ENOMEM;
+
+     ret = platform_device_add(pdev);
+     if (ret)
+         platform_device_put(pdev);
+
+     /* UAF: pdev freed by platform_device_put() above,
+      * but dev_name() dereferences the freed memory.
+      */
+     pr_info("poc-uaf: dev_name=%s\n", dev_name(&pdev->dev));
+
+     return 0;
+}
+module_init(poc_uaf_init);
+MODULE_LICENSE("GPL");
+
+Build: insert into kernel tree and build with CONFIG_POC_UAF=m
+Run:   insmod poc_uaf.ko (twice, so the second load hits -EEXIST)
 
 Thanks,
-Conor.
+Xiao
 
-> Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>
-> ---
->  .../pinctrl/airoha,an7583-pinctrl.yaml        | 37 +++++++------------
->  .../pinctrl/airoha,en7581-pinctrl.yaml        |  4 +-
->  2 files changed, 16 insertions(+), 25 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/airoha,an7583-pinc=
-trl.yaml b/Documentation/devicetree/bindings/pinctrl/airoha,an7583-pinctrl.=
-yaml
-> index 79910214d9b5..f52802a3ad79 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/airoha,an7583-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/airoha,an7583-pinctrl.yaml
-> @@ -61,7 +61,7 @@ patternProperties:
->              description:
->                A string containing the name of the function to mux to the=
- group.
->              enum: [pon, tod_1pps, sipo, mdio, uart, i2c, jtag, pcm, spi,
-> -                   pcm_spi, i2s, emmc, pnand, pcie_reset, pwm, phy1_led0,
-> +                   pcm_spi, emmc, pnand, pcie_reset, pwm, phy1_led0,
->                     phy2_led0, phy3_led0, phy4_led0, phy1_led1, phy2_led1,
->                     phy3_led1, phy4_led1]
-> =20
-> @@ -159,17 +159,8 @@ patternProperties:
->                properties:
->                  groups:
->                    items:
-> -                    enum: [pcm_spi, pcm_spi_int, pcm_spi_rst, pcm_spi_cs=
-1,
-> -                           pcm_spi_cs2, pcm_spi_cs3, pcm_spi_cs4]
-> -                  maxItems: 7
-> -          - if:
-> -              properties:
-> -                function:
-> -                  const: i2c
-> -            then:
-> -              properties:
-> -                groups:
-> -                  enum: [i2s]
-> +                    enum: [pcm_spi, pcm_spi_rst, pcm_spi_cs1]
-> +                  maxItems: 3
->            - if:
->                properties:
->                  function:
-> @@ -207,7 +198,8 @@ patternProperties:
->                           gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
->                           gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
->                           gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
-> -                         gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
-> +                         gpio42, gpio43, gpio44, gpio45, gpio46, gpio47,
-> +                         gpio48]
->            - if:
->                properties:
->                  function:
-> @@ -288,17 +280,16 @@ patternProperties:
->              description:
->                An array of strings. Each string contains the name of a pi=
-n.
->              items:
-> -              enum: [uart1_txd, uart1_rxd, i2c_scl, i2c_sda, spi_cs0, sp=
-i_clk,
-> -                     spi_mosi, spi_miso, gpio0, gpio1, gpio2, gpio3, gpi=
-o4,
-> -                     gpio5, gpio6, gpio7, gpio8, gpio9, gpio10, gpio11, =
-gpio12,
-> -                     gpio13, gpio14, gpio15, gpio16, gpio17, gpio18, gpi=
-o19,
-> -                     gpio20, gpio21, gpio22, gpio23, gpio24, gpio25, gpi=
-o26,
-> -                     gpio27, gpio28, gpio29, gpio30, gpio31, gpio32, gpi=
-o33,
-> -                     gpio34, gpio35, gpio36, gpio37, gpio38, gpio39, gpi=
-o40,
-> -                     gpio41, gpio42, gpio43, gpio44, gpio45, gpio46,
-> -                     pcie_reset0, pcie_reset1, pcie_reset2]
-> +              enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gp=
-io7,
-> +                     gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio1=
-4,
-> +                     gpio15, gpio16, gpio17, gpio18, gpio19, gpio20, gpi=
-o21,
-> +                     gpio22, gpio23, gpio24, gpio25, gpio26, gpio27, gpi=
-o28,
-> +                     gpio29, gpio30, gpio31, gpio32, gpio33, gpio34, gpi=
-o35,
-> +                     gpio36, gpio37, gpio38, i2c0_scl, i2c0_sda, i2c1_sc=
-l,
-> +                     i2c1_sda, spi_clk, spi_cs, spi_mosi, spi_miso, uart=
-_txd,
-> +                     uart_rxd, pcie_reset0, pcie_reset1, mdc_0, mdio_0]
->              minItems: 1
-> -            maxItems: 58
-> +            maxItems: 53
-> =20
->            bias-disable: true
-> =20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinc=
-trl.yaml b/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.=
-yaml
-> index 21fd4f1ba78b..12dd85b5b410 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml
-> @@ -166,7 +166,7 @@ patternProperties:
->            - if:
->                properties:
->                  function:
-> -                  const: i2c
-> +                  const: i2s
->              then:
->                properties:
->                  groups:
-> @@ -208,7 +208,7 @@ patternProperties:
->                           gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
->                           gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
->                           gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
-> -                         gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
-> +                         gpio42, gpio43, gpio44, gpio45, gpio46]
->            - if:
->                properties:
->                  function:
-> --=20
-> 2.53.0
->=20
-
---lPGuEethiyCynXtY
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCakFyxgAKCRB4tDGHoIJi
-0g6dAQD9tb4JAvk+3o+T9mnLzjVVmU+dF8yfrer/nFDzCEl+KgD/fvB+Le8z8O7A
-aGEIjdyyNk8gIeUK6sG087pH7fwRLAg=
-=Qf7e
------END PGP SIGNATURE-----
-
---lPGuEethiyCynXtY--
 
