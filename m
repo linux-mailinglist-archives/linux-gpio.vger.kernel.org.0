@@ -1,154 +1,153 @@
-Return-Path: <linux-gpio+bounces-39054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id U8nuJ1UAQGqBbAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39054-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2026 18:54:45 +0200
+	id cJS3G2e0QGqrhQkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39056-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 07:43:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF80E6D258B
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2026 18:54:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A96496D33C2
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 07:43:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b="h/P7HL6u";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39054-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39054-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=samsung.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=emyEE5Re;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39056-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39056-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E947A3008607
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2026 16:54:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3F868301571F
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 05:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7788432C923;
-	Sat, 27 Jun 2026 16:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AE2631F9A4;
+	Sun, 28 Jun 2026 05:42:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26892701DC
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Jun 2026 16:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A8E3101A7
+	for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2026 05:42:56 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782579271; cv=none; b=g5z3PR8Qbly5oZNk6tVWp3NPzKw5vVsMK47DtDEUwbRgFL3yMT50awsk9DaURYHXDOnfGJkeUbI4UuIYKPMIPFivFhpLsoz44oOSfYY8+ltvCqPoXV//d6HgZh9Q+bX/dMGRhOUnsjgDykNeGKP6UudlvFI//Aa18kukW3h1UxU=
+	t=1782625377; cv=none; b=t22vbLWD12712dfa1P3tyoHqK7/u5upuZnuPufwNmSpTit7WaeQJ8EKv6KjCGp2++ACsVevCz4HaCqw/9KV+572xqWBZDlRaFfAmauKgDaxZb1XRY5ts1KTdMjTVKYzQaZKdkNH5IWRTe+ljU1cK3wWV/EX2KG7Yb18Beno1l9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782579271; c=relaxed/simple;
-	bh=DhWrWAH6pSp+Smwnq22EI/Ld7m8pY4Pykfe9SUrvhD8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=B8Qm1GPvmlEGz0MhhSSIK4X/84hsmEidWYcWJskoK/vBY6phY3DzldtlWJNRG1QI/xEY84Km3gf/fmwuJGa/hJ4YhBNnw021Vyr1ZvbQzGVC4LXH6x13sxek5kdOyEJrwSySnp/RKkulrtG1CNXH+y+wB07dhCRSAlfcSIJfSe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=h/P7HL6u; arc=none smtp.client-ip=203.254.224.24
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260627165428epoutp0172055f0965cd166b7b1518d3d553def0~8-mZpdoKI1632516325epoutp01S
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Jun 2026 16:54:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260627165428epoutp0172055f0965cd166b7b1518d3d553def0~8-mZpdoKI1632516325epoutp01S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1782579268;
-	bh=yxQV2OmQ8FmlGKRUAsciidZmHjuFiJO8smjOiFHVv7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h/P7HL6uOnzJL6aSZln3lWZYnbcV7y84ZgFiHoIHOiL0RzvtOT4c0JLKruuJHon1t
-	 KtrQCLbQLU/AYawunPnpTQnlFA+YAdfSfSxycOPtqNauiBEfe+q+CgouLiveCSC2nv
-	 VDNFJRIZ76Ri+WUY2aHTuNA1sWEISjx0OXM3K5gI=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20260627165427epcas5p26b4df715d2277bc220bcff20b25a6bfd~8-mZPe9dR1145511455epcas5p2R;
-	Sat, 27 Jun 2026 16:54:27 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.93]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4gndtV6zHJz6B9m4; Sat, 27 Jun
-	2026 16:54:26 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260627165426epcas5p205bd4b60c6f1dba68f4f1125ad29745d~8-mXrDabu1145411454epcas5p2i;
-	Sat, 27 Jun 2026 16:54:26 +0000 (GMT)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260627165424epsmtip1623a04ef7aeb2592566c2d2d559a6a1a~8-mWNJ6462007020070epsmtip1Q;
-	Sat, 27 Jun 2026 16:54:24 +0000 (GMT)
-From: Alim Akhtar <alim.akhtar@samsung.com>
-To: krzk@kernel.org, peter.griffin@linaro.org, robh@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	hajun.sung@samsung.com, Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH v3 6/6] MAINTAINERS: Add entry for Samsung Exynos8855 SoC
-Date: Sat, 27 Jun 2026 22:42:28 +0530
-Message-Id: <20260627171228.2687857-7-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260627171228.2687857-1-alim.akhtar@samsung.com>
+	s=arc-20240116; t=1782625377; c=relaxed/simple;
+	bh=wEU6RlzMmPj3vwHyeVijBCf2GYxX5FBc6kTWl/OvW7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OL8CMJxvV1OkVX6N1VgKJrgLv/Bdm98xMymKQyIKwRn8xZEW6GIv9J4rYG+J/lX4CK7TisXQsGoEm0Ta9xLV8fH3V582YD2uJOEAQfZJWDO9i/xAY5eJ0AFnZs9KfpVw+bTaURN716CbS2Sd1309yKsDk7EMfO62WAn9fQD2O5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emyEE5Re; arc=none smtp.client-ip=74.125.82.175
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-30bbe98c3f0so5866189eec.0
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Jun 2026 22:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782625376; x=1783230176; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=n4q3s0iq058f2mfiICzcmbq2srXPnTFy8iFai1LrYro=;
+        b=emyEE5ReDRBJvCqb1JBjsjOE9F/EItV6CGiP4YZ/6B7ET8b1lPG90L1/DJB7WRX42B
+         qlP5yMZ8+WbGp/ilcS6bUjxSUClD7Wt9WHOzXlKdzCzzVNOX7ea3ANSfB6/yzBmCzyRt
+         fRpKZvJ9fS3BSVxB1N7xpd5pgn/EPrBAoNe5gJ/0BEXyFczpwNtouDbJaZs7thPh4Vmm
+         xwXVeL6X2XeF1fhCMEI83MbRqhrEMe39LLkb88xHpUYz97v6+b6ATM95gENiG8PZK5il
+         JXQg/r/hxH4Y7UkPN7XWE2L3rx3jmxaz1adlcr+h9BxWX5YfwPYE1Guo2/8Nde32JdXj
+         bCjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782625376; x=1783230176;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4q3s0iq058f2mfiICzcmbq2srXPnTFy8iFai1LrYro=;
+        b=ke+Pqc6Y42LYX7siAoMLOXTigqHTytklwY4wFv3NUM9tAjs9dyns44K+of9CvQhyOv
+         Qfo8ENcJEdgnXwjQiN1HPp+sX+b0K7AlpohPGWYeQxJ0AmFZeb8H6bkOTk6Y4Cnho7od
+         ONXFj/GMJQoETZ2Ox4sAqhXkYqYVgIVPtiZWFIU6SlKONjnRYKqEZQ1uDTe4M0JzsoLY
+         Lr2V4VSaG0hwST7O8m3rgxgqbX0wKxDLCwWdjmlpWJVs4xsSVRLOhYT+TKJNZpDm4dT7
+         tmYHlIfp4slIUOs7AgAc9XPWGfClXIz5hkYbF+Su06PCT4qokfloqv/T5bAnJ7516hmB
+         8JaA==
+X-Forwarded-Encrypted: i=1; AHgh+RrHDFktbv6zMcDOaMzIenYgYLtsJYC62ly4hX/jF7pvHhR05u8igpBiRRdQSXVsyh5HAlEA5c7AKUpb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCUSQoSx4dwfQ/9/VaoQafv3NQVZQ62TzXv6lgChdwUEZ+Da5n
+	zJFz2L7cj//6Qy3CCXQpffdROBpnNGSUXGs6WZpMvS1Dp3E3Bh6KyGe5
+X-Gm-Gg: AfdE7cnx7Z+u6LXuDJ89GB/rYNJYoOyAJj7ta3mWhSnEBxiEm7XmXeL1EUdGIHmRYzP
+	0VFA32opsjvzSKlAOjArHe2D1Kcc9uv2Pg8CctkDph104xw/uRUQnak3k+YGVqmWHq8D5ZIe9Wk
+	MYVbe5ywMjp+y7Y44YK4nchNIYwNyPFL5+OAYELEUk7LyJWg/eGvDJQ9trskEx/BWqM/8iXVlOy
+	b0lDuT21xbVa04HaHDcg7Xp8vAkPwqhR+E6KX3jW2jrt6jm/n+fijncqyO6vZNVDH8UVzehRsnr
+	L1tUxGcc5I8d6LneMfsr4NR9jcC92ykFwNWqV4b5M6dtTVv+Tnf0mtjgn4UkvlrpdjK2IRyoP5J
+	lLZU0ZmdhtJJ1diEZXn+laotFQ2hOKOIFWbCk4rLJBwpximHoAC6g2XjXsNbJjpC7sHuKnY7D96
+	J+v0DjfYn/B1lmdFPJ+7o+vOAD1LUXxyRB59lIi6uSTtvmuHUmoq9PRg==
+X-Received: by 2002:a05:7300:8b15:b0:304:e72a:d4d9 with SMTP id 5a478bee46e88-30c84d0d612mr12847847eec.19.1782625375757;
+        Sat, 27 Jun 2026 22:42:55 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:977e:876b:dc75:9723])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7c570b7bsm32451677eec.12.2026.06.27.22.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 22:42:52 -0700 (PDT)
+Date: Sat, 27 Jun 2026 22:42:50 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Tj <tj.iam.tj@proton.me>, 
+	"Enrico Weigelt, metux IT consult" <info@metux.net>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH] gpio: amd-fch: switch to guard() notation
+Message-ID: <akCz48E0i6jqzmiC@google.com>
+References: <aZarCgDvMUta4Viq@google.com>
+ <CAD++jL=tK7w=vpCN9JBOmnqR99cX=rG5QKqqBKyRdztg9kSy1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260627165426epcas5p205bd4b60c6f1dba68f4f1125ad29745d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-543,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260627165426epcas5p205bd4b60c6f1dba68f4f1125ad29745d
-References: <20260627171228.2687857-1-alim.akhtar@samsung.com>
-	<CGME20260627165426epcas5p205bd4b60c6f1dba68f4f1125ad29745d@epcas5p2.samsung.com>
+In-Reply-To: <CAD++jL=tK7w=vpCN9JBOmnqR99cX=rG5QKqqBKyRdztg9kSy1w@mail.gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39054-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:dkim,samsung.com:email,samsung.com:mid,samsung.com:from_mime,vger.kernel.org:from_smtp,infradead.org:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
-	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:alim.akhtar@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39056-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:tj.iam.tj@proton.me,m:info@metux.net,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linusw@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AF80E6D258B
+X-Rspamd-Queue-Id: A96496D33C2
 
-Add maintainers entry for the Samsung Exynos8855 SoC based platforms
+On Thu, Feb 19, 2026 at 06:26:25PM +0100, Linus Walleij wrote:
+> On Thu, Feb 19, 2026 at 7:46 AM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> 
+> > guard() is more concise and ensures that lock is released at the end of
+> > the scope.
+> >
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> That looks right!
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Bartosz, do you need me to resubmit?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1705eb823dd0..f6d9e03d3370 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23996,6 +23996,13 @@ F:	arch/arm64/boot/dts/exynos/exynos850*
- F:	drivers/clk/samsung/clk-exynos850.c
- F:	include/dt-bindings/clock/exynos850.h
- 
-+SAMSUNG EXYNOS8855 SoC SUPPORT
-+M:	Alim Akhtar <alim.akhtar@samsung.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-samsung-soc@vger.kernel.org
-+S:	Maintained
-+F:	arch/arm64/boot/dts/exynos/exynos8855*
-+
- SAMSUNG EXYNOS ACPM MAILBOX PROTOCOL
- M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- L:	linux-kernel@vger.kernel.org
+Thanks.
+
 -- 
-2.34.1
-
+Dmitry
 
