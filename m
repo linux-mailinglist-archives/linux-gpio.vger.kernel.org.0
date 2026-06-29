@@ -1,232 +1,189 @@
-Return-Path: <linux-gpio+bounces-39101-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ikqVJkdBQmpJ2wkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39101-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 11:56:23 +0200
+	id QUmpJdNFQmq73QkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:15:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 320956D885D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 11:56:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD796D8C54
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:15:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=oJu75Ot5;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=bi3DO1iR;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39101-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39101-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=pass header.d=intel.com header.s=Intel header.b=ZeKYU0v5;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 243B1300C320
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 09:56:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4FF993000893
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 10:05:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0B73B71B4;
-	Mon, 29 Jun 2026 09:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEE23FBEAC;
+	Mon, 29 Jun 2026 10:05:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C0B3B71DE
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 09:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2FC3FAE19;
+	Mon, 29 Jun 2026 10:05:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782726976; cv=none; b=iOlsZuM/Yyp0GGkAOgCpOOu5Y0M6Yo3so92m6QjjEMIG+cUpm66eyG813chQGubEShYQC1nccUyBeNbOIFdyNXfq9ptwvj79rPSNpbP30DSwfNsNYJs+VvAoKDl58gsy54wCwiIfDpi9ElZ+43nlKmiwSaX40xFDxN5pkLih96Y=
+	t=1782727539; cv=none; b=JVvJhK2yZXsdzPdtBps44RTfAoCTDGfmFgJnHRg1VE8LaYycV514LkqPSbtmYugDBDoNQY0NlMsawceV80cNHcibkl3KI/SQvPdC83ECJe3d4jwrgQJhKF7AMm2iTd82J2ZK4z+Qj5LbNvS4xSCK9/kog9jVextUV/dfr4Bu2Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782726976; c=relaxed/simple;
-	bh=TrPGv/zl/q9riZcQ557K3m/9tohKczPiBQpjOOFNp00=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQG080mS07WKD2fQM7TRzvybn1N9T7QqH0OzCS4qgFUw8yQOJH1sWgiImAz2sDMI8z4+lxWXBj9g7CxLOjVy5ca0B1dfruADLCC0j/kQS9lK9hZbIA6pES8CYUzTE+gBOhCnUiPzJ4YYIZgZLaU1U9cWV0JwcDOfkE6f6Vp3Mjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oJu75Ot5; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bi3DO1iR; arc=none smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65T7Dx6A2188882
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 09:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+GpxxFw2UM30Ce8Qa2rv3JI9XcKMO4o2jYpPU5f/yv8=; b=oJu75Ot5ed9PVbIe
-	goukbMpUXMmZO0aBBSV6tGMj7UYIo7EI280cIOrF1hyDLCjx7cf5pGTE5FvMv0X6
-	UINAqxzguJvgq1PiRK/Snv6541tVOPwQ3ZnMytFJFK5XkdOeMKJN+5DZxL/RMZqh
-	+e5kaIwY9vPgmUBMifJ5LAID4V+TgNH+9q1utRjJENdU5LTNn4G7Q1tAz2I6+Ghu
-	/Yts4ukPx2bBtKSkC9KFcgL+UbYpd6aG/xRQHPRw36IZCSv+Lkyf1e34wsqnedxB
-	fvcB6/M4UEQNVWWUvXu2gD0qUTHxwJiyN92xqDakvzg+ZVcxKT7sW6Ei3r9phv5p
-	ETE3ow==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3m4trpbc-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 09:56:14 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51bfd1772d8so1566741cf.1
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 02:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782726973; x=1783331773; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+GpxxFw2UM30Ce8Qa2rv3JI9XcKMO4o2jYpPU5f/yv8=;
-        b=bi3DO1iR0pKW8EGf/lxp1ZIfOk+Pn/RrI40R9iYEmdlM7HdkhkfYssFWLbk6A4b4XI
-         piETdB5jf5dlX4NyGxXMxYTp90zXetJZigHOkP4bVtQ4HOI0SPx0ZQQv4wzlaD2ZhyIO
-         ZxAYFQbfFqBTgB61km1plrDM5wZme/M5HxF4wFeY/hoYqfrlY6XfoMSzb0LDz1X92j3k
-         EwAiGt5pLJ+32A4+ADAcFfLF4DgxmPByaXkFn++PA/rRzDZZqZF1DOgFWDAIP31sl/fL
-         RYLyePi4iLJd5SLUexcRPPu1J6c0QJVAk/uW1BeytFUMPnnDu/6fUmc8tt27bZ/Rl5jq
-         HPYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782726973; x=1783331773;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+GpxxFw2UM30Ce8Qa2rv3JI9XcKMO4o2jYpPU5f/yv8=;
-        b=fvD5KspHJXp9xPm4yQFYH0A8BWaf92SgL/dE1OSx71mwE5jmzEcpGup14D/lPyUY7/
-         wxulEURFoOyfuxjpWbOuONqH6xTet9rUbI6owN+OxvEHsX1E36ZMktRllJRppTi5QhJe
-         Rbqx5G3PcR6/9cHhDa5XC+AXftyG1cUzFlOHgyTucUi2IXZOkparhEbuYS2FzEdi9ICM
-         Ef7HZCESdO6nZ56XrXG2ddGa2TcGgAiDa3zUWSZE/0lDW3Rd0RK2ZlzaLezhsmv7rGXx
-         +qvvqj14ZnHHC/e/c1lU4rOsbdod/DDmnrjM17cHtTR3p2pGFL+znmYlptmFBLyA59l2
-         gVYg==
-X-Forwarded-Encrypted: i=1; AFNElJ/6BbGXHIg6NFYu8ycB9IZZTlP14HkBKDdLVtPZer7JSSOHT4EMwXMdqQwbfWR6QtNXjFqzuhN1SdpG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwffopgvQ19YAC8wBdJDl8ODFKZn/STGMnnwZu9wzijjw0gQ/Kf
-	2GJ77LGwDDzPpnzxzshEquU6tefk4W3pXOBTxNHAU2BVOgW+HucnKLAPt7EdGMsoAPmzlhMoy1I
-	t99Tz+zkgJ/r1FDt9qQ8HbMm7wIFJju3ZWjaCnIoDlSU9XqDwpFaPgKH14/NW+LDW
-X-Gm-Gg: AfdE7ckJmkxrUOb0zzsS9xevwpDYnqis0q9HigbwmB1WXy9+hF1wuWZbmWcqMj3MSOV
-	sWl+zFn/plZQXvcf4+JF01+/hbucCGK81yUZhBdsMS4kO2lqlHWguHifgvaobC3HwlYs/8CbxWM
-	lcyujkiQdHxAtK25DRAKToSo8IJTXmU7U8EFbYnUTUFtVAr0OSu+D+xh1rsb3xT7sFjRzBX8TOj
-	aaBhq9oSRZ0sH71TM/jBsvYbkCatIBy4IfGroNb17ghavZGTxp2mN4Sm4AqXLbVAWEro/+qFnsa
-	Ggx/A/ZF9JN2rux95IABrE9koQaA84T0DowDwAhgMFwUQ2P8lRI1m8wtgOf8eK3t5n9eb7ZwbkT
-	4lIjxFcNAf/hQ69vD1/oGoJuipcse9wIS6eE=
-X-Received: by 2002:ac8:7f82:0:b0:51a:8c9b:6494 with SMTP id d75a77b69052e-51a8c9b94admr77692431cf.11.1782726973114;
-        Mon, 29 Jun 2026 02:56:13 -0700 (PDT)
-X-Received: by 2002:ac8:7f82:0:b0:51a:8c9b:6494 with SMTP id d75a77b69052e-51a8c9b94admr77692291cf.11.1782726972635;
-        Mon, 29 Jun 2026 02:56:12 -0700 (PDT)
-Received: from [192.168.120.170] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1252b4e6e0sm231458666b.2.2026.06.29.02.56.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2026 02:56:11 -0700 (PDT)
-Message-ID: <2d6e7b56-01a8-4b92-921d-629417c7f5c9@oss.qualcomm.com>
-Date: Mon, 29 Jun 2026 11:56:09 +0200
+	s=arc-20240116; t=1782727539; c=relaxed/simple;
+	bh=tIiREu5pXy/nUQ9dOW6a3+enIzKKULeLd6hiLgFvlUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9Bau9S121HyfK1pkjiR65hfdnhob8/lmqdEC47/HLrOvaKKwirxUE7drdLZZ2+r9pxVYqKHQolh/39N5i+92ztA4FT+eEGATYSaPZUiS8SBYCjjpTQ6GJF9QM65zvTc1NHjnDIpgmkZnTbIMncT681QVTpQK13QUGprb+tozU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZeKYU0v5; arc=none smtp.client-ip=192.198.163.19
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782727537; x=1814263537;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tIiREu5pXy/nUQ9dOW6a3+enIzKKULeLd6hiLgFvlUc=;
+  b=ZeKYU0v5EBppIkx4mP5GOC1EI2Gp9xEqjkkCKbP0cgiBgZ3ig4GFj67M
+   /E0mo1q1vjvcpz+R6vvfy0fAY3lyTb+riT6NTK7mYwyOpQdRurW/MBRRF
+   domdGC3sk2Vhy4D7/gNHdQtI/0/tQQfqlBOW2Cf2B2Tj9nQJCWgbkcfdN
+   1bgKktBJ++QY+4KOSYeAI6Sc6cv+CCvtfW58F0A1EWsnZvDwAJMg8tK9f
+   7+Obazs7Nl+cTOTlUy4INhfWdEx2BoOI4bBeMn4330DHUqQ+BTJSE0/fc
+   SeVjzkon6J8aKw5lyj9L9BkzsCR5nozEJh/LkzHhs97oYevXv84zuF+XG
+   A==;
+X-CSE-ConnectionGUID: v8YNKf/PQDmwat311Pjkbg==
+X-CSE-MsgGUID: cLfEU/dEQkSiIQ8g9AcTdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11831"; a="82406331"
+X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
+   d="scan'208";a="82406331"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 03:05:36 -0700
+X-CSE-ConnectionGUID: Ntom/HqKR5qqEM1xpEtHrA==
+X-CSE-MsgGUID: j8RxipM4ToakveL+yLuIIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
+   d="scan'208";a="255509012"
+Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 29 Jun 2026 03:05:33 -0700
+Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1we8rr-000000007Gz-065t;
+	Mon, 29 Jun 2026 10:05:31 +0000
+Date: Mon, 29 Jun 2026 18:04:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jia Wang via B4 Relay <devnull+wangjia.ultrarisc.com@kernel.org>,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jia Wang <wangjia@ultrarisc.com>
+Subject: Re: [PATCH] gpio: dwapb: Defer clock gating until noirq
+Message-ID: <202606291736.mAgOeA65-lkp@intel.com>
+References: <20260629-gpio-dwapb-wakeup-v1-1-3394f02317da@ultrarisc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/8] irqchip/qcom-pdc: Move all statics to struct
- pdc_desc
-To: "Maulik Shah (mkshah)" <maulik.shah@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-        Linus Walleij <linusw@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Sneh Mankad <sneh.mankad@oss.qualcomm.com>
-References: <20260616-hamoa_pdc_v3-v3-0-4d8e1504ea75@oss.qualcomm.com>
- <20260616-hamoa_pdc_v3-v3-2-4d8e1504ea75@oss.qualcomm.com>
- <8754de51-bfbe-42f2-84bf-36cc000afa3f@oss.qualcomm.com>
- <91fa4b98-d99e-401c-bb1f-f235034f3aab@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <91fa4b98-d99e-401c-bb1f-f235034f3aab@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDA3OSBTYWx0ZWRfX/P45oCMT4BQE
- png2u5xWm9XVBVZrs9QFcfeQUGDsiAfHoVlhBPshrVaut/ZHJjjFmjTL04/wsUDJbxpqj0hU7rI
- 1sDuW/pnUidaSL6mK1ReWm/BvecHVrhGBux6Xe+FMIUfV7oISnQZHUAy+lBxK24zgKzRp46bgyW
- FOwsCz2LK/WI8lkwtoibce4DiJLdyS6ONPG1EL0A4Kcz1MnQ4HPsERgfq7sS7XNdpS+huGnChLF
- wPv3rtji+ulfB7Gn67eBH6x/4S2FJ5NqbAmrSD4ZE4sM7CdmzrRMB6plXeDpoVzOhEYB9aYGo+P
- XZgTjIhsCwjCjYMKQjDCr3Gxv0URo3GuVp8CT4oKpUy63AjzuIPGPLFFxQYWZCyjsR/sSyA62Jx
- GQopZFd/ASI/3lbqcvxRE931euHniRaJdgmQs2yGlXPpickuaRrthtda3c2cC3ixw3Fv5W3a781
- QKhePNQf/Rd+mppT5Yg==
-X-Authority-Analysis: v=2.4 cv=R58z39RX c=1 sm=1 tr=0 ts=6a42413e cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=EUspDBNiAAAA:8 a=hGRUbYMsCoS4gC--qvEA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDA3OSBTYWx0ZWRfX26yZKwbW0AJp
- N73yWXQ5io3YvdL0yAeOlcvbj3bNkezhwDwS8CXOhj2tMAK8bpci1OEEMwI3R7pSqzIgLhTxYrS
- Ylugw68YDY7ESF9XiV9h3Vjjk7rsMLA=
-X-Proofpoint-ORIG-GUID: z7G5ISiW8978kG3YGf44I1dqb2C22klt
-X-Proofpoint-GUID: z7G5ISiW8978kG3YGf44I1dqb2C22klt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-29_02,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 phishscore=0 clxscore=1015
- adultscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606290079
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260629-gpio-dwapb-wakeup-v1-1-3394f02317da@ultrarisc.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39101-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:maulik.shah@oss.qualcomm.com,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:tglx@kernel.org,m:linusw@kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:sneh.mankad@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-39102-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,qualcomm.com:dkim,qualcomm.com:email];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:devnull+wangjia.ultrarisc.com@kernel.org,m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:oe-kbuild-all@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:wangjia@ultrarisc.com,m:devnull@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,wangjia.ultrarisc.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,01.org:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:dkim,intel.com:email,intel.com:mid,intel.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 320956D885D
+X-Rspamd-Queue-Id: 8CD796D8C54
 
-On 6/25/26 11:19 AM, Maulik Shah (mkshah) wrote:
-> 
-> 
-> On 6/17/2026 6:56 PM, Konrad Dybcio wrote:
->> On 6/16/26 11:25 AM, Maulik Shah wrote:
->>> There are multiple statics used. Move all to struct pdc_desc to better
->>> align with versioning support. Document them.
->>>
->>> No functional impact.
->>>
->>> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
->>> ---
->>
->> [...]
->>
->>>  static void pdc_enable_intr(struct irq_data *d, bool on)
->>>  {
->>> -	unsigned long flags;
->>> +	guard(raw_spinlock)(&pdc->lock);
->>
->> tglx suggested to use guard(irq) around "the other callsite"..
->> which I'm not sure where it'd be - maybe around __pdc_enable_intr()
->> in pdc_setup_pin_mapping()?
->>
->> Otherwise this patch looks good to me
->>
->> Konrad
-> 
-> All callers will be from irqchip except pdc_setup_pin_mapping() which was
-> invoking lock-less because at that time irqchip is not setup and as such
-> can stay lock less.
-> 
-> Once the patch-3 of this series is applied pdc_setup_pin_mapping() too
-> will use the lock as it makes direct use of pdc->enable_intr() where the new lock
-> is kept (only for v2.7 version specific enable function).
+Hi Jia,
 
-Ack, thanks
+kernel test robot noticed the following build errors:
 
-Konrad
+[auto build test ERROR on dc59e4fea9d83f03bad6bddf3fa2e52491777482]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jia-Wang-via-B4-Relay/gpio-dwapb-Defer-clock-gating-until-noirq/20260629-135404
+base:   dc59e4fea9d83f03bad6bddf3fa2e52491777482
+patch link:    https://lore.kernel.org/r/20260629-gpio-dwapb-wakeup-v1-1-3394f02317da%40ultrarisc.com
+patch subject: [PATCH] gpio: dwapb: Defer clock gating until noirq
+config: sparc64-randconfig-001-20260629 (https://download.01.org/0day-ci/archive/20260629/202606291736.mAgOeA65-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260629/202606291736.mAgOeA65-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606291736.mAgOeA65-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpio/gpio-dwapb.c: In function 'dwapb_irq_set_wake':
+>> drivers/gpio/gpio-dwapb.c:377:7: error: 'struct irq_data' has no member named 'parent_data'
+     if (d->parent_data && !!ctx->wake_en != !!wake_en) {
+          ^~
+>> drivers/gpio/gpio-dwapb.c:378:9: error: implicit declaration of function 'irq_chip_set_wake_parent'; did you mean 'irq_set_parent'? [-Werror=implicit-function-declaration]
+      err = irq_chip_set_wake_parent(d, enable);
+            ^~~~~~~~~~~~~~~~~~~~~~~~
+            irq_set_parent
+   cc1: some warnings being treated as errors
+
+
+vim +377 drivers/gpio/gpio-dwapb.c
+
+   362	
+   363	static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+   364	{
+   365		struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+   366		struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+   367		struct dwapb_context *ctx = gpio->ports[0].ctx;
+   368		irq_hw_number_t bit = irqd_to_hwirq(d);
+   369		u32 wake_en = ctx->wake_en;
+   370		int err;
+   371	
+   372		if (enable)
+   373			wake_en |= BIT(bit);
+   374		else
+   375			wake_en &= ~BIT(bit);
+   376	
+ > 377		if (d->parent_data && !!ctx->wake_en != !!wake_en) {
+ > 378			err = irq_chip_set_wake_parent(d, enable);
+   379			if (err)
+   380				return err;
+   381		}
+   382	
+   383		ctx->wake_en = wake_en;
+   384	
+   385		return 0;
+   386	}
+   387	
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
