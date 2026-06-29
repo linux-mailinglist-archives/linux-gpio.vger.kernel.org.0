@@ -1,90 +1,90 @@
-Return-Path: <linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39152-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id X+z1CcmVQmqm+AkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:56:57 +0200
+	id RMkZK66XQmo3+QkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39152-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 18:05:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF9986DD01B
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:56:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 044506DD1A2
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 18:05:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arndb.de header.s=fm1 header.b=NE6t34RD;
-	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="B vW9GpE";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arndb.de header.s=fm1 header.b=otExSv6C;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="Z P+OSo5";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39152-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39152-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=arndb.de;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4A6C6312AF06
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:47:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 13942318E6E0
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:49:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EFA44E021;
-	Mon, 29 Jun 2026 15:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A7942DFEF;
+	Mon, 29 Jun 2026 15:48:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0659E43C05C;
-	Mon, 29 Jun 2026 15:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67A8427A1F;
+	Mon, 29 Jun 2026 15:48:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782747936; cv=none; b=rQoiH5eZkzWysZgIckctYyK2hU3kqFdzOekA3Tt8PZF8JoMxgHKHOhBaFZr6OnzcvG7NXaNLff2q9Y66dsfSQylqxsAfv3psuQmW58L/nwDdLXRx3u/TR1GcvPjZQPINt/dBvVSGIliysg5eZ+NI+GpN+nF/3xdcYgX4QAaUHYU=
+	t=1782748113; cv=none; b=QbUnRpW7CqSKG3RoXq6tgnW654tatDjtWxE0i3ipvPfcf3OAWU7VfQkfaHD+9cAoYtZRGFTSBRYkpW1v023lg9bvKEGf96GkBPXISitRJlFsbicb4SHBs9KJgIeDsjQp6NoTALkn6WlAw4KH7z8c52hdalrW0RlxTFBC6qLKVOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782747936; c=relaxed/simple;
-	bh=rjFM2D6jrN878gEPa2yebQ2V6lQ4Ly5z/86sDfy9Ef4=;
+	s=arc-20240116; t=1782748113; c=relaxed/simple;
+	bh=1McCVs2snxu+gNjJm1D421N5eVerVO5vK6JHvxW/TfQ=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=igqU4KZYGRzC+JPX1EZnz5H3JgfIDGRtyP5vRY5klE5P+k5LblIx/+KB8bDGTyl35qjn9D6bh2NQnO6zSfY7fZ+KKmUxJB4k5hQZjFfx2GFuERn3T8Ma2MZ0M7SXQvue7HJhUWrnTOnuc///Yto63dz3aSU7jf7/13NDsY9nM34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=NE6t34RD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BvW9GpEf; arc=none smtp.client-ip=202.12.124.140
+	 Subject:Content-Type; b=JkXKFk2KDlXlJXEHiJi7KHZnlLSmfiBNTVT4NuzOCwqFNoPrK2cHdXG1yL3YPokO+hwyOgbfsWKZuq+Qn9iX/kTHEZ0PXILsVfk1BV4Qwbo4GqGOfMyC2pyLqp+C5B1rYUd3kSe9hofSJ6tegmtqmUBkIPSeU+bHnf8DKOq3Bpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=otExSv6C; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZP+OSo5y; arc=none smtp.client-ip=202.12.124.140
 Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.stl.internal (Postfix) with ESMTP id B7CF01300119;
-	Mon, 29 Jun 2026 11:45:33 -0400 (EDT)
+	by mailflow.stl.internal (Postfix) with ESMTP id 7F8A013001E3;
+	Mon, 29 Jun 2026 11:48:31 -0400 (EDT)
 Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Mon, 29 Jun 2026 11:45:34 -0400
+  by phl-compute-04.internal (MEProxy); Mon, 29 Jun 2026 11:48:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1782747933;
-	 x=1782755133; bh=JSWP+oCjDefLm/g9PuV1GqUkziDul2e9yv/ysVQsJLY=; b=
-	NE6t34RDiIItJnjdvpPNLzERZEmy1Uokb4joPY1CUGLVDWSQy6O7lM7YR/JH2Vzz
-	EKjSBDHgy12XKPTe4T6/vFGszy9/X5bhW/dAEDGMtAFHdRGEckNuxhc9bX3PR0VE
-	bfW0MW2BR1AKR58Jk7h1JxjrIx1Kz7REAVnwk0oAlfoj8/mj7rRNlBSR0zA4hhnh
-	nrZ5Ql6KmC6VRVCiJ20YjlxB5Hon27fcsCOduVLOhAndchegK3YeVpKE9Pp1EySs
-	+Hgew3gjNwCsL97JbgGzSZGffJk0l4s3icmD0kqHlku9NQytJJHrK5zKTtqTrlSN
-	nN0K/5MSbp6GsS3AP9v5Xw==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1782748111;
+	 x=1782755311; bh=OQSYL+rcbbMvXGkfQit/IeSyVBDzp7a1uiLZytls49o=; b=
+	otExSv6CCfwgU+53OmRzfq2B2DYzwG97/7OG2yFVL9SLp2zuXWfhdL/w+7nIA4id
+	pS7hJpE+p/zM36qUEbCM1LqXAUyUGB34hT8s1CLctdvUhUl0w1ZhqpR2HIS3PV7o
+	bsnIFZBboF30NjRkOQ9UT+Q8NXhm9E13I7offTJ2aRcuG8r2Lm82KoHQohaMMwV5
+	1pog70vnywIoIEN8MJJPZBLCU4XXKtem9FHI/gOfgvqsBOGTC7GkxZFe5P2Lw2ga
+	yjsSm7K9GLJMBOqJ4k1/I3YVG3A8X1aWU9NyZdVYzw3BMgCE/ro9EeoLtAyGzeFK
+	Pl4J0bO7j6edaTVNsgNFEA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782747933; x=
-	1782755133; bh=JSWP+oCjDefLm/g9PuV1GqUkziDul2e9yv/ysVQsJLY=; b=B
-	vW9GpEfQf5KLp9NtJM6GkHv3I5ZqIvw4Ca2lMiHX8SKqsoxlmypG2EMXAsormSFb
-	oqLT0a0Bl9FJyA6vd4v32gwdXkqPQVCs0Q1Y9jXp5dOSVQI2tfbQcx1ULcycd2no
-	cz4W31l3TBY05Bi2KSWoBV2ZPe6YbfMg4EFP7hw/vkSYA/ePVKRQACV+DCkNrleC
-	7d2U6h7NAcmkprtPUjO4A9XW6JXNK6W9RSqJU2/A289YIaXuaBCd1hJaZ6vsHuTg
-	GNxjVNjZ5DH/aXylHFIrfAuE5N81jk6hj/53mTDmJA3sJAwIS6GzLql0EapV+l/2
-	td6qNY5irlX8jNYf/UttQ==
-X-ME-Sender: <xms:HJNCaoMrkvvQS7N_eQkd2-7GzY3rf6oAfFR9scbcsRER6z01sw7mzQ>
-    <xme:HJNCapwMpwLVp89QaYKeW8Gu_iFO6mtIcDakQdQ1IcDR2awHglttG5XYgUbY-f2KY
-    MUHVhVlQ81X_KxAdYNn48ZwudPAYseWVvBXQ00pUVx7Z5102rCPfbsZ>
-X-ME-Proxy-Cause: dmFkZTGfEuV5uhz9iLc4/VqJewkOwZztE2Q/W2L8MWGpthXJSG6cnqB0ybUTZO/gmTStFr
-    IiMG3oMMwTOd1GN29iTAZh8ELqDq/pvNTu31HqcDhNTnRV5w+qN8TY5zQgqjhrWyTFnLFv
-    a5lC1bd0Nsy33atl2U9pCG8DwHiBT9SAvLqnCXSLgY6ykY2nreWYk0o6gpE7z+zCzbU5QI
-    CLqmPEwYE4mll5+cmq6mEdAN12TaRxj619rRYC2M3spZPblqPgudPkyzWrdvTZpBYK3w/u
-    jqv7Hdzc+TtswHLZ1V6GZ+c/1ZffJJfwsB5JIPB30uvkpQkKQBrSQtzi9AGb8HNFEb2kgE
-    qKkXl9pCm/0B95O8InFrTkKN0fJJdpnCSraeOZvlbYvDYSuDEOsOuD28QLxuf4mNOnHYEc
-    4em35Aufoj/L6MFtoXv8X9guYW3iZk9yMbK8VidKBOe9HIlA6Vy69oYVLWvoeIP/sRtUxM
-    xWA7NaPmd/Kd9MV/ItckFUA5jQ19oB0lqDlABCPUJva5FAJO0rNnJiVDlHuYcKo1028G2L
-    QCmWZB57sVtG9lZURwNtcccEDwqWzXsVO1FCuadUaHZRSO4zh0UrefsDvNNDkSsAklUL8C
-    nDBMgI4yo+tcTzxNjLzthPlRQuu7ftRHxOLDna+Fu5ygZv/F2jkt5rcMUitw
-X-ME-Proxy: <xmx:HJNCaiVR99ITZUIeVHLQIjkAl3W5L7-NY_eXPpexE2ezyiuvPV7Wig>
-    <xmx:HJNCaqDcmel0SZvoqXYoLZayz9Q48weXPGpjP4Y1EEA9-teXfq9kNA>
-    <xmx:HJNCalHWKybZhCSB_h9ep1tLEkKEMci7ODZ3AjJ9oK0yH0tMhtYVDw>
-    <xmx:HJNCamc1hcyXGhjSob0H8QG7OUqPoVNgYLrZzyvRI9sJF6RPK2srWA>
-    <xmx:HZNCahf_1C-xXUG9BEQMuJSIEx8k4QdhQtNpq8TMrV7EM8NaHbepNMFj>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782748111; x=
+	1782755311; bh=OQSYL+rcbbMvXGkfQit/IeSyVBDzp7a1uiLZytls49o=; b=Z
+	P+OSo5yef9/cf64i9oZY96JMQWrkgDB3///chYutdOeJnhuCLMIQBthaTPJcoReA
+	A42wB43XIfLOAHZlUSZRrEWmaIkkJVPyR9ZrNj0Zg79fjHX5GNwFKh44vBnstNjs
+	+gKwPg044HSnH3p4e5kEU8/gJdXnd5J9rcJgbSl1CjuvG8G/lzCfuRrzQSuK0yFG
+	nAQ3o6X2C2t4pALrCSMONEpg+Bh0sXEMP7jMgbrh5fxsQE9kGxPzz2YGv3rx56Gv
+	vpRCb8LQ5USUCARnUKXaPOljl/bpYRFLx50FMB3vSHHH4V2/reUKPVgJULvxVire
+	Mkj0fQjdTFT7fm+9wEFeQ==
+X-ME-Sender: <xms:z5NCakeBygjeAHHHThz3dUsTnvB6AK_UVMjKz-WZKZVRr2lluk78FQ>
+    <xme:z5NCahCpYUk2lb8a1RbHVmyXeGBSy5l5DdSrmUr_uS7YYPkiTX-Ewa_wUd6Pe47oi
+    fqqLUBT-9g8HmIrQlngZpk17TUMnckWDzEtut6NIZEoxunmVuyUuWA>
+X-ME-Proxy-Cause: dmFkZTGx/zQGI8s/7q5psZd2hog4QvvLF8VyS3SEh6yndDN0NLF+SUROST5TuJaRfbYzsR
+    kRNLz+nZnLIWxTAnVDEiVI3LWMoT76m1NPebPhT28iJCWPXc0GO7oFLEPDfrdg9tfzroWb
+    HnrfV5e1jPmjz36LnDV+54JGw32aQMY40K1t7WiGcRFvXEmQH6xS4redW3l3jMN7eHVHXH
+    OMUBqc4hdT1AWM82wO5kRpwsYMYMv8K7MRSSgj1UrGhr0ZavzP88ve8YyHNE7ly6hSja/5
+    QiP/FqZsNFQZ34zbxnGfKyKytbn/wMNNFVGFjw0DXOPPa8n6XjB/fzcu7YZiP8PrvEJSOd
+    l8wa/9o9YFghE4nmtzEFNP5GHS4DgMKC4w2rG1ksKG4K1tNod94D3VEihl/RxyL9ohAzRZ
+    DV3gAxtenHg9Z5cQJzoBipUKZ9pqhmJudtox/jlSGg2Nc/v34rLMtOwqFKQfA1uoQshteX
+    Fj+AMNKhMnJ4QbvjVI2RQG1hwfF0E+t7vkI/rh/pkR03lll3huezz0P+7sfFgS0BBFEc4I
+    tgwdiyeO6AWLRMbzNKqGc2BGlgFQrUK3BgCvUK9m1iH9OEbmB8sUgFESS3o9AeJDZgiza+
+    QtMgrmbDhds3U+BZzmooK8ccK4+ZTU4CwBh9Kr050guMXdKmxiwbffVRqy2w
+X-ME-Proxy: <xmx:z5NCaqnslMw1U4x946I_QUjw_ET8HBcAAsdnOpVQMvFlVCBGjb5OEQ>
+    <xmx:z5NCatSrHaFps5ZyxX5SqaW3oWWvqcDK6TzS14FaET5Pf4npQ179sg>
+    <xmx:z5NCanXHY9GeHNVa3tjFzINJQ_mrCW-T7sCwo55oVGN2tZsh_Krxbw>
+    <xmx:z5NCars5LXs8k9icxryzzfrpvBcoTsGtWAAjyBjSc4vWQn2-iQYc8Q>
+    <xmx:z5NCarutsUgfjq0e6Ud1ZnN0qPM1Eju682i8umHuTCrQdRzm5WnqOIk6>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BA658182007A; Mon, 29 Jun 2026 11:45:32 -0400 (EDT)
+	id 215901820082; Mon, 29 Jun 2026 11:48:31 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -93,9 +93,9 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-ThreadId: A045QOfflcQ7
-Date: Mon, 29 Jun 2026 17:45:12 +0200
+Date: Mon, 29 Jun 2026 17:48:04 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>,
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>,
  "Arnd Bergmann" <arnd@kernel.org>
 Cc: "Linus Walleij" <linusw@kernel.org>,
  "Bartosz Golaszewski" <brgl@kernel.org>,
@@ -113,10 +113,11 @@ Cc: "Linus Walleij" <linusw@kernel.org>,
  "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
  linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
  linux-usb@vger.kernel.org
-Message-Id: <34d4eddf-bfe5-4103-b2c6-143c63ea37f9@app.fastmail.com>
-In-Reply-To: <akKN59lv55CXS3HU@ashevche-desk.local>
+Message-Id: <ff4d7043-1929-4fa1-ba5e-f28403ad6fcc@app.fastmail.com>
+In-Reply-To: 
+ <CAMuHMdXhsM4JzArRuB=A46N-Ogbn2Fans+PVJVA-hEytFq=DeQ@mail.gmail.com>
 References: <20260629135917.1308621-1-arnd@kernel.org>
- <akKN59lv55CXS3HU@ashevche-desk.local>
+ <CAMuHMdXhsM4JzArRuB=A46N-Ogbn2Fans+PVJVA-hEytFq=DeQ@mail.gmail.com>
 Subject: Re: [PATCH] [RFC] gpiolib: introduce gpio_name() helper
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
@@ -126,16 +127,16 @@ X-Spamd-Result: default: False [-0.65 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
 	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39151-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39152-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:arnd@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:marcel@holtmann.org,m:myungjoo.ham@samsung.com,m:cw00.choi@samsung.com,m:geert+renesas@glider.be,m:andy@kernel.org,m:dmitry.torokhov@gmail.com,m:ulfh@kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-iio@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-usb@vger.kernel.org,m:geert@glider.be,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:geert@linux-m68k.org,m:arnd@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:marcel@holtmann.org,m:myungjoo.ham@samsung.com,m:cw00.choi@samsung.com,m:geert+renesas@glider.be,m:andy@kernel.org,m:dmitry.torokhov@gmail.com,m:ulfh@kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-iio@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-usb@vger.kernel.org,m:geert@glider.be,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -151,46 +152,57 @@ X-Spamd-Result: default: False [-0.65 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,messagingengine.com:dkim,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,arndb.de:dkim,arndb.de:from_mime]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,messagingengine.com:dkim,vger.kernel.org:from_smtp,arndb.de:dkim,arndb.de:email,arndb.de:from_mime,app.fastmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AF9986DD01B
+X-Rspamd-Queue-Id: 044506DD1A2
 
-On Mon, Jun 29, 2026, at 17:23, Andy Shevchenko wrote:
-> On Mon, Jun 29, 2026 at 03:56:29PM +0200, Arnd Bergmann wrote:
->> +const char *gpiod_name(const struct gpio_desc *desc)
->> +{
->> +	return desc ? desc->name : "(no gpio)";
+On Mon, Jun 29, 2026, at 17:29, Geert Uytterhoeven wrote:
+> On Mon, 29 Jun 2026 at 15:59, Arnd Bergmann <arnd@kernel.org> wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> Most remaining users of desc_to_gpio() only call it for printing debug
+>> information.
+>>
+>> Replace this with a new gpiod_name() helper that returns the
+>> gpio_desc->name string after checking the gpio_desc pointer.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 >
-> Can we get into here with wrong (error pointer descriptor)? Shouldn't you call
-> one of validate_desc() / VALIDATE_DESC()?
+> Thanks for your patch!
 
-Since all the callers previously call desc_to_gpio and that does
-not even check desc at all, it would be a preexisting bug if
-any caller passed an error pointer.
+Thanks for testing!
 
-I added the NULL pointer check since many callers had that
-part originally, like
-
-      tsdata->wake_gpio ? desc_to_gpio(tsdata->wake_gpio) : -1,
-
-> Also not sure if "(no gpio)" is a good choice. "not requested"? "not provided"?
-
-Any of those seem fine to me, not sure.
-
->> +static inline const char *gpiod_name(const struct gpio_desc *desc)
->> +{
->> +	WARN_ON(desc);
->> +	return "(no gpio)";
+>> --- a/drivers/gpio/gpio-aggregator.c
+>> +++ b/drivers/gpio/gpio-aggregator.c
+>> @@ -758,8 +758,8 @@ int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
+>>
+>>         fwd->descs[offset] = desc;
+>>
+>> -       dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
+>> -               desc_to_gpio(desc), gpiod_to_irq(desc));
+>> +       dev_dbg(chip->parent, "%u => gpio %s irq %d\n", offset,
+>> +               gpiod_name(desc), gpiod_to_irq(desc));
+>>
+>>         return 0;
+>>  }
 >
-> Hmm... This will be a second copy with a slight potential of going apart from
-> the other case. Perhaps a #define? (Yes, yes, I understand that there are pros
-> and cons, in particular readability with define is questionable.)
+> Before, this printed:
+>
+>     gpio-aggregator gpio-aggregator.1: 0 => gpio 589 irq 188
+>     gpio-aggregator gpio-aggregator.1: 1 => gpio 590 irq 189
+>
+> After, this prints:
+>
+>     gpio-aggregator gpio-aggregator.1: 0 => gpio (null) irq 188
+>     gpio-aggregator gpio-aggregator.1: 1 => gpio (null) irq 189
+>
+> Same results for instantiation using sysfs or configfs[1], although
+> the latter does have optional support for specifying the name.
 
-I was mostly trying to optimize for consistency with the other
-stub functions here. Since it should not actually be used at all
-without gpiolib, returning NULL or an empty string here would
-also work.
+I wonder how many of the other instances have the same problem
+then. Would it be appropriate for gpiochip_fwd_desc_add() to set
+a name itself to address this one?
 
-     Arnd
+       Arnd
 
