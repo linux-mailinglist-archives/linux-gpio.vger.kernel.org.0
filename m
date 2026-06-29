@@ -1,154 +1,186 @@
-Return-Path: <linux-gpio+bounces-39114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zUidMvJYQmq55AkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39114-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 13:37:22 +0200
+	id qlqhBr1wQmoz7QkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:18:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09CC96D9831
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 13:37:22 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD8A6DB0B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:18:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=PPRhueGs;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39114-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39114-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hC4kKBSl;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 46B3F30BA826
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 11:25:51 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 208A43018CFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 13:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA80403B1E;
-	Mon, 29 Jun 2026 11:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C89407CFC;
+	Mon, 29 Jun 2026 13:03:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A636E403AF1;
-	Mon, 29 Jun 2026 11:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B6407CF0;
+	Mon, 29 Jun 2026 13:03:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782732238; cv=none; b=nmbPkFaPtbrPtCBesPbcJsNa7OOzhTY/lEMxOd8SGcq5zWsukvS3b4K+ciDs7IMgRdECH5/KRzMdgeBF0c8K16dNZNGs5hQGbS3SGYhJOekNz6duuSU8pMLDpooRnhoTGjn7fibMm+LsPUVZHbZF+LyqdDkJol7GKdwf7mdKAXs=
+	t=1782738226; cv=none; b=fojrWM70eEMp+1CEUGUfJh3i19coqrjgZRzYEAU74WMvqpJpkgkXhGweweoD5naa+aghVENNOerwnIChKX5vcHKzg5M1oUme/m5IYKxJYWc/dWV0ECjHyVIrWzVT/H4HmGk5y1oKwcL4DMh9QmhIHHmlr10ETScxk1kwxAHtBQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782732238; c=relaxed/simple;
-	bh=z+zWPxm3JBdhU/L5WtVYwuCIHZ488gQQa10lxH3MfSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lc9Zrgna+o+3mhBi3F7UBHGKqctp5Dn9ErP8/mVeMFwS9wAd1QzlkEMlG4wdwBr/OgxeymqL/uUwZ1Rs4ygsT4LEHAIVqRg/dBCNt9ZK4EFl2Y2VqngqUTGFwNgQlI7NqgH+Sv8lx9PG3WShi4OCaWoyMrwXhJVyVuLAcv/fw/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PPRhueGs; arc=none smtp.client-ip=192.198.163.17
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782732236; x=1814268236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z+zWPxm3JBdhU/L5WtVYwuCIHZ488gQQa10lxH3MfSw=;
-  b=PPRhueGsIgae11QAPgnQqge0Y45kTGi74BM+XCvuA/IPsJr9w6Oc4kVa
-   vrgfQ6jCkZaEoVuFwvqgHIE7ahJZuwRjCVM6ngPjCYwZnPGMLl/jjZs5V
-   ddlkfCBOwXN90zhFgdO8CnYdxOds/AvoN+6Sw+vmBkn+skG/pzvof9+Q0
-   0z2U6VjtLS8BAd9yM6Hw3y7U8hcjXT5DCjXf1SWk5UwpkuOMIJqEtVpjx
-   EEwHKT6naQ3tvL4Mx7VAmi+b25+Cf9qF2utBNTVlGGbz3SofizAXDFIr2
-   s9a00XGrLCmM2dATiGf+Nundi0w8nwSHqP+HqDIVrPZ+XMMXFhy6cT47o
-   Q==;
-X-CSE-ConnectionGUID: 3EPU29jYSXOwnpzTPEu+iw==
-X-CSE-MsgGUID: 1pjp/A84RZ+j9PWr2E6RLw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11831"; a="83292444"
-X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
-   d="scan'208";a="83292444"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 04:20:39 -0700
-X-CSE-ConnectionGUID: E/Z5r64PS/6YdODkz95kRQ==
-X-CSE-MsgGUID: t/UIqA0pTvSS0IrkG6SvVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
-   d="scan'208";a="252566664"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.207])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 04:20:34 -0700
-Date: Mon, 29 Jun 2026 14:20:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
+	s=arc-20240116; t=1782738226; c=relaxed/simple;
+	bh=ZXxYYKWc/jGxfk2Nytyp7ioT+GGF5iEplxY6FAnMyNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ruGrJ7etg49CfDcV4qKIZwumoyKDlAboeVdXi/dkaN5ccMooda7gdOMLujna5wsh4EFjTAjDllrUwucMyBuUyv0t8YPJBNMRo8I3NMCAlv8zKEfjPJhfTQjAwCJLhbuHSnltJ2LFsG7CVlvXjQXytFjXh+ZlNlySXjs58FgQLO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hC4kKBSl; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D3E1F00A3D;
+	Mon, 29 Jun 2026 13:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782738225;
+	bh=1jg1rQAK89ERmpcHGqenOSdalDO5zb8XIpGNN1kpzuo=;
+	h=From:To:Cc:Subject:Date;
+	b=hC4kKBSlI1YC3aYkWyb12M65wJhVTyQjHINpXLna7nBIHIzQXslOpalidGl0nU9F9
+	 sKZBdHiIsT04xXPsPor0JvuYwebZMvQQT8VQQpLHBv6/Bh8LNMsCwvDvrF8KfyvWKr
+	 v8Dc/ynpn7KS92OwuJZo8X6AnaCBV3GQW6XcoKwLhCBoEwdYy9ndAO0sLc5dh1rmsB
+	 L3K2uf+lsmGnNS79iddvPtEWAvNxrHN+KsZMLDkmK9MU0hHquZ4qICWKj3EwMf6mky
+	 SPgKLz+YGudrwoWXgOq0xzM/sZG6/TjjozaWd69NFMZCJE3eX9Rr/7FhRiwUp3KQJS
+	 oilFtAu8wI0YQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-gpio@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
 	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/5] MAINTAINERS: add myself as reviewer of software node
- support
-Message-ID: <akJU_1BS4NoLd3tV@ashevche-desk.local>
-References: <20260629-swnode-fw-devlink-v1-0-b90058b41839@oss.qualcomm.com>
- <20260629-swnode-fw-devlink-v1-4-b90058b41839@oss.qualcomm.com>
+	Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	linux-sh@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-leds@vger.kernel.org
+Subject: [PATCH v5 0/6] gpiolib: fence off legacy interfaces
+Date: Mon, 29 Jun 2026 15:03:23 +0200
+Message-Id: <20260629130329.1291953-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260629-swnode-fw-devlink-v1-4-b90058b41839@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-39115-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39114-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:arnd@arndb.de,m:glaubitz@physik.fu-berlin.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:linusw@kernel.org,m:brgl@kernel.org,m:dmitry.torokhov@gmail.com,m:lee@kernel.org,m:pavel@kernel.org,m:linux-sh@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-leds@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[arndb.de,physik.fu-berlin.de,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,vger.kernel.org];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux.intel.com:from_mime]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,zytor.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 09CC96D9831
+X-Rspamd-Queue-Id: 0DD8A6DB0B0
 
-On Mon, Jun 29, 2026 at 12:52:09PM +0200, Bartosz Golaszewski wrote:
-> I've been working extensively on software nodes lately and introduced
-> some changes. Add myself as reviewer so that I can help review any new
-> proposed changes.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Thanks, I appreciate the move!
+This is the remainder of the series previously posted as v2
+in [1]. I've changed the version to v5 for all patches to
+not confuse b4 too much, but the patches are mostly unchanged.
 
-...
+The patch "Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY"
+was not part of the series last time, but the build bots reported
+this as a regression since I had dropped that since v1.
 
-> +F:	drivers/base/test/swnode-devlink-test.c
+I hope that all that remains now can just get merged through the
+gpio tree. The gpio-keys patch needs a bit coordination with
+another patch addressing the same issue that is already in
+flight, so I expect that I'll rebase my series once more when
+that is in a stable branch, but the state I have here should
+just work as-is on top of v7.2-rc1.
 
-This should be part of the patch that bring this file to life.
+     Arnd
+
+[1] https://lore.kernel.org/all/20260520183815.2510387-1-arnd@kernel.org/
+
+Arnd Bergmann (6):
+  [v5] sh: select legacy gpiolib interface
+  [v5] x86/olpc: select GPIOLIB_LEGACY
+  [v5] Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY
+  [v5] Input: gpio-keys: make legacy gpiolib optional
+  [v5] leds: gpio: make legacy gpiolib interface optional
+  [v5] gpiolib: turn off legacy interface by default
+
+ arch/sh/Kconfig                           |  1 +
+ arch/sh/boards/Kconfig                    |  8 ++++
+ arch/sh/boards/mach-highlander/Kconfig    |  1 +
+ arch/sh/boards/mach-rsk/Kconfig           |  3 ++
+ arch/x86/Kconfig                          |  1 +
+ arch/x86/platform/olpc/olpc-xo1-sci.c     |  2 +-
+ drivers/gpio/Kconfig                      |  9 +++-
+ drivers/input/keyboard/gpio_keys.c        |  9 ++--
+ drivers/input/keyboard/gpio_keys_polled.c |  4 +-
+ drivers/input/misc/Kconfig                |  3 ++
+ drivers/input/misc/soc_button_array.c     |  2 +-
+ drivers/leds/leds-gpio.c                  | 53 +++++++++++++++--------
+ drivers/mfd/rohm-bd71828.c                |  1 -
+ drivers/mfd/rohm-bd718x7.c                |  1 -
+ include/linux/gpio_keys.h                 |  2 +
+ include/linux/leds.h                      |  2 +
+ sound/pci/Kconfig                         |  1 +
+ sound/pci/cs5535audio/cs5535audio_olpc.c  |  2 +-
+ 18 files changed, 76 insertions(+), 29 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.39.5
 
-
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@kernel.org>
+Cc: linux-sh@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-input@vger.kernel.org
+Cc: linux-leds@vger.kernel.org
 
