@@ -1,221 +1,196 @@
-Return-Path: <linux-gpio+bounces-39150-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SEy8NuaUQmpy+AkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39150-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:53:10 +0200
+	id X+z1CcmVQmqm+AkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:56:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A299B6DCF5D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF9986DD01B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:56:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b="S/zykTuh";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39150-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39150-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=arndb.de header.s=fm1 header.b=NE6t34RD;
+	dkim=pass header.d=messagingengine.com header.s=fm1 header.b="B vW9GpE";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39151-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=arndb.de;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2AB0C30461EA
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:45:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4A6C6312AF06
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:47:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33DD243C058;
-	Mon, 29 Jun 2026 15:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EFA44E021;
+	Mon, 29 Jun 2026 15:45:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011071.outbound.protection.outlook.com [40.107.130.71])
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A1A4266BF;
-	Mon, 29 Jun 2026 15:43:20 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782747802; cv=fail; b=bu/L8cBW3e87mJxZlyfMwyHbBWQbod8vqZzNezbh4IaW/ruUsCcKsQDn70S28WYg30Xv5R8vsKWAqvowwRQQCtQIAUYdJ7kktdxebzQA0TSp+w3lgsaiAgkXoV5vKklEJvx7j4bsPiClNHApBb7ek99ZOwelJHU+cJv9ViKIFpA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782747802; c=relaxed/simple;
-	bh=4TKb8DXeBND7OLKvnWbVNLIPnGCLaGAbDq4tM2LS09o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ar67jBhuByBlScqFvG2rA/fr/qHXHWSpexswCiaSLrdWRQTRFba5VIX0xn4YtIEk5tvbyoMseD7+IxfgUJ9ExiIySdQyOSOk8OwaJeG/wueRm50XppPnFZTJDRWLd7Y3DvDHQO7Zw5rNekLc/Sg84HggvR0kqAA9F2RbOjgKd84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=S/zykTuh; arc=fail smtp.client-ip=40.107.130.71
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YhyQvjyNAMmrR1gYVz+E/eT6D4RJ0rA1uAANVvCuOuYYLBSc0zOqACpg0JKV8+CCFCqVeR+x2nNh9tL81A6TEMCfxksEM1VdFSZH03VOQjXDHg/g0QyMxGnt8Df/i7YXh9N0IRO4TP3uK6Pc2XaQWgjuT8L8Pu8Ph3B0RfH4qIwFOfUn6XPJAnqehRmk2H738TaUlzfzBa9tQM18FHL2lg6Rr38DB5uKrJoBlKgkFy3BRNLl8B+Je+81nBXFgb7zXkYC9OuhHFbJGsK3PRP9ekKtIHT1ZdHaic09J8c+urP5rKr4rmc4eMfuSgWa9Khxb2LLQrV+h7BaqnBrO+69mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eUlfXlgXPywHPdQ0QOggn86872UVQZcmxCm6e/LrYIs=;
- b=tqjcolLGIb/CEAHZonk3jiHrl0IfLwkMp81WIDduIUJtjTPhz/DoDzn5+ir0arOFq+EDCsif6iAeP0iHe2iINFyDrTeMbKw4ZhJQ7TD0fr4YexUOhDI2ocJA5zQB/hBfU5q67e2y0MBe2+8Ri1WTlO2vA0GZmCQh/zGtsBXzgRActEvqifszgSCnuzeCwonscBjE0Dte0l++4BUqj04fejBSCXAXsc69NEMUSaLYHREz7HHpprNzhagVVvVhTVEHjXGe8DlsUxhU4WKO+d2491QJ9c/yrtZ9p4qz2oDBwFEdsoZMjCjM8kA6dFKxzshf4mIx7FJggVARm2mKakaV5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eUlfXlgXPywHPdQ0QOggn86872UVQZcmxCm6e/LrYIs=;
- b=S/zykTuhTH17SpKkWMQtPFMuJuPXe20j9FtyL3P8b6OHDI0AN3TOQd7+bv4KV4/dldxCjZ5fRKPrglioJgzR4l1Hbq9iucGxanIG0M7KwSiW+5w7PFx0uwaUXuYmg1IuzXN3vmb/kKew9usiJPq6olHtqpvjjyCwmtbYG9cWKG+YWmccRFvAdfiNF1fc5XtCB11eholJxz935R61ORq0g/1S1nGGnhzUWKoujCQHRUZT4iqof0y2d7BqpAH9RxB25piI1l+NCFumaU2Zwneu+3W4KFoghlJomTCjoNSaHMdLdKlqUZx6ePWuyARVHs8w8TT7OKo9nmlOyklCtlTriQ==
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by VI0PR04MB11819.eurprd04.prod.outlook.com (2603:10a6:800:2eb::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
- 2026 15:43:17 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Mon, 29 Jun 2026
- 15:43:17 +0000
-From: Frank.Li@oss.nxp.com
-To: Linus Walleij <linusw@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Peter Rosin <peda@lysator.liu.se>,
-	Frank Li <Frank.Li@nxp.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>
-Subject: Re: (subset) [PATCH v6 0/7] pinctrl: Add generic pinctrl for board-level mux chips
-Date: Mon, 29 Jun 2026 11:43:08 -0400
-Message-ID: <178274777822.2249000.12458353880909358016.b4-ty@b4>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260504-pinctrl-mux-v6-0-8ea858ba3a5b@nxp.com>
-References: <20260504-pinctrl-mux-v6-0-8ea858ba3a5b@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PH8PR02CA0028.namprd02.prod.outlook.com
- (2603:10b6:510:2da::29) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0659E43C05C;
+	Mon, 29 Jun 2026 15:45:34 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782747936; cv=none; b=rQoiH5eZkzWysZgIckctYyK2hU3kqFdzOekA3Tt8PZF8JoMxgHKHOhBaFZr6OnzcvG7NXaNLff2q9Y66dsfSQylqxsAfv3psuQmW58L/nwDdLXRx3u/TR1GcvPjZQPINt/dBvVSGIliysg5eZ+NI+GpN+nF/3xdcYgX4QAaUHYU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782747936; c=relaxed/simple;
+	bh=rjFM2D6jrN878gEPa2yebQ2V6lQ4Ly5z/86sDfy9Ef4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=igqU4KZYGRzC+JPX1EZnz5H3JgfIDGRtyP5vRY5klE5P+k5LblIx/+KB8bDGTyl35qjn9D6bh2NQnO6zSfY7fZ+KKmUxJB4k5hQZjFfx2GFuERn3T8Ma2MZ0M7SXQvue7HJhUWrnTOnuc///Yto63dz3aSU7jf7/13NDsY9nM34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=NE6t34RD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BvW9GpEf; arc=none smtp.client-ip=202.12.124.140
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id B7CF01300119;
+	Mon, 29 Jun 2026 11:45:33 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Mon, 29 Jun 2026 11:45:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1782747933;
+	 x=1782755133; bh=JSWP+oCjDefLm/g9PuV1GqUkziDul2e9yv/ysVQsJLY=; b=
+	NE6t34RDiIItJnjdvpPNLzERZEmy1Uokb4joPY1CUGLVDWSQy6O7lM7YR/JH2Vzz
+	EKjSBDHgy12XKPTe4T6/vFGszy9/X5bhW/dAEDGMtAFHdRGEckNuxhc9bX3PR0VE
+	bfW0MW2BR1AKR58Jk7h1JxjrIx1Kz7REAVnwk0oAlfoj8/mj7rRNlBSR0zA4hhnh
+	nrZ5Ql6KmC6VRVCiJ20YjlxB5Hon27fcsCOduVLOhAndchegK3YeVpKE9Pp1EySs
+	+Hgew3gjNwCsL97JbgGzSZGffJk0l4s3icmD0kqHlku9NQytJJHrK5zKTtqTrlSN
+	nN0K/5MSbp6GsS3AP9v5Xw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782747933; x=
+	1782755133; bh=JSWP+oCjDefLm/g9PuV1GqUkziDul2e9yv/ysVQsJLY=; b=B
+	vW9GpEfQf5KLp9NtJM6GkHv3I5ZqIvw4Ca2lMiHX8SKqsoxlmypG2EMXAsormSFb
+	oqLT0a0Bl9FJyA6vd4v32gwdXkqPQVCs0Q1Y9jXp5dOSVQI2tfbQcx1ULcycd2no
+	cz4W31l3TBY05Bi2KSWoBV2ZPe6YbfMg4EFP7hw/vkSYA/ePVKRQACV+DCkNrleC
+	7d2U6h7NAcmkprtPUjO4A9XW6JXNK6W9RSqJU2/A289YIaXuaBCd1hJaZ6vsHuTg
+	GNxjVNjZ5DH/aXylHFIrfAuE5N81jk6hj/53mTDmJA3sJAwIS6GzLql0EapV+l/2
+	td6qNY5irlX8jNYf/UttQ==
+X-ME-Sender: <xms:HJNCaoMrkvvQS7N_eQkd2-7GzY3rf6oAfFR9scbcsRER6z01sw7mzQ>
+    <xme:HJNCapwMpwLVp89QaYKeW8Gu_iFO6mtIcDakQdQ1IcDR2awHglttG5XYgUbY-f2KY
+    MUHVhVlQ81X_KxAdYNn48ZwudPAYseWVvBXQ00pUVx7Z5102rCPfbsZ>
+X-ME-Proxy-Cause: dmFkZTGfEuV5uhz9iLc4/VqJewkOwZztE2Q/W2L8MWGpthXJSG6cnqB0ybUTZO/gmTStFr
+    IiMG3oMMwTOd1GN29iTAZh8ELqDq/pvNTu31HqcDhNTnRV5w+qN8TY5zQgqjhrWyTFnLFv
+    a5lC1bd0Nsy33atl2U9pCG8DwHiBT9SAvLqnCXSLgY6ykY2nreWYk0o6gpE7z+zCzbU5QI
+    CLqmPEwYE4mll5+cmq6mEdAN12TaRxj619rRYC2M3spZPblqPgudPkyzWrdvTZpBYK3w/u
+    jqv7Hdzc+TtswHLZ1V6GZ+c/1ZffJJfwsB5JIPB30uvkpQkKQBrSQtzi9AGb8HNFEb2kgE
+    qKkXl9pCm/0B95O8InFrTkKN0fJJdpnCSraeOZvlbYvDYSuDEOsOuD28QLxuf4mNOnHYEc
+    4em35Aufoj/L6MFtoXv8X9guYW3iZk9yMbK8VidKBOe9HIlA6Vy69oYVLWvoeIP/sRtUxM
+    xWA7NaPmd/Kd9MV/ItckFUA5jQ19oB0lqDlABCPUJva5FAJO0rNnJiVDlHuYcKo1028G2L
+    QCmWZB57sVtG9lZURwNtcccEDwqWzXsVO1FCuadUaHZRSO4zh0UrefsDvNNDkSsAklUL8C
+    nDBMgI4yo+tcTzxNjLzthPlRQuu7ftRHxOLDna+Fu5ygZv/F2jkt5rcMUitw
+X-ME-Proxy: <xmx:HJNCaiVR99ITZUIeVHLQIjkAl3W5L7-NY_eXPpexE2ezyiuvPV7Wig>
+    <xmx:HJNCaqDcmel0SZvoqXYoLZayz9Q48weXPGpjP4Y1EEA9-teXfq9kNA>
+    <xmx:HJNCalHWKybZhCSB_h9ep1tLEkKEMci7ODZ3AjJ9oK0yH0tMhtYVDw>
+    <xmx:HJNCamc1hcyXGhjSob0H8QG7OUqPoVNgYLrZzyvRI9sJF6RPK2srWA>
+    <xmx:HZNCahf_1C-xXUG9BEQMuJSIEx8k4QdhQtNpq8TMrV7EM8NaHbepNMFj>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BA658182007A; Mon, 29 Jun 2026 11:45:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|VI0PR04MB11819:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f078b37-5bd3-4c84-dcd8-08ded5f52348
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|19092799006|1800799024|366016|18002099003|921020|22082099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	2EZmjWDpakhKM46qR/yTpWg6xUwOm0tFazLQzjMkADbcb2DKU0775NweBaXhAK0+thgNsqyo2zf95bIPAsLv60AIQIaGxrsMpWt0Y7BtsJsCIpfcG26/Sfwfq6SxkvUeOOQ48jgsjHMQpWh+vOXVSdwFc36Ax0qoKTw3VEm9KD7F0XIb5q7O0fCZQeAOnKSf61SMHRK9DUKQjFI6ecF7eWy2cRM5hM9emQFoXxHtBo9mnGjawLe4xTkEK9l6e5X5qI9x2YVNgLIQmK3A1/4JKSzIykaSW8kF9r78AddLm6c7bzaatsIXBfnlpG22UUzDUMhHCsvp49f4hzCyiRIzGivDkoLQuhyIgzYGSpIZXf7qpNTkdopcvhDEp02zSAAnrsTyno7QBfy+6FfKSvMsYegk+DjY+l4R10HsxzZ6DP1IKCKDo3sEDuSwuBZx48j5ulPDq/ErqnB8kwBeyVRZM6WZEQxOd6xtgnccKPL6723i5mqED+voYK8szt+Mwv4M4hEqPOKhvLpQe6I3OYWgPlztnHrM+5tzdzeF7s+MLBbk9+SRgBbkbkh8OqvOkdpVKnKxjX4Jyt6sd7SxQ3gHel1CI4U5XsB40s3VUIpZqSEKEn00o0CbW+GT9zuZA45SszsRlrjCtgWDDJa+J3+hIqTSLzHPkyTyZmpzZRuDe+JXXgHloXIaQNa6UBsNAN6gm2BJw3ebI1wG0DruVq1+8g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(19092799006)(1800799024)(366016)(18002099003)(921020)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eFp6SEdYa08xak03RlJobkVZRTg1a0Y3QmVhVnRmcHh6RnhhK2cyKytBUXlz?=
- =?utf-8?B?RmNTQnMxZGFIRUlaM3MwYkx0UXF0NTBsZTlpZVZxT0lLS3BsVnFQWFpYZTlo?=
- =?utf-8?B?QWtSMnVhVkZYd3ByMDB2bExrSmRTRmtUeWNCYlY1OEMyRnNCTUM2b3FFRFZP?=
- =?utf-8?B?ei9MNk9NREN1alVjUUFuV3h5OVpoMmNNNGlqd210TU1VeVhxSHhMYzBuTjYv?=
- =?utf-8?B?N2N1UVVEalBKblQ5aDUxN09uZUNiaEJuQXR5VXowRFg3bmlERTh0c241YWY4?=
- =?utf-8?B?S3VUc042WWpydzhkNnd3djNEeDFTZ2ZWQXZkSE9odlNqelNkZ0hpY3d0QkRZ?=
- =?utf-8?B?SW9VYU9wNElReVRIVU5TTkZzQTZla05EYlBvUy8rZjhyVU56d0hXN2NlNkJ3?=
- =?utf-8?B?NnBPUEU0U2JRcTdrc0NLNmlpM0VESEd0NDVuS1pPSm1odGJwM3FUN1VoRjhs?=
- =?utf-8?B?M2YxMGxxai9Xemo4NXNmTnRWajdmRm5vbGQ4R2ptdWVrZWpiYXROTXAxQ3oz?=
- =?utf-8?B?U1JpMXZDWG05VVpyZ2xTSXgxcHk3YnJZckIzRFR5SWMyMVRsY0NuNGlJa1M2?=
- =?utf-8?B?TGJ1VERBTWc1V29yVmZVWjRHT3dLNlA2V004UXRIVml0V1ZvcmN2eEszbzFl?=
- =?utf-8?B?Z0xHZERDbVExMzVGSGc3a1BML2FkbUFyMVJ6dmN3eFR6S0QwTE5iSHhDSXpz?=
- =?utf-8?B?Qm9ZQWlaTklxSXhWRlFocm1zYnNMNEkybkY1QlhQMUFNWWtwUWROWktpRkRu?=
- =?utf-8?B?RTlWL3RkdVRhaUUydUlYSVFJRHlPTC96cURyUXZwT0NZVEdkK1hySTQ4VUZm?=
- =?utf-8?B?aGRJUVZ0VlEvd2Z4enRTRW1ESFg2SWkraWwrYTRuajRyckd3VkFOdFVFQzQ2?=
- =?utf-8?B?Z0g4U0I5Z2VUL0FidmVkbjIzcjE1ZWs2YVpHcXN6M3JoNENIRER2RDRTVml6?=
- =?utf-8?B?Q1BxN3hEKzJvM3FodVU1ZkoxWUJnNmc2emMvVEhTOWRZcng0cmJ4Y25TOVhv?=
- =?utf-8?B?c2Z4N2E2UjNTV055WjNJZ29lV0lxN3IvOG5QZ2U0dzViL2dkc1hycUtadXJh?=
- =?utf-8?B?YWZQR1BpVXdoYWpoaW5wWnlHNDRPbnRpcm1TN0V2eUNhemt4ejFlRUdYSG1Y?=
- =?utf-8?B?c2JYNmJIYm1laVc0ZFh4bWszQmJGV3BzWEZEZ1ZBU3VjQTV1T1lWUUh2UEt2?=
- =?utf-8?B?elV2S3FBczlUNEpJSnBhQnIvZUtrSFdLMVZCR0ZnU1J1dE1JeFN4dkE5emNt?=
- =?utf-8?B?RFVjUUVqNU5Kblo0akIrU1lIU1VxbEwwMlNNMUVGSG05RVpibEZHMGxEQTE3?=
- =?utf-8?B?Q3l3YkFMdUdQSTgrb29pUEpjNVJ5WTFtSERDMUs3ZWYybGw4eU5GNXRJa2VC?=
- =?utf-8?B?aWlJUGVHekNoeXRzQmNVQThuSzhEbWlzOHIza2pYQytCRUhoZThvVDhBaFhw?=
- =?utf-8?B?YjlyMGNoY3NvNldFRFhGNmFsSWRYQWZxU04yZGJtSmxXZmpvWmFKS0xMdWRr?=
- =?utf-8?B?bnZnbWtOMHUrbmFvL3VGNXpTRkduOWo2bU8vNEkzSUJVYzBTR2pzTDlhRkhp?=
- =?utf-8?B?emorNXBtUjk1dC9qMlk5OGgzTzg5a09pOWs3dzlCaVVkYUExbG9zS29wQlZt?=
- =?utf-8?B?cDZpOXJDdm1OUzh3STJRbW83S3poUzNRSVI4NUcwbGV6ZnZaeWEzenFxeDFJ?=
- =?utf-8?B?eVBPOTVMTVNFczR4RkNuRlZlR1RTTkozWDdnbTJNRU9FWlY3MC9QNm95SHBR?=
- =?utf-8?B?ZEswUnhGaTI1bDQxZXpsT1FvYXMraENvMzNWMlhwMXJvdVVvbVg0OXRzUXE1?=
- =?utf-8?B?Tms0dnJnakI4OFFhL1BRU3VxMTBwSHZtR2NORlJsOEtDS3pGMlEzb01xOThE?=
- =?utf-8?B?ZDJRU3NjT0hha3N4TXR4TnVpR0t5Q3JBbXdoZW5BYlRDb3E4UmhpTWtoWWJB?=
- =?utf-8?B?UDM5NHd2Ty9tQnNTYWNJZXFwUjM3VWFJRHVVSkdDSzlFdDlWMUVGUWhCMU5R?=
- =?utf-8?B?YXNlZ0dtUjJOT2FrRmZ4ZXdJRjFmUXVudVN6MGx1K0J5dG9wWm8rT3NXOWgv?=
- =?utf-8?B?dXUxV0QrWHgwQkFablJrUUVoemo5MnQxKzVhcVVVeEdPaU1XYlFEZWVOV2NX?=
- =?utf-8?B?V01zWm90bDhua3R6TThEdnpxK0F6aDJkeDNCQllpT1VvTENuK0xBZzlWTHk2?=
- =?utf-8?B?RW9jeUZiMWp5OGNlNXNpd1RBYlBVYm1hSWc1ZEwydDFHVUFaWlFOaTliZlVt?=
- =?utf-8?B?eXpLSnZrdlFxdWdLQkkya0NvNlZ5ZVJvN2ZSckFNVXFrTlNnZ3lBMDYxNzZh?=
- =?utf-8?B?RzhjWXBKcjlRVERsVWpFWGdSRU4wSnFRVjJvdGtma2J5b1ZSWjNxMHZGbE5q?=
- =?utf-8?Q?sKDlWaRmi5R01acFct85hHYUzTITl05wbzs8C?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f078b37-5bd3-4c84-dcd8-08ded5f52348
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 15:43:17.0730
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oX/anZrDI/Hrqa2y8SmQjjDSGSLyrS/XolH2HR4Vfvj7PCcw0EaEQy/fD0woPBo1cCjeAZL6iyO/ul4QqY8lQy5jRYHJIu6t8paL+OPcTwjCfRj8uHsnl/m0g6rCjXVr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB11819
+X-ThreadId: A045QOfflcQ7
+Date: Mon, 29 Jun 2026 17:45:12 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Linus Walleij" <linusw@kernel.org>,
+ "Bartosz Golaszewski" <brgl@kernel.org>,
+ "Marcel Holtmann" <marcel@holtmann.org>,
+ "MyungJoo Ham" <myungjoo.ham@samsung.com>,
+ "Chanwoo Choi" <cw00.choi@samsung.com>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Ulf Hansson" <ulfh@kernel.org>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+ "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+ linux-usb@vger.kernel.org
+Message-Id: <34d4eddf-bfe5-4103-b2c6-143c63ea37f9@app.fastmail.com>
+In-Reply-To: <akKN59lv55CXS3HU@ashevche-desk.local>
+References: <20260629135917.1308621-1-arnd@kernel.org>
+ <akKN59lv55CXS3HU@ashevche-desk.local>
+Subject: Re: [PATCH] [RFC] gpiolib: introduce gpio_name() helper
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.44 / 15.00];
+X-Spamd-Result: default: False [-0.65 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:rafal@milecki.pl,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:festevam@gmail.com,m:peda@lysator.liu.se,m:Frank.Li@nxp.com,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:haibo.chen@nxp.com,m:conor.dooley@microchip.com,m:a.fatoum@pengutronix.de,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39151-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FREEMAIL_TO(0.00)[kernel.org,milecki.pl,pengutronix.de,gmail.com,lysator.liu.se,nxp.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:arnd@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:marcel@holtmann.org,m:myungjoo.ham@samsung.com,m:cw00.choi@samsung.com,m:geert+renesas@glider.be,m:andy@kernel.org,m:dmitry.torokhov@gmail.com,m:ulfh@kernel.org,m:linux-bluetooth@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-i2c@vger.kernel.org,m:linux-iio@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-mmc@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-pm@vger.kernel.org,m:linux-usb@vger.kernel.org,m:geert@glider.be,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-39150-lists,linux-gpio=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,holtmann.org,samsung.com,glider.be,gmail.com,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,NXP1.onmicrosoft.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,nxp.com:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,messagingengine.com:dkim,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,arndb.de:dkim,arndb.de:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A299B6DCF5D
+X-Rspamd-Queue-Id: AF9986DD01B
 
-From: Frank Li <Frank.Li@nxp.com>
+On Mon, Jun 29, 2026, at 17:23, Andy Shevchenko wrote:
+> On Mon, Jun 29, 2026 at 03:56:29PM +0200, Arnd Bergmann wrote:
+>> +const char *gpiod_name(const struct gpio_desc *desc)
+>> +{
+>> +	return desc ? desc->name : "(no gpio)";
+>
+> Can we get into here with wrong (error pointer descriptor)? Shouldn't you call
+> one of validate_desc() / VALIDATE_DESC()?
 
+Since all the callers previously call desc_to_gpio and that does
+not even check desc at all, it would be a preexisting bug if
+any caller passed an error pointer.
 
-On Mon, 04 May 2026 19:54:34 -0400, Frank Li wrote:
-> Add a generic pinctrl binding for board-level pinmux chips that are
-> controlled through the multiplexer subsystem.
-> 
-> On some boards, especially development boards, external mux chips are used
-> to switch SoC signals between different peripherals (e.g. MMC and UART).
-> The mux select lines are often driven by a GPIO expander over I2C,
-> as illustrated below:
-> 
-> [...]
+I added the NULL pointer check since many callers had that
+part originally, like
 
-Applied, thanks!
+      tsdata->wake_gpio ? desc_to_gpio(tsdata->wake_gpio) : -1,
 
-[6/7] arm64: dts: imx8mp-evk: add board-level mux for CAN2 and MICFIL
-      commit: ec5c75673cb9d4c9a2a55a70d54a6ccb254f4ba4
-[7/7] arm64: dts: imx8mp-evk: add flexcan2 overlay file
-      commit: 368eb597c6ef0263931a3922648e8c7b83cd0536
+> Also not sure if "(no gpio)" is a good choice. "not requested"? "not provided"?
 
-Best regards,
--- 
-Frank Li <Frank.Li@nxp.com>
+Any of those seem fine to me, not sure.
+
+>> +static inline const char *gpiod_name(const struct gpio_desc *desc)
+>> +{
+>> +	WARN_ON(desc);
+>> +	return "(no gpio)";
+>
+> Hmm... This will be a second copy with a slight potential of going apart from
+> the other case. Perhaps a #define? (Yes, yes, I understand that there are pros
+> and cons, in particular readability with define is questionable.)
+
+I was mostly trying to optimize for consistency with the other
+stub functions here. Since it should not actually be used at all
+without gpiolib, returning NULL or an empty string here would
+also work.
+
+     Arnd
 
