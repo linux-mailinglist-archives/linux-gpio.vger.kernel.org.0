@@ -1,249 +1,310 @@
-Return-Path: <linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fJx3EVeoQWq2tAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 01:03:51 +0200
+	id r87LNocDQmqQygkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39082-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 07:32:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96E9A6D539B
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 01:03:50 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9426D60CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 07:32:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=IMWgbM9D;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39081-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=HOYSpg7E;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39082-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39082-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 52A2D301CA64
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2026 23:02:08 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 795363008625
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 05:32:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 190F3374195;
-	Sun, 28 Jun 2026 23:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D0EB390C8D;
+	Mon, 29 Jun 2026 05:32:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CAD3559F8
-	for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2026 23:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9172238F95A;
+	Mon, 29 Jun 2026 05:32:42 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782687727; cv=none; b=SrUL2FkhrhgR/72rcISpB7vJocK9f98B4Feh4KgbgNZE/6U9jsI5G80fYG8ao6lnFHkQyWgK+8ZDuYZMgsiGoI9akFUZA2fzopHsGsxynle0MRnsG8UfYxNPwvpfaHi6FREjt+pd7yPsHRcBTaSqsWwke/1Ugj3x8MdHBAWYGBw=
+	t=1782711162; cv=none; b=P6BAro4WKcs10aMMtV/b72YVY1+4oukubDtEDfxWQ82srUxBp0V4Y18xMk9UPv9LjnOdA0TCcAT6xQX4jixMJva/vaYySgoBBMt9s8RFLx7Yn1Af/Wo5KTWTcCLXpbUHKNdI3W9GHy7V9xkb/v6ZZU8EzCgeUdIYkIW9y7DuRtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782687727; c=relaxed/simple;
-	bh=CNHUAK/S24oDKcBpryQESBqdNmm6Qn/xKxs0WrC9iSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qev23YF8DdKJ/irTVyjDNN3OhXgYhdbc2scf+T3ROdI6rBdouDU13INOjvpanjz0Eq3QTVk7W5X/lwsSB+wWKdDhsLfcO7APjMiRsYyvxTylaxT2R0SB0QfMUEtJSMUhIUrOJ+vf87A9tM8OwAvzYzsKgmzlqryazpGNKpjUO5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMWgbM9D; arc=none smtp.client-ip=74.125.82.48
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-13809223fd4so3218409c88.1
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2026 16:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782687724; x=1783292524; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YMZ10IYFKNLnYKr+gx1rVCyYcTm3FWyqJhOk5IPgR8w=;
-        b=IMWgbM9D92XEq7+Dx6g4tATkmly/LJiEElhHkb4X1CERuG+1Gs7V48pKBtWmtzaCRs
-         UYIo7HuuiqnSR3MnG8SLqUxzN7ruon7+qMmLGmPHkSdZFdjqw73ton4VswwMdnGApeOp
-         vAQUDcjYLM2FyePggCZ7yj76CMTjh77iz/KQnWx10zDAXwVHoWFmFrusZV7uxIxUqRbB
-         9Zmw02wIhdzuBBKSMcqY7VrHwyjzV9wP5Br6pxEJf/BtrkDO00q3JDmWV622ZiRZ6WqI
-         9efHmhxloaE0BTIqZg975XLUjsrHaNnMa+x2DvKHfQMglaah8xSD7fJ4gh4+ry4TeCz8
-         BBCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782687724; x=1783292524;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YMZ10IYFKNLnYKr+gx1rVCyYcTm3FWyqJhOk5IPgR8w=;
-        b=K2ObhmhSoL+InlRq3j0ijWfvOD9QmNpO3E1j5aaBCeQXv395QnP+H8U9hDI3w/MCeA
-         1QMbm1XCeaoGtBzp/sSFR0PI4xZC46QbiFJSmyIE/n4r1pk+iUCX72qhxaB4AHQzb8VD
-         GNLYR2rWn2m8pn1TYl/O6yZvKSMofTpEqwWfk065TDDvN2nHUZONkJF3SvqtE+f81pFh
-         1RGBHMqr3h47DJAbEjVL1jOSnxAM0VtXIRss8zJyqXqQPsKm0VIb5demWEezfXplYgSO
-         giVrFjewPQzndH8sMh1ihYsAKDk5gJKj8TM5AH76uWf9N3TlsI2qI77J4Dk55Gb70252
-         2kFg==
-X-Gm-Message-State: AOJu0Yylz2nCXyGxgsJOFr7KYxAYCkPAKSS72vTG78CsmuAbXg3ISqqQ
-	sEgooqEEvxB/vsS/wZ9Iy7rLFy39WEnfMZbLGX4HBibSfjZxwMsm2a/vkRYaUA==
-X-Gm-Gg: AfdE7cnPYCTTMzbCyJheBJ8PotkdS7kP5+GdQ5T0dhbvMPs+Dl9dC9jjCqVsQI4OJ0+
-	NtFtglLHwaxTH221mrKnwqrzJWKsPYXo/oOirYlZ6RBhjSkO/rCtvpLUv4Air/UIV1Dri7zigtf
-	/kiMCwxMhyFKFW8cUq9m5YZ19dWgKhMbNzvRHFQt6yr7AAUaXNMswYP+sqY9eaCQwQHEZU4cweP
-	47WaCjE4eGY+4DCd6cZuTQGFmGTfmeqSq7FO6sB8TeyIVhSwcKYzyTWJFp86ZoMG76vIKrDxh6w
-	raQ4jBn4N7okYU+c585hzFXGjbxAQ8BxdFHRUJS+d5fOH/m6JcRNtptBa3P36ujc2feyDWGHnuI
-	UVHLwr7MrfhQzt576YNyozJM8zaV+lZh4g7P34BFVtshcoyHPo4BsSTJ7TjOMM1RdDW+3Ep/70Q
-	UB3L+XJcqqy3j9WN+W37m1cI4N2/0bY009SfMC/dywf4XvJKYlzYbjw+djsQKILlOUHsyUCSwQN
-	1keakTkIg==
-X-Received: by 2002:a05:7022:e0e:b0:139:c724:79e5 with SMTP id a92af1059eb24-139dbac7a8cmr11480937c88.35.1782687724240;
-        Sun, 28 Jun 2026 16:02:04 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e34])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139d8f318e7sm41365965c88.3.2026.06.28.16.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2026 16:02:03 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: mvebu: add wake-up interrupt support
-Date: Sun, 28 Jun 2026 16:02:02 -0700
-Message-ID: <20260628230202.1209991-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1782711162; c=relaxed/simple;
+	bh=8DzTPwfFqIOwAxFXE5W+2ns1bOw3l9dZx7VLUSy6O8M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jTpBjl6jE4ROCFe3TpUpwijufCTD8yUsGNKLVtO8RHU40izKWVlkFC2029I8PHnTeg/3c8ttG71y8WPZFTfzzj5/fLjfxnC6Huj1kkFhVpIXp4rnrU3dvHEo36IL/BBAEQgS9TBu7FpnDLY4xrSXch35rqIADlLy12I6PcrShrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOYSpg7E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D218DC19425;
+	Mon, 29 Jun 2026 05:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1782711161;
+	bh=8DzTPwfFqIOwAxFXE5W+2ns1bOw3l9dZx7VLUSy6O8M=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=HOYSpg7EXNfu6rc84BbHaN0d+d2H7WgzMUKRFB7X0wi+KGzCdQZjr4/BXe0aCe2u0
+	 +/1HoNot0/5zf8TUsIt8FIJ+eHTT/4+Hjb7h7jR4Q3p8VCgRTvdQFCA4ctRNiRM7GQ
+	 4DTblD1PNV9rY1PChdug+sABivSXjOJM827I8A05dMCVwsLvZixeF0kMwhyp3Ejo+e
+	 Sir3W4Mh2ELlJAVHuY4Emb2MsnymxfeSLz8gywox98FjA/Bi//GbBJ05MxD6/b7FTi
+	 07MF09gNpbOF41gcCIHyUJX0eqoriZE15wFdKnDorbtgYTubM/PMCfB9Q8Gz0L9c/G
+	 vxD0F2McwtL2g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B591CC43458;
+	Mon, 29 Jun 2026 05:32:41 +0000 (UTC)
+From: Jia Wang via B4 Relay <devnull+wangjia.ultrarisc.com@kernel.org>
+Date: Mon, 29 Jun 2026 13:30:39 +0800
+Subject: [PATCH] gpio: dwapb: Defer clock gating until noirq
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260629-gpio-dwapb-wakeup-v1-1-3394f02317da@ultrarisc.com>
+X-B4-Tracking: v=1; b=H4sIAP4CQmoC/yXMTQqDMBBA4avIrDsQYwzWq5Qu8jPRsaAhqbUg3
+ r2pLr/FeztkSkwZ+mqHRB/OvMwF9a0CN5p5IGRfDFJILbS84xB5Qb+ZaHEzL1ojNsqItgvaNVJ
+ B6WKiwN/z+XhezqudyL3/IziOH5g8/U51AAAA
+X-Change-ID: 20260629-gpio-dwapb-wakeup-34a058f6c324
+To: Hoan Tran <hoan@os.amperecomputing.com>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Hoan Tran <hotran@apm.com>, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jia Wang <wangjia@ultrarisc.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1782711160; l=6202;
+ i=wangjia@ultrarisc.com; s=20260515; h=from:subject:message-id;
+ bh=g4rwSAFhgwqLta0rkHzLInNFzAIIrHUuIi0OSa42Ub0=;
+ b=x4mGEsqKlYunL0LKb+qqQTNj8uqNdJpycXsa8/lvqwF2LUGlcLZlUiX+5LPBIZUPU053DF6Gb
+ 7HBNNo9vnQNAFd0tJOT/ywF5RCaw0DPgZTRtllqlLTgy70gDA/izmRC
+X-Developer-Key: i=wangjia@ultrarisc.com; a=ed25519;
+ pk=wGVm18siRScehKOkOz0WKxgxDy7IezHEszhnN4/TUCY=
+X-Endpoint-Received: by B4 Relay for wangjia@ultrarisc.com/20260515 with
+ auth_id=779
+X-Original-From: Jia Wang <wangjia@ultrarisc.com>
+Reply-To: wangjia@ultrarisc.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39081-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39082-lists,linux-gpio=lfdr.de,wangjia.ultrarisc.com];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:hotran@apm.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:wangjia@ultrarisc.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	HAS_REPLYTO(0.00)[wangjia@ultrarisc.com]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 96E9A6D539B
+X-Rspamd-Queue-Id: CC9426D60CE
 
-Implement wake IRQ support for the mvebu GPIO controller:
+From: Jia Wang <wangjia@ultrarisc.com>
 
-- Replace unused irqbase field with bank_irq[4] to store per-bank
-  IRQ numbers for use in the wake-up callback.
-- Add mvebu_gpio_set_wake_irq() that forwards enable_irq_wake /
-  disable_irq_wake to the correct parent IRQ based on hwirq.
-- Set IRQCHIP_SET_TYPE_MASKED and IRQCHIP_MASK_ON_SUSPEND flags
-  on both level and edge chip types.
-- Set IRQ_GC_INIT_NESTED_LOCK for the nested irq domain.
-- Add missing <linux/interrupt.h> include.
+GPIO consumers such as gpio-keys can enable IRQ wake and adjust the wake
+trigger type from their suspend callbacks. If the DWAPB controller suspends
+first, masking interrupts and disabling its clocks in the normal suspend
+phase prevents that late wake configuration from reliably reaching the
+hardware. Systems with real DWAPB bus clocks then fail to wake from s2idle
+through GPIO keys.
 
-Assisted-by: opencode:big-pickle
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Save the register context in the normal suspend callback, but defer IRQ
+masking and clock gating until suspend_noirq. At that point all consumers
+have finished configuring wake IRQs, so keep the clocks enabled when wake
+lines are armed and only gate them when no wake source is active.
+Resume_noirq reenables clocks, if they were gated, before the normal resume
+path restores registers.
+
+Propagate wake requests to the parent irqchip while keeping the local wake
+mask in sync with failures.
+
+Fixes: 6437c7ba69c3 ("gpio: dwapb: Add wakeup source support")
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
 ---
- drivers/gpio/gpio-mvebu.c | 40 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 37 insertions(+), 3 deletions(-)
+This one-patch series fixes system wakeup for DesignWare APB GPIO
+controllers that have real APB/debounce clocks.
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index c030d1f00abc..26092b223be5 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -37,6 +37,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- #include <linux/init.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
-@@ -114,7 +115,7 @@ struct mvebu_gpio_chip {
- 	struct regmap     *regs;
- 	u32		   offset;
- 	struct regmap     *percpu_regs;
--	int		   irqbase;
-+	int		   bank_irq[4];
- 	struct irq_domain *domain;
- 	int		   soc_variant;
- 
-@@ -603,6 +604,34 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
- 	.val_bits = 32,
+The driver currently masks interrupts and disables its clocks from the
+normal suspend callback. That is too early for GPIO consumers such as
+gpio-keys, which may still enable IRQ wake or adjust the wake trigger type
+from their own suspend callbacks. Once the DWAPB clocks are disabled, those
+late wake updates cannot reliably reach the controller, and GPIO-key wake
+from s2idle can fail.
+
+Move the final interrupt masking and clock gating to suspend_noirq, after
+consumers have completed their wake configuration. If at least one wake
+line is armed, leave the clocks running and mark the device as part of the
+wakeup path. Otherwise, gate the clocks in noirq and re-enable them from
+resume_noirq before restoring the saved register state.
+
+The patch also propagates aggregate wake enable/disable state to the
+parent irqchip so a wake-capable parent interrupt is armed only while the
+DWAPB controller has at least one local wake source.
+
+Based on v7.2-rc1.
+---
+ drivers/gpio/gpio-dwapb.c | 76 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 64 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index c1f3d83a67c1..504e2d779584 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -118,6 +118,7 @@ struct dwapb_gpio {
+ 	unsigned int		flags;
+ 	struct reset_control	*rst;
+ 	struct clk_bulk_data	clks[DWAPB_NR_CLOCKS];
++	bool			clocks_on_for_wake;
+ 	struct dwapb_gpio_port	ports[] __counted_by(nr_ports);
  };
  
-+/*
-+ * Forward wake-up configuration to the parent bank IRQ.
-+ * @d:		interrupt data
-+ * @enable:	enable as wake-up if non-zero
-+ *
-+ * Return: 0 on success, or a negative error code.
-+ */
-+static int mvebu_gpio_set_wake_irq(struct irq_data *d, unsigned int enable)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct mvebu_gpio_chip *mvchip = gc->private;
-+	int bank;
-+	int irq;
-+
-+	bank = d->hwirq / 8;
-+	if (bank >= ARRAY_SIZE(mvchip->bank_irq))
-+		return -EINVAL;
-+
-+	irq = mvchip->bank_irq[bank];
-+	if (irq <= 0)
-+		return -EINVAL;
-+
-+	if (enable)
-+		return enable_irq_wake(irq);
-+
-+	return disable_irq_wake(irq);
-+}
-+
- /*
-  * Functions implementing the pwm_chip methods
-  */
-@@ -1249,7 +1278,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+@@ -365,11 +366,21 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+ 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+ 	struct dwapb_context *ctx = gpio->ports[0].ctx;
+ 	irq_hw_number_t bit = irqd_to_hwirq(d);
++	u32 wake_en = ctx->wake_en;
++	int err;
  
- 	err = irq_alloc_domain_generic_chips(
- 	    mvchip->domain, ngpios, 2, np->name, handle_level_irq,
--	    IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_LEVEL, 0, 0);
-+	    IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_LEVEL, 0, IRQ_GC_INIT_NESTED_LOCK);
- 	if (err) {
- 		dev_err(&pdev->dev, "couldn't allocate irq chips %s (DT).\n",
- 			mvchip->chip.label);
-@@ -1267,6 +1296,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	ct->chip.irq_mask = mvebu_gpio_level_irq_mask;
- 	ct->chip.irq_unmask = mvebu_gpio_level_irq_unmask;
- 	ct->chip.irq_set_type = mvebu_gpio_irq_set_type;
-+	ct->chip.irq_set_wake = mvebu_gpio_set_wake_irq;
-+	ct->chip.flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
- 	ct->chip.name = mvchip->chip.label;
- 
- 	ct = &gc->chip_types[1];
-@@ -1275,6 +1306,8 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	ct->chip.irq_mask = mvebu_gpio_edge_irq_mask;
- 	ct->chip.irq_unmask = mvebu_gpio_edge_irq_unmask;
- 	ct->chip.irq_set_type = mvebu_gpio_irq_set_type;
-+	ct->chip.irq_set_wake = mvebu_gpio_set_wake_irq;
-+	ct->chip.flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
- 	ct->handler = handle_edge_irq;
- 	ct->chip.name = mvchip->chip.label;
- 
-@@ -1283,13 +1316,14 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	 * interrupt handlers, with each handler dealing with 8 GPIO
- 	 * pins.
- 	 */
--	for (i = 0; i < 4; i++) {
-+	for (i = 0; i < ARRAY_SIZE(mvchip->bank_irq); i++) {
- 		int irq = platform_get_irq_optional(pdev, i);
- 
- 		if (irq < 0)
- 			continue;
- 		irq_set_chained_handler_and_data(irq, mvebu_gpio_irq_handler,
- 						 mvchip);
-+		mvchip->bank_irq[i] = irq;
- 	}
+ 	if (enable)
+-		ctx->wake_en |= BIT(bit);
++		wake_en |= BIT(bit);
+ 	else
+-		ctx->wake_en &= ~BIT(bit);
++		wake_en &= ~BIT(bit);
++
++	if (d->parent_data && !!ctx->wake_en != !!wake_en) {
++		err = irq_chip_set_wake_parent(d, enable);
++		if (err)
++			return err;
++	}
++
++	ctx->wake_en = wake_en;
  
  	return 0;
--- 
-2.54.0
+ }
+@@ -750,6 +761,8 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 	int i;
+ 
+ 	scoped_guard(gpio_generic_lock_irqsave, gen_gc) {
++		gpio->clocks_on_for_wake = false;
++
+ 		for (i = 0; i < gpio->nr_ports; i++) {
+ 			unsigned int offset;
+ 			unsigned int idx = gpio->ports[i].idx;
+@@ -771,11 +784,38 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 				ctx->int_pol = dwapb_read(gpio, GPIO_INT_POLARITY);
+ 				ctx->int_type = dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
+ 				ctx->int_deb = dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
++			}
++		}
++	}
++
++	return 0;
++}
++
++static int dwapb_gpio_suspend_noirq(struct device *dev)
++{
++	struct dwapb_gpio *gpio = dev_get_drvdata(dev);
++	struct gpio_generic_chip *gen_gc = &gpio->ports[0].chip;
++	bool wake_enabled = false;
++	int i;
++
++	scoped_guard(gpio_generic_lock_irqsave, gen_gc) {
++		for (i = 0; i < gpio->nr_ports; i++) {
++			unsigned int idx = gpio->ports[i].idx;
++			struct dwapb_context *ctx = gpio->ports[i].ctx;
+ 
+-				/* Mask out interrupts */
++			if (idx == 0) {
++				wake_enabled = ctx->wake_en;
+ 				dwapb_write(gpio, GPIO_INTMASK, ~ctx->wake_en);
++				break;
+ 			}
+ 		}
++
++		gpio->clocks_on_for_wake = wake_enabled;
++	}
++
++	if (wake_enabled) {
++		device_set_wakeup_path(dev);
++		return 0;
+ 	}
+ 
+ 	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+@@ -783,18 +823,27 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int dwapb_gpio_resume(struct device *dev)
++static int dwapb_gpio_resume_noirq(struct device *dev)
+ {
+ 	struct dwapb_gpio *gpio = dev_get_drvdata(dev);
+-	struct gpio_chip *gc = &gpio->ports[0].chip.gc;
+-	struct gpio_generic_chip *gen_gc = to_gpio_generic_chip(gc);
+-	int i, err;
++	int err;
++
++	if (gpio->clocks_on_for_wake)
++		return 0;
+ 
+ 	err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
+-	if (err) {
++	if (err)
+ 		dev_err(gpio->dev, "Cannot reenable APB/Debounce clocks\n");
+-		return err;
+-	}
++
++	return err;
++}
++
++static int dwapb_gpio_resume(struct device *dev)
++{
++	struct dwapb_gpio *gpio = dev_get_drvdata(dev);
++	struct gpio_chip *gc = &gpio->ports[0].chip.gc;
++	struct gpio_generic_chip *gen_gc = to_gpio_generic_chip(gc);
++	int i;
+ 
+ 	guard(gpio_generic_lock_irqsave)(gen_gc);
+ 
+@@ -828,8 +877,11 @@ static int dwapb_gpio_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static DEFINE_SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops,
+-				dwapb_gpio_suspend, dwapb_gpio_resume);
++static const struct dev_pm_ops dwapb_gpio_pm_ops = {
++	SYSTEM_SLEEP_PM_OPS(dwapb_gpio_suspend, dwapb_gpio_resume)
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(dwapb_gpio_suspend_noirq,
++				  dwapb_gpio_resume_noirq)
++};
+ 
+ static struct platform_driver dwapb_gpio_driver = {
+ 	.driver		= {
+
+---
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+change-id: 20260629-gpio-dwapb-wakeup-34a058f6c324
+
+Best regards,
+--  
+Jia Wang <wangjia@ultrarisc.com>
+
 
 
