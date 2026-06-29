@@ -1,189 +1,124 @@
-Return-Path: <linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39103-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QUmpJdNFQmq73QkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:15:47 +0200
+	id K+/5BIZKQmqk4AkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39103-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:35:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CD796D8C54
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:15:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61DD96D8F88
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 12:35:49 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=ZeKYU0v5;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39102-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="ceezZL/O";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39103-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39103-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4FF993000893
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 10:05:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 181463005D32
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 10:33:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEE23FBEAC;
-	Mon, 29 Jun 2026 10:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4979D3B8D5C;
+	Mon, 29 Jun 2026 10:33:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2FC3FAE19;
-	Mon, 29 Jun 2026 10:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3012A38D011
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 10:33:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782727539; cv=none; b=JVvJhK2yZXsdzPdtBps44RTfAoCTDGfmFgJnHRg1VE8LaYycV514LkqPSbtmYugDBDoNQY0NlMsawceV80cNHcibkl3KI/SQvPdC83ECJe3d4jwrgQJhKF7AMm2iTd82J2ZK4z+Qj5LbNvS4xSCK9/kog9jVextUV/dfr4Bu2Tw=
+	t=1782729188; cv=none; b=LvzzyKGLZpnkFwc6ZxaW6Vca3u5wMKVQhAK7gW9eyI8qMP6JdGl/j/44q08+9W5Mo1VLEH80kJwT6zQoIt8PSweya2GbqRY9ag2wtj8/dU1zxK9qA+HhAW9Er3vFbNfMIJG1Bz9VQ83PRgbjkuuBI0uWfrZqW89SzJcpaJ8+CZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782727539; c=relaxed/simple;
-	bh=tIiREu5pXy/nUQ9dOW6a3+enIzKKULeLd6hiLgFvlUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9Bau9S121HyfK1pkjiR65hfdnhob8/lmqdEC47/HLrOvaKKwirxUE7drdLZZ2+r9pxVYqKHQolh/39N5i+92ztA4FT+eEGATYSaPZUiS8SBYCjjpTQ6GJF9QM65zvTc1NHjnDIpgmkZnTbIMncT681QVTpQK13QUGprb+tozU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZeKYU0v5; arc=none smtp.client-ip=192.198.163.19
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782727537; x=1814263537;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tIiREu5pXy/nUQ9dOW6a3+enIzKKULeLd6hiLgFvlUc=;
-  b=ZeKYU0v5EBppIkx4mP5GOC1EI2Gp9xEqjkkCKbP0cgiBgZ3ig4GFj67M
-   /E0mo1q1vjvcpz+R6vvfy0fAY3lyTb+riT6NTK7mYwyOpQdRurW/MBRRF
-   domdGC3sk2Vhy4D7/gNHdQtI/0/tQQfqlBOW2Cf2B2Tj9nQJCWgbkcfdN
-   1bgKktBJ++QY+4KOSYeAI6Sc6cv+CCvtfW58F0A1EWsnZvDwAJMg8tK9f
-   7+Obazs7Nl+cTOTlUy4INhfWdEx2BoOI4bBeMn4330DHUqQ+BTJSE0/fc
-   SeVjzkon6J8aKw5lyj9L9BkzsCR5nozEJh/LkzHhs97oYevXv84zuF+XG
-   A==;
-X-CSE-ConnectionGUID: v8YNKf/PQDmwat311Pjkbg==
-X-CSE-MsgGUID: cLfEU/dEQkSiIQ8g9AcTdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11831"; a="82406331"
-X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
-   d="scan'208";a="82406331"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 03:05:36 -0700
-X-CSE-ConnectionGUID: Ntom/HqKR5qqEM1xpEtHrA==
-X-CSE-MsgGUID: j8RxipM4ToakveL+yLuIIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
-   d="scan'208";a="255509012"
-Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 29 Jun 2026 03:05:33 -0700
-Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1we8rr-000000007Gz-065t;
-	Mon, 29 Jun 2026 10:05:31 +0000
-Date: Mon, 29 Jun 2026 18:04:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jia Wang via B4 Relay <devnull+wangjia.ultrarisc.com@kernel.org>,
-	Hoan Tran <hoan@os.amperecomputing.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jia Wang <wangjia@ultrarisc.com>
-Subject: Re: [PATCH] gpio: dwapb: Defer clock gating until noirq
-Message-ID: <202606291736.mAgOeA65-lkp@intel.com>
-References: <20260629-gpio-dwapb-wakeup-v1-1-3394f02317da@ultrarisc.com>
+	s=arc-20240116; t=1782729188; c=relaxed/simple;
+	bh=IPf7npHKpKVPUHjTIUCVByl196Hnkbb+w8joYF7Efsg=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PMdKFf07nqXghdeluGKrg0LyhKJW0Zn7+LfOkRksT4y7R7TgtzF60bkk2yNKv8xZYbnQogCNtSfBMS/tnhS79vPGAmyU5WEYnK09uDXZfxyrYzCbq+j2uvX5OVWs8io9l4x0W/c5JrKHNrZ+swo3lkuM7dimc7SYDanDDL2bUiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceezZL/O; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E25C11F00A3D
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 10:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782729186;
+	bh=IPf7npHKpKVPUHjTIUCVByl196Hnkbb+w8joYF7Efsg=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=ceezZL/O+++SnRnbMQA8GB0m+FFX0GaNrccyQCJTK4euAfAxed3aL+RAShYJIEan3
+	 5qi1wRJcIoqYDooCwOWa0Jnknly5I1maVQxmdUinm7LGyuly7WLIe/wvcIj83p56K9
+	 u0JwHqfekc/lYnTyPxIJ83bYi+MjJzkJ2W6NLMS2e5k33rAuqQWrPSOc2gNUqdwOWP
+	 j31juQulWpfgBfb7GUZA0nB7OrJ+S3ftyl404urcPMydf5/CV47KQ3A+jD3HcBoVNl
+	 y7NWYamSbXZX1lRiDoHIaMGZCpjWbuF9BeSRIlBGYTZTDAoAYLjbXlc/8g1USB0ZDm
+	 kdzMCvqYImLQQ==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-39957d210f4so26835511fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 03:33:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Ro7he3WRYY79ifOfr5pjPJ5bPFFpfpOkz/9PBUS0JWe48UK9KYCoHjJgjNvnJ2sxOzwtlo+aD0jYvT2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfshzpe4UeH2nL5AUPL1BEj1vI/1VOuaq2hbz+vREF+gCn0qSj
+	yLGUZkcliw4/EgoLIJ8onOqLbWkGLGeF1oaXYWJop9gQIXfDTIB7EvLLxREcHH08wToQtTuemiM
+	yZcYQlnM3N1k6B5lPjNpOL8UI2i+U6gcfY+AQY7r41Q==
+X-Received: by 2002:a05:651c:1597:b0:38f:20cc:2bb0 with SMTP id
+ 38308e7fff4ca-39acb6b61bdmr37128281fa.23.1782729185701; Mon, 29 Jun 2026
+ 03:33:05 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 29 Jun 2026 03:33:01 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 29 Jun 2026 03:33:01 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260629060526.3638272-25-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260629-gpio-dwapb-wakeup-v1-1-3394f02317da@ultrarisc.com>
+References: <20260629060526.3638272-1-jgross@suse.com> <20260629060526.3638272-25-jgross@suse.com>
+Date: Mon, 29 Jun 2026 03:33:01 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MdO7nKsLLRJuygcb49iNEgviUd9TAOJ+NG5LqweodQ6QQ@mail.gmail.com>
+X-Gm-Features: AVVi8CdysbreubTgRkFDPe6zcyMEAaN06tO1HAMpwWVA0R4ZbE7AL9NonK4pCFU
+Message-ID: <CAMRc=MdO7nKsLLRJuygcb49iNEgviUd9TAOJ+NG5LqweodQ6QQ@mail.gmail.com>
+Subject: Re: [PATCH 24/32] drivers/gpio: Stop using 32-bit MSR interfaces
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39102-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39103-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:devnull+wangjia.ultrarisc.com@kernel.org,m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:oe-kbuild-all@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:wangjia@ultrarisc.com,m:devnull@kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jgross@suse.com,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.com:email,qualcomm.com:email,vger.kernel.org:from_smtp,mail.gmail.com:mid];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,wangjia.ultrarisc.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,01.org:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:dkim,intel.com:email,intel.com:mid,intel.com:from_mime]
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8CD796D8C54
+X-Rspamd-Queue-Id: 61DD96D8F88
 
-Hi Jia,
+On Mon, 29 Jun 2026 08:05:15 +0200, Juergen Gross <jgross@suse.com> said:
+> The 32-bit MSR interfaces rdmsr() and wrmsr() are planned to be
+> removed. Use the related 64-bit variants instead.
+>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on dc59e4fea9d83f03bad6bddf3fa2e52491777482]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jia-Wang-via-B4-Relay/gpio-dwapb-Defer-clock-gating-until-noirq/20260629-135404
-base:   dc59e4fea9d83f03bad6bddf3fa2e52491777482
-patch link:    https://lore.kernel.org/r/20260629-gpio-dwapb-wakeup-v1-1-3394f02317da%40ultrarisc.com
-patch subject: [PATCH] gpio: dwapb: Defer clock gating until noirq
-config: sparc64-randconfig-001-20260629 (https://download.01.org/0day-ci/archive/20260629/202606291736.mAgOeA65-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260629/202606291736.mAgOeA65-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606291736.mAgOeA65-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/gpio/gpio-dwapb.c: In function 'dwapb_irq_set_wake':
->> drivers/gpio/gpio-dwapb.c:377:7: error: 'struct irq_data' has no member named 'parent_data'
-     if (d->parent_data && !!ctx->wake_en != !!wake_en) {
-          ^~
->> drivers/gpio/gpio-dwapb.c:378:9: error: implicit declaration of function 'irq_chip_set_wake_parent'; did you mean 'irq_set_parent'? [-Werror=implicit-function-declaration]
-      err = irq_chip_set_wake_parent(d, enable);
-            ^~~~~~~~~~~~~~~~~~~~~~~~
-            irq_set_parent
-   cc1: some warnings being treated as errors
-
-
-vim +377 drivers/gpio/gpio-dwapb.c
-
-   362	
-   363	static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
-   364	{
-   365		struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-   366		struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
-   367		struct dwapb_context *ctx = gpio->ports[0].ctx;
-   368		irq_hw_number_t bit = irqd_to_hwirq(d);
-   369		u32 wake_en = ctx->wake_en;
-   370		int err;
-   371	
-   372		if (enable)
-   373			wake_en |= BIT(bit);
-   374		else
-   375			wake_en &= ~BIT(bit);
-   376	
- > 377		if (d->parent_data && !!ctx->wake_en != !!wake_en) {
- > 378			err = irq_chip_set_wake_parent(d, enable);
-   379			if (err)
-   380				return err;
-   381		}
-   382	
-   383		ctx->wake_en = wake_en;
-   384	
-   385		return 0;
-   386	}
-   387	
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
