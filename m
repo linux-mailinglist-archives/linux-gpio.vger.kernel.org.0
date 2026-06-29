@@ -1,50 +1,51 @@
-Return-Path: <linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39116-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id qlqhBr1wQmoz7QkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:18:53 +0200
+	id ajVvKLRuQmoy7AkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39116-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:10:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DD8A6DB0B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:18:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81BCC6DAD4D
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 15:10:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hC4kKBSl;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39115-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ayu5fucu;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39116-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39116-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 208A43018CFA
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 13:05:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3807F302066E
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 13:05:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C89407CFC;
-	Mon, 29 Jun 2026 13:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A26408035;
+	Mon, 29 Jun 2026 13:03:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6B6407CF0;
-	Mon, 29 Jun 2026 13:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9B9407CF0;
+	Mon, 29 Jun 2026 13:03:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782738226; cv=none; b=fojrWM70eEMp+1CEUGUfJh3i19coqrjgZRzYEAU74WMvqpJpkgkXhGweweoD5naa+aghVENNOerwnIChKX5vcHKzg5M1oUme/m5IYKxJYWc/dWV0ECjHyVIrWzVT/H4HmGk5y1oKwcL4DMh9QmhIHHmlr10ETScxk1kwxAHtBQ4=
+	t=1782738230; cv=none; b=nVQJpWEDbN5y+6m0cA9e/r8pi+HpCimCIE+x/qo/oMMpkh7sQ3/MkZ6jUPBZgrU2iRDYLCKZ6DNvL4VFVmXEJK1y+7jMxAO2cCFReWsa+BUdPPDVWH3WwSrsnGBa5RPESo9cukT2R6GDljJt9FBFIfvLfEcU0g8YT+ztjEVRv5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782738226; c=relaxed/simple;
-	bh=ZXxYYKWc/jGxfk2Nytyp7ioT+GGF5iEplxY6FAnMyNM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ruGrJ7etg49CfDcV4qKIZwumoyKDlAboeVdXi/dkaN5ccMooda7gdOMLujna5wsh4EFjTAjDllrUwucMyBuUyv0t8YPJBNMRo8I3NMCAlv8zKEfjPJhfTQjAwCJLhbuHSnltJ2LFsG7CVlvXjQXytFjXh+ZlNlySXjs58FgQLO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hC4kKBSl; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D3E1F00A3D;
-	Mon, 29 Jun 2026 13:03:41 +0000 (UTC)
+	s=arc-20240116; t=1782738230; c=relaxed/simple;
+	bh=QxZGvrOIN0fSMKxM7XYCXodrrxEoocN4xSyCDnHnW00=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CLcAtuCqQ+ClrGHkLcWOeVFTbJKI614wvUYPO4Gndukp6YqGjytqpi7ja7mUlQhhbWcMGRCnphGnHtx9vPSW3Xm+rhp/XoZ6yXWv1PM/AYU9sf8y5i24j8SGXqez9Skon2tJwnyJchTBLyP/VaIcqi/cmYOyruZ+wNce3r6uuJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayu5fucu; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50011F000E9;
+	Mon, 29 Jun 2026 13:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782738225;
-	bh=1jg1rQAK89ERmpcHGqenOSdalDO5zb8XIpGNN1kpzuo=;
-	h=From:To:Cc:Subject:Date;
-	b=hC4kKBSlI1YC3aYkWyb12M65wJhVTyQjHINpXLna7nBIHIzQXslOpalidGl0nU9F9
-	 sKZBdHiIsT04xXPsPor0JvuYwebZMvQQT8VQQpLHBv6/Bh8LNMsCwvDvrF8KfyvWKr
-	 v8Dc/ynpn7KS92OwuJZo8X6AnaCBV3GQW6XcoKwLhCBoEwdYy9ndAO0sLc5dh1rmsB
-	 L3K2uf+lsmGnNS79iddvPtEWAvNxrHN+KsZMLDkmK9MU0hHquZ4qICWKj3EwMf6mky
-	 SPgKLz+YGudrwoWXgOq0xzM/sZG6/TjjozaWd69NFMZCJE3eX9Rr/7FhRiwUp3KQJS
-	 oilFtAu8wI0YQ==
+	s=k20260515; t=1782738229;
+	bh=/KDLXd4EonMqcbqH12ZdRT21OBdHeMxLOstM2OQjqkM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ayu5fucum1ifUqmcCpgQYrDnmdQJ273pZ6EnZJ2nT0bkE8AY3LOBFdDtnmZx4PHEi
+	 CgLLiYW1o5T6MpIrBjBxMlM+LicAoU/587Pq+FIJCmXHh6mFsg5u5V8pThLFtYLbdi
+	 6mj1f6JU/Nwg7TbjuSycWvI8bndl6I34O5P+cv8KLZj7GnWpj5qJprePU1rHYgE5ry
+	 hIxfp1qMgD7STi161QfakLUc6y8cmnt0ggfFaDhcRnfHBEKd69C9zFQ6eyP8cUqzrp
+	 2nA3P+CA+GawU3psXdhuVm1GPauumhcp66O4ANzdzkUBkL3UlllRfwcGBgzn+qywxi
+	 D3YQ6rxn/Eo8Q==
 From: Arnd Bergmann <arnd@kernel.org>
 To: linux-gpio@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
@@ -64,10 +65,12 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-kernel@vger.kernel.org,
 	linux-input@vger.kernel.org,
 	linux-leds@vger.kernel.org
-Subject: [PATCH v5 0/6] gpiolib: fence off legacy interfaces
-Date: Mon, 29 Jun 2026 15:03:23 +0200
-Message-Id: <20260629130329.1291953-1-arnd@kernel.org>
+Subject: [PATCH 1/6] [v5] sh: select legacy gpiolib interface
+Date: Mon, 29 Jun 2026 15:03:24 +0200
+Message-Id: <20260629130329.1291953-2-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260629130329.1291953-1-arnd@kernel.org>
+References: <20260629130329.1291953-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,11 +87,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39115-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39116-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:arnd@arndb.de,m:glaubitz@physik.fu-berlin.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:linusw@kernel.org,m:brgl@kernel.org,m:dmitry.torokhov@gmail.com,m:lee@kernel.org,m:pavel@kernel.org,m:linux-sh@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-leds@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[18];
@@ -108,79 +111,148 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,zytor.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,fu-berlin.de:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0DD8A6DB0B0
+X-Rspamd-Queue-Id: 81BCC6DAD4D
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-This is the remainder of the series previously posted as v2
-in [1]. I've changed the version to v5 for all patches to
-not confuse b4 too much, but the patches are mostly unchanged.
+Many board files on sh reference the legacy gpiolib interfaces that
+are becoming optional. To ensure the boards can keep building, select
+CONFIG_GPIOLIB_LEGACY on each of the boards that have one of the
+hardcoded calls.
 
-The patch "Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY"
-was not part of the series last time, but the build bots reported
-this as a regression since I had dropped that since v1.
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2..v5: no changes. The patch did not make it into v7.2-rc1, so
+        I'm keeping it with the rest of the series
+---
+ arch/sh/Kconfig                        | 1 +
+ arch/sh/boards/Kconfig                 | 8 ++++++++
+ arch/sh/boards/mach-highlander/Kconfig | 1 +
+ arch/sh/boards/mach-rsk/Kconfig        | 3 +++
+ 4 files changed, 13 insertions(+)
 
-I hope that all that remains now can just get merged through the
-gpio tree. The gpio-keys patch needs a bit coordination with
-another patch addressing the same issue that is already in
-flight, so I expect that I'll rebase my series once more when
-that is in a stable branch, but the state I have here should
-just work as-is on top of v7.2-rc1.
-
-     Arnd
-
-[1] https://lore.kernel.org/all/20260520183815.2510387-1-arnd@kernel.org/
-
-Arnd Bergmann (6):
-  [v5] sh: select legacy gpiolib interface
-  [v5] x86/olpc: select GPIOLIB_LEGACY
-  [v5] Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY
-  [v5] Input: gpio-keys: make legacy gpiolib optional
-  [v5] leds: gpio: make legacy gpiolib interface optional
-  [v5] gpiolib: turn off legacy interface by default
-
- arch/sh/Kconfig                           |  1 +
- arch/sh/boards/Kconfig                    |  8 ++++
- arch/sh/boards/mach-highlander/Kconfig    |  1 +
- arch/sh/boards/mach-rsk/Kconfig           |  3 ++
- arch/x86/Kconfig                          |  1 +
- arch/x86/platform/olpc/olpc-xo1-sci.c     |  2 +-
- drivers/gpio/Kconfig                      |  9 +++-
- drivers/input/keyboard/gpio_keys.c        |  9 ++--
- drivers/input/keyboard/gpio_keys_polled.c |  4 +-
- drivers/input/misc/Kconfig                |  3 ++
- drivers/input/misc/soc_button_array.c     |  2 +-
- drivers/leds/leds-gpio.c                  | 53 +++++++++++++++--------
- drivers/mfd/rohm-bd71828.c                |  1 -
- drivers/mfd/rohm-bd718x7.c                |  1 -
- include/linux/gpio_keys.h                 |  2 +
- include/linux/leds.h                      |  2 +
- sound/pci/Kconfig                         |  1 +
- sound/pci/cs5535audio/cs5535audio_olpc.c  |  2 +-
- 18 files changed, 76 insertions(+), 29 deletions(-)
-
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index d5795067befa..d60f1d5a94c0 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -462,6 +462,7 @@ config CPU_SUBTYPE_SHX3
+ 	select CPU_SHX3
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select PINCTRL
+ 
+ # SH4AL-DSP Processor Support
+diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
+index 1af93be61b1f..d89b74177233 100644
+--- a/arch/sh/boards/Kconfig
++++ b/arch/sh/boards/Kconfig
+@@ -80,6 +80,7 @@ config SH_7724_SOLUTION_ENGINE
+ 	select SOLUTION_ENGINE
+ 	depends on CPU_SUBTYPE_SH7724
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	imply SND_SOC_AK4642 if SND_SIMPLE_CARD
+ 	help
+@@ -199,6 +200,7 @@ config SH_SH7757LCR
+ 	bool "SH7757LCR"
+ 	depends on CPU_SUBTYPE_SH7757
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 
+ config SH_SH7785LCR
+@@ -226,6 +228,7 @@ config SH_URQUELL
+ 	bool "Urquell"
+ 	depends on CPU_SUBTYPE_SH7786
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select HAVE_PCI
+ 	select NO_IOPORT_MAP if !PCI
+ 
+@@ -233,6 +236,7 @@ config SH_MIGOR
+ 	bool "Migo-R"
+ 	depends on CPU_SUBTYPE_SH7722
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	help
+ 	  Select Migo-R if configuring for the SH7722 Migo-R platform
+@@ -242,6 +246,7 @@ config SH_AP325RXA
+ 	bool "AP-325RXA"
+ 	depends on CPU_SUBTYPE_SH7723
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	help
+ 	  Renesas "AP-325RXA" support.
+@@ -251,6 +256,7 @@ config SH_KFR2R09
+ 	bool "KFR2R09"
+ 	depends on CPU_SUBTYPE_SH7724
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	help
+ 	  "Kit For R2R for 2009" support.
+@@ -259,6 +265,7 @@ config SH_ECOVEC
+ 	bool "EcoVec"
+ 	depends on CPU_SUBTYPE_SH7724
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	imply SND_SOC_DA7210 if SND_SIMPLE_CARD
+ 	help
+@@ -329,6 +336,7 @@ config SH_MAGIC_PANEL_R2
+ 	bool "Magic Panel R2"
+ 	depends on CPU_SUBTYPE_SH7720
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
+ 	help
+ 	  Select Magic Panel R2 if configuring for Magic Panel R2.
+diff --git a/arch/sh/boards/mach-highlander/Kconfig b/arch/sh/boards/mach-highlander/Kconfig
+index b0abd03cac4e..cd3a553ce30c 100644
+--- a/arch/sh/boards/mach-highlander/Kconfig
++++ b/arch/sh/boards/mach-highlander/Kconfig
+@@ -20,6 +20,7 @@ config SH_R7785RP
+ 	bool "R7785RP board support"
+ 	depends on CPU_SUBTYPE_SH7785
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 
+ endchoice
+ 
+diff --git a/arch/sh/boards/mach-rsk/Kconfig b/arch/sh/boards/mach-rsk/Kconfig
+index f0299bc4416f..3810937aa5d4 100644
+--- a/arch/sh/boards/mach-rsk/Kconfig
++++ b/arch/sh/boards/mach-rsk/Kconfig
+@@ -12,16 +12,19 @@ config SH_RSK7201
+ config SH_RSK7203
+ 	bool "RSK7203"
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	depends on CPU_SUBTYPE_SH7203
+ 
+ config SH_RSK7264
+ 	bool "RSK2+SH7264"
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	depends on CPU_SUBTYPE_SH7264
+ 
+ config SH_RSK7269
+ 	bool "RSK2+SH7269"
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	depends on CPU_SUBTYPE_SH7269
+ 
+ endchoice
 -- 
 2.39.5
 
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Walleij <linusw@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>
-Cc: linux-sh@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-input@vger.kernel.org
-Cc: linux-leds@vger.kernel.org
 
