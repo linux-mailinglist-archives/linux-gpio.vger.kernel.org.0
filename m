@@ -1,250 +1,220 @@
-Return-Path: <linux-gpio+bounces-39157-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39158-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ON5XKTOZQmqh+QkAu9opvQ
-	(envelope-from <linux-gpio+bounces-39157-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 18:11:31 +0200
+	id PlnaAk2mQmrg/AkAu9opvQ
+	(envelope-from <linux-gpio+bounces-39158-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 19:07:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BEEC6DD298
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 18:11:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A5EA6DD983
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 19:07:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b="ZR26Xpj/";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39157-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39157-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=bootlin.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Yrxvbo4X;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39158-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39158-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D6E443036B3C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 16:05:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D625B301C3F0
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2026 17:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AAE144BC92;
-	Mon, 29 Jun 2026 16:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 778AE3B6364;
+	Mon, 29 Jun 2026 17:07:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918574418FF
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 16:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E5337F8A5
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 17:07:02 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782749110; cv=none; b=KvEEfqvppzwdaCiV2BVsJJsTYnnwMdS6oofeR9+BgX0nNUCWZGx7cTl2Jca4LeccPCq4izfK2uNza80RPz/8mClREjknnwI/sUq7er6M+5m8URo51KBzKVN+kYkhauNZimavgkdCGX87ugFtTdRmmjzZUGDfmo0boCCQMymjlsY=
+	t=1782752824; cv=none; b=es6nrBevU1AZ/UuVly1Jpgn0u/WBL1E5ZVZojJyw6ZVWiNm3Ne54n2nacExEyxztfaTR2XdKBGf51DhAY8/9mNmbexZ8gXuOXDDLJlNgfydM05ECSS/EGuBc7pyRyGjsZ+AuHSF7XvxTC3pvik9pDPpzY1KaLFj68PR9fB4OTD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782749110; c=relaxed/simple;
-	bh=2CqpLrxkdTX7sOcbrrrZvxIln4gPdG+c93HFcDXzXnk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=so/D4YuP6KNl1GTu4EU0HN0LkFYx3GwpepKDLCQaWSSCGSeeguEISaFzZV29cmtdeYNy27QUh3c7OhKhbnW3v6pkarymqXuezH6LqnM+QuDJ8avDf19Vosi6H8hE52+fPxXjsNwYLVUlYOkB5f+rFS0Cp1REX2yuBluDYZ1y10M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZR26Xpj/; arc=none smtp.client-ip=185.171.202.116
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 1014FC6B3A9;
-	Mon, 29 Jun 2026 16:05:17 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id CC0055FF96;
-	Mon, 29 Jun 2026 16:05:06 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5043D106F1820;
-	Mon, 29 Jun 2026 18:04:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1782749105; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references:autocrypt;
-	bh=JEjXI5ld7Y55/QqO5968kb9+2z9CP3Ygxw7dHEqom5Q=;
-	b=ZR26Xpj/h2bjGnEy0rXxSf8ycA92obShxrsaA50vA52kd8FsTZE7hKWfj45lwvmZ0vpUD+
-	CpUIgwZajjKpABmCqVzPtvHNToTYZULmlCgJYH50mOCHNklr/7EFWhOaikdFBh4Asl8OyU
-	ch7IkaMi7YQgKppWdOiA9MnUOIFrKhNQ/8iVMwky19S30P9iMhDCVsHpzHaMYDQioTGKdE
-	4Qt14sxoTHE31GtL7MuzaQVQmQQGxXKg9k/haUnxCq1MCHxk2Vl9MQvubsKjWKosHUr+pL
-	zTWVID89XRmUAVM8XXdJQ+NDg2WpDuH7fDRsVGlLBIroIO52qb4o5+WJWqRxkw==
-Message-ID: <31477953aace52bb6594461e82ddf99493af2329.camel@bootlin.com>
-Subject: Re: [PATCH v5 0/5] Add support for AAEON SRG-IMX8P MCU
-From: Thomas Perrot <thomas.perrot@bootlin.com>
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij	 <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, Shawn Guo	 <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- =?ISO-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Lee Jones	 <lee@kernel.org>
-Cc: "thomas.perrot@bootlin.com" <thomas.perrot@bootlin.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski@oss.qualcomm.com>, Conor Dooley
- <conor.dooley@microchip.com>,  Bartosz Golaszewski
- <bartosz.golaszewski@oss.qualcomm.com>
-Date: Mon, 29 Jun 2026 18:04:59 +0200
-In-Reply-To: <b4396f57-3501-4e89-9cf3-8dc5d7cad9b7@roeck-us.net>
-References: <20260408-dev-b4-aaeon-mcu-driver-v5-0-ad98bd481668@bootlin.com>
-							 <b4396f57-3501-4e89-9cf3-8dc5d7cad9b7@roeck-us.net>
-Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
- keydata=mQGNBF+/ZOUBDAC2DghCjZvmgYcve02OG7dGZ7Iy58uEwne3LB7w7nRwdAxKw7ZaiVqwY
- O+yNGVi+GVx7oA6Wn4pv46z+QDRLQiq6OseuXhkSGCg7U/yBCUq12B/GRGO1Qt2Qi1mJJT1s+1qZ5
- Gxv6Nypz9qKVn94GM2bR1hXBga0t87vBpebThOHmX5d/0dqIcVxRCM7onNb0dDyRoVgLS5rBhQzrL
- CMrJaCy39xZUy0J1SOlH4Mgk6EhJIPYY4wlzikGX6urg+Tc9EjGd78ry0e0p5U5qgjFR5QGJDy1Gn
- U3CfwbT9sowdCASDbQDUoltlv2iWJCLa0xl97KVchCa0pr7HKbFA3J5SLKqFYUBCkFL+5WudYlz2n
- XxiUgyviMQxyK+ij66kEi6/2zFDAecd43pHV7790ptqZBC3Jc67Emj7Vo3ShX6RXPPxxbeCTOF2uk
- I45aJ9XcVFH/MFE96NjXj8uahnIsiTPyuCUoJu8tj7TSQyue874qJqVQvqlFyt2aZYJZ8ruq8AEQE
- AAbQpVGhvbWFzIFBlcnJvdCA8dGhvbWFzLnBlcnJvdEBib290bGluLmNvbT6JAc4EEwEIADgCGwMF
- CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCX79mdwAKCRCfw
- AsFcf4K7fhbC/wP0kSl6id2E/K3+UdXk6CLMVRbCFLCREzQs5WFpQ6l/I0WGOamhrOgegdszheiVF
- orlUP8d37XSpFAqydhKGaN78V5Dps0Wmwm4lIlS4MtQXJtSLUHXDJLIZLW0pw8tiPLKsd1o/yDkXE
- dnpsjJTRG6SdDSHnyOB2/gh4p+yTaLytFdARk/r4/P26+L+FiH0fFl+RnBt19LPklfKgeDc7GwIif
- ja+nIWpp3W23DAUuI6xduEut25Q89yu7Ci8CliLfAiLy9bIGjBQWU2Y+1/j/7KuPj6VbBsZWLTZY0
- hUmpJSTnWAqc9SMsNxo7NSQuddgviz5e2tqucaRqxP02FGzNa8U4NAKdWaXrlHG5Dglj9XH0DK+SH
- +c96qqFewYD8VPQ6XAGxQcXbrtJmiMor1R2DfziispLRvJcfYs8xqabbCtoS3ouXB9XRi8hn7A2kh
- ME1ryS+Oh63JshXHnw6bmjCpVd/p+fGLIGU6A47pJOpviKR4jEO84pl2ejtDZ3Tc=
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-yncApkmTxr+3zEDpopn/"
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1782752824; c=relaxed/simple;
+	bh=iYf31nvEv14euCo/bLXTi3/WkhtdASg9KgXlPFWoU8s=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FPQhTRhr4d6oRNa9BXdRHYvUFLs0kU/DsSFVb9+DxzczaoaD15DoM6/itdzs1ZHfHISNUtjrsGwuPJkF8DWByeKL6ZYAMeYPjDwYjBWLZQlKjjIByUeUEl9Xp6CNfPamuKyXuB5Zr1V2bXjem99xm4ksTqN7/sUBBKK+dE21g2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yrxvbo4X; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80FE11F00ACA
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 17:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782752822;
+	bh=CU8TMB46KVquqb6NZE+mjswOyduzrIxQL/Z45liuHG4=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=Yrxvbo4XVFc+tkKdK7ym6mYWtieEBKFP4ZF/LfZmsMd+Q2sbjIohStqMyffYbb58m
+	 fo2OjtDduxdHXaWy+Bev1CZcc8KNmm1GFXx+PhNrm7ZYumddHmBPQdHAbWbk70xjTA
+	 AYXXm5/9uFyV1BJu5nILEbmvwZ5k2KrYToZBRfhRAUKYhvDT1mIDIZ1Rgvh3Jyc3s6
+	 G6uFpkq84Tnqzhx50fgN0Zqmv+hftyHBlT9H1sVzLfpQXniz7880NHZEmkrJ2b9aL6
+	 GyNQ2WIkGDusVbegI6YLTwu73CQV2IVb4o4/cnaVVQxgbH1FGChiBRSv3jBYoTpVog
+	 MD9GRaLjSTOPA==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-39af6402933so21179611fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2026 10:07:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoYCKAWGQn/cMFLvKe+ud1/6B6OSTunwwOBnetV0RxVEQJlvQP9w265MTf4P3uzObYL21EI7/qrFqSH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvTpsz913PG6qZSxtYKUjOghEgPAfNYRbxyjst3MSI84qjP7Af
+	LNWYYqkD3yOleKTv3fzynEgM7xWXXc9wO85mMmvMLWHUZD73V+QwPYeYyHi//kNMqwAALu9SyC6
+	KEOvwI6w1nogJPny841x321bCZA3OpjsaYYZV/VQHHw==
+X-Received: by 2002:a05:651c:158c:b0:399:83a4:4f2c with SMTP id
+ 38308e7fff4ca-39b1daae071mr107701fa.18.1782752821184; Mon, 29 Jun 2026
+ 10:07:01 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 29 Jun 2026 10:06:59 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 29 Jun 2026 10:06:59 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260625115718.1678991-2-v@baodeep.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20260625115718.1678991-1-v@baodeep.com> <20260625115718.1678991-2-v@baodeep.com>
+Date: Mon, 29 Jun 2026 10:06:59 -0700
+X-Gmail-Original-Message-ID: <CAMRc=McgB0gYfvE1KMXkNFnMgx6ahKoMFb2pi0_AF03m4BDk_g@mail.gmail.com>
+X-Gm-Features: AVVi8Cex4Km60qsC3nmt5H_9iHFU4BjDrOYA0iDy91F4RstIOAhIA0emnN3RoSU
+Message-ID: <CAMRc=McgB0gYfvE1KMXkNFnMgx6ahKoMFb2pi0_AF03m4BDk_g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: shared-proxy: always serialize with a
+ sleeping mutex
+To: Viacheslav Bocharov <v@baodeep.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Diederik de Haas <diederik@cknow-tech.com>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39157-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[roeck-us.net,kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FORGED_RECIPIENTS(0.00)[m:linux@roeck-us.net,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:festevam@gmail.com,m:jeremie.dautheribes@bootlin.com,m:wim@linux-watchdog.org,m:lee@kernel.org,m:thomas.perrot@bootlin.com,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:thomas.petazzoni@bootlin.com,m:miquel.raynal@bootlin.com,m:krzysztof.kozlowski@oss.qualcomm.com,m:conor.dooley@microchip.com,m:bartosz.golaszewski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER(0.00)[thomas.perrot@bootlin.com,linux-gpio@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39158-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:v@baodeep.com,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linaro.org,baylibre.com,googlemail.com,samsung.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org,kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,mail.gmail.com:mid,samsung.com:email,baodeep.com:email];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thomas.perrot@bootlin.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,sashiko.dev:url,bootlin.com:dkim,bootlin.com:mid,bootlin.com:url,bootlin.com:from_mime]
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5BEEC6DD298
+X-Rspamd-Queue-Id: 5A5EA6DD983
 
+On Thu, 25 Jun 2026 13:57:17 +0200, Viacheslav Bocharov <v@baodeep.com> said:
+> The shared GPIO descriptor used either a mutex or a spinlock, chosen at
+> runtime from the underlying chip's can_sleep:
+>
+> 	shared_desc->can_sleep = gpiod_cansleep(shared_desc->desc);
+> 	... if (can_sleep) mutex_lock(); else spin_lock_irqsave();
+>
+> can_sleep describes only the value path (->get/->set). Under the same
+> lock, however, the proxy may call gpiod_set_config() and
+> gpiod_direction_*(), which can reach pinctrl paths that take a mutex
+> (e.g. gpiod_set_config() -> gpiochip_generic_config() ->
+> pinctrl_gpio_set_config()), independent of can_sleep. On a controller
+> with non-sleeping MMIO value ops the descriptor lock was a spinlock, so
+> the sleeping pinctrl call ran from atomic context. Reproduced on an
+> Amlogic A113X board with the workaround from commit 28f240683871
+> ("pinctrl: meson: mark the GPIO controller as sleeping") reverted; the
+> original Khadas VIM3 report hit the same path:
+>
+> 	BUG: sleeping function called from invalid context
+> 	  __mutex_lock
+> 	  pinctrl_get_device_gpio_range
+> 	  pinctrl_gpio_set_config
+> 	  gpiochip_generic_config
+> 	  gpiod_set_config
+> 	  gpio_shared_proxy_set_config   <- voting spinlock held
+> 	  ...
+> 	  mmc_pwrseq_simple_probe
+>
+> The spinlock existed to take the value vote from atomic context, but the
+> vote and the (possibly sleeping) control operations share the same state
+> and lock, so this scheme cannot serialize config under a mutex and still
+> offer atomic value access. Always serialize the shared descriptor with a
+> mutex instead and mark the proxy a sleeping gpiochip, driving the
+> underlying GPIO through the cansleep value accessors: those are valid
+> for both sleeping and non-sleeping chips, so value access keeps working
+> on fast controllers, at the cost of no longer being atomic.
+>
+> This is observable: consumers gating on gpiod_cansleep() take their
+> sleeping branch on a proxied GPIO (mmc-pwrseq-emmc skips its
+> emergency-restart reset handler; its normal reset is unaffected), and
+> consumers that reject sleeping GPIOs (pwm-gpio, ps2-gpio, ...) would
+> fail to probe. Such atomic users do not share a pin through the proxy,
+> whose purpose is voting on shared reset/enable lines. The same narrowing
+> already applies on Amlogic since that workaround, and rockchip
+> addressed the identical splat per-driver in commit 7ca497be0016 ("gpio:
+> rockchip: Stop calling pinctrl for set_direction"); fixing the proxy
+> addresses the locking error once, for every controller.
+>
+> The lock type was added by commit a060b8c511ab ("gpiolib: implement
+> low-level, shared GPIO support"); the sleeping call under it arrived with
+> the proxy driver.
+>
+> Fixes: e992d54c6f97 ("gpio: shared-proxy: implement the shared GPIO proxy driver")
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Closes: https://lore.kernel.org/all/00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com/
+> Signed-off-by: Viacheslav Bocharov <v@baodeep.com>
+> ---
+> v1 -> v2: open-code the descriptor mutex; drop the gpio_shared_desc_lock
+>           guard and the gpio_shared_lockdep_assert() helper, use
+>           guard(mutex) and lockdep_assert_held() directly; move the
+>           mutex rationale from the header to the can_sleep assignment in
+>           probe.
+>
+> v1: https://lore.kernel.org/linux-gpio/20260610153329.937833-2-v@baodeep.com/
+>
+>  drivers/gpio/gpio-shared-proxy.c | 66 +++++++++++++-------------------
+>  drivers/gpio/gpiolib-shared.c    |  9 +----
+>  drivers/gpio/gpiolib-shared.h    | 28 +-------------
+>  3 files changed, 29 insertions(+), 74 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-shared-proxy.c b/drivers/gpio/gpio-shared-proxy.c
+> index 6941e4be6cf1..0cd52015b731 100644
+> --- a/drivers/gpio/gpio-shared-proxy.c
+> +++ b/drivers/gpio/gpio-shared-proxy.c
+> @@ -9,8 +9,10 @@
+>  #include <linux/err.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/gpio/driver.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+>  #include <linux/string_choices.h>
+>  #include <linux/types.h>
+>
+> @@ -32,7 +34,7 @@ gpio_shared_proxy_set_unlocked(struct gpio_shared_proxy_data *proxy,
 
---=-yncApkmTxr+3zEDpopn/
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I was about to apply it but then realized that it can be simplified further.
+The set_func() argument in gpio_shared_proxy_set_unlocked() is no longer
+needed and can be replaced with a direct call to gpiod_set_value_cansleep().
 
-Hello Guenter,
+Would you mind sending a v3 with that included?
 
-On Sat, 2026-04-11 at 17:12 -0700, Guenter Roeck wrote:
-> snip
->=20
-> Sashiko has some interesting feedback that might be worth looking
-> into.
->=20
-> https://sashiko.dev/#/patchset/20260408-dev-b4-aaeon-mcu-driver-v5-0-ad98=
-bd481668%40bootlin.com
->=20
-
-Thanks for the pointer. I went through all findings and addressed the
-  valid ones in v6:
-
-  MFD driver:
-   - Set I2C_M_DMA_SAFE on all i2c_msg flags. The buffers were already
-     heap-allocated for DMA safety but the flag was missing, which
-     would have caused unnecessary bounce-buffering by the host driver.
-   - Add select REGMAP to config MFD_AAEON_MCU
-   - "Kconfig COMPILE_TEST link failure": I2C || COMPILE_TEST lets
-     MFD_AAEON_MCU=3Dy even when I2C=3Dm (tristate OR caps to y), which
-     would fail to link since i2c_transfer(), only exist when I2C
-     itself is built in. Will drop the COMPILE_TEST escape and just use
-     depends on I2C, matching the other I2C MFD drivers in this file.
-
-  GPIO driver:
-   - Replace __set_bit/__clear_bit/__assign_bit with their atomic
-     counterparts. gpiolib does not serialize across pins, so
-     concurrent direction changes on different pins could race on the
-     shared bitmaps.
-   - Reverse the order in aaeon_mcu_gpio_config_output_cmd(): write the
-     output value first, then switch the pin to output mode, to avoid a
-     potential glitch if the previously latched value differs.
-   - Add MODULE_ALIAS("platform:aaeon-mcu-gpio") for udev auto-loading.
-
-  Watchdog driver:
-   - Add WDIOF_SETTIMEOUT and watchdog_init_timeout() so the software
-     timeout is configurable via ioctl, DT timeout-sec, or the
-     watchdog_timeout boot parameter. This also addresses the concern
-     you raised about the hardcoded 240s timeout.
-   - Add watchdog_stop_on_reboot() so the MCU watchdog is stopped
-     during system shutdown, preventing a spurious reset from the
-     external MCU.
-   - Add MODULE_ALIAS("platform:aaeon-mcu-wdt") for udev auto-loading.
-
-  The following findings were considered false positives:
-
-   - "Heap buffer overflow during bulk writes": with reg_bits=3D16 and
-     val_bits=3D8, regcache_sync() calls _regmap_write() per register, so
-     the write callback always receives exactly 3 bytes (2 reg + 1
-val).
-     No bulk path reaches the custom bus callback.
-
-   - "Stack DMA violation in read path": val_buf comes from regmap's
-own
-     heap-allocated work_buf, not a stack pointer, so DMA safety is
-     guaranteed by the regmap core.
-
-   - "I2C interleaving race": Concurrent access from child drivers
-     (GPIO and watchdog) is serialized by regmap's internal mutex,
-     which is held for the entire bus transaction ; both i2c_transfer()
-     calls complete under that lock before another caller can enter.
-
-   - "Missing PM suspend/resume callbacks": the watchdog core already
-     handles this via watchdog_pm_ops, which calls wdt->ops->stop() on
-     system suspend.
-
-Kind regards,
-Thomas
-
-
-> Guenter
->=20
-
---=20
-Thomas Perrot, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---=-yncApkmTxr+3zEDpopn/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmpCl6sACgkQn8ALBXH+
-Cu3gtwv/WZRg+KDlEazT/qmm8H0EzbCYvvDakncblFOk6oJq75kaC7outXtOGBPs
-RK5rwW7VB2GP37sLS2vrA+JhrJ4gUgY53HnLtpgZhYgV5q449bqqb/8VGSBFYvw/
-CBdvzUlHzP4zA6fxilChd6n8LVFAvxNLMe+wzm5iq8Q5687omtSQG6/Z1DDy/RHo
-B8xahs7i3PGGPoWD3TQXKptPBfMBuZHZb391TGsWs4dmG7JLi1QTM1Z30NBRY3ov
-CQfyzsvn44wcFZosCgWBVtM8n6UZZrIpuUtq/EbRFnk7UzdNB7Tv025plUbXJbRV
-cuKEFUs1DaW7Rlv4DL6Q2sV0DeoLYM24/7Tac7txF4D+8Caqd4u8QPtlqpWmzMfI
-HbHdcQB3sIkbGvVn4wNxmzKNgGqjOUs+p/UqwVhb7w9B7W7DxuH5gTswBWBo2X9O
-vx+YKBejGUw52tqYkAedq8Xi+KwwFwWI5oP2wa/cOmP4YHn1jabk0DCIGmlKfxlj
-hKzlP3Xi
-=aAXr
------END PGP SIGNATURE-----
-
---=-yncApkmTxr+3zEDpopn/--
+Thanks,
+Bartosz
 
