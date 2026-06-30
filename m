@@ -1,189 +1,207 @@
-Return-Path: <linux-gpio+bounces-39250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7TPcMS7/Q2oynAoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39250-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 19:38:54 +0200
+	id gtU6BPwRRGrCnwoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39251-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 20:59:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A1AE6E6F7D
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 19:38:54 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9149A6E758D
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 20:59:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=kSLmbg5C;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39250-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39250-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=google.com header.s=20251104 header.b="I/3WEowT";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39251-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39251-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=google.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4EAC53017C28
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 17:34:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9C52E300B87F
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 18:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55913DDDAE;
-	Tue, 30 Jun 2026 17:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B873E3DBE;
+	Tue, 30 Jun 2026 18:59:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82DB3DDDD0
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 17:33:56 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782840839; cv=pass; b=EHMIiB1Li71BI4sDH05bjqiCFmijjPyEykWZHsaCWDGX3pJRKBnMbXQzvEIKjV5VkDxOiZipmT1wwEzJR6QIeFXT6xUViTGmOxl2eX1Np3t2DXswtfREanxHjp/n2iT1JRvcMfMRuIW7iK4RwRQRg5/4VhwoQTuBT4570+s+W3M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782840839; c=relaxed/simple;
-	bh=a1+IyxE6SelQN4KsElW/8aBcYki1THU+HxZcl6xJ8zI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uR35PJiAr7VK1p5Fm0Ea4tBhVSnIGZ4lkBQHjgJOCLST7T+5FIds+BTTvwND99oJ5857QgvlmAsAIElQFRXP39Kx8KARUncV+8g8cNyEUll50g6O8gFrkqPuqV/jqJUdOs7bwahF5aU9Y+tb+XFL+OoNMb98av92rOG6QxFRUMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSLmbg5C; arc=pass smtp.client-ip=74.125.82.48
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1384ebe7a10so8582759c88.1
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 10:33:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782840835; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Qb+ioeU+0gWlAEjT+LprFQG7/LljfXvOKM1QyheriER/0PmAKyx4/bIWGjOwLXCzEH
-         1g0viJbHH266f2fbXhx21kL16CFdeZiGvIqGczccae0oTKsQnpVbLbfXHIg9tcfKeUc3
-         r2nrX1zJmCjbz9xpDyNx+m1pQVCiT73RlMORBLsDu4DP2EpiqE/i3JQMMKrtDZ628/s3
-         FZMOQP4EU0fdBvkYEn1krZCqMZXfya4JtPOaqysiJgkiSbDqNW/a00kWL0KOzqHsoI6d
-         WzWLFAswatxZcL2Di6WVT1o2its/fNPzrRAIFZWn9nLzrJPi7dGmBefZSfqK8w8rHwOz
-         N6og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=7mntaeVDxS4VMBjyvDf6fkrVcy80Ml+R6llSPn+Yyf4=;
-        fh=a1E8ggIxeJsv4N0LIly72kOj/YCK7VG5MvCEqKKetAE=;
-        b=OwBTHMg08Yv67w32rQ/VszyRU0Sa/aHNSu1oe+ySG1c0r2bUkY4O5Wy4lm8qw732wF
-         aABW8mfjWVM9xVjHap7IVtUl76ES/TyfgW7OSEn5qfpsEWHZhN7+pH6H8n+8ICB3eO1o
-         R/9EvbaV3VA1h7kgxO7pvWf8cdpAj4sG4GKKQaUSS9JzI1LpY0TqvBTanHr9KxtTsSyC
-         jTwlhLrxZ+sLDSo/Nq3LcxE0ZVZ3xnMCyIdKXW/VePawKMGp3hF3AHm388Wjfc32rJ8F
-         vW0cME6j/OYJx4t1SihuVbxKcINpGokjyuK6welGt/79MEodxWawaEk2kda8SS9CWkYU
-         cIfw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451F03E1227
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 18:59:03 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782845945; cv=none; b=ePehZ4fgJcZt0odvgYxY8jYXPB/7iZs/kYv+gO+GZ5pTmW3g13F/SRlPz3HVjcC0e6hwo5xOzxBpDIQbpfR50MoHys6Sv5IRjuJLPUrR0vh00c1pjNawu9RPaqoQtaPIpAAzvfdu7VtcQ+G0RssusM71EAeCREnHXNyVkqh4z1o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782845945; c=relaxed/simple;
+	bh=XGgg+xXUmnlRvAbgTK542VK34Jp1hfwPb9Na535wrug=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BMgWJglRA2H8XklqDXZCgzUUOV5xVUKDCI5E6GVnaQD2VTNJ3baj3+QZZn9LWxXAJMNt49e4GOWvaSqiBvUJfkP5/BbwHOtFw06KidyUHcN78ikvxMdvihQH+vVma72ZADIEluClco1ocakZF2tvQoXqJYBouVscdQqiLMs4f+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I/3WEowT; arc=none smtp.client-ip=209.85.214.201
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2ca0331d0b1so34252435ad.3
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 11:59:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782840835; x=1783445635; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7mntaeVDxS4VMBjyvDf6fkrVcy80Ml+R6llSPn+Yyf4=;
-        b=kSLmbg5Cai9CkpaNzLpPQt1KVzT0Tz3dXCKVK6ku3jeZq5Hk2/7ggQvpjeLZjPTTJc
-         iG5cC7gasPA00qslmDU9fOyk6Oxh55vbW7977m4XhmZFFQFRH8BmZMIvE6hAY84n4iD1
-         6NSf0ZKe5reVOSumfgkv0tKiUzJFjQo8B+UUrKUoK7sIP2XUXnPy5/MUcFcgDYksBzk2
-         HadFxKoknkASQBM8j+9QE5EondPcD/Xa2t16AYWYhetUps1Fh9BaPbx4uFudELzbsn6S
-         4VGuiMR0gQ1Zw1EyVHF8EX8S/N1dZsuLPRL1rL9RkV/fZQ0PK+4x5oak9RRo88R6Gtlb
-         YD5Q==
+        d=google.com; s=20251104; t=1782845943; x=1783450743; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+HRXjFGgcPzOleYtd12nce6K890KkClpjKYcrzynFs=;
+        b=I/3WEowTJRiihaVlRhDqzwj+YFRhy3c6bZt1KMXwh9x+om89q3OC+JV0rMtABHuHPF
+         qKTGPEF+LctDdirA+uM3nYkHMtqx7fzxbKIo7F/ANMmPr47Kwsrrnm8E9Yb1Y2eCZ8WT
+         pb40zvGu2vMFonNzF5uChbhNUm+4Abp0wLfh+8tBFirSreUkERpYPrulspJkbT2ABs3t
+         54e3TQ4JLV7EMB4ti1zVIN8Zf+GguCJY/CTwPz2Vs6GJbsvvrBWQB+i8mbiTIY3WqJ2b
+         z/S25V9ZGlAtRn3L2wb//Dbu0OlwWKm5mOpsVZXv+wJ2t9RD6W6vx1WOb8AUFiiio86v
+         g6uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782840835; x=1783445635;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7mntaeVDxS4VMBjyvDf6fkrVcy80Ml+R6llSPn+Yyf4=;
-        b=cfB2kYFwxS9iXZjtBSvmwEuIQ1DdMwofILuoksO7OH8/CC7X4I5V1vqJ8VrR3G6DoH
-         h4xi3oKKjVKNXjcuyBCK2Iu+VoIfkkdFw69kQh4BfiT8Kj7kGhCzWhzw9DYzIbenHtrB
-         kkRny0XfEuRrl+/3vQ9yRrVUzEyyJbz/ynugSYKWU7Shq3VQ9AnVtBw8QiUcV7MD4D8O
-         xeJ679LGXm371d6UvUssj7gJs1e/QtjWr3MHrZH7nDWlVDj7wEEuU2a07Wh6k8CKs2eH
-         6j4Dnv9yrBIj4+vBRw2m/OHM8STgSPj+NToEAgLtkDgZMl31Fun6LWyfdOTI+RAhc80U
-         CGHA==
-X-Gm-Message-State: AOJu0YxgMayhz+oN856pnyk/ZPDrTAgIiPNwmXOdQQRhlOKOWinGVvQR
-	JbBCZwQKdKf15DOVoCfxnwrg5VQjEyhhk14Enu160X34TpGHp0WUyXd+oCh0NRUDnEwYf2U5nre
-	y8wJ+FqHkY9LGUhJHj1XzJpaxRE2yIpU=
-X-Gm-Gg: AfdE7cl08bU9wAOViLTDnvjRcnEj33KX89FqpwdA44ALOPe6+HRXnBC3Ph8Vt4LbOt/
-	KJsxKArAdtB41/kIiVdCx9um11GU4YTjfyhZBywFs9v6dnS0ic8Zmnge4l3I9etR64Oa8kQW/wA
-	smVdLIU7VQa122Twzguu6+j0P8p04OwKTLby//0i91BcQ5+9UbiPU7+puTXuOOIPJlyd9va7dNB
-	b3nzc26YQCAie3+OnbhafiiYkRfReuKFiEvPOa0sEt+si6fUpeLB3jMivWA4Di1j5LTYg==
-X-Received: by 2002:a05:701b:450c:10b0:13b:2d2d:198a with SMTP id
- a92af1059eb24-13b2d2d1a2emr1427179c88.30.1782840835469; Tue, 30 Jun 2026
- 10:33:55 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782845943; x=1783450743;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+HRXjFGgcPzOleYtd12nce6K890KkClpjKYcrzynFs=;
+        b=Sr0SPJ/9Rxqx4E4MJgTMPjupM4vcv89Tl22ESong41aiZTZOvIbAmChP2LiZ1hVTc+
+         cqdeamGotZxPi+xp6Hw5KNP4mW4M28Ob0K87jlBE3Y+rJKtX52bB+msDQZ4fCbyfOQvW
+         I/tyGYlg4PglxIENPQZ7V7gmTexk/U2ncYzzdonoHZdiA6gjsiI1FSiFMPqNUUqhtsXn
+         spA9IZDMlyNDhUu+ZCjKBwaSdf9jBnVTxrebOnrUwg7HkFmH0Um/+ZPBPbmbiRdgm38V
+         ioyYX3RnG8/6cjIJvS3navR45rUBuT70aYZA2n4BlH0JTd9bVhljuudn6gaRzkFyEeUQ
+         h7hQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrNw+2lKplFpm3C+tke253pusVIi2VP0ujWuQTSKd3JC5YRjmuymCZrm4+Tizz2TQ3SXVgttBg4tXJ8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs9neRZTZ1RtjFGm743jwEBF/X4mzxvS6zcNpVgjaa5ETGtMTl
+	R0KAFb75DRCK0W5VB8WIF6Dqrfdx40d2J51ZVxcTbvlm3tKpS4zRJlMSTXMZp1eCVqQS7pvhsK8
+	WqE3btQ==
+X-Received: from plbko12.prod.google.com ([2002:a17:903:7cc:b0:2c6:9f66:d581])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:acd:b0:2c9:c517:d075
+ with SMTP id d9443c01a7336-2ca5a581ab5mr15124165ad.15.1782845942348; Tue, 30
+ Jun 2026 11:59:02 -0700 (PDT)
+Date: Tue, 30 Jun 2026 11:59:01 -0700
+In-Reply-To: <akJUz0kYkEBdLSZ3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260626060112.2498324-1-sergio.paracuellos@gmail.com> <178283020836.36519.12213594335592775087.b4-ty@oss.qualcomm.com>
-In-Reply-To: <178283020836.36519.12213594335592775087.b4-ty@oss.qualcomm.com>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Tue, 30 Jun 2026 19:33:43 +0200
-X-Gm-Features: AVVi8CcT-OFGS8AdfyIL3pfUxbFLFqv_V4ELpypaRNrIYn_htSU2yJFN_RzfhXk
-Message-ID: <CAMhs-H8qy9XiYEOjcPPsH4ztejfo0=7_ZSNkvKEFfYNjd7w36w@mail.gmail.com>
-Subject: Re: (subset) [PATCH v2 0/4] gpio: mt7621: address Sashiko complains
- and other cleanups
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org, linusw@kernel.org, brgl@kernel.org, 
-	vicencb@gmail.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20260629060526.3638272-1-jgross@suse.com> <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
+ <c1608c48-13c2-4290-826b-28b5ca51eaf7@suse.com> <7332feff-2649-496c-8e49-b0a19eb54a32@app.fastmail.com>
+ <akJUz0kYkEBdLSZ3@gmail.com>
+Message-ID: <akQR9YMtMHReJTfB@google.com>
+Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, 
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, x86@kernel.org, linux-acpi@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-ide@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-hyperv@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, "lukasz.luba@arm.com" <lukasz.luba@arm.com>, 
+	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, "Kirill A. Shutemov" <kas@kernel.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Pu Wen <puwen@hygon.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Reinette Chatre <reinette.chatre@intel.com>, 
+	Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, 
+	Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Dave Airlie <airlied@redhat.com>, 
+	Helge Deller <deller@gmx.de>, linux-geode@lists.infradead.org, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Huang Rui <ray.huang@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Artem Bityutskiy <dedekind1@gmail.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Ashok Raj <ashok.raj.linux@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="us-ascii"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39250-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:vicencb@gmail.com,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sergioparacuellos@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39251-lists,linux-gpio=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:mingo@kernel.org,m:arnd@arndb.de,m:jgross@suse.com,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-edac@vger.kernel.org,m:x86@kernel.org,m:linux-acpi@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-pci@vger.kernel.org,m:virtualization@lists.linux.dev,m:linux-ide@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:platform-driver-x86@vger.kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jbaron@akamai.com,m:bp@alien8.de,m:tony.luck@intel.com,m:yazen.ghannam@amd.com,m:lenb@kernel.org,m:pavel@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:pbonzini@redhat.com,m:kas@kernel.org,m:rick.p.edgecombe@intel.
+ com,m:puwen@hygon.cn,m:bhelgaas@google.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:viresh.kumar@linaro.org,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:TonyWWang-oc@zhaoxin.com,m:dlemoal@kernel.org,m:cassel@kernel.org,m:airlied@redhat.com,m:deller@gmx.de,m:linux-geode@lists.infradead.org,m:olivia@selenic.com,m:herbert@gondor.apana.org.au,m:linusw@kernel.org,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux@roeck-us.net,m:peterz@infradead.org,m:acme@kernel.org,m:namhyung@kernel.org,m:mark.rutland@arm.com,m:alexander.shishkin@linux.intel.com,m:jolsa@kernel.org,m:irogers@google.com,m:adrian.hunter@intel.com,m:james.clark@linaro.org,m:jpoimboe@kernel.org,m:pawan.kumar.gupta@linux.intel.com,m:vkuznets@redhat.com,m:luto@kernel.org,m:boris.ostrovsky@oracle.com,m:ray.hu
+ ang@amd.com,m:mario.limonciello@amd.com,m:perry.yuan@amd.com,m:kprateek.nayak@amd.com,m:srinivas.pandruvada@linux.intel.com,m:artem.bityutskiy@linux.intel.com,m:dedekind1@gmail.com,m:miquel.raynal@bootlin.com,m:richard@nod.at,m:vigneshr@ti.com,m:ashok.raj.linux@gmail.com,m:hansg@kernel.org,m:ilpo.jarvinen@linux.intel.com,m:irenic.rajneesh@gmail.com,m:david.e.box@intel.com,m:xen-devel@lists.xenproject.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[seanjc@google.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[arndb.de,suse.com,vger.kernel.org,kernel.org,lists.linux.dev,lists.freedesktop.org,lists.infradead.org,intel.com,arm.com,akamai.com,alien8.de,amd.com,redhat.com,linux.intel.com,zytor.com,hygon.cn,google.com,broadcom.com,linaro.org,zhaoxin.com,gmx.de,selenic.com,gondor.apana.org.au,linuxfoundation.org,microsoft.com,roeck-us.net,infradead.org,oracle.com,gmail.com,bootlin.com,nod.at,ti.com,lists.xenproject.org];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[96];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2A1AE6E6F7D
+X-Rspamd-Queue-Id: 9149A6E758D
 
-On Tue, Jun 30, 2026 at 4:37=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
->
->
-> On Fri, 26 Jun 2026 08:01:08 +0200, Sergio Paracuellos wrote:
-> > This patchset covers some sashiko complains reported at some point when=
- IRQ
-> > mapping was being fixed for this driver [0].
-> >
-> > I have included 'Fixes' tag and CC to stable for patches 13 since patch=
- 4 is
-> > just a cleanup for naming.
-> >
-> > Thanks in advance for your time.
-> >
-> > [...]
->
-> Applied, thanks!
->
-> [1/4] gpio: mt7621: avoid corruption of shared interrupt trigger state
->       https://git.kernel.org/brgl/c/1781172526d1092323af443fa03f00e6de560=
-401
-> [2/4] gpio: mt7621: more robust management of IRQ domain teardown
->       https://git.kernel.org/brgl/c/839738536adabae1a7e98ed3fc332ce9cc991=
-d27
-> [3/4] gpio: mt7621: be sure IRQ domain is created before exposing GPIO ch=
-ips
->       https://git.kernel.org/brgl/c/0e024f58291dfcb28d98c512002e1a80fad69=
-798
->
-> Best regards,
+On Mon, Jun 29, 2026, Ingo Molnar wrote:
+> * Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > >>> Note that most patches of this series are independent from each other.
+> > >>> Only the patches removing a specific interface (patches 7, 15, 26 and
+> > >>> 30) and the last two patches of the series depend on all previous
+> > >>> patches.
+> > >> 
+> > >> It looks like you are touching most files twice or more here, to
+> > >> first convert from rdmsr to rdmsrq and then to change the
+> > >> two-argument rdmsrq() macro to a single-argument inline. If you
+> > >> introduce the inline version of rdmsrq() first, you should be
+> > >> able to skip the second step (patch 31) as they could be able
+> > >> to coexist.
+> > >
+> > > I've discussed how to structure the series with Ingo Molnar before [1]. The
+> > > current approach was his preference.
+> > 
+> > Ok.
+> 
+> Note that the individual patches are IMO significantly easier to review
+> through the actual 32-bit => 64-bit variable assignment changes done
+> in isolation (which sometimes include minor cleanups), while
+> the Coccinelle semantic patch:
+> 
+>    { a(b,c) => c = a(b) }
+> 
+> which changes both the function signature and the order of terms as
+> well, is just a single add-on treewide patch.
 
-Thanks! What about PATCH 4? Are you planning to apply afterwards or
-should I just forget about it?
-
-Best regards,
-    Sergio Paracuellos
-> --
-> Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Is the plan for subsystem maintainers to pick up the relevant patches, and then
+do the treewide change one release cycle later?
 
