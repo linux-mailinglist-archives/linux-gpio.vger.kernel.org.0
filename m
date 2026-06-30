@@ -1,177 +1,282 @@
-Return-Path: <linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vRFLDRO2Q2pjfgoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:26:59 +0200
+	id p2olCxW6Q2qafwoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:44:05 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2786F6E427C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:26:58 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDCCF6E4542
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:44:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AoHbI0OL;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=jXHqKVIe;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6D1F03001A78
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:24:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1D96E3046CF3
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:43:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BED63451AA;
-	Tue, 30 Jun 2026 12:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39DB40E8C1;
+	Tue, 30 Jun 2026 12:43:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7F7403151
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4BC40DFDC
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:43:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782822276; cv=none; b=IC+AqvCDcGrCHQAZZzGA8JgIfYbuG4WCz1M1p6T1sshe8Nkx9g9KoZx9iRpp9L8Lmn4lHy8cMyWuVf1TXddg69XeApw2nZvgJvyaJkZ+sjy2FY5JPRJehPUWbAS2FwixpLUKRLRORoFqVUfyoDvYNbJcXUbknShZpOkYzRfZ18c=
+	t=1782823382; cv=none; b=aPI6afmT8UHPIkrEbrx023N1Gf+WNfbTCBOzj7hDnKm4ZWzHKfq8TKl9N9CSh2FDjVPVWAnWPYVV/XdyuP4g46iPsFspio54AzgB7/hcRbKR5KU+SA3q63BPwd4p3aHXFs1DnXys8kUrVfSJie6Oq9cysGVt3gyicoesZdhMxZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782822276; c=relaxed/simple;
-	bh=+fFZgAKWrYN+hCu+kQJCPOIr4tYEfNU+9NpNHAwD2fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvqAdikMdPzdCv1fgM07RRpET+BIkqUNwYnm/UU+Vg5ecOj7c0MNuILPnNhtjD/+A+GM0KlK38UG8SChiHr/m9DrbC35VkX4DxjYHuFVCXvF7cbzQkmTOT4IDVCrm895S2j/j2KybM8ABO4jCEHsaLWIdy5Z4g+T+zuVJWLpEk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoHbI0OL; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7741F000E9;
-	Tue, 30 Jun 2026 12:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782822274;
-	bh=Chjl0R5SYSfBR9d0EISjwX5KQIt66MgY8+Zt2ObbHp0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=AoHbI0OLAa7c68GY6fW+bbH2llyRDpQn3c5S/E15BptTzpxgRY7M5lIDFoD2e2pza
-	 qJ7RPMjVvUzl2PisKMJZlxpKAXbd2m+qLgkxxumH+Ak60TVn4Vm/VM3FopQ8x4rOKY
-	 V9FLr5DNJ9/Tbrh7DJrj1VdYm9piqZB5BLEfqdl/dRXLPgo/oEI3e/Pm+c7VswCh0H
-	 9e5YCtr/3+m+8ViWMsTs9YKK56d478izO0t9eitk9nuzHs9NW/cXUZUj6g0CKenQ21
-	 pEqsJbbeNynF6kehuT3+p5QYmRMOkrmVXHKmigqYBXltDqGOJlcjTNMuc6E046wYEX
-	 VmpVgop1kUgKw==
-Message-ID: <68fffe3a-42da-4746-85f3-d2c6d0235a5d@kernel.org>
-Date: Tue, 30 Jun 2026 14:24:29 +0200
+	s=arc-20240116; t=1782823382; c=relaxed/simple;
+	bh=ZXgrx+i/lzRmzelbZNdMdT4PblJHk/UsxA0EFnVoETM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=YT9gSimPzibs5V1pxsz7fz6yqKVf1gZBaDcdAaUhURkUadSTR/8zDAut9OlX0sk2suaRZMM0jfMWt7rQ0dnam0zS7AvanXECUmE45dEXDaoGB63t2UxDmKNs/dB/CxEsd791E4iJqvFC/1SdaJJRshV3fFzXRoR3A9nHMnMjwgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXHqKVIe; arc=none smtp.client-ip=209.85.214.171
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c0b7ca8831so5559025ad.1
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 05:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782823380; x=1783428180; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=wQQt8/liiD7j9rkNB8OmPdlXy1iI1AH7RYaIrvmmAGM=;
+        b=jXHqKVIeAn0mml3ruum1w+oYoEvn3O3W/enBKCShYsJU9U7O4Lz8OGqJD4MsOHCl9L
+         cZIDUGIwP7PL/zgR9G94DLmcSv8FiMklJmvHR51167ZiX3UWlkI0UqFnHFH/z5ksZxh2
+         YU3Z+9E7TUbvWRKigjg8VyZQa0yfSsmoe6jQ0k0U5TfpyvnE8qFY4+j4GiaKLZ607iIO
+         f82J01Qtc5gMEJaY6H1NU6w3CprP+Im4tZXnE3O+pe2K1NhVdaOtgWhdgxzOzRIqq/6Z
+         9rS/eVGiezQp1N96XxLHxMy2Ku8IUwzTqB6nYZmin2cf27e/n8+kru4mGi+leGKOzkyt
+         vrbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782823380; x=1783428180;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=wQQt8/liiD7j9rkNB8OmPdlXy1iI1AH7RYaIrvmmAGM=;
+        b=DlAhHMgR8VhEHpUkKWEvKmLuMSXYpmrRzrFx2N9CpfeEhHRMVutl+kC0plwTe8gi1G
+         Qke/qZCRrvZDcumr3xsV6rksPQOxhn8bwk5/c3U7ZpgctoAHPuucgPuYEIKqSZngqLB6
+         Baz2bNaomElAtotjq3NpJ0YaO5GLJL2BBXjdvShwLm2RiIV2/f9ZDMaw6WT8KSmwJWjF
+         yt5MhbssA52bQRmJ6SXOCRN6hVy9UkVhD3eX8HeeUzglaaPD2UiDgQYnhT2yhNRvbsbp
+         /01nWcEn0VOZXfBrN90/fO5tIQ5AxByaLLtHDxgiyaoN5NUR+FwsTCjSCo+l34h1UOsI
+         HMCA==
+X-Forwarded-Encrypted: i=1; AFNElJ+6q9OYSvLN7ivwRs2CiVYrAfDZucNpQx8CFB0yaT2GDzev6GZ5G559c+FLoLZ/e7+c/1T6pOe2Zhc1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMZrU221iertjwPDTIq+ZtaPHqkRRWNNmTgEv3ggvnL413y06i
+	n9TveTNktB/bhoULeQWy21ldms6TfGiRlgTvxc+q61HcKiVHVVIhCFEt
+X-Gm-Gg: AfdE7clRJC+I6cUH4o1LXijDubvSBWepW39rlh3tPj/VDmm1Cpns9AM3zPE/TuEkCph
+	DC2LrdrP+VEHGgTDZBUx/ZClpE/IHrkqgzZRD5q0OX3Do125eCy1qbov6597ML4uM9swynG9XQD
+	P3Vv5JUsQ+W5So2lCM9fvLSZj488RDEN2/CvXFlj/yyMd2xbwEVKK48O7LTArfP8TTzIJ75cfYW
+	h0c0gEQFi/Pf86YFC5yRedAz+lSumcZVLecBGXqjQj12XGHADjoVcoIM65cqI/PlTe6ZTmodUPl
+	w8xuOFGT+NbF/eFsYRJwvMxKg5KNsfvV3+y46P6COi033dgf+aeQ8ERbF+2IeweSH5dYvppHbIn
+	145srD+K2hsa9VA+JxaAaU0siN1/bjjaSnxUpfG6cS1QBKcmnYp1Q/3MickHfufSTDTREM6BuTU
+	fdvHgf/YT0EjGgqBCNl7GpzNtA06FoyZeSZeNxnFxoTA==
+X-Received: by 2002:a05:6a20:939a:b0:3bf:7d96:2db2 with SMTP id adf61e73a8af0-3bfc52d4607mr1841452637.6.1782823380390;
+        Tue, 30 Jun 2026 05:43:00 -0700 (PDT)
+Received: from smtpclient.apple ([23.247.139.92])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c9bbc6da7a1sm1528434a12.2.2026.06.30.05.42.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jun 2026 05:42:59 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: tb10x: Mark base as __iomem
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20260630-tb10x-v1-1-5d08d2dd3240@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <20260630-tb10x-v1-1-5d08d2dd3240@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.8\))
+Subject: Re: [PATCH RFC] gpio: loongson-64bit: Add back the support for
+ gsi_idx_map
+From: Miao Wang <shankerwangmiao@gmail.com>
+In-Reply-To: <akOxdBR_-rOweHXB@ashevche-desk.local>
+Date: Tue, 30 Jun 2026 20:42:43 +0800
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+ Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-gpio@vger.kernel.org,
+ Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Linus Walleij <linusw@kernel.org>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>,
+ Liu Peibao <liupeibao@loongson.cn>,
+ Juxin Gao <gaojuxin@loongson.cn>,
+ Mika Westerberg <westeri@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B77A4E49-774C-4DB2-9CA6-FFBE14F1EF94@gmail.com>
+References: <20260630-loongson-gpio-v1-1-576908831fa0@gmail.com>
+ <CAMRc=MdtRj6c3Bg72QMaAEMPovNyUdqWL_qDPGb1p=Cu=cETvA@mail.gmail.com>
+ <akOxdBR_-rOweHXB@ashevche-desk.local>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+X-Mailer: Apple Mail (2.3826.700.81.1.8)
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39200-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:lkp@intel.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-39201-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:devnull+shankerwangmiao.gmail.com@kernel.org,m:chenhuacai@kernel.org,m:lvjianmin@loongson.cn,m:kernel@xen0n.name,m:jiaxun.yang@flygoat.com,m:linux-gpio@vger.kernel.org,m:zhuyinbo@loongson.cn,m:linusw@kernel.org,m:zhanghongchen@loongson.cn,m:liupeibao@loongson.cn,m:gaojuxin@loongson.cn,m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:devnull@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio,shankerwangmiao.gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2786F6E427C
-
-On 30/06/2026 13:34, Linus Walleij wrote:
-> The compile tests are complaining that this is not correctly typed.
-> 
-> Fixes: 1982621decaf ("pinctrl: Allow compile testing for K210, TB10X and ZYNQ")
-
-I do not think this is a correct fixes tag. The issue was introduced by
-whichever commit made iomem memory a plain pointer.
-
-Issue was reproducible earlier, just not on x86.
-
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202606150641.cbQ05ZMM-lkp@intel.com/
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
-> ---
->  drivers/pinctrl/pinctrl-tb10x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
-> index 3f581404a9b9..b7cbd69dd877 100644
-> --- a/drivers/pinctrl/pinctrl-tb10x.c
-> +++ b/drivers/pinctrl/pinctrl-tb10x.c
-> @@ -479,7 +479,7 @@ struct tb10x_port {
->   */
->  struct tb10x_pinctrl {
->  	struct pinctrl_dev *pctl;
-> -	void *base;
-> +	void __iomem *base;
+X-Rspamd-Queue-Id: BDCCF6E4542
 
 
-Best regards,
-Krzysztof
+
+> 2026=E5=B9=B46=E6=9C=8830=E6=97=A5 20:07=EF=BC=8CAndy Shevchenko =
+<andriy.shevchenko@linux.intel.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On Tue, Jun 30, 2026 at 07:45:52AM +0000, Bartosz Golaszewski wrote:
+>> On Mon, 29 Jun 2026 23:05:28 +0200, Miao Wang via B4 Relay
+>> <devnull+shankerwangmiao.gmail.com@kernel.org> said:
+>=20
+>>> This patch adds back the support for gsi_idx_map, which is used in =
+the
+>>> ACPI DSDT table to describe the mapping between the GPIO line number =
+to
+>>> the index of the interrupt number in the declared interrupt =
+resources.
+>>>=20
+>>> This property was removed in Loongson CPU Universal Specification =
+for
+>>> Interface Between PC/Server System Firmware and Kernel v4.1 in =
+November,
+>>> 2023, but still in use in firmwares released this year. A sample of
+>>> an affected DSDT entry from a 3C6000 board I'm currently using is:
+>=20
+> Oh my gosh, can somebody actually try to consult first with the Linux =
+kernel
+> developers before adding non-standard and wrongly named properties, =
+please?
+
+Inferred from the time when gsi_idx_map was removed from the spec, I =
+believe
+that the removal might be because the maintainers suggestion against =
+introducing
+gsi_idx_map. However, the firmwares "in the wild" have not followed the =
+change.
+
+>>> Device (GPO1) {
+>>>  Name (_HID, "LOON000F")
+>>>  Name (_CRS, ResourceTemplate () {
+>>>    QWordMemory ( // Omitted, not related
+>>>    )
+>>>    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, ) {
+>>>      0x00000010, 0x00000011, 0x00000012, 0x00000013,
+>>>      0x00000014, 0x00000015, 0x00000016, 0x00000017,
+>>>    }
+>>>  Name (_DSD, Package (0x02) {
+>>>    ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301")
+>>>    Package (0x03) {
+>>>      Package (0x02) { "gpio_base", 0x50 } // Ignored by the driver
+>=20
+> Yes, it's non-standard property. It's a broken one in terms of the =
+style.
+> See DT binding documentation.
+
+To clarify, I agree that this property should be redundant and ignored =
+by
+the driver and global gpio numbers should be assigned dynamically by the
+kernel.
+
+>>>      Package (0x02) { "ngpios", 0x20 }
+>>>      Package (0x02) { "gsi_idx_map", Package (0x20) {
+>>>        0, 1, 2, 3, 4, 5, 6, 7,
+>>>        0, 1, 2, 3, 4, 5, 6, 7,
+>>>        0, 1, 2, 3, 4, 5, 6, 7,
+>>>        0, 1, 2, 3, 4, 5, 6, 7,
+>>>      }}
+>>>    }
+>>>  }
+>>> }
+>>>=20
+>>> As can be seen in the DSDT entry, the mapping is essential for =
+obtaining
+>>> the IRQ number from a GPIO line number. Otherwise, when IRQ is =
+requested
+>>> for the line numbers largers than 7, it will fail with -ENXIO.
+>=20
+> This doesn't look good. Why can't we simply hardcode the proper =
+behaviour based
+> on the _HID? The gsi_idx_map seems quite regular and periodic, do you =
+have some
+> other examples with different mapping?
+
+According to the manual, the gpio controllers in HID LOON0007 and =
+LOON000F are
+actually embedded into the CPU chip and the interrupt lines are hard =
+wired so
+that all the gpio lines of the gpio controller share in total 8 irqs =
+such that
+the i-th line is wired to the (i%8)-th irq. So the mapping for these two =
+models
+are fixed. I have no idea about the behavior of other kinds of =
+controllers, which
+should be answered by Loongson personales.
+
+So far, there are known to be 2 styles of DSDT entries. One is defined =
+by
+the latest Firmware Spec, to list all the irq numbers in _CRS, e.g. Name =
+(_CRS,
+ResourceTemplate () { Interrupt () { 0x10, 0x11, .., 0x17, 0x10, 0x11, =
+..., 0x17,
+... (in total ngpios entries) } }). The other is defined by the previous =
+Firmware
+spec, to use the property `gsi_idx_map` to map the gpio line number to =
+the irq
+number listed in the ResourceTemplate. The former should now be =
+compatible with
+the current implementation of the driver in the kernel, while the later =
+not. I
+believe that although being abandoned by the spec, the later should also =
+be
+considered and supported by the driver, since it is used by the =
+firmwares in the
+wild.
+
+Looking forward to your advice on this.
+
+>>> The code in this patch is mostly picked from the version 5 of =
+Yinbo's
+>>> original patch.
+>=20
+>> Cc'ing ACPI GPIO maintainers.
+>=20
+> Thanks, Bart!
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+
+Cheers,
+
+Miao Wang
+
 
