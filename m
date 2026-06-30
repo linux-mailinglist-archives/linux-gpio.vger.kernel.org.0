@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-39182-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39183-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /cruCb6bQ2oDdQoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39182-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:34:38 +0200
+	id i4SIFeibQ2oUdQoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39183-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:35:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A35E6E2EDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:34:37 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4DBB6E2F07
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:35:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=0PRU7xZv;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39182-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39182-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=u0yPOZN2;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39183-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39183-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=bootlin.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AE84D30DF6F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 10:29:38 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EF83230F215D
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 10:29:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249813F1654;
-	Tue, 30 Jun 2026 10:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0283EFFDD;
+	Tue, 30 Jun 2026 10:29:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521713EFFC1;
-	Tue, 30 Jun 2026 10:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358F93EF65F;
+	Tue, 30 Jun 2026 10:29:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782815371; cv=none; b=nsMjxz+hElGQGIJDFNgs43DNnpV11e46NoPsXXu6cmtQjRoZvmWKASC2U0WABN/5pBCCsVn/EOhb5oWDsI3+T1g8OnPvXtjYXy7XP4UH2idlFmQAGKP2W6RWnm4Y9sxRF8UFZl8cTne8xBloOvaS43HkKTdqsa3LRMPbnxUSPpQ=
+	t=1782815379; cv=none; b=l7UyTXB5ki9e3G7Gz/M5orCPagV2fS70eTNe4IEaFOMB3GMGJLyNWmcqlyvfOAr1Bqcc6wIaV+DtYaQnzAVMoqUgEuTRCyYjTpgnsVGKHHOw0iJ2Cfc8bHkvPEdVozeqVEdDP8KUd9f4l4ULV/Hf5mCj9tUi77dkPzeFfSV8Mnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782815371; c=relaxed/simple;
-	bh=BpTyG1//EWswMk5IQRXtudkPyRb8Rp7R+xF04cbchJY=;
+	s=arc-20240116; t=1782815379; c=relaxed/simple;
+	bh=P2gcSYVj+YSuIfptHAlHXowQVxHQHm6wtyHdqFyu/kI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lsWAR6ScdNpO3ud92Qoi8h4hEHyxSRj0J9zfospyNBZi4MK0nmhrpiOmJ711gSPk5TqA03OYYcCPAY7Ziw8FyfvUEjj7S39cw9lJuBEWrBXvQp3JbsXn0bryYMx08sk/PGVeDLjYdbk8IPk3uEXLXCv7rWlfw4kZ3pdeYu/TYkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=0PRU7xZv; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=jcy4pFcMgijfRiX4L++9iBqo8s+EX/+K/kYdMkNeZpncc/0XBIDcHzlHAq/k2dSqVSUrYyN9itupDtabSqZgh0wWnXC19HXnUlMnIr59GV/tpsNLi42bZ81ncsLfKBfd3pRWQFCtBNry32pr5g1oTPyj+UkgCwLNo/37ni9jCyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=u0yPOZN2; arc=none smtp.client-ip=185.246.85.4
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 0764B1A0D52;
-	Tue, 30 Jun 2026 10:29:29 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id D53234E40BA0;
+	Tue, 30 Jun 2026 10:29:36 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id CC75B6025A;
-	Tue, 30 Jun 2026 10:29:28 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E015B106F1D9C;
-	Tue, 30 Jun 2026 12:29:21 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 9C9B06025A;
+	Tue, 30 Jun 2026 10:29:36 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 518B1106F1D9A;
+	Tue, 30 Jun 2026 12:29:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1782815366; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1782815374; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=TQK+VPWtjag2mSJrbbo6eDkC0yK9A4I+uD+yosmL538=;
-	b=0PRU7xZvp7SSvpGP6V5tEhcc11IzGhPStIIztnqnvR0xNWXwurprpWEJC4l1QuZTAUZ9u+
-	SievCluE0V86lDgiMQL/bCAbIBbnbUfU10HCDO2afXdyG4Zrddt0riHIYtdUYhkcNDAn9n
-	RKziAmwaCuefbRGopjWKu3erQuyEaG+zDlzTHcqYXvziwJjHXgVnFADW1q4Po3aJWjYfjJ
-	WMGmKuu4WEwGO1sYNuNQkToEwKYmdP8NXvnCI2jOn/W0ryKzqZw/b6r0IJ3DH4XKWpLvqQ
-	IjcH+fOtE6dXnMOz703y63VcwHk0xQR9kRZS/GlQkUjpyETsoxID7/PeYPBnLA==
+	bh=KqZe5pNjCZjTUX10ucdD2xXyOPwVWtL1RR7G2V3Xw8s=;
+	b=u0yPOZN2eB6v0h+2AlMZ6zWQIMZmHCZnO95bd0L/eQDnKYcCGsZKKxk3GAMlWfME12LSij
+	5vQKkBF8RUUI505jqmAswkVD5R5kzx0Ml3Hy4lSNT4YU9t5TTXHBiTSooz0HKd5bAIwP0l
+	DlPm5QAZG5DBcWet40dVv/XNGRxC4bawVD93F7yh0wlOKVpC1Ijh8FXh4ELN2Fj0BqGKbG
+	DyaUAMpKlwnJnNYXtT4KTKlgbxjicaw9YL/qIL0Crz9h+Apz0flkZOHTys+RuoQzC0A5Sn
+	Jg4CTuxE/EdGxcdQ//rBxX0TBh3OQd8oJo/r/f048PWykqEoT1aOmWYpULlXFw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -91,10 +91,11 @@ Cc: driver-core@lists.linux.dev,
 	Daniel Machon <daniel.machon@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v8 3/8] pinctrl: cs42l43: Use fw_devlink_set_device()
-Date: Tue, 30 Jun 2026 12:27:57 +0200
-Message-ID: <20260630102804.413563-4-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: [PATCH v8 4/8] cxl/test: Use device_set_node()
+Date: Tue, 30 Jun 2026 12:27:58 +0200
+Message-ID: <20260630102804.413563-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260630102804.413563-1-herve.codina@bootlin.com>
 References: <20260630102804.413563-1-herve.codina@bootlin.com>
@@ -112,17 +113,17 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[40];
+	RCPT_COUNT_TWELVE(0.00)[41];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39182-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39183-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:andrew@lunn.ch,m:robh@kernel.org,m:saravanak@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:bhelgaas@google.com,m:david.rhodes@cirrus.com,m:rf@opensource.cirrus.com,m:ckeepax@opensource.cirrus.com,m:linusw@kernel.org,m:lenb@kernel.org,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:dave@stgolabs.net,m:jic23@kernel.org,m:dave.jiang@intel.com,m:alison.schofield@intel.com,m:vishal.l.verma@intel.com,m:djbw@kernel.org,m:iweiny@kernel.org,m:ming.li@zohomail.com,m:lizhi.hou@amd.com,m:herve.codina@bootlin.com,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-sound@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-cxl@vger.kernel.org,m:allan.nielsen@microchip.com,m:horatiu.vultur@microchip.com,m:daniel.machon@microchip.com,m:steen.hegelund@microchip
- .com,m:luca.ceresoli@bootlin.com,m:thomas.petazzoni@bootlin.com,s:lists@lfdr.de];
+ .com,m:luca.ceresoli@bootlin.com,m:thomas.petazzoni@bootlin.com,m:jonathan.cameron@huawei.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,linuxfoundation.org,google.com,cirrus.com,opensource.cirrus.com,linux.intel.com,gmail.com,stgolabs.net,intel.com,zohomail.com,amd.com,bootlin.com];
@@ -137,40 +138,39 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[bootlin.com:+];
 	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[cirrus.com:email,vger.kernel.org:from_smtp,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,bootlin.com:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,intel.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,huawei.com:email,intel.com:email,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,bootlin.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9A35E6E2EDE
+X-Rspamd-Queue-Id: E4DBB6E2F07
 
-The code set directly fwnode->dev field.
+The code set directly dev->fwnode.
 
-Use the dedicated fw_devlink_set_device() helper to perform this
-operation.
+Use the dedicated helper to perform this operation.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Linus Walleij <linusw@kernel.org>
 ---
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c | 2 +-
+ tools/testing/cxl/test/cxl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-index 8990fab0446c..563070aba3d8 100644
---- a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-@@ -576,7 +576,7 @@ static int cs42l43_pin_probe(struct platform_device *pdev)
- 				return ret;
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index ef92dd35e030..69da0727362b 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -1528,7 +1528,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
+ {
+ 	device_initialize(&adev->dev);
+ 	fwnode_init(&adev->fwnode, NULL);
+-	dev->fwnode = &adev->fwnode;
++	device_set_node(dev, &adev->fwnode);
+ 	adev->fwnode.dev = dev;
+ }
  
- 			if (!child->dev)
--				child->dev = priv->dev;
-+				fw_devlink_set_device(child, priv->dev);
- 			fwnode = child;
- 		}
- 	}
 -- 
 2.54.0
 
