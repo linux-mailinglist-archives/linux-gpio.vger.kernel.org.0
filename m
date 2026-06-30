@@ -1,282 +1,234 @@
-Return-Path: <linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39202-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id p2olCxW6Q2qafwoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:44:05 +0200
+	id 7doxDIK8Q2p/gAoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39202-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:54:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDCCF6E4542
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:44:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B04456E47BD
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:54:23 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=jXHqKVIe;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39201-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=Ol53ycHT;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39202-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39202-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=bootlin.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1D96E3046CF3
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:43:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 191C930ADD70
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39DB40E8C1;
-	Tue, 30 Jun 2026 12:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADFB440FD87;
+	Tue, 30 Jun 2026 12:51:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4BC40DFDC
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4780440E8D6;
+	Tue, 30 Jun 2026 12:51:30 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782823382; cv=none; b=aPI6afmT8UHPIkrEbrx023N1Gf+WNfbTCBOzj7hDnKm4ZWzHKfq8TKl9N9CSh2FDjVPVWAnWPYVV/XdyuP4g46iPsFspio54AzgB7/hcRbKR5KU+SA3q63BPwd4p3aHXFs1DnXys8kUrVfSJie6Oq9cysGVt3gyicoesZdhMxZQ=
+	t=1782823892; cv=none; b=fXU4wMqnK1OlZcp5+GJO5KDhgAX6wfpWr8xA6umKy2oSCCLCjd374opWVQrrkvg8MfpfBFUVUGOp2suTQC8lrmFeSy1JjrDlwXUtZfxN2HJ62eaoMPvlfWjfDg1KIBkoW1AvuUJooXMXbkSAUsuraL0/OFYdQiwSN/MzeOGU5mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782823382; c=relaxed/simple;
-	bh=ZXgrx+i/lzRmzelbZNdMdT4PblJHk/UsxA0EFnVoETM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=YT9gSimPzibs5V1pxsz7fz6yqKVf1gZBaDcdAaUhURkUadSTR/8zDAut9OlX0sk2suaRZMM0jfMWt7rQ0dnam0zS7AvanXECUmE45dEXDaoGB63t2UxDmKNs/dB/CxEsd791E4iJqvFC/1SdaJJRshV3fFzXRoR3A9nHMnMjwgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXHqKVIe; arc=none smtp.client-ip=209.85.214.171
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c0b7ca8831so5559025ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 05:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782823380; x=1783428180; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=wQQt8/liiD7j9rkNB8OmPdlXy1iI1AH7RYaIrvmmAGM=;
-        b=jXHqKVIeAn0mml3ruum1w+oYoEvn3O3W/enBKCShYsJU9U7O4Lz8OGqJD4MsOHCl9L
-         cZIDUGIwP7PL/zgR9G94DLmcSv8FiMklJmvHR51167ZiX3UWlkI0UqFnHFH/z5ksZxh2
-         YU3Z+9E7TUbvWRKigjg8VyZQa0yfSsmoe6jQ0k0U5TfpyvnE8qFY4+j4GiaKLZ607iIO
-         f82J01Qtc5gMEJaY6H1NU6w3CprP+Im4tZXnE3O+pe2K1NhVdaOtgWhdgxzOzRIqq/6Z
-         9rS/eVGiezQp1N96XxLHxMy2Ku8IUwzTqB6nYZmin2cf27e/n8+kru4mGi+leGKOzkyt
-         vrbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782823380; x=1783428180;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wQQt8/liiD7j9rkNB8OmPdlXy1iI1AH7RYaIrvmmAGM=;
-        b=DlAhHMgR8VhEHpUkKWEvKmLuMSXYpmrRzrFx2N9CpfeEhHRMVutl+kC0plwTe8gi1G
-         Qke/qZCRrvZDcumr3xsV6rksPQOxhn8bwk5/c3U7ZpgctoAHPuucgPuYEIKqSZngqLB6
-         Baz2bNaomElAtotjq3NpJ0YaO5GLJL2BBXjdvShwLm2RiIV2/f9ZDMaw6WT8KSmwJWjF
-         yt5MhbssA52bQRmJ6SXOCRN6hVy9UkVhD3eX8HeeUzglaaPD2UiDgQYnhT2yhNRvbsbp
-         /01nWcEn0VOZXfBrN90/fO5tIQ5AxByaLLtHDxgiyaoN5NUR+FwsTCjSCo+l34h1UOsI
-         HMCA==
-X-Forwarded-Encrypted: i=1; AFNElJ+6q9OYSvLN7ivwRs2CiVYrAfDZucNpQx8CFB0yaT2GDzev6GZ5G559c+FLoLZ/e7+c/1T6pOe2Zhc1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMZrU221iertjwPDTIq+ZtaPHqkRRWNNmTgEv3ggvnL413y06i
-	n9TveTNktB/bhoULeQWy21ldms6TfGiRlgTvxc+q61HcKiVHVVIhCFEt
-X-Gm-Gg: AfdE7clRJC+I6cUH4o1LXijDubvSBWepW39rlh3tPj/VDmm1Cpns9AM3zPE/TuEkCph
-	DC2LrdrP+VEHGgTDZBUx/ZClpE/IHrkqgzZRD5q0OX3Do125eCy1qbov6597ML4uM9swynG9XQD
-	P3Vv5JUsQ+W5So2lCM9fvLSZj488RDEN2/CvXFlj/yyMd2xbwEVKK48O7LTArfP8TTzIJ75cfYW
-	h0c0gEQFi/Pf86YFC5yRedAz+lSumcZVLecBGXqjQj12XGHADjoVcoIM65cqI/PlTe6ZTmodUPl
-	w8xuOFGT+NbF/eFsYRJwvMxKg5KNsfvV3+y46P6COi033dgf+aeQ8ERbF+2IeweSH5dYvppHbIn
-	145srD+K2hsa9VA+JxaAaU0siN1/bjjaSnxUpfG6cS1QBKcmnYp1Q/3MickHfufSTDTREM6BuTU
-	fdvHgf/YT0EjGgqBCNl7GpzNtA06FoyZeSZeNxnFxoTA==
-X-Received: by 2002:a05:6a20:939a:b0:3bf:7d96:2db2 with SMTP id adf61e73a8af0-3bfc52d4607mr1841452637.6.1782823380390;
-        Tue, 30 Jun 2026 05:43:00 -0700 (PDT)
-Received: from smtpclient.apple ([23.247.139.92])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c9bbc6da7a1sm1528434a12.2.2026.06.30.05.42.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jun 2026 05:42:59 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1782823892; c=relaxed/simple;
+	bh=Ew94CTnIuyG041Zskrgoh5pOpYPUy+JIIzndTHF8o4M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jKnMHwqaAJ0zq+EhcXygoDZKcj4YIO89/yierrGKyiCozK4Fa7IF9NgEPBnbhAqYgoISyn7jf+Ibct4PvLV89eGFQjmsgSPhr208MRzF6/1TOg80Li/cqDA7AY/WYnrS043qtVhLZBCvhSqTuRjTmA7jkMIcW2WQVf2AuYBg5r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ol53ycHT; arc=none smtp.client-ip=185.246.84.56
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id D02AF1A0D5A;
+	Tue, 30 Jun 2026 12:51:28 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id A0D7B6025A;
+	Tue, 30 Jun 2026 12:51:28 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 55F4E106F1E97;
+	Tue, 30 Jun 2026 14:51:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1782823887; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=Y4vxuq1hsWIzJHmUQ5gpCbPTMUFi5om9JE3+vStt6zc=;
+	b=Ol53ycHTwafFTsJ0jZuZC4mvH6xvLp5KPZGNOSnvgIW3KU74ZEuhiYbzABdmSfR1Gd0OU5
+	mopW01mzA1bKH57thL2n0SKrd3Mh8FxotIuM2vtkYfdvI7lw0pBF1Ung05CtgtqwB1Ej2h
+	Gj/noj0x7EHg4saiIHS5xTsw/LNctdT3wxa0QP1QNYaZPCYLASbgY2PWFXONbYvbxLXZUz
+	Z4sTqnun5JJ53gh/J7fLsvoQDM8U8kQkfk+QuJonrBT4x/Xs0IxAsonSXE4NP2UhzvPDWU
+	srCoI5+/0TIw3+9zxp+pn5lbg/WsjB8/eAhb5l1J3r9DURbEvbchGvXHtGn+xw==
+From: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
+Subject: [PATCH v6 0/5] Add support for AAEON SRG-IMX8P MCU
+Date: Tue, 30 Jun 2026 14:51:10 +0200
+Message-Id: <20260630-dev-b4-aaeon-mcu-driver-v6-0-d66b5fcbd2f0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.8\))
-Subject: Re: [PATCH RFC] gpio: loongson-64bit: Add back the support for
- gsi_idx_map
-From: Miao Wang <shankerwangmiao@gmail.com>
-In-Reply-To: <akOxdBR_-rOweHXB@ashevche-desk.local>
-Date: Tue, 30 Jun 2026 20:42:43 +0800
-Cc: Bartosz Golaszewski <brgl@kernel.org>,
- Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-gpio@vger.kernel.org,
- Yinbo Zhu <zhuyinbo@loongson.cn>,
- Linus Walleij <linusw@kernel.org>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>,
- Juxin Gao <gaojuxin@loongson.cn>,
- Mika Westerberg <westeri@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B77A4E49-774C-4DB2-9CA6-FFBE14F1EF94@gmail.com>
-References: <20260630-loongson-gpio-v1-1-576908831fa0@gmail.com>
- <CAMRc=MdtRj6c3Bg72QMaAEMPovNyUdqWL_qDPGb1p=Cu=cETvA@mail.gmail.com>
- <akOxdBR_-rOweHXB@ashevche-desk.local>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-X-Mailer: Apple Mail (2.3826.700.81.1.8)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XQ3UoDMRAF4FcpuTaSyV+zXvke4kUmmdiA3Ui2B
+ qXsu5stSinL1sszMN8Z5swmqpkm9rQ7s0otT7mMPdiHHQsHP74Rz7FnJoU0IAF4pMZRc++pjPw
+ YPnmsuVHlJMgNhEn7hKxvf1RK+esiv7z2fMjTqdTvS1GDZfq/2YALbgZMHtAHldQzlnJ6z+NjK
+ Mel5FeQ9wWL0RoMjhLIG2G5q8m/W6wAqbYl2aUh6SAEJjQB15K6SlLckVSXhIdBKyn21oe1pK+
+ Sknpb0l3q/xYAMen9oNeSuUpauG3JLFIcHEbtwFp3K83z/AO2BVRzKgIAAA==
+X-Change-ID: 20251211-dev-b4-aaeon-mcu-driver-e0e89ebf4afb
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ =?utf-8?q?J=C3=A9r=C3=A9mie_Dautheribes?= <jeremie.dautheribes@bootlin.com>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.3
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-39202-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-39201-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org,roeck-us.net];
+	FORGED_SENDER(0.00)[thomas.perrot@bootlin.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	FORGED_RECIPIENTS(0.00)[m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:festevam@gmail.com,m:jeremie.dautheribes@bootlin.com,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:lee@kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:thomas.petazzoni@bootlin.com,m:miquel.raynal@bootlin.com,m:thomas.perrot@bootlin.com,m:krzysztof.kozlowski@oss.qualcomm.com,m:conor.dooley@microchip.com,m:bartosz.golaszewski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:devnull+shankerwangmiao.gmail.com@kernel.org,m:chenhuacai@kernel.org,m:lvjianmin@loongson.cn,m:kernel@xen0n.name,m:jiaxun.yang@flygoat.com,m:linux-gpio@vger.kernel.org,m:zhuyinbo@loongson.cn,m:linusw@kernel.org,m:zhanghongchen@loongson.cn,m:liupeibao@loongson.cn,m:gaojuxin@loongson.cn,m:westeri@kernel.org,m:andriy.shevchenko@linux.intel.com,m:devnull@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[thomas.perrot@bootlin.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,shankerwangmiao.gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,bootlin.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BDCCF6E4542
+X-Rspamd-Queue-Id: B04456E47BD
 
+This patch series introduces support for the AAEON SRG-IMX8P embedded
+controller (MCU). The MCU is connected via I2C and provides GPIO and
+watchdog functionality for the SRG-IMX8P board.
 
+The series includes:
+- Device tree binding for the MFD driver
+- MFD driver that serves as the core driver for the MCU
+- GPIO driver implementing the GPIO functionality
+- Watchdog driver for system monitoring
+- MAINTAINERS entry for the new drivers
 
-> 2026=E5=B9=B46=E6=9C=8830=E6=97=A5 20:07=EF=BC=8CAndy Shevchenko =
-<andriy.shevchenko@linux.intel.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Tue, Jun 30, 2026 at 07:45:52AM +0000, Bartosz Golaszewski wrote:
->> On Mon, 29 Jun 2026 23:05:28 +0200, Miao Wang via B4 Relay
->> <devnull+shankerwangmiao.gmail.com@kernel.org> said:
->=20
->>> This patch adds back the support for gsi_idx_map, which is used in =
-the
->>> ACPI DSDT table to describe the mapping between the GPIO line number =
-to
->>> the index of the interrupt number in the declared interrupt =
-resources.
->>>=20
->>> This property was removed in Loongson CPU Universal Specification =
-for
->>> Interface Between PC/Server System Firmware and Kernel v4.1 in =
-November,
->>> 2023, but still in use in firmwares released this year. A sample of
->>> an affected DSDT entry from a 3C6000 board I'm currently using is:
->=20
-> Oh my gosh, can somebody actually try to consult first with the Linux =
-kernel
-> developers before adding non-standard and wrongly named properties, =
-please?
+The drivers follow the standard Linux kernel subsystem patterns, with
+the MFD driver registering the sub-devices (GPIO and watchdog) which
+are then handled by their respective subsystem drivers.
 
-Inferred from the time when gsi_idx_map was removed from the spec, I =
-believe
-that the removal might be because the maintainers suggestion against =
-introducing
-gsi_idx_map. However, the firmwares "in the wild" have not followed the =
-change.
+Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
+---
+Changes in v6:
+- mfd: rename local variable to ddata in probe
+- mfd: fix driver name from "aaeon_mcu" to "aaeon-mcu"
+- mfd: set I2C_M_DMA_SAFE on all i2c_msg flags so the host driver
+  skips bounce-buffering the heap-allocated DMA-safe buffers
+- mfd: drop COMPILE_TEST
+- gpio: replace __set/__clear/__assign_bit with atomic set_bit/
+  clear_bit/assign_bit to fix potential races on shared bitmaps
+- gpio: write output value before switching pin to output mode to
+  avoid a potential glitch on direction_output
+- gpio: add MODULE_ALIAS("platform:aaeon-mcu-gpio")
+- watchdog: add WDIOF_SETTIMEOUT and watchdog_init_timeout() so the
+  software timeout is configurable via ioctl, DT timeout-sec or
+  the watchdog_timeout boot parameter
+- watchdog: add watchdog_stop_on_reboot() to prevent a spurious
+  reset from the external MCU during system shutdown
+- watchdog: add MODULE_ALIAS("platform:aaeon-mcu-wdt")
+- Link to v5: https://lore.kernel.org/r/20260408-dev-b4-aaeon-mcu-driver-v5-0-ad98bd481668@bootlin.com
 
->>> Device (GPO1) {
->>>  Name (_HID, "LOON000F")
->>>  Name (_CRS, ResourceTemplate () {
->>>    QWordMemory ( // Omitted, not related
->>>    )
->>>    Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, ) {
->>>      0x00000010, 0x00000011, 0x00000012, 0x00000013,
->>>      0x00000014, 0x00000015, 0x00000016, 0x00000017,
->>>    }
->>>  Name (_DSD, Package (0x02) {
->>>    ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301")
->>>    Package (0x03) {
->>>      Package (0x02) { "gpio_base", 0x50 } // Ignored by the driver
->=20
-> Yes, it's non-standard property. It's a broken one in terms of the =
-style.
-> See DT binding documentation.
+Changes in v5:
+- mfd: use heap-allocated DMA-safe buffers for I2C transfers, replacing
+  stack-allocated buffers in the regmap bus callbacks
+- mfd: switch from REGCACHE_NONE to REGCACHE_MAPLE; add volatile_reg
+  callback marking GPIO input read registers (opcode 0x72) as volatile;
+  add max_register
+- mfd: use PLATFORM_DEVID_AUTO instead of PLATFORM_DEVID_NONE
+- mfd: use MFD_CELL_BASIC() macro for cell definitions
+- mfd: use dev_err_probe() for regmap initialization error
+- Link to v4: https://lore.kernel.org/r/20260324-dev-b4-aaeon-mcu-driver-v4-0-afb011df4794@bootlin.com
 
-To clarify, I agree that this property should be redundant and ignored =
-by
-the driver and global gpio numbers should be assigned dynamically by the
-kernel.
+Changes in v4:
+- mfd: switch to a custom regmap bus; remove aaeon_mcu_i2c_xfer() and the aaeon_mcu_dev struct
+- mfd: locking delegated to regmap's built-in mutex; drop explicit mutex
+- mfd: remove firmware version reading at probe time
+- gpio, watchdog: use regmap_read()/regmap_write() via dev_get_regmap()
+- include: replace aaeon_mcu_i2c_xfer() declaration with AAEON_MCU_REG() macro
+- dt-bindings: remove unused label from example node
+- Link to v3: https://lore.kernel.org/r/20260203-dev-b4-aaeon-mcu-driver-v3-0-0a19432076ac@bootlin.com
 
->>>      Package (0x02) { "ngpios", 0x20 }
->>>      Package (0x02) { "gsi_idx_map", Package (0x20) {
->>>        0, 1, 2, 3, 4, 5, 6, 7,
->>>        0, 1, 2, 3, 4, 5, 6, 7,
->>>        0, 1, 2, 3, 4, 5, 6, 7,
->>>        0, 1, 2, 3, 4, 5, 6, 7,
->>>      }}
->>>    }
->>>  }
->>> }
->>>=20
->>> As can be seen in the DSDT entry, the mapping is essential for =
-obtaining
->>> the IRQ number from a GPIO line number. Otherwise, when IRQ is =
-requested
->>> for the line numbers largers than 7, it will fail with -ENXIO.
->=20
-> This doesn't look good. Why can't we simply hardcode the proper =
-behaviour based
-> on the _HID? The gsi_idx_map seems quite regular and periodic, do you =
-have some
-> other examples with different mapping?
+Changes in v3:
+- Renamed SRG-IMX8PL to SRG-IMX8P
+- dt-bindings: add gpio-controller properties as required
+- mfd: move struct aaeon_mcu_dev from header to .c file (private)
+- mfd: use guard(mutex) and devm_mutex_init() for cleanup
+- mfd: firmware version log changed to dev_dbg()
+- mfd: add select MFD_CORE to Kconfig
+- Kconfig: add || COMPILE_TEST to all three drivers
+- watchdog: add comments explaining hardware timeout and WDOG_HW_RUNNING
+- watchdog: remove unused platform_set_drvdata()
+- watchdog: add a function to query the status
+- Link to v2: https://lore.kernel.org/r/20260123-dev-b4-aaeon-mcu-driver-v2-0-9f4c00bfb5cb@bootlin.com
 
-According to the manual, the gpio controllers in HID LOON0007 and =
-LOON000F are
-actually embedded into the CPU chip and the interrupt lines are hard =
-wired so
-that all the gpio lines of the gpio controller share in total 8 irqs =
-such that
-the i-th line is wired to the (i%8)-th irq. So the mapping for these two =
-models
-are fixed. I have no idea about the behavior of other kinds of =
-controllers, which
-should be answered by Loongson personales.
+Changes in v2:
+- Fold GPIO and watchdog bindings into MFD binding
+- Drop OF_GPIO dependency in GPIO Kconfig
+- Use __set_bit/__clear_bit/__assign_bit instead of atomic variants
+- Various driver cleanups and improvements
+- Link to v1: https://lore.kernel.org/r/20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com
 
-So far, there are known to be 2 styles of DSDT entries. One is defined =
-by
-the latest Firmware Spec, to list all the irq numbers in _CRS, e.g. Name =
-(_CRS,
-ResourceTemplate () { Interrupt () { 0x10, 0x11, .., 0x17, 0x10, 0x11, =
-..., 0x17,
-... (in total ngpios entries) } }). The other is defined by the previous =
-Firmware
-spec, to use the property `gsi_idx_map` to map the gpio line number to =
-the irq
-number listed in the ResourceTemplate. The former should now be =
-compatible with
-the current implementation of the driver in the kernel, while the later =
-not. I
-believe that although being abandoned by the spec, the later should also =
-be
-considered and supported by the driver, since it is used by the =
-firmwares in the
-wild.
+---
+Thomas Perrot (Schneider Electric) (5):
+      dt-bindings: vendor-prefixes: Add AAEON vendor prefix
+      dt-bindings: mfd: Add AAEON embedded controller
+      mfd: aaeon: Add SRG-IMX8P MCU driver
+      gpio: aaeon: Add GPIO driver for SRG-IMX8P MCU
+      watchdog: aaeon: Add watchdog driver for SRG-IMX8P MCU
 
-Looking forward to your advice on this.
+ .../bindings/mfd/aaeon,srg-imx8p-mcu.yaml          |  67 ++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ MAINTAINERS                                        |  10 +
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-aaeon-mcu.c                      | 230 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  11 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/aaeon-mcu.c                            | 205 ++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  10 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/aaeon_mcu_wdt.c                   | 144 +++++++++++++
+ include/linux/mfd/aaeon-mcu.h                      |  40 ++++
+ 13 files changed, 731 insertions(+)
+---
+base-commit: d358e5254674b70f34c847715ca509e46eb81e6f
+change-id: 20251211-dev-b4-aaeon-mcu-driver-e0e89ebf4afb
 
->>> The code in this patch is mostly picked from the version 5 of =
-Yinbo's
->>> original patch.
->=20
->> Cc'ing ACPI GPIO maintainers.
->=20
-> Thanks, Bart!
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
-Cheers,
-
-Miao Wang
+Best regards,
+-- 
+Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
 
 
