@@ -1,135 +1,177 @@
-Return-Path: <linux-gpio+bounces-39199-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 0LqaNGKzQ2q0fQoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39199-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:15:30 +0200
+	id vRFLDRO2Q2pjfgoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:26:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EB416E411A
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:15:30 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2786F6E427C
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:26:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Md3pGbPR;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39199-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39199-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=AoHbI0OL;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39200-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5FFA13049E3D
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:14:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6D1F03001A78
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 12:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2607240B371;
-	Tue, 30 Jun 2026 12:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BED63451AA;
+	Tue, 30 Jun 2026 12:24:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD553F5BC3
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7F7403151
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:24:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782821650; cv=none; b=nwlndqCzVAqmtl3bEfYb8BvMtHwxpIO0x7es5pfs322e1DeRIl+2rw7ZNAlsgVU16WJfCN7FK46omn+UOi1AIJ9bTXZSgKc+xvKl4F2Vww3W2RyA6SF45MED/5TR0LwzkW3rPaGTtMl8nIUCsSpYppSkjNOxllv6s2Pobv6Va6I=
+	t=1782822276; cv=none; b=IC+AqvCDcGrCHQAZZzGA8JgIfYbuG4WCz1M1p6T1sshe8Nkx9g9KoZx9iRpp9L8Lmn4lHy8cMyWuVf1TXddg69XeApw2nZvgJvyaJkZ+sjy2FY5JPRJehPUWbAS2FwixpLUKRLRORoFqVUfyoDvYNbJcXUbknShZpOkYzRfZ18c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782821650; c=relaxed/simple;
-	bh=QW5hfsDRd1FivVmd2ugPokfYmZGbqzRuvms7qEgsMwQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KwRFhLQLR0g9Tpt6vuVOUXGr/xUIWFQjhMu+no6zNSdDvb9jJOmGbVbU8UIRFD3rL7kXoO4XUSZdAlsHy4bWGiIceZ9i3JwqSljEcnlQDjOOXWNhz88ArMI7iQihehukcOF3hiE4iFx5ATx0hC3ouFmCLZeOfTutrqUc/WY5pdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Md3pGbPR; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D382B1F00A3D
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 12:14:08 +0000 (UTC)
+	s=arc-20240116; t=1782822276; c=relaxed/simple;
+	bh=+fFZgAKWrYN+hCu+kQJCPOIr4tYEfNU+9NpNHAwD2fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LvqAdikMdPzdCv1fgM07RRpET+BIkqUNwYnm/UU+Vg5ecOj7c0MNuILPnNhtjD/+A+GM0KlK38UG8SChiHr/m9DrbC35VkX4DxjYHuFVCXvF7cbzQkmTOT4IDVCrm895S2j/j2KybM8ABO4jCEHsaLWIdy5Z4g+T+zuVJWLpEk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoHbI0OL; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7741F000E9;
+	Tue, 30 Jun 2026 12:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782821648;
-	bh=QW5hfsDRd1FivVmd2ugPokfYmZGbqzRuvms7qEgsMwQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Md3pGbPRwNwsScKMp1sgak9oDRrk20dEpQizuVWSQSz05lFcb9o5XXUsV7YHWTZmF
-	 4P2V755bmrNNJaOQOGbulpbgkcsWr7O8XXKz/DOfFQLJv4b1edqHUKxgPH658NG3tj
-	 2hNA3IS9360PKlELSAFDsqq6EEnsVHAVjMbdVhhdbebrKux78XJQUEuxoqfYB5dWoP
-	 +6eg5NjUI0E9Ua3fAzTAFvJLr9RbRFpgRCOnjeGED2wr07AZhpPilH9FjB6TaKtKPE
-	 yth/lnLuYfBFK9LSxbmJtxqI5ZDi9P0f1mtXz+dY6tmRl2bZhRzwasTgL1sPBRKtP5
-	 wf50tmaTJ1lAQ==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-39b011ae0b4so20388801fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2026 05:14:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpT0kJAVld3PaxnbZlmphJzCtoXolrodVcfo0x4bmEn/EDv/vvlXqcvCOUAKMXiNB3yuOwa6cbpdIVW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLMnfoOf5864tLj2dXyEK5u+xiEVWeHZJOjWLIACm/OUxAwppn
-	QLAqRsY2CeV1oTu6MpBIfT/JtufQY4D3Ddby3KkVRgx0sMH6MICi0tSVEbdgt6hhfg9Lopc6Ha2
-	R4lQh7g3flyCJg/+1MlutuD9Ywg9uUMk=
-X-Received: by 2002:ac2:4576:0:b0:5ae:b9e6:afac with SMTP id
- 2adb3069b0e04-5aec10aa4aamr99161e87.23.1782821647638; Tue, 30 Jun 2026
- 05:14:07 -0700 (PDT)
+	s=k20260515; t=1782822274;
+	bh=Chjl0R5SYSfBR9d0EISjwX5KQIt66MgY8+Zt2ObbHp0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AoHbI0OLAa7c68GY6fW+bbH2llyRDpQn3c5S/E15BptTzpxgRY7M5lIDFoD2e2pza
+	 qJ7RPMjVvUzl2PisKMJZlxpKAXbd2m+qLgkxxumH+Ak60TVn4Vm/VM3FopQ8x4rOKY
+	 V9FLr5DNJ9/Tbrh7DJrj1VdYm9piqZB5BLEfqdl/dRXLPgo/oEI3e/Pm+c7VswCh0H
+	 9e5YCtr/3+m+8ViWMsTs9YKK56d478izO0t9eitk9nuzHs9NW/cXUZUj6g0CKenQ21
+	 pEqsJbbeNynF6kehuT3+p5QYmRMOkrmVXHKmigqYBXltDqGOJlcjTNMuc6E046wYEX
+	 VmpVgop1kUgKw==
+Message-ID: <68fffe3a-42da-4746-85f3-d2c6d0235a5d@kernel.org>
+Date: Tue, 30 Jun 2026 14:24:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260615-b4-serial-max310x-gpio-get-direction-v2-1-4704ba2b181a@vaisala.com>
-In-Reply-To: <20260615-b4-serial-max310x-gpio-get-direction-v2-1-4704ba2b181a@vaisala.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 30 Jun 2026 13:13:55 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=g6jVJS=MeWxv+1J5m-nKjqNasb82xv0z3=wU47rxUtA@mail.gmail.com>
-X-Gm-Features: AVVi8CdUwZsxJGd-1jkbwJC3cpMuesQpbhYucYXzc8Y282bGiYiAvtZpAnJjlJ4
-Message-ID: <CAD++jL=g6jVJS=MeWxv+1J5m-nKjqNasb82xv0z3=wU47rxUtA@mail.gmail.com>
-Subject: Re: [PATCH v2] serial: max310x: implement gpio_chip::get_direction()
-To: Tapio Reijonen <tapio.reijonen@vaisala.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Alexander Shiyan <shc_work@mail.ru>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: tb10x: Mark base as __iomem
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20260630-tb10x-v1-1-5d08d2dd3240@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <20260630-tb10x-v1-1-5d08d2dd3240@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39199-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,mail.ru,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39200-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:tapio.reijonen@vaisala.com,m:gregkh@linuxfoundation.org,m:jirislaby@kernel.org,m:brgl@kernel.org,m:shc_work@mail.ru,m:linux-kernel@vger.kernel.org,m:linux-serial@vger.kernel.org,m:linux-gpio@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:lkp@intel.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3EB416E411A
+X-Rspamd-Queue-Id: 2786F6E427C
 
-On Mon, Jun 15, 2026 at 7:38=E2=80=AFAM Tapio Reijonen
-<tapio.reijonen@vaisala.com> wrote:
+On 30/06/2026 13:34, Linus Walleij wrote:
+> The compile tests are complaining that this is not correctly typed.
+> 
+> Fixes: 1982621decaf ("pinctrl: Allow compile testing for K210, TB10X and ZYNQ")
 
-> It's strongly recommended for GPIO drivers to always implement the
-> .get_direction() callback - even when the direction is tracked in
-> software. The GPIO core emits a warning when the callback is missing
-> and a user reads the direction of a line, e.g. via
-> /sys/kernel/debug/gpio.
->
-> The MAX310X keeps the GPIO direction in the GPIOCFG register (a set bit
-> selects output), which the existing direction_input/output callbacks
-> already program, so the current direction can be read back directly.
->
-> Fixes: f65444187a66 ("serial: New serial driver MAX310X")
-> Signed-off-by: Tapio Reijonen <tapio.reijonen@vaisala.com>
+I do not think this is a correct fixes tag. The issue was introduced by
+whichever commit made iomem memory a plain pointer.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Issue was reproducible earlier, just not on x86.
 
-Yours,
-Linus Walleij
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202606150641.cbQ05ZMM-lkp@intel.com/
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> ---
+>  drivers/pinctrl/pinctrl-tb10x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
+> index 3f581404a9b9..b7cbd69dd877 100644
+> --- a/drivers/pinctrl/pinctrl-tb10x.c
+> +++ b/drivers/pinctrl/pinctrl-tb10x.c
+> @@ -479,7 +479,7 @@ struct tb10x_port {
+>   */
+>  struct tb10x_pinctrl {
+>  	struct pinctrl_dev *pctl;
+> -	void *base;
+> +	void __iomem *base;
+
+
+Best regards,
+Krzysztof
 
