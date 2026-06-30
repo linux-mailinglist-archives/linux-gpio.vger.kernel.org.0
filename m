@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-39239-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39240-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id a7ecAuLVQ2pqjwoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39239-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 16:42:42 +0200
+	id mMkMGKrXQ2rpjwoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39240-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 16:50:18 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97C2C6E5857
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 16:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD0D76E5924
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 16:50:17 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=eMz1ugPV;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39239-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39239-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jcpfsMI0;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39240-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39240-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1A6AB30CEE69
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:38:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A638231307A2
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2026 14:46:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CC143C04A;
-	Tue, 30 Jun 2026 14:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29B304192F1;
+	Tue, 30 Jun 2026 14:46:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DA5305E3B;
-	Tue, 30 Jun 2026 14:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153913F0AB6;
+	Tue, 30 Jun 2026 14:46:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782830298; cv=none; b=RnQLbrAp+T8lxEs6+bZEVk8GFxZ+zVoRF2rHFBmxvekJaU5GnP20e9HHJRBVnpdlpxT0qInmpvLoLYQnrwmtrDwDddXjQTU4AbKtQwcxd6YmUlpp4+z44LIhWRU+7uhzPdfPS41pysn05cqlA2J3roGznZxkB5zrEqBAXT2z0NM=
+	t=1782830809; cv=none; b=bmVVf34T2Cfd3p3AniN3pWpiQl8om7r+StSH9kYibMN62Pqta/uOP+5hva0QT52VrI6c2XD29gww4jqgQjY/ds+fLe2PE0NaRVBFcwSYT+DwW555OLUQ5cur0H0QbMwQFHnh8XNjSZnnQKxhTgeN526uexckX2BmDyno0JlPWpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782830298; c=relaxed/simple;
-	bh=YfwEigpPGhXcuiHS4zH5F3vWZhheHmXE4GZOVvtEveQ=;
+	s=arc-20240116; t=1782830809; c=relaxed/simple;
+	bh=DLIdamcxujGmprppFt9NtsCNxBtM/Us+m3JNK/blc2c=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mLP9mSI7MWHof1Uk/NhGBHlo30BesW+JOnfQuencFNIDueWiYGidiOAjEgKmBjhABSlpDXvGjABjd96p2jgorL1NPr0/3Q987d7eHDsWEIfJoHQs8h6HXAynS+TS59gw36kpdmyZ5Mtu4UCQuPIZ/wGDhbaz+t950Q3Ji41Hm3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMz1ugPV; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C951F000E9;
-	Tue, 30 Jun 2026 14:38:16 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ogQV/pURByqvbzRJhwjc/v5yQ3pYNwUkBQ1+snErNpcorpmf1tU+QBRcf3pq3SwIK5N34wsGV+BP1IDOqYMxWqfhck3WXMvK1hVngF8FRH4OGYztVe0CcDBIHjWkkrPih1ynhufo+p5YtoJX5RvTt1HNOuNI8T4RVSU4F4y1gk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcpfsMI0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7161F000E9;
+	Tue, 30 Jun 2026 14:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782830297;
-	bh=eqxKC7y31kgloyrgermctK42iM3drUWTil477SSzdDs=;
+	s=k20260515; t=1782830808;
+	bh=j6OwDerxhRjXIaHh1FTuELXdWa9x8UdInRjOIqNsTNQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=eMz1ugPV+JIJQb9cAyopUUEQJ/os7+yXnZtU1KKX8E4VevCIrE0toBKAMSD/MjNE9
-	 daJ8FSdKodVQjUUxyGsupaehRIYSdTcPYpam4+tDOIWgIKKPI7m5qCbdJs6C00eMST
-	 Rs7RsT3/v5Jr04D8ie5S6wjk/B3pa6wM2WhGKgMzmWBXwGEdQ7/AEsGCN3j7TyrOb8
-	 tXBamEoXsaUSbBnTxUTojmOCSmhNz8+Y8jB3+U62ycYpSvb/pvr0e+YzOoLIZnpIxk
-	 cNrNBUx9QdVhbRAYvwdQWYgbzp54DrHjJHhlOXcItlIrcNt68YaGVJl1HWGXawUNFC
-	 jrMS0rAl04rYA==
+	b=jcpfsMI0dql7IfEYZHk4tat9YX6F50U6Wvcrj3Lx2+aW5GFgJW8qepL1WWB8Ig+8G
+	 OAw1PMVkWNJThwQiwi3sJeW1YwH9+Pa5EmKANzh/TUededsFiNI2ioyAGLwrZCwJdd
+	 qlviuu/PmdGKUIGEfliMzrWVyJ2taoYbTKfEMwxZqc5nLqvqqfYSYMoNUeRJkilV4Z
+	 VhRFGzUVl0ioU7SPAwfodyX5vM9Al6nkNytndXmKBKH7UJtTgU6XKa4Fobb6Tw1m18
+	 fqxxerwBVfberfAWkgs2TLy+qi2AGWCi4hdG9SwDHdPgtbk5VImkr275PKRDDgsktd
+	 SzbHczpJRcB3A==
 From: Thomas Gleixner <tglx@kernel.org>
 To: Maulik Shah <maulik.shah@oss.qualcomm.com>, Bjorn Andersson
  <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob
@@ -54,12 +54,13 @@ To: Maulik Shah <maulik.shah@oss.qualcomm.com>, Bjorn Andersson
 Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Sneh Mankad
  <sneh.mankad@oss.qualcomm.com>, Maulik Shah <maulik.shah@oss.qualcomm.com>
-Subject: Re: [PATCH v3 1/8] irqchip/qcom-pdc: restructure version support
-In-Reply-To: <20260616-hamoa_pdc_v3-v3-1-4d8e1504ea75@oss.qualcomm.com>
+Subject: Re: [PATCH v3 2/8] irqchip/qcom-pdc: Move all statics to struct
+ pdc_desc
+In-Reply-To: <20260616-hamoa_pdc_v3-v3-2-4d8e1504ea75@oss.qualcomm.com>
 References: <20260616-hamoa_pdc_v3-v3-0-4d8e1504ea75@oss.qualcomm.com>
- <20260616-hamoa_pdc_v3-v3-1-4d8e1504ea75@oss.qualcomm.com>
-Date: Tue, 30 Jun 2026 16:38:14 +0200
-Message-ID: <87mrwcqejt.ffs@fw13>
+ <20260616-hamoa_pdc_v3-v3-2-4d8e1504ea75@oss.qualcomm.com>
+Date: Tue, 30 Jun 2026 16:46:45 +0200
+Message-ID: <87jyrgqe5m.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,7 +87,7 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:maulik.shah@oss.qualcomm.com,m:andersson@kernel.org,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:sneh.mankad@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-39239-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39240-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -101,20 +102,21 @@ X-Spamd-Result: default: False [-4.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,fw13:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 97C2C6E5857
+X-Rspamd-Queue-Id: AD0D76E5924
 
 On Tue, Jun 16 2026 at 14:55, Maulik Shah wrote:
-> @@ -336,7 +418,8 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->  		return -EINVAL;
->  
->  	pdc_region_cnt = n / 3;
-> -	pdc_region = kzalloc_objs(*pdc_region, pdc_region_cnt);
-> +	pdc_region = devm_kcalloc(dev, pdc_region_cnt, sizeof(*pdc_region),
-> +				  GFP_KERNEL);
+> -		for (i = 0; i < pdc_region[n].cnt; i++)
+> -			__pdc_enable_intr(i + pdc_region[n].pin_base, 0);
+> +		for (int i = 0; i < pdc->region[n].cnt; i++)
+> +			pdc->enable_intr(i + pdc->region[n].pin_base, 0);
 
-No line break required. You have 100 characters
+This needs a guard(raw_spinlock_irqsave)() when invoking
+pdc->enable_intr(). The probe function is only invoked
+with interrupts disabled during early boot. If it's called later, then
+this still works, but lockdep will be rightfully upset.
 
-Other than that nit, this looks sane now.
+
+
 
