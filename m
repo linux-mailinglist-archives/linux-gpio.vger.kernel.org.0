@@ -1,47 +1,48 @@
-Return-Path: <linux-gpio+bounces-39315-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39316-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id lnwIO+IMRWqh5woAu9opvQ
-	(envelope-from <linux-gpio+bounces-39315-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 14:49:38 +0200
+	id GkykIXwURWqM6goAu9opvQ
+	(envelope-from <linux-gpio+bounces-39316-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 15:22:04 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9ACB6ED933
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 14:49:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 818C76EE066
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 15:22:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linux.dev header.s=key1 header.b=gQvYCKzM;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39315-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39315-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=linux.dev header.s=key1 header.b=G3D4uGO3;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39316-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39316-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=linux.dev;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 561A130287AB
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 12:41:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 10AFD32E9DE4
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 12:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DF03481FA3;
-	Wed,  1 Jul 2026 12:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CCB481673;
+	Wed,  1 Jul 2026 12:41:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F92A481A87;
-	Wed,  1 Jul 2026 12:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6129C48123F;
+	Wed,  1 Jul 2026 12:41:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782909653; cv=none; b=JicaRUhTuhp/wwoyAk4HVBlMk+BeX5ug7/PfGbTAEVTjnOfmdk6D/gDKoyhqWySRrKvF3z92/2WkPHT142ufZWk5Jser/PUJm0EWMo/goKtxbWsmRNWfvgvQ4kb5HucDC6rQ/LqCGFivPMtHmSAwj9NRrbvR8iN5f7C628Zb+rI=
+	t=1782909699; cv=none; b=qWe8jEey1yeZNxVJDAy0hQmRpj68yOAn88I7ptcluJqWdLy5F/0Gxd8XzV4nXCi4zHtEyxH98XK5MUUydlXh879MdOEeDAO0Zwaya/YjCvJ6zccxoAiGTqgaG6mx+H897JYjvUFLOOmJNvzEJUuyTuzxKk/vcScBWFC33hpZ+HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782909653; c=relaxed/simple;
-	bh=u7rlk6WjnZJ8yyBEjOlow02CVcCwL5fGiUnXZ5iRM1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=W5BMGBZBZ5+2MfB4njekH5jFvs26EdmiXmhh8lkvy1QdaUD5CFfOHwv3cOrl7RXmGkc3gnvxSKSocPMHGXkzXDjkvwA1EsXzgLaZ9NCtaZHj3HzCEuXvSwVsqcjyYq0j+5XGOu+QISJyvO8yXw9iJT7j0VQVj/06/9GlGSqps6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gQvYCKzM; arc=none smtp.client-ip=91.218.175.177
-Date: Wed, 1 Jul 2026 15:40:29 +0300
+	s=arc-20240116; t=1782909699; c=relaxed/simple;
+	bh=InBLkfXjp3T1Zwtd+0sckVRf5My5XuAqvJacDWEOf7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1MwV/C6zsaVq3oekABXl72WfFWf/NnVFRNneDrb4OBG3NTj3+R9J63n9Llo6APINMpTM6YpEv/2QZCKKhw9OY9L4GcdtAt9Zbsifjk+opS1vG8pFl81sX53ZWLZFTy8vfmo5FjSFf1FEpnyw4E5lZ9Vrd60Y3IQg/fHN5qVuw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G3D4uGO3; arc=none smtp.client-ip=95.215.58.183
+Date: Wed, 1 Jul 2026 15:41:11 +0300
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782909639; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	t=1782909685; h=from:from:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type; bh=aK3bC/Yk0HPeufinAbygJPny8WFgvPaMtUqpGTyHhJE=;
-	b=gQvYCKzMuitnqCrr9yMf4pAiAN3VWLV15XONb6CIKdJdwmtC+o0aSHBQwI6IPX3U1t4DNP
-	2Pg96KIEo1TWYH0rAdmfLWX3TEdb/sudtr11QYhDxP5QVCE7DBCyAuT3HgVH5RYhl0M9vd
-	3x5uc7UAClug1VBWlUtWaNSlITOrV1k=
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=W32RUxeDi1R2eooDgqltvM+rPOaIvVbXo7pvR37qo98=;
+	b=G3D4uGO36bv0J+XWYw+QIjayasY9dt9ovvA7Twtf+vaWUn1vUmaQQBV5kP4zo+WUroTjZM
+	/0Jw5fA/PFE0Wr5/XshYdCgZRcx6OoTrHE20dWGgcsayZa6/g3+r5CcJkabnqf9XQGZkPB
+	EolngxIPXwyrdqD+0cFbO5gSiLQVPhs=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Matti Vaittinen <matti.vaittinen@linux.dev>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
@@ -61,9 +62,10 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
 	linux-rtc@vger.kernel.org
-Subject: [PATCH 0/8] Support ROHM BD73800
-Message-ID: <cover.1782909323.git.mazziesaccount@gmail.com>
+Subject: [PATCH 1/8] dt-bindings: regulator: ROHM BD73800 regulators
+Message-ID: <67b42b5363533f11c22a6421417c3345f9872aec.1782909323.git.mazziesaccount@gmail.com>
 Reply-To: Matti Vaittinen <mazziesaccount@gmail.com>
+References: <cover.1782909323.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,131 +73,226 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3MnEKyKDxsefSFik"
+	protocol="application/pgp-signature"; boundary="Vix9+puGfqriyr7Z"
 Content-Disposition: inline
+In-Reply-To: <cover.1782909323.git.mazziesaccount@gmail.com>
 X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [0.24 / 15.00];
-	SIGNED_PGP(-2.00)[];
 	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_TO(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.dev:dkim,linux.dev:from_mime];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-39315-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:mazziesaccount@gmail.com,m:matti.vaittinen@fi.rohmeurope.com,m:matti.vaittinen@linux.dev,m:lee@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:linusw@kernel.org,m:brgl@kernel.org,m:alexandre.belloni@bootlin.com,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-rtc@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
 	FREEMAIL_TO(0.00)[gmail.com,fi.rohmeurope.com,linux.dev];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	URIBL_MULTI_FAIL(0.00)[vger.kernel.org:server fail,sea.lore.kernel.org:server fail,devicetree.org:server fail,linux.dev:server fail];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FREEMAIL_REPLYTO(0.00)[gmail.com];
 	FORGED_SENDER(0.00)[matti.vaittinen@linux.dev,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[mazziesaccount@gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[matti.vaittinen@linux.dev,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,gmail.com,baylibre.com,redhat.com,bootlin.com,vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DKIM_TRACE(0.00)[linux.dev:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[matti.vaittinen@linux.dev,linux-gpio@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39316-lists,linux-gpio=lfdr.de];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
+	HAS_REPLYTO(0.00)[mazziesaccount@gmail.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[linux.dev:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux.dev:dkim,linux.dev:from_mime,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E9ACB6ED933
+X-Rspamd-Queue-Id: 818C76EE066
 
 
---3MnEKyKDxsefSFik
+--Vix9+puGfqriyr7Z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Add support for the ROHM BD73800 PMIC and compatibles.
+=46rom: Matti Vaittinen <mazziesaccount@gmail.com>
 
-The ROHM BD73800 is a power management IC which integrates 8 BUCKs and 4
-LDOs. There is also an ADC and operation amplifier intended for current
-/ temperature measurement and accumulation. RTC and 32.768 kHz clock
-gate are also included. The PMIC can be customized via OTP and it has
-options for operating as a main PMIC in multi-PMIC installation. Some
-of the pins can also be used for GPO or GPI (including interrupt support).
+Add bindings for the BUCKs and LDOs on ROHM BD73800. The PMIC state
+specific voltages can be set in same fashion as with a few other ROHM
+PMICs (for example with BD718[15,28,37,47,50,79]). Same properties are
+recycled :)
 
-There are also ROHM BD71851 and BD71885 PMICs out there. These are, from
-the SW-perspective, similar to the BD73800. There is only some different
-default values and OTP settings. The driver should be able to handle them
-just fine.
+The LDOs 1 and 4 can use different voltage ranges depending on the OTP
+configuration.
 
-Oh, finally - there is absolutely no rush reviewing this. I am likely to
-be (mostly) offline for (at least) 3 weeks. So please, take your time, I
-probably will spin the next version only somewhere at August.
-
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
-
-Matti Vaittinen (8):
-  dt-bindings: regulator: ROHM BD73800 regulators
-  dt-bindings: mfd: ROHM BD73800 PMIC
-  mfd: Support for ROHM BD73800 PMIC core
-  rtc: bd70528: Support RTC on ROHM BD73800
-  regulator: bd71828: Support ROHM BD73800
-  clk: bd718x7: Support ROHM BD73800
-  gpio: bd73800: Support ROHM BD73800 PMIC GPIOs
-  MAINTAINERS: Add ROHM BD73800 PMIC files
-
- .../bindings/mfd/rohm,bd73800-pmic.yaml       | 229 ++++++++
- .../regulator/rohm,bd73800-regulator.yaml     | 119 ++++
- MAINTAINERS                                   |   2 +
- drivers/clk/clk-bd718x7.c                     |   8 +
- drivers/gpio/Kconfig                          |  11 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd73800.c                   | 234 ++++++++
- drivers/mfd/Kconfig                           |  15 +-
- drivers/mfd/rohm-bd71828.c                    | 145 ++++-
- drivers/regulator/Kconfig                     |   4 +-
- drivers/regulator/bd71828-regulator.c         | 555 +++++++++++++++++-
- drivers/rtc/rtc-bd70528.c                     |   8 +
- include/linux/mfd/rohm-bd73800.h              | 307 ++++++++++
- include/linux/mfd/rohm-generic.h              |   1 +
- 14 files changed, 1629 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd73800-pmic=
-=2Eyaml
+ .../regulator/rohm,bd73800-regulator.yaml     | 119 ++++++++++++++++++
+ 1 file changed, 119 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd7380=
 0-regulator.yaml
- create mode 100644 drivers/gpio/gpio-bd73800.c
- create mode 100644 include/linux/mfd/rohm-bd73800.h
 
-
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd73800-regul=
+ator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd73800-regula=
+tor.yaml
+new file mode 100644
+index 000000000000..c427a04098ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd73800-regulator.ya=
+ml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd73800-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD73800 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <mazziesaccount@gmail.com>
++
++description: |
++  This module is part of the ROHM BD73800 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd73800-pmic.yaml.
++
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
++
++  Regulator nodes should be named to buck<number> and ldo<number>.
++  The valid names for BD73800 regulator nodes are
++  buck1, buck2, buck3, buck4, buck5, buck6, buck7, buck8
++  ldo1, ldo2, ldo3, ldo4
++
++patternProperties:
++  "^buck[1-8]$":
++    type: object
++    description:
++      Properties for a single BUCK regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-8]$"
++        description:
++          should be "buck1", ..., "buck8"
++
++      rohm,dvs-run-voltage:
++        description:
++          PMIC default "RUN" state voltage in uV. 0 means disabled. See the
++          explanation below for regulator specific details.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 3500000
++
++      rohm,dvs-idle-voltage:
++        description:
++          PMIC default "IDLE" state voltage in uV. 0 means disabled. See t=
+he
++          explanation below for regulator specific details.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 3500000
++
++      rohm,dvs-suspend-voltage:
++        description:
++          PMIC default "SUSPEND" state voltage in uV. 0 means disabled. Se=
+e the
++          explanation below for regulator specific details.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 3500000
++
++        # BUCKs 1,2,3,4 and 8 support voltages 0.5 - 1.3V
++        # BUCK 5 supports voltages 0.3 - 1.3V
++        # BUCKs 6 and 7 support voltages 1.5 - 3.5V
++
++    required:
++      - regulator-name
++
++    unevaluatedProperties: false
++
++  "^ldo[1-4]$":
++    type: object
++    description:
++      Properties for single LDO regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-4]$"
++        description:
++          should be "ldo1", ..., "ldo4"
++
++      rohm,dvs-run-voltage:
++        description:
++          Set the default output state at PMIC's "RUN" state.
++          0 is disabled, 1 is enabled.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 1
++
++      rohm,dvs-idle-voltage:
++        description:
++          Set the default output state at PMIC's "IDLE" state.
++          0 is disabled, 1 is enabled.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 1
++
++      rohm,dvs-suspend-voltage:
++        description:
++          Set the default output state at PMIC's "SUSPEND" state.
++          0 is disabled, 1 is enabled.
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 1
++
++      rohm,ldo-range-high:
++        type: boolean
++        description:
++          LDO1 and LDO3 voltage ranges can be "high" or "low" depending on
++          OTP. Indicate that the "high" range is used. See comment below
++          for voltages.
++
++        # LDOs 2 and 4 support voltages 0.75 - 3.3V
++        # LDOs 1 and 3 may support different ranges depending on OTP.
++        # either 0.6 - 1.8V or 0.75 - 3.3V.
++
++    unevaluatedProperties: false
++
++additionalProperties: false
 --=20
 2.54.0
 
 
---3MnEKyKDxsefSFik
+--Vix9+puGfqriyr7Z
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmpFCr0ACgkQeFA3/03a
-ocW39Qf+JhmHKD3YmwcPiXyAzs4+zjXCf/hmvseRMrfUZMcPgd6wzSdfwW5tjREO
-ZvjBKwewGLKu9DhRuOOx4SvTFW2nTIgALznjjX5CKWVfZf+Rh1SOAHL/A6knt/CP
-4+aQrY6CG0wX/zrrFLcoGpU7pPeyhgyn+QZ+h3azfcW4+RQmYpAv/oYteFXs5bPX
-YZD3k/t+2y9xFTbSEcurR7zSNqcCWn8/blvs6h9o25PI7XvctsvYJ8I/jxAw1Vd/
-mrNMSPWEHuGf8Y0O0Hy/YhhRluR1zszWcFOxHKynorjn73os+O5EMBe3zmRUK/ti
-sFS8Dn4YqrvMUyMhhPtbpdci+o/m6A==
-=zQEM
+iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmpFCucACgkQeFA3/03a
+ocWfSgf+JDZdKCG82CyT9JwSIX0usDVLf+GGrv/78ITz/Lf63AJlM/e+urj/zoAf
+V9mEf1bAZhJWmjIvlw/cjvHx/C9VbLEL5iMMnPQvDahLoWUekMH+VjxE3PFWdwSc
+xiOiBMHIlf2qUFnIoC6tZu8SmIQk9TexKLW+DE8uasXeoC1frryu3cAPzfKyGFuD
+50gZMbNV8bCBK+f0uOngP1nn2kCmh1TGlcjhWoFczRgljZnDOQdmpYxxhM8bbulF
+ia4BUq7wjZD750OETJDJnTkEbTIead0MqaSfhzZa67kBbR6vJWoWcxKjTy/6EtsS
+G4l9zhWHnuwzj4kYIQcLttGz09CHBw==
+=vu4f
 -----END PGP SIGNATURE-----
 
---3MnEKyKDxsefSFik--
+--Vix9+puGfqriyr7Z--
 
