@@ -1,213 +1,499 @@
-Return-Path: <linux-gpio+bounces-39272-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39273-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eN5ZBGHBRGpx0QoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39272-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:27:29 +0200
+	id HUOkJc/CRGq80QoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39273-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:33:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 615856EAA0B
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:27:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED5586EAABA
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:33:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=a6N2XewA;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=CeCHna4G;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39272-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39272-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dXF2gbb4;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39273-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39273-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B43453017BDF
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:27:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9928C304B6AA
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:31:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEA63BADA7;
-	Wed,  1 Jul 2026 07:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D813A0EB3;
+	Wed,  1 Jul 2026 07:31:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4D93B42EB
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B822798EA
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:31:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782890837; cv=none; b=dtusJOltHh6gfzvdSuc7J0mQLGr2o4Rj8q7DTkhuEbKUDw+yW2l4HR41cV4iyc4Hslxl5wcnZhfbIub/3H8PFOH76ON3B/AlQ49wAIsR2yp4VVR5Squ8yzGvmyOEFye6HoXWKOYbKh7qGvoUVlbzOqaNCdFl5fuq2uomsfukGbw=
+	t=1782891099; cv=none; b=PFCKuzqUgXCi43BSTw4SzxAT0IgJVvJH0xamFE+DrjJ0LQEvMBIeZogtPtEmsqMMobvQnGkwzzwX523gt0ryavkV2R/j9IJOuYr8m0Yx2msa4pUhs+OaoSeIRi3H0jptYBqD12yzhBLqp9yHJMiz9SagPLnJEuwaDxyYBqOO2A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782890837; c=relaxed/simple;
-	bh=4GE2h3uQWPFIKUiRHjbrTKswNYR20y7g5wbcKu6OEx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SjqiWi2EBxhXLgV0AvqlWT/uoErFi/qjx/NK0y1onT01emxkh6Z4neaIQKv2bxfho8q06rNw2mkPloMpwSRAmRMt5MdEWcpfsPhLdt9TJ1Ie0w7TfR70bTeYyR7uRRWXZXhYGSkTNYWxGjltmDuaRRB9NZdxG6IZ7zwFlCmY3SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a6N2XewA; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CeCHna4G; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6616qUKY279960
-	for <linux-gpio@vger.kernel.org>; Wed, 1 Jul 2026 07:27:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UjPiDRtkBxxHS008iG49oRhf0qpCD3AfI/FuawlGAtQ=; b=a6N2XewAv+horXnK
-	nKkWBvQxpygYro9ayToWkB+R+7sHu+pSIFsh6CKOXOc+upk4XoQcHznfXwVh+2m8
-	9UfxKuwo+PCvR3+N/+QowoQW8W6a8KHRalmB02z2+C4CNqnSR6JLYmHyb12wwsyV
-	QDYySU/vWiSn8ZLRyKlpjinT8fpduIsElGhR8p5zyqf9QXo/4gVsb1zu38hcl8Fs
-	QKDPDtCs8oknupQhU9oAy2ZVjmczQ72QkxGsLUn92OP2eTGzSFDpl17p0bPf6bmw
-	1VplRXkA/PWjCHP4Al3Jc0ByNqnU1h0Ii7YW7pAzra/x5BSkc2HjbRU2tn4Yjs0B
-	qK/V5w==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f4x0tg643-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 07:27:13 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-915f6ff639aso72013385a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782890833; x=1783495633; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UjPiDRtkBxxHS008iG49oRhf0qpCD3AfI/FuawlGAtQ=;
-        b=CeCHna4GxVQmdgmdJYS+uCf4Ff00LhWCVt21M37ICVYtIyUGKfIRHmGVtUrx7oB7Xn
-         1lMYK0J9z/o5mZWg5QKDXHWwX8tB2fpD/az8omwxuPo7eCf/rv3/O3kzmWg2KA+o+TrK
-         D6oG5FAp0AQdBja49Z5gI+MjA3e0UVU8IBmwHOBsh/QPBj5icE+OqiLQJO/fzpJTijlW
-         ysGnX1hmp7LxCJ5Wv67xs8XTEri4uBw1cQ+UOWf5ILFu8rA8/RXt6bHpPH/qlfWS1Nxi
-         mobSzt7uGyhpD+cb0c500tTcyp19dVl1yPr6XH+SLAdnYRMaTOnqdZzCMO0y9MdI/QCf
-         Kbjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782890833; x=1783495633;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UjPiDRtkBxxHS008iG49oRhf0qpCD3AfI/FuawlGAtQ=;
-        b=Xvzi2QMir7JI9bOSXwgpmxyY1wHaKJu+Y5G4GEXarxJkIYl3H2q7Qx0N1R7MvrzCVJ
-         AmsUZIZQlDOd+3+Ra7+4hwao68TVXqdrGmJl+WI4gwPmq0Dzg6LS2YscqS8P/Y/N8hR/
-         eOHIXmtfpnv4eoDDmRDp8f1JCerXpx2aDfmwVi+01OTr27qSSiHPf/g9QjxEN1II5h9z
-         ayyvyCbFhlyqd60D2cnK9VCCg982yzHtIP6ZOTv0z9KeP1mnT8INwmk8YyUS6J2aNN1K
-         8dSt65WIfdOgtpUAcZIormKVnXNjhohOdQusAcfiUxvZAISKW8tQy2NRrQF4IPkR3MjM
-         uI/g==
-X-Forwarded-Encrypted: i=1; AFNElJ8cjaodsSmBsrFcwRQENUXqHKDPq4ERmmP7zaB661mDtgNVADMbknI8gyMtpNLG8AHhSyD2bYV0BhGV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwERdaCGLYgi4/piAYwR6AyyWpMGdL2C3iGcglViFPjaaJogXXt
-	uFgWJduiDXWZ1AdyOLZr3eqpNINAD/lBE2SlJnl98wpeIIm7rc7JR/bMwsdvUkllnn6zMFeqAbC
-	3iWY6tketOH+sLMf5UXYyvKoKWJU/QnT1K6RsG8DHzu1HyayF7g77FxpUwjoPOubc
-X-Gm-Gg: AfdE7cm5C7kMjlyWl6/oqfPt8EIVUpxWZ8aR5WJi9bVZCEHz0vvpomENV5nQfU20pJf
-	s1Nhx34XIiLuUfHsS5OlBauW7cfAb4LEpK/o+J5pOivUXlMHrvNdB638fiZYwmO3OuR7fZ7I8Bc
-	qfHDvvh20KnvEjuFVuxn3nqwd++UVht23AkF0EPkSi6CHmhYUWQFaUUmBWhLTOWjzr6GyCVK+Uf
-	mLRTWM70FbKqnkD5lWYu8M528N1sBu8thymyhu7NZZKnlwazstg0d6Pgum56Xlc08x3BEfsTp6R
-	+I3oQy+zEAJePFsaO2IW32qGfYxgwPyKuEvvuHzlIfCR71qLeO0i4kSW5EqWGAIqmvehhI0r07r
-	UhOl2rJG16FlSHTUNsSivSs8O48iEx51/KgEGFxA=
-X-Received: by 2002:a05:620a:1a19:b0:926:e8e6:3c34 with SMTP id af79cd13be357-92e78217161mr66559785a.21.1782890833319;
-        Wed, 01 Jul 2026 00:27:13 -0700 (PDT)
-X-Received: by 2002:a05:620a:1a19:b0:926:e8e6:3c34 with SMTP id af79cd13be357-92e78217161mr66556385a.21.1782890832668;
-        Wed, 01 Jul 2026 00:27:12 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:4718:fd49:e3d7:676a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47566c0deacsm15559815f8f.26.2026.07.01.00.27.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 00:27:11 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Viacheslav Bocharov <v@baodeep.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Diederik de Haas <diederik@cknow-tech.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 0/2] gpio: fix sleeping-in-atomic in shared-proxy; restore meson non-sleeping
-Date: Wed,  1 Jul 2026 09:27:09 +0200
-Message-ID: <178289081780.4972.9992474509894050572.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260625115718.1678991-1-v@baodeep.com>
-References: <20260625115718.1678991-1-v@baodeep.com>
+	s=arc-20240116; t=1782891099; c=relaxed/simple;
+	bh=iUaIFCGnuFfNH3URRFCdq+79pJiah1D8HEIjhWk+yCw=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T6T//37Y510ZzgG71s7dVdnpi5bBoHRdCMeQOuUQVUM4rxfv2Hc2E5z8mlidxJbV1OMcXSgXjBLreVhglMt8T3YiyZrtmjYR77mKDUSWDemBepUXois/OoTyASEIWBmoNDIddCNjs3soPnk+KAApypz1NEd2kPwdmlz61/Kxzkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXF2gbb4; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57141F00ACA
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782891097;
+	bh=EHH0hjrKeaZWnba6OJ5JT0e3gySxkqVh6AO3zCntqNE=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=dXF2gbb4zSreejAuIAugrOyXLuV+oDU7bhAYgL0LZxT0zrV9v8M5ANPVmGmXDFNKW
+	 Zqy3X3gD6N5hBwHERKl8dd2ZkXb75PHo8petzIQkpDR9vDKkYMZxCq6jNbmxRZmz/C
+	 /cA/iBHwJHvLucrePyNEZJWpTfOL2U6tLtXxV94EyOAblZaLwAqNtX30lgZ7pU7PEf
+	 S1NcZvtsLS9BV/x/qC+mR/FH7XowLzv3L09xDuwXs/2uLIq5pQfKfqXTJw0wdtZJ3B
+	 koAK0uVuwl844JRhO2/5wCvIMR4WhpBBWfmGFpx73gG8mbnMN4NQDxK7pG/9oG8C+W
+	 m80tae7NgM2gw==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-39adb9a103aso3356651fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:31:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoAdxx9tnruJXy7O3g+bu9x/pepTP7Xe5sZu8NwyAXoneavfugjuUj8MrWY6i0iB898JSEGKl6GWAW3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaLmjdL/gM9gsjAJHo99nHtL9nBdw/czAB3xKgdGRMFIidb4od
+	1OmmVd3iMKaaUBKB+nDOmD7gfCTIRjsiGXo5mkKwE/04nFDdnGqFwr5k8Cs1NzITmxA8ratb9TD
+	uaVT8LslrshUWPZM6X9G+PlA1ZRoRR4/G83hwypo0fw==
+X-Received: by 2002:a2e:bd83:0:b0:399:8394:9dee with SMTP id
+ 38308e7fff4ca-39b340c41d3mr912171fa.25.1782891096281; Wed, 01 Jul 2026
+ 00:31:36 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 1 Jul 2026 03:31:35 -0400
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 1 Jul 2026 03:31:35 -0400
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260630-dev-b4-aaeon-mcu-driver-v6-3-d66b5fcbd2f0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: kbJEyFo6OQ8l0wjbzdknBQgMsuM475uY
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAxMDA3NSBTYWx0ZWRfX59/DyHr/Tp9J
- f52FPUgVejM1SRFdkjkjeUMmKIfrUmspSZm79IPdzhQNO0VF+OlAxqNtb6ltbcTQVJqdsGDYOWg
- DKmKU6UVLkOBxQPPVM3z9qUPstVHu+Y=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAxMDA3NSBTYWx0ZWRfX5YaiWxs38NbT
- 3zIF//mki0qx/QBGCguI72xPs2lghP2Tw+ySTIhRflC0TFw5+S2IW9Pnd4hqDdsKCPyGmRQdeZ1
- 0VvfBQCgKrGs6WkAnjtQ1ne53mb5K4xR4YyGZhPZjUgDJeSNOhOA4mLxqiiaFAewaUOfUZ/nzad
- U4CGw13b7kkpKoSbPZP2KgI6v6P3zESce8ycS9wNHVBr6VgRoudnj/wLJnFNn9AoY5/TIAlqENC
- KFL+86jgaTurfcsOFLYu9XpZXAjLpiBbosiCteKeyu3HxMq2nhmg7vODz5/aBJ/zUF+IUPufkea
- qZymQfRF4OBPm9niVR0Fr0Y1Hppg/pKzkj8Z3lQWcfMhctcTvsCTXCT+XGmjNpDmGoRd20i+z/0
- KnTQCDIQ8yYs4EVz/vCrGJJGomyP2MlT3RkUXTCXYNjqqwa5Y7LKjg523oq68DpRYOMR++VXdWS
- zwRvg8RzAs8okD0rtKA==
-X-Authority-Analysis: v=2.4 cv=T5+8ifKQ c=1 sm=1 tr=0 ts=6a44c151 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=1LRHIn5sqR3nmJZzQNMA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: kbJEyFo6OQ8l0wjbzdknBQgMsuM475uY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-01_01,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607010075
+References: <20260630-dev-b4-aaeon-mcu-driver-v6-0-d66b5fcbd2f0@bootlin.com> <20260630-dev-b4-aaeon-mcu-driver-v6-3-d66b5fcbd2f0@bootlin.com>
+Date: Wed, 1 Jul 2026 03:31:35 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Md2=u=tWhC-H6CA10zoS3ByPtA0UuSsCVkh-eLNe=Rmaw@mail.gmail.com>
+X-Gm-Features: AVVi8Cc_OfLeKOGOhGEKktyfB7tzHJqrZ0eIZ3H6jyHsoTN6UQFcWrRNSrUer3M
+Message-ID: <CAMRc=Md2=u=tWhC-H6CA10zoS3ByPtA0UuSsCVkh-eLNe=Rmaw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] mfd: aaeon: Add SRG-IMX8P MCU driver
+To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, 
+	=?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?= <jeremie.dautheribes@bootlin.com>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	TAGGED_FROM(0.00)[bounces-39272-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:v@baodeep.com,m:bartosz.golaszewski@oss.qualcomm.com,m:neil.armstrong@linaro.org,m:khilman@baylibre.com,m:jbrunet@baylibre.com,m:martin.blumenstingl@googlemail.com,m:m.szyprowski@samsung.com,m:robin.murphy@arm.com,m:diederik@cknow-tech.com,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-amlogic@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:martinblumenstingl@gmail.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39273-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,linaro.org,baylibre.com,googlemail.com,samsung.com,arm.com,cknow-tech.com,vger.kernel.org,lists.infradead.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:thomas.perrot@bootlin.com,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:thomas.petazzoni@bootlin.com,m:miquel.raynal@bootlin.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:kernel@pengutronix.de,m:festevam@gmail.com,m:jeremie.dautheribes@bootlin.com,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:lee@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,lists.infradead.org,bootlin.com,kernel.org,pengutronix.de,gmail.com,linux-watchdog.org,roeck-us.net];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid,vger.kernel.org:from_smtp];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 615856EAA0B
+X-Rspamd-Queue-Id: ED5586EAABA
 
+On Tue, 30 Jun 2026 14:51:13 +0200, "Thomas Perrot (Schneider
+Electric)" <thomas.perrot@bootlin.com> said:
+> Add Multi-Function Device (MFD) driver for the Aaeon SRG-IMX8P
+> embedded controller. This driver provides the core I2C communication
+> interface and registers child devices (GPIO and watchdog controllers).
+>
+> The driver implements a custom regmap bus over I2C to match the MCU's
+> fixed 3-byte command format [opcode, arg, value]. Register addresses
+> are encoded as 16-bit values (opcode << 8 | arg) using the
+> AAEON_MCU_REG() macro defined in the shared header. The regmap
+> instance is shared with child drivers via dev_get_regmap(). Concurrent
+> I2C accesses from child drivers are serialized by regmap's built-in
+> locking.
+>
+> I2C transfers use heap-allocated DMA-safe buffers rather than
+> stack-allocated ones, as required by I2C controllers that perform DMA.
+>
+> Regmap caching is enabled (REGCACHE_MAPLE) with a volatile_reg
+> callback that marks GPIO input read registers (opcode 0x72) and the
+> watchdog status register (opcode 0x63, arg 0x02) as volatile. All
+> other registers written by the driver (GPIO direction,
+> GPO state, watchdog control) are stable and can be safely cached.
+>
+> Co-developed-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jere=
+mie.dautheribes@bootlin.com>
+> Signed-off-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jeremi=
+e.dautheribes@bootlin.com>
+> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.=
+com>
+> ---
+>  MAINTAINERS                   |   2 +
+>  drivers/mfd/Kconfig           |  11 +++
+>  drivers/mfd/Makefile          |   1 +
+>  drivers/mfd/aaeon-mcu.c       | 205 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/mfd/aaeon-mcu.h |  40 +++++++++
+>  5 files changed, 259 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea9d55f76f35..f91b6a1826d0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -191,6 +191,8 @@ M:	Thomas Perrot <thomas.perrot@bootlin.com>
+>  R:	J=C3=A9r=C3=A9mie Dautheribes <jeremie.dautheribes@bootlin.com>
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/mfd/aaeon,srg-imx8p-mcu.yaml
+> +F:	drivers/mfd/aaeon-mcu.c
+> +F:	include/linux/mfd/aaeon-mcu.h
+>
+>  AAEON UPBOARD FPGA MFD DRIVER
+>  M:	Thomas Richard <thomas.richard@bootlin.com>
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index aace5766b38a..ed5169c7a683 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1561,6 +1561,17 @@ config ABX500_CORE
+>  	  remain unchanged when IC changes. Binding of the functions to
+>  	  actual register access is done by the IC core driver.
+>
+> +config MFD_AAEON_MCU
+> +	tristate "Aaeon SRG-IMX8P MCU Driver"
+> +	depends on I2C
+> +	select MFD_CORE
+> +    select REGMAP
+> +	help
+> +	  Select this option to enable support for the Aaeon SRG-IMX8P
+> +	  onboard microcontroller (MCU). This driver provides the core
+> +	  functionality to communicate with the MCU over I2C. The MCU
+> +	  provides GPIO and watchdog functionality.
+> +
+>  config AB8500_CORE
+>  	bool "ST-Ericsson AB8500 Mixed Signal Power Management chip"
+>  	depends on ABX500_CORE && MFD_DB8500_PRCMU
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index e75e8045c28a..34db5b033584 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_MFD_88PM860X)	+=3D 88pm860x.o
+>  obj-$(CONFIG_MFD_88PM800)	+=3D 88pm800.o 88pm80x.o
+>  obj-$(CONFIG_MFD_88PM805)	+=3D 88pm805.o 88pm80x.o
+>  obj-$(CONFIG_MFD_88PM886_PMIC)	+=3D 88pm886.o
+> +obj-$(CONFIG_MFD_AAEON_MCU)	+=3D aaeon-mcu.o
+>  obj-$(CONFIG_MFD_ACT8945A)	+=3D act8945a.o
+>  obj-$(CONFIG_MFD_SM501)		+=3D sm501.o
+>  obj-$(CONFIG_ARCH_BCM2835)	+=3D bcm2835-pm.o
+> diff --git a/drivers/mfd/aaeon-mcu.c b/drivers/mfd/aaeon-mcu.c
+> new file mode 100644
+> index 000000000000..306aaac1bd60
+> --- /dev/null
+> +++ b/drivers/mfd/aaeon-mcu.c
+> @@ -0,0 +1,205 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Aaeon MCU driver
+> + *
+> + * Copyright (C) 2026 Bootlin
+> + * Author: J=C3=A9r=C3=A9mie Dautheribes <jeremie.dautheribes@bootlin.co=
+m>
+> + * Author: Thomas Perrot <thomas.perrot@bootlin.com>
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/aaeon-mcu.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +struct aaeon_mcu {
+> +	struct i2c_client *client;
+> +	u8 *cmd;      /* DMA-safe 3-byte write buffer [opcode, arg, value] */
+> +	u8 *response; /* DMA-safe 1-byte read buffer for MCU acknowledgment */
+> +};
+> +
+> +static const struct mfd_cell aaeon_mcu_devs[] =3D {
+> +	MFD_CELL_BASIC("aaeon-mcu-wdt", NULL, NULL, 0, 0),
+> +	MFD_CELL_BASIC("aaeon-mcu-gpio", NULL, NULL, 0, 0),
+> +};
+> +
+> +/* Number of bytes in a MCU command: [opcode, arg, value] */
+> +#define AAEON_MCU_CMD_LEN      3
+> +
+> +/*
+> + * Custom regmap bus for the Aaeon MCU I2C protocol.
+> + *
+> + * The MCU uses a fixed 3-byte command format [opcode, arg, value] follo=
+wed
+> + * by a 1-byte response. It requires a STOP condition between the comman=
+d
+> + * write and the response read, so two separate i2c_transfer() calls are
+> + * issued.  The regmap lock serialises concurrent accesses from the GPIO
+> + * and watchdog child drivers.
+> + *
+> + * Register addresses are encoded as a 16-bit big-endian value where the
+> + * high byte is the opcode and the low byte is the argument, matching th=
+e
+> + * wire layout produced by regmap for reg_bits=3D16.
+> + */
 
-On Thu, 25 Jun 2026 14:57:16 +0300, Viacheslav Bocharov wrote:
-> gpio-shared-proxy chooses its descriptor lock (mutex vs spinlock) from
-> the underlying chip's can_sleep, but under that lock it calls config and
-> direction ops that reach sleeping pinctrl paths. On a controller with
-> non-sleeping MMIO value ops the lock is a spinlock, so a sleeping call
-> runs from atomic context:
-> 
->   BUG: sleeping function called from invalid context
->     ... pinctrl_gpio_set_config <- gpiochip_generic_config
->     <- gpio_shared_proxy_set_config (voting spinlock held)
->     <- ... <- mmc_pwrseq_simple_probe
-> 
-> [...]
+I would have preferred this implemented as a quirk in the i2c regmap but
+won't die on that hill.
 
-Applied, thanks!
+> +
+> +static int aaeon_mcu_regmap_write(void *context, const void *data, size_=
+t count)
+> +{
+> +	struct aaeon_mcu *mcu =3D context;
+> +	struct i2c_client *client =3D mcu->client;
+> +	struct i2c_msg write_msg;
+> +	/* The MCU always sends a response byte after each command; discard it.=
+ */
+> +	struct i2c_msg response_msg;
+> +	int ret;
+> +
+> +	memcpy(mcu->cmd, data, count);
+> +
+> +	write_msg.addr  =3D client->addr;
+> +	write_msg.flags =3D I2C_M_DMA_SAFE;
+> +	write_msg.buf   =3D mcu->cmd;
+> +	write_msg.len   =3D count;
+> +
+> +	response_msg.addr  =3D client->addr;
+> +	response_msg.flags =3D I2C_M_RD | I2C_M_DMA_SAFE;
+> +	response_msg.buf   =3D mcu->response;
+> +	response_msg.len   =3D 1;
+> +
+> +	ret =3D i2c_transfer(client->adapter, &write_msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret !=3D 1)
+> +		return -EIO;
+> +
+> +	ret =3D i2c_transfer(client->adapter, &response_msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret !=3D 1)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int aaeon_mcu_regmap_read(void *context, const void *reg_buf,
+> +				 size_t reg_size, void *val_buf, size_t val_size)
+> +{
+> +	struct aaeon_mcu *mcu =3D context;
+> +	struct i2c_client *client =3D mcu->client;
+> +	struct i2c_msg write_msg;
+> +	struct i2c_msg read_msg;
+> +	int ret;
+> +
+> +	/*
+> +	 * reg_buf holds the 2-byte big-endian register address [opcode, arg].
+> +	 * Append a trailing 0x00 to form the full 3-byte MCU command.
+> +	 */
+> +	mcu->cmd[0] =3D ((u8 *)reg_buf)[0];
+> +	mcu->cmd[1] =3D ((u8 *)reg_buf)[1];
+> +	mcu->cmd[2] =3D 0x00;
+> +
+> +	write_msg.addr  =3D client->addr;
+> +	write_msg.flags =3D I2C_M_DMA_SAFE;
+> +	write_msg.buf   =3D mcu->cmd;
+> +	write_msg.len   =3D AAEON_MCU_CMD_LEN;
+> +
+> +	read_msg.addr  =3D client->addr;
+> +	read_msg.flags =3D I2C_M_RD | I2C_M_DMA_SAFE;
+> +	read_msg.buf   =3D val_buf;
+> +	read_msg.len   =3D val_size;
+> +
+> +	ret =3D i2c_transfer(client->adapter, &write_msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret !=3D 1)
+> +		return -EIO;
+> +
+> +	ret =3D i2c_transfer(client->adapter, &read_msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret !=3D 1)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct regmap_bus aaeon_mcu_regmap_bus =3D {
+> +	.write =3D aaeon_mcu_regmap_write,
+> +	.read  =3D aaeon_mcu_regmap_read,
+> +};
+> +
+> +static bool aaeon_mcu_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	/*
+> +	 * GPIO input registers are driven by external signals and can change
+> +	 * at any time without CPU involvement, always read from hardware.
+> +	 *
+> +	 * The watchdog status register reflects hardware state and can change
+> +	 * autonomously.
+> +	 *
+> +	 * All other registers are written by the driver and their values are
+> +	 * stable, so they can be safely cached.
+> +	 */
+> +	if ((reg >> 8) =3D=3D AAEON_MCU_READ_GPIO_OPCODE)
+> +		return true;
+> +	if (reg =3D=3D AAEON_MCU_REG(AAEON_MCU_CONTROL_WDT_OPCODE, 0x02))
+> +		return true;
+> +	return false;
+> +}
+> +
+> +static const struct regmap_config aaeon_mcu_regmap_config =3D {
+> +	.reg_bits          =3D 16,
+> +	.val_bits          =3D 8,
+> +	.reg_format_endian =3D REGMAP_ENDIAN_BIG,
+> +	.max_register      =3D AAEON_MCU_MAX_REGISTER,
+> +	.volatile_reg      =3D aaeon_mcu_volatile_reg,
+> +	.cache_type        =3D REGCACHE_MAPLE,
+> +};
+> +
+> +static int aaeon_mcu_probe(struct i2c_client *client)
+> +{
+> +	struct aaeon_mcu *ddata;
+> +	struct regmap *regmap;
+> +
+> +	ddata =3D devm_kzalloc(&client->dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata)
+> +		return -ENOMEM;
+> +
+> +	ddata->client =3D client;
+> +
+> +	ddata->cmd =3D devm_kzalloc(&client->dev, AAEON_MCU_CMD_LEN * sizeof(*d=
+data->cmd),
 
-[2/2] pinctrl: meson: restore non-sleeping GPIO access
-      https://git.kernel.org/brgl/c/9777530157e7b82fd994327ff878c4245dadc931
+Why not devm_kcalloc()?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> +				   GFP_KERNEL);
+> +	if (!ddata->cmd)
+> +		return -ENOMEM;
+> +
+> +	ddata->response =3D devm_kzalloc(&client->dev, sizeof(*ddata->response)=
+, GFP_KERNEL);
+> +	if (!ddata->response)
+> +		return -ENOMEM;
+> +
+> +	regmap =3D devm_regmap_init(&client->dev, &aaeon_mcu_regmap_bus,
+> +				  ddata, &aaeon_mcu_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(&client->dev, PTR_ERR(regmap),
+> +				     "failed to initialize regmap\n");
+> +
+> +	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
+> +				    aaeon_mcu_devs, ARRAY_SIZE(aaeon_mcu_devs),
+> +				    NULL, 0, NULL);
+> +}
+> +
+> +static const struct of_device_id aaeon_mcu_of_match[] =3D {
+> +	{ .compatible =3D "aaeon,srg-imx8p-mcu" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, aaeon_mcu_of_match);
+> +
+> +static struct i2c_driver aaeon_mcu_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "aaeon-mcu",
+> +		.of_match_table =3D aaeon_mcu_of_match,
+> +	},
+> +	.probe =3D aaeon_mcu_probe,
+> +};
+> +module_i2c_driver(aaeon_mcu_driver);
+> +
+> +MODULE_DESCRIPTION("Aaeon MCU Driver");
+> +MODULE_AUTHOR("J=C3=A9r=C3=A9mie Dautheribes <jeremie.dautheribes@bootli=
+n.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/aaeon-mcu.h b/include/linux/mfd/aaeon-mcu.=
+h
+> new file mode 100644
+> index 000000000000..3a1aeec85d60
+> --- /dev/null
+> +++ b/include/linux/mfd/aaeon-mcu.h
+> @@ -0,0 +1,40 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Aaeon MCU driver definitions
+> + *
+> + * Copyright (C) 2026 Bootlin
+> + * Author: J=C3=A9r=C3=A9mie Dautheribes <jeremie.dautheribes@bootlin.co=
+m>
+> + * Author: Thomas Perrot <thomas.perrot@bootlin.com>
+> + */
+> +
+> +#ifndef __LINUX_MFD_AAEON_MCU_H
+> +#define __LINUX_MFD_AAEON_MCU_H
+> +
+> +/*
+> + * MCU register address: the high byte is the command opcode, the low
+> + * byte is the argument.  This matches the 3-byte wire format
+> + * [opcode, arg, value] used by the MCU I2C protocol.
+> + */
+> +#define AAEON_MCU_REG(op, arg)		(((op) << 8) | (arg))
+> +
+> +/*
+> + * Opcode for GPIO input reads. These registers are volatile, their valu=
+es
+> + * are driven by external signals and can change without CPU involvement=
+.
+> + * Used by the MFD driver's volatile_reg callback to bypass the regmap c=
+ache.
+> + */
+> +#define AAEON_MCU_READ_GPIO_OPCODE	0x72
+> +
+> +/*
+> + * Opcode for watchdog control and status commands.
+> + * The status register (arg=3D0x02) reflects hardware state and is volat=
+ile.
+> + */
+> +#define AAEON_MCU_CONTROL_WDT_OPCODE	0x63
+> +
+> +/*
+> + * Highest register address in the MCU register map.
+> + * The WRITE_GPIO opcode (0x77) with the highest GPIO argument (0x0B =3D=
+ 11,
+> + * i.e. MAX_GPIOS - 1) produces the largest encoded address.
+> + */
+> +#define AAEON_MCU_MAX_REGISTER		AAEON_MCU_REG(0x77, 0x0B)
+> +
+> +#endif /* __LINUX_MFD_AAEON_MCU_H */
+>
+> --
+> 2.54.0
+>
+>
+
+Bart
 
