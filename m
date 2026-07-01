@@ -1,79 +1,78 @@
-Return-Path: <linux-gpio+bounces-39276-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +oKAAxzGRGoW0woAu9opvQ
-	(envelope-from <linux-gpio+bounces-39276-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:47:40 +0200
+	id pSlULifHRGpY0woAu9opvQ
+	(envelope-from <linux-gpio+bounces-39277-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:52:07 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56CA66EAD3D
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:47:39 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7C706EADD5
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:52:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=h82x9az8;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39276-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39276-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=j2DcNdYd;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39277-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39277-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AAA743016811
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:47:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 365E5300620B
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F433BBFDA;
-	Wed,  1 Jul 2026 07:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D58D3BED08;
+	Wed,  1 Jul 2026 07:50:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A143B6BFA
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3440036A354
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:50:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782892050; cv=none; b=A8pYgFMR5KvU2nlRJOEVzQWMG60U0bOKeTAT4hIttSBdLRni83oGxtW7FdTRjw43R/xWxru3PgJKMBZsH+fcSedCggD02MqbJehcLVo3fnZgeVaij1VaC5HtCoOBIVB4ykl6k/xF2CB0u5X0Ra96q8VXpdXRw7/Bwo6f1koYyK8=
+	t=1782892211; cv=none; b=rrPgs0R6YBYXRw/GK6Ro22bGfTdG/XQpMPQoy1ieHaPtX+t4UWSwULbaL0Pz3Lu5CgUOY2sPPz3Tq3FeceRe87KIQlOZgCGMHSQeMSTrAOzltSJW5Zgp3oTdE6iPE35SFdieUqlP6qGicydSByfM7HZCQK1XTk9MvWpWG6xCtX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782892050; c=relaxed/simple;
-	bh=tHD2yVEHzdy8DLtJ2/nbdi1VySk42Z1vfw6pJpAFCkI=;
+	s=arc-20240116; t=1782892211; c=relaxed/simple;
+	bh=dx1O75jqKMARjEbw4xneNk7aG4r2yfuJioWVDgA4Lp0=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kjgI+oqDqtbFxSoEQtxNea1vZy6p9c/f8R7wK7sBelQXtv9sh5cRJMooAPyXBpa/8ZFWJQX1s01cjDTj5GoEynCCt/T2K/BOvAXfjrNKDBOzjM+3zCHuwHJmXWLr4ZZm3gBEWVeM8y1bRIZDbgi63v1e0Clq1osqqwyzLHbMsbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h82x9az8; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80D911F0155E
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:47:29 +0000 (UTC)
+	 To:Cc:Content-Type; b=PLfg5qDWuzs3DBG8DLVVxJdQvCmoMmJm+pOKrWscPw6udRpOdi2BrdGUI+tQ8kIW1mWDbdpFNAl7n4BE9JudUidAJZwL5eR0qKy5noHAiYG2BmlxudC7gGephegeaWccfgDD44EwBQpKTV7etsnSsuLamft2+StaSWXUPZrItwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2DcNdYd; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5B71F01558
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782892049;
-	bh=tHD2yVEHzdy8DLtJ2/nbdi1VySk42Z1vfw6pJpAFCkI=;
+	s=k20260515; t=1782892210;
+	bh=dx1O75jqKMARjEbw4xneNk7aG4r2yfuJioWVDgA4Lp0=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=h82x9az808hfj76bX1Jwefwe1HGwMiLTYRyd6c4VCcLZHxsTgSb+wcy89/cSftH9D
-	 dciBvozWO+CyVd16PUmy6KIJaiEBSDtu6CBHhe0aYZ/OWUgsCujdYPf6NK9OVl/BzA
-	 EpwIgaCpgceo7sPvfk8znHmJ+7h87SdcxACsx9GV9R7DtWljXBsfYObqkX/cpL+CEZ
-	 qnNewlfLC/P6seXHIACHaIcArCSlVN7mHLnTWQbWYy36WQdLYV1W8ue8VG0CoP0xSw
-	 ETFdSNLQQ5vqcnrJgndEE1aqB69xkWjAGIKHZdubQyNhiOCsPH0bncOCuYX9DH7/H/
-	 FeaCxWjbDSYFw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-39b26e2ad5eso3316811fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:47:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rr8Ngq4PniyL2wGey/qqRcCkv3vQ+v4j39E6H7/ojUGhE3F7GdAodllNE8Xvdo4k2dtmBMJONZ2zwQp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxugph4NZGJwt8pjj8HFvPlJZEXdMEWQnhQn16v/TYGWOYaHlJa
-	JBqWc+KQSBNOrKpFd5jTOD74PRhTqZ4BLq2OAcE0xg1fBA5jKM44Bepp4OsRfCaAjoNHRR7YV18
-	2353dsA4InSmyoedfTYLIUMkh5AlgYUCYTDhOBPEe9g==
-X-Received: by 2002:a2e:9a91:0:b0:396:7026:ad8d with SMTP id
- 38308e7fff4ca-39b33fc828bmr866001fa.13.1782892048227; Wed, 01 Jul 2026
- 00:47:28 -0700 (PDT)
+	b=j2DcNdYdADDJu+D3REmFeOGs5cw/wVRDCtpWACgDuKjqrOOLm2M4y5DN23480AZ1+
+	 vdbHErYbb2InVSGUdjvxGuamb9E+yPRsBVjhCVCiXyKaOxignCJrhJJ+sCulqREuj2
+	 JZxBrhhL8M2bGYMeKhgzQoRiW4OCC68fnAE12cgLy2w3/40ruKeTVw7/mHAPBTxFXf
+	 MW3RIJTIy2p3JhCAAmsgmH3SkxgQcdyu4tbovvpGx2pi551ZcwYmfASnsbjb8Sy5Am
+	 u1HrtfRlZkc2/+8NNkXk6EuHohgDRlqIW5fn+gweETKl82yJ2QHYPWNfZQsisst93n
+	 oOXXzvbJsIhvQ==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-39b14a7e53aso3399311fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:50:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RogPppgLU49z13LsszOePf0rOa+4tdqQreRyZT4EffiKdBUl9pL4AmoS7uNpoE3u81Q2BlKe67iVPsi@vger.kernel.org
+X-Gm-Message-State: AOJu0YytHPvXRZcfkoVzRpT/6NcPHWrJ+fpZfHvhRf40HSuIzliYMwtE
+	eQXMzi2f1IJqwletdRYkCV+PsyPJiovH5YN85hK/H3MtHMYUpXW0Si/Bcj7nwwljPGYnZVnsq8A
+	VjkhU4K0z+yRMhMnlVPok5/PZDWo3x90wCOXydv9mLQ==
+X-Received: by 2002:a05:651c:1593:b0:39a:f75e:a147 with SMTP id
+ 38308e7fff4ca-39b340d882dmr882981fa.34.1782892208779; Wed, 01 Jul 2026
+ 00:50:08 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Jul 2026 03:47:26 -0400
+ HTTPREST; Wed, 1 Jul 2026 00:50:07 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Jul 2026 03:47:26 -0400
+ HTTPREST; Wed, 1 Jul 2026 00:50:07 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260630125403.546375-5-khristineandreea.barbulescu@oss.nxp.com>
+In-Reply-To: <20260630125403.546375-6-khristineandreea.barbulescu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260630125403.546375-1-khristineandreea.barbulescu@oss.nxp.com> <20260630125403.546375-5-khristineandreea.barbulescu@oss.nxp.com>
-Date: Wed, 1 Jul 2026 03:47:26 -0400
-X-Gmail-Original-Message-ID: <CAMRc=MdknO+isf8BJGZG+VBiJZPC3J99DHcvdevQS5B1f1WHuQ@mail.gmail.com>
-X-Gm-Features: AVVi8Ceyeil22X60y3yZsNCxMt7k2roX0DVloL4hTxIC87YuEmy8U3T4_KiZNnI
-Message-ID: <CAMRc=MdknO+isf8BJGZG+VBiJZPC3J99DHcvdevQS5B1f1WHuQ@mail.gmail.com>
-Subject: Re: [PATCH v12 4/6] dt-bindings: pinctrl: s32g2-siul2: describe GPIO
- and EIRQ resources
+References: <20260630125403.546375-1-khristineandreea.barbulescu@oss.nxp.com> <20260630125403.546375-6-khristineandreea.barbulescu@oss.nxp.com>
+Date: Wed, 1 Jul 2026 00:50:07 -0700
+X-Gmail-Original-Message-ID: <CAMRc=McZEw4P3LS9HzaS5W1qonGWkdvCYaEvFiY8m6sm98aWjA@mail.gmail.com>
+X-Gm-Features: AVVi8Ce65ZHRsdwHuQE2lkQelFQAZtLRoTaOMFpaCpGigaio81APEbQW62eUHbc
+Message-ID: <CAMRc=McZEw4P3LS9HzaS5W1qonGWkdvCYaEvFiY8m6sm98aWjA@mail.gmail.com>
+Subject: Re: [PATCH v12 5/6] pinctrl: s32cc: implement GPIO functionality
 To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
 Cc: Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org, 
 	Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev, 
@@ -96,7 +95,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -104,13 +103,13 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39276-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39277-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:khristineandreea.barbulescu@oss.nxp.com,m:aruizrui@redhat.com,m:clizzi@redhat.com,m:devicetree@vger.kernel.org,m:eballetb@redhat.com,m:echanude@redhat.com,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:s32@nxp.com,m:kernel@pengutronix.de,m:vincent.guittot@linaro.org,m:linusw@kernel.org,m:brgl@bgdev.pl,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:chester62515@gmail.com,m:mbrugger@suse.com,m:ghennadi.procopciuc@nxp.com,m:larisa.grigore@nxp.com,m:lee@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:festevam@gmail.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:srini@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FREEMAIL_CC(0.00)[redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com,pengutronix.de,linaro.org,kernel.org,bgdev.pl,gmail.com,suse.com,linuxfoundation.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,nxp.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,qualcomm.com:email,mail.gmail.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,nxp.com:email,mail.gmail.com:mid,vger.kernel.org:from_smtp,qualcomm.com:email];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -122,34 +121,42 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 56CA66EAD3D
+X-Rspamd-Queue-Id: A7C706EADD5
 
-On Tue, 30 Jun 2026 14:54:01 +0200, Khristine Andreea Barbulescu
+On Tue, 30 Jun 2026 14:54:02 +0200, Khristine Andreea Barbulescu
 <khristineandreea.barbulescu@oss.nxp.com> said:
-> Extend the S32G2 SIUL2 pinctrl binding to describe the GPIO data and
-> external interrupt resources present in the same SIUL2 hardware block.
+> From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 >
-> Besides the MSCR and IMCR registers used for pin multiplexing and pad
-> configuration, SIUL2 also contains PGPDO and PGPDI registers
-> for GPIO data and EIRQ registers for external interrupt control.
+> The updated SIUL2 block groups pinctrl, GPIO data access
+> and interrupt control within the same hardware unit.
+> The SIUL2 driver is therefore structured as a monolithic
+> pinctrl/GPIO driver.
 >
-> Add GPIO controller properties because the SIUL2 block also provides
-> GPIO functionality, and gpio-ranges are needed to describe the
-> mapping between GPIO lines and pin controller pins.
+> GPIO data access and direction handling are implemented using the
+> gpio-regmap library backed by a virtual regmap. The virtual regmap
+> translates the gpio-regmap register model to the underlying SIUL2
+> registers: MSCR for direction, PGPDI for input values and PGPDO for
+> output values.
 >
-> Document the interrupt controller properties. The SIUL2 block
-> contains EIRQ hardware as part of the same register space. IRQ support
-> itself will be added in a follow-up patch series.
+> The existing pinctrl GPIO callbacks are used for the request/free path:
+> they switch the pad to GPIO mode on request and restore the previous
+> MSCR configuration when the GPIO is released.
 >
-> Update the example accordingly to show the complete SIUL2 register
-> layout, including the GPIO data and EIRQ register windows.
+> This change came as a result of upstream review in the
+> following series:
+> https://lore.kernel.org/linux-gpio/20260120115923.3463866-4-khristineandreea.barbulescu@oss.nxp.com/T/#m543c9edbdde74bdc68b6a2364e8b975356c33043
+> https://lore.kernel.org/all/20260504131148.3622697-7-khristineandreea.barbulescu@oss.nxp.com/
+>
+> Support both SIUL2 DT layouts:
+> - legacy pinctrl-only binding
+> - extended pinctrl/GPIO/irqchip binding
 >
 > Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 > Signed-off-by: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
 > ---
 
