@@ -1,146 +1,201 @@
-Return-Path: <linux-gpio+bounces-39270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bHT0MULBRGpn0QoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39270-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:26:58 +0200
+	id agz7JibCRGqg0QoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39271-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:30:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CD626EA9FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:26:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E943C6EAA6E
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 09:30:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kUcec2xU;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39270-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39270-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=D5KgyCu5;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39271-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39271-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 776F230CD500
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:24:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E080E3038A65
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 07:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 280DD3B7772;
-	Wed,  1 Jul 2026 07:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B387B3B5318;
+	Wed,  1 Jul 2026 07:26:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF632BE056
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127902BF002
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:26:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782890650; cv=none; b=SvWd+3Sc3RMER1E/We4XudZ+djJB9Qc3tmjpqpF2VsfnTIBWo5geRwTD9h26GsNV81BmmgtNogDdu5OF1NAGSnulKa4igfiaf0vXhcGPKcsudAdaJiiU6fwDbfVLodu8s7h3HDxZHXDHx4QhTPt+9TXlPy0pj5FtRbClWS6vNBo=
+	t=1782890765; cv=none; b=NMnpoWBRr/BDR3Vjfs1SM83+Y1JsLAbmWdYQy/X9P3rKLLTH/vHkQlV+xhDDAn7nM9xu/Tfce2iwKlpEdkdfjAr8qV+GMxhQ80JVSOavEH0FOaQ0dlpunOZ1dcUlUWKKUXpRb2gFjO8gS+R9gJcCSSinLTHdRVGXhnib6dOdrIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782890650; c=relaxed/simple;
-	bh=0JeXke4yrp//2jr+m7hmWb8VpYLnSF8U95s+7e6qDHA=;
+	s=arc-20240116; t=1782890765; c=relaxed/simple;
+	bh=bwrtRFjoK4UIez7xwJzXKm/8RtgqJanzk3LaK/QyMhY=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=STnHwfdoSLBcALm6K/9yyQ04PsrHsB2dgN0DfbusD7AGMV+VG5wGWL9K6w9KzaagxrM7GI9DsNSHW7KG33KYBsFNzpUPbUggZn3PERDIbKKFn0pHRWsl2LYfE7lrmMh5kT8Nwx++QvLm64R7UfZUSEf/WGpWKXxDW4hHNFrXIDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUcec2xU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5731F00ACA
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:24:08 +0000 (UTC)
+	 To:Cc:Content-Type; b=HHXy0cmhqqfkMlsm4V0FvXtBvJr06UnFtsyaOg3rwCFgLHkBEqEhutg/jrXUURLIgb1fFFDXWyOVnKBabshnuPoyj6sBacxMZHK/d9c8wUGC9XK06PJFvbqjZc2FfDlmrKcp33I6NKub7pEYerevdfostnlH+0bI016ouIQJRjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5KgyCu5; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F0F1F00A3D
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 07:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782890648;
-	bh=0JeXke4yrp//2jr+m7hmWb8VpYLnSF8U95s+7e6qDHA=;
+	s=k20260515; t=1782890763;
+	bh=d8Rvpk04BdjSa0tVlaireZJxfNxn48bfWqSWvAZYurU=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=kUcec2xUGizUm4jYUSRVNZUZ2PitJiw0h3ynkag1RrglT7Nx4bbkWtRyE8ediOF0p
-	 kd1/sIVGCsAhftKS9cCJ7eY+fQrN1zaow/1mvSkwVapkI+i+N9/ojg/Heamz05Xe7x
-	 nxH9FpWYuiH8oJdnh5r2UNhGu05KnQ18HlcI7UkRoMsElxegmitw3P0G9zRnj159T9
-	 tdNxyDbSfJqq+dsShojhOwWlBakqerd7NCX8lQxuMuAuRBiYaDjXK1Cvm1vd0PwQqz
-	 0fZ/M7fSsa0DnGf7DFCnaGebST51PzABCpHekGZ0JfF00Hwt1Djo1KGaTHrJGVghkn
-	 muRXKtmcHOJIg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5aebae2f310so291523e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:24:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrM7MQ7CWjkdXdD0UBcE7IVE7RrPiwP/EXuuwiUinR7u5bohYnWGqhp71YHJqRo4Uhlh+PG7WP5bhJ8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCB31PNEp8HwQSFj17S7ib6YN7LOJNWB67uBCI1o6Ab8QMGu4R
-	OfBxhWX+VOOZcDZ65Cy04jkRYftXBN+wq3QBX99Hw7tAmXp0uaaJmkA0p49qCfszKNBdtLASR37
-	quulw6lW1lOsko3WjgpGIL2oBfYm4EMelbr/c2cVcrg==
-X-Received: by 2002:a05:6512:66c6:10b0:5ae:bbe4:f4b9 with SMTP id
- 2adb3069b0e04-5aec68b65bamr58169e87.55.1782890647604; Wed, 01 Jul 2026
- 00:24:07 -0700 (PDT)
+	b=D5KgyCu5DgEa2hVO+10BQbV78125mitj5BN42yCw+omu3Wq7o42nHHeUDCdduI7x1
+	 yqN2B1q+MHypP7eWGHb/+/N9/ut8TVi+34BaZa7WtXVnnZtCLrfOPeqJaOZ8wyTkga
+	 jkJzzTPw8sgg9xUdtPolgCuLFxpsIXLtYmR4y2umAUjCLwNRlOU0TmdYcetgmOZYIg
+	 nd0wBOs6Lk6YZmMX0zG18sUndr6bf9r/iyTFiNiH3IsJnv8P9NHIwbr0TEiGOnusvl
+	 UKR+VX4WAsrGNQ+LynSNW8yJiHUJ5CaJ1/xBLdKcL7OuxEvF8CsHNmklqSI+AfFZN/
+	 kBJ27Jf8ZVOrQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aebae2f310so293058e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 00:26:03 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxIozZRLDqZ/42t5I7gUnPOoL2GVzO92S4+cRewbTR4PJsWJ/N6
+	IRvjBd/XOEVoA50CePMeXpFs5fbsTTL1N+x+Nhar8d0KAYAOqbPLpl8m1HQicN7EXqg2UTO8m7U
+	BUHqlC705HuHzuRwhhYzAAe1+4mlr+Pzr/OsE8nA01Q==
+X-Received: by 2002:a05:6512:8388:b0:5ae:b861:ac27 with SMTP id
+ 2adb3069b0e04-5aec6793d72mr68315e87.18.1782890762547; Wed, 01 Jul 2026
+ 00:26:02 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Jul 2026 03:24:05 -0400
+ HTTPREST; Wed, 1 Jul 2026 03:26:00 -0400
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 1 Jul 2026 03:24:05 -0400
+ HTTPREST; Wed, 1 Jul 2026 03:26:00 -0400
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <CAD++jLneg_hxaBbcH915K8h1aec3L2gHKMhCmmj_eZ3iOs=VJA@mail.gmail.com>
+In-Reply-To: <20260701010228.1605573-1-mark.tomlinson@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260626-topic-8280_pinctrl_wakeup-v1-1-2ccb267148f5@oss.qualcomm.com>
- <CAD++jLneg_hxaBbcH915K8h1aec3L2gHKMhCmmj_eZ3iOs=VJA@mail.gmail.com>
-Date: Wed, 1 Jul 2026 03:24:05 -0400
-X-Gmail-Original-Message-ID: <CAMRc=Mcug-E9KDk7UBfKVhN4mwP+rjeUsT9CrNrZ4UhmdRF2WQ@mail.gmail.com>
-X-Gm-Features: AVVi8CcteT0RaTmV3zZX-RGkX-SuXhqlfYUURo1c1xqnTSRwT0M9M5dI5mPTCrY
-Message-ID: <CAMRc=Mcug-E9KDk7UBfKVhN4mwP+rjeUsT9CrNrZ4UhmdRF2WQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: sc8280xp: Add missing wakeup entries for GPIO143/151
-To: Linus Walleij <linusw@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Bartosz Golaszewski <brgl@kernel.org>
+References: <20260701010228.1605573-1-mark.tomlinson@alliedtelesis.co.nz>
+Date: Wed, 1 Jul 2026 03:26:00 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Md8c6MPUoGHixboAkYsHTU+C=nGT5ci+fDkfpC=3f6Xcg@mail.gmail.com>
+X-Gm-Features: AVVi8CehTFeMlqnUcg2bmFqiLFNGH0P4hdTNMEaoayy_ga8T_WSiEbnob19tyfE
+Message-ID: <CAMRc=Md8c6MPUoGHixboAkYsHTU+C=nGT5ci+fDkfpC=3f6Xcg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: fix pca953x_irq_bus_sync_unlock regmap lock
+To: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linusw@kernel.org, brgl@kernel.org, ian.ray@gehealthcare.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-39271-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39270-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:url,qualcomm.com:email];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:andersson@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:konrad.dybcio@oss.qualcomm.com,m:brgl@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:mark.tomlinson@alliedtelesis.co.nz,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:ian.ray@gehealthcare.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid,alliedtelesis.co.nz:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2CD626EA9FC
+X-Rspamd-Queue-Id: E943C6EAA6E
 
-On Wed, 1 Jul 2026 09:00:33 +0200, Linus Walleij <linusw@kernel.org> said:
-> On Fri, Jun 26, 2026 at 3:08=E2=80=AFPM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
+On Wed, 1 Jul 2026 03:02:28 +0200, Mark Tomlinson
+<mark.tomlinson@alliedtelesis.co.nz> said:
+> Locking is disabled in the regmap config as this driver uses its own
+> lock. This means that all calls to regmap functions (read or write) must
+> hold the i2c_lock. The function pca953x_irq_bus_sync_unlock() did not do
+> this, and it was therefore possible that multiple threads could cause an
+> incorrect register to be read/written.
 >
->> Pins 143 and 151 were not included in the PDC wakeup map. They are
->> normally used for PCIe2A and PCIe3a PERST# respectively, so they're
->> unlikely to be excercised in practice, but still add them for the sake
->> of completeness.
->>
->> Fixes: c0e4c71a9e7c ("pinctrl: qcom: Introduce sc8280xp TLMM driver")
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> A previous patch partly fixed this, but only protected the write to the
+> interrupt mask register, and not the read from the direction register.
 >
-> LGTM Bartosz will queue Qualcomm patches, but I see he's
-> already on CC albeit in the qcom address.
->
-> Is this an urgent or a nonurgent fix?
->
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-Now queued, thanks.
+Plase add Fixes: and Cc: stable.
 
-Konrad: I use my kernel.org address for linux develpment as per MAINTAINERS=
- so
-may miss email sent to oss.qualcomm.com.
+> ---
+>  drivers/gpio/gpio-pca953x.c | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 2ee35e855e4d..9689e3f3c517 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -605,20 +605,27 @@ static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *
+>  	return 0;
+>  }
+>
+> -static int pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned off)
+> +static int _pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned off)
+
+Please prefer pca953x_gpio_direction_input_unlocked() as it's more verbose
+about the purpose.
+
+>  {
+>  	struct pca953x_chip *chip = gpiochip_get_data(gc);
+>  	u8 dirreg = chip->recalc_addr(chip, chip->regs->direction, off);
+>  	u8 bit = pca953x_get_bit_mask(chip, off);
+>
+> -	guard(mutex)(&chip->i2c_lock);
+> -
+>  	if (PCA_CHIP_TYPE(chip->driver_data) == TCA6418_TYPE)
+>  		return regmap_update_bits(chip->regmap, dirreg, bit, 0);
+>
+>  	return regmap_update_bits(chip->regmap, dirreg, bit, bit);
+>  }
+>
+> +static int pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned off)
+> +{
+> +	struct pca953x_chip *chip = gpiochip_get_data(gc);
+> +
+> +	guard(mutex)(&chip->i2c_lock);
+> +
+> +	return _pca953x_gpio_direction_input(gc, off);
+> +}
+> +
+>  static int pca953x_gpio_direction_output(struct gpio_chip *gc,
+>  		unsigned off, int val)
+>  {
+> @@ -856,9 +863,10 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+>  	DECLARE_BITMAP(reg_direction, MAX_LINE);
+>  	int level;
+>
+> +	guard(mutex)(&chip->i2c_lock);
+> +
+>  	if (chip->driver_data & PCA_PCAL) {
+>  		DECLARE_BITMAP(latched_inputs, MAX_LINE);
+> -		guard(mutex)(&chip->i2c_lock);
+>
+>  		/* Enable latch on edge-triggered interrupt-enabled inputs */
+>  		bitmap_or(latched_inputs, chip->irq_trig_fall, chip->irq_trig_raise, gc->ngpio);
+> @@ -880,7 +888,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+>
+>  	/* Look for any newly setup interrupt */
+>  	for_each_andnot_bit(level, irq_mask, reg_direction, gc->ngpio)
+> -		pca953x_gpio_direction_input(&chip->gpio_chip, level);
+> +		_pca953x_gpio_direction_input(&chip->gpio_chip, level);
+>
+>  	mutex_unlock(&chip->irq_lock);
+>  }
+> --
+> 2.54.0
+>
+>
 
 Thanks,
-Bart
+Bartosz
 
