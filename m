@@ -1,41 +1,41 @@
-Return-Path: <linux-gpio+bounces-39299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id lQS3EEToRGqu2woAu9opvQ
-	(envelope-from <linux-gpio+bounces-39299-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:13:24 +0200
+	id wBaQBq/pRGoI3AoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39300-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:19:27 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1D826EBF79
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:13:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA83E6EC092
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:19:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39299-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39299-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39300-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39300-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 46F9C301D764
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:12:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 68CBA31259C1
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF5F40E8C6;
-	Wed,  1 Jul 2026 10:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A58A40DFD9;
+	Wed,  1 Jul 2026 10:12:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBBB40DFCF;
-	Wed,  1 Jul 2026 10:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A88C3FD15E;
+	Wed,  1 Jul 2026 10:12:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782900729; cv=none; b=e9TAjMushjh3tDP+Osz30wp3WaJAeFX2BuLxgUtsJoPREgbfgH0A35w9AzFHSms0pyw0hI2ZK7KNuSvcaAKbbviCxJmCIHVHFaXe6eebC4m9obKNSYYdkx61kHUxn6ILuWpF3sEAS2t8RdXbcp4VlMrmJ7rDGWz2IO0Dpun1/LQ=
+	t=1782900732; cv=none; b=BM7IV294X6huwNDZK7Yrs9LKd4nlsmAWF7kKTInbb1knCDXSNKgNiVZtm4g/tT4cHZJFxhzb9eVgv+7uSXWJsho77oBI5e38CubISyWhKoDVEgmYt9YL/BJ8Fnczrzlz6Y3o5TjtH8JxSEh2uf7p2zqekLnYggJnEsI9NHIfCbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782900729; c=relaxed/simple;
-	bh=B0DBPdbDcgJGH2EFbbmm8OmRu5Kh0J1h0+vJkGdUY4A=;
+	s=arc-20240116; t=1782900732; c=relaxed/simple;
+	bh=jSXkSz8JX58dioIh15KZz9lTCSGLczxglZ5o659EEcA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEu6dwYGXZx6FoViuxu+nNWtD/jF8q9WjuRCoDehIuEyIowP8BUeL2zPynmpRvHO7osnYSQGm5bmGdMXGvcLpnHE3N8C4f91Y69o/IaUrTYnqkgvNmVJUqdBosuWfOBwNaTwqyVaTSaqVPJQ3pvcGIt++Api6t2+2YjUfjnnGUI=
+	 MIME-Version; b=A5eUb1t5AZrcsRa7/gdJ2dbArJtm4Gy5Uwho4tw/6Fma3JjNDSVk2ii9dyKfM5Irmyl2T4LqxTTE99eyn82IEKTQ28lMr+BayorD0o7ZfUrGug9S7qdZoRMyJ9baIbzh+NatLVhNXPYRVolMRZpteJEQWeJCpdNu9aHRoTgspII=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B111F000E9;
-	Wed,  1 Jul 2026 10:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4101F00A3A;
+	Wed,  1 Jul 2026 10:12:08 +0000 (UTC)
 From: Geert Uytterhoeven <geert@linux-m68k.org>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Linus Walleij <linusw@kernel.org>,
@@ -46,9 +46,9 @@ Cc: linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert@linux-m68k.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v2 6/9] MIPS: TXX9: Use GPIO lookup table for iocled LEDs
-Date: Wed,  1 Jul 2026 12:11:41 +0200
-Message-ID: <68c915761e5234ad64cd62024fbac39ab097494d.1782900491.git.geert@linux-m68k.org>
+Subject: [PATCH v2 7/9] MIPS: TXX9: Drop GPIOLIB_LEGACY select
+Date: Wed,  1 Jul 2026 12:11:42 +0200
+Message-ID: <0dd4ff62e5cfd5c34817c58d5311e7a060b08971.1782900491.git.geert@linux-m68k.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1782900491.git.geert@linux-m68k.org>
 References: <cover.1782900491.git.geert@linux-m68k.org>
@@ -64,7 +64,7 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -75,7 +75,7 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39299-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39300-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -88,17 +88,13 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,linux-m68k.org:email,linux-m68k.org:mid,linux-m68k.org:from_mime,qualcomm.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,qualcomm.com:email,linux-m68k.org:email,linux-m68k.org:mid,linux-m68k.org:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C1D826EBF79
+X-Rspamd-Queue-Id: AA83E6EC092
 
-Convert iocled LED description from legacy GPIO numbers to GPIO
-descriptors using a GPIO lookup table.
-
-For now, just ignore the "lowactive" parameter, and force
-GPIO_ACTIVE_LOW, as that is what the sole caller wants.
+TXx has been converted away from the old-style gpiolib interfaces.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
@@ -107,54 +103,21 @@ Reviewed-by: Linus Walleij <linusw@kernel.org>
 v2:
   - Add Reviewed-by.
 ---
- arch/mips/txx9/generic/setup.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/mips/txx9/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
-index 611ccbe429cfe7e1..32246f5f78f5070c 100644
---- a/arch/mips/txx9/generic/setup.c
-+++ b/arch/mips/txx9/generic/setup.c
-@@ -19,6 +19,7 @@
- #include <linux/clkdev.h>
- #include <linux/err.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/machine.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/txx9/ndfmc.h>
- #include <linux/serial_core.h>
-@@ -615,6 +616,15 @@ static int txx9_iocled_dir_out(struct gpio_chip *chip, unsigned int offset,
- 	return 0;
- }
+diff --git a/arch/mips/txx9/Kconfig b/arch/mips/txx9/Kconfig
+index 92b759a434c0eedf..7335efa4d52801dc 100644
+--- a/arch/mips/txx9/Kconfig
++++ b/arch/mips/txx9/Kconfig
+@@ -37,7 +37,6 @@ config SOC_TX4927
+ 	select IRQ_TXX9
+ 	select PCI_TX4927
+ 	select GPIO_TXX9
+-	select GPIOLIB_LEGACY
  
-+static struct gpiod_lookup_table txx9_iocled_table = {
-+	.table = {
-+		GPIO_LOOKUP_IDX("iocled", 0, NULL, 0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("iocled", 1, NULL, 1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("iocled", 2, NULL, 2, GPIO_ACTIVE_LOW),
-+		{ },
-+	},
-+};
-+
- void __init txx9_iocled_init(unsigned long baseaddr,
- 			     int basenum, unsigned int num, int lowactive,
- 			     const char *color, char **deftriggers)
-@@ -659,14 +669,14 @@ void __init txx9_iocled_init(unsigned long baseaddr,
- 		snprintf(iocled->names[i], sizeof(iocled->names[i]),
- 			 "iocled:%s:%u", color, i);
- 		led->name = iocled->names[i];
--		led->gpio = basenum + i;
--		led->active_low = lowactive;
- 		if (deftriggers && *deftriggers)
- 			led->default_trigger = *deftriggers++;
- 	}
- 	pdev->dev.platform_data = &iocled->pdata;
- 	if (platform_device_add(pdev))
- 		goto out_pdev;
-+	txx9_iocled_table.dev_id = dev_name(&pdev->dev);
-+	gpiod_add_lookup_table(&txx9_iocled_table);
- 	return;
- 
- out_pdev:
+ config SOC_TX4938
+ 	bool
 -- 
 2.43.0
 
