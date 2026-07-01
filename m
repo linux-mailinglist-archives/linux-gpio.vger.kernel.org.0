@@ -1,84 +1,84 @@
-Return-Path: <linux-gpio+bounces-39284-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39285-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EIHSKK7QRGpE1QoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39284-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 10:32:46 +0200
+	id hlskHoHSRGqz1QoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39285-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 10:40:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E6FE6EB213
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 10:32:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8DC46EB32A
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 10:40:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=JPmzfIvb;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39284-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39284-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=suse.com header.s=google header.b=DkFUWyqW;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39285-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39285-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=suse.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1FC083043822
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 08:32:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6A70130FF1D0
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 08:33:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED6D93E716F;
-	Wed,  1 Jul 2026 08:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D5F83EB0F1;
+	Wed,  1 Jul 2026 08:33:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7462D3BB675
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 08:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FEC3E717C
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 08:33:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782894749; cv=none; b=n++D9m2O/y66/MSMSZg51HZxaGx8SnMO0pmN/72jhyo1PSDIajP5YguNlGO5+ZYOX5R6mxTIAyUbl9SgH7c2SiFR20GoY5D2l/8w0ho3ZYG6mLSR4zLWBcWXa4vhf23F3GapoXtfq16onxIfbZfoKHJ9UCYfLXc37Gt5lVV1BV4=
+	t=1782894814; cv=none; b=t/Rq+KyZw4Mw++E3Psp+aA+gfNwRGcrNYiz01BaDL/a2l3T8Dv7A6CPp7AoWRjzskRCvYw4bJ5lg2QZdXHCfNDq08OVwiNvJ+SCiaIBKAV2/n/aqKycZJ0EGU5Nowlza176JkmrCwus64gG5iZWmwHwHbHUdoylKQLSxBLKGjyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782894749; c=relaxed/simple;
-	bh=ZKl6w321q3N/LHsPju0BkShQH/Evbm1Q13JQ+0LryA4=;
+	s=arc-20240116; t=1782894814; c=relaxed/simple;
+	bh=vjpi9gDuzwwRM7WLjI09X9TThOB1p5PHgz+55yL6rYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aiM59rWgBrVkpXpUwB/0JVTvhzaPt4opOIDQhcaFZIhtJBObO7to7S3zv/jKLgtSd6FzyJGU473bNU0o8bKq01ma5iOKGLMhQo6xgnbtUyrjUxiM6b/+GlehiSGgtZhuqFwOB3YslQLNRSHRZv2Rm53J1Qrbp4s0xvYBpgJ3qNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JPmzfIvb; arc=none smtp.client-ip=209.85.218.53
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c125bce2294so50260866b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 01:32:28 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=KN1VNAfJ1ByVeeGSSKz43riv2XA1XdaHfmj4ZDbOpBlg4j14IguBf+Ev1Sl7ZYdKZlW/ieoRCZ8hE6+SCZY42azOBT7ACdmJdquvkX9iOalVTE4YQPK30hl3EStRTFbPUc2KIe8g0TXiim4kjCxfUbuPmeXEh6PpuRTFZmiGto8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DkFUWyqW; arc=none smtp.client-ip=209.85.208.45
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-695f6438518so648059a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 01:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1782894747; x=1783499547; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1782894810; x=1783499610; darn=vger.kernel.org;
         h=in-reply-to:autocrypt:from:content-language:references:cc:to
          :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ZKl6w321q3N/LHsPju0BkShQH/Evbm1Q13JQ+0LryA4=;
-        b=JPmzfIvbVlwkz1LVtR+zY+Dq0mbllClQSfXvYCU+lX8XnPXQWKFgfWNNUIixs9M11F
-         qBnEHy3IlVBURHWqeQhJprWAYSScAFy0lDPjbRp6Caejx/5sD+E/c6k1cYgF8jQyWjzd
-         JMPl5gbKb5JqAC7bz3zfVeTo7HUJRcjuqq2kPY65PkLpWqlsYZzq3xH2ha2mFC24MkJW
-         Q/2UDtJt3hERYCTr3R56ovADgd/N8YBgZzjo8rM5+QOEy6jgrCxOWnVAAVr4xSyREQ5v
-         GcjAddI9A7sTtjlhLRKjsyKkNDl+AmO6KZIf+n3ZLRGgdlRjw15yq3ESGtcGQZ3MvHdN
-         NRFA==
+        bh=vjpi9gDuzwwRM7WLjI09X9TThOB1p5PHgz+55yL6rYs=;
+        b=DkFUWyqWgHxHYcBp/nkaazJBOgywn1jIJGObl7tyCpjYq9+mpQKE+0rynd2RjzfAln
+         TfpbQG1lMoQrqU2qN/QNEJrSnUNTuJDCihBoNOPiNjSsf8gMYeHq4a+oS513NxoZz+E9
+         Odh+0eqoXLTk3yGO/G1x3pOr0oR+2gXsdJXRTV5EzHkYrsoAX9CVJWxOvTzEQtox/BrK
+         LmvuNVDJQ+tBKftxx/vOWMhmHIwJ2fqU63brG78qvhy3up//G6cYDjnATwlwhIfR+7R/
+         mD1mFHE2Bu4D/3hu8ajaIwZq/P1TEnqwZhExPIFBCCAdizo5oKdylPa7PUUgedYmHqfI
+         poaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782894747; x=1783499547;
+        d=1e100.net; s=20251104; t=1782894810; x=1783499610;
         h=in-reply-to:autocrypt:from:content-language:references:cc:to
          :subject:user-agent:mime-version:date:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKl6w321q3N/LHsPju0BkShQH/Evbm1Q13JQ+0LryA4=;
-        b=IvvVuYDlgwfpaaVzzUTf3V/sAOKy8IMhBre+3AkKL27yfPCn2vL17N6lqjiz703Uxm
-         f3LLfuVtRUOl1mImRk5vIixz0fSyxGrPJPjd9JXvYNrHIqU9kdThXcqndzKKDtihsHcx
-         sgF7Ol/DqiqtlZeq7pwOB7/jqOsE1aiGzA+IxRnM6K7IWvQEu1TMFUW9QesbD8wjhSrM
-         ZbNArBHTbucQbuAiFVT1Td9DbqAsGMYw+VISZ5lwDjMqoipH8LTnFYYcLKxI7XNPcXjZ
-         t79djbQdSYkCJJYYsgAtwVKcf9nv3NhKAoUFFuSqvbLEbC5kOWC74r/ywfGVYzA9uvqY
-         mo8w==
-X-Forwarded-Encrypted: i=1; AHgh+Rqn/CL47gxji8Se3LMqeGSHhkmjg9viO+LsKXGtQDEKpU7xO7Yxu660m15pNUlHOMZx5+UGsIPpDhOc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/c/LEhPy/M6UYBMQrWWDfMI0Zl+1SkuMcChSUsA6eJzUVUxxC
-	lDNcERghFVLYobpb4cmHYSh/n3kfPOt4SDJGeRDjO60JBq4oA/vG8LLlhTM0IkbW+Sw=
-X-Gm-Gg: AfdE7cmGfGDIGeZCb4JG8QmRoAwq+c3ePPFf5RtYm3g8g4lt/ut/sDCMPHA+5RI2ObM
-	wCVQldN/tm9Vk88t1Ilth+Fs/+eJtaYth1wGegGiYZnG5ltT4phQzScy/4CZaV2EPOoCG2Acf1K
-	jQR9bX1KyDfHa0Ja5wlodtwOFTYNjufABT1RBZY1gLZS7q4uuSfFB/HNzDRJw63bDA/ncITxurv
-	jPUUF20BMZZOXor+TmT0OIUQuLCGTlir6byLgu1/SXKe7okt/eaSwHOhuIJnAtptQJv3x018uxi
-	BwWiIaAcGbA3KouPgirvns/cRZHklcknl/2ifh1ch8LOgs4ZOygI4vOvD1DsY5c0LSlS3Av7zbn
-	txeaZcHkW7cC26J4wThAwh45UEA0z76mMrW3Ggt+XCGuq5o3H3XP7cW1eznqNrRWbMFzgzBd/Az
-	ws+6BELNemE/HJWs9FFjhA+jkxrsLFU0aHsf+UK+S9DlPMWwTXvs3t4iiQHmTyKGAxyz0MrWUt0
-	DGtVOiyscZyl64o4KrlNETdd51YBp/eEGiryEkebPM=
-X-Received: by 2002:a17:907:3c95:b0:c0c:9f16:90df with SMTP id a640c23a62f3a-c12a9d3046fmr30320666b.13.1782894746816;
-        Wed, 01 Jul 2026 01:32:26 -0700 (PDT)
+        bh=vjpi9gDuzwwRM7WLjI09X9TThOB1p5PHgz+55yL6rYs=;
+        b=spzkIbJGQ/vM0wjMngsrdZ+rEKwG04CRmufzkAVALzpvWiB21nRD/r4q+N8gpec8wd
+         pc/krPR84spySqRonaPKq4rFY/w28wueBVhDeam8TC6WK6eoKEeZPlEJOy6yJxjejuR/
+         hhl8Ddo9oakwroIq6UomAkbx7mh/6d++ziduxwgXtX6TAWwKSsN+1TY0yph+TJFk5Yj+
+         JAnyi8STbSzghnTz2LLpP4g5htdIO5CkeUHDne3i1J0lsAqen3UNd5d+IMh6RVvCgUQQ
+         7xeTCxq0PPap43rdHiQinKcLlsHC2Kzb52QBiyfHLww/apozKhHoCFu3jOmRbPX61tnQ
+         K0Ug==
+X-Forwarded-Encrypted: i=1; AHgh+Rrf+IT6jsbENNVSjdwuwsFAFz7dIEaGj5VKGeE4rCcVGFE0O++plOxYlz270GXRZ2+ZkxWCVHtrLbtG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv2++fZTX8S5r5SUDxjuHJ5yvmT1QIi2I849b7K2H6cUWP0G5Y
+	z2bc0n3bSVgmuXqHsHzyIoJmXUbpmyYEkqinfuxam0+OIIunPenDwNNBQXqCwR4mprc=
+X-Gm-Gg: AfdE7cmokICNIaBg0p588jK35bY8g8bPgDQzDfQQaKrf6tqdMaJHPaefQHC9xLXeRyW
+	+gU+aurgLT7lVJejnGMCwdv/wgT4Cz+SVML9FWUCRtvGwXbMOo4Isl2IZrLmEBNkbdc7M336ooP
+	5mvNucAp/SWPd6ctZE/pZYv8oPfWmNC7Oi2l9CUraFQmolo2JoQ/dneSrCXWzWX0vmKnFq4QLyM
+	8D8XY4zD5VFQuXwTk5fcI2+zmZBrM606KitX8SP33teC/2/mR8sx6dNbdApc1Hypvl4YVjnRBBd
+	y2wkffOJq4Ne4UrwxCpPxIpEov0H0nra6MiZsFL6N8tinKnmbuDPv2p5x7EsTBi4FnK0iSj2Iwj
+	M1YQoyUxUNMrkvghK/GXBIHWcHJMbcaAChPB96kphJeQsyXVKtVkBOAelOD4Vep0AUZxFjZHu48
+	oWNlpkXPaa/4zAGZ42daqji58etpQW6TqBCaaH/X4yBGtvr5Zj8vq1AOpty30rjCHUQol2CBR25
+	xqificwIeJFoSIhB8HQhakZnpDNAOVyb0CyXAgdX1ewHCckwY92Yw==
+X-Received: by 2002:a05:6402:4146:b0:698:99be:29d6 with SMTP id 4fb4d7f45d1cf-6989f38e868mr343446a12.29.1782894809526;
+        Wed, 01 Jul 2026 01:33:29 -0700 (PDT)
 Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1289142a46sm234310466b.53.2026.07.01.01.32.26
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6987c21f123sm2359277a12.0.2026.07.01.01.33.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jul 2026 01:32:26 -0700 (PDT)
-Message-ID: <e487f14c-0329-46b1-b087-188adea36950@suse.com>
-Date: Wed, 1 Jul 2026 10:32:26 +0200
+        Wed, 01 Jul 2026 01:33:29 -0700 (PDT)
+Message-ID: <0c5e4515-b51e-4b19-8389-a76cabc88042@suse.com>
+Date: Wed, 1 Jul 2026 10:33:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,15 +86,74 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/32] drivers/gpio: Stop using 32-bit MSR interfaces
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Bartosz Golaszewski <brgl@kernel.org>
+Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
+To: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, x86@kernel.org,
+ linux-acpi@vger.kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-ide@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>, "lukasz.luba@arm.com"
+ <lukasz.luba@arm.com>, Jason Baron <jbaron@akamai.com>,
+ Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Len Brown <lenb@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ "Kirill A. Shutemov" <kas@kernel.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, Pu Wen <puwen@hygon.cn>,
+ Bjorn Helgaas <bhelgaas@google.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+ Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Dave Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Guenter Roeck <linux@roeck-us.net>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, Huang Rui <ray.huang@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Artem Bityutskiy <dedekind1@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, xen-devel@lists.xenproject.org
 References: <20260629060526.3638272-1-jgross@suse.com>
- <20260629060526.3638272-25-jgross@suse.com>
- <CAD++jL=D81BED5g36JRZ-+-rYwszsMmUhi1vLeby0KZVjbr00Q@mail.gmail.com>
+ <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
+ <c1608c48-13c2-4290-826b-28b5ca51eaf7@suse.com>
+ <7332feff-2649-496c-8e49-b0a19eb54a32@app.fastmail.com>
+ <akJUz0kYkEBdLSZ3@gmail.com> <akQR9YMtMHReJTfB@google.com>
 Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
 Autocrypt: addr=jgross@suse.com; keydata=
  xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
  ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
@@ -118,82 +177,166 @@ Autocrypt: addr=jgross@suse.com; keydata=
  HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
  QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
  ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <CAD++jL=D81BED5g36JRZ-+-rYwszsMmUhi1vLeby0KZVjbr00Q@mail.gmail.com>
+In-Reply-To: <akQR9YMtMHReJTfB@google.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="------------Z8GiUPE2jbuzLZaCy02SW6kJ"
+ boundary="------------yR0aQa1Dp38FRBSVbM28PBR6"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.06 / 15.00];
+X-Spamd-Result: default: False [-0.85 / 15.00];
 	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	R_MIXED_CHARSET(0.71)[subject];
 	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	MAILLIST(-0.15)[generic];
-	MIME_BASE64_TEXT(0.10)[];
 	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39284-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	FORGED_SENDER(0.00)[jgross@suse.com,linux-gpio@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:brgl@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39285-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:seanjc@google.com,m:mingo@kernel.org,m:arnd@arndb.de,m:linux-kernel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-edac@vger.kernel.org,m:x86@kernel.org,m:linux-acpi@vger.kernel.org,m:kvm@vger.kernel.org,m:linux-coco@lists.linux.dev,m:linux-pci@vger.kernel.org,m:virtualization@lists.linux.dev,m:linux-ide@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-hyperv@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-perf-users@vger.kernel.org,m:linux-mtd@lists.infradead.org,m:platform-driver-x86@vger.kernel.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:jbaron@akamai.com,m:bp@alien8.de,m:tony.luck@intel.com,m:yazen.ghannam@amd.com,m:lenb@kernel.org,m:pavel@kernel.org,m:tglx@kernel.org,m:mingo@redhat.com,m:dave.hansen@linux.intel.com,m:hpa@zytor.com,m:pbonzini@redhat.com,m:kas@kernel.org,m:rick.p.edgecombe@inte
+ l.com,m:puwen@hygon.cn,m:bhelgaas@google.com,m:ajay.kaher@broadcom.com,m:alexey.makhalov@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:viresh.kumar@linaro.org,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:TonyWWang-oc@zhaoxin.com,m:dlemoal@kernel.org,m:cassel@kernel.org,m:airlied@redhat.com,m:deller@gmx.de,m:linux-geode@lists.infradead.org,m:olivia@selenic.com,m:herbert@gondor.apana.org.au,m:linusw@kernel.org,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:kys@microsoft.com,m:haiyangz@microsoft.com,m:wei.liu@kernel.org,m:decui@microsoft.com,m:longli@microsoft.com,m:linux@roeck-us.net,m:peterz@infradead.org,m:acme@kernel.org,m:namhyung@kernel.org,m:mark.rutland@arm.com,m:alexander.shishkin@linux.intel.com,m:jolsa@kernel.org,m:irogers@google.com,m:adrian.hunter@intel.com,m:james.clark@linaro.org,m:jpoimboe@kernel.org,m:pawan.kumar.gupta@linux.intel.com,m:vkuznets@redhat.com,m:luto@kernel.org,m:boris.ostrovsky@oracle.com,m:ray.
+ huang@amd.com,m:mario.limonciello@amd.com,m:perry.yuan@amd.com,m:kprateek.nayak@amd.com,m:srinivas.pandruvada@linux.intel.com,m:artem.bityutskiy@linux.intel.com,m:dedekind1@gmail.com,m:miquel.raynal@bootlin.com,m:richard@nod.at,m:vigneshr@ti.com,m:ashok.raj.linux@gmail.com,m:hansg@kernel.org,m:ilpo.jarvinen@linux.intel.com,m:irenic.rajneesh@gmail.com,m:david.e.box@intel.com,m:xen-devel@lists.xenproject.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[jgross@suse.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[arndb.de,vger.kernel.org,kernel.org,lists.linux.dev,lists.freedesktop.org,lists.infradead.org,intel.com,arm.com,akamai.com,alien8.de,amd.com,redhat.com,linux.intel.com,zytor.com,hygon.cn,google.com,broadcom.com,linaro.org,zhaoxin.com,gmx.de,selenic.com,gondor.apana.org.au,linuxfoundation.org,microsoft.com,roeck-us.net,infradead.org,oracle.com,gmail.com,bootlin.com,nod.at,ti.com,lists.xenproject.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCPT_COUNT_GT_50(0.00)[96];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jgross@suse.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	HAS_ATTACHMENT(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,suse.com:dkim,suse.com:email,suse.com:mid,suse.com:from_mime]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,suse.com:dkim,suse.com:mid,suse.com:from_mime,arndb.de:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5E6FE6EB213
+X-Rspamd-Queue-Id: A8DC46EB32A
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Z8GiUPE2jbuzLZaCy02SW6kJ
-Content-Type: multipart/mixed; boundary="------------7R2Mfy70R2uAdOLBmt7KmUSR";
+--------------yR0aQa1Dp38FRBSVbM28PBR6
+Content-Type: multipart/mixed; boundary="------------vD8700IqVizDT0GQTpFiBkTP";
  protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Bartosz Golaszewski <brgl@kernel.org>
-Message-ID: <e487f14c-0329-46b1-b087-188adea36950@suse.com>
-Subject: Re: [PATCH 24/32] drivers/gpio: Stop using 32-bit MSR interfaces
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Sean Christopherson <seanjc@google.com>, Ingo Molnar <mingo@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, x86@kernel.org,
+ linux-acpi@vger.kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-ide@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>, "lukasz.luba@arm.com"
+ <lukasz.luba@arm.com>, Jason Baron <jbaron@akamai.com>,
+ Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Len Brown <lenb@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ "Kirill A. Shutemov" <kas@kernel.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, Pu Wen <puwen@hygon.cn>,
+ Bjorn Helgaas <bhelgaas@google.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+ Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Dave Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Guenter Roeck <linux@roeck-us.net>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, Huang Rui <ray.huang@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Artem Bityutskiy <dedekind1@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, xen-devel@lists.xenproject.org
+Message-ID: <0c5e4515-b51e-4b19-8389-a76cabc88042@suse.com>
+Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
 References: <20260629060526.3638272-1-jgross@suse.com>
- <20260629060526.3638272-25-jgross@suse.com>
- <CAD++jL=D81BED5g36JRZ-+-rYwszsMmUhi1vLeby0KZVjbr00Q@mail.gmail.com>
-In-Reply-To: <CAD++jL=D81BED5g36JRZ-+-rYwszsMmUhi1vLeby0KZVjbr00Q@mail.gmail.com>
+ <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
+ <c1608c48-13c2-4290-826b-28b5ca51eaf7@suse.com>
+ <7332feff-2649-496c-8e49-b0a19eb54a32@app.fastmail.com>
+ <akJUz0kYkEBdLSZ3@gmail.com> <akQR9YMtMHReJTfB@google.com>
+In-Reply-To: <akQR9YMtMHReJTfB@google.com>
 
---------------7R2Mfy70R2uAdOLBmt7KmUSR
-Content-Type: multipart/mixed; boundary="------------APXQrlgkGVWay0uXfKDY1Dbn"
+--------------vD8700IqVizDT0GQTpFiBkTP
+Content-Type: multipart/mixed; boundary="------------jBK7pBe03sqwPCAFbkx06T5B"
 
---------------APXQrlgkGVWay0uXfKDY1Dbn
+--------------jBK7pBe03sqwPCAFbkx06T5B
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
 
-T24gMDEuMDcuMjYgMTA6MTMsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IEhpIErDvHJnZW4s
-DQo+IA0KPiBPbiBNb24sIEp1biAyOSwgMjAyNiBhdCA4OjA34oCvQU0gSnVlcmdlbiBHcm9z
-cyA8amdyb3NzQHN1c2UuY29tPiB3cm90ZToNCj4gDQo+PiBUaGUgMzItYml0IE1TUiBpbnRl
-cmZhY2VzIHJkbXNyKCkgYW5kIHdybXNyKCkgYXJlIHBsYW5uZWQgdG8gYmUNCj4+IHJlbW92
-ZWQuIFVzZSB0aGUgcmVsYXRlZCA2NC1iaXQgdmFyaWFudHMgaW5zdGVhZC4NCj4+DQo+PiBT
-aWduZWQtb2ZmLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+IA0KPiBJ
-cyB0aGlzIHNvbWV0aGluZyB0aGUgc3Vic3lzdGVtIG1haW50YWluZXJhIGFyZSBzdXBwb3Nl
-ZCB0byBhcHBseQ0KPiBkaXJlY3RseSBvbiBhIHBlci1zdWJzeXN0ZW0gYmFzaXM/IEkgd2Fz
-IHVuZGVyIHRoYXQgaW1wcmVzc2lvbi4NCg0KWWVzLCBwbGVhc2UgZG8gc28uDQoNCg0KSnVl
-cmdlbg0K
---------------APXQrlgkGVWay0uXfKDY1Dbn
+T24gMzAuMDYuMjYgMjA6NTksIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+IE9uIE1v
+biwgSnVuIDI5LCAyMDI2LCBJbmdvIE1vbG5hciB3cm90ZToNCj4+ICogQXJuZCBCZXJnbWFu
+biA8YXJuZEBhcm5kYi5kZT4gd3JvdGU6DQo+Pg0KPj4+Pj4+IE5vdGUgdGhhdCBtb3N0IHBh
+dGNoZXMgb2YgdGhpcyBzZXJpZXMgYXJlIGluZGVwZW5kZW50IGZyb20gZWFjaCBvdGhlci4N
+Cj4+Pj4+PiBPbmx5IHRoZSBwYXRjaGVzIHJlbW92aW5nIGEgc3BlY2lmaWMgaW50ZXJmYWNl
+IChwYXRjaGVzIDcsIDE1LCAyNiBhbmQNCj4+Pj4+PiAzMCkgYW5kIHRoZSBsYXN0IHR3byBw
+YXRjaGVzIG9mIHRoZSBzZXJpZXMgZGVwZW5kIG9uIGFsbCBwcmV2aW91cw0KPj4+Pj4+IHBh
+dGNoZXMuDQo+Pj4+Pg0KPj4+Pj4gSXQgbG9va3MgbGlrZSB5b3UgYXJlIHRvdWNoaW5nIG1v
+c3QgZmlsZXMgdHdpY2Ugb3IgbW9yZSBoZXJlLCB0bw0KPj4+Pj4gZmlyc3QgY29udmVydCBm
+cm9tIHJkbXNyIHRvIHJkbXNycSBhbmQgdGhlbiB0byBjaGFuZ2UgdGhlDQo+Pj4+PiB0d28t
+YXJndW1lbnQgcmRtc3JxKCkgbWFjcm8gdG8gYSBzaW5nbGUtYXJndW1lbnQgaW5saW5lLiBJ
+ZiB5b3UNCj4+Pj4+IGludHJvZHVjZSB0aGUgaW5saW5lIHZlcnNpb24gb2YgcmRtc3JxKCkg
+Zmlyc3QsIHlvdSBzaG91bGQgYmUNCj4+Pj4+IGFibGUgdG8gc2tpcCB0aGUgc2Vjb25kIHN0
+ZXAgKHBhdGNoIDMxKSBhcyB0aGV5IGNvdWxkIGJlIGFibGUNCj4+Pj4+IHRvIGNvZXhpc3Qu
+DQo+Pj4+DQo+Pj4+IEkndmUgZGlzY3Vzc2VkIGhvdyB0byBzdHJ1Y3R1cmUgdGhlIHNlcmll
+cyB3aXRoIEluZ28gTW9sbmFyIGJlZm9yZSBbMV0uIFRoZQ0KPj4+PiBjdXJyZW50IGFwcHJv
+YWNoIHdhcyBoaXMgcHJlZmVyZW5jZS4NCj4+Pg0KPj4+IE9rLg0KPj4NCj4+IE5vdGUgdGhh
+dCB0aGUgaW5kaXZpZHVhbCBwYXRjaGVzIGFyZSBJTU8gc2lnbmlmaWNhbnRseSBlYXNpZXIg
+dG8gcmV2aWV3DQo+PiB0aHJvdWdoIHRoZSBhY3R1YWwgMzItYml0ID0+IDY0LWJpdCB2YXJp
+YWJsZSBhc3NpZ25tZW50IGNoYW5nZXMgZG9uZQ0KPj4gaW4gaXNvbGF0aW9uICh3aGljaCBz
+b21ldGltZXMgaW5jbHVkZSBtaW5vciBjbGVhbnVwcyksIHdoaWxlDQo+PiB0aGUgQ29jY2lu
+ZWxsZSBzZW1hbnRpYyBwYXRjaDoNCj4+DQo+PiAgICAgeyBhKGIsYykgPT4gYyA9IGEoYikg
+fQ0KPj4NCj4+IHdoaWNoIGNoYW5nZXMgYm90aCB0aGUgZnVuY3Rpb24gc2lnbmF0dXJlIGFu
+ZCB0aGUgb3JkZXIgb2YgdGVybXMgYXMNCj4+IHdlbGwsIGlzIGp1c3QgYSBzaW5nbGUgYWRk
+LW9uIHRyZWV3aWRlIHBhdGNoLg0KPiANCj4gSXMgdGhlIHBsYW4gZm9yIHN1YnN5c3RlbSBt
+YWludGFpbmVycyB0byBwaWNrIHVwIHRoZSByZWxldmFudCBwYXRjaGVzLCBhbmQgdGhlbg0K
+PiBkbyB0aGUgdHJlZXdpZGUgY2hhbmdlIG9uZSByZWxlYXNlIGN5Y2xlIGxhdGVyPw0KDQpZ
+ZXMsIHBsZWFzZS4NCg0KDQpKdWVyZ2VuDQo=
+--------------jBK7pBe03sqwPCAFbkx06T5B
 Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Description: OpenPGP public key
@@ -260,25 +403,25 @@ kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
 =3DeeAB
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------APXQrlgkGVWay0uXfKDY1Dbn--
+--------------jBK7pBe03sqwPCAFbkx06T5B--
 
---------------7R2Mfy70R2uAdOLBmt7KmUSR--
+--------------vD8700IqVizDT0GQTpFiBkTP--
 
---------------Z8GiUPE2jbuzLZaCy02SW6kJ
+--------------yR0aQa1Dp38FRBSVbM28PBR6
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpE0JoFAwAAAAAACgkQsN6d1ii/Ey8t
-ZAf9HPRySazaSywuYFzONl4XXphp0o5u4sc6TWRUGGxOspoyGyDiEFryrKMuSvPk65s6IuUShkCn
-f/ddi85xz5C+FlC+nn4KeqAO9b54PfFtBi5sYSwDhPzDpSc0KvWI3hM6/LUbSzcbBBuST5ICzKjw
-Z7pCWh7eVFBqoCknFaKoADBOPmwZeRcuegGvhpqaFY2UlTgCdKY+FJrIzp32hPDyAFrf6bOUoVM2
-aZfKzOzz16ZZ90KiOfci0jTcED1R/oxhNnRX4ofk+oFza09VXdkWqgUDm9EdmAhUPGRJdT2pVTos
-uIBN5ADCV6M3saecKRlkb5rtDZxlDk+DfY6/m/kpPQ==
-=lPFI
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpE0NcFAwAAAAAACgkQsN6d1ii/Ey+4
+VQf5ARTTFZkvO/RB1pgLA5pxpW3UUS3uxxV7SopNU0hZc/AzNq9az9lJfyH7jPZ8QBmU9IKulebG
+ITlyXQQs6UjK+gdS9lqvVR/gt7jXQo56BFaXUZQwHSt8ln7k9LhUmdEaBj2m305DZnpb9SGilWTg
+FU/0xAyiM++MkxazBUebIsHavKxiZg3dIjZQ6L7GCivFopHxm59Fg0dv+E0OzaQGPmtrz/oR7sNP
+AkYiOzz84cF2fQXnHTlKAU02RMhfJ2YDp/KAdwPaf1hFwAZsNFL3usH2Ku34Q0ARJoRpUockNhfc
+G3t+JspAVbLH9NBe6jFF+6eWh86FKPsmtwZt0e9tvQ==
+=ng7t
 -----END PGP SIGNATURE-----
 
---------------Z8GiUPE2jbuzLZaCy02SW6kJ--
+--------------yR0aQa1Dp38FRBSVbM28PBR6--
 
