@@ -1,41 +1,41 @@
-Return-Path: <linux-gpio+bounces-39296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39297-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id d4qTAVzqRGpk3AoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39296-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:22:20 +0200
+	id MQF0FYfqRGpu3AoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39297-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:23:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F27FD6EC180
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 464A96EC1AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:23:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39296-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39296-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39297-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39297-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D0C4730457D3
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:12:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3D72F3047178
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC3740759C;
-	Wed,  1 Jul 2026 10:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8098E403EA0;
+	Wed,  1 Jul 2026 10:12:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D9B403B01;
-	Wed,  1 Jul 2026 10:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654AB409610;
+	Wed,  1 Jul 2026 10:12:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782900722; cv=none; b=dz54eOt14hEv0j2q+OHDN263jctXwdotLc+ziQ4zdTBZ73BXd6fOARmWaRFX/zoie/D9SzATX1U+BNLfV0mf1GFW2xxVd1diM7dKB+T3cDWIay3xbLJ8ZA6Z+V2edBdCO8hGDv6nA22J+IdD3aMH2UMVFK7Q9Fk4IUMiyzmG7dc=
+	t=1782900724; cv=none; b=SLSeIC+mwXBjOGdOjCN0Tx8RueHHdO1CmEGOnOS53M8R0ruByvPUyy+EjR/atLQedDpAM/nDZ+Ns2TfVaifBYVZ3+OmvZ7QSgtvzJLS6J+oNi4CPKherzxbniDnfXgIAaDz1PBnDBzhIwox560yKMFQn3nF209kiTurG81FqTso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782900722; c=relaxed/simple;
-	bh=ZYtyWqzUKLdTfhttyKRhmf+JVPdYhBGeiRxJttec8+4=;
+	s=arc-20240116; t=1782900724; c=relaxed/simple;
+	bh=mNYqsqOZvNhjixXZv8Ezr1zqEiJxw40GTEU/SdZDdJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YpALwmCPIHyU+hIXR/ZB9D5hJxE1zj+wjhpSI3IURFLAT3+APqRTrpNuW8idiZnHSUK06mhqmy+zqsgSJZkPTZAaD1/jC5DhklGGUgZksZn647DSXAblUfj4iazvpytSCQqroj5G6bswVUr92lr4eIAtqhBgnYar29OW+/u/adI=
+	 MIME-Version; b=J68QlXMRWD1wdraf3O5LWySQ6Ph5VsHCdmot6tRltqcR4RmafEEMVUTW3cJlcnc1Y54pwFQYrtHS3w2WICWyvozkAa+10ufKu6PuhKe56FiPOho5x9TDOTBiEuDMeulrbnV4fedi8OQHCKSjZepjCYiyM1qhzL1sV9zOxBShbFs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9B9E1F00A3A;
-	Wed,  1 Jul 2026 10:11:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573771F000E9;
+	Wed,  1 Jul 2026 10:12:01 +0000 (UTC)
 From: Geert Uytterhoeven <geert@linux-m68k.org>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Linus Walleij <linusw@kernel.org>,
@@ -46,9 +46,9 @@ Cc: linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert@linux-m68k.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v2 3/9] MIPS: TXX9: rbtx4927: Use GPIO lookup table for SIO DTR
-Date: Wed,  1 Jul 2026 12:11:38 +0200
-Message-ID: <413c28068841aea76697dca9c2f910373c3dc8c7.1782900491.git.geert@linux-m68k.org>
+Subject: [PATCH v2 4/9] MIPS: TXX9: rbtx4927: Use GPIO lookup table for TXx9 LEDs
+Date: Wed,  1 Jul 2026 12:11:39 +0200
+Message-ID: <92613064355ad1228b0f43031fc6c5d781e7d4f6.1782900491.git.geert@linux-m68k.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1782900491.git.geert@linux-m68k.org>
 References: <cover.1782900491.git.geert@linux-m68k.org>
@@ -75,7 +75,7 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39296-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39297-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -92,57 +92,63 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,linux-m68k.org:email,linux-m68k.org:mid,linux-m68k.org:from_mime,vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F27FD6EC180
+X-Rspamd-Queue-Id: 464A96EC1AA
 
-Convert SIO DTR handling from legacy GPIO calls to GPIO descriptors
-using a GPIO lookup table.
+Convert TXx9 LED description from legacy GPIO numbers to GPIO
+descriptors using a GPIO lookup table.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 ---
 v2:
-  - Add Reviewed-by.
+  - Add Reviewed-by,
+  - Return early on platform_device_add() failure.
 ---
- arch/mips/txx9/rbtx4927/setup.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/mips/txx9/rbtx4927/setup.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/arch/mips/txx9/rbtx4927/setup.c b/arch/mips/txx9/rbtx4927/setup.c
-index 31955c1d55550fd4..e57c409c318ca220 100644
+index e57c409c318ca220..75674b4cc91d7207 100644
 --- a/arch/mips/txx9/rbtx4927/setup.c
 +++ b/arch/mips/txx9/rbtx4927/setup.c
-@@ -49,6 +49,7 @@
- #include <linux/platform_device.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/leds.h>
- #include <asm/io.h>
- #include <asm/reboot.h>
-@@ -157,11 +158,20 @@ static inline void tx4927_pci_setup(void) {}
- static inline void tx4937_pci_setup(void) {}
- #endif /* CONFIG_PCI */
- 
-+/* TX4927-SIO DTR on (PIO[15]) */
-+GPIO_LOOKUP_SINGLE(sio_gpio_table, NULL, "TXx9", 15, "sio-dtr",
-+		   GPIO_ACTIVE_HIGH);
-+
- static void __init rbtx4927_gpio_init(void)
- {
--	/* TX4927-SIO DTR on (PIO[15]) */
--	gpio_request(15, "sio-dtr");
--	gpio_direction_output(15, 1);
-+	struct gpio_desc *d;
-+
-+	gpiod_add_lookup_table(&sio_gpio_table);
-+	d = gpiod_get(NULL, "sio-dtr", GPIOD_OUT_HIGH);
-+	if (IS_ERR(d))
-+		pr_err("Unable to get sio-dtr GPIO descriptor\n");
-+	else
-+		gpiod_put(d);
- 
- 	tx4927_sio_init(0, 0);
+@@ -327,11 +327,19 @@ static void __init rbtx4927_mtd_init(void)
+ 		tx4927_mtd_init(i);
  }
+ 
++static struct gpiod_lookup_table rbtx4927_gpioled_table = {
++	.table = {
++		GPIO_LOOKUP_IDX("TXx9", 0, NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("TXx9", 1, NULL, 1, GPIO_ACTIVE_LOW),
++		{ },
++	},
++};
++
+ static void __init rbtx4927_gpioled_init(void)
+ {
+ 	static const struct gpio_led leds[] = {
+-		{ .name = "gpioled:green:0", .gpio = 0, .active_low = 1, },
+-		{ .name = "gpioled:green:1", .gpio = 1, .active_low = 1, },
++		{ .name = "gpioled:green:0", },
++		{ .name = "gpioled:green:1", },
+ 	};
+ 	static struct gpio_led_platform_data pdata = {
+ 		.num_leds = ARRAY_SIZE(leds),
+@@ -342,8 +350,13 @@ static void __init rbtx4927_gpioled_init(void)
+ 	if (!pdev)
+ 		return;
+ 	pdev->dev.platform_data = &pdata;
+-	if (platform_device_add(pdev))
++	if (platform_device_add(pdev)) {
+ 		platform_device_put(pdev);
++		return;
++	}
++
++	rbtx4927_gpioled_table.dev_id = dev_name(&pdev->dev);
++	gpiod_add_lookup_table(&rbtx4927_gpioled_table);
+ }
+ 
+ static void __init rbtx4927_device_init(void)
 -- 
 2.43.0
 
