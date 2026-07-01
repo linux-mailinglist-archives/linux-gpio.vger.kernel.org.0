@@ -1,186 +1,338 @@
-Return-Path: <linux-gpio+bounces-39302-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39303-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id g/L0LijrRGqI3AoAu9opvQ
-	(envelope-from <linux-gpio+bounces-39302-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:25:44 +0200
+	id yIQNJOTpRGog3AoAu9opvQ
+	(envelope-from <linux-gpio+bounces-39303-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:20:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAD636EC1F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:25:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25AF06EC0E8
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Jul 2026 12:20:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39302-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39302-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=Igkif34J;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39303-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39303-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E180A3080E3B
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:13:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C47303155E41
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2026 10:13:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1D18413D66;
-	Wed,  1 Jul 2026 10:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034113FAE0C;
+	Wed,  1 Jul 2026 10:12:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F2F403146;
-	Wed,  1 Jul 2026 10:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636403FBB6D
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Jul 2026 10:12:51 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782900737; cv=none; b=dwRLx3OYIlAO+yOShJSXnaqTCXlG+B1f+pa0OOv99qsqKAKRJgOOr1sWU8yzpUKctpCjoYmLUrN6+g6Egq0Kf/Ln9J3hE0/Swwh8hCMql33zWBFEM4v7ryyzi8LhUjC6Wa7VcmSbF5NRXRVA+QC2O5oXKsI01em8SKwWVQSQiSA=
+	t=1782900772; cv=none; b=JANud1XZ7wpWNtNei8GS658bXugCTPVHPlfDIyO2RSKsuxFdRYEf3ngZ+/QGWT6/jIB0vLLdijqJRlhVKeiHWxFxfbMj6tYj76ueV8QgdBBL0fE+rHobwdUCMsDVae3hsvllFSKUrr8bFoD2hVv/EFDpE+Fntr7BirGUYYEV/ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782900737; c=relaxed/simple;
-	bh=xw/RjGvq8tAT7TeUTa28eWuEeizoLodGiK1EzfMqbUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AH0N+dPNFokd/sCCiHCOsFgyI4RcXV8iQlmrSHoN13ML5VugY9BwvmjLUTY9SkRIV87sG567nVwfFNNGr5h4FgdpNOCod9267TMt+oRe3nSGc9SyQPcoHrlLmE8q5LIqUY+B3DIB/lMBp1Xn1264HFxrunJSJCVOMFr6A2oClJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EBEC1F00A3A;
-	Wed,  1 Jul 2026 10:12:13 +0000 (UTC)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mips@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@oss.qualcomm.com>
-Subject: [PATCH v2 9/9] MIPS: TXX9: Clean up txx9_iocled_init()
-Date: Wed,  1 Jul 2026 12:11:44 +0200
-Message-ID: <fd58225121892960c6a9c45b742288863ab872d2.1782900491.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1782900491.git.geert@linux-m68k.org>
-References: <cover.1782900491.git.geert@linux-m68k.org>
+	s=arc-20240116; t=1782900772; c=relaxed/simple;
+	bh=hKZQkFUlZRkJ4dkfQ7XCvFwhZ/U5i9bJe+6uKHcZVlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N6uepIMoE/Nf4vz37kx8S60xYQW2CG3ns3YtMx4ftWeS3LCjk4fDHLhXoyvfsSPxWXMrfhepj9nF1R0TCDToAZcLab+KafwzQ2kcK/KSkEoWGqkTRZ8/Zx8CCitCP6Qc/ySqXp7GIt3Lr40AhshqkhAYrpbaJTlmnoWm1gYO158=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Igkif34J; arc=none smtp.client-ip=74.125.82.177
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30edbb0dc5fso290862eec.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Jul 2026 03:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782900770; x=1783505570; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JnbZMh/VMIPXgvmmZVZQ54fXfz7U5FC3rNj6e+Tek2E=;
+        b=Igkif34JLzRRhajlzP4lrQT5H6wHRUu3bdPkDkbwnIF1dnhfFSwufW6aGqY1h3q5zu
+         thz7e+ls1yUMzpdOE8IZXb/2jHFeTmMImrFec97i3AFseka/wfT91/S8+iO7wCBXxDkC
+         6TR2xHyl/KDp3sNtGPrJXF7D5bb1FZJB0T+3rwzL7D5SinyituTFAaCHCb3G6i9kxTWW
+         8VfLeF0iRVATBlnSadij2MOAZdo/4hbjo/0U1wIFkh0II5A+DU+QwOdKeIjL8txeTVwJ
+         WJBuAgvNErgB4LYgzZ4MRC9Sd9Du30dq31IEuEgKCzX5cJ9ouzRg4MUjYRoaIIH63SN2
+         Kzfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782900770; x=1783505570;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JnbZMh/VMIPXgvmmZVZQ54fXfz7U5FC3rNj6e+Tek2E=;
+        b=iR2lMPJYRRuG0Iz6sFy3AolLzeaJo9WTR3/8BJvP+yNNckD55R3lPc/QNcX3jAy6j8
+         PSh+RtmcgXLjryYpNnqYp3r2iJVE40RquRMhSU2dqbL0XEH8/amsE4/dtdX030cxvu42
+         GJKR35Q08t3BJPk4wp2gN1QYscwgYjnKVh5fRtSDwpruutyc2OZ0LKpNzn8RhaZJEhfN
+         8M67EPLPS0iAytkjbsLgxC7EfxHJTndMBR5qY6sysKPa8MDCA8O7rz10BR4I3saBXptE
+         0LSejfW+A9lGxb7RJzvfU/E5F4BvFqQmEW8KnBd1CS5PKaqHV4LjuIcnfBQjKj0nWQZg
+         DWtQ==
+X-Gm-Message-State: AOJu0Yw3oAs6GWshLK8Lshw9uHNgtGKSgp0Wd793T96hZ+ms0LtMqYR5
+	ZnC0R6thtafyGjcr/UCwBLwlzG8nl0FXhulK/fBRE6BvuSEjoy2pz83m
+X-Gm-Gg: AfdE7cnQYkNWxc1ZSQvOQ8tiDIfgEIKOPxV0V4Zs0lSfMhoAb59ZGYcICU/b3T9uWv9
+	heCFRrQpLbDURSIWVH9QUVuaGs5qjVHGnsG3fC0PVsd9IJOyxU8l+jV64SjRtGhJpMVv/b5Qhrs
+	4FzjjwOFVPGq8b6P1HRr+ojq91Cjkf3G0cnEtBFaL9p2z3OgcyuI8ExXez0U4DlaolrfGRAwDTe
+	kx8NcwOGrAdnUhmdxAMKJW0zDIJ+5Uf9ylCAM/ROB31UFYZ6EgtPYX30PQLRwS8rbOtCNdAWCve
+	NVySsXggDbEt/hSdY9ZDd3lzmm7p30TUvN8R2zkiVNmG53each9ebeZCTQ7da/7VBQwYZ3JtH7P
+	m0t3fkbSsCAe3IUVkKwKECzGvl1rWFYO0NyYEBr8awODbfWSr8kP+apJTs9WiSl0B+4cgKDbVGe
+	CwM8k4YMOEgl11/MhZrCpL34dkMbszpjpPYDXLxZcLIkLUAMxX71RiZ4aFxXVokVE5xCfn02iT3
+	sNpvbqCWNI67Gnips+hXrXPVAhRnw8MRLBRVE5S8RS1eVhIkVy6K4X1UzHSlv1N344TKojksifU
+	5g==
+X-Received: by 2002:a05:7300:7312:b0:304:e865:f7d1 with SMTP id 5a478bee46e88-30f053f3845mr122579eec.25.1782900770320;
+        Wed, 01 Jul 2026 03:12:50 -0700 (PDT)
+Received: from hardik-yoga.oryx-cobra.ts.net ([2401:4900:a137:d795:30b1:c22:58a1:6ebc])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee2ffdbfesm18720743eec.11.2026.07.01.03.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 03:12:49 -0700 (PDT)
+From: Hardik Prakash <hardikprakash.official@gmail.com>
+To: linux-i2c@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	wsa@kernel.org,
+	andriy.shevchenko@intel.com,
+	mario.limonciello@amd.com,
+	brgl@bgdev.pl,
+	basavaraj.natikar@amd.com,
+	linusw@kernel.org,
+	nathan@kernel.org,
+	chaitanya.kumar.borah@intel.com,
+	Hardik Prakash <hardikprakash.official@gmail.com>
+Subject: [PATCH v10] i2c: designware: defer probe if child GpioInt controllers are not bound
+Date: Wed,  1 Jul 2026 15:42:18 +0530
+Message-ID: <20260701101218.42529-1-hardikprakash.official@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39302-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:tsbogend@alpha.franken.de,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:linux-mips@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:geert@linux-m68k.org,m:bartosz.golaszewski@oss.qualcomm.com,m:philmd@oss.qualcomm.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,intel.com,amd.com,bgdev.pl,gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	FORGED_SENDER(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39303-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:andriy.shevchenko@intel.com,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:nathan@kernel.org,m:chaitanya.kumar.borah@intel.com,m:hardikprakash.official@gmail.com,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hardikprakashofficial@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	R_DKIM_NA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,linux-m68k.org:email,linux-m68k.org:mid,linux-m68k.org:from_mime,qualcomm.com:email]
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BAD636EC1F9
+X-Rspamd-Queue-Id: 25AF06EC0E8
 
-The sole caller already uses dynamic GPIO base allocation, so drop
-support for static allocation.
-While at it, drop the no longer used "lowactive" parameter.
+I2C controllers may have child devices with GpioInt resources that
+depend on GPIO controllers to be fully initialized. If the I2C
+controller probes and enumerates children before the referenced GPIO
+controller has completed probe, GPIO interrupts may not be properly
+configured, leading to device failures.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Reviewed-by: Philippe Mathieu-Daudé <philmd@oss.qualcomm.com>
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
+AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
+pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
+AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
+fail with lost arbitration errors.
+
+Add a generic dependency check in i2c-designware that walks ACPI child
+devices, identifies any GpioInt resources, resolves the referenced GPIO
+controllers, and defers probe if those controllers are not yet bound.
+Uses acpi_gpio_get_irq_resource() to avoid duplicating GPIO resource
+parsing logic from gpiolib-acpi. Skips resources with no resource
+source string (string_length == 0 or string_ptr == NULL) to avoid
+crashes on hardware where GPIO resources have no named controller.
+
+The probe ordering race was confirmed via dynamic debug tracing:
+
+  0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
+  0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
+  0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
+  2.348157  lost arbitration
+
+Fixes: 3812a9e84265 ("pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7 14AGP11")
+Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
+Assisted-by: Claude:claude-sonnet-4-6
+Assisted-by: GPT:gpt-5.4-mini
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=221494
 ---
-v2:
-  - Add Reviewed-by.
----
- arch/mips/include/asm/txx9/generic.h |  3 +--
- arch/mips/txx9/generic/setup.c       | 12 ++++--------
- arch/mips/txx9/rbtx4927/setup.c      |  2 +-
- 3 files changed, 6 insertions(+), 11 deletions(-)
+ drivers/i2c/busses/i2c-designware-platdrv.c | 132 ++++++++++++++++++++
+ 1 file changed, 132 insertions(+)
 
-diff --git a/arch/mips/include/asm/txx9/generic.h b/arch/mips/include/asm/txx9/generic.h
-index 5ce5b8579a444ec3..653315fb6ca559a7 100644
---- a/arch/mips/include/asm/txx9/generic.h
-+++ b/arch/mips/include/asm/txx9/generic.h
-@@ -79,8 +79,7 @@ static inline unsigned int __fls8(unsigned char x)
- 	return r;
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 6d6e81242f74..d8331d1dead8 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -8,6 +8,8 @@
+  * Copyright (C) 2007 MontaVista Software Inc.
+  * Copyright (C) 2009 Provigent Ltd.
+  */
++
++#include <linux/acpi.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+@@ -130,6 +132,132 @@ static int i2c_dw_probe_lock_support(struct dw_i2c_dev *dev)
+ 	return 0;
  }
  
--void txx9_iocled_init(unsigned long baseaddr,
--		      int basenum, unsigned int num, int lowactive,
-+void txx9_iocled_init(unsigned long baseaddr, unsigned int num,
- 		      const char *color, char **deftriggers);
- 
- void __init txx9_aclc_init(unsigned long baseaddr, int irq,
-diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
-index 32246f5f78f5070c..5f66236038c8f468 100644
---- a/arch/mips/txx9/generic/setup.c
-+++ b/arch/mips/txx9/generic/setup.c
-@@ -625,8 +625,7 @@ static struct gpiod_lookup_table txx9_iocled_table = {
- 	},
- };
- 
--void __init txx9_iocled_init(unsigned long baseaddr,
--			     int basenum, unsigned int num, int lowactive,
-+void __init txx9_iocled_init(unsigned long baseaddr, unsigned int num,
- 			     const char *color, char **deftriggers)
++#if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
++struct gpio_controller_ref {
++	struct list_head node;
++	const char *path;
++};
++
++static void free_gpio_controller_list(struct list_head *gpio_controllers)
++{
++	struct gpio_controller_ref *ref, *tmp;
++
++	list_for_each_entry_safe(ref, tmp, gpio_controllers, node) {
++		list_del(&ref->node);
++		kfree(ref->path);
++		kfree(ref);
++	}
++}
++
++static int check_gpioint_resource(struct acpi_resource *ares, void *data)
++{
++	struct list_head *gpio_controllers = data;
++	struct acpi_resource_gpio *agpio;
++	struct gpio_controller_ref *ref;
++
++	if (!acpi_gpio_get_irq_resource(ares, &agpio))
++		return 1;
++
++	if (!agpio->resource_source.string_length)
++		return 1;
++
++	/* Skip if we've already tracked this GPIO controller */
++	list_for_each_entry(ref, gpio_controllers, node) {
++		if (!strncmp(ref->path, agpio->resource_source.string_ptr,
++			     agpio->resource_source.string_length))
++			return 1;
++	}
++
++	ref = kzalloc(sizeof(*ref), GFP_KERNEL);
++	if (!ref)
++		return -ENOMEM;
++
++	ref->path = kstrdup(agpio->resource_source.string_ptr, GFP_KERNEL);
++	if (!ref->path) {
++		kfree(ref);
++		return -ENOMEM;
++	}
++
++	list_add_tail(&ref->node, gpio_controllers);
++	return 1;
++}
++
++static int check_child_gpioint(struct acpi_device *adev, void *data)
++{
++	struct list_head res_list;
++	int ret;
++
++	INIT_LIST_HEAD(&res_list);
++	ret = acpi_dev_get_resources(adev, &res_list, check_gpioint_resource, data);
++	if (ret < 0)
++		return ret;
++
++	acpi_dev_free_resource_list(&res_list);
++	return 0;
++}
++
++static int i2c_dw_check_gpio_dependencies(struct device *dev)
++{
++	struct gpio_controller_ref *ref;
++	LIST_HEAD(gpio_controllers);
++	struct acpi_device *adev;
++	int ret;
++
++	adev = ACPI_COMPANION(dev);
++	if (!adev)
++		return 0;
++
++	/* Walk all child devices and collect GpioInt controller references */
++	ret = acpi_dev_for_each_child(adev, check_child_gpioint, &gpio_controllers);
++	if (ret < 0)
++		goto cleanup;
++
++	/* For each GPIO controller, check if its platform device is bound */
++	list_for_each_entry(ref, &gpio_controllers, node) {
++		struct acpi_device *gpio_adev;
++		struct device *gpio_dev;
++		acpi_status status;
++		acpi_handle handle;
++		bool bound;
++
++		status = acpi_get_handle(NULL, ref->path, &handle);
++		if (ACPI_FAILURE(status))
++			continue;
++
++		gpio_adev = acpi_fetch_acpi_dev(handle);
++		if (!gpio_adev)
++			continue;
++
++		gpio_dev = acpi_get_first_physical_node(gpio_adev);
++		acpi_dev_put(gpio_adev);
++		if (gpio_dev) {
++			guard(device)(gpio_dev);
++			bound = device_is_bound(gpio_dev);
++		} else {
++			bound = false;
++		}
++		/*
++		 * Defer probe until the GPIO controller is fully bound,
++		 * ensuring its IRQ setup is complete before we enumerate
++		 * I2C child devices.
++		 */
++		if (!bound) {
++			ret = -EPROBE_DEFER;
++			goto cleanup;
++		}
++	}
++
++cleanup:
++	free_gpio_controller_list(&gpio_controllers);
++	return ret;
++}
++#else
++static int i2c_dw_check_gpio_dependencies(struct device *dev)
++{
++	return 0;
++}
++#endif /* CONFIG_ACPI && CONFIG_GPIOLIB */
++
+ static int dw_i2c_plat_probe(struct platform_device *pdev)
  {
- 	struct txx9_iocled_data *iocled;
-@@ -652,14 +651,12 @@ void __init txx9_iocled_init(unsigned long baseaddr,
- 	iocled->chip.direction_input = txx9_iocled_dir_in;
- 	iocled->chip.direction_output = txx9_iocled_dir_out;
- 	iocled->chip.label = "iocled";
--	iocled->chip.base = basenum;
-+	iocled->chip.base = -1;
- 	iocled->chip.ngpio = num;
- 	if (gpiochip_add_data(&iocled->chip, iocled))
- 		goto out_unmap;
--	if (basenum < 0)
--		basenum = iocled->chip.base;
+ 	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
+@@ -138,6 +266,10 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	struct dw_i2c_dev *dev;
+ 	int irq, ret;
  
--	pdev = platform_device_alloc("leds-gpio", basenum);
-+	pdev = platform_device_alloc("leds-gpio", iocled->chip.base);
- 	if (!pdev)
- 		goto out_gpio;
- 	iocled->pdata.num_leds = num;
-@@ -689,8 +686,7 @@ void __init txx9_iocled_init(unsigned long baseaddr,
- 	kfree(iocled);
- }
- #else /* CONFIG_LEDS_GPIO */
--void __init txx9_iocled_init(unsigned long baseaddr,
--			     int basenum, unsigned int num, int lowactive,
-+void __init txx9_iocled_init(unsigned long baseaddr, unsigned int num,
- 			     const char *color, char **deftriggers)
- {
- }
-diff --git a/arch/mips/txx9/rbtx4927/setup.c b/arch/mips/txx9/rbtx4927/setup.c
-index e904217a5fb20102..223889c031866ca3 100644
---- a/arch/mips/txx9/rbtx4927/setup.c
-+++ b/arch/mips/txx9/rbtx4927/setup.c
-@@ -373,7 +373,7 @@ static void __init rbtx4927_device_init(void)
- 		tx4938_aclc_init();
- 	}
- 	platform_device_register_simple("txx9aclc-generic", -1, NULL, 0);
--	txx9_iocled_init(RBTX4927_LED_ADDR - IO_BASE, -1, 3, 1, "green", NULL);
-+	txx9_iocled_init(RBTX4927_LED_ADDR - IO_BASE, 3, "green", NULL);
- 	rbtx4927_gpioled_init();
- }
- 
++	ret = i2c_dw_check_gpio_dependencies(device);
++	if (ret)
++		return ret;
++
+ 	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq == -ENXIO)
+ 		flags |= ACCESS_POLLING;
+
+base-commit: 5a66900afbd6b2a063eebad35294038a654de2b0
 -- 
-2.43.0
+2.54.0
 
 
