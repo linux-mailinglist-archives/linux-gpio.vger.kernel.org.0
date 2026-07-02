@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-39374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39375-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id M71IFCZkRmoiSgsAu9opvQ
-	(envelope-from <linux-gpio+bounces-39374-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Jul 2026 15:14:14 +0200
+	id 48zfIzBkRmokSgsAu9opvQ
+	(envelope-from <linux-gpio+bounces-39375-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Jul 2026 15:14:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D43D6F8316
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Jul 2026 15:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53D396F831C
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Jul 2026 15:14:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=LpBqo9EO;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39374-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39374-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=Anssswzi;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39375-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39375-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 839C03075C88
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jul 2026 13:09:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D9533308624E
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jul 2026 13:09:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257D244D6B2;
-	Thu,  2 Jul 2026 13:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E6C3905EA;
+	Thu,  2 Jul 2026 13:09:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1E6492517;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C828D42EEA2;
 	Thu,  2 Jul 2026 13:09:30 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782997773; cv=none; b=VW7M4mdVgSYSp23rMcLQ+zjO1IYMblI//xkJKNC3c+Gd67kRXqLr3GEJdt0F0hfHJZJY6xvbSDKNXZrrX+5f9DJDWE7rF/v1rVIYjNDI9mQyKT3BvKwViebbAEVRGMUU4VZwcFcATLv5sC76fss3oOU1vfYcypkF/ccv2I1VoEE=
+	t=1782997774; cv=none; b=IT+nzZPMzTJDLYj1ZERbiXClUohO5l5E9/P0YFmDwHNeQhEeToSf+eh/upGLXu2BI7DbvqxFmu9cFY7R4SyI46AlVXvmmjJDGRmkBUaPU73H4Lum+lYYqkO1vAdw2tX7s+bMHzqNppZ4yrIvhb0ZE9EZXu0/4khat5tAy0DWR9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782997773; c=relaxed/simple;
-	bh=fKF0xg8o2PjOYhyJJfUeGshnp1PDtYVAgCREukzwwIw=;
+	s=arc-20240116; t=1782997774; c=relaxed/simple;
+	bh=ysYB0HfR2ElzBxQ0vsjRanwNC5HogXqATkqnY5i2J54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XO/B4NVjIPB5ZQ/LuPM8Wp5sxq/Rx2JgxFkDbM/IXSHQ4ajZkllo9zEoclTVKE/jQOYDI7OCsVYS3+CsRZaPHE7r/rw7ZR3T6MgqGJXvnCb3RFMxsyLUCGPYeSSWwdjWxuBcqNdkLDPj1C6lANUZv+BSsZU5dEeqJm8B+N5l6MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpBqo9EO; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=k4zWTAvo9nrJE/f/vo8ZVKpwG5uz0H5gqo/U+i1zlAsQr6oLMY4DvgMYyYE0gO4OnifAXZeSu5RUwYXlHlPkfB8HdN1gW28har3cqMoX3d14qXgh24wDgZsIPTT7G9JMDrI4/iVTixasULLbU7ozgwhnRvKmp3y6zK5oyM3VXek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Anssswzi; arc=none smtp.client-ip=198.175.65.10
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782997771; x=1814533771;
+  t=1782997772; x=1814533772;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fKF0xg8o2PjOYhyJJfUeGshnp1PDtYVAgCREukzwwIw=;
-  b=LpBqo9EOdghRGnrSihN0pfxbEU4tdYAzBHTlVdOLYXplJL5HsI4IK8dP
-   wTYfBNqZqs2QFY92/0QERKUCiudzhKd4U5RIQsxGtDPhly3PpqyS1OLHj
-   zoiMvTBhWO0uexyKvVcaNvZqz5oQlyJ7xWrB8NGbdFZGGB2dH+arAhOcj
-   Sdcj9WeyO/NTf8N7UO8TgSiGC/kfFXBeKz+bVzV27ms2/Vfc81MEWNGYM
-   KGTi2XWmNcCc1mC1voAt4imBFRBjXzdTu/u6AgBWqZcnk/PbmIaGX/QYx
-   5JHAx8fnM9Hh2eCJuN1TlZ+PgPrf9muCCmd03k55dXpH+MWydWoh7U72f
-   Q==;
-X-CSE-ConnectionGUID: hwV1RsF/Tm+5jzOVY6qL0g==
-X-CSE-MsgGUID: M9mFzFROQxmypPnJGcJBlA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="101175354"
+  bh=ysYB0HfR2ElzBxQ0vsjRanwNC5HogXqATkqnY5i2J54=;
+  b=AnssswziHKOh8NDSfpMWYq0Aky1LhRvePkHMlJ8p/kcJl29ELHQK41lh
+   gwOtF09oNtrNdhrIBO5BFHwCz8Bhl2IGXyTmbE0tk8717O+bFZnZZiyld
+   j6y+FQ74eFPon/JLhr0AVnuhyau+IVswnWX2cz6O18YDgYz+GttM95Ku1
+   LVQC6xYX/6VsbjydPTPral5jRx79YtO0rJx7nXDm9FEnmiKmXO1VT+7P0
+   zdTCZDd3m9XPFqgbs3bIonBoqb+7Hj4qHK6fktoYbSroxlhuWkL7kLojw
+   jAudil9XlZFJTxYovmeYsFnJEOazR7atJJAI5U7EBVYrg+V60vkgHghHW
+   g==;
+X-CSE-ConnectionGUID: 4qoe75RBROC8duva1sJX/A==
+X-CSE-MsgGUID: GComcb83RAKwE1pNeRs9jQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="101175360"
 X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
-   d="scan'208";a="101175354"
+   d="scan'208";a="101175360"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 06:09:26 -0700
-X-CSE-ConnectionGUID: 9Up/Kkt8RkWorpzI5Oj6zg==
-X-CSE-MsgGUID: 9oSJb1L/TJusdesDn/K1/A==
+X-CSE-ConnectionGUID: S49wbDXHQQ6CKbBMv83HZw==
+X-CSE-MsgGUID: ML3lQ/c3SLi4k/ykLb3nDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
-   d="scan'208";a="248412272"
+   d="scan'208";a="248412274"
 Received: from black.igk.intel.com ([10.91.253.5])
   by fmviesa006.fm.intel.com with ESMTP; 02 Jul 2026 06:09:22 -0700
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 802B899; Thu, 02 Jul 2026 15:09:21 +0200 (CEST)
+	id 84B8F9B; Thu, 02 Jul 2026 15:09:21 +0200 (CEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Mark Brown <broonie@kernel.org>,
 	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
@@ -78,9 +78,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Michael Walle <mwalle@kernel.org>,
 	Yu-Chun Lin <eleanor.lin@realtek.com>,
 	William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH v1 2/4] gpio: regmap: Provide default IRQ resource request and release callbacks
-Date: Thu,  2 Jul 2026 14:42:55 +0200
-Message-ID: <20260702130903.1790633-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/4] gpio: regmap: Apply default resource callbacks for regmap IRQ chip
+Date: Thu,  2 Jul 2026 14:42:56 +0200
+Message-ID: <20260702130903.1790633-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
 References: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
@@ -104,7 +104,7 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39374-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39375-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FORGED_RECIPIENTS(0.00)[m:broonie@kernel.org,m:mathieu.dubois-briand@bootlin.com,m:andriy.shevchenko@linux.intel.com,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:mwalle@kernel.org,m:eleanor.lin@realtek.com,m:wbg@kernel.org,s:lists@lfdr.de];
@@ -124,65 +124,65 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9D43D6F8316
+X-Rspamd-Queue-Id: 53D396F831C
 
-When GPIO regmap based driver supplies its own IRQ domain, it might
-still want to keep track of the IRQ requests and releases, in particular
-to prevent a GPIO, which is used and locked as IRQ, to be requested
-via standard ways. Provide default callbacks for such cases and keep
-struct gpio_chip private to GPIO regmap implementation.
+When GPIO regmap creates an IRQ chip on behalf of the user, it also
+takes an ownership of the respective callbacks and driver data.
+With that being done, apply default resource callbacks that keep
+tracking the IRQ requests and releases.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-regmap.c  | 22 ++++++++++++++++++++++
- include/linux/gpio/regmap.h |  3 +++
- 2 files changed, 25 insertions(+)
+ drivers/gpio/gpio-max7360.c | 7 ++++---
+ drivers/gpio/gpio-regmap.c  | 3 +++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpio/gpio-max7360.c b/drivers/gpio/gpio-max7360.c
+index d12cf1dc8d57..07eda49f375b 100644
+--- a/drivers/gpio/gpio-max7360.c
++++ b/drivers/gpio/gpio-max7360.c
+@@ -127,7 +127,7 @@ static int max7360_handle_mask_sync(const int index,
+ 				    const unsigned int mask_buf,
+ 				    void *const irq_drv_data)
+ {
+-	struct regmap *regmap = irq_drv_data;
++	struct regmap *regmap = gpio_regmap_get_drvdata(irq_drv_data);
+ 	int ret;
+ 
+ 	for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
+@@ -170,7 +170,6 @@ static int max7360_gpio_probe(struct platform_device *pdev)
+ 
+ 			/* Create custom IRQ configuration. */
+ 			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+-			gpio_config.regmap_irq_chip = irq_chip;
+ 			if (!irq_chip)
+ 				return -ENOMEM;
+ 
+@@ -181,7 +180,9 @@ static int max7360_gpio_probe(struct platform_device *pdev)
+ 			irq_chip->num_irqs = MAX7360_MAX_GPIO;
+ 			irq_chip->irqs = max7360_regmap_irqs;
+ 			irq_chip->handle_mask_sync = max7360_handle_mask_sync;
+-			irq_chip->irq_drv_data = regmap;
++
++			gpio_config.regmap_irq_chip = irq_chip;
++			gpio_config.drvdata = regmap;
+ 
+ 			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
+ 				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
 diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index 51b4d69b8740..ad808d8d24b3 100644
+index ad808d8d24b3..d0e65eac9f0b 100644
 --- a/drivers/gpio/gpio-regmap.c
 +++ b/drivers/gpio/gpio-regmap.c
-@@ -276,6 +276,28 @@ static int gpio_regmap_direction_output(struct gpio_chip *chip,
- 	return gpio_regmap_set_direction(chip, offset, true);
- }
- 
-+int gpio_regmap_reqres_irq(struct gpio_regmap *gpio, unsigned int offset)
-+{
-+	return gpiochip_reqres_irq(&gpio->gpio_chip, offset);
-+}
-+EXPORT_SYMBOL_GPL(gpio_regmap_reqres_irq);
-+
-+void gpio_regmap_relres_irq(struct gpio_regmap *gpio, unsigned int offset)
-+{
-+	gpiochip_relres_irq(&gpio->gpio_chip, offset);
-+}
-+EXPORT_SYMBOL_GPL(gpio_regmap_relres_irq);
-+
-+static int gpio_regmap_irq_reqres(void *irq_drv_data, irq_hw_number_t hwirq)
-+{
-+	return gpio_regmap_reqres_irq(irq_drv_data, hwirq);
-+}
-+
-+static void gpio_regmap_irq_relres(void *irq_drv_data, irq_hw_number_t hwirq)
-+{
-+	gpio_regmap_relres_irq(irq_drv_data, hwirq);
-+}
-+
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
- {
- 	return gpio->driver_data;
-diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index 06255756710d..e939709fde8d 100644
---- a/include/linux/gpio/regmap.h
-+++ b/include/linux/gpio/regmap.h
-@@ -121,4 +121,7 @@ struct gpio_regmap *devm_gpio_regmap_register(struct device *dev,
- 					      const struct gpio_regmap_config *config);
- void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio);
- 
-+int gpio_regmap_reqres_irq(struct gpio_regmap *gpio, unsigned int offset);
-+void gpio_regmap_relres_irq(struct gpio_regmap *gpio, unsigned int offset);
-+
- #endif /* _LINUX_GPIO_REGMAP_H */
+@@ -419,6 +419,9 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ #ifdef CONFIG_REGMAP_IRQ
+ 	if (config->regmap_irq_chip) {
+ 		gpio->regmap_irq_line = config->regmap_irq_line;
++		config->regmap_irq_chip->irq_reqres = gpio_regmap_irq_reqres;
++		config->regmap_irq_chip->irq_relres = gpio_regmap_irq_relres;
++		config->regmap_irq_chip->irq_drv_data = gpio;
+ 		ret = regmap_add_irq_chip_fwnode(dev_fwnode(config->parent), config->regmap,
+ 						 config->regmap_irq_line, config->regmap_irq_flags,
+ 						 0, config->regmap_irq_chip, &gpio->irq_chip_data);
 -- 
 2.50.1
 
