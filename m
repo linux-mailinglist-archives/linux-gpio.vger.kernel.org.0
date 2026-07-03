@@ -1,455 +1,211 @@
-Return-Path: <linux-gpio+bounces-39402-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39403-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9ZrwHGC2R2qmdwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39402-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:17:20 +0200
+	id JChOKhS7R2pqeQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39403-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:37:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7BFA702C1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:17:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C72E702F12
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:37:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=CXYJqqPM;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39402-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39402-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=PKJdgbvB;
+	dmarc=pass (policy=reject) header.from=bootlin.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39403-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39403-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 822BE300EC81
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:11:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 659503008750
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:30:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933C53D5237;
-	Fri,  3 Jul 2026 13:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 177B23D566B;
+	Fri,  3 Jul 2026 13:30:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EB8184540
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 13:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7E93C9890;
+	Fri,  3 Jul 2026 13:30:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783084301; cv=none; b=W/Tu0QXR9BKjmTeoRQXAth0Am5fn0/Ip+biNqGhB2323mker7gNuSPp1TslK6Qx7+o8C4H3KptZmcxu0P/EcxA7P1v2KKux5ahxxyugfdExRLc2qrh3t0D+lyPCIPt1OHdUAvNNOge6vW11PNZwxBTPRWjirvYIZosw/4zcdwF0=
+	t=1783085433; cv=none; b=qfJ1bsWSokJBLDdnCELBukNn7ej36DPg15ivdWsq6xO/WhJ7XJnxjaK0jQSxMe0ir4ZxuCoxBcc+hJFBnJFP85rqPiA2lTbHXPpBQljR/HovA6KBEcpqipjtngjamszntncJ2tCBzgs3LirNGKQG0PnvNqN7ugCuALTZK4ZPl+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783084301; c=relaxed/simple;
-	bh=xmey9e5/cxKXXSFCAnisuOsIuzPYDL8Ngb0teO9TvrE=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D5dpJOUvR4p0SmOZO1yuolXkh9OAeL+iKIaqBhMjrsLRQ2KTdP7gS/RXfJF0qCHm9OtmzXEbOQ9iEySTyFawS/jGm1SLw3Gx7wEbnYtIvK39tcE+RAdvqXMCFpNWE36VWvAMOagmJ2HU35hVPRAFP3RqpJ96ZIJySe8VXHV2bNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXYJqqPM; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D721F01563
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 13:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783084298;
-	bh=UvmjYOgLC9fhdWPNTKBTToWNXYqkMPHeHSDluBZYtFA=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=CXYJqqPMTQ23OUbZme/20yc8xpMUwjDh1Ydx2nq1GniC5Me2s17ZItYYF7c6OL5pM
-	 i6fTQCwlhjMXJ8uzZA/fiQglPNBeXH0rDXUkoz6rFxFy5NnhTQsaDZvhC8op3GYH3S
-	 agZUx3PEK2eOuRrfSpAsADgVQ17ycnRjQcpH8l5oXwqTX1+j8RugQzPblQmgDTfCsI
-	 n+esjGYTFonksFCwLA7BKW4rCYlXxJL9agBtNje6vo+4puWuhj7tVYSYcxz1OYoM80
-	 tltMm/dRHMmX3smAREWZnhsOjAP1erg0KdyZSqEfDeUn3l2PwzQpj2WXiqtDc/Ao5N
-	 j0OX4ZJsaCVjQ==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-39b0c6488e6so6134171fa.3
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 06:11:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpPQNxhfDZUtUfShnLHXSzwwVh6UIBg6Cv92+hmbm2eEOK+WD7lVtqQRuKLx4r5o2yzhg5RCMtzP2NJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza+nIAOGevC/UIWtDydJBbYxoVaHRxfC6jip/Akrw3Iq7g2rZ2
-	nPZPFyI42h6sawo+Udlg/l9N+6eqmNqtYjhjjLCntdeWoum1QKqUka1d6o9m6wqLOISgd1UwUeo
-	ihbC3+pWmhXEzKUciCYAsR/CNQePU3S2py2Wfz7ZeEA==
-X-Received: by 2002:a2e:beaa:0:b0:39b:156c:d097 with SMTP id
- 38308e7fff4ca-39b34028295mr24511591fa.13.1783084297476; Fri, 03 Jul 2026
- 06:11:37 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 3 Jul 2026 08:11:35 -0500
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 3 Jul 2026 08:11:35 -0500
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <27fb93d0e61704d495e3adf4ed614edac1642267.1782909323.git.mazziesaccount@gmail.com>
+	s=arc-20240116; t=1783085433; c=relaxed/simple;
+	bh=1yGfD2Bn0HIgjtbHahbjnqvrsiBGIr12/iGNAQIsO4E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GTXVLRHcxj+BDhN9P23U8h2BRydNgR2wFNF+GDXwD0RYQF5JEGRDs9X7jl8/z2zFrpnNjd9OilXN2MQHjCMqJjD1DYvZi6Mv3Z35VBp2byK2W3OpxsI9zcDNQEdZqsj6x2Lv5suq9bv9EtrV/AX7gTVNZRW9orVhE+cnowsBG5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PKJdgbvB; arc=none smtp.client-ip=185.171.202.116
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 61215C49F56;
+	Fri,  3 Jul 2026 13:30:41 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 81ADA60300;
+	Fri,  3 Jul 2026 13:30:29 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8C201104C94BE;
+	Fri,  3 Jul 2026 15:30:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1783085428; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=5mFtqUYrNt5Jtcz5Xx0Xzx69WhDueky464L1flUsojc=;
+	b=PKJdgbvBwLLqmMSoSaXjSkq3tGVHqMcjpjd5puIh6yH03DJX7vw96fFOdAarNP7f+BhGHn
+	+9NyGhDJqf2uueK1833RPQDkoYzHmOtLhAF9erYuWoLt6e/H2eRA1cpjoqkzUCarHYbJl2
+	BNoHXFDd1X5M+z4/dRUlZ38YcFKsK7NduHk3fXp2uONjAolnyPCH5ulcC+IiQPvkG18mKl
+	VPMk//ST+d4Q0zlz5XwGvCiV5dy5OnOp2TNPy44DoT5KEQ55tNTfD4vg1YWVGtsGA4H18l
+	zLT98L+qt+ZUUt0rY7Hu726czmiwsF3cb20OnGFHVgoR4A8rIBS87WBmw6C+Yw==
+From: Paul Louvel <paul.louvel@bootlin.com>
+Subject: [PATCH 00/12] soc: fsl: qe: QE PIC improvement and add support of
+ IRQs to QUICC ENGINE GPIOs
+Date: Fri, 03 Jul 2026 15:30:08 +0200
+Message-Id: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1782909323.git.mazziesaccount@gmail.com> <27fb93d0e61704d495e3adf4ed614edac1642267.1782909323.git.mazziesaccount@gmail.com>
-Date: Fri, 3 Jul 2026 08:11:35 -0500
-X-Gmail-Original-Message-ID: <CAMRc=MccLRKb8ZjChcR7WK3TqV3=waSnKX=UX9LR=5hOT=_tsg@mail.gmail.com>
-X-Gm-Features: AVVi8CcUKnlhnq7EE36etK1w5TMl6FhgpT_im_vC2GAXFa9q-dLwI3b9jghl0D4
-Message-ID: <CAMRc=MccLRKb8ZjChcR7WK3TqV3=waSnKX=UX9LR=5hOT=_tsg@mail.gmail.com>
-Subject: Re: [PATCH 7/8] gpio: bd73800: Support ROHM BD73800 PMIC GPIOs
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@linux.dev>, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Brian Masney <bmasney@redhat.com>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, 
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2XNTQ6CMBCG4auQrq3pD5TqynsYF7QMMkYptkg0h
+ LtbYIO4/JJ53hlIAI8QyDEZiIceA7omDr5LiK2L5goUy7iJYEKxjEv6BNqipdcWXaAslyB0qnh
+ WSBJJ66HC95w7X5YdXuYGtpsa00WNoXP+M//r+XS3pBXbpHtOGa2ktiAqJjSkJ+Ncd8dmb92DT
+ PFerHm64SJydSgMcK6rMjX/XK55tuEycs1AGW7y0gj5y8dx/ALAq6umOgEAAA==
+X-Change-ID: 20260513-qe-pic-gpios-073e284615a3
+To: Qiang Zhao <qiang.zhao@nxp.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Paul Louvel <paul.louvel@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, stable@kernel.org, 
+ Christophe Leroy <chleroy@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783085423; l=3216;
+ i=paul.louvel@bootlin.com; s=20260313; h=from:subject:message-id;
+ bh=1yGfD2Bn0HIgjtbHahbjnqvrsiBGIr12/iGNAQIsO4E=;
+ b=t2Y0LBJysR5oFAc3K2X2asCnqDjMttKGixZaUW0InOOvdj8WRyWoVMgiIRfx74m+Uoi1nrRnF
+ O217geOIZWNCZVj68BVRyl0OWCN/WB+0HXOC0pdo0xoA6YKiO/eAq+r
+X-Developer-Key: i=paul.louvel@bootlin.com; a=ed25519;
+ pk=eLW50NT18UAvUT5cAcYf88zNbBCZDLFXuptpyLVhVIU=
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-39403-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39402-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:mazziesaccount@gmail.com,m:matti.vaittinen@linux.dev,m:lee@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:linusw@kernel.org,m:brgl@kernel.org,m:alexandre.belloni@bootlin.com,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-rtc@vger.kernel.org,m:matti.vaittinen@fi.rohmeurope.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_TO(0.00)[nxp.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
+	FORGED_SENDER(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
 	RCPT_COUNT_TWELVE(0.00)[20];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:qiang.zhao@nxp.com,m:chleroy@kernel.org,m:tglx@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:paul.louvel@bootlin.com,m:thomas.petazzoni@bootlin.com,m:stable@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[linux.dev,kernel.org,gmail.com,baylibre.com,redhat.com,bootlin.com,vger.kernel.org,fi.rohmeurope.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:mid,bootlin.com:from_mime,bootlin.com:url,bootlin.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D7BFA702C1D
+X-Rspamd-Queue-Id: 1C72E702F12
 
-On Wed, 1 Jul 2026 14:43:25 +0200, Matti Vaittinen
-<matti.vaittinen@linux.dev> said:
-> From: Matti Vaittinen <mazziesaccount@gmail.com>
->
-> The ROHM BD73800 PMIC has 4 pins (named GPIO1, CLKOUT, FAULT_B and
-> EXTEN_OUT) which might have been set to operate as a GPI or GPO when OTP
-> (One Time Programmable memory) is written at device manufacturing.
-> Support the GPI/GPO use-case via GPIO framework.
->
-> The default OTP for these pins is to not use any of them as GPI or GPO.
-> (The GPIO1 defaults as an ADC input regardless the naming). Hence the
-> driver assumes none of these pins is a GPI/GPO unless explicitly pointed
-> as GPI or GPO via device tree.
->
-> Furthermore, pin's direction can't be changed after OTP configuration is
-> done. Also the default drive type for a GPO (CMOS / Open Drain) is set
-> by the OTP configuration. The BD73800 has a set of undocumented test
-> registers which should allow changing the drive type. Access to the test
-> register area or the test registers aren't documented and so this driver
-> does not support configuring the drive type even though it might be
-> doable.
->
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> ---
->  drivers/gpio/Kconfig        |  11 ++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-bd73800.c | 234 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 246 insertions(+)
->  create mode 100644 drivers/gpio/gpio-bd73800.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 28cf6d2e83c2..09d87c3b756f 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1363,6 +1363,17 @@ config GPIO_BD72720
->  	  be configured to GPO on the ROHM PMIC. The pin configuration is done
->  	  on OTP at manufacturing.
->
-> +config GPIO_BD73800
-> +	tristate "ROHM BD73800 GPIO support"
-> +	depends on MFD_ROHM_BD71828
-> +	help
-> +	  Support for GPIOs on ROHM BD73800 PMIC. There can be up to 4
-> +	  GPI or GPO pins available on the PMIC in total. The purpose of
-> +	  the pins is decided at the device manufacturing by OTP
-> +	  configuration and can't be reconfigured later. Enable this
-> +	  if your PMIC has pins set as GPIs or GPOs and if you wish to
-> +	  control the pins via the GPIO framework.
-> +
->  config GPIO_BD9571MWV
->  	tristate "ROHM BD9571 GPIO support"
->  	depends on MFD_BD9571MWV
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 4d0e900402fc..3041c06aa933 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -45,6 +45,7 @@ obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+= gpio-xgs-iproc.o
->  obj-$(CONFIG_GPIO_BD71815)		+= gpio-bd71815.o
->  obj-$(CONFIG_GPIO_BD71828)		+= gpio-bd71828.o
->  obj-$(CONFIG_GPIO_BD72720)		+= gpio-bd72720.o
-> +obj-$(CONFIG_GPIO_BD73800)		+= gpio-bd73800.o
->  obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
->  obj-$(CONFIG_GPIO_BLZP1600)		+= gpio-blzp1600.o
->  obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
-> diff --git a/drivers/gpio/gpio-bd73800.c b/drivers/gpio/gpio-bd73800.c
-> new file mode 100644
-> index 000000000000..3fe4b7f167b8
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-bd73800.c
-> @@ -0,0 +1,234 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Support to GPIOs on ROHM BD73800
-> + * Copyright 2024 ROHM Semiconductors.
-> + * Author: Matti Vaittinen <mazziesaccount@gmail.com>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/rohm-bd73800.h>
-> +
-> +#define BD73800_GPIO_MAX_PINS 4
-> +/*
-> + * The BD73800 has several "one time programmable" (OTP) configurations which
-> + * can be set at manufacturing phase. Some of these options allow using
-> + * individual pins as GPI or GPO (not both at the same time). The OTP
-> + * configuration can't be read at run-time, so drivers rely on device-tree to
-> + * advertise the OTP programmed in manufacturing.
-> + *
-> + * The pins which can be used as GPIO are:
-> + * GPIO1, CLKOUT (GPIO2), FAULT_B, EXTEN_OUT.
-> + *
-> + * The OTP options 2 and 3 state for all the pins:
-> + *  - OTP2: GPI (also IRQ source)
-> + *  - OTP3: GPO (NOTE: This is actually 2 different OTP options. Either a
-> + *    register controllable output or a power-sequence controlled output.
-> + *    The "gpo" referred here means only the register controllable output.
-> + *    The datasheet refers to this as: "<pin> output is controlled by
-> + *    GPIO<N>_OUT or power on/off sequencer to control external VRs. ON/OFF
-> + *    sequence timing is configurable."
-> + *
-> + * The data-sheet further says that the GPI/GPO is not a default OTP
-> + * configuration for any of the pins. Hence the GPIO driver defaults to a pin
-> + * not being a GPI or GPO, but requires the pin to be explicitly marked as a
-> + * GPI or GPO in the device-tree.
-> + *
-> + * DT properties:
-> + * "rohm,pin-gpio1", "rohm,pin-clkout", "rohm,pin-fault-b", "rohm,pin-exten"
-> + * can be set to one of the values "gpi" or "gpo" to enable them to be used as
-> + * GPIO.
-> + */
-> +
-> +enum bd73800_gpio_state {
-> +	BD73800_PIN_UNKNOWN,
-> +	BD73800_PIN_GPI,
-> +	BD73800_PIN_GPO,
-> +};
-> +
-> +struct bd73800_gpio_pin_cfg {
-> +	enum bd73800_gpio_state state;
-> +	int mask; /* GPIO_OUT and INT_SRC have same bit offsets for GPIO */
-> +};
-> +
-> +struct bd73800_gpio {
-> +	/* chip.parent points the MFD which provides DT node and regmap */
-> +	struct gpio_chip chip;
-> +	struct bd73800_gpio_pin_cfg pin[BD73800_GPIO_MAX_PINS];
-> +	int num_pins;
-> +	/* dev points to the platform device for devm and prints */
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static int bd73800_gpio_get_pins(struct bd73800_gpio *g)
-> +{
-> +	static const char * const properties[] = {"rohm,pin-gpio1",
-> +		"rohm,pin-clkout", "rohm,pin-fault-b", "rohm,pin-exten"};
-> +	const char *val;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(properties); i++) {
-> +		ret = fwnode_property_read_string(dev_fwnode(g->dev->parent),
+This series modernizes the QUICC Engine Port Interrupt Controller (QE
+PIC) driver and adds the ability for QE GPIO pins to generate interrupts
+through the QE PIC, completing Christophe Leroy's prior work [1].
 
-It would be cleaner with device_property_read_string(g->dev->parent, ...)
+Christophe's series was partially merged; patches 4, 6 and 7 did not
+make it to mainline.
 
-> +						  properties[i], &val);
-> +
-> +		if (ret) {
-> +			if (ret == -EINVAL)
-> +				continue;
-> +
-> +			return dev_err_probe(g->dev, ret,
-> +					"pin %d (%s), bad configuration\n", i,
-> +					properties[i]);
-> +		}
-> +
-> +		if (strcmp(val, "gpi") == 0) {
-> +			g->pin[g->num_pins].state = BD73800_PIN_GPI;
-> +			g->pin[g->num_pins].mask = BIT(i);
-> +			g->num_pins++;
-> +		} else if (strcmp(val, "gpo") == 0) {
-> +			g->pin[g->num_pins].state = BD73800_PIN_GPO;
-> +			g->pin[g->num_pins].mask = BIT(i);
-> +			g->num_pins++;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int bd73800gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	struct bd73800_gpio *bdgpio = gpiochip_get_data(chip);
-> +	struct bd73800_gpio_pin_cfg *pin = &bdgpio->pin[offset];
-> +	int ret, val;
-> +
-> +	/* Only pins configured as GPI via OTP can have their status read */
-> +	if (pin->state != BD73800_PIN_GPI) {
-> +		dev_dbg(bdgpio->dev, "pin %d (%x) not input. State %d\n",
-> +			offset, pin->mask, pin->state);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = regmap_read(bdgpio->regmap, BD73800_REG_INT_5_SRC, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return val & pin->mask;
-> +}
-> +
-> +static int bd73800gpo_set(struct gpio_chip *chip, unsigned int offset,
-> +			  int value)
-> +{
-> +	struct bd73800_gpio *bdgpio = gpiochip_get_data(chip);
-> +	struct bd73800_gpio_pin_cfg *pin = &bdgpio->pin[offset];
-> +
-> +	if (pin->state != BD73800_PIN_GPO) {
-> +		dev_dbg(bdgpio->dev, "pin %d (%d) not output. State %d\n",
-> +			offset, pin->mask, pin->state);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (value)
-> +		return regmap_set_bits(bdgpio->regmap, BD73800_REG_GPO_OUT,
-> +				       pin->mask);
-> +
-> +	return regmap_clear_bits(bdgpio->regmap, BD73800_REG_GPO_OUT, pin->mask);
-> +}
-> +
-> +static int bd73800gpio_direction_get(struct gpio_chip *chip,
-> +				    unsigned int offset)
-> +{
-> +	struct bd73800_gpio *bdgpio = gpiochip_get_data(chip);
-> +
-> +	if (bdgpio->pin[offset].state == BD73800_PIN_GPO)
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +
-> +	return GPIO_LINE_DIRECTION_IN;
-> +}
-> +
-> +/*
-> + * Template for GPIO chip. The BD73800 GPO supports both CMOS and open drain
-> + * configurations. The default however depends on the OTP. The runtime config
-> + * can be done via undocumented test registers - but at the moment there is no
-> + * support for this.
-> + *
-> + * NOTE: When the BD73800 GPIO pins are used as IRQ source, the users are
-> + * expected to request them directly from the regmap_irq IRQ-chip (implemented
-> + * in the MFD driver). This way we don't need to populate another IRQ-chip
-> + * here.
-> + */
-> +static const struct gpio_chip bd73800gpio_chip = {
-> +	.label			= "bd73800",
-> +	.owner			= THIS_MODULE,
-> +	.get			= bd73800gpio_get,
-> +	.get_direction		= bd73800gpio_direction_get,
-> +	.set			= bd73800gpo_set,
-> +	.can_sleep		= true,
-> +};
-> +
-> +static int gpo_bd73800_probe(struct platform_device *pdev)
-> +{
-> +	struct bd73800_gpio *g;
+The series is organized in three parts:
 
-May I suggest a slightly more descriptive name for driver data? Maybe at the
-very least... "data"? :)
+1) Add missing chained_irq_{enter,exit}() calls
 
-> +	struct device *parent, *dev;
-> +	int ret;
-> +
-> +	/*
-> +	 * Bind devm lifetime to this platform device => use dev for devm.
-> +	 * also the prints should originate from this device.
-> +	 */
+   - In a chained handler, the parent controller need to mask and ack
+     the interrupt source.
 
-Why would you need to comment on it though? It's very much the standard
-approach, isn't it?
+2) DT binding updates
 
-> +	dev = &pdev->dev;
-> +	/* The device-tree and regmap come from MFD => use parent for that */
-> +	parent = dev->parent;
-> +
-> +	g = devm_kzalloc(dev, sizeof(*g), GFP_KERNEL);
-> +	if (!g)
-> +		return -ENOMEM;
-> +
-> +	g->chip = bd73800gpio_chip;
-> +	g->chip.base = -1;
-> +	g->chip.parent = parent;
-> +	g->regmap = dev_get_regmap(parent, NULL);
-> +	g->dev = dev;
-> +
-> +	ret = bd73800_gpio_get_pins(g);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!g->num_pins) {
-> +		/*
-> +		 * The BD73800 may or may not have pins allocated for GPIO
-> +		 * depending on the OTP used at manufacturing. Free the memory
-> +		 * and go out if there is no pins as then we have nothing to do
-> +		 */
-> +		dev_dbg(dev, "no GPIO pins\n");
-> +		devm_kfree(dev, g);
+   - Update #interrupt-cells from 1 to 2 in the QE PIC binding so
+     consumers can encode the interrupt type (falling-edge or
+     both-edges).
 
-No need for that, because...
+   - Convert the QE GPIO binding from freeform text to DT schema.
 
-> +		return 0;
+   - Extend the QE GPIO binding with an interrupt-map (nexus node) that
+     maps GPIO lines to parent QE PIC interrupts.  This approach was
+     suggested by Rob Herring [2] as an alternative to using compatible
+     strings and driver data to specify which pins support interrupts in
+     a given bank.
 
-... this will still leave a bound device in the system, I'm not sure we want
-it? The correct error code in this case is -ENODEV.
+3) QE PIC driver refactoring
 
-> +	}
-> +	g->chip.ngpio = g->num_pins;
-> +
-> +	return devm_gpiochip_add_data(dev, &g->chip, g);
-> +}
-> +
-> +static const struct platform_device_id bd73800_gpio_id[] = {
-> +	{ "bd73800-gpio" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, bd73800_gpio_id);
-> +
-> +static struct platform_driver gpo_bd73800_driver = {
-> +	.driver = {
-> +		.name = "bd73800-gpio",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.probe = gpo_bd73800_probe,
-> +	.id_table = bd73800_gpio_id,
-> +};
-> +module_platform_driver(gpo_bd73800_driver);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <mazziesaccount@gmail.com>");
-> +MODULE_DESCRIPTION("GPIO interface for BD73800");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.54.0
->
->
+   - The QE PIC is a perfect fit to use the generic irq framework
+     instead. Perform the necessary changes to the driver to convert it.
 
-Bart
+   - Minor cleanups.
+
+4) QE GPIO interrupt support
+
+   - Add a to_irq() method to the QE GPIO driver that perform the
+     mapping of the GPIO pin to the parent interrupt domain, allowing
+     GPIO pins to be used as interrupt sources through the QE PIC via
+     gpio_to_irq().
+
+[1] https://lore.kernel.org/all/cover.1758212309.git.christophe.leroy@csgroup.eu/
+[2] https://lore.kernel.org/all/20250919152414.GB852815-robh@kernel.org/
+
+Signed-off-by: Paul Louvel <paul.louvel@bootlin.com>
+
+---
+Christophe Leroy (1):
+      dt-bindings: soc: fsl: qe: Convert QE GPIO to DT schema
+
+Paul Louvel (11):
+      soc: fsl: qe: Add chained_irq_{enter,exit}() calls in cascade handler
+      dt-bindings: soc: fsl: qe: Set #interrupt-cells to 2 to support interrupt type encoding
+      dt-bindings: soc: fsl: qe: Add support of IRQ in QE GPIO
+      soc: fsl: qe: Use generic_handle_domain_irq()
+      soc: fsl: qe: Iterate over all pending interrupts in cascade handler
+      soc: fsl: qe: Handle spurious interrupts
+      soc: fsl: qe: Convert to generic IRQ chip
+      soc: fsl: qe: Rename irq variable to parent_irq
+      soc: fsl: qe: Rename host member to domain in struct qepic_data
+      soc: fsl: qe: Remove useless struct member
+      soc: fsl: qe: Add support of IRQs in QE GPIO
+
+ .../bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml   | 108 ++++++++++++++++
+ .../interrupt-controller/fsl,qe-ports-ic.yaml      |   4 +-
+ .../bindings/soc/fsl/cpm_qe/qe/par_io.txt          |  26 +---
+ arch/powerpc/platforms/Kconfig                     |   1 +
+ drivers/soc/fsl/qe/gpio.c                          |  28 +++-
+ drivers/soc/fsl/qe/qe_ports_ic.c                   | 144 +++++++++++++--------
+ 6 files changed, 232 insertions(+), 79 deletions(-)
+---
+base-commit: f1b7f9c6e1a7fc549f37cafb48d233c9f7c26adc
+change-id: 20260513-qe-pic-gpios-073e284615a3
+
+Best regards,
+--  
+Paul Louvel, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
