@@ -1,168 +1,165 @@
-Return-Path: <linux-gpio+bounces-39420-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4e/MAErVR2rpfwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39420-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 17:29:14 +0200
+	id NSjqJZYLSGqwkgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39422-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 21:20:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDDE2703E08
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 17:29:12 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11B3170515E
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 21:20:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GyAnGwkk;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EYpzH0Hw;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39420-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39420-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39422-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39422-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 312263005316
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 15:29:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 37380305C137
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 19:19:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ADA9417368;
-	Fri,  3 Jul 2026 15:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7BF32860B;
+	Fri,  3 Jul 2026 19:19:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFE93A9D8F;
-	Fri,  3 Jul 2026 15:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07E23264D8;
+	Fri,  3 Jul 2026 19:19:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783092549; cv=none; b=dw5M9ZmV1nfmQ95A+qhRiFG0byFLBpU+3WLSynfu1nlw/ng2bbJ+I9s/i8y4rZJ0pjFrFM8d5nyaf9q6FuYAwL3rDEh+ONGt09BiDANJ+jehK/deMNBfiI4X6oH1P0QkH7ljr6LxigEJxgQOAlbAB+xdYQX4lhILJyArQu9Xp1w=
+	t=1783106368; cv=none; b=XSOFI7AS+RxhJet0AuNkdK1iH9iKTWiDWOgaGivK+WtNtNGdeG1k2b6AvHh5fJA6XrUUKl4RyFD1aK0ADV7e/MoSGtkSxWsV16Pwur3HA3iKATHzUP3/Wyu71dxt2Kp5KsI4SqVhTOUdCAQAlVL9O570tz/Na5tW9+GZzl5Tsks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783092549; c=relaxed/simple;
-	bh=QRSZBzWZVvGk9orGFJlFPHLfube9MNKRgNrIAajuVKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTaBYHWKB+exqX3DMhuMPe94OBZRosvhcLEvJ15mizyy5pJqQy/VGgmRiuRI9wOxv0ThsIvTsZdvBCih47kPws3lMvKwypttgx3p6a8aZ3bSOn7zqBQYRG8jKa3OFZyk4FgcbRXljCsnbAK3wuoNQ1LS3emhk4Xs6CTbkbXBxp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyAnGwkk; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0F41F000E9;
-	Fri,  3 Jul 2026 15:29:05 +0000 (UTC)
+	s=arc-20240116; t=1783106368; c=relaxed/simple;
+	bh=HSAC5/nMEP6Slb2rGTY7bKLJQONDl0RVvDxg7fUQw9I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ss0M6+HM8xzy1NKOcLTSqUwesNY+VQk4XZumxw1eUhNXx+6ZKWEWEWfgUJex3pVLV6SfMBZzvC6XMreSIaxjjP+QtOrrotF4UU2sVwhWMNOvErMHfPkmWbjLYrQx4Hv6GIAiUT0+9VQ2Phn9OT1xjak0Mi31EegUBxL1Z1jCrLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYpzH0Hw; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCAB1F000E9;
+	Fri,  3 Jul 2026 19:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783092547;
-	bh=zCf8waDDfB9xkYRSX6+tsUG11Ds9BUUIgoWtZjK6W4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GyAnGwkkZLG9s2cAIU7WblN5rauL5m93TqeTG58sLZE2540Ui4DO7k6+hfnQv6xtQ
-	 5dQxMXczODHl0gltoZZ9+L/xD7o1PWbmNUGfqso/xh2wL8MgSnpVtkRpSx2wDT9j//
-	 QWvzW2omldxoUu4KlJ9GgJRX1OwN3bPDy/qk208/xaaYs4XK/sgOTSWxscDsNr6yul
-	 /Sc6JXxZ1L1p1eNxxZHuw2QJ51DiUq66fZ665D+BIJvmat6DenY3JCLvCy/xTQwRuT
-	 mboDjgH2yPfhSBJ8Lrju2m5Py9ccCelhcfsUcAA6ntQaCjz3EMqd2+tZZJhHn8sFEw
-	 o5I31NtCPWBJg==
-Date: Fri, 3 Jul 2026 16:29:02 +0100
+	s=k20260515; t=1783106367;
+	bh=ue0U9IrP0YVIunQgyG+C4mydhPBdKQxV7dUp1GXpXC4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=EYpzH0Hwy3xKW2L4khD/GWIAXQCijjEXl3bld3eLUqypKgWsdZWq8dG1rC6azEmg5
+	 OJxxhCa2B+u0pWZjGjzaE+HghbBNTAakzHn2ZRVI6uvREB11rX6BhRVwNhAD8Rlhzq
+	 qVSI3o16MQ5TuLZSazBpzMVQYw2GvfFag86yj36qnFZWJqxw4cMNbakZeOkkYM61+t
+	 V0c8dSMxEDJ3KVHRji5yxZI6kUoxRrmb5Zvpnfy1hJyAbW7c3Otk1cK7s/h8Gj7o2s
+	 n8IWPJGE/KNVfnuhazgUnuxkSeigXPrfjjyWjlf0aqNmNTuoTa4RCAOAgGWb10SVZB
+	 34YkJdFzTfIjQ==
 From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Yu-Chun Lin <eleanor.lin@realtek.com>,
-	William Breathitt Gray <wbg@kernel.org>
-Subject: Re: [PATCH v1 1/4] regmap-irq: Provide IRQ resource request and
- release callbacks
-Message-ID: <1e550cba-ab37-4f55-84f0-0dde47e7158d@sirena.org.uk>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, 
+ driver-core@lists.linux.dev, linux-gpio@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Yu-Chun Lin <eleanor.lin@realtek.com>, 
+ William Breathitt Gray <wbg@kernel.org>
+In-Reply-To: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
 References: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
- <20260702130903.1790633-2-andriy.shevchenko@linux.intel.com>
+Subject: Re: (subset) [PATCH v1 0/4] gpio: regmap: Keep tracking IRQ
+ requests and releases
+Message-Id: <178309254924.53103.7161454484858197335.b4-ty@b4>
+Date: Fri, 03 Jul 2026 16:29:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w9gIsdYu7gdKaoWo"
-Content-Disposition: inline
-In-Reply-To: <20260702130903.1790633-2-andriy.shevchenko@linux.intel.com>
-X-Cookie: Another megabytes the dust.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1876; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=HSAC5/nMEP6Slb2rGTY7bKLJQONDl0RVvDxg7fUQw9I=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqSAs7qXI94Z/V987rVKP/qZMHi46jTawLkKaDP
+ fcTnm3FbfWJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCakgLOwAKCRAk1otyXVSH
+ 0HF+B/9UFKne3oT0zWPrYdtn4E8+T3UU+5fMmwpcFifEnrnjFzfjNFvhmI64ht70VXzWveavhmW
+ c2rvGrL256FgCAgUabOEy4zKuGv6B6WpEDePB6/13rIXjactZtj5LPWU+UpGWjcVUaF/rzi8/hH
+ IGc7xge8hyGC7hsHlh2u4PnhPDuCZrkVVxZQjqUDm4hSJrXrP5My9T13K/VIyy9p7YjCDD0livr
+ CRfACGWzh6pORezB3G1WW5IWm/B5O5wuBvTbVKbkKbmFHHEGSb6BTVpgn9BcxWKVUz9/dGJNN+z
+ /CqVBUFIqOFNIReUD9ufWEnWt3vLch+9hKI2D+vIPBlRU15g
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-7.26 / 15.00];
+X-Spamd-Result: default: False [-4.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:mathieu.dubois-briand@bootlin.com,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:andriy.shevchenko@linux.intel.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:mwalle@kernel.org,m:eleanor.lin@realtek.com,m:wbg@kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:mathieu.dubois-briand@bootlin.com,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:mwalle@kernel.org,m:eleanor.lin@realtek.com,m:wbg@kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[13];
-	TAGGED_FROM(0.00)[bounces-39420-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-39422-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EDDE2703E08
+X-Rspamd-Queue-Id: 11B3170515E
 
+On Thu, 02 Jul 2026 14:42:53 +0200, Andy Shevchenko wrote:
+> gpio: regmap: Keep tracking IRQ requests and releases
+> 
+> During the review of the v3 [1] of the series that adds a driver for
+> Realtek DHC RTD1625 SoC GPIO the gap in the GPIO regmap implementation
+> has been discovered, id est the IRQ chip that is created by regmap IRQ
+> doesn't have IRQ request and release callbacks and hence in terms of
+> GPIO does not track if any line is locked as IRQ. This might lead to
+> undesired and most likely faulty behaviour. This series is to fill that
+> gap. Currently it only fixes the only user of the automatic IRQ chip
+> creation facility provided by GPIO regmap, but also provides the exported
+> callbacks for others to be possible to call them from customised versions
+> of the callbacks in the respective drivers.
+> 
+> [...]
 
---w9gIsdYu7gdKaoWo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
-On Thu, Jul 02, 2026 at 02:42:54PM +0200, Andy Shevchenko wrote:
-> The users which rely on regmap IRQ to create the IRQ chip may also
-> want to have an additional tracking of the IRQ requests and releases.
-> Provide a callback for them.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git regmap-irq-reqrel
 
-The following changes since commit dc59e4fea9d83f03bad6bddf3fa2e52491777482:
+Thanks!
 
-  Linux 7.2-rc1 (2026-06-28 12:01:31 -0700)
+[1/4] regmap-irq: Provide IRQ resource request and release callbacks
+      https://git.kernel.org/broonie/regmap/c/9bb4c0b37d54
 
-are available in the Git repository at:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-reqrel
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-for you to fetch changes up to 9bb4c0b37d54fc7d61f2a21cfa635fa2e3a29ac5:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-  regmap-irq: Provide IRQ resource request and release callbacks (2026-07-03 16:24:45 +0100)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-----------------------------------------------------------------
-regmap-irq: Provide IRQ resource request and release callbacks
+Thanks,
+Mark
 
-The users which rely on regmap IRQ to create the IRQ chip may also
-want to have an additional tracking of the IRQ requests and releases.
-Provide a callback for them.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      regmap-irq: Provide IRQ resource request and release callbacks
-
- drivers/base/regmap/regmap-irq.c | 22 ++++++++++++++++++++++
- include/linux/regmap.h           |  2 ++
- 2 files changed, 24 insertions(+)
-
---w9gIsdYu7gdKaoWo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmpH1T0ACgkQJNaLcl1U
-h9D8Zgf+PDEbAE/+D/5VEkn/B8vWqpXBcosPjTZYkLQ57a3WUbL0iROa2g25hun+
-JZan+QsYOj3QvS99sh2JEQhobI8EMX6gGLoF5m+Wl5KupMnBNbhwwMgBFS3WjHuS
-qm/7d0y9yg9wodNR9TxMubeB9gF0o6HLIbjVVZjvDcmmtYEPv0SMem62Am8nMTkK
-kK2VnKQgN0JGuwBKsFaett31Plyrt1WEPHaTYQv6EBrjHf2d1ItNA4fhFeeXcbCt
-LV0YAUGDkRURILmiC4tksZ0YG5tsoN9ct9047C+mYERil1BTZCeuOLFdddOPddNh
-912sZBAbJ0ge571OpgUKCNI613HfTg==
-=Qq20
------END PGP SIGNATURE-----
-
---w9gIsdYu7gdKaoWo--
 
