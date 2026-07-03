@@ -1,183 +1,209 @@
-Return-Path: <linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39417-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bHxUK3rAR2r0egAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:00:26 +0200
+	id RHk4NwDDR2qNewAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39417-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:11:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EE3A703301
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:00:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33D4E703475
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:11:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=FJXagwe4;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=arm.com header.s=foss header.b=fZrIn5Xf;
+	dmarc=pass (policy=none) header.from=arm.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39417-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39417-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B87FD3065A49
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:51:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 865433058743
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B169E3EB119;
-	Fri,  3 Jul 2026 13:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5B003DA7CD;
+	Fri,  3 Jul 2026 13:53:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9373E5EEB
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 13:49:01 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC543D9DAD;
+	Fri,  3 Jul 2026 13:52:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783086542; cv=none; b=COdc8nqRzn41LN9vrApIyr+TZzrI2fYT2OyFnI83tq6gt49n83xb4P9RRAAwv+2E5yi7RASIowbiT8GTSiLfKI1hMIonekmu1n9vmCw1c5LEvCkgJO0ULDwNqHkbiV/78DtCeQoOBkD3Trt2NXQ2ATdHppNPUr/wZLXV9/ortxA=
+	t=1783086782; cv=none; b=WGcAeXzxEYaYyamLD9zFWBXCVfxzmDSDes9YU4ueeHd4Z5xABUNvaS3UJHPFhpvcRg8B0XLypVr+3QvtjKriLnDIUVtFFe2zinKsMakFIH5O5GTMukfBvS9mf9ohN3Pbej8ZXlDKbErINAcn9XFv+l6kRy335J30yKVXVSFdgLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783086542; c=relaxed/simple;
-	bh=8nfEgkSEDOOx7LCl18zFqRBJrxILJG4GC6C+e98aV0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ENT/c1Y6JOOnM2r42iQ2AdWqvQmq6AbDIHwAEGm/IRGMaeaABOSg8NB40q0w/f8czGCuendlOdFk5cKOi7xe+goHIHsN48CFDWo5ptVe29848m97foBtATu4NJU7BXRvaMUk7kbnOZZywjFuA4Vbw5wEIboqicPoTD06cNGAqxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJXagwe4; arc=none smtp.client-ip=209.85.214.174
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2caed617615so2106035ad.3
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 06:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783086540; x=1783691340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BOYAmzy2QJ6938uaT+sAj/jru3XG3w5p/LQAZKOhZqU=;
-        b=FJXagwe4lSvnVfTYnw4I1OFcOTNvovfnUeOYWeUiHRZqwONIbKTf1BaNlb/0PilGYv
-         B/Ki+MYeN1LagiZYj4rDISbpcLQfkuHDC0QeVFVjC2oZXcUVIzTGzx9/BpCllp3A2f7i
-         b4vdqlR5DYqxtookx42EcKKdvsDbwuR8jeznEOteEuGcSqdflP2S4vsVYgy92MrSPyz/
-         HpWeojSuDhsA8YVtTswVZrvPZvAK7+5k7aOe6vhR1S9rbH8kDB6fue0MeDsNslxsBvol
-         q42lPcGsYjgFxF0ccrLxSZldy4c/PPkro22cnsMuP60pbDza7pOxltL3XRMTwAplLgky
-         fuhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783086540; x=1783691340;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BOYAmzy2QJ6938uaT+sAj/jru3XG3w5p/LQAZKOhZqU=;
-        b=Vd8uNKWigwSWlZvyXutlYzfoh0VoCD0NGEjm8Xwl0jIETOCjs2xsbpU2MSbU9ElMRw
-         Ed/ASGA+SCGxXwf9mAk9oXGFaFEu9hQp4W8jlF3FkGErt/TScnIucs+u7nIF9fQCN7Qm
-         lxMmK12MUO8P7YcXmaca/Q8dzmnqjn2Vc+WZiqTZZSJB3YNf3XjQG3R2vG5PugQ7Vb4Z
-         9CUXKNUgJhfJmReNJA6ZIBVp1xtjHpVLQnRyOlPyQ8FffEwLlPSRMF8wTy26n9JKzzL5
-         AK3aHukqzgzU4ogQX3ujOs6u3oysNSLkcsiTaDKWj8pmGZWyU73BxSkYrBVrNym5NjjQ
-         JM7A==
-X-Gm-Message-State: AOJu0Yxpz8EHZggR4piDhMD7a8hfYjrZEbPCJLNRrArhUhDjJouK2qLK
-	zMYR69daezFrcaneEQnUPp3U0btb5TqLIH33E/9v3SeQsh3KeorGRl1B
-X-Gm-Gg: AfdE7cmtTQ4fgYlDuQ2O+tQdxr1N3Vwcr0w3L6mj5YLuSmjeHo2bsJsdEBrVmLXLuY/
-	LXLL8h2oxZWY0brmPqONr7JtyC52Ci533iRDnYtp6AuGmvTY7D9bWO3ghn2dLsUk249r75YIe8s
-	qnRRAdODkRDIK7swPYmQlIU2HvuR+UwSY9nIMcIRPh759BuzrSMtj/nov6koDKr1ShEpvxO80OC
-	38WPbxd46C7tRpUZQEKhvROUWFbaLcOBq/7uV9cFKdU6maS4DYqcYIshxsYSf+GICOp2nt7HUp3
-	V+m+gFoxK1vX6IiTKHDij+JzWkHGSarnAzVm2CTiRbPcB58bMCu7F4CzvHRf8Aax50J8KsvWG8Y
-	ZF2XrXbKxGJ7t1UIspX+9/hJ6GqEg6JXy2uTbcl9KML1P1zeulq/D++c4hh3iwGbYUlkD4VUQgu
-	iLiuI9/NT2gVeU/FBc9YAgILJu
-X-Received: by 2002:a17:902:d490:b0:2c9:97a7:b1eb with SMTP id d9443c01a7336-2ca7e92a25emr102079865ad.42.1783086540037;
-        Fri, 03 Jul 2026 06:49:00 -0700 (PDT)
-Received: from localhost ([112.65.12.207])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7765950sm10095955ad.44.2026.07.03.06.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 06:48:58 -0700 (PDT)
-From: Liang Hao <haohlliang@gmail.com>
-To: hoan@os.amperecomputing.com,
-	linusw@kernel.org,
-	brgl@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liang Hao <haohlliang@gmail.com>
-Subject: [PATCH] gpio: dwapb: Add robust error handling in interrupt handler
-Date: Fri,  3 Jul 2026 21:48:33 +0800
-Message-ID: <20260703134833.21110-1-haohlliang@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1783086782; c=relaxed/simple;
+	bh=Me6gmkaDjGZ/schb+RcR4K/Q/82u1DCsmp9vVOmmDmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=phmS56bMPO3eGgEMPN/oWtbc5fW1Jnml/iOHkdk+/5frBmw8soEyrLwBVdaOwgXw+uAlCUOgG4L//Ni4DWDkTldrpRijH33jh/BQxozarU9GlOKki5BxfRBp3wL36UwgwIs5abGP4UAjQQ3Z5C/fMNvqD08QRMbgcxSsi9SN2Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fZrIn5Xf; arc=none smtp.client-ip=217.140.110.172
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A3801570;
+	Fri,  3 Jul 2026 06:52:54 -0700 (PDT)
+Received: from [192.168.178.24] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78843F85F;
+	Fri,  3 Jul 2026 06:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783086778; bh=Me6gmkaDjGZ/schb+RcR4K/Q/82u1DCsmp9vVOmmDmM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fZrIn5XfQIvAcd0b69t8CmMai85U02ASBX0X/4as/KCW8Jodcldpa/pH5V10eQgHq
+	 9auHzyf8i2oM6zFGh8cV2I8qCTmcq5p4qHfBFzB7TbCG+cdRRlSNnjHTJTsDmbUhWf
+	 7RPvEds2OQQYqzxgTEbpq8Efep2fU3R2hTVIuI/k=
+Message-ID: <72ccedfb-742c-4af7-8439-0f37fff2853d@arm.com>
+Date: Fri, 3 Jul 2026 15:52:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] pinctrl: sunxi: convert to GPIO_GENERIC
+To: Bartosz Golaszewski <brgl@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Icenowy Zheng <uwu@icenowy.me>, Jerome Brunet <jbrunet@baylibre.com>
+References: <20260313000652.11470-1-andre.przywara@arm.com>
+ <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
+ <20260315014205.471d6834@ryzen.lan>
+ <CAMRc=MeorQJvA8TBosjnDU+x-FD6GhkbXwXOjCD0nmCs16ERfQ@mail.gmail.com>
+Content-Language: en-GB
+From: Andre Przywara <andre.przywara@arm.com>
+In-Reply-To: <CAMRc=MeorQJvA8TBosjnDU+x-FD6GhkbXwXOjCD0nmCs16ERfQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-39417-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-39416-lists,linux-gpio=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:haohlliang@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:linusw@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:linux-gpio@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:uwu@icenowy.me,m:jbrunet@baylibre.com,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[arm.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arm.com:from_mime,arm.com:email,arm.com:mid,arm.com:dkim,vger.kernel.org:from_smtp,icenowy.me:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3EE3A703301
+X-Rspamd-Queue-Id: 33D4E703475
 
-The current interrupt handler silently continues if an interrupt
-handling fails, which may lead to interrupt storms. Add proper
-error handling to gracefully recover from failed interrupt
-handling.
+Hi Bartosz, Linus,
 
-When generic_handle_irq() fails, the following recovery actions are
-taken:
-  - Write EOI to clear the pending interrupt
-  - Mask the interrupt to prevent immediate re-triggering
-  - Disable the interrupt to stop further interrupts on this line
+so I wanted to come back to this, posting a A733 v2, with this patch 
+included, and was wondering what the consensus on this matter would be?
 
-These measures prevent the system from being overwhelmed by repeated
-unhandled interrupts while logging a rate-limited warning for
-debugging purposes.
+...
 
-Signed-off-by: Liang Hao <haohlliang@gmail.com>
----
- drivers/gpio/gpio-dwapb.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+On 3/16/26 09:57, Bartosz Golaszewski wrote:
+> On Sun, 15 Mar 2026 01:42:05 +0100, Andre Przywara
+> <andre.przywara@arm.com> said:
+>> On Sat, 14 Mar 2026 13:14:25 +0800
+>> Icenowy Zheng <uwu@icenowy.me> wrote:
+>>
+>>> 在 2026-03-13五的 01:06 +0100，Andre Przywara写道：
+>>>> Allwinner SoCs combine pinmuxing and GPIO control in one device/MMIO
+>>>> register frame. So far we were instantiating one GPIO chip per
+>>>> pinctrl
+>>>> device, which covers multiple banks of up to 32 GPIO pins per bank.
+>>>> The
+>>>> GPIO numbers were set to match the absolute pin numbers, even across
+>>>> the
+>>>> typically two instances of the pinctrl device.
+>>>>
+>>>> Convert the GPIO part of the sunxi pinctrl over to use the
+>>>> gpio_generic
+>>>> framework. This alone allows to remove some sunxi specific code,
+>>>> which
+>>>> is replaced with the existing generic code. This will become even
+>>>> more
+>>>> useful with the upcoming A733 support, which adds set and clear
+>>>> registers for the output.
+>>>> As a side effect this also changes the GPIO device and number
+>>>> allocation: Each bank is now represented by its own gpio_chip, with
+>>>> only
+>>>> as many pins as there are actually implemented. The numbering is left
+>>>> up
+>>>
+>>> Ah, is this a userspace API break?
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 7b92b233fafe..dec700e3cfb0 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -209,8 +209,20 @@ static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
- 	for_each_set_bit(hwirq, &irq_status, DWAPB_MAX_GPIOS) {
- 		int gpio_irq = irq_find_mapping(gen_gc->gc.irq.domain, hwirq);
- 		u32 irq_type = irq_get_trigger_type(gpio_irq);
--
--		generic_handle_irq(gpio_irq);
-+		int ret;
-+		u32 val_intmask, val_inten;
-+
-+		ret = generic_handle_irq(gpio_irq);
-+		if (ret) {
-+			dev_warn_ratelimited(gpio->dev, "Failed to handle irq %d\n", gpio_irq);
-+			/* Clear the interrupt */
-+			dwapb_write(gpio, GPIO_PORTA_EOI, BIT(hwirq));
-+			val_intmask = dwapb_read(gpio, GPIO_INTMASK);
-+			dwapb_write(gpio, GPIO_INTMASK, val_intmask | BIT(hwirq));
-+			val_inten = dwapb_read(gpio, GPIO_INTEN);
-+			dwapb_write(gpio, GPIO_INTEN, val_inten & ~BIT(hwirq));
-+			continue;
-+		}
- 
- 		if ((irq_type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH)
- 			dwapb_toggle_trigger(gpio, hwirq);
--- 
-2.50.1 (Apple Git-155)
+So to summarise: yes, the user visible number in /sys/class/gpio would 
+change. For a start, there would be up to a dozen gpiochip's now, 
+instead of the just two before. But at the moment they are somewhat 
+inconsistently named: the current labels are just <addr>.pinctrl, you 
+would need to know that 300b000 is the primary controller. This is of 
+course SoC specific, and DOES differ between generations of Allwinner 
+chips. With this patch we get the bank number appended to the label, so 
+it becomes something like: 300b000.pinctrl-PD, which is grep-able even.
+
+As for users being affected by this change: that's hard to say, there 
+seem to be a lot of silent users there (not being visible in mainline 
+discussions), also a lot of people using these boards in a very embedded 
+way. My hunch is that still quite some people use the sysfs interface, 
+because it's so convenient to use from the shell, and many compile their 
+own kernels. At the same time I am sure those people could adapt to any 
+new scheme.
+
+>> Was that ever a guaranteed user space API? Or just something
+>> that everyone relied on because it was always the same (until it
+>> wasn't)? Similar to /dev/mmcblk0 being the SD card?
+
+
+>> And ignoring the ill-fated old-style sysfs interface for now, how does
+>> this work with libgpiod? Would it still use the absolute pin numbers?
+>>
+>> I mean looking at that warning about the forced GPIO numbering we
+>> get, using base = -1 seems to be the recommended way?
+>>
+> 
+> My view is this: for libgpiod, there are no absolute GPIO numbers and the
+> ordering of GPIO chip character devices is not guaranteed.
+> 
+> For sysfs: userspace may rightfully expect the global numbering to stay the
+> same. I don't like it but this is the kernel policy.
+
+Does it matter anyhow that this interface is deprecated, and even hidden 
+behind CONFIG_EXPERT?
+
+> Here however, there's another thing: the fact that a single GPIO chips is now
+> split into several. I don't mind it but if someone complains, it would have
+> to be reverted.
+
+Who would care, and are there other effects outside of the sysfs 
+numbering? I mean we always had two GPIO chips before (because of two 
+instances of pinctrl IP in most Allwinner SoCs), one with one or two 
+banks, one with up to 11. Now it's at least consistently one bank per 
+chip, without gaps.
+
+So personally I am leaning towards doing the change: most users can 
+typically adapt - or they don't care because they don't update their 
+kernels (beyond stable revisions). And to address the naming 
+ambiguities, we could push for more gpio-line-names. That would make 
+finding a GPIO much safer and easier, and works either way.
+
+But if this patch's ABI breakage is a showstopper, I would need to know, 
+so that I can rebase the A733 pinctrl patches without this one being the 
+first patch in the series.
+
+Cheers,
+Andre
 
 
