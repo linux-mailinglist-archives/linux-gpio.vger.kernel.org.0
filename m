@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-39418-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39419-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id x2jXAJvHR2qpfAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39418-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:30:51 +0200
+	id tKfCLkLLR2q3fQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39419-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:46:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 625D47036BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:30:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19FCF70391D
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:46:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=HDDzmjMa;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=gOHDDi47;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39418-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39418-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39419-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39419-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4D0C230377B6
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 14:28:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E76E0311A16F
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 14:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874DF3E2773;
-	Fri,  3 Jul 2026 14:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9634E3F8ED2;
+	Fri,  3 Jul 2026 14:38:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE3B3E5EC2
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 14:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020CF3F20E8
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 14:38:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783088901; cv=none; b=G1N+hOEq+w1Y/c3CnOazJQ2NisVPe9vxu+zqBTegI/YRzSDP2c+Iy7Jl3wY59v27LpaGcpRCYQ1Yr4ARznTH0G3UufJp6tB7qLNZ7wTJOGEPODBKu4UKkvKPKh+kjZN53bBghLegICpnZc/RwcrvzKXXuZEphdUlc0KOaQOw1SE=
+	t=1783089511; cv=none; b=UrqwLNNqctYph6QAKxDkedXEeKfUu/8wYqrKl1LKQlV+cxd1VevFepa9YMFOKnfObzAgTpdMFeAHrUS7ixV4tPbn2iafYJG3zZHQ07NOxx9wUr0y+VPTCj//vjk54vC+Gn+dKOaYcfaG1eVjJAVonqvQ6AlX0Q1bBYTGc1euhK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783088901; c=relaxed/simple;
-	bh=cSWcObhNusU13Oj32dVFBFz/zqLc5Snk08dxMjEK+JM=;
+	s=arc-20240116; t=1783089511; c=relaxed/simple;
+	bh=BITYDlpj14tweBpHr/KGE30g292NjbP2/XStdRq+Zyw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b4mVzDd6gEZ5jRLqU5mbQzkTha3xkKES8qUqKPfWZWPTUFloSVxfbmQeL9iFeOcLNg11ds3EjGUDtT22ZiH5+ey2ToPEcNZvePRWTgQqlVrEgwtcYCiliWYpT6veGYF1ssQSAVd9h2AYuYzbQlu+OK40spTBZsRcA4l6OueWahg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDDzmjMa; arc=none smtp.client-ip=209.85.215.179
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c8b49639fbaso469861a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 07:28:18 -0700 (PDT)
+	 MIME-Version; b=KUqKYC9mk7lipQ7AUqkEJ243j9M8ID2Gbh4UAAG6T66VsQ2FfFF4j53+Cluu+CYgbTXbW5AqKGBGhlYn6L8tPESDfqoRfpE6PFpFBSwBFNtrOf1TyvxOniYyi5enpI2X4w/xtfl9biL56OPH0El8Oqk6k+tuGaM7LK2w3VH6gsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOHDDi47; arc=none smtp.client-ip=209.85.214.169
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2c82538b6b0so4961595ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 07:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783088897; x=1783693697; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783089509; x=1783694309; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MG2y+koG365pWfdqnykSJDadz8vDj+bdgjUKuwxQq9c=;
-        b=HDDzmjMaMvEOkUlPpebw3de6qHS/nPiOheUmGRIxbg999J3yKNRA1wMQBWbR6z8bw9
-         oHyd8UvUc/sZXUdE+/1QZde8NF0FsUxnYZUlOQztBZykCKkcgLe8z1dq7kdkMqiPaN/5
-         79xihewItpBu+ubmnHQIGQjdzTKgBJ7Qa8HuLJSoRWXvzxuM6MR2vC5fvhuRGbl7+pTr
-         rf+nddfN56O9QulYcFRqcnAvIEQAesbC7cOw+zxtbSGjxuU9uWvDx6Mh3egvFS90wLix
-         jkrf0hrXAL8322ro22/9dtcPOckUbmtosGZMU4gbtT+9EGqlXDvt+w8Dq8tD1I0LRV5m
-         XVVg==
+        bh=mJfTD+8hyPNNhxmGiMQGcKMmVfiKF9cAU/hUt4etC7I=;
+        b=gOHDDi47/xGv0+ZFZgdzXFZSEajnaClZAoMAmgQCZXWjnCQGWo/oTSiKMPin2GXYAR
+         DRWnn5dnHVde4RoG89bQukdahSlB0MHme4b90JXzZslXevumnfkSHJvgFoXzycIve1cK
+         Av0QKMNycS+zKsOgxMGONPVyZIkk0wwiQtVOwF5sjBcGL9KGdOShR/h3dt51DzqUbIwe
+         eq/AjTDO685bIPL8WUdJsFtut9s/68M9Q3jyMx3SJgZWNLxGTsREEsPtjZcIuvic8Fxu
+         Xnx+G+rbO4SvrkkvX0NMMlMf2PfqJitCV4+Vd+mtWlHCKg+WDI8wtn21hy9MchbqFIB0
+         rySA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783088897; x=1783693697;
+        d=1e100.net; s=20251104; t=1783089509; x=1783694309;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MG2y+koG365pWfdqnykSJDadz8vDj+bdgjUKuwxQq9c=;
-        b=hbGUQ6znMoaYLlygi/WdtFTCnOAz3ugimgJEMel8gOTy9V8ZNrg3zyX9tsq3P2KH7E
-         SQJiLSkWfYa55SGXHrz+Qa49PNKFrD17qPuvUIICarurEfOriGlvUAFQme2pMVtoVhUg
-         biswATXHGLF2n6ebgF4O1F0JdvFPnpAsnfkFgq9xfoYgCxerAwFRiW9CsXNkQnWsV3iO
-         aICJdJJmtX7F7joiRMGL5iHd02mgf+QHVpRhr51FqKoCohL3ppfsvbvqzkyFtHVDQW7F
-         kvMYBWd8oyPd9hLUk7Mess/V0P2ntxFmUMOeGcSGiM4yGM5MjLEiqWl9Xoq9fUTTUN7u
-         nWMg==
-X-Gm-Message-State: AOJu0Ywosv3nJ+tTt8fsBjNUb6z+JiDZWpv9IViU8ac8pvAq40XfDS0o
-	AVO/M2/DAU8wnKPJScHqR9Y0O1gU3Rf8z/koe1zIAHzzA2IJ9/r5G5Ng
-X-Gm-Gg: AfdE7cml6meSis0NLvEmf8jO4+MXqA68PEmClb3FsbyZow6nn6U821O1hHfa3QjRZxq
-	MfNcxsHYKN2LnR99CJmkWPZZqOO4rQPgU0HL0qGMDRybKDc7fTranl1DPbkYkayo4ikbmuQC/Oh
-	9IBHrpkYcl15QlLMCn0oo22ahFJmD+Vy9lzM8Uqea/ESD8EQYvYUvv4DyNYSpM+gp2EPSug8Uw+
-	pLjAbgYwKdFCiNGupOdU2RiRx3Cp3+B66IKapvY3TZPhVGA09Mx+NzohrQotePM+hAWdj7lbSlD
-	A+rAnhdEdK3TH/e/OizG61cgSpNbDPlSTIKzdn/DsIAcn3nxqMnPLRNELMkmjoK717kjLyaQrqY
-	O06zDBnxwM4ExAu30BVXtXw+c3wKSss14NhIxaAalcpooxox6vW7Y5RX1EP9R1X9dWzNfIxwoiS
-	WL6N6DtRcycl8G0JIIt6Y=
-X-Received: by 2002:a05:6a20:6a0d:b0:3aa:c93b:625b with SMTP id adf61e73a8af0-3c03c46d39emr103058637.3.1783088896947;
-        Fri, 03 Jul 2026 07:28:16 -0700 (PDT)
+        bh=mJfTD+8hyPNNhxmGiMQGcKMmVfiKF9cAU/hUt4etC7I=;
+        b=jhwCtvhRJAP5rM2hynn6fTeCdfkA6ln2QTY7rMxM+n4XUi4k3ePzsnLJ6pt+DcMpEi
+         amOqDFIXOHDFq6G0ligZCbkKlZw32Q12hoo3HGHkjQ0zDRLFd8zLwNdJ774NEg7QqWTx
+         bkJMkknsAvLoXNQMgwx0RWd8TcmxS9E1tHM2tfjGa8JodSnwGU29QJFPA3FQxQElqMsV
+         Ky8TRd6PZBgkqgAWB0kyXsBZZVLguBZv3xosAGel5nkGH0e/b4I+iTHTWOM8uwWtWsT9
+         pT2l6Aax0iUesVEFCRpd6G2tJBZ1G/zu+Gom1K+BI8wmdUaj1V36k7bPbhdO3nSE/X/Q
+         UPhQ==
+X-Gm-Message-State: AOJu0YyZqBjhCFJ6ATxUPagltd/TwundQ6WdCI3KjHjWk614l7zmxmFL
+	MDEdioX3YMX5J8jlzr3C5qGq9o1vemlPQU5lKuy2gjxVux7xfQTQLCLRPIZYT9e/dwoVKg==
+X-Gm-Gg: AfdE7cnLCEke6Ekfjw6j954OTTZcGlGDJS/9YF2mg9/c8WV3wTepDemXwFBOW+p1Cqk
+	vEI1dHvN7nEKzrYHw8mIjutH0weY6gdHOJtmdEw0LPuJwsWer2b9C01D5zYRc/8uuT4RF/Amrfn
+	4ze6x4blFGyeaKTA2byI7ks2x04F1e/hWuXoRvtqnbo+17jj4wO7oiQ1C+9xxkcmStqd6fKd7Ac
+	iZaMPyR3TnwzGfkEEw0wTleO2mtsoN8ozoCDG2q8TOzUTxW81RruaJ2h2Z2Yrecx/0t6iZ/1B06
+	cXwo3VlaHFS9J+dUZRYyMeLgIdsMiC1IUlOHOtrfEF9l8Ya+ROlqAupGg3qOv0B8jrv/5n03lL2
+	EVTDfUYznhELhDRjBPhm2+RIXI/9KHKA3QxLmbVzkK1VTeE7d5Q8FO3LygHl5KX4GQCjssfa2XQ
+	qfaB64aTbhxl+YIZu5eam+dzeZ
+X-Received: by 2002:a17:902:d490:b0:2c9:97a7:b1eb with SMTP id d9443c01a7336-2ca7e92a25emr103976315ad.42.1783089508880;
+        Fri, 03 Jul 2026 07:38:28 -0700 (PDT)
 Received: from localhost ([112.65.12.207])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c9e8eb0ee85sm2636210a12.3.2026.07.03.07.28.15
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad6f25febsm10658945ad.1.2026.07.03.07.38.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 07:28:16 -0700 (PDT)
+        Fri, 03 Jul 2026 07:38:28 -0700 (PDT)
 From: Liang Hao <haohlliang@gmail.com>
 To: hoan@os.amperecomputing.com,
 	linusw@kernel.org,
@@ -82,12 +82,12 @@ To: hoan@os.amperecomputing.com,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Liang Hao <haohlliang@gmail.com>
-Subject: [PATCH v2] gpio: dwapb: Add robust error handling in interrupt handler
-Date: Fri,  3 Jul 2026 22:27:49 +0800
-Message-ID: <20260703142749.24203-1-haohlliang@gmail.com>
+Subject: [PATCH v3] gpio: dwapb: Add robust error handling in interrupt handler
+Date: Fri,  3 Jul 2026 22:38:22 +0800
+Message-ID: <20260703143822.25285-1-haohlliang@gmail.com>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260703131833.17097-1-haohlliang@gmail.com>
-References: <20260703131833.17097-1-haohlliang@gmail.com>
+In-Reply-To: <20260703142749.24203-1-haohlliang@gmail.com>
+References: <20260703142749.24203-1-haohlliang@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -101,7 +101,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -109,7 +109,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-39418-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39419-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:haohlliang@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -126,13 +126,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 625D47036BC
+X-Rspamd-Queue-Id: 19FCF70391D
 
 The current interrupt handler silently continues if an interrupt
 handling fails, which may lead to interrupt storms. Add proper
@@ -157,6 +157,9 @@ debugging purposes.
 
 Signed-off-by: Liang Hao <haohlliang@gmail.com>
 ---
+v2 -> v3:
+- Remove duplicate comment
+
 v1 -> v2:
 - Add spinlock protection for register access in error path
 - Protect against race with irq_chip callbacks accessing shared registers
