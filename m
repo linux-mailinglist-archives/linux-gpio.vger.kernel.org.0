@@ -1,213 +1,183 @@
-Return-Path: <linux-gpio+bounces-39415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vnQ0FGq8R2rDeQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39415-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:43:06 +0200
+	id bHxUK3rAR2r0egAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:00:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E9C70301B
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:43:05 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EE3A703301
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 16:00:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=QXaAzfOJ;
-	dmarc=pass (policy=reject) header.from=bootlin.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39415-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39415-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=FJXagwe4;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39416-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EC97230574BD
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:31:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B87FD3065A49
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:51:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C2F3DA7F8;
-	Fri,  3 Jul 2026 13:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B169E3EB119;
+	Fri,  3 Jul 2026 13:49:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAAE3DB309;
-	Fri,  3 Jul 2026 13:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9373E5EEB
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 13:49:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783085458; cv=none; b=qcTq6suyiYW52jaPQ5ud0SKtxrmB0HzP3XfnkQAsbudf22HpI/ixi6EgR5WUsmZce8DLVEeK2fPdFUKZmZgJbrNhnxjK+13MnIcF4hNt+c+6e3to/x+yCJz7tF9N1inIkhSz5Ehg+gHc2Wqt9xptI/TkNN/R2uOCtx53PU4GUQk=
+	t=1783086542; cv=none; b=COdc8nqRzn41LN9vrApIyr+TZzrI2fYT2OyFnI83tq6gt49n83xb4P9RRAAwv+2E5yi7RASIowbiT8GTSiLfKI1hMIonekmu1n9vmCw1c5LEvCkgJO0ULDwNqHkbiV/78DtCeQoOBkD3Trt2NXQ2ATdHppNPUr/wZLXV9/ortxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783085458; c=relaxed/simple;
-	bh=uU4iuMohvv17IiIgOuFnj9w2k+ZovOe5eFIHeMSDjt4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PfZ2gj0ZzfmBhHUd7P2pGPyGzXsuE1uuh9Qr5QsKdbybBaMhhaAeZ03ZCw9/N8Tl0S1mowrIEVceOgzLr6qpSPaY39aM2NuRGMHoVBMdTm9QsNnykg+QZjm8vdy0TDwhpNp4oIkd3ytx3/ezp/QjitMTMxRo3TWe3RHwubRLikA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QXaAzfOJ; arc=none smtp.client-ip=185.246.84.56
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id BB95F1A0E2E;
-	Fri,  3 Jul 2026 13:30:51 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 8C24660300;
-	Fri,  3 Jul 2026 13:30:51 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 388B5104C95AC;
-	Fri,  3 Jul 2026 15:30:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1783085450; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=n9bPyS/0uNi6wXJqgrGX5cVcsYuuWD9wtysaxkT+Dt4=;
-	b=QXaAzfOJIpi/uOaJ6u/UgTYwunCe5bV9Fm7RPLZs4LjoS8ZAO5GapEmJ1pDc5hjTTFtDDa
-	5cTLLZbs2gsqgYBMzkGY2BaWUX7P0czD+wbLJD/U/5lTtF4MDwOunIknti8z/6IsFTWiWe
-	otFTFFdXt3R0jU8l91bAzGqXpT+jnOdhHLbY0HZPQZR3BexF9pwGnp7IoKKmX9/66v2XTS
-	cx3VBR/pvXj+w0K3umrGdIlSTUScE3CPltrvv0MXKGUPPi4cweL+zLNQ8Ad193+0EgMBc6
-	Hmj1oeQpolqdXNAzThanud+z8Oqh14OBmSb/VqtyM5E6MdC0DOOJZLbwsfSA8g==
-From: Paul Louvel <paul.louvel@bootlin.com>
-Date: Fri, 03 Jul 2026 15:30:20 +0200
-Subject: [PATCH 12/12] soc: fsl: qe: Add support of IRQs in QE GPIO
+	s=arc-20240116; t=1783086542; c=relaxed/simple;
+	bh=8nfEgkSEDOOx7LCl18zFqRBJrxILJG4GC6C+e98aV0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ENT/c1Y6JOOnM2r42iQ2AdWqvQmq6AbDIHwAEGm/IRGMaeaABOSg8NB40q0w/f8czGCuendlOdFk5cKOi7xe+goHIHsN48CFDWo5ptVe29848m97foBtATu4NJU7BXRvaMUk7kbnOZZywjFuA4Vbw5wEIboqicPoTD06cNGAqxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJXagwe4; arc=none smtp.client-ip=209.85.214.174
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2caed617615so2106035ad.3
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 06:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783086540; x=1783691340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BOYAmzy2QJ6938uaT+sAj/jru3XG3w5p/LQAZKOhZqU=;
+        b=FJXagwe4lSvnVfTYnw4I1OFcOTNvovfnUeOYWeUiHRZqwONIbKTf1BaNlb/0PilGYv
+         B/Ki+MYeN1LagiZYj4rDISbpcLQfkuHDC0QeVFVjC2oZXcUVIzTGzx9/BpCllp3A2f7i
+         b4vdqlR5DYqxtookx42EcKKdvsDbwuR8jeznEOteEuGcSqdflP2S4vsVYgy92MrSPyz/
+         HpWeojSuDhsA8YVtTswVZrvPZvAK7+5k7aOe6vhR1S9rbH8kDB6fue0MeDsNslxsBvol
+         q42lPcGsYjgFxF0ccrLxSZldy4c/PPkro22cnsMuP60pbDza7pOxltL3XRMTwAplLgky
+         fuhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783086540; x=1783691340;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BOYAmzy2QJ6938uaT+sAj/jru3XG3w5p/LQAZKOhZqU=;
+        b=Vd8uNKWigwSWlZvyXutlYzfoh0VoCD0NGEjm8Xwl0jIETOCjs2xsbpU2MSbU9ElMRw
+         Ed/ASGA+SCGxXwf9mAk9oXGFaFEu9hQp4W8jlF3FkGErt/TScnIucs+u7nIF9fQCN7Qm
+         lxMmK12MUO8P7YcXmaca/Q8dzmnqjn2Vc+WZiqTZZSJB3YNf3XjQG3R2vG5PugQ7Vb4Z
+         9CUXKNUgJhfJmReNJA6ZIBVp1xtjHpVLQnRyOlPyQ8FffEwLlPSRMF8wTy26n9JKzzL5
+         AK3aHukqzgzU4ogQX3ujOs6u3oysNSLkcsiTaDKWj8pmGZWyU73BxSkYrBVrNym5NjjQ
+         JM7A==
+X-Gm-Message-State: AOJu0Yxpz8EHZggR4piDhMD7a8hfYjrZEbPCJLNRrArhUhDjJouK2qLK
+	zMYR69daezFrcaneEQnUPp3U0btb5TqLIH33E/9v3SeQsh3KeorGRl1B
+X-Gm-Gg: AfdE7cmtTQ4fgYlDuQ2O+tQdxr1N3Vwcr0w3L6mj5YLuSmjeHo2bsJsdEBrVmLXLuY/
+	LXLL8h2oxZWY0brmPqONr7JtyC52Ci533iRDnYtp6AuGmvTY7D9bWO3ghn2dLsUk249r75YIe8s
+	qnRRAdODkRDIK7swPYmQlIU2HvuR+UwSY9nIMcIRPh759BuzrSMtj/nov6koDKr1ShEpvxO80OC
+	38WPbxd46C7tRpUZQEKhvROUWFbaLcOBq/7uV9cFKdU6maS4DYqcYIshxsYSf+GICOp2nt7HUp3
+	V+m+gFoxK1vX6IiTKHDij+JzWkHGSarnAzVm2CTiRbPcB58bMCu7F4CzvHRf8Aax50J8KsvWG8Y
+	ZF2XrXbKxGJ7t1UIspX+9/hJ6GqEg6JXy2uTbcl9KML1P1zeulq/D++c4hh3iwGbYUlkD4VUQgu
+	iLiuI9/NT2gVeU/FBc9YAgILJu
+X-Received: by 2002:a17:902:d490:b0:2c9:97a7:b1eb with SMTP id d9443c01a7336-2ca7e92a25emr102079865ad.42.1783086540037;
+        Fri, 03 Jul 2026 06:49:00 -0700 (PDT)
+Received: from localhost ([112.65.12.207])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7765950sm10095955ad.44.2026.07.03.06.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2026 06:48:58 -0700 (PDT)
+From: Liang Hao <haohlliang@gmail.com>
+To: hoan@os.amperecomputing.com,
+	linusw@kernel.org,
+	brgl@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Liang Hao <haohlliang@gmail.com>
+Subject: [PATCH] gpio: dwapb: Add robust error handling in interrupt handler
+Date: Fri,  3 Jul 2026 21:48:33 +0800
+Message-ID: <20260703134833.21110-1-haohlliang@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260703-qe-pic-gpios-v1-12-6c3e706e27dc@bootlin.com>
-References: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
-In-Reply-To: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
-To: Qiang Zhao <qiang.zhao@nxp.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Paul Louvel <paul.louvel@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783085423; l=2410;
- i=paul.louvel@bootlin.com; s=20260313; h=from:subject:message-id;
- bh=uU4iuMohvv17IiIgOuFnj9w2k+ZovOe5eFIHeMSDjt4=;
- b=hNx7S/9Lk8zefyWMtjb/HRlT/T9Bq5wS3kVedzZyJ1n5LRDAihpruvvGSJm5Li7vBBareHst+
- bqggNYIbt96CsUzNAiJy5UEsQIIQkuAgz6vMaGlCucqiEWHZcqkKCyJ
-X-Developer-Key: i=paul.louvel@bootlin.com; a=ed25519;
- pk=eLW50NT18UAvUT5cAcYf88zNbBCZDLFXuptpyLVhVIU=
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39415-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-39416-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[nxp.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
-	FORGED_SENDER(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_RECIPIENTS(0.00)[m:qiang.zhao@nxp.com,m:chleroy@kernel.org,m:tglx@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:paul.louvel@bootlin.com,m:thomas.petazzoni@bootlin.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:haohlliang@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:from_mime,bootlin.com:email,bootlin.com:mid,bootlin.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,oirq.np:url]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A3E9C70301B
+X-Rspamd-Queue-Id: 3EE3A703301
 
-Some QE GPIO pins have an associated interrupt line in the QE PIC to
-signal state changes on the pin.
+The current interrupt handler silently continues if an interrupt
+handling fails, which may lead to interrupt storms. Add proper
+error handling to gracefully recover from failed interrupt
+handling.
 
-Because the GPIO controller does not perform any interrupt handling
-itself, a nexus node (interrupt-map) is used to map each GPIO line
-supporting IRQ to the parent QE PIC interrupt domain.
+When generic_handle_irq() fails, the following recovery actions are
+taken:
+  - Write EOI to clear the pending interrupt
+  - Mask the interrupt to prevent immediate re-triggering
+  - Disable the interrupt to stop further interrupts on this line
 
-Add the to_irq() method in the corresponding GPIO controller driver,
-that uses the nexus node to perform the translation.
+These measures prevent the system from being overwhelmed by repeated
+unhandled interrupts while logging a rate-limited warning for
+debugging purposes.
 
-Signed-off-by: Paul Louvel <paul.louvel@bootlin.com>
+Signed-off-by: Liang Hao <haohlliang@gmail.com>
 ---
- drivers/soc/fsl/qe/gpio.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-dwapb.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 66828f2a3577..f8919642f40d 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -16,6 +16,7 @@
- #include <linux/gpio/driver.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- 
- #include <soc/fsl/qe/qe.h>
-@@ -23,6 +24,7 @@
- #define PIN_MASK(gpio) (1UL << (QE_PIO_PINS - 1 - (gpio)))
- 
- struct qe_gpio_chip {
-+	struct device_node *np;
- 	struct gpio_chip gc;
- 	void __iomem *regs;
- 	spinlock_t lock;
-@@ -135,6 +137,29 @@ static int qe_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- 	return 0;
- }
- 
-+static int qe_gpio_to_irq(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct qe_gpio_chip *qe_gc = gpiochip_get_data(gc);
-+	struct of_phandle_args oirq;
-+	struct irq_domain *domain;
-+	int ret;
-+
-+	oirq.np = qe_gc->np;
-+	oirq.args_count = 2;
-+	oirq.args[0] = gpio;
-+	oirq.args[1] = 0;
-+
-+	ret = of_irq_parse_raw(NULL, &oirq);
-+	if (ret)
-+		return ret;
-+
-+	domain = irq_find_host(oirq.np);
-+	if (!domain)
-+		return -EPROBE_DEFER;
-+
-+	return irq_create_of_mapping(&oirq);
-+}
-+
- struct qe_pin {
- 	/*
- 	 * The qe_gpio_chip name is unfortunate, we should change that to
-@@ -299,7 +324,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	qe_gc = devm_kzalloc(dev, sizeof(*qe_gc), GFP_KERNEL);
- 	if (!qe_gc)
- 		return -ENOMEM;
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 7b92b233fafe..dec700e3cfb0 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -209,8 +209,20 @@ static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
+ 	for_each_set_bit(hwirq, &irq_status, DWAPB_MAX_GPIOS) {
+ 		int gpio_irq = irq_find_mapping(gen_gc->gc.irq.domain, hwirq);
+ 		u32 irq_type = irq_get_trigger_type(gpio_irq);
 -
-+	qe_gc->np = np;
- 	spin_lock_init(&qe_gc->lock);
+-		generic_handle_irq(gpio_irq);
++		int ret;
++		u32 val_intmask, val_inten;
++
++		ret = generic_handle_irq(gpio_irq);
++		if (ret) {
++			dev_warn_ratelimited(gpio->dev, "Failed to handle irq %d\n", gpio_irq);
++			/* Clear the interrupt */
++			dwapb_write(gpio, GPIO_PORTA_EOI, BIT(hwirq));
++			val_intmask = dwapb_read(gpio, GPIO_INTMASK);
++			dwapb_write(gpio, GPIO_INTMASK, val_intmask | BIT(hwirq));
++			val_inten = dwapb_read(gpio, GPIO_INTEN);
++			dwapb_write(gpio, GPIO_INTEN, val_inten & ~BIT(hwirq));
++			continue;
++		}
  
- 	gc = &qe_gc->gc;
-@@ -311,6 +336,7 @@ static int qe_gpio_probe(struct platform_device *ofdev)
- 	gc->get = qe_gpio_get;
- 	gc->set = qe_gpio_set;
- 	gc->set_multiple = qe_gpio_set_multiple;
-+	gc->to_irq = qe_gpio_to_irq;
- 	gc->parent = dev;
- 	gc->owner = THIS_MODULE;
- 
-
+ 		if ((irq_type & IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH)
+ 			dwapb_toggle_trigger(gpio, hwirq);
 -- 
-2.55.0
+2.50.1 (Apple Git-155)
 
 
