@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-39405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R2RONNC5R2rueAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39405-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:32:00 +0200
+	id NSb2HqG5R2rleAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39406-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:31:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51832702E2B
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:32:00 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0D9B702E14
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 15:31:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=pwiLMmfV;
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=jN8TEer6;
 	dmarc=pass (policy=reject) header.from=bootlin.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39405-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39405-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39406-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39406-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6CD13303F70A
+	by sto.lore.kernel.org (Postfix) with ESMTP id A5DF6302176F
 	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 13:31:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416113D9690;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F53F3D9689;
 	Fri,  3 Jul 2026 13:30:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5943D9524;
-	Fri,  3 Jul 2026 13:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB9E3D902C
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 13:30:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783085441; cv=none; b=WI3MbJhwUJSOODAaFTaZdjvo66KHkNVAqxmxwj6XZ8YHoRpDzlSkvR6g5NW6WMpMM92gCjZj5S3nyXzO/MZf0qqhVxns2E25f6iSL5nxZIe8lh7jHiXmpWNMbKjKzfYdkyxT2DS3+AKRihsAZbXN7HAfcTdHZ8mAprrlJiIJLfQ=
+	t=1783085442; cv=none; b=F8KSA+1TQvWZz9YsKUFR1PUL1hEYtCfj/qNry4YBjHzabjeBwTyOR9VIiqIdVcwI3b7SYdfwL7bof8S4JwgVaZDD4xSurk4k1qXjR83j8OQySN08JHHhEMagwK4IasJh8848ML/6+ONTLgJbCjPSsGXWv7CaZJCXyOlJim54JBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783085441; c=relaxed/simple;
-	bh=mjxqYKQt7RhbTH9annDerlVLtJg9QeVJe4wiCLif0v8=;
+	s=arc-20240116; t=1783085442; c=relaxed/simple;
+	bh=u2OI4R1W+E/iv5KABbr1+V9qLAGTjN5S6T+vBdfluz0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Iv/7PilfQvECDNV317CzRi/hhMK5zwnnjo8sWoStX84GipbfI2AHh6NzRJ6k+la+XGhY2wF6QrXGjRXd2WRDevMHVqatbnaMBskwcmDcTPimJ9FVKdyJWSrzR7jwqg3nyT4eHdTjN81e3eDmSJ+NN+cerdPw4ByXy6p+VY2x16Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pwiLMmfV; arc=none smtp.client-ip=185.171.202.116
+	 In-Reply-To:To:Cc; b=Z/3V02mTnhVhfAzeLf5o+hmt51KoFybU2gFwsYnt6pcPKJIJMfu8TyBtZCiyNBhG6zlWxisYX7TJMzky3031nBXc1gFEfn5nEzB5fmY1A2O1hHOpSsmfhmmvUtWMbs7ApYS65/ANvGkOJgwyyhoRBsmtfWAwgPwmia7IDo7L080=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jN8TEer6; arc=none smtp.client-ip=185.246.84.56
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 27794C49F5A;
-	Fri,  3 Jul 2026 13:30:45 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id B57A71A0E20;
+	Fri,  3 Jul 2026 13:30:35 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5649660300;
-	Fri,  3 Jul 2026 13:30:33 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0084D104C956C;
-	Fri,  3 Jul 2026 15:30:30 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 890A460300;
+	Fri,  3 Jul 2026 13:30:35 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9F80C104C94BE;
+	Fri,  3 Jul 2026 15:30:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1783085432; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1783085434; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Cr2wW8ttzYiYLdwnRKCH/wUeHL21X2WlKudfchK028Q=;
-	b=pwiLMmfVos4md1Bu88HcdBUVf5qGWEPp+EXtHImzJltQj0BpoqwYKCmceE7FafQ0zTpGgU
-	RuteKSOENKSQYPJvGalREy3Ya5fh/Zfver6GQbNcJbqJak6n8epwiHZi8hm5YkhBR07s5b
-	tbZgqqI/nXJti7tjbDr9s+azrKIbiwnDKnfAfUEbbWFE2Py9kAPRJtU9EXxngySdHjpE7B
-	dUAYG+sAD3D3KJf/CQzkFGicPTFyh1V7uqzu8TgMrvVyTyCXWC8vklej9JB9bJAbCNEbiA
-	7UHpvQTvyaFJb2enJrH3hmNYBPapgKWU8kCcmQ7n4kY6RnCgyuVTw5U41rOHuw==
+	bh=LmnXo/SGWrO/0KnyVsTxFSdDOehbwdkTiN/8lyKC2Wc=;
+	b=jN8TEer6pMg3T7nnq0YZjEsSdj/+zVY4l8CSpnQOrNFHFGWd2ODAYqNKZQjDfre2ry2PVW
+	SWoNP7gKjxOKzUKBXsVJn1jgtYQV9llMzEkXKtERApFS5HhW4TLgx/SXTVDzl2ZLju/pfl
+	jORvR67cnY1rcE7Y23noxfWhU570AvyrQCzm5Q1PnP2uaX5wKkegFJCuJjDVzaBioNJpRG
+	jTJl1A+gLUPqq7+5D+uhUQJP9kizM/lkTJskZE39QzGylB4bjsJyROOGta17VRJCh/u5rI
+	JrDpOCsxlHqk2KPxbmt8tLIpnz71NDqmHjDccMXRy1x1B+2RR0bHFsi02EQGZQ==
 From: Paul Louvel <paul.louvel@bootlin.com>
-Date: Fri, 03 Jul 2026 15:30:10 +0200
-Subject: [PATCH 02/12] dt-bindings: soc: fsl: qe: Set #interrupt-cells to 2
- to support interrupt type encoding
+Date: Fri, 03 Jul 2026 15:30:11 +0200
+Subject: [PATCH 03/12] dt-bindings: soc: fsl: qe: Convert QE GPIO to DT
+ schema
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260703-qe-pic-gpios-v1-2-6c3e706e27dc@bootlin.com>
+Message-Id: <20260703-qe-pic-gpios-v1-3-6c3e706e27dc@bootlin.com>
 References: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
 In-Reply-To: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
 To: Qiang Zhao <qiang.zhao@nxp.com>, 
@@ -77,13 +77,14 @@ To: Qiang Zhao <qiang.zhao@nxp.com>,
 Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-gpio@vger.kernel.org, Paul Louvel <paul.louvel@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Christophe Leroy <chleroy@kernel.org>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783085423; l=1260;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783085423; l=3008;
  i=paul.louvel@bootlin.com; s=20260313; h=from:subject:message-id;
- bh=mjxqYKQt7RhbTH9annDerlVLtJg9QeVJe4wiCLif0v8=;
- b=AozDGgL99UwYTEj6LEkXlQmiz0Gg/354Iorfp1Ozq7sd2NOOgNJG0V/EJkiVoY+kY2vSgZwWz
- QEjNjJuDVNRD3U3ovwqD8XZ3hbJjRW2RKXKdI2obGbokOJdO/DKYFCE
+ bh=jPv6+oN1PNk0jOvDo2iXLOgR5gbYEBnEM8QFOo50bqM=;
+ b=VCPFVzIwNRAJPE9evATrbiCIMKdY9LW1EHW+KdKc1YaMr0Aqb9sPAn3QotJLSlybF/gEITCxi
+ O+f1q0+qAROCwF6br4ZfROh/CvnhvjTnOaQygueMjYSp60nsHABNBhL
 X-Developer-Key: i=paul.louvel@bootlin.com; a=ed25519;
  pk=eLW50NT18UAvUT5cAcYf88zNbBCZDLFXuptpyLVhVIU=
 X-Last-TLS-Session-Version: TLSv1.3
@@ -93,16 +94,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39405-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39406-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FREEMAIL_TO(0.00)[nxp.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com];
 	FORGED_SENDER(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORGED_RECIPIENTS(0.00)[m:qiang.zhao@nxp.com,m:chleroy@kernel.org,m:tglx@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:paul.louvel@bootlin.com,m:thomas.petazzoni@bootlin.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,48 +118,110 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[bootlin.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:from_mime,bootlin.com:email,bootlin.com:mid,bootlin.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:from_mime,bootlin.com:email,bootlin.com:mid,bootlin.com:dkim,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,devicetree.org:url,csgroup.eu:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 51832702E2B
+X-Rspamd-Queue-Id: B0D9B702E14
 
-The QUICC Engine port interrupt controller can be configured to generate
-an interrupt on either a high-to-low transition or any change in the
-signal state on the related GPIOs.
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-Update the #interrupt-cells property to 2 so consumers can encode
-interrupt level information.
+Convert QE GPIO devicetree binding to DT schema.
 
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Paul Louvel <paul.louvel@bootlin.com>
 ---
- .../devicetree/bindings/interrupt-controller/fsl,qe-ports-ic.yaml     | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml   | 45 ++++++++++++++++++++++
+ .../bindings/soc/fsl/cpm_qe/qe/par_io.txt          | 26 +------------
+ 2 files changed, 46 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,qe-ports-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,qe-ports-ic.yaml
-index 2b8e7b9c6d7a..2b7c6b4f0389 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/fsl,qe-ports-ic.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,qe-ports-ic.yaml
-@@ -23,7 +23,7 @@ properties:
-     const: 0
- 
-   '#interrupt-cells':
--    const: 1
+diff --git a/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml b/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml
+new file mode 100644
+index 000000000000..1af99339ff40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/fsl,mpc8323-qe-pario-bank.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale QUICC Engine Parallel I/O (QE PARIO) GPIO Bank
++
++maintainers:
++  - Christophe Leroy <christophe.leroy@csgroup.eu>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,mpc8360-qe-pario-bank
++              - fsl,mpc8569-qe-pario-bank
++          - const: fsl,mpc8323-qe-pario-bank
++      - const: fsl,mpc8323-qe-pario-bank
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
 +    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio-controller@1400 {
++        compatible = "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-pario-bank";
++        reg = <0x1400 0x18>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt
+index 09b1b05fa677..782699c14567 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt
+@@ -24,28 +24,4 @@ par_io@1400 {
  
-   interrupts:
-     maxItems: 1
-@@ -45,7 +45,7 @@ examples:
-       reg = <0xc00 0x18>;
-       interrupt-controller;
-       #address-cells = <0>;
--      #interrupt-cells = <1>;
-+      #interrupt-cells = <2>;
-       interrupts = <74 0x8>;
-       interrupt-parent = <&ipic>;
-     };
+ Note that "par_io" nodes are obsolete, and should not be used for
+ the new device trees. Instead, each Par I/O bank should be represented
+-via its own gpio-controller node:
+-
+-Required properties:
+-- #gpio-cells : should be "2".
+-- compatible : should be "fsl,<chip>-qe-pario-bank",
+-  "fsl,mpc8323-qe-pario-bank".
+-- reg : offset to the register set and its length.
+-- gpio-controller : node to identify gpio controllers.
+-
+-Example:
+-	qe_pio_a: gpio-controller@1400 {
+-		#gpio-cells = <2>;
+-		compatible = "fsl,mpc8360-qe-pario-bank",
+-		"fsl,mpc8323-qe-pario-bank";
+-		reg = <0x1400 0x18>;
+-		gpio-controller;
+-	  };
+-
+-	qe_pio_e: gpio-controller@1460 {
+-		#gpio-cells = <2>;
+-		compatible = "fsl,mpc8360-qe-pario-bank",
+-			     "fsl,mpc8323-qe-pario-bank";
+-		reg = <0x1460 0x18>;
+-		gpio-controller;
+-	  };
++via its own gpio-controller node.
 
 -- 
 2.55.0
