@@ -1,187 +1,171 @@
-Return-Path: <linux-gpio+bounces-39436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xCIgOO8uSGq3nQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39436-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 23:51:43 +0200
+	id M6yBF1yYSGpOrwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 07:21:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A109705F90
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Jul 2026 23:51:43 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB775706AF0
+	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 07:21:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=byiF63I5;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39436-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39436-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EP5Uch0S;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1C0F5301C6E0
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2026 21:51:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0A03C300EE8D
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2026 05:21:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5BC32B9A1;
-	Fri,  3 Jul 2026 21:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6926334F492;
+	Sat,  4 Jul 2026 05:21:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A272FE0F
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Jul 2026 21:51:37 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783115498; cv=pass; b=bmQp1baJwZ3c9zWlxuiY/AWQn5NaBVHK4z3+0T8cC+iy9EGgeBVXCoPa3HUBLupLJkoquzv/h5wsTxVPCTat7y/LoDwRkfZ0P0Xt7IMoNLdx7/0ZEojupIetEIAT8jWnZ3oND4NWRWnSepoItl442EifqGyMo3Dt2HKQ7Oo+DiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783115498; c=relaxed/simple;
-	bh=O8TeWJwjSerP8JulIAHgI6qJbohNfsKKKSQ7IKbfR7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JlGMuvbUAd2PcXgFXvxjSo6j7vptEJZnszHQkEdTgf3qPUrfW8QpsdMXQC/ZZRNsdluB6v2LockZ37Qp40gYocd8QRu9/HNa6VPrRmX6I+LjxDUUDLDiS0fQ7vJ8UkXBKPQJoUAarWuE2sNmCxxtkIy5LQCHApZzbI3+7ORnWcQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byiF63I5; arc=pass smtp.client-ip=209.85.208.45
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-698bf7a1a2dso1590992a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jul 2026 14:51:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783115496; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pI5r4TdrTJHxEj9BMBZhGPooy9A0aUEUo2CnkBaRNRKVkk4J8dwHWy40271LLcu4fP
-         Ht+oozjm5qvOGgPlaT6fG58aP6sPap1RjUCD7jI5fOfTk/fnsNUI6LKeM6F6ZHhXBmel
-         lfALw+z4NuN9AW8mXb5AQlN8FC5auYnk62zOUDgeb6VFxAjCzpthaKNHPPEZyyFaL2jr
-         g+7blLmzmqECcJbPTlzMkscDK+8bza+2V47ytfOSDTV7Tspoj3kL7sPAImvFlpSAnUJx
-         emQqweHQoaSFf2XSpzZ2SLHkg1BwkRLnraTObYRN5hvsEM2dg/F1QrFuTuItinDpFfSH
-         KqQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=O8TeWJwjSerP8JulIAHgI6qJbohNfsKKKSQ7IKbfR7k=;
-        fh=GhFBK1QHscPorqKcv7qc/2De2HLu4y4MN6w8EmDacAY=;
-        b=T3JTYe64JBp+RcNmeXPTlOs6W4ykg+8JDZ+ChfDy33e24+OejwPrE2xgKF9JyKe28Q
-         vRCugw9dTgDJZL6JT0IfcS8GZWiMnavcx8Fz6YOR4wqOkm814/s5J5YYYiqqa1OmxY8V
-         CYAeLTt8K/HWwD9DEtiYlwuwoXMssrh+6Z8G9wSKTrO/GUvyNkSLeb7f6SB8r6oN+SLC
-         HEg3bt2iRVCuRTudL2P2QEOWjCT41i5Hv1CdJmk/0BilY5PpsBtK18MxL42O5L6ixwYU
-         FhkUK2oElmT9KQTUBtDeFeJ2pQjEnA7CMmpWowu+NddSeZjLhfG1196pr84fjQiioVWU
-         W4Ww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783115496; x=1783720296; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=O8TeWJwjSerP8JulIAHgI6qJbohNfsKKKSQ7IKbfR7k=;
-        b=byiF63I5Q0/YmNtTgicDrBQ3YjjXWy1jOh1+AJQV/YNFNwGjJNo+30skgFVwlcVy5+
-         n4AcOjfg7I1F1QET0LljfZMk03sDRek82d/cKsM1vPq9ksn2NvaSW4i5bDB1+60HPeeW
-         FdPfa7nBA/3IGdEThMNpiJMz+CKWPfWwkftH38+ceFnJ28IdWSKopMt5fD1ABKnphTdJ
-         oR49N0ONp5ENp8KxLTPRa8qBbzU8oNA03inZ7MFgMND6537Bwc5WwakOJyqj+GBlVnpj
-         K2cZf3CcrobB/DYfNl+kS5RvMP2auq5NqOVQwpMa8T3oJTOHvqyjQsZ9OSg+unCRAbuk
-         Mk5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783115496; x=1783720296;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=O8TeWJwjSerP8JulIAHgI6qJbohNfsKKKSQ7IKbfR7k=;
-        b=bPIoBZ0yqd7FzmExS+TM2JprZ0HEM318mzCd2kGAHy/3Ojxv07qLyM9ZZEayoiEMj/
-         bEzJso3uUArFqCpd1fzKuC5LrCM7k1BeskQUzDSfuCf7UuMjP3RKP9PSrfwmKaQhdS+i
-         Xin9JPhkPFO02t2Y0v5uoAwLi2t8CCEOL6nyftOs2VfjioS0eBavsG+aVx5qXiMAzlTE
-         rpTUXuXz1yKUDvmQDTv1hsMaI20V5DB+OV/bU8MLKwEWwkTQcHNyEKVyim/RmqP+t3sY
-         Ji1rQtECULal40f/ZBfTa0gy6UsfgKiLNQR2I36eEK+/yLklIEWtDU3RbsdbHEgy147T
-         YXbw==
-X-Gm-Message-State: AOJu0YwvXCO58Rwte8rjfWUOa0EuAgdLzkuc3xKmGSK9cL+1D7AsKJt7
-	8BlPbAXTU78yNMTsfrqJveW4DbGF00gMI0T0ORM57JKpU+QVAZZicaKvfcVX1+b23CdnoptMBrr
-	zwC6HVtTLtDzbpkKzQW86IQ6DM0nvdpc=
-X-Gm-Gg: AfdE7clYJfE9JxGqOpwBjzfDwqoqwpx6etOodzPu6qKLIJIADvN8OYUHZSMfYSCoMMX
-	uasYSYEuDtjEoD6dW5XJGE5a6QE28A2ftBK1sB6IhtRFkTGWB86lYDBslYaBPEV6xEBYi8sXhcn
-	SB6uHtlx9nOivtwkJ4hgFQHMI/ZKz4OknXL2S/I/gVQWYTllJsl8vfFsCbXcZDwnyDFXVER9p6f
-	BrFhIQI87xO8u3uq6OUATuS0b1S7kC5Uu3MIomvC8KD8ZW0KLOWR5pRsxLKpadoHGqy1LnZTpvi
-	Pux24ZLnBWEtzgH3s6ZpNeGEneLDnMAW2pseRgNISqRyM/v0+cADRM3wrWXJvcLU32c6x8VTU4E
-	iK6oME0ZjHq/EK00q9eRPyWQmMXHSbILOZuKC0g==
-X-Received: by 2002:a05:6402:3218:b0:698:3fd4:47da with SMTP id
- 4fb4d7f45d1cf-69a1a3af7b6mr363829a12.26.1783115495573; Fri, 03 Jul 2026
- 14:51:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0B2DEA64;
+	Sat,  4 Jul 2026 05:21:27 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783142489; cv=none; b=l6faLAeXvfV/zzhLKuF/LrqTk7eEjFM2nKlshjEmnWpHave3t/VhyJ2pp/M0RSFW2FjXF0gUF3VFRzbdjyJtqKWm4cG0D2Wou7WedR115yw/qMA/GfFlM/927sX4fg70ulRMdRO/puotkcVVlBjnvTaZkpxM++1zpmGpMeL2VeU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783142489; c=relaxed/simple;
+	bh=jEggrTol82OUXPf6ckt8EgEimMY1MYiuNQnTfMbjWlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PreJxdG2o+pi8lMXZyOYGh7NUQOe1Hrm1vsx3p3P7MSMve2pwjFbN/RRVaXfSorWOBxMj/yA6jXafrA45/DXzkNvlSnJd/Ui5GiWYsk+vJgXBFvZGi3/aDK7WrX9SvsfyGVFcFKl+BQaK5Le9dDEnzpAM9dwH3BP+OLzkGgV2Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EP5Uch0S; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1861F000E9;
+	Sat,  4 Jul 2026 05:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783142487;
+	bh=CYDOQJsjhk530hF90YdapxyKM5jfGqkWjC+R6iH89QE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=EP5Uch0SRUZ0ZvOUZvgSHjR4VJX0W+cI6Z4o48IG7MLaMhlZcHOWKdeIfkrC+jaes
+	 TmrHnTkPTSAvBztrW/s32vsUv2/esnZpsPDwpRF+tDUtKbTzDzUl7X2OHWH+4f4e0f
+	 YPgvnP4XOQYp2Hn8fml8/m9B7fZVmeKX5NIPZ9nnh3SWO2ySSGdB/iikdQUsM7l2dR
+	 SQ+KJvvFtuZrWJKcMELzIBSjj9iWSzuAvKiUh10dR0FBK0SYS59fsBRDlO3S5SURfF
+	 zl3AH0lltF5ulfkjcWHecy6VcWjVeNgrgzA1Df+36vfa6vS0kvB+HLv2uACU+g4zdL
+	 bVs8F1kl4RzYA==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Yu-Chun Lin <eleanor.lin@realtek.com>,
+	Fred Eckert <Frede@cmslaser.com>,
+	Matthew Mohn <matthew.mohn@ishicorp.com>
+Subject: Re: [PATCH v1 0/4] gpio: regmap: Keep tracking IRQ requests and releases
+Date: Sat,  4 Jul 2026 14:21:19 +0900
+Message-ID: <20260704052120.798323-1-wbg@kernel.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
+References: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260702231838.1175485-1-rosenp@gmail.com> <CAD++jLkY8AiiKyKN8FbKFRGp4i1=k6LuxE3ifcoP_MV6Vf_39Q@mail.gmail.com>
-In-Reply-To: <CAD++jLkY8AiiKyKN8FbKFRGp4i1=k6LuxE3ifcoP_MV6Vf_39Q@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Fri, 3 Jul 2026 14:51:24 -0700
-X-Gm-Features: AVVi8CcQ2w1DPSUWD_pg6qQOiJd8nGWONzU_mkdm9-13Swe6TlKUOA529NpzgVg
-Message-ID: <CAKxU2N_cAK_tcucrTUyXNSmSVuvAnfCcbHKGuWhEnY9nf=eLQw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: fix devres LIFO ordering between GPIO chip
- and IRQ domain
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2371; i=wbg@kernel.org; h=from:subject; bh=jEggrTol82OUXPf6ckt8EgEimMY1MYiuNQnTfMbjWlQ=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDFkeM3jm9l7I322/o3DnEQllyezUzX/OfVqXH5j7LejQk S/HDhT86yhlYRDjYpAVU2TpNT9798ElVY0fL+Zvg5nDygQyhIGLUwAmYmjJ8JuVk+/tQq9bC648 3TThwgIJs5c1WntuPjPMs/3qVL+LR3kXI8MKFdnMnSZKzR/FegW2Ot9eeIZhMWP0Yy855ZL9ydV rOJgA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39436-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39437-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:wbg@kernel.org,m:broonie@kernel.org,m:mathieu.dubois-briand@bootlin.com,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:mwalle@kernel.org,m:eleanor.lin@realtek.com,m:Frede@cmslaser.com,m:matthew.mohn@ishicorp.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[wbg@kernel.org,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wbg@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4A109705F90
+X-Rspamd-Queue-Id: DB775706AF0
 
-On Fri, Jul 3, 2026 at 2:01=E2=80=AFPM Linus Walleij <linusw@kernel.org> wr=
-ote:
->
-> Hi Rosen,
->
-> nice patch!!
->
-> On Fri, Jul 3, 2026 at 1:18=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wro=
-te:
->
-> > During driver removal, devres cleans up in LIFO order. The IRQ domain
-> > was created and its devm cleanup action registered after
-> > devm_gpiochip_add_data(), so the domain was destroyed before the GPIO
-> > chip was deregistered. If gpiod_to_irq() is called on a pin during
-> > this window, mvebu_gpio_to_irq() passes the freed mvchip->domain to
-> > irq_create_mapping().
-> >
-> > Fix by moving the IRQ domain creation, devm cleanup action registration=
-,
-> > generic chip allocation, and chip type setup before
-> > devm_gpiochip_add_data(). This ensures the GPIO chip is torn down
-> > first (preventing new IRQ mappings), then the IRQ domain is removed,
-> > and finally mvchip is freed.
-> >
-> > Assisted-by: opencode:big-pickle
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->
-> Can someone from MVEBU test this on hardware?
-> From my PoV:
-I have 3 devices that use this. Tested on one. Works fine.
->
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
->
-> Yours,
-> Linus Walleij
+On Thu, Jul 02, 2026 at 02:42:53PM +0200, Andy Shevchenko wrote:
+> During the review of the v3 [1] of the series that adds a driver for
+> Realtek DHC RTD1625 SoC GPIO the gap in the GPIO regmap implementation
+> has been discovered, id est the IRQ chip that is created by regmap IRQ
+> doesn't have IRQ request and release callbacks and hence in terms of
+> GPIO does not track if any line is locked as IRQ. This might lead to
+> undesired and most likely faulty behaviour. This series is to fill that
+> gap. Currently it only fixes the only user of the automatic IRQ chip
+> creation facility provided by GPIO regmap, but also provides the exported
+> callbacks for others to be possible to call them from customised versions
+> of the callbacks in the respective drivers.
+> 
+> Most of the affected drivers if I am not mistaken are the Industrial PC104
+> ones, hence I Cc'ed William to look at this and perhaps even test.
+
+Hi Andy,
+
+I'll take a look at these patches when I get a chance. For now, I'll CC
+Fred Eckert and Matthew Mohn who have tested these PC104 drivers in the
+past and may be interested in this patchset.
+
+Thanks,
+
+William Breathitt Gray
+
+> 
+> Yu-Chun, can you give a try with your v3 based on this series? I believe
+> we can use regmap approach after all.
+> 
+> The merge strategy is to go via GPIO tree with the immutable branch or tag
+> provided for the first patch that can be done by regmap tree for others to
+> consume. Of course, there are possible options, I'm all ears if you think it
+> will be better in any other way.
+> 
+> Link: https://lore.kernel.org/all/20260512033317.1602537-1-eleanor.lin@realtek.com/ [1]
+> 
+> Andy Shevchenko (4):
+>   regmap-irq: Provide IRQ resource request and release callbacks
+>   gpio: regmap: Provide default IRQ resource request and release
+>     callbacks
+>   gpio: regmap: Apply default resource callbacks for regmap IRQ chip
+>   gpio: regmap: Order kernel-doc descriptions with the actual appearance
+> 
+>  drivers/base/regmap/regmap-irq.c | 22 ++++++++++++++++++++++
+>  drivers/gpio/gpio-max7360.c      |  7 ++++---
+>  drivers/gpio/gpio-regmap.c       | 25 +++++++++++++++++++++++++
+>  include/linux/gpio/regmap.h      | 21 ++++++++++++---------
+>  include/linux/regmap.h           |  2 ++
+>  5 files changed, 65 insertions(+), 12 deletions(-)
+> 
+> --
+> 2.50.1
+> 
 
