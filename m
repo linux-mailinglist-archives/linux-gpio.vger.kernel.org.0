@@ -1,171 +1,185 @@
-Return-Path: <linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39438-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id M6yBF1yYSGpOrwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 07:21:32 +0200
+	id 5GU3N7e4SGrpswAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39438-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 09:39:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB775706AF0
-	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 07:21:31 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B148B706F51
+	for <lists+linux-gpio@lfdr.de>; Sat, 04 Jul 2026 09:39:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EP5Uch0S;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39437-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b="ErK/Q5cD";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39438-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39438-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0A03C300EE8D
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2026 05:21:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F0BBF300B82E
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2026 07:39:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6926334F492;
-	Sat,  4 Jul 2026 05:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF33389114;
+	Sat,  4 Jul 2026 07:39:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0B2DEA64;
-	Sat,  4 Jul 2026 05:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A0314D15
+	for <linux-gpio@vger.kernel.org>; Sat,  4 Jul 2026 07:39:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783142489; cv=none; b=l6faLAeXvfV/zzhLKuF/LrqTk7eEjFM2nKlshjEmnWpHave3t/VhyJ2pp/M0RSFW2FjXF0gUF3VFRzbdjyJtqKWm4cG0D2Wou7WedR115yw/qMA/GfFlM/927sX4fg70ulRMdRO/puotkcVVlBjnvTaZkpxM++1zpmGpMeL2VeU=
+	t=1783150765; cv=none; b=i/G2WP5oXBmEXerQZ3B1ae4NlA/KwuvFHZK3/Vi8xMLVTmW2DDBHuzDqZJlT2QIn2e8fWioDAUA0MwD5ujVxuVPiNlv9QrhAu+6cFGABNDNnNhmyuXXYYNM4qff3Qk06LhzK2TcZbS2varxKd+ZyrxCgkWBD5Cdk7/bHlAXsKWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783142489; c=relaxed/simple;
-	bh=jEggrTol82OUXPf6ckt8EgEimMY1MYiuNQnTfMbjWlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PreJxdG2o+pi8lMXZyOYGh7NUQOe1Hrm1vsx3p3P7MSMve2pwjFbN/RRVaXfSorWOBxMj/yA6jXafrA45/DXzkNvlSnJd/Ui5GiWYsk+vJgXBFvZGi3/aDK7WrX9SvsfyGVFcFKl+BQaK5Le9dDEnzpAM9dwH3BP+OLzkGgV2Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EP5Uch0S; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1861F000E9;
-	Sat,  4 Jul 2026 05:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783142487;
-	bh=CYDOQJsjhk530hF90YdapxyKM5jfGqkWjC+R6iH89QE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EP5Uch0SRUZ0ZvOUZvgSHjR4VJX0W+cI6Z4o48IG7MLaMhlZcHOWKdeIfkrC+jaes
-	 TmrHnTkPTSAvBztrW/s32vsUv2/esnZpsPDwpRF+tDUtKbTzDzUl7X2OHWH+4f4e0f
-	 YPgvnP4XOQYp2Hn8fml8/m9B7fZVmeKX5NIPZ9nnh3SWO2ySSGdB/iikdQUsM7l2dR
-	 SQ+KJvvFtuZrWJKcMELzIBSjj9iWSzuAvKiUh10dR0FBK0SYS59fsBRDlO3S5SURfF
-	 zl3AH0lltF5ulfkjcWHecy6VcWjVeNgrgzA1Df+36vfa6vS0kvB+HLv2uACU+g4zdL
-	 bVs8F1kl4RzYA==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
+	s=arc-20240116; t=1783150765; c=relaxed/simple;
+	bh=Vjk92yj5SDGwYHyFOT9M2fcaGNwel5+hRD7zUCCZF0w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hoLZ1VzzoiUZaxFqM6XR84r4Sln69PfdHIsEQOjvPZPuJIHbPXS9gEhe9ho0WtPMPWTx3RdhF5ZhbYfxccpSdVV0aWG+b+DfVE6jn+uXjevLcwU6eH5kArJDCuK/x5qL8dAqBMHrNyNun02lgRR0xSyIG2AsV39cOu6x7uFc+CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErK/Q5cD; arc=none smtp.client-ip=209.85.128.47
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-493b7612475so11534955e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 04 Jul 2026 00:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783150755; x=1783755555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DVufXZv3C9nTTbjjeAadD32Z+/uBgkpYSXQtGIeK46U=;
+        b=ErK/Q5cDjePjjQ+3jJbWHqKVm2FdbCH8kCT1T6dAr8EfQxd0yNy0NWz8ATR6cH2x8w
+         oTKbiEPe2ZruITE+0vY3nHSJQ097nL23HQklI04UgA4/AVAP1uJ6W/AGGPcyq2PAl+EH
+         0VeWHfegRPJ+81ogUs5tM272IppDRoC/yrVbcV6NY9Bmp0XGo5PU3gAO0AFGSQybiWJM
+         JLIubHiBPyOD8nRL5hNFbiP7mEqloJffr/Y16sJLqr4meANOICUlrEh/+Jm5X2mYGBxl
+         Wh3/Huqp7ReU+QlEPSLjFLUF1y0YjgXent1EKgMtt/lVuAw7aqZuAsmmd38dmcWLsnnZ
+         k23A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783150755; x=1783755555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DVufXZv3C9nTTbjjeAadD32Z+/uBgkpYSXQtGIeK46U=;
+        b=hjWKHJGrwTiNf9QMCisV3vEmlgLkPuJ1VERTj9hLuEH78nE7WgHmffqUQPzHDWmX7m
+         g2ynwTigROfQoKJncs8bTD1vVlZtrgBtVvv32cAOckSpr/OE5iLX1EQALEN1kY94U3V2
+         oc5mRg5n26L9xsotZnjILMpKhlyq0UGbI6zywAYXjpkraakQiMiKvPx2WHQEls5jq6CK
+         x50/WNQJCtlDKmZcCmYLPgt1G63H4gGBRS/Oz+kyjkytZb8xS1Dn5FiOo3TPZ6X+omCL
+         xHhlcsiZ/iTKlbZuNWT3yDtWCfgMQF4pS74ohOOY58tg4MFNX0N440Qt9HU6BwcF83u1
+         qOwA==
+X-Forwarded-Encrypted: i=1; AFNElJ8i3W3RXiSFmcsYCm8WUnQyCqjsE5jsiQSePbXz72xviAaSsgdbz2BsIm7IDPF5etl7nH2Fx1QEL7z7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0tb+zGld9CdafbyYLVHAc0eko2XaAh2jS1jIMDbW+NClKIfHq
+	dy1WbSBPvcOg8z2fQnR+x6Tq9DL1S1+BDWlyKgIxqSG3mIo/ddW2DTuV
+X-Gm-Gg: AfdE7ckwKYv8hNCUA4W+ScyKJaMQxqyTxp1Uz10LE23HSoYQmD1ZdZsRNoZeDpOEccB
+	vst7J1XBfqyVTWIivwHvvY1k2cW5IE5wK0twuYDr56miaRS4TyqwYSS5Ju2UCtZZvWsbfXxJyX0
+	3S+Ksd+KMrc9CS4YGtJCdIVT3ER0wBxwC5wEw3KNmOpkXqSD6woUU5vC0/BV4/8qP99j3b73Lzi
+	qdcVVD8slY5fFf4xN4hAYXywPAZe/nKAKryRR5QKJSkJfkjeGybFhtVpKLXn0GxvrKKnMNCviiU
+	cayFH+IIKzYBs9krPrvXELbka13xTP4AeuX0EPvXqKJf1B/V1880HrLS0qwxkCkUvc7vYmw8xit
+	C9LgJcEn40nhuICxVleOJbXdeH6gM4wfwJ+5j9n8fWgGR0MGB3/34MGNCW39ixj5vPYj6SnPDo1
+	KUAQhyXy22sZVOFFbLdNjds9cvlql2nwntLQ==
+X-Received: by 2002:a05:600c:c166:b0:492:63c3:8eeb with SMTP id 5b1f17b1804b1-493d11fe04cmr24840475e9.35.1783150755151;
+        Sat, 04 Jul 2026 00:39:15 -0700 (PDT)
+Received: from localhost.localdomain ([95.43.220.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9de1e736sm6565488f8f.7.2026.07.04.00.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2026 00:39:14 -0700 (PDT)
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
 	Linus Walleij <linusw@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Yu-Chun Lin <eleanor.lin@realtek.com>,
-	Fred Eckert <Frede@cmslaser.com>,
-	Matthew Mohn <matthew.mohn@ishicorp.com>
-Subject: Re: [PATCH v1 0/4] gpio: regmap: Keep tracking IRQ requests and releases
-Date: Sat,  4 Jul 2026 14:21:19 +0900
-Message-ID: <20260704052120.798323-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
-References: <20260702130903.1790633-1-andriy.shevchenko@linux.intel.com>
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: [PATCH 0/5] phy: cpcap-usb: improve charger detection and export cable state
+Date: Sat,  4 Jul 2026 10:38:38 +0300
+Message-Id: <20260704073843.1750458-1-ivo.g.dimitrov.75@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2371; i=wbg@kernel.org; h=from:subject; bh=jEggrTol82OUXPf6ckt8EgEimMY1MYiuNQnTfMbjWlQ=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDFkeM3jm9l7I322/o3DnEQllyezUzX/OfVqXH5j7LejQk S/HDhT86yhlYRDjYpAVU2TpNT9798ElVY0fL+Zvg5nDygQyhIGLUwAmYmjJ8JuVk+/tQq9bC648 3TThwgIJs5c1WntuPjPMs/3qVL+LR3kXI8MKFdnMnSZKzR/FegW2Ot9eeIZhMWP0Yy855ZL9ydV rOJgA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39437-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:wbg@kernel.org,m:broonie@kernel.org,m:mathieu.dubois-briand@bootlin.com,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:mwalle@kernel.org,m:eleanor.lin@realtek.com,m:Frede@cmslaser.com,m:matthew.mohn@ishicorp.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[wbg@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-39438-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:ivo.g.dimitrov.75@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:ivogdimitrov75@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wbg@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DB775706AF0
+X-Rspamd-Queue-Id: B148B706F51
 
-On Thu, Jul 02, 2026 at 02:42:53PM +0200, Andy Shevchenko wrote:
-> During the review of the v3 [1] of the series that adds a driver for
-> Realtek DHC RTD1625 SoC GPIO the gap in the GPIO regmap implementation
-> has been discovered, id est the IRQ chip that is created by regmap IRQ
-> doesn't have IRQ request and release callbacks and hence in terms of
-> GPIO does not track if any line is locked as IRQ. This might lead to
-> undesired and most likely faulty behaviour. This series is to fill that
-> gap. Currently it only fixes the only user of the automatic IRQ chip
-> creation facility provided by GPIO regmap, but also provides the exported
-> callbacks for others to be possible to call them from customised versions
-> of the callbacks in the respective drivers.
-> 
-> Most of the affected drivers if I am not mistaken are the Industrial PC104
-> ones, hence I Cc'ed William to look at this and perhaps even test.
+The Motorola CPCAP USB PHY contains the hardware state machine used for
+USB cable detection. Besides distinguishing USB peripheral and host
+connections, it can also detect dedicated charging ports (DCP).
 
-Hi Andy,
+This series starts with a prerequisite fix from Tony Lindgren to prevent
+spurious SysRq events when switching between USB and UART modes. It then
+adds DCP detection support to the CPCAP USB PHY, updates the Device Tree
+binding and corresponding mapphone Device Tree to use the charger
+detection interrupt, and finally exports the detected cable state through
+the Extcon framework.
 
-I'll take a look at these patches when I get a chance. For now, I'll CC
-Fred Eckert and Matthew Mohn who have tested these PC104 drivers in the
-past and may be interested in this patchset.
+The existing driver already interprets the CPCAP USB detection state
+machine to determine the attached cable type. This series extends that
+logic to distinguish DCP connections and exposes the detected cable state
+through Extcon using a standard kernel interface. It also makes the idle
+UART mode optional, allowing the PHY to remain in its default USB
+detection configuration unless UART support is explicitly requested.
 
-Thanks,
+The series has been tested on Motorola Droid 4 hardware.
 
-William Breathitt Gray
+Ivaylo Dimitrov (4):
+  phy: cpcap-usb: add DCP detection and make UART idle mode optional
+  dt-bindings: phy: motorola,cpcap-usb: replace se1 interrupt with
+    chrg_det
+  ARM: dts: ti: cpcap-mapphone: use charger detection interrupt for
+    CPCAP USB PHY
+  phy: cpcap-usb: add extcon support
 
-> 
-> Yu-Chun, can you give a try with your v3 based on this series? I believe
-> we can use regmap approach after all.
-> 
-> The merge strategy is to go via GPIO tree with the immutable branch or tag
-> provided for the first patch that can be done by regmap tree for others to
-> consume. Of course, there are possible options, I'm all ears if you think it
-> will be better in any other way.
-> 
-> Link: https://lore.kernel.org/all/20260512033317.1602537-1-eleanor.lin@realtek.com/ [1]
-> 
-> Andy Shevchenko (4):
->   regmap-irq: Provide IRQ resource request and release callbacks
->   gpio: regmap: Provide default IRQ resource request and release
->     callbacks
->   gpio: regmap: Apply default resource callbacks for regmap IRQ chip
->   gpio: regmap: Order kernel-doc descriptions with the actual appearance
-> 
->  drivers/base/regmap/regmap-irq.c | 22 ++++++++++++++++++++++
->  drivers/gpio/gpio-max7360.c      |  7 ++++---
->  drivers/gpio/gpio-regmap.c       | 25 +++++++++++++++++++++++++
->  include/linux/gpio/regmap.h      | 21 ++++++++++++---------
->  include/linux/regmap.h           |  2 ++
->  5 files changed, 65 insertions(+), 12 deletions(-)
-> 
-> --
-> 2.50.1
-> 
+Tony Lindgren (1):
+  phy: cpcap-usb: Prevent line glitches from triggering sysrq
+
+ .../bindings/phy/motorola,cpcap-usb-phy.yaml  |   8 +-
+ .../dts/ti/omap/motorola-cpcap-mapphone.dtsi  |   4 +-
+ drivers/phy/motorola/phy-cpcap-usb.c          | 312 +++++++++++++++---
+ 3 files changed, 274 insertions(+), 50 deletions(-)
+
+-- 
+2.25.1
+
 
