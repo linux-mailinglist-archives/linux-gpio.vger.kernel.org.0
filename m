@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-39457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2QyxMdIOSmqs9wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39457-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:59:14 +0200
+	id lcSvIfUOSmqw9wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39458-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:59:49 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D7C97094A1
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:59:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4F9C7094B1
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:59:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=CYWuA4CX;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=LuVB5TV8;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39457-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39457-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39458-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39458-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 78F5430057AE
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:58:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7ABE4302D120
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:58:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35AC6366DB4;
-	Sun,  5 Jul 2026 07:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8692367B8E;
+	Sun,  5 Jul 2026 07:58:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E107366057
-	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:58:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD36363C79
+	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:58:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783238323; cv=none; b=e7xw8+2shFQ+sHyg7CweZOp/NN+62ALbA7ldQ9BklN8Yq8+uLbspvEn7rheewmh0nMlY2t3gVAJSRfr2k3/8a6P0ixvKfXpe+bYFQJXsbbUPkBWBhDk7FvanSSYKej4zrjTlauw54fSBXpESXrhEkyuN1rI3cqylOyU8l6k0X/0=
+	t=1783238325; cv=none; b=DLbq01Dj/5979ldfdGdNdnRLrNdu1AP6vOAaau/BfLao3Gz6kS3vk18NONHOIERv1O7sgKk6qMKyKh+LinWueP7yWwcwQX4nwERGvVnYqif7m3U4US1YzLO5LO7nOZh8qySbO3z6NCBkC5Ekrwy35nZF68tH57qUzArfJXYx2y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783238323; c=relaxed/simple;
-	bh=UOdS+ggItBo8Fbxj7Cwq/9AocOYrjMGNU/RcBG7UEQM=;
+	s=arc-20240116; t=1783238325; c=relaxed/simple;
+	bh=k1rvSiyDPCpk0SDwFUE32ypMUm2i7I+6V8cUG5dyG3Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Uo7tqI3M5ep93DkQ71X+Y+pRKnXIDiTKnS6bSyoIBlixB9fVXkUMuC5LcRc+Hyady+M+t5WjM73I81EfhFD/gIVg08Ko3ib5IulXnpHFqCdBl78aVqyoMIga0NISymSS+1fNKfwEzaRCL2Hlvt0rpv9s4kdIohSIArrgWCsyPdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYWuA4CX; arc=none smtp.client-ip=209.85.128.53
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-49241dbf9c1so18682715e9.2
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:58:41 -0700 (PDT)
+	 MIME-Version; b=RuzLk2AYRqjZ7ynbai4OsQn7QevFItEZn+UKDiWEoj0tjaeq5N57XedNHmyA9cU1XghmO3CFU+6ZzGkptCRgSnDo/mb5URxPzLzwIiWLh8bnfGdEkrE27L0acuSdv0RqrXqQe0kh6y8+jkULQzXX3gui0UiFUOieKLI8ueaQcOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LuVB5TV8; arc=none smtp.client-ip=209.85.128.48
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490cf322ed0so12069725e9.1
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783238320; x=1783843120; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783238322; x=1783843122; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8luoQD6yVJJNuYdfTQQskkaqAeRmMzwRB2xqljwPj5g=;
-        b=CYWuA4CXgmmGc3HCRXu7Q17xp2H6REiy9NJb/iHz1N/9IdCkOwGa7gQesUzpaylWQx
-         uMdyq0LfxGsS/HJFlJFQo7uCatURt52ZJK+EIHsMSNJ1WZ+ojQqUMaTiEN458a2/QR2C
-         ccRFr4o3B+8hT6B3nbFcvbI63oROn5KE505SdgNwUp/ylnlJwOsoraEt0ygWv5XpNNS3
-         jCEij5JcIEEMIPsF/lnHK8PehYnvygRaN5hWQquVZDsNuWozeQN+TDtjhgq5cLsCyH0A
-         k5DQP79siclJXYF5GJYRUFBx2QutzbQjT68cph0VfrFMyXT1Xj7jof8Wyh3Z8OCZAHEs
-         uJUA==
+        bh=Ii5elS5NgLsQv2qqwGxrcHkoRbkINQLFmPJvl9kn5Xg=;
+        b=LuVB5TV8fVpFw5WFm+ZdxERq8bLRePrlkjCOJ07Sg1y45dbOhoUJEA43uaAyYgQgMg
+         XaeEkBFD3REg7Bj6JhbbChzIxNTHQDsPyxLZyEAAeFD6rMy1DprsB7YQdfpklPObqtvf
+         6XPz4vzgo+s0dXZOYv5/ULBEPk21fqVcajF9Gl/n9meW1GvWyXW88F+zY14cay/DGNXj
+         y5MHASMEhqjxE2fDwcqVADtFih1aKIl733wBBSJ09+7j6RTNnEI+fYIwazX9YH2nDf9O
+         HxnXoupDOO+Zg0uPleO3qt7RSy/HcvKs9F2wdx+pVMcuOiqRYCU+geSnW9MYTC/AM5aa
+         95YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783238320; x=1783843120;
+        d=1e100.net; s=20251104; t=1783238322; x=1783843122;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8luoQD6yVJJNuYdfTQQskkaqAeRmMzwRB2xqljwPj5g=;
-        b=gYCqMAso/57FfPrDIRF6abNQjvtgk/SVF7q+DJXoT7+WjvH1knZbFs5zH5tYkSL4L6
-         NkKki20kS4WFaM5WCP1GemCDhvKBRU82jt4n8XkVD21bqf8sH7apXYJ5D2E9cqdh+/K6
-         vdlKZuK4Sm0g0XktHZBgGHAZe9XH/mJFI8mU2G7Q8CIc+vhlY9R0yFe5waJa0IiSKWgJ
-         igCp++LotmmldGFyCKxLy2q8VkJjoAaK04SGw80YdYkGpasLIWY5s8qaP9KcRZXhjawV
-         Cjk//BGv53WE7OWEpy/EKcMwEgn8fnobJb+S4vqw6Ty6C6ulZ/aGrNGhAqZkOTdB9X3c
-         Crfw==
-X-Forwarded-Encrypted: i=1; AFNElJ8GABrjvgevqJVcYnoiFCRr1BF01l8e/q21zqfu5B4N/QH2UHGtGwNa7Dp0/yb5ZN/YWtAq5m4Hlcjw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5s7D79WKp3SNztq2ZERRxUiS7qSTU2IZ2BfQFCf0ui8HcK8r+
-	UQTvOl6EII8t9Dkx1R6fFmX7ut0GubZAXg9yp/Y8elJslPD13dVqayqR
-X-Gm-Gg: AfdE7clAPDKRgnqI806Tw8on0uGE4Y9sEdjOKoDGfqncGYOlpmPROSj9bTkORfs4tSJ
-	mET5jatiFCP6N6M3GMfQ7yVdiLRSS//4UHEgqyg/HHXNTDiPRIU2l5MJ3WDW0N/DurCg8ZMggg4
-	3qdHwL6qjoC1mPV4mtkmEBEYlKeV90aMTaBw57BX7rC6VVaCfAnSBgL5ayABcY60SM9wScK4hiZ
-	b+UiuVuvjd7yLhSkk6WFSFQ/UvhXAnVBSOurlCDoS8canTOxqeXrH9C3pdmAZocNyGXBGBLalqG
-	WR7+OvSF6jxViESNYjySmMij0EJlysQXFj90SXWzk6mF3HbZGiv0DSLHJYyY1eW9y92lHOgGo0N
-	rump9DslwXg7ZCiM5ctoXRg8VpwogybB2QFjupsaMcynaarGAgqAcsGmvRl1XixCmSfIPlsK6u3
-	WCJfHJNFiOTFGERpwqcBYr9mfiy7/bIlJm3w==
-X-Received: by 2002:a05:600d:8654:20b0:493:bfea:2786 with SMTP id 5b1f17b1804b1-493d11f6d34mr45957155e9.32.1783238319733;
-        Sun, 05 Jul 2026 00:58:39 -0700 (PDT)
+        bh=Ii5elS5NgLsQv2qqwGxrcHkoRbkINQLFmPJvl9kn5Xg=;
+        b=F/5Dn7Vq3lwEHt4Y5YXZeCuxwu0M7EVWxxLX0Uu1ZhBqf/zSQpvohkST7f+JYkE/Q2
+         PChr/hS8/03VWRhQliDlixJ+ZrL7PYbGYkzLW/UWyQ/ju5zX11gkJm7lJAdDHKf66o8C
+         HsYirdh5e52oEmHvHlOmdGRjaJlFlCr2J8Ki41MdOcTWb6AILNrr6sWkxy8qsdQb9wnO
+         uoDgl4g6N4gbQjD2EmFrksImtHkgnkEo8ct4lOv/wuQxMzPX3NWgYvtEEVWaHTg4x4f0
+         A4olJh/coKPH0XH62wU7tn/eXquYdh2dnCv03fGdj0D1OwNfeX9J66ehMFtHBgkxGv4d
+         Mi6A==
+X-Forwarded-Encrypted: i=1; AFNElJ+94KSGa6zKfE3Lt9AL+ouXdfAk0qtL3a8bXjxyleZjmiYPujpcxDW8M4OJa0jrJVl0lkhXW+1Tbsbz@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywji5muK+Oq+pVwxs0b+0LOheBebGCtoG76yoW7gjI6qgQnNr8W
+	aOn93bIz0QAM/WftVfZxhoU+F6W0XuDeNEphg9/YomlcombOtZYLUXBP
+X-Gm-Gg: AfdE7ckCUmDk4MY8dO2lid7CBmaXRdW2F4EmBCf3irBTmZx1bOwi9wxHCVErmOlxK5S
+	OBGGKF8/QTReHpL1jDfITHqbYxVfC7mvjLtB6EBRoPLXVfkKXQaASAZWLmr/2GEb/VBEmnIc5g4
+	vBDjEYFK3OcOa3tgxluzAGec0UBfILhlTnhDGwma5ItvqcaZ5UrNC/PQU2uOQgzppbkWTKexKU/
+	xneVQUYMk5XnWWVCIqvf7kFUXOa5nqtHWkPMct6Qh/UU8W4HranJjNMvaD0jW3d2o8kGRq5yvpn
+	hd522jgj9z6u+O5sQy56vYezdoDzpQ8TNaP2TCRfBoYHi+O04DkNrRTKxQav++yLBwDPOt1MjNW
+	kiMFnlvl1O/2LZasE6kX84D/oOGuNbVOKPDw/TnqBJhiF2j5NVBjFlsNR/6zKNK4WcqqYuM127h
+	yly6t1Zqs7qwheyVXeaS38MPppF+urn9Hqbw==
+X-Received: by 2002:a05:600c:474f:b0:492:4a70:faaa with SMTP id 5b1f17b1804b1-493d11db16emr58211645e9.11.1783238322443;
+        Sun, 05 Jul 2026 00:58:42 -0700 (PDT)
 Received: from localhost.localdomain ([95.43.220.235])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63bfba1sm305769765e9.15.2026.07.05.00.58.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63bfba1sm305769765e9.15.2026.07.05.00.58.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 00:58:38 -0700 (PDT)
+        Sun, 05 Jul 2026 00:58:40 -0700 (PDT)
 From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
@@ -95,9 +95,9 @@ Cc: linux-phy@lists.infradead.org,
 	linux-omap@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH v2 1/5] phy: cpcap-usb: Prevent line glitches from triggering sysrq
-Date: Sun,  5 Jul 2026 10:58:05 +0300
-Message-Id: <20260705075809.1793784-2-ivo.g.dimitrov.75@gmail.com>
+Subject: [PATCH v2 2/5] dt-bindings: phy: motorola,cpcap-usb: add chrg_det interrupt
+Date: Sun,  5 Jul 2026 10:58:06 +0300
+Message-Id: <20260705075809.1793784-3-ivo.g.dimitrov.75@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260705075809.1793784-1-ivo.g.dimitrov.75@gmail.com>
 References: <20260705075809.1793784-1-ivo.g.dimitrov.75@gmail.com>
@@ -115,13 +115,13 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-39457-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39458-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:ivo.g.dimitrov.75@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:ivogdimitrov75@gmail.com,s:lists@lfdr.de];
@@ -129,7 +129,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FORGED_SENDER(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
 	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -143,65 +143,54 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[atomide.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6D7C97094A1
+X-Rspamd-Queue-Id: D4F9C7094B1
 
-We can get random sysrq events on switching from USB to debug serial
-port mode unless we temporarily disable sysrq on serial line for the mode
-changes.
+The CPCAP USB PHY driver uses the CPCAP charger detection interrupt
+for DCP detection.
 
-Suggested-by: Tony Lindgren <tony@atomide.com>
+Update the binding and example DTS to use the corresponding
+"chrg_det" interrupt name.
+
 Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 ---
- drivers/phy/motorola/phy-cpcap-usb.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml     | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/motorola/phy-cpcap-usb.c b/drivers/phy/motorola/phy-cpcap-usb.c
-index 7cb020dd3423..d1c70c715346 100644
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -20,6 +20,7 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-+#include <linux/sysrq.h>
+diff --git a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+index 0febd04a61f4..1a202cd29724 100644
+--- a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+@@ -28,6 +28,7 @@ properties:
+       - description: sessvld interrupt
+       - description: sessend interrupt
+       - description: se1 interrupt
++      - description: charger detection interrupt
+       - description: dm interrupt
+       - description: dp interrupt
  
- #include <linux/gpio/consumer.h>
- #include <linux/mfd/motorola-cpcap.h>
-@@ -413,7 +414,12 @@ static int cpcap_usb_gpio_set_mode(struct cpcap_phy_ddata *ddata,
+@@ -41,6 +42,7 @@ properties:
+       - const: sessvld
+       - const: sessend
+       - const: se1
++      - const: chrg_det
+       - const: dm
+       - const: dp
  
- static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- {
--	int error;
-+	int old_sysrq_mask, error;
-+
-+	/* Disable sysrq to prevent random sysrq events on line glitches */
-+	old_sysrq_mask = sysrq_mask();
-+	if (old_sysrq_mask & 1)
-+		sysrq_toggle_support(old_sysrq_mask & ~1);
- 
- 	/* Disable lines to prevent glitches from waking up mdm6600 */
- 	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_UNKNOWN_DISABLED);
-@@ -445,13 +451,13 @@ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata)
- 
- 	/* Enable UART mode */
- 	error = cpcap_usb_gpio_set_mode(ddata, CPCAP_DM_DP);
--	if (error)
--		goto out_err;
--
--	return 0;
- 
- out_err:
--	dev_err(ddata->dev, "%s failed with %i\n", __func__, error);
-+	if (old_sysrq_mask & 1)
-+		sysrq_toggle_support(old_sysrq_mask);
-+
-+	if (error)
-+		dev_err(ddata->dev, "%s failed with %i\n", __func__, error);
- 
- 	return error;
- }
+@@ -91,10 +93,10 @@ examples:
+         interrupts-extended = <
+             &cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
+             &cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
+-            &cpcap 48 1
++            &cpcap 48 1 &cpcap 13 0
+         >;
+         interrupt-names = "id_ground", "id_float", "se0conn", "vbusvld",
+-                          "sessvld", "sessend", "se1", "dm", "dp";
++                          "sessvld", "sessend", "se1", "dm", "dp", "chrg_det";
+         io-channels = <&cpcap_adc 2>, <&cpcap_adc 7>;
+         io-channel-names = "vbus", "id";
+         vusb-supply = <&vusb>;
 -- 
 2.39.5
 
