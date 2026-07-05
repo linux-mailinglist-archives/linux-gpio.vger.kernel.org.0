@@ -1,85 +1,93 @@
-Return-Path: <linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id QNLrGdsLSmo29wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:46:35 +0200
+	id oYIBJTsMSmpA9wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39455-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:48:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90AE47093CF
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:46:34 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48DFC7093D9
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:48:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=HqQeKiy4;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=MUyxLTsF;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39455-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39455-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3A4B4300DDD0
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:46:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B614F3001D44
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:48:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE9DF35F602;
-	Sun,  5 Jul 2026 07:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CA4362149;
+	Sun,  5 Jul 2026 07:48:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4983542CF
-	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC01C34AB00
+	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:48:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783237590; cv=none; b=kLC8kxbFyls3fcibUL9T+yMErMv3do2OANFZOrtSzJpf3VEkFYEq0JczD38QMjk/qp0A/yu+koruERD/1gPQmaEujiSIpdXU+dOE3fhNuiDJw6wG8J58BVIVWsjEX1JYDDPVbFcsJGX52ozMPznMz/Elp76uBlUZj2WjZO7QW88=
+	t=1783237687; cv=none; b=bZrKb3ldSfKECGPx8r8Jx8gQhwjYY8xogoPAnHusy6oLZiTtMmedysJ9KFmcS5QT+iIcA8e2zZoPJtRfd2av2qNuNWVZknwUDiS+Y2r+5J1ucJaFHGOhD6QdxASum5GR3UwLnnlTIhrkNQ1SqGuVi5mjFAqFyEg9H0YQ84LtAjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783237590; c=relaxed/simple;
-	bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
-	h=From:Date:Message-ID:To:Cc:Subject:In-Reply-To:References; b=RtB9wo27al7gYXxX9moHOEVDhDvrm0AOjZlJ/T9VaTh08rSq1XG/1a9rb446McuATbL7v31mlKEloZdqJ5lLaG/2jnDo6hTOc9x60wByJoZfFQKY6YfAIaHFctGXNLZvn9dneTyYz9N9Cp8ZVdThugEQL5clxmj+5fpBPRmDOU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqQeKiy4; arc=none smtp.client-ip=209.85.210.173
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-84347ad88edso2763304b3a.1
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:46:29 -0700 (PDT)
+	s=arc-20240116; t=1783237687; c=relaxed/simple;
+	bh=Dbilg9/n2unXm7B+wlncUdwupZtYPq3wzAaKZ1VRYoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AFlMHgVRQnHTvZ3iT3vwo0ylSyADz0yYfP4B6HuYUhbiMYCWvUfizftY8ZkC8owOmuv6T/ld7QwQM+eHHdmZ+9GbXEL2usXxjuhUOFrdGttCUa+JDpoN+nKVoEpD55CP2jhcM7T+vHz3ztIhzHTIAwYBiLdSFC6eNv2LQaavSCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUyxLTsF; arc=none smtp.client-ip=209.85.214.179
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2cc8bc9d222so1533165ad.1
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:48:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783237589; x=1783842389; darn=vger.kernel.org;
-        h=references:in-reply-to:subject:cc:to:message-id:date:from:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
-        b=HqQeKiy4Pxhp3aeACNmAZuIYpiWUn33FNL9w7YaCNPluyXFKmmkvASDCx/rrZsl1x7
-         7ba1uoeAFKYEJ+g6piaAD7JNK1Sc2w+NcHeZqe2+rgnBYdJ9lnHNwORH9Ua1CEht9bXG
-         F451fvs+xnTKlZnCEA7F3fxd1EcFxQBblTzWsOgIwTnJL0ZsvZ3jn3XMm+XoHRn+jRji
-         bJRiJx3jjaCiHG/qC3QVvheeepOZ+WX7FuIf+y9tfF+ce/Sms0PM9RKhPhPMd9hFwM8r
-         mn1rmnayiX0VeGcUe/m+zJ8+srHN0/0nwbtjFKX3bZ+bANrvg3f75MxTvcpOfZ1KV3nA
-         xKzg==
+        d=gmail.com; s=20251104; t=1783237685; x=1783842485; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B7rYvqmtxh7QVbsMGEyyEdKfUiA/iq7LRZnhoQl1CVw=;
+        b=MUyxLTsFPC5js0suuJXRHaatqV3Y2YNTQTlNXiCc+unIP7DqQeIT4xPs2NS2E856Ih
+         S/29s2FM8/XyPZruYAmhKICUpkG1Aiv2UDXMYyH/W7PszjWYnBgP14+AoVQNMnMtsbnX
+         +ZX7GbCsqSGGL/WZTtYqHGcU1DsuDNgdtdPq5Jl4LyeFgJ60L4qfHku7aYMC0x5Sm4JP
+         hOL3HkmQBMBZfcugfbwCOk/b/ngP90RTs3+RkElVrOoi7SHEzB7gM0FAcdlV722valOY
+         il5SqR+hT3yPaq65qgsBKwB/5+hTWNo+nOGUxbhDzhKXWemnm33fqMwO1h9x7R1ydR0A
+         yihg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783237589; x=1783842389;
-        h=references:in-reply-to:subject:cc:to:message-id:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
-        b=ZhAsOxNQEQgyG9TCCkb4dioGMx4sEzUGr+qGJ8OnnJR6eBMB//f9IiQdD/+jQ6QXTQ
-         O1aGz9iVvsp80Humot2+luVTX5LoY2/XxyqkhYOlJqhjzqdLSAigtosr5gkWplJnp+K7
-         TgAqIkij5cPZ5fNa2G1djIlrdn+8vb3yUgOnLPms6rpWLWXIXwI0saLURNYjOxD5HYGT
-         tIVM91bl6X7eP/UkY1cFjGlz8ziiVgHvAxQvVaGZb5Mv73nNA25e8UH3L6ZDjK8Nh1+U
-         CqotxGw2XqV5HoY8zWUvMZxm4fr+XfoAls+s9tWiSPnD5PHXwwOCDMpQzaTfMNTYWoJU
-         oMWA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro++JVGXsBS+4NNnaYZcs8un0pEXi13yyUa0P6+3V280h5IMk56hVW439SItZu2Pg1sfgNTr3HZhKon@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf+WAZrwUXOYxgU51u2wqN+41ZuSbE4RB7o8GWdNiJr4j6j5tC
-	TSSH7hj4qLLUcAM0mJVYgvAY1gJRAi+/PnNx9GFjNSW+1JV7i5IPIT89
-X-Gm-Gg: AfdE7cmCL9hPF3l8xxckFqn6qR3iAlCJXR5/WnFz0RCsjecQbodtHygjMacQDrrP7HH
-	83OAtYr6Iq7MRnNGjJzQrnyE/Qb4G4PgRFcbKg2WccpIXEgVGh/Kcv+OCl1kNf0TMJfsP29oR/M
-	ywHjVYyY3d7U7/IuUK+sN42wVlF3845hDI+c/ltqJ6zhR6kvkK8rHB3GgDBzXbrbvZ/EaJBbr89
-	HScCk+RSkCb46/uZXgd8v0IE3xAXDcjX7JNSCqjgka0cKCtZBJlBfZYO2kl7WTrCxni0YgSOeRk
-	B16gXbNkrdpIuWgoupfIk9SWzUzTJCqqu7+t/EisAKxKBiDxeV2GpPEUoTwlZpFZxptRVQs6Hd+
-	5YrvBk8x7GPxoKvnuitYW+S2hZ5SpD4W1hshgmMwR3RrsRKOE7BC5fHroPmIBFFzYjLHcSltAsE
-	e5VZOwX1Zhhl+WRhHfSxfZIiXYkSoulwEsIJg=
-X-Received: by 2002:a05:6a00:13aa:b0:845:d650:b75f with SMTP id d2e1a72fcca58-847f6d5a1e8mr5176306b3a.8.1783237588849;
-        Sun, 05 Jul 2026 00:46:28 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783237685; x=1783842485;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=B7rYvqmtxh7QVbsMGEyyEdKfUiA/iq7LRZnhoQl1CVw=;
+        b=N3IJ49yWRAe3R7JzLsLmivzxfxjrRW4c3Ib3rZMvAlMJEGJ7pKFEBihK+IArFdqaxO
+         JXgl5kEqOdOS1xPf1LXcCdWKQcVv+JwisiRsmTCBU/qHt5AREAXyzLB8LLWuPYrzC3Ek
+         WKOByjIvV0RktR8tn0MiZVluuAwjfF5QjgQT3+fVkh7ZmBSVg8GcyIbXsuEIPTLS01kl
+         61G8eQXWnTOPjvVhlXLELjQXOGMuhkOvNCtid9tFQFx1mFNSur01urpj5YYPG4ygcA2W
+         wpwzfrhPC53jsZGob7iwTwIk0LMZvftTO+zn+Ocj2DXQKLRDbnXO062bI9WW+OSofWZd
+         lWOg==
+X-Forwarded-Encrypted: i=1; AHgh+RqDkRqw459Vtl0XmlTjorNhFZ7WbHxg+LlbfIEIOGcVLMTxAaoEZDUCDikGyg5xx27k5RoGYW3VIcNK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG94KDSJslmuOPj497auB7DFOqIDnIv8Pj8yXBkgAh4tPwVwA4
+	3YDiUf3V4cJAw9RwYTCOBQm1QONRTED38BKkUrziu9vCbUNxMAB0BZFk
+X-Gm-Gg: AfdE7cn0bxzLR2buHygvyEKJrY0tXxBgvaVHf5kvtWkrNLi3tvmM3I6Fo2tIQvnq0Z2
+	0O0FEqMrgnr2iJBVSmJzdutbsWBG9W31chlwijZM/wERrIj+r9sw4FG9/I+ihhCC8ZJ0eLxYYjR
+	FtqT7UqA41h2/ezTRIKCf5YAjn9LpvrWpGse2U2DUux1q2v/+g/v6a1qeOLjvn4xre1oN6ARoIr
+	79n2hXuNS2Po/oP/0jf0HiHbg5l8DY7f7o8laef6Y8m2nFFlLxTO2yMO/yVgsG6RE5qsYMoeDh1
+	ZoCwkHecpQZRlKApj0r6Oa+BXG7VNNKCZbx2oBlh6NGZ7b+0ybfxDtJ0PHFRs4c6jl+NNLPb0VS
+	MtFLkUgvit03j59g3sXtwgH7JOMMSGaAjyBRq6VyaMxP0ldqik/vT0t7l14GAqwNwS932J2WtGM
+	j4vVIZCK19/GfJ7TdENeLYJOpK
+X-Received: by 2002:a17:903:ac6:b0:2c9:e86e:aa0a with SMTP id d9443c01a7336-2cb97d1228dmr51504625ad.0.1783237684522;
+        Sun, 05 Jul 2026 00:48:04 -0700 (PDT)
 Received: from localhost ([112.65.12.207])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6d4edb4sm2028187b3a.33.2026.07.05.00.46.27
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7893a8dsm30766295ad.73.2026.07.05.00.48.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 00:46:28 -0700 (PDT)
-From: haohlliang@gmail.com
-Date: Sun, 05 Jul 2026 15:46:25 +0800
-Message-ID: <26c872506bd87b969a84c91d0a7dea9f@gmail.com>
+        Sun, 05 Jul 2026 00:48:04 -0700 (PDT)
+From: Liang Hao <haohlliang@gmail.com>
 To: tglx@kernel.org
-Cc: linusw@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: dwapb: Add robust error handling in interrupt handler
+Cc: brgl@kernel.org,
+	haohlliang@gmail.com,
+	hoan@os.amperecomputing.com,
+	linusw@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] gpio: dwapb: Mask interrupts at hardware initialization
+Date: Sun,  5 Jul 2026 15:47:59 +0800
+Message-ID: <20260705074759.47863-1-haohlliang@gmail.com>
+X-Mailer: git-send-email 2.50.1
 In-Reply-To: <875x2vlpjx.ffs@fw13>
 References: <875x2vlpjx.ffs@fw13>
 Precedence: bulk
@@ -87,60 +95,113 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-39454-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FROM_NO_DN(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,os.amperecomputing.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39455-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:brgl@kernel.org,m:haohlliang@gmail.com,m:hoan@os.amperecomputing.com,m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 90AE47093CF
+X-Rspamd-Queue-Id: 48DFC7093D9
 
-Hi tglx,
+GPIO interrupts may retain stale state across warm reboots when
+peripherals remain powered. If a GPIO line is not explicitly
+configured for interrupts, this can result in interrupt storms
+due to missing handlers.
 
-Thank you for the thorough review. You're absolutely right that my
-previous approach was limited to handling the symptom at the crash
-site without investigating the root cause.
+Fix this by ensuring all interrupts are masked and disabled at
+hardware initialization time via the init_hw() callback. Pending
+interrupts are also cleared to start from a known-safe state.
 
-After your explanation, I realized the real problem is that the GPIO
-controller does not properly initialize its interrupt state, and stale
-interrupt configuration can persist across warm reboots when
-peripherals remain powered.
+Interrupts will be unmasked only when explicitly configured by
+userspace or kernel drivers.
 
-I'll send a v4 that masks all interrupts at hardware initialization
-time via the init_hw() callback, which addresses the root cause
-rather than the symptom.
+Signed-off-by: Liang Hao <haohlliang@gmail.com>
+---
+v3 -> v4:
+- Instead of handling errors in the interrupt handler, properly
+  initialize hardware interrupt state at probe time via init_hw()
+- This addresses the root cause identified by tglx rather than
+  papering over the symptom
 
-Thanks,
-Liang
+v2 -> v3:
+- Remove duplicate comment
+
+v1 -> v2:
+- Add spinlock protection for register access in error path
+- Protect against race with irq_chip callbacks accessing shared registers
+---
+ drivers/gpio/gpio-dwapb.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 7b92b233fafe..3189a0269efc 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -199,6 +199,22 @@ static void dwapb_toggle_trigger(struct dwapb_gpio *gpio, unsigned int offs)
+ 	dwapb_write(gpio, GPIO_INT_POLARITY, pol);
+ }
+ 
++static int dwapb_irq_init_hw(struct gpio_chip *gc)
++{
++	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
++
++	/*
++	 * GPIO interrupts may retain stale state across warm reboots when
++	 * peripherals stay powered. Force a known-safe state before the GPIO
++	 * irqchip and irq domain are set up.
++	 */
++	dwapb_write(gpio, GPIO_INTEN, 0);
++	dwapb_write(gpio, GPIO_INTMASK, 0xffffffff);
++	dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
++
++	return 0;
++}
++
+ static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
+ {
+ 	struct gpio_generic_chip *gen_gc = &gpio->ports[0].chip;
+@@ -457,6 +473,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 	girq = &gc->irq;
+ 	girq->handler = handle_bad_irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
++	girq->init_hw = dwapb_irq_init_hw;
+ 
+ 	port->pirq = pirq;
+ 
+-- 
+2.50.1 (Apple Git-155)
+
 
