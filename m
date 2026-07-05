@@ -1,154 +1,146 @@
-Return-Path: <linux-gpio+bounces-39453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mesIBhwCSmoI9gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39453-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:05:00 +0200
+	id QNLrGdsLSmo29wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:46:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5418D709310
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:04:59 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90AE47093CF
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 09:46:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=otsbk5at;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HqQeKiy4;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39453-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39453-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39454-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E052A300BDB0
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:04:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3A4B4300DDD0
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 07:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25394357D03;
-	Sun,  5 Jul 2026 07:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE9DF35F602;
+	Sun,  5 Jul 2026 07:46:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68E618BBAE
-	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4983542CF
+	for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2026 07:46:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783235095; cv=none; b=VDTTqcO3WGbTSjrYtNK6GRM+TaXpHPD4VegZeWD7R/EQs7cyHBgBA47BKUxzjIQ0kL7lWzs0apeVQvbfGoF47VHiw52P/2O3RaiYYUSMCI8NQaN8fYYrX8/A9fytjujpHpYsHRpyVFsVzYRNcSypCMsKUx1x0sEizkm92uMlcOQ=
+	t=1783237590; cv=none; b=kLC8kxbFyls3fcibUL9T+yMErMv3do2OANFZOrtSzJpf3VEkFYEq0JczD38QMjk/qp0A/yu+koruERD/1gPQmaEujiSIpdXU+dOE3fhNuiDJw6wG8J58BVIVWsjEX1JYDDPVbFcsJGX52ozMPznMz/Elp76uBlUZj2WjZO7QW88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783235095; c=relaxed/simple;
-	bh=rVUEl79PoXlXUwAmZC2UErhUtKZCSu0B1xf6Wz6IFuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dcc3hYYJS6rw0YhhfotBGWIIRDhKoI14pQqaSgU2CdLOPrXa0AR/OsUv5h5WUvBDB9N2yqK38hbCuS+Lm3GOA6VwkDsFUFcQzx43r+22Rq10+329KRYeha+YfDSvOQhCJJGZq53bRygnIrQsphXuIOlWJ7hcifbOMmq1dVYduXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=otsbk5at; arc=none smtp.client-ip=209.85.210.182
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-84536ecfc5bso1921911b3a.2
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:04:54 -0700 (PDT)
+	s=arc-20240116; t=1783237590; c=relaxed/simple;
+	bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
+	h=From:Date:Message-ID:To:Cc:Subject:In-Reply-To:References; b=RtB9wo27al7gYXxX9moHOEVDhDvrm0AOjZlJ/T9VaTh08rSq1XG/1a9rb446McuATbL7v31mlKEloZdqJ5lLaG/2jnDo6hTOc9x60wByJoZfFQKY6YfAIaHFctGXNLZvn9dneTyYz9N9Cp8ZVdThugEQL5clxmj+5fpBPRmDOU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqQeKiy4; arc=none smtp.client-ip=209.85.210.173
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-84347ad88edso2763304b3a.1
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2026 00:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783235094; x=1783839894; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wwuaRcvZpvE517elMjV7huVW3y2374lD/GTgCqXZOsI=;
-        b=otsbk5atf66UubxH+brOs/j3GW8dAEIbsHYGvvNLRt5K2KYQuNzJOnDQ3pqigI97WU
-         vhMW1pkZzU6ZEzDz/gfpTDZw/forUg2LDY4vEtqZRJxNyLqi08kmtt8enheiKEujVgSQ
-         E+pHy4a7X/D6EHxVr0vFguyEGNOMwYi9vZUHTyAfyjdB5Ck8kO6s74KP3FjhEMPfxLaM
-         rgpbSIW/jvEVzfDlXOujm2LYlVOnAMhVd9EXpBAvdS0EAHZPXDnUTTEHyGpPxgB4FfRe
-         edKN1wTHGIwhmBUm8sHMWpBjW3/f2sJmzZIRfPnlWdxIcGff9TfGsunjz4ENmOrCHFpq
-         aW+Q==
+        d=gmail.com; s=20251104; t=1783237589; x=1783842389; darn=vger.kernel.org;
+        h=references:in-reply-to:subject:cc:to:message-id:date:from:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
+        b=HqQeKiy4Pxhp3aeACNmAZuIYpiWUn33FNL9w7YaCNPluyXFKmmkvASDCx/rrZsl1x7
+         7ba1uoeAFKYEJ+g6piaAD7JNK1Sc2w+NcHeZqe2+rgnBYdJ9lnHNwORH9Ua1CEht9bXG
+         F451fvs+xnTKlZnCEA7F3fxd1EcFxQBblTzWsOgIwTnJL0ZsvZ3jn3XMm+XoHRn+jRji
+         bJRiJx3jjaCiHG/qC3QVvheeepOZ+WX7FuIf+y9tfF+ce/Sms0PM9RKhPhPMd9hFwM8r
+         mn1rmnayiX0VeGcUe/m+zJ8+srHN0/0nwbtjFKX3bZ+bANrvg3f75MxTvcpOfZ1KV3nA
+         xKzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783235094; x=1783839894;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wwuaRcvZpvE517elMjV7huVW3y2374lD/GTgCqXZOsI=;
-        b=Jf01wsCoDIc8adYUuzW+coWjmPCC2CtJMLv5oQ4P4QEt3cW+QxJ3zYBEhxAyQruVzq
-         0d7Sd4rpJkjkp/iecZolB3pX/xbVoiwPaZLys7y0g2mVPDm7WkRfiSocGScrtKm8bBS+
-         35kjKaCVtEGkfIHb3aslmoZ9BpFk7MF7GXgkH+U5xS/nde7cnq+ZIFTTS/rV7+azxdWl
-         rngtrk7y56YeE8yJiRYNzc553vqD7hC2gv5sbgDUbwrh69N4kg1ofWPFcpvSEOBKxktI
-         1lCEeZKrBLU3+qDQnq3gYKbexOP6PA7UTIIDuoLWOIKm7659XVzU6rgeECIRDX1D2iTZ
-         5XTg==
-X-Gm-Message-State: AOJu0Yzn+bGtXPx8p2hVmZA2qnb2uKJMDwBJFRqSQb9IFwmH5zw0eO4R
-	ojo5IDKBhR1YJfyKBGSiyeGYvcUJQIEPGQt6dJab7z4BOCCxr8pBa+Bze8kPNJP1cRHBwg==
-X-Gm-Gg: AfdE7ckHT3oV/WCm6XF0jXDbFMRzoqJoWEOM5QH2YBdgFN9uv3QHq1aB6Gezfzdutn/
-	EHEpZZqOfrXmAiSjcOEhf7/LQz6/6UU1NYJ3llg7CVxmc9NBIh2r9HVOoXiNMuFMhFeOzUyoj8C
-	MYHG11GS2hwCTpCeNTySZScwDoyR5UQuzsPs1KOTFLO4y6gyQ0gpTh4+qOjBh+ZkTZNlJW9JPtB
-	Lg7/fNgvEAs+6BVbSO/efVFgGZbvzrY0AZxJP4W5qhDLy+1trzIUPIzBTYOSH2k44rIwJD91tHF
-	wO1+Xcqn/7HSsC1hpCVwFW3zr+wHrJKyPcGb279QBdLr0xxXqEd0IloMpnSyfpjSEudKaxO7f10
-	fI/dmkFSfowtdwCfbW8AdQUnPdA0lmH7gTnXwbdpMaNvmAw0ipsaar9DicW/BdJIPk7SA4kQhBX
-	lY74qzCzAqWL7ONb+scfCT
-X-Received: by 2002:a05:6a00:189e:b0:847:973b:3d04 with SMTP id d2e1a72fcca58-847f6d67be4mr5897810b3a.10.1783235094116;
-        Sun, 05 Jul 2026 00:04:54 -0700 (PDT)
-Received: from localhost.localdomain ([138.199.21.246])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6bcf03bsm2012675b3a.26.2026.07.05.00.04.52
+        d=1e100.net; s=20251104; t=1783237589; x=1783842389;
+        h=references:in-reply-to:subject:cc:to:message-id:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Z6qxfLB0hQ60ZJc/fcwtlCkLOpCr27Eeo1hSX068R4w=;
+        b=ZhAsOxNQEQgyG9TCCkb4dioGMx4sEzUGr+qGJ8OnnJR6eBMB//f9IiQdD/+jQ6QXTQ
+         O1aGz9iVvsp80Humot2+luVTX5LoY2/XxyqkhYOlJqhjzqdLSAigtosr5gkWplJnp+K7
+         TgAqIkij5cPZ5fNa2G1djIlrdn+8vb3yUgOnLPms6rpWLWXIXwI0saLURNYjOxD5HYGT
+         tIVM91bl6X7eP/UkY1cFjGlz8ziiVgHvAxQvVaGZb5Mv73nNA25e8UH3L6ZDjK8Nh1+U
+         CqotxGw2XqV5HoY8zWUvMZxm4fr+XfoAls+s9tWiSPnD5PHXwwOCDMpQzaTfMNTYWoJU
+         oMWA==
+X-Forwarded-Encrypted: i=1; AHgh+Ro++JVGXsBS+4NNnaYZcs8un0pEXi13yyUa0P6+3V280h5IMk56hVW439SItZu2Pg1sfgNTr3HZhKon@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf+WAZrwUXOYxgU51u2wqN+41ZuSbE4RB7o8GWdNiJr4j6j5tC
+	TSSH7hj4qLLUcAM0mJVYgvAY1gJRAi+/PnNx9GFjNSW+1JV7i5IPIT89
+X-Gm-Gg: AfdE7cmCL9hPF3l8xxckFqn6qR3iAlCJXR5/WnFz0RCsjecQbodtHygjMacQDrrP7HH
+	83OAtYr6Iq7MRnNGjJzQrnyE/Qb4G4PgRFcbKg2WccpIXEgVGh/Kcv+OCl1kNf0TMJfsP29oR/M
+	ywHjVYyY3d7U7/IuUK+sN42wVlF3845hDI+c/ltqJ6zhR6kvkK8rHB3GgDBzXbrbvZ/EaJBbr89
+	HScCk+RSkCb46/uZXgd8v0IE3xAXDcjX7JNSCqjgka0cKCtZBJlBfZYO2kl7WTrCxni0YgSOeRk
+	B16gXbNkrdpIuWgoupfIk9SWzUzTJCqqu7+t/EisAKxKBiDxeV2GpPEUoTwlZpFZxptRVQs6Hd+
+	5YrvBk8x7GPxoKvnuitYW+S2hZ5SpD4W1hshgmMwR3RrsRKOE7BC5fHroPmIBFFzYjLHcSltAsE
+	e5VZOwX1Zhhl+WRhHfSxfZIiXYkSoulwEsIJg=
+X-Received: by 2002:a05:6a00:13aa:b0:845:d650:b75f with SMTP id d2e1a72fcca58-847f6d5a1e8mr5176306b3a.8.1783237588849;
+        Sun, 05 Jul 2026 00:46:28 -0700 (PDT)
+Received: from localhost ([112.65.12.207])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6d4edb4sm2028187b3a.33.2026.07.05.00.46.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 00:04:53 -0700 (PDT)
-From: Yuhong Cheng <ceohunk@gmail.com>
-To: linusw@kernel.org,
-	corbet@lwn.net
-Cc: linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Yuhong Cheng <ceohunk@gmail.com>
-Subject: [PATCH] docs: driver-api: pin-control: fix spelling of below
-Date: Sun,  5 Jul 2026 15:04:22 +0800
-Message-ID: <20260705070422.764-1-ceohunk@gmail.com>
-X-Mailer: git-send-email 2.46.0.windows.1
+        Sun, 05 Jul 2026 00:46:28 -0700 (PDT)
+From: haohlliang@gmail.com
+Date: Sun, 05 Jul 2026 15:46:25 +0800
+Message-ID: <26c872506bd87b969a84c91d0a7dea9f@gmail.com>
+To: tglx@kernel.org
+Cc: linusw@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: dwapb: Add robust error handling in interrupt handler
+In-Reply-To: <875x2vlpjx.ffs@fw13>
+References: <875x2vlpjx.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-39453-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:corbet@lwn.net,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:ceohunk@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[ceohunk@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ceohunk@gmail.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:tglx@kernel.org,m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39454-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NO_DN(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[haohlliang@gmail.com,linux-gpio@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5418D709310
+X-Rspamd-Queue-Id: 90AE47093CF
 
-Fix the spelling of 'bellow' to 'below' in the PM API section.
+Hi tglx,
 
-Signed-off-by: Yuhong Cheng <ceohunk@gmail.com>
----
- Documentation/driver-api/pin-control.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the thorough review. You're absolutely right that my
+previous approach was limited to handling the symptom at the crash
+site without investigating the root cause.
 
-diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
-index 1f585ecca..80106e44a 100644
---- a/Documentation/driver-api/pin-control.rst
-+++ b/Documentation/driver-api/pin-control.rst
-@@ -1175,7 +1175,7 @@ Possible standard state names are: "default", "init", "sleep" and "idle".
-   selected after the driver probe.
- 
- - the ``sleep`` and ``idle`` states are for power management and can only
--  be selected with the PM API bellow.
-+  be selected with the PM API below.
- 
- PM interfaces
- =================
--- 
-2.46.0.windows.1
+After your explanation, I realized the real problem is that the GPIO
+controller does not properly initialize its interrupt state, and stale
+interrupt configuration can persist across warm reboots when
+peripherals remain powered.
 
+I'll send a v4 that masks all interrupts at hardware initialization
+time via the init_hw() callback, which addresses the root cause
+rather than the symptom.
+
+Thanks,
+Liang
 
