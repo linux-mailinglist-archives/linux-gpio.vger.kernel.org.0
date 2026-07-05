@@ -1,136 +1,129 @@
-Return-Path: <linux-gpio+bounces-39483-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39484-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id h2htAkigSmrYFAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39483-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 20:19:52 +0200
+	id 7txUHpHGSmroHQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39484-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 23:03:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94C3370ACB3
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 20:19:51 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE8C770B680
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Jul 2026 23:03:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=infradead.org header.s=casper.20170209 header.b=SVNsJqd5;
-	dmarc=pass (policy=none) header.from=infradead.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39483-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39483-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dMyNsLgY;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39484-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39484-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C867F30097E3
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 18:19:48 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3ACB43009388
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2026 20:59:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D52539EF05;
-	Sun,  5 Jul 2026 18:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357CD3B27F7;
+	Sun,  5 Jul 2026 20:58:20 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF179286891;
-	Sun,  5 Jul 2026 18:19:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27303B14C4;
+	Sun,  5 Jul 2026 20:58:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783275588; cv=none; b=nYd8HUTSfvT38ZAJJEp+YZV2TZh8r+d1QJqnS3tM0uMw0FSAj+irVC/kXw1kbmj5RBl67SgTTUbj8lia+hK2cd6ugD6JVq+8j4hOx2aAZfheEDokgAGE7eDcsHrHHKYZQJiGemB7ZnlBSaRY0ZCFkq/w0lxLcDu53ZkgZkeo6DA=
+	t=1783285100; cv=none; b=Mafw97AYrWuyBQ5V8CiOgtU/hAZMbAgthgN2/dmrvhg9KPWMsWptT3Ce1FW3W1Afnh3HZnS88oP55NnEeOGjUmjmgHcXxkVntoDWr+zQXrRShI5UcCwWgiLBEYgy72h8UZ/teJBWyqAGsojB4fRBGpYXHbXyCDFxG43iYZ/uadg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783275588; c=relaxed/simple;
-	bh=fskadU09R3rO4mYXohrgHTCPoVbaHxLlcULLLJq9bms=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=oDSft4xMNDxoOQp7TbL+Z6gYqxbhODmcjHQ+bOWucwZmMW8YvBlH8ayUO2dJv6FbLKNtbzIAdho479eLF/bPGTc9ZSrTa9hXIrXEx2m1ne37pS0FRGPtUXAzAPh6QNH4BRmHQtLGNLZ+AC5YFNzHzbztjqmO/tuegwhn4jvuuk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SVNsJqd5; arc=none smtp.client-ip=90.155.50.34
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=Kul4N4nXXzqbUZuLjtPlpkKmoHD+8H8dGczk9kaE3pI=; b=SVNsJqd5q/tEIgqPTKzqLa0qt3
-	j414PcZWx/TF4euzQ94kB5KnVwcyYA/4zUA6wyhQIOHz85pYQhQJuYM34dA6AvSNBfYgOvZ5ohWwj
-	NFxsVtHXiuc3wpNQd1tSCEjv+MPKuXpKyXQ8mmZ6HhOQ+wdwK6yd7FP4NnOPyw6kuCCaVWqFUvonX
-	fRYPb+RKmEgADGtaFZwglG8GcYOCy9VopzrSNTRoWO7NuJt4d1YTG1hD5Nris5MQjdFF5k2j+dNKl
-	V3jZKCFV9dq60po1CR98hfO0GY41USzo0xFgOF5jhxGeFqsJVb2RWt7RJQV/5ChykaENUBDoG/yiZ
-	tfFURMWw==;
-Received: from [129.95.232.135] (helo=ehlo.thunderbird.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgRRN-0000000EU9w-0xcl;
-	Sun, 05 Jul 2026 18:19:41 +0000
-Date: Sun, 05 Jul 2026 11:19:38 -0700
-From: Randy Dunlap <rdunlap@infradead.org>
-To: Yuhong Cheng <ceohunk@gmail.com>, linusw@kernel.org, corbet@lwn.net
-CC: linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: driver-api: pin-control: fix spelling of below
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20260705070422.764-1-ceohunk@gmail.com>
-References: <20260705070422.764-1-ceohunk@gmail.com>
-Message-ID: <6F8B0A43-EB7F-4442-B9AA-126F4D8D21AB@infradead.org>
+	s=arc-20240116; t=1783285100; c=relaxed/simple;
+	bh=mTPgiBX4dVkJ57KaC/YAdzW+b0nCig0nU5t6fVFhkUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QOMppdN1cqGwJtVTEPUvpPbiKK1L5yv8Hzzo3Wt99sivRc53y40/xQyVcZ2G06vkkYwPDmj7g9lkgsRisJ/8+eaAuauPBcml2bFaofwWKcyuRaIxU5x6xhGtHzz+daaAGCYPotf3hIpER/SuiDyJDaqZXcn+SiFeCkEK6m+77WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dMyNsLgY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7254C1F000E9;
+	Sun,  5 Jul 2026 20:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783285098;
+	bh=E8Omg9VpqUJQkuh4f6JRLyZJV36bh9EAZ1uJ3toWuNg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=dMyNsLgYfQ56xs4xbl0OgHC1t+VzfGeR7yh/FEclnbvh5biuaoMJyB18VD1nweS9r
+	 NoHlIr5L3eueua/a9ZPxK6UtUyi/5UmDeKbxEhR/jp78zSKqbOHvyqbVS10372CU/T
+	 I/sLskfJGfaKX8EpVDvt8YKQo+5iV+RT7/EJcqUhluw8cmBimSkCLKkvnRu0Xo5Yye
+	 cuZ0wLvbu3y6F1fU0LZd/8C1JoZDOMmTT7mebZ/1LdO4aUX6N6vNdPuzxvMPIiqOyF
+	 qBZE9h+J3wraWvV2MEdzXS6u3YomnmIC+pu5oyPLanzfuG7iKaSaAy+0728FQhPTss
+	 zXBUyk88BnzVg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: linux-arm-msm@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Collins <david.collins@oss.qualcomm.com>,
+	kamal.wadhwa@oss.qualcomm.com,
+	kernel@oss.qualcomm.com
+Subject: Re: (subset) [PATCH 0/3] pinctrl: qcom: spmi-gpio: Add pm8010 GPIO support
+Date: Sun,  5 Jul 2026 15:57:56 -0500
+Message-ID: <178328508287.1157743.556759656826877879.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260507-pm8010_gpio-v1-0-3bce9da8d2ba@oss.qualcomm.com>
+References: <20260507-pm8010_gpio-v1-0-3bce9da8d2ba@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:linux-arm-msm@vger.kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:konradybcio@kernel.org,m:fenglin.wu@oss.qualcomm.com,m:subbaraman.narayanamurthy@oss.qualcomm.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:david.collins@oss.qualcomm.com,m:kamal.wadhwa@oss.qualcomm.com,m:kernel@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:ceohunk@gmail.com,m:linusw@kernel.org,m:corbet@lwn.net,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[rdunlap@infradead.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39483-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,lwn.net];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	TAGGED_FROM(0.00)[bounces-39484-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rdunlap@infradead.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[infradead.org:+];
+	FROM_NEQ_ENVFROM(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:from_mime,infradead.org:email,infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 94C3370ACB3
-
-On July 5, 2026 12:04:22 AM PDT, Yuhong Cheng <ceohunk@gmail=2Ecom> wrote:
->Fix the spelling of 'bellow' to 'below' in the PM API section=2E
->
->Signed-off-by: Yuhong Cheng <ceohunk@gmail=2Ecom>
-
-Acked-by: Randy Dunlap <rdunlap@infradead=2Eorg>
-Thanks=2E
-
->---
-> Documentation/driver-api/pin-control=2Erst | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/Documentation/driver-api/pin-control=2Erst b/Documentation/d=
-river-api/pin-control=2Erst
->index 1f585ecca=2E=2E80106e44a 100644
->--- a/Documentation/driver-api/pin-control=2Erst
->+++ b/Documentation/driver-api/pin-control=2Erst
->@@ -1175,7 +1175,7 @@ Possible standard state names are: "default", "init=
-", "sleep" and "idle"=2E
->   selected after the driver probe=2E
->=20
-> - the ``sleep`` and ``idle`` states are for power management and can onl=
-y
->-  be selected with the PM API bellow=2E
->+  be selected with the PM API below=2E
->=20
-> PM interfaces
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+X-Rspamd-Queue-Id: AE8C770B680
 
 
-~Randy
+On Thu, 07 May 2026 22:34:06 -0700, Fenglin Wu wrote:
+> Add compatible string for pm8010 GPIO in the binding and driver. Also
+> add GPIO device nodes in the existing pm8010*.dtsi files.
+> 
+> 
+
+Applied, thanks!
+
+[3/3] arm64: dts: qcom: Add gpio device node for pm8010
+      commit: 9f41cb88adfe769a87762eff1a7d0d8a2df42560
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
