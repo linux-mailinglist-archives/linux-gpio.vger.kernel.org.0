@@ -1,224 +1,234 @@
-Return-Path: <linux-gpio+bounces-39531-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39532-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HilgO9fSS2q+awEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39531-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 18:07:51 +0200
+	id PhriJZ7vS2oodQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39532-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 20:10:38 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E13D71305B
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 18:07:51 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2C6471451F
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 20:10:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linaro.org header.s=google header.b="Z+/eLfFN";
-	dmarc=pass (policy=none) header.from=linaro.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39531-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39531-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=T45CDG2O;
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39532-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39532-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DCC39302000C
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 15:58:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0101C318D3B2
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 16:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FB0430CF9;
-	Mon,  6 Jul 2026 15:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDA673FE644;
+	Mon,  6 Jul 2026 16:03:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012062.outbound.protection.outlook.com [52.101.66.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0D742F6EF
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2026 15:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CF9378828;
+	Mon,  6 Jul 2026 16:03:00 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783353481; cv=pass; b=GQ12QxodXg9EeICjOxXMu9psMEy3cPc5yExKpLGkwy/5XsSDb1d8GIIx04viKlzOJa042KZT4E3PsOU3qyefZwzCKK/mcAd5Pt58tqiR9mgzvbyj3hdvqP90Tbq4QDpIzeSAz6Pu5oplBhbeHeYmHZsMcEKdbv4yEe+pBpGlIGA=
+	t=1783353783; cv=fail; b=qOsbdiqC7SBKuvwdLMRrKd79SdU03FW7KjEopTEV7crcPX+ECD3vLzpt0V0MoKjSP/7Slq1xCPqhkntoGhrIRcPS6lRxNR0hn7rDi0c3THsExjVxQ8ocyjZm3r83fFaCEAkUAx8+bfHB1olSNWOZmi26re5U8lJZTEABpKrKkow=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783353481; c=relaxed/simple;
-	bh=gCs9HokUb+6ZMGzRlYcfJL9jBr5oqoU0ENUXdBhbWys=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UoxfwRCADJwTwsSx9D8VPEir9A3ZzjUjQozN9JHZdEMyYVXM4W+9deCEoXXOSnMjg+RlSFpLtmQs2Iq/H0pPJFcluGNM4idDMe19VNqKems4o3FqzvteHfU+dctXz5X8+xZWtXij2LDsjTqtvjEtSpM8uUt5IqUnVAEay9Ol1u4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z+/eLfFN; arc=pass smtp.client-ip=209.85.208.47
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6983f20a8bfso5360820a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 08:57:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783353478; cv=none;
-        d=google.com; s=arc-20260327;
-        b=k/q7F5wfBBsYEFrOuQo4/4NSxqxKtgxJl3iHGe8wPagGHPG5r2GlFB4OlydGH0rfO0
-         JY+P0pRddn9oeW/LwLSNORbKZZfeQR496fY1LMuoIe9RWDeKs2D0wS71JsWAExtd60Es
-         QpRmTCHiCSQLEcLMv7IuCZHiwrg3YgwfEQ8iLUW/hEYEGBLqtsedHI/Vq+vyPGGF2cHj
-         w4czJHbSKh0NBj5DEThixekTkL4x2nNsIFWUkW6H6hbt8UQxXvUFVu5k6wF/VckBxqnh
-         +wSQDG+zlpiWIznFWHZVs73wA2CcN+4K66+fnuEiov0xXWuJI646JX3nEgVXSmSXZ2rq
-         RlOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=lGxnHQcUvM+Wk9iuDAhV9iKJOnzCJXCRMoquKntthQc=;
-        fh=g6pZh81ixD3tOJQaQbdPBHG/TdDKrYNrlFINxrZpbt8=;
-        b=ezSlOUKbfzU4f9INMVTO722qospbBrm2GjwvTFZwj/ueHWA0Qf+X62F1zEp+ZU2jDV
-         EnLvFtvtpVWeEW2oFjP31tb9z3fhCn13q7U/zdi3PvGa50nq9D5Oa6PfS7QiqEhq8VSS
-         ax8QihOE/JXQ8JRJUMuHb1fxWLxSUSywATtBBflg7SSgEpTyi+TgQfCUKBZOxEChx65l
-         cGDAFRmWTF8eVLLyLp4lEqDe9CKZ6qJgGaAUkTnCLmYyelL4nmSA+LcKpATSRT1rvc/h
-         9umRd4Ev15T+Ksdwjewdrzaqkl4NQLoMkFiLjbHcJ7MkYzPnsKhyEVj2jmubzVTUfZue
-         FPVg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1783353478; x=1783958278; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lGxnHQcUvM+Wk9iuDAhV9iKJOnzCJXCRMoquKntthQc=;
-        b=Z+/eLfFN6xCQ/JXzVDa72FWOBSmvZ2SHuV4SdsDbvXjEyKc7QtkRbACuGnlZmMG1kS
-         21xIPFkDIo19WZWh4MCGa4sk2CXpayXD+H7uysfPymrkR11lVhaYQsy9vLo9bLKb8A6Y
-         J7RgKGvrNJf78fC8qhM7hy4ya+8hxs5TsxX7lhtYNglg6SzH2zpVinycyfn84YPIu6H5
-         s0TrKrmW0KzxtTjJuha8xi0nxCtR5aqldd/QyCQfIfdFotfXtR3TKSAdS6pRs9vAXOZm
-         d8f1EjuuZdwgNaLvS6tH4uHhS9ttCCosKo2FD8YrHuH4jO28GtDw3mVpSPdp8lR97Dso
-         z2ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783353478; x=1783958278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lGxnHQcUvM+Wk9iuDAhV9iKJOnzCJXCRMoquKntthQc=;
-        b=SAvbAh39/MZzVHltCfh/6T27TxMnZA7OB1ZoqOc02esKUGmA+lwnmfFS0rl5woMazu
-         qTG4I8Su5bY8gyB9FX1nKXTpZxgh6XQR5LeznoToEXEN6nTiuRmrY6vs+jhxjxtt6ndL
-         aWFP1Jz2YTWuw4KwKMDYzkl5x76RhWakmD75cSqstOnkQJ9OWmT34JK2Ttxs11aUwxDr
-         U2DhqejIb25rMES5BXLa6nkcKFajodgVAaBKQISksbhL4cARHMcxj7j3eJthKu8KRPmW
-         rmYxVEpBpEEwfEwTCvoGoJEQitU5CohPmwvVCUp9bM1VKTg3Qjto5x61Epn37saEdksk
-         PRkg==
-X-Forwarded-Encrypted: i=1; AHgh+Roq4RJAwH12P09VAV8sYsiUtb1ns70L+6Cy6zlGy53oy+bI0P/RxNN6X5SGJ5yoNaOKF65UvAyeIqYD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhFAsdbi4ayzimVqWVJYvkBwY+9H39vdKoM4zIeZrYCuGddwjI
-	+/e0FFwTcVcsSwHmTtSQm2bKXFnCzi0G/6N0nTt6QT6UJLGHXZ2EqyUk8ziTVWOOCicJOfPjxPh
-	UkvTQzm1Nh4uTyB0TJSeGnlYaOVHG2VobtaPc2o9I8w==
-X-Gm-Gg: AfdE7clJIoY58p0CcquGRK2MM/nl4dZeTD7RcXOW3MpInvrXCeBinZkPGp6Jf8Jywiv
-	8fa0TdDoRUXFLQYLuQEozburj+tO2TLcVSrSasC9eBclSQJ0qm7TBXxM/JMlWKVjgXcPmt4GrHp
-	/4NlmSoNS1zs30kjI2Bz25LPQ/VNIrWyOFcov+nliSDXexv5OfOQJF5ihZXj3M/aLw2qF/i+of2
-	1LQV0rfCCqB1xRXaERAh1tWm3izqcMU4y7KGJ/H7CWRHABrmD0zWiyIS+Hr4HO16acCQyH9pFjt
-	3K5K4+zGAXs+x7QVqG/YFgWoGNhJ
-X-Received: by 2002:a17:906:3ce:b0:c12:992b:16d4 with SMTP id
- a640c23a62f3a-c15a68cf56fmr47982566b.41.1783353478105; Mon, 06 Jul 2026
- 08:57:58 -0700 (PDT)
+	s=arc-20240116; t=1783353783; c=relaxed/simple;
+	bh=YuWi21sTKDpUyLaH5OWVuHGNpSvgirXmEHPkWTrmNDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dIZskUvTphNAW8+kd26jcxulEepr0Ym3Wu0NO+QwMTB7eXAZX0jDAhdyLT+EOVozzjRqVY7AGCzy2wlebG5bdYADNHkFRuU/pViJNx46Xjnc/KJanKUhbkQBGnP5+mQ88aSiv4GgKITQ7nqkw2V0AZPR8Cnjwymh4v3pAJ81FFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=T45CDG2O; arc=fail smtp.client-ip=52.101.66.62
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rIllTXcPFX/ccQt776M6bRaSnGnsd1yTg8XT6btYmNlH50QghCShCUaugYT1TlXnrhjWo+BFD56hIe/7Wk0ObAM8aeDHS7PZ2FHDudZoO7sKk8PHHvVz0f1DTrUMg2QLtYAKOj8UBXbLTEtxUh3k6lJfGqFOqabKwXUwuRmOKWi82O31BLvpWE3CjhnV8sQDTPtOUs/2y/7pHFgl6yWI8LdZRuglXMe8eeQzeDVKLhgux/xYmx8XQ0IgyAotTo7byQu8i9YvIt7LWuZu7HEdW127a4tvc0q9VB9LRnotSF5RfpLVV0ZV3afTLUFBWWSJU96Rd3Qr2VjDwlF3gfUWDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vZ0mEzOD2mXgFU+AtZV63450tePvHjwEooqg73zOlcg=;
+ b=jgNL9qz40Gjc6UyJl7Dpab6LtBz0xeJlVNsDAGefiKfKyWAgoVTkXh5+yMfGUqHegG+lMPTmwopmzyZ/e6C9Zke3x8kZKN/IjtzoO5cZmE3x+1+cl7ErK2dMoWrg4OeZaS/G+fNKofLdTq/M2gGrBIGUsb+SSTOC6sOAIlVxv3kJW9TkTsC70YEhhGWQxqqDWnd/hu3wWyse0IpQPUbe+RVu/VkVBpRI6uFJr/th3zuX0R4M6NfsR0fge1IBWfl5PuvrBYQVQ80ZFNeor5SMccEdT/Qn6JWx5Lq3gQIusKariT7EibZS2yqLsRiS2ZbY3JxP/LB6m4wthZ2H5mTSUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vZ0mEzOD2mXgFU+AtZV63450tePvHjwEooqg73zOlcg=;
+ b=T45CDG2OeRdu9/XTmBXPGLr/CPOxFeNpkII8LEiw95+inspPOti5dy6nIJlID3f8FJuo+GoDERvbEeqBedJ1Tb67bpUEzrOdPhEwryeOZhh6W0Bi36fH/QGfGJlnORGanuhATiYxffWDQudvR/ccLrfdNc8IxyI/R97hHZwB3gIfnEacx9gcIE1W9p/8qSlgj1Rcd85ycau4gk8ecbTL4ISwlKDJs55WDBjRZO90FfSAidUHu0PdSjS4CZx/daVDk+SbfrZ/SoocV8gX+YXF+9sZrxP3SD37hBlx8raWrlS1x+gUUnO5L1Bw8JGTAjDhb5HayzV5UD8+ybXnxxZVjw==
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by MI3PR04MB12634.eurprd04.prod.outlook.com (2603:10a6:290:81::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
+ 2026 16:02:56 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Mon, 6 Jul 2026
+ 16:02:56 +0000
+From: Frank.Li@oss.nxp.com
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Lee Jones <lee@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+Cc: Frank Li <Frank.Li@nxp.com>,
+	Alberto Ruiz <aruizrui@redhat.com>,
+	Christophe Lizzi <clizzi@redhat.com>,
+	devicetree@vger.kernel.org,
+	Enric Balletbo <eballetb@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: (subset) [PATCH v12 0/6] gpio: siul2-s32g2: add initial GPIO driver
+Date: Mon,  6 Jul 2026 12:02:49 -0400
+Message-ID: <178335371557.1392931.14354994026196868913.b4-ty@b4>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260630125403.546375-1-khristineandreea.barbulescu@oss.nxp.com>
+References: <20260630125403.546375-1-khristineandreea.barbulescu@oss.nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PH7P220CA0007.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:326::13) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260625155432.815185-1-shenwei.wang@oss.nxp.com> <PAXPR04MB91855056638F0028BCC5F9EF89F12@PAXPR04MB9185.eurprd04.prod.outlook.com>
-In-Reply-To: <PAXPR04MB91855056638F0028BCC5F9EF89F12@PAXPR04MB9185.eurprd04.prod.outlook.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Mon, 6 Jul 2026 09:57:47 -0600
-X-Gm-Features: AVVi8CfCK8RZVsOnom89zz62dC_eh8WB0dnPwnnTYPsAfwJakdAft3ffWaiSkNg
-Message-ID: <CANLsYkxmf=QfNUe=BLrrP7kBtZKq2Z1BkQDLnzmcQsW-kYzTPQ@mail.gmail.com>
-Subject: Re: [PATCH v14 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
-To: "Shenwei Wang (OSS)" <shenwei.wang@oss.nxp.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Shuah Khan <skhan@linuxfoundation.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Shenwei Wang <shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, 
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, 
-	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>, "b-padhi@ti.com" <b-padhi@ti.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|MI3PR04MB12634:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31fd6bbb-3596-4ffb-0d4e-08dedb780af3
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|7416014|1800799024|366016|376014|19092799006|23010399003|11063799006|56012099006|22082099003|18002099003|921020;
+X-Microsoft-Antispam-Message-Info:
+ bjaWjv8IOUcXrk0Su9izWm3JN3wDz/Ye8ceL7A5BFyZkTIKmmw62/6UTufn+189JWewLj8xTBmbpRDGiBSyJgt2JDf2K8JwotWKeB7h6RVtMbf3rO9sk1rIUw8RP4h+WbcL1YAc9VuxPosRNBr8Mj6txAB9ZUTAGX5uIRC9BkhGw7vWDONrNtZCSVupc1yTqXH0B487R6UZSWq+4Im1eQeAEjrdsR4YHfVI8LckfuwGLmErHJtyCbE0w8mSi4b65tRTpfmJ55vjGSVZl+qvqIstWOuelY4BWlOhGZExc5nzaFaKp3SSCz7JpK2+Q/Q4FWVAs8j94BgtBinFW9xz4LyrF20xwPZPR6rp6aVvBcwxyTL7Q0W8u1HXk8fiQNOV/99KETyF/8RSg/PjlV84cpddTIF/HgaTzoMLnNjpMKCSp2cUD6lE4tNF+eA48LSpgS8GFGnho0xg/XO92om1BfaUR4vMnkeViBb1UTHt6laBQ+tzaWeaRZod5xyoeKgS7pRnie7Lh8uCuzcbmFZOzZc6oeXU5CSWgwFEYXyswBHKVIytljcI2olpq7tMnlFo2WYlgezlZSE2U5NwCRR9MDN+WvT8N1Km2qK7CWBQCnpay488RO4NGyQV5hp2oaPuQDfApS1orsX6KKdwbYjXpGXCCiT03FY2NPpVKHogMqbgacRZXPxSsoUBpncb3M/JxR18eLJzKGgw1vUZGqZXdeg==
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(19092799006)(23010399003)(11063799006)(56012099006)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?NTN6b2tIY2JVMVJrYkxIL2U2WVpLWVJhMlZRcXZCRDB5cEpmM2F0c1lVTGIw?=
+ =?utf-8?B?NTM5TytBd3FNL0JwbmZ5VUNJNnAxaWZyZDdsM0ZtY3BxdkpNU09iKytNQlRX?=
+ =?utf-8?B?ZWs5QWpRRkxvZXZIa241QUduNEVDcThWUlJWeVNJaDZpZ296MUtZaHpUc2FP?=
+ =?utf-8?B?RDlNblBIcms3cm5UMTE2UFhJWUY3czd4SVhqRk5qYzJQemtvbDJoeGdZNm9G?=
+ =?utf-8?B?ZmNNM1FiK2xkamVXOFJ0VmdqTHlrRXAwNEwzVnBVSDZ6d2dPN3BnRFdISEZt?=
+ =?utf-8?B?Y0N1YjZ6WlFhUHlRamFFNXMwRm8vZyt0S1B4NStqcG83YVpqZzR3N3piNUNV?=
+ =?utf-8?B?MTJwLzA5ZVNha1dXWnpsazNEQThvcjV3WjJBU0YwK1R4cC9RT1c5LzdPWTJj?=
+ =?utf-8?B?UndWYVM4dzR2VUVDR2FvMFp2V3YyYmdiZ2ZyTFVmd1k1SXErWUNUa2RKQXNw?=
+ =?utf-8?B?M1RKMVFkUUlqeUY2bktjWnBuTlk3K0pBWVJFSkwzMm92cWtEdkoveXNKYzZI?=
+ =?utf-8?B?ZGExVytBRzVnQ1Q3S0FJWUZ5emd0aTlWbEpGempRUG5YYjNVRDNVYU9URW5Z?=
+ =?utf-8?B?aGs1VGVXUUtzZ3ZPTXorazVmblp3TWx0MlNWamt3QlNNd2l1aytjdmdEZ0ZY?=
+ =?utf-8?B?TmkvaHJGR2F1WlRXZ3dzVWxSYzFNYkh3bjUrWE41Y1pJd2M5QTdZbFFldVhU?=
+ =?utf-8?B?MU13R1liUFpoa0NCY1FvYUZpZjFjOE0zZ2FTWWswcVpoSXhUU054ZWx5cmIr?=
+ =?utf-8?B?dXRsaFp3dE5VcVA1VEF2T09ieHFpYTR6UjZ2WnZnUzJjZjQ3anNBUElGb1g2?=
+ =?utf-8?B?eVJMWWNudFp4RE5STHZCdXJtUGFBOWw5YXNDVCtVVS9EVXkvclNwVDNRUW0w?=
+ =?utf-8?B?THI3cmp0RU5kOUMrTTdTTVJKbys0endLTFQxY3BMeHFUdWhXZVI3d3BETkpy?=
+ =?utf-8?B?NHJLaWw5K1krNjNmU001VUkrWUZhRXEvRktiMTV1MkFFYmtBUDJRd3NSVE9a?=
+ =?utf-8?B?a2V3TnkrVjJWUEJZOTQ0WmlLdlBTaXNId2xPR3FxajgvV3N1Lzc1ZkkxNEUr?=
+ =?utf-8?B?Q3NZL1c2dlJQZjN3RGtMM1pONWJzeSt2aWFxZHFxaE1mY2pMQnlyYytGRWov?=
+ =?utf-8?B?MVBaeE1CT2FlR21HV1JrK1VpOTBzQjVuekNURkZkejQrUEdJazFIWUM0WTJH?=
+ =?utf-8?B?NHRkQ1UwT0dvTTIxNlN3WDdsM1N2WVlieFc2L1FFS2VJdVFMdjhvbFRkQzZT?=
+ =?utf-8?B?bGowV09CN0tCZXIxYzRmczBSMjhqaE5FK05CNFluWVpDVkZJd0RmUFVjTkhM?=
+ =?utf-8?B?TWtnYUxTdlBhR09lSlMyQjJIbHdlSkdCWENQVnR6ejlKQ1hhYUV3WVRrREVj?=
+ =?utf-8?B?azU2OW14eXpBd2NZOG9PYURpcURLcnNacXJ5MDNtSEdBNFhGSlFkQkZ0VGxv?=
+ =?utf-8?B?QTRHTkU4OXlBSXkyZWsrbzlId3lBTUxZVjg3U2kwZTdnYUxPVmVvZmRMbWM2?=
+ =?utf-8?B?UUZySVRqTmhuSlZyN2phWmpPcDZ5SmhFdTlBSFQwVjduR1VINko3bVFVUWV5?=
+ =?utf-8?B?ZkpVK1JDdmFBbHFGekNsUk8wdFd1SmtRRExtTENVUXQwdWtoWm1jSXpOV2Z4?=
+ =?utf-8?B?VE9mWnp0cjlXY3F4SWhJZ0k4cXZtN1ZKTmN0eE9HbWxoU2gxMThRWEk0emJp?=
+ =?utf-8?B?WTM3UVBoRzd5ZWJhRS9JRHhXM3BlVGZ2Mk9wUm9mcy8zcCsxaW4zeUpVanQx?=
+ =?utf-8?B?NnltZ3dlSVk2YW5BL0wwMHNrQjZXNjV6NjNLMFJSN2c2K00xay9Dd2xiMExP?=
+ =?utf-8?B?Q1hsRkRId1p3SHY2Wk1zWjdqYTlubS9JWnZVK1krbkV3Wk0vT2JXVDZiaWVt?=
+ =?utf-8?B?emY1SmxSR2R0UEJyM2MrR0dZMi9aaUdJa3Y5aXdLeEpqSmFlUkFNSHZ5QU5v?=
+ =?utf-8?B?OUhqYThCQU1Fd2VrUFlZL3k1YlREU3daWmxXbDE5RFdJK2dCcXl6UCtIRGFT?=
+ =?utf-8?B?VFJzenVyYlBXK0RpYnpPb0FqSFNaaWt1MmF5cEpuSHlJeDZ4NzdPWmRaRnR1?=
+ =?utf-8?B?UFhORlFTanpTNjkyalhORHVnOTdJZitpMGlMbktKSUpDN3Vzb1hPcUZSK0pp?=
+ =?utf-8?B?a3JsZ0xORDNwQ2FKSzVFQkhOQ2s4Ly9ZaVlwY2xPOFliKzNWUkFCa29BNWtP?=
+ =?utf-8?B?d29WN2VYZW5kSDVmb1o2Zk40amZRcUErbzIyR3BvZCtoZGxxY1FvakREY3VU?=
+ =?utf-8?B?aDNTdkhZaWlzek8yZHpLMk9aeVRwTjZhNUZhMUw4UldUb2szV3RVOUNRK002?=
+ =?utf-8?B?ekpXVEQydyt5SlJ4OVNwUkFvZzhZNGZmZUtCOG95OWNIQzdkYXN0VU03TWRs?=
+ =?utf-8?Q?P0VSmb0YEAgmSV2CKVD74SoEWKhN39E7WPGfQ?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31fd6bbb-3596-4ffb-0d4e-08dedb780af3
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 16:02:56.4263
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RBFdFppkrECkmnFDZfJEOSe3bM86w5wUtEeju7qX5R4IvzO+AKDchmbwkIDuTPf03KRA9gF3HQih02nPZ5z9ww3rrzTloDJi3ZlDUva6gN2hF1DakjE8Trn56Z2alKv4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MI3PR04MB12634
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [2.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39531-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@bgdev.pl,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:chester62515@gmail.com,m:mbrugger@suse.com,m:ghennadi.procopciuc@nxp.com,m:larisa.grigore@nxp.com,m:lee@kernel.org,m:shawnguo@kernel.org,m:s.hauer@pengutronix.de,m:festevam@gmail.com,m:aisheng.dong@nxp.com,m:ping.bai@nxp.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:srini@kernel.org,m:khristineandreea.barbulescu@oss.nxp.com,m:Frank.Li@nxp.com,m:aruizrui@redhat.com,m:clizzi@redhat.com,m:devicetree@vger.kernel.org,m:eballetb@redhat.com,m:echanude@redhat.com,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:s32@nxp.com,m:kernel@pengutronix.de,m:vincent.guittot@linaro.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FORGED_RECIPIENTS(0.00)[m:shenwei.wang@oss.nxp.com,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:andersson@kernel.org,m:frank.li@nxp.com,m:s.hauer@pengutronix.de,m:skhan@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kernel@pengutronix.de,m:festevam@gmail.com,m:shenwei.wang@nxp.com,m:peng.fan@nxp.com,m:devicetree@vger.kernel.org,m:linux-remoteproc@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-imx@nxp.com,m:arnaud.pouliquen@foss.st.com,m:b-padhi@ti.com,m:andrew@lunn.ch,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	FREEMAIL_TO(0.00)[kernel.org,bgdev.pl,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,oss.nxp.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[mathieu.poirier@linaro.org,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,lwn.net,nxp.com,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,foss.st.com,ti.com,lunn.ch];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mathieu.poirier@linaro.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[linaro.org:+];
+	TAGGED_FROM(0.00)[bounces-39532-lists,linux-gpio=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[Frank.Li@oss.nxp.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NO_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,NXP1.onmicrosoft.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.nxp.com:from_mime,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8E13D71305B
+X-Rspamd-Queue-Id: F2C6471451F
 
-On Mon, 6 Jul 2026 at 09:40, Shenwei Wang (OSS)
-<shenwei.wang@oss.nxp.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Shenwei Wang (OSS)
-> > Sent: Thursday, June 25, 2026 10:55 AM
-> > To: Linus Walleij <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel=
-.org>;
-> > Jonathan Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysz=
-tof
-> > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Bjo=
-rn
-> > Andersson <andersson@kernel.org>; Mathieu Poirier
-> > <mathieu.poirier@linaro.org>; Frank Li <frank.li@nxp.com>; Sascha Hauer
-> > <s.hauer@pengutronix.de>
-> > Cc: Shuah Khan <skhan@linuxfoundation.org>; linux-gpio@vger.kernel.org;=
- linux-
-> > doc@vger.kernel.org; linux-kernel@vger.kernel.org; Pengutronix Kernel T=
-eam
-> > <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>; Shenwei
-> > Wang <shenwei.wang@nxp.com>; Peng Fan <peng.fan@nxp.com>;
-> > devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
-> > imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org; dl-linux-imx=
- <linux-
-> > imx@nxp.com>; Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>; b-
-> > padhi@ti.com; Andrew Lunn <andrew@lunn.ch>
-> > Subject: [PATCH v14 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
-> >
-> > From: Shenwei Wang <shenwei.wang@nxp.com>
-> >
-> > Support the remote devices on the remote processor via the RPMSG bus on=
- i.MX
-> > platform.
-> >
-> > Changes in v14:
-> >  - Update gpio-rpmsg.rst per Mathieu=E2=80=99s feedback.
->
-> Hi Mathieu,
->
-> Could you please let me know if you have any further comments on this ver=
-sion?
+From: Frank Li <Frank.Li@nxp.com>
 
-I intend to review your patches but other people's work is ahead of yours.
 
->
-> Thanks,
-> Shenwei
->
-> >  - Align the rpmsg-gpio driver with the revised gpio-rpmsg.rst.
-> >  - Modify rpmsg-core to enable prefix-based matching of RPMSG device ID=
-s.
-> >
-> > Changes in v13:
-> >  - drop the support for legacy NXP firmware.
-> >  - remove the fixed_up hooks from the rpmsg gpio driver.
-> >  - code cleanup.
-> >
->
+On Tue, 30 Jun 2026 14:53:57 +0200, Khristine Andreea Barbulescu wrote:
+> This patch series adds support for basic GPIO
+> operations using gpio-regmap.
+> 
+> There are two SIUL2 hardware modules: SIUL2_0 and SIUL2_1.
+> However, this driver exports both as a single GPIO driver.
+> This is because the interrupt registers are located only
+> in SIUL2_1, even for GPIOs that are part of SIUL2_0.
+> 
+> [...]
+
+Applied, thanks!
+
+[6/6] arm64: dts: s32g: describe GPIO and EIRQ resources in SIUL2 pinctrl node
+      commit: 5e7e00f811fb1808352a22d18e20aa8026c6d73c
+
+Best regards,
+-- 
+Frank Li <Frank.Li@nxp.com>
 
