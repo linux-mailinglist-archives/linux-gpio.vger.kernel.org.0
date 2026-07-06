@@ -1,203 +1,297 @@
-Return-Path: <linux-gpio+bounces-39492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VSBZHsxyS2p1RgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39492-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:18:04 +0200
+	id QFpgIMZ6S2qBSAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39493-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:52:06 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6865570E866
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:18:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB44E70ECAA
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:52:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=GuwEkIMW;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=SoGkL6fo;
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39492-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39492-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=gW1AZif3;
+	dmarc=pass (policy=reject) header.from=bootlin.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39493-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39493-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DF2D6308FFB1
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 08:49:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 24FE43056FDE
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 08:53:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 386014252D2;
-	Mon,  6 Jul 2026 08:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5565247ECF3;
+	Mon,  6 Jul 2026 08:48:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9E3378D7F
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2026 08:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DE44189D5
+	for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2026 08:48:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783327640; cv=none; b=aDyO7y71NtIEw2fMYcBawyhlhfJs3npAKwFnxzho/dyslq3dh1ml9qn1/7n+riy3VwhhYGcZoRVJFxxtZcMWl+ThSoKoACBmc0zKu0QtLXISofOLp2ty348u5BRgrqjMmW8xQwVIXsYGjAxiWysVW7G2xnLkhPUpdE4/PYqoKIQ=
+	t=1783327733; cv=none; b=dP7UxUhclsB0u7uFRxinxkPi4fs2nfnKVeTcaIjiRhtLr6CP1bCKZDzBfck5YuisDNllAuXT5cCxlW3LV0VKsitZU1E/y6r7gNsGKbaV9lUeiyuxXl/k/gUonl6a1jGTOD7F//1k2ucq9TSogoTAxLNtjpI42o8XV0eFo3FMiEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783327640; c=relaxed/simple;
-	bh=kyla1w/oc3Bz/mSY5pKrdMFoOztHPoBcl7c+XrrRF8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ks+vlojS3bWSVlyAr+Jyvq0+rTBnUfnF33m75hp0HWvRdUwJq1+qa/va6CQ7vw/y3LtEqWuB5Ao7JVtfv1ZVx8W09shOO9jJEDJ9clWCWz/D/6cZC97JJ+2kalzgj9oi+vBm3QoWHJzbdY03d6kpjGUCRtra9Nbt32m6qy9t3FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GuwEkIMW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SoGkL6fo; arc=none smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6668N2b04072465
-	for <linux-gpio@vger.kernel.org>; Mon, 6 Jul 2026 08:47:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tkYP3OC/LGLNNPp1OzKbhDNNQrn6HqNLBzqQQFjefnM=; b=GuwEkIMWoCxx6IrM
-	gQMH14bZ/dcpMdqYgaQjGjp08xg3tRLbTAldWqg5fQcJSY/z9j2DhYanw6ntJv+n
-	yNlj6mrFIMaVBkE1q6mazb82x+40Ry2JdQD1lUUfojbeMoNUo0fRrfAsg3xvwNmo
-	icFVM/zgmpteKR7xNccBENX2GDYYbH6jvCulM9VGFPa92wa6AHC06bwZ1bVFLDeA
-	dkimCTckYfOZVIfqmefKqQfnoNclEcToiSXHb2ADtLSlcNC2v0185Budb2E1FLUy
-	MMJxQshZOdsXfhuilXAz20QmXm6RyObpANjgdSmsqc7wiQy7jkAQT2fT/oni6fWm
-	4I/ZYQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f88t8836q-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 08:47:11 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-92e820609d9so195219585a.2
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 01:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783327631; x=1783932431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkYP3OC/LGLNNPp1OzKbhDNNQrn6HqNLBzqQQFjefnM=;
-        b=SoGkL6fo3lmNTKqq7xdTUBE09JYqGkqq3+J+TM5vLvy8HCfNR0+wA1xevvXJvBRXNp
-         vUC4EsRUB0ENlAscSMUESS2ncK89BWblR8dZQVQIP3zRgyuHn0jKguFRge8HhwJEzbFl
-         SJ3rf+wiymrQ7HQ6EcW4X8hOuro4Vcp56cEZYQ62GbjvPcl8dzMWKKGcEU1O/VxtHMRF
-         X7LF+FzNSdDZQn6lpnhrVkTtQb3iw8eUfphkpFlSTtbeWLTEI/RMfEC07JW/slW85pjg
-         6jZdGe4b+ePM8O1Mp++b8BAgyYoj5tR9HxpeNe9yoopo3R415k+3J5zl7yDjFGp8cv4t
-         deyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783327631; x=1783932431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tkYP3OC/LGLNNPp1OzKbhDNNQrn6HqNLBzqQQFjefnM=;
-        b=ZtVJTc+5M+bInvSIntxUpdMJWCLSJwetTHUloZm5Qv4v9PSTpEzaizEvyBnTEaEjH1
-         +8kdPpI1kcs0yszRMpfXqrIWHIkZtnIZOGbydO+SZq0YJ0018vPVp7XL4VXjhc7Gln1j
-         SLtsGQ07wkoeOuHKQwh9pzB/kz9nlOzenAVXmkYpBXvAcvOFopbpsBTHAL/ot2WR3Yf4
-         UubyGinGbHyec5azMhW2Qju/v9AGZyVFXPlgjsNC6qJD4E5YTNBSDXgcajbEZRtoxvHJ
-         bdHvvwqOom3mY/Mwytoubbpd+0c8RMwbKtaQWD3RHjO//YIed1YMaKzrvkjdp5OM3jzs
-         X57g==
-X-Gm-Message-State: AOJu0YyyZQUeHQ7NAaV07spPkNQKmL13hGAX5ZpR8NQ+0ioEXqnyQDEy
-	3JoORX4UcdSfSwJ6iv1UQ4ykTmYNe7hROLYWpLlnbB8Tm5riisB1IZURQoRHkpr9ZgsV/CcZfQJ
-	+J+nxlRe1uJu4n/XFodVbj9/5YMh8VvcjOCm8+mx6s4r902qi32q6CUW2Z9q0nM4VR2rTI/mk
-X-Gm-Gg: AfdE7cnphxi15ksUUwQlJpSequQc6omSi+kVPvWRFSmoVXd1dRuwdkLC0WEGTD3b6QN
-	aVysHI8cjLg3V6VGtytMZRKsAslSZBaKH9y43HO8IBnqPNk9P70UrYFVJSgzXp7G5PrBVDte98J
-	MEJAyhF/eht1qv12qPEup8Gt9WFsoAnviuHuutvQQzeGlokBiUUsUDkvq31aoWasDqR1Ipsek8i
-	NAvQsw3GX/Vs8XRSA1/hh/c3BbVkPVF9Czmy7HpMaOA9vjOzw/GPZ+81+oYN2Kr+it6znRq5wIK
-	4qS6Mz4qepbUlSHukMlNq2IRUHGeMJWirSgrOSwrBYl4K06NEgg+zuFxe0CrlkvdZKDOQBvbG2I
-	qGwEnkVxm1NRNTtT1xWaHBW2Dio7YtA5vd5D/mcc=
-X-Received: by 2002:a05:620a:450c:b0:92e:5297:108 with SMTP id af79cd13be357-92e9a3446cemr1315686085a.14.1783327630041;
-        Mon, 06 Jul 2026 01:47:10 -0700 (PDT)
-X-Received: by 2002:a05:620a:450c:b0:92e:5297:108 with SMTP id af79cd13be357-92e9a3446cemr1315684285a.14.1783327629559;
-        Mon, 06 Jul 2026 01:47:09 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:86f0:c42b:ef4c:d3bb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63bf7efsm358170155e9.14.2026.07.06.01.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 01:47:08 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: linux-gpio@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        linusw@kernel.org, brgl@kernel.org, vicencb@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 0/4] gpio: mt7621: address Sashiko complains and other cleanups
-Date: Mon,  6 Jul 2026 10:47:06 +0200
-Message-ID: <178332762342.17485.9754072207529453942.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260626060112.2498324-1-sergio.paracuellos@gmail.com>
-References: <20260626060112.2498324-1-sergio.paracuellos@gmail.com>
+	s=arc-20240116; t=1783327733; c=relaxed/simple;
+	bh=z2oTf9yYxPo6yQtv8mYvhxIjMC9eUcS2nJLqAhDWmuo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=IRbGFCKU+ROD0/Nq2eBwBRrVh6H7j/H/2kuZmjxXpbyoMDmKc5GZk0Cabw67BwRE8R++NCJjAcZf+p1is+KSRnrWRiQ3/5m2s65pgl+tOO3ZAgogCQpWuodySeKn/RXYz0UKCsA03rEcbdiipZ5O9cLtHsxCIvtZkU06EywGg8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gW1AZif3; arc=none smtp.client-ip=185.246.84.56
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 522D11A0E82;
+	Mon,  6 Jul 2026 08:48:39 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 17D68601A2;
+	Mon,  6 Jul 2026 08:48:39 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6922C11BB9D9D;
+	Mon,  6 Jul 2026 10:48:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1783327717; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=4G2+USFAeZTDisSq/eM4nDWS0t6QootkKLNwL7GEI6s=;
+	b=gW1AZif3NdWuwJpcaSREpPyyzuzLVd6yQeWN/RWYlglDm0RwfTJdyVqzGj2HaxYgqGb15r
+	SI5y5Jtp6apxHnFT3jd5CKjLqUDoukQNNZ6T47eGareIAu+Vj0a+MwOm6j17N2t5v+Itsy
+	I6bmUZdZ1Xn4YFbvDRlORuo/quhrnQyqTdRLXtYOMjuuevVQjLX7KR00jqSc/EHkmD812F
+	LkIoPE9qnTCZ7hVcb36epMNvJ35G+b4CplTfizscLw+l9t4n6lh6SkRn5Ohq4SROCD5iVb
+	iphsKW7hpvYrGOOv2tSBXA6qa3bHMKVscFwAojrisvLbZNZaqPgshagL764ZOw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA4NyBTYWx0ZWRfX4GW6eWU/VTQ0
- gGtkNhA3tfaRIW1ivvaq6zRJ3P6SedzXl+7mxasUtewHBS8E98IOOh3ULRoLOkSvaurw1Weu9kI
- SYkfoGq9l+aSu1GaPN5MGibFDbKewBg=
-X-Proofpoint-GUID: NoTpOojjm6wO06on4ZpdFRnWofrqaLuZ
-X-Authority-Analysis: v=2.4 cv=C6zZDwP+ c=1 sm=1 tr=0 ts=6a4b6b8f cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=KLu7tvSqfL87IkgZ-RwA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: NoTpOojjm6wO06on4ZpdFRnWofrqaLuZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA4NyBTYWx0ZWRfX6DXOWLl703si
- rc6ZJyfODOOGoNGVrXpN2eoHtPDwi5H6qXB5F0LnNYMiFqY1ZXdAwibyOI8OBS2yDQdXSYDRd59
- nwh+HhnG/MRu/xYv7ddBBTcIFxk+WSaLblaBD8R1Ja66kHMq9aQCIgyYq3S0ZZ93+x6hXmv+t2C
- MNgNKtXCm8Oayepqsl/AdPXEwRfH5QW1kzx37JUQv5C2Ht1idR2oq1vlTTh/1xfIpzdyZG+ZHMm
- TEW7caLvdemb8P0YL5qwGJyKzE+DxkCqg9wHL/Jx6wyffw/ZXOirTWQ7WuUSsuPfn5wWObSMlxM
- YAQt9gjMdgP+i3X7IkBOX9eqYvWJqbVWpU+T5BZzgeA0xKbszlStfLtVGya6uyIpo/0xtj8opGJ
- u3yWpJ9oslUzmyqPafXKVYCx/4zr0KVx/t1VrrVR9aJvuovT8MlYghwZu7+tHt4bwF+EJcUZ/sV
- kNMP3Cv/WDnt6Jw4NyQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-05_02,2026-07-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 clxscore=1015 spamscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607060087
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 06 Jul 2026 10:48:32 +0200
+Message-Id: <DJRCWXDUGFY8.1AIUFSEBFTG94@bootlin.com>
+Cc: "Qiang Zhao" <qiang.zhao@nxp.com>, "Christophe Leroy (CS GROUP)"
+ <chleroy@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Linus Walleij" <linusw@kernel.org>,
+ "Bartosz Golaszewski" <brgl@kernel.org>, "Madhavan Srinivasan"
+ <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>, "Nicholas
+ Piggin" <npiggin@gmail.com>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 04/12] dt-bindings: soc: fsl: qe: Add support of IRQ in
+ QE GPIO
+From: "Paul Louvel" <paul.louvel@bootlin.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Paul Louvel"
+ <paul.louvel@bootlin.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
+ <20260703-qe-pic-gpios-v1-4-6c3e706e27dc@bootlin.com>
+ <20260706-elfish-cornflower-bullfinch-604e0a@quoll>
+In-Reply-To: <20260706-elfish-cornflower-bullfinch-604e0a@quoll>
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39492-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,kernel.org,gmail.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email,qualcomm.com:dkim];
-	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:sergio.paracuellos@gmail.com,m:bartosz.golaszewski@oss.qualcomm.com,m:linusw@kernel.org,m:brgl@kernel.org,m:vicencb@gmail.com,m:linux-kernel@vger.kernel.org,m:sergioparacuellos@gmail.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39493-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FORGED_SENDER(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:qiang.zhao@nxp.com,m:chleroy@kernel.org,m:tglx@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:linuxppc-dev@lists.ozlabs.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:thomas.petazzoni@bootlin.com,m:krzk@kernel.org,m:paul.louvel@bootlin.com,m:conor@kernel.org,s:lists@lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_CC(0.00)[nxp.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,lists.ozlabs.org,lists.infradead.org,vger.kernel.org,bootlin.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:mid,bootlin.com:from_mime,bootlin.com:url,bootlin.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6865570E866
+X-Rspamd-Queue-Id: CB44E70ECAA
+
+On Mon Jul 6, 2026 at 8:52 AM CEST, Krzysztof Kozlowski wrote:
+> On Fri, Jul 03, 2026 at 03:30:12PM +0200, Paul Louvel wrote:
+>> Some QE GPIO pins have an associated interrupt line in the QE PIC to
+>> signal state changes on the pin.  Add the corresponding
+>> interrupt-controller / nexus properties to the QE GPIO binding.
+>>=20
+>> Because the GPIO controller does not perform any interrupt handling
+>> itself, a nexus node (interrupt-map) is used to map each GPIO line
+>> supporting IRQ to the parent QE PIC interrupt domain.
+>>=20
+>> As the QE PIC can be configured to generate an interrupt on either a
+>> high-to-low transition or any change in signal state, three
+>> interrupt-map entries are needed per GPIO pin that can yield an
+>> interrupt (falling, both, and the "none" case which defaults to both in
+>> QE PIC).  This overhead is necessary because the interrupt-map-pass-thru
+>> property is not part of the DT specification.
+>>=20
+>> The interrupt-map property is optional: it is not required for GPIO
+>> banks that have no interrupt capable GPIO line (e.g. port D on MPC8323),
+>> or when interrupt functionality is not used.
+>>=20
+>> Update the example to show a scenario where each bank supports a
+>> different numbers of IRQs, or no IRQs at all.
+>>=20
+>> Signed-off-by: Paul Louvel <paul.louvel@bootlin.com>
+>> ---
+>>  .../bindings/gpio/fsl,mpc8323-qe-pario-bank.yaml   | 69 +++++++++++++++=
+++++++-
+>>  1 file changed, 66 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario=
+-bank.yaml b/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-ba=
+nk.yaml
+>> index 1af99339ff40..0c849a5698f4 100644
+>> --- a/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.y=
+aml
+>> +++ b/Documentation/devicetree/bindings/gpio/fsl,mpc8323-qe-pario-bank.y=
+aml
+>> @@ -27,6 +27,17 @@ properties:
+>>    "#gpio-cells":
+>>      const: 2
+>> =20
+>> +  "#address-cells":
+>> +    const: 0
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>
+> If this has interrupt-cells, then it is a nexus, thus why isn't this
+> also a "interrupt-controller"?
+
+Because these these banks are not interrupt controllers.
+Interrupts are handled by the QE PIC, and the GPIO controller does not do a=
+ny
+interrupt handling itself.
+In this setup, does it really needs an "interrupt-controller" property?
+
+>
+>> +  interrupt-map:
+>> +    description: |
+>> +      Specifies the mapping of GPIO lines to the parent interrupt contr=
+oller, as the
+>> +      GPIO controller does not do interrupt handling itself.
+>> +
+>>  required:
+>>    - compatible
+>>    - reg
+>> @@ -37,9 +48,61 @@ additionalProperties: false
+>> =20
+>>  examples:
+>>    - |
+>> -    gpio-controller@1400 {
+>> -        compatible =3D "fsl,mpc8360-qe-pario-bank", "fsl,mpc8323-qe-par=
+io-bank";
+>> -        reg =3D <0x1400 0x18>;
+>
+> I don't get why you rewrite existing example instead of adding new one.
+
+I could yes.
+
+>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    pic: interrupt-controller {
+>> +      interrupt-controller;
+>> +      #address-cells =3D <0>;
+>> +      #interrupt-cells =3D <2>;
+>> +    };
+>
+> Drop node, irrelevant.
+>
+>> +
+>> +    gpio-controller@1418 {
+>> +        #gpio-cells =3D <2>;
+>> +        #address-cells =3D <0>;
+>> +        #interrupt-cells =3D <2>;
+>> +        compatible =3D "fsl,mpc8323-qe-pario-bank";
+>> +        reg =3D <0x1418 0x18>;
+>
+> And now you are not following DTS coding style.
+>
+>>          gpio-controller;
+>> +        interrupt-map =3D <
+>> +          7 IRQ_TYPE_EDGE_FALLING  &pic 4 IRQ_TYPE_EDGE_FALLING
+>> +          7 IRQ_TYPE_EDGE_BOTH     &pic 4 IRQ_TYPE_EDGE_BOTH
+>> +          7 0                      &pic 4 IRQ_TYPE_NONE
+>> +
+>> +          9 IRQ_TYPE_EDGE_FALLING  &pic 5 IRQ_TYPE_EDGE_FALLING
+>> +          9 IRQ_TYPE_EDGE_BOTH     &pic 5 IRQ_TYPE_EDGE_BOTH
+>> +          9 0                      &pic 5 IRQ_TYPE_NONE
+>> +
+>> +          25 IRQ_TYPE_EDGE_FALLING &pic 6 IRQ_TYPE_EDGE_FALLING
+>> +          25 IRQ_TYPE_EDGE_BOTH    &pic 6 IRQ_TYPE_EDGE_BOTH
+>> +          25 0                     &pic 6 IRQ_TYPE_NONE
+>> +
+>> +          27 IRQ_TYPE_EDGE_FALLING &pic 7 IRQ_TYPE_EDGE_FALLING
+>> +          27 IRQ_TYPE_EDGE_BOTH    &pic 7 IRQ_TYPE_EDGE_BOTH
+>> +          27 0                     &pic 7 IRQ_TYPE_NONE
+>> +        >;
+>> +    };
+>> +
+>> +    gpio-controller@1430 {
+>>          #gpio-cells =3D <2>;
+>
+> So two new examples? But old one was wrong?
+>
+>> +        #address-cells =3D <0>;
+>> +        #interrupt-cells =3D <2>;
+>> +        compatible =3D "fsl,mpc8323-qe-pario-bank";
+>> +        reg =3D <0x1430 0x18>;
+>> +        gpio-controller;
+>> +        interrupt-map =3D <
+>> +          24 IRQ_TYPE_EDGE_FALLING &pic 8 IRQ_TYPE_EDGE_FALLING
+>> +          24 IRQ_TYPE_EDGE_BOTH    &pic 8 IRQ_TYPE_EDGE_BOTH
+>> +          24 0                     &pic 8 IRQ_TYPE_NONE
+>> +
+>> +          29 IRQ_TYPE_EDGE_FALLING &pic 9 IRQ_TYPE_EDGE_FALLING
+>> +          29 IRQ_TYPE_EDGE_BOTH    &pic 9 IRQ_TYPE_EDGE_BOTH
+>> +          29 0                     &pic 9 IRQ_TYPE_NONE
+>> +        >;
+>> +    };
+>> +
+>> +    gpio-controller@1448 {
+>> +        #gpio-cells =3D <2>;
+>> +        compatible =3D "fsl,mpc8323-qe-pario-bank";
+>
+> Wait, three examples? But isn't this the same as previous one?
+
+I wanted to outline that each bank do not have the same number of GPIO line=
+s
+that support interrupts.
+
+>
+>> +        reg =3D <0x1448 0x18>;
+>> +        gpio-controller;
+>>      };
+>>=20
+>> --=20
+>> 2.55.0
+>>=20
+
+Thanks,
+Paul.
 
 
-On Fri, 26 Jun 2026 08:01:08 +0200, Sergio Paracuellos wrote:
-> This patchset covers some sashiko complains reported at some point when IRQ
-> mapping was being fixed for this driver [0].
-> 
-> I have included 'Fixes' tag and CC to stable for patches 13 since patch 4 is
-> just a cleanup for naming.
-> 
-> Thanks in advance for your time.
-> 
-> [...]
 
-Applied, thanks!
 
-[4/4] gpio: mt7621: unify naming style in driver code
-      https://git.kernel.org/brgl/c/83957567b1589bcaf5fafbc359cc17f79a59ed29
+--=20
+Paul Louvel, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
