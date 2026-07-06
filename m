@@ -1,225 +1,204 @@
-Return-Path: <linux-gpio+bounces-39533-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id MxoPCyfwS2pXdQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39533-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 20:12:55 +0200
+	id Vq00L4jlS2pHcQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:27:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A85E714591
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 20:12:54 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1268713DA3
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:27:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KxMbrcay;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=VJFrGpJJ;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39533-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39533-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B36433278DD1
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 16:05:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 702403013C63
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 17:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 448343F6C4F;
-	Mon,  6 Jul 2026 16:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4FE3806DD;
+	Mon,  6 Jul 2026 17:15:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE3338944D;
-	Mon,  6 Jul 2026 16:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1B137C11E;
+	Mon,  6 Jul 2026 17:15:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783353939; cv=none; b=rG12mWQvf9yi+fh8wY3Af9f1kBpexX0hPkcgT+FdzqP9kC6cVr7SRRCuYWCa0Mhjxr1bsAaOppUfuE4gXnwnV0MEQV2OjxgAc3S2vZOzsvRuuNb7rYxNqtJ5vFZvzOhJML6aDtqK6/lLPJsGhrkfsKcCV/lnUP5rpR94/ZMQxfY=
+	t=1783358103; cv=none; b=C/5e1SBWRv4DhC6sANmdhPKZe9DeGrBUA61uSzqj6FbDUKVwMOxbVS7uKnqaIGXphzIqVK4iDZ/bDhYXgbnMBv9NLGEQNunjYhNhH/VRFvRE15Dsk1QQwoUJxIVdyVIUj40W781vnVDBFFuG6os+2QYKN5kKvCJFyBHbhXF4G0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783353939; c=relaxed/simple;
-	bh=dIml/A0VfO+9OIzbeO2WrUGUbJn9cOOad2jYzsULj7A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TiQv9wYuY/0a3f0+nOytJ1e/ly70wTAdUzj1s1hddaaHQrEGvNI1ASnpnQIyjxRz7H1DWRbUByVQVA3bBIzZwfA0EdJyLc3z9zbQ+0lbra8esP3w8/8eqLMN/yz+Ro49LDDg46l55eNB1UOv8fNAJDMgfVhwsVBy5zu0Ko03KJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxMbrcay; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3397A1F00A3A;
-	Mon,  6 Jul 2026 16:05:34 +0000 (UTC)
+	s=arc-20240116; t=1783358103; c=relaxed/simple;
+	bh=Cyrg0grsaRMPFMVwBK5PCRBknfGqtG3jJSiGJhjJh10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pBvUM7zHwdpaZQe+DCYR2pZRNgHqDdXmT3w1RP2UmBCiK5c7iMuCh5/fcJeptWyI3pCqMpFdEJ4uC9rTEfW5o4BFvXIlMDdlERuL5KkzSCluZSQITmu4rxK09IrAY5NRG2j1tLClnc3wnkHYEKLFV1nFUiq+xOWgT7lhJq3i3Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJFrGpJJ; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C1D1F000E9;
+	Mon,  6 Jul 2026 17:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783353937;
-	bh=j5n8ja+KSkOU2fLkjSwPTg2xbFjC5d2yzlMgQe8icO4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KxMbrcaylBUgT9EdsD5fjCITWko5iY74ZC3bsAcqo1IiBV+EqQ28bEbxCGm5/gYjF
-	 sEzhl0eBnFteAYTt2blXvqraE9I5wvmktayLfFdOYeeuWns0DtdkTgLcZc5zCrWG3D
-	 wb1tw7VSu58afWS/Rtss2bd7RS/A5rnSOIYzvbQA4fTCrjm/kXPKm0tNejlIqn9a3D
-	 guDB2bdkKre4MeFWVj3AzO6AO5NutpNrJg7j57motaKKwm7bccR8w4qPyuKSPiHhnv
-	 J8H0DCf/Exglv4QjYTZsJ8W95YsJ3exn3/h2QUZf8mEGrltyH1IKKNMobxkDs7kVVM
-	 LWoffMVkHUWFQ==
-Message-ID: <49883bf8-1c7d-4708-9d38-07767b6b229e@kernel.org>
-Date: Mon, 6 Jul 2026 18:05:31 +0200
+	s=k20260515; t=1783358101;
+	bh=FLCkRFY/xZawZM4IfpyQEQBqFJQifdjTe2UFwHN+pbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VJFrGpJJi0WdJNBZtw4v4b+k6Zqo9dKSW5u3hd7vNaqe7DRoSA3roX+lo8tzwWPFZ
+	 K1TViY4xZvQQiOF8+PF4HjiGkJfplG5LjYwmIzsFKVRG+XxlGYomGz5Vkwq95amvdx
+	 4zKPi5OQvVVaTlisaZtCHrIUvXLxnkqOzbxAnmv8h9TVZgfseJbA5cDFYpTDEV+ySc
+	 5VBBboakFE94TO9Hs6IKFdMnD6xRpVR7ac94ZnKkZ1pzArVTbiuCwyb/j5aliMrWeY
+	 b7Zsl7te9dxAspf/EMLA7iwGhksS8dopDR+/KyNe1c+kH8K7eK3tQ/NojTG/Iq6BMT
+	 7oMlJvppDzAnQ==
+Date: Mon, 6 Jul 2026 18:14:56 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: phy: motorola,cpcap-usb: add
+ chrg_det interrupt
+Message-ID: <20260706-visitor-calorie-b805ac5af970@spud>
+References: <20260705101105.1798069-1-ivo.g.dimitrov.75@gmail.com>
+ <20260705101105.1798069-2-ivo.g.dimitrov.75@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] dt-binding: ARM: samsung: Add Samsung Exynos8855
-To: Alim Akhtar <alim.akhtar@samsung.com>,
- 'Ivaylo Ivanov' <ivo.ivanov.ivanov1@gmail.com>, peter.griffin@linaro.org,
- robh@kernel.org, conor+dt@kernel.org, linusw@kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- hajun.sung@samsung.com
-References: <20260627171228.2687857-1-alim.akhtar@samsung.com>
- <CGME20260627165406epcas5p1be75af2010edfc57cad0f668a8e3568d@epcas5p1.samsung.com>
- <20260627171228.2687857-2-alim.akhtar@samsung.com>
- <4df9f388-2dc7-47b6-afc0-7a0cc6d15ca3@gmail.com>
- <08ba01dd0cf9$cbe0a4b0$63a1ee10$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <08ba01dd0cf9$cbe0a4b0$63a1ee10$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EHPotJN9Y/7sp6ZZ"
+Content-Disposition: inline
+In-Reply-To: <20260705101105.1798069-2-ivo.g.dimitrov.75@gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-5.26 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:ivo.g.dimitrov.75@gmail.com,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:ivogdimitrov75@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:alim.akhtar@samsung.com,m:ivo.ivanov.ivanov1@gmail.com,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:ivoivanovivanov1@gmail.com,m:conor@kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[samsung.com,gmail.com,linaro.org,kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39533-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39534-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,samsung.com:email,linaro.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[spud:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7A85E714591
+X-Rspamd-Queue-Id: A1268713DA3
 
-On 06/07/2026 05:44, Alim Akhtar wrote:
-> Hi Ivaylo,
-> Thanks for your review. 
-> 
->> -----Original Message-----
->> From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
->> Sent: Monday, July 6, 2026 4:11 AM
->> To: Alim Akhtar <alim.akhtar@samsung.com>; krzk@kernel.org;
->> peter.griffin@linaro.org; robh@kernel.org; conor+dt@kernel.org;
->> linusw@kernel.org
->> Cc: linux-samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-gpio@vger.kernel.org;
->> hajun.sung@samsung.com
->> Subject: Re: [PATCH v3 1/6] dt-binding: ARM: samsung: Add Samsung
->> Exynos8855
->>
->> On 6/27/26 20:12, Alim Akhtar wrote:
->>> Add Samsung Exynos8855 smdk board to documentation
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> ---
->>>  .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
->>> b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
->>> index 753b3ba1b607..273464400477 100644
->>> ---
->>> a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-
->> boards.yam
->>> +++ l
->>> @@ -235,6 +235,12 @@ properties:
->>>                - winlink,e850-96                 # WinLink E850-96
->>>            - const: samsung,exynos850
->>>
->>> +      - description: Exynos8855 based boards
->>> +        items:
->>> +          - enum:
->>> +              - samsung,exynos8855-smdk         # Samsung SMDK
->>> +          - const: samsung,exynos8855
->>
->> Is there any particular reason for using "exynos8855" rather than the
->> commercial name - exynos1580? We've already established using the latter
->> naming scheme as a convention (e.g. exynos3830 -> exynos850, exynos9830 ->
->> exynos990) rather than the development model numbers, so I don't think
->> breaking that will help anyone with the already painful model number confusion.
->>
-> The reason for using Exynos8855 is that it comes from the chip-id register, which is RO register.
-> And in my opinion it has to be chip-id, maintaining two names is confusing (as you also mentioned).
-> Yes, there were couple of deviation but let's come back to the "original" convention (which is to use chip-id).
-> 
-> @ Krzysztof, Peter 
-> Any input on this? 
+--EHPotJN9Y/7sp6ZZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Back in Exynos850 upstreaming, my preference was the chipid value, but I
-agreed for marketing name. Marketing names are tricky, because:
-1. They change,
-2. They might multiply (two or three marketing names for the same die -
-common case in Qualcomm),
+On Sun, Jul 05, 2026 at 01:11:02PM +0300, Ivaylo Dimitrov wrote:
+> The CPCAP USB PHY driver uses the CPCAP charger detection interrupt
+> for DCP detection.
 
-That's why for Samsung SoCs, I rather prefer chipid value. For
-Google/Axis/Tesla the case is different and we should use their naming -
-some engineering name for example.
+This is not currently true, the driver does not look for this interrupt
+at the time of this patch.
 
+> Update the binding and example DTS to use the corresponding
+> "chrg_det" interrupt name.
 
+Sounds to me like this new interrupt is optional, since until now it has
+not been needed? The patch however makes it mandatory. I think your
+driver patch also makes it mandatory, which will break older
+devicetrees.
 
-Best regards,
-Krzysztof
+What makes this ABI break okay?
+
+Thanks,
+Conor.
+
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> ---
+>  .../devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml     | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy=
+=2Eyaml b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+> index 0febd04a61f4..523a8f8480d0 100644
+> --- a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+> @@ -30,6 +30,7 @@ properties:
+>        - description: se1 interrupt
+>        - description: dm interrupt
+>        - description: dp interrupt
+> +      - description: charger detection interrupt
+> =20
+>    interrupt-names:
+>      description: Interrupt names
+> @@ -43,6 +44,7 @@ properties:
+>        - const: se1
+>        - const: dm
+>        - const: dp
+> +      - const: chrg_det
+> =20
+>    io-channels:
+>      description: IIO ADC channels used by the USB PHY
+> @@ -91,10 +93,10 @@ examples:
+>          interrupts-extended =3D <
+>              &cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
+>              &cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
+> -            &cpcap 48 1
+> +            &cpcap 48 1 &cpcap 13 0
+>          >;
+>          interrupt-names =3D "id_ground", "id_float", "se0conn", "vbusvld=
+",
+> -                          "sessvld", "sessend", "se1", "dm", "dp";
+> +                          "sessvld", "sessend", "se1", "dm", "dp", "chrg=
+_det";
+>          io-channels =3D <&cpcap_adc 2>, <&cpcap_adc 7>;
+>          io-channel-names =3D "vbus", "id";
+>          vusb-supply =3D <&vusb>;
+> --=20
+> 2.39.5
+>=20
+
+--EHPotJN9Y/7sp6ZZ
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCakvikAAKCRB4tDGHoIJi
+0v+aAP9LtdSSmr/h68scZGIFlgV6ysH5j3UmXqH1E2gDLiQUNwEA3nVaHeU2gU7A
+6DvEFs8Okg6Y6JMPXLUM2uDUSeiDOwY=
+=kZwB
+-----END PGP SIGNATURE-----
+
+--EHPotJN9Y/7sp6ZZ--
 
