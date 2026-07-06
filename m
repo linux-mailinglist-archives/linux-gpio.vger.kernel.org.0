@@ -1,305 +1,236 @@
-Return-Path: <linux-gpio+bounces-39528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3yTpC63HS2qGaAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39528-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 17:20:13 +0200
+	id tEB6BmvPS2rKagEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39529-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 17:53:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5133A7127DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 17:20:12 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6AD4712D86
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 17:53:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=C61YYZZb;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39528-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39528-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=SLj7S0Sh;
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39529-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39529-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2404431183A7
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 14:46:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DE1D232581A9
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 15:43:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5AF36C9C2;
-	Mon,  6 Jul 2026 14:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD7F3AC0FE;
+	Mon,  6 Jul 2026 15:40:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013019.outbound.protection.outlook.com [40.107.162.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6303624A9
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2026 14:46:06 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783349167; cv=none; b=VphNGVD6PdnwCEXWuRPI6VsVDVK4c2h/2Sdi2r45xbYfnmxF2Kuayqo4DsM94TXA2yv+XHv9DrTueUBQWKqUUabh/EvN5v8E9tfnunKaWlUyNmx/Pq2n32jCSI/Aa5I3wSfuAOmMZqRFBjVEVqyn30uKJoL8tUl56pxqdYu1/28=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783349167; c=relaxed/simple;
-	bh=03JEDD1EY5FShOhPitKzB6awmNO37P408+N+vwTG3uU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=PJfQv9oLX3fssH3nxV9MAG62zaY+2/GBYsk5Hb0/GhK9ARGFuNxha6/QQBqPDKC8a4r6wDwaIwQ+eRA1Rc2VNAcU5JUujHIfiKgOEu5eEb4ibD851Hj9pIUWjCrhe72lLMfDbNR7fDOHGKhJCr581c7HtUjWdNxjlVc5MY+kkYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C61YYZZb; arc=none smtp.client-ip=209.85.214.169
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cc827a68fbso3927775ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 07:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783349165; x=1783953965; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=TKmz61w8Qy4Dv2MzHhCOD3wXFt+43UEUSfOq+MGpvrc=;
-        b=C61YYZZbNAEPQ66UuyCUVyu5lu4flx9SnBqcKZCgkLAF6DJ70e1LN7QfDCdhaSqo6k
-         /s5sps0FNSO/TGSa7bMwVkAeBNJBDMZS6LHZyRfuzJBGOJv0oLmu8sqTZpCl1BRUF3Vi
-         Pvde5c/KAoM2E08vuZeCq7FQWTUNyfzBvcNOkYEM6VJZrWJiJ/HUXQ4hqadx9EQbjSSn
-         1l/em9njzuVuxID51VmGAci5uYThtuvxXJ1NLNWMEBu3caSn9iPm8sVaD+cwyVQLRlU+
-         kX4v+/L0EpqoBDIADt97/TQsEi/n74QS3E11m51XfPqcnXsQsretAjifmRQKru1PNQOl
-         hTMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783349165; x=1783953965;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TKmz61w8Qy4Dv2MzHhCOD3wXFt+43UEUSfOq+MGpvrc=;
-        b=Fu7XlLdAc2QQlh+NXO/T6WUk8tcslhPcHKpnkUKtfGj68egqJNCxCrp6ebvZKmVmHo
-         3X17iZIeGdwIq15lfsyFLlyS5WntYdMYU50w1rXz9xPFQGfIKK9ywimiR3tozQ9v15Nl
-         DeYA3pDkcMo25Qh6vHfmctNL3Y7ObpbB6gdmAbxz7OaJUruxycj+n7kEZ8JbEL/9PHqq
-         gWyP8qEAMC5HMd2Qulfuw4MAsTgf9EKg4RzPOiKkiClkVAczPtCFBxbcdEnGK/SYHBOj
-         n1kQvqRW+i4l/8qcbcltqiG+HBPQFgl54B+kThAIqQ+TC8GkPcSRMKuekiGOmuaKRXIz
-         umlg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp2kwZNv9GAEom4TWgoZva/1hyJdLPDtFzBXeFV99Mc9ffZs8hRCBels5oUlUg/SbelbLMayeAxzwHx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeJDdI5FHaGyArpb+sNH5ceSwHLLzrxEQKKNH35dPE8R9PSDp/
-	FJ7kdCPiihZluTQdwQj6oqrRkLPEgYqCrIdl3ZW9/4eU9SzPRvIN9K2fPn5qrA==
-X-Gm-Gg: AfdE7ckJ1RCq6I6buTUxWU9wsEpZPrejBDKbKfxYjQvZKeemhFWRJcKQFtYM5sprXCW
-	k8EhozM7DZ5BMf8Eya6CDlimuOJ6QqmMDC2lhMVnVdGMmJWDbVebOj/hds9uPuDhjPwll2hQcG3
-	Xx5yVZ0Oew0ZCk9a6VHmSjnfFu+FcyrBenyL6KRMQkEgKkVEbDgj0u1z3mEvnPfYREDpkg8MjEI
-	91nQ0cHBpbM/NXE6CzT6Yp5F9Hq1PeQphIUpSAkEss1Z3rEto+Jme6dOTEAzub/RPk/RtFAzXQG
-	rBT+aVouW501PFqhWOeX+XIK57NV3HcMCLZaNVW0Sh1TH1aHojbiGjq9qjzRiXuYek4HkCRbZL5
-	nk3iTplMEo/ha+uOW8/LoGOPG25pcOvIfVdoXs3fXy2ebtnRuq7hPygauDFDwdRUO5CVPZSba3u
-	zR21O6ZcNmTs6fy2qhzH0nV88=
-X-Received: by 2002:a17:902:cf0d:b0:2c4:397:dd7a with SMTP id d9443c01a7336-2cbb9ebba2emr61601865ad.4.1783349165341;
-        Mon, 06 Jul 2026 07:46:05 -0700 (PDT)
-Received: from smtpclient.apple ([2406:4440:0:105::41:a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad7140a13sm51402605ad.30.2026.07.06.07.46.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jul 2026 07:46:04 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D3D39934A;
+	Mon,  6 Jul 2026 15:40:10 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783352412; cv=fail; b=YuCOdWHoYiGla3ZAd9F0epQYd+3E4QkMY17IDa+i1//0zSM6ANWwVWFMZAbjDxvxNG3Yo2mBxclYcgp3kcgGnCmedrOt9SNQdFDUMt0vjqoukzEMIsuTjCyi5rJ4BowhDtzpBBJRu9SqzQJhERSvOa6FBd+ls7bo5CTQBSX70m8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783352412; c=relaxed/simple;
+	bh=hTWjwgCXxt6hTw08btnLGEppuERjf0VGtYBDsq6fShs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=u9JVpkU/vE3PV+0BTWx/j8vRBm8x0h+aC4doq2XFdjLdS/GJD6Gtsfge4jgLIiLoA9j+feFLD/ow9q5TG+M4WFYeCo3plLgiEnGH73TKDOLyCcZ7ju/egythjzbVICE1wsZWzOXRo+UxgsY8keWpcqwQGhaM7zyKR6glt7BhXBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=SLj7S0Sh; arc=fail smtp.client-ip=40.107.162.19
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AhgZEmCp/652AAAqUPntraD00QkfK8PitJRPIU2emUiTbnQd/MG2YOko8ChSwZU4bnPddLd3UTf9nOI0CnB/FEZF9trxzHr+5EVJpucuKsmb/RlWg+6GHxwF6T33uaDVnLTFdLqO6Y21jWgENe2Iz9eLjPNruaFj//PZ4VrDfcLRKRHQ6WXA95wIT/00w4C2WhCA70Mfrq+MkvHAFVV1U5d4LqkZJMPY7V9MKPF5QO39WXjsNKsp7vD+WuTDtFe8B6ssdg1t9jh2DdRuaq1Dgo6pHSaA4qXtSah5h4HwF39OctMKjk3udl2qqs+cVTdz/42h/hlwJRn+ken92c1udQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hTWjwgCXxt6hTw08btnLGEppuERjf0VGtYBDsq6fShs=;
+ b=wwSyzsJN0qYTNoPMkci/8PAsNR5VScTDh3DNq+LtCyAgpmLQsTvvTEjqMFhuF+1XwmE5t7FAXTP5//MsgKA4rhV4eDxjcm8WsYdiUiGiI/lD3UD+ar2kT8re91KQePiWCOAzoecMLlGErxdb9gaoecBwIaFNAWZkJkR6Lpp3OG71EbQaW6J7E8qjJfdtyDmmi+aWmonyu/w1Nbm/teXpjQ7U7T/TPmblADE5MDuH7PYWAVwNEPE9pgXXitjS1YUDtt+q0cd2rrPMy7tDiIMd8jrkLs4pf2C5v4W8wQNXzZvwZjJYiMqEFOLdgyRCWVe4JKt0xuk/bhcmJ8W4c1Yg2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hTWjwgCXxt6hTw08btnLGEppuERjf0VGtYBDsq6fShs=;
+ b=SLj7S0ShSaFSlQZ3cbAbEriaurpPNpl093S2VkMNZBvxJ0/1MjqPNWhaB9NcPiFgErH7Cpac5mmO0pohQ6riNTQZPF2JiJKk1JTT13z5YRynRBH9VYhbVHgv33BPoAsY26oeZHvF1uj/2nSZxPefK9WlBLYIqdMQKx4rhFTE6j0CxeyLX7WkjWm8YINdBRSDU5gCz4r8OUcMFiH9qDRgmfeFM6SeE1JZ25PZpgamYzJ8o9f7D/p2Vx+4qjCtG+F56L+H7FcM3wePuyR1GF2hcEpOY1aTJ2hjqXXMFymhjYAl2t/4RaSv7S+ku7cVpA1V44S2NFZLfhid24M+81NSFw==
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by GV2PR04MB11141.eurprd04.prod.outlook.com (2603:10a6:150:27c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.11; Mon, 6 Jul
+ 2026 15:40:02 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb%5]) with mapi id 15.21.0159.018; Mon, 6 Jul 2026
+ 15:40:02 +0000
+From: "Shenwei Wang (OSS)" <shenwei.wang@oss.nxp.com>
+To: "Shenwei Wang (OSS)" <shenwei.wang@oss.nxp.com>, Linus Walleij
+	<linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson
+	<andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Frank
+ Li <frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+CC: Shuah Khan <skhan@linuxfoundation.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Shenwei Wang
+	<shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>,
+	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>, "b-padhi@ti.com"
+	<b-padhi@ti.com>, Andrew Lunn <andrew@lunn.ch>
+Subject: RE: [PATCH v14 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Thread-Topic: [PATCH v14 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Thread-Index: AQHdBLru379VkC1WBkywqUjM2ZB4D7ZgsfEQ
+Date: Mon, 6 Jul 2026 15:40:02 +0000
+Message-ID:
+ <PAXPR04MB91855056638F0028BCC5F9EF89F12@PAXPR04MB9185.eurprd04.prod.outlook.com>
+References: <20260625155432.815185-1-shenwei.wang@oss.nxp.com>
+In-Reply-To: <20260625155432.815185-1-shenwei.wang@oss.nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB9185:EE_|GV2PR04MB11141:EE_
+x-ms-office365-filtering-correlation-id: f31e02ae-ef3b-4912-01cd-08dedb74d83e
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|19092799006|1800799024|23010399003|7416014|376014|38070700021|921020|22082099003|56012099006|11063799006|18002099003;
+x-microsoft-antispam-message-info:
+ S7zmNnAmCKQEErbnl8zODtu8aDcXEvW5phtHdxD8HIxH3YuI7HgNu9dtYzb03GlPQ9i8jUc6Q+DqEB3M3xF49kBpImz+cAILH5W15pxPdIdd9k7Fs9NkJrZY+hmHd4ivERxQGvRENV7sxNqrzHxZRf/xazD0T9jP9flWLISIoEceBs92EK4uJq9BGmgyc+k3GD6sVIC6nxWbnCzCr2yJlQ7x2LUr3nfva0M/CXZcF1Pwpm9MocQIrGHB3HMHKM6OWcYMGpli7nfSfUzW9WBnV10eGTKYTlUvqm8O3I4yZxHxNM3JvUiQx+9YRh2+n+AiyFhzFP23GuO6XwlyLXM/rJE9SO9lnJu5WR/XqKjakOjjBrcGbwjD9HVI5yjcx7Kr8Qh2aHVrEdg4KZnBmB5LNahnmy9LLpqwxZo5SBoUlmQlyal7wtqIAIDwNrvIiFCM/ZPMqeQYTqaKM6Eci8eoa2QEGybyWDxWTSI+fbNNK6Dr3cxjoKgFWCO4YB4SgjVKS8QyZSjQoY0aKVdRaiCNXXZuFFwSQOxI9sWTsjgjfVUEqsYYV+vRMWJhgqB5ET4lt9oP5n0PSfeEVgDGIYXj5hCMxjUIp/LpPZXxkq9x8oF1QnuHmit0wFPcxPVT0SL6fJZjDnlRoSSMUcDfLQ5HglhDKg6kQIP69n9xJ2DV5ffG6kCJEduSMYyXhtsEFXJt4fgjsoqkupnHKENVgwKQho4PkVeKeTcYs7pqx7IBzpiM0xYnRc/j9DZ6NDsBim5R
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(23010399003)(7416014)(376014)(38070700021)(921020)(22082099003)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?c2tXQzVMQVhOR0JobWxvUk1PMWkvS0xvZzhvdjJYNDFIelJzV3ZCOG4xaUhh?=
+ =?utf-8?B?MkhGUmtQTWVtRXhlejZ5bGZSZ1Vvb3htQXYvYTNRUzE5NEJ2aGI4bWVNRHNY?=
+ =?utf-8?B?eFpvbXFmQ0tSR0NDMVhhdnJqazI0NURjYTB1VnExL0tpRFJQL2ZyNndaM25m?=
+ =?utf-8?B?QVF6M1pWQUhtRkRRaEpXeEtqdUIyQWlETXowbEVTQlZFV0w3SXZPM2ozK1FE?=
+ =?utf-8?B?NXR2TWtFRkN6Q3JWK0dTVjduVFBBNDN0cUQ4SGtOUXFIVlZwY0paS0llNTZk?=
+ =?utf-8?B?SGlLZVZDQTdsMmlWTDl5RTNIL2pRczF6UjRHcVFzRHlTUDFUM1gyT29VM0Vp?=
+ =?utf-8?B?WDVsMGRYRUdaRVNVRHBNeXdONzlxSXZpSmkxY2p3Z1lGUllTRTlXTTM1NEpt?=
+ =?utf-8?B?N013NjV1bXRuTmRSU2NvN0ZPQzR5QmZGd3Z0Z1QyT0hyVFl5MmlPa0JYblFP?=
+ =?utf-8?B?UU1KcWZ2S0VHTmd6VWJRMHI0SVphWVpFeTRDankvZDJMZlgxT2h0RTRxZHJV?=
+ =?utf-8?B?ZXdiVVhRMEhieDVSZHBwcVNmb1k1ei9RZzZVcWxoZnVCZ0VSeTlyNHp5amt0?=
+ =?utf-8?B?cFVFZ1pNYUlMUlhSMHBBaThVcWwrZTRuU1VXOFV0QlYvejRlbmp0MjMxM0t2?=
+ =?utf-8?B?SG1HZWFOMFpReGFhN3pqVmpDLzBwRStsV2JsdXBaRFJnKzZQUFZIUnpqK2l4?=
+ =?utf-8?B?QVp3bnBtcWNMZzRpV0J2SXBuTGNqT2l0ck5QRktmcUEyK0paU0t4K0lFaDRR?=
+ =?utf-8?B?bFdDVDlnNC9JU0t4RGtaZ1ZrWDkwdVdJS1lHaXljNDROemFnS3ozVkRSc0Iv?=
+ =?utf-8?B?U0dZc2JHbVpLM09yUytpQ1J0em9TN0hRbWlvNUk4T3k2VXpONDA2MDdpT00v?=
+ =?utf-8?B?NENUbFI5djlZdk1meVloSWVQenNMTTd1ekc2OVo3NW0xU2FVcS9FWXdhbDJn?=
+ =?utf-8?B?ZVdYR0dqUU4wSm9NclJiajNkckwwS0pxRFJOS2Z2UmpRUm5SVXhSejhRYW11?=
+ =?utf-8?B?Q1Njd3VMd0V1TkFURzQ3ZmgxL2lkVzhQWHZLTWUwcG1yTk9UQmUyS1BVbTlo?=
+ =?utf-8?B?K1lGQ0ltZ3hXM282TWVEOURzdFB5K3Nmd2haenhwTHpLR0xHQTUrekVCYkpm?=
+ =?utf-8?B?Zkd3REZVNlA5UGU0OFVCVG1vNHJ6RlMxSXo3TWZycTEvQitGdkpTUUJyRGtL?=
+ =?utf-8?B?YjE5dGVuUWlOcmp1TFN5RTV5b2d0bVVkWDZVekRnWjV4KytRNHhCYzJWeFVS?=
+ =?utf-8?B?Y201S1Y4MnlyWXk2Z0NNcms5UnphTTcvNXdzL3FhSGZ2TkxpTU9US2V4dGg1?=
+ =?utf-8?B?K3NqakRqaHZaWFRLbXZXTWxydlA5OEtvb2JqTDNtSzhBRU9zcHVqL0U1Szhp?=
+ =?utf-8?B?UUpUSEZaU0xVSzJxSHRkUUFNK29NM2xBTU5ndmRVcGhOVmpNMmgra3BnTm9u?=
+ =?utf-8?B?a1hWR3ZRY1hwaW9sR3ArcXlMNDhDU3ZRYVRGbmlhNG1FMnBKNHllMnAwL3h1?=
+ =?utf-8?B?L0dxQmtSKysvRlU3U1FpUVU2UXpGN1h0YS84OXp5TkpuSWE4bmRvUzZGTVFJ?=
+ =?utf-8?B?YWNpa1NZdTg4MVRmZzUyWkJvczdwOEtiVG1DRHpPRGRlbXV2N3RkakRvUVVa?=
+ =?utf-8?B?VFJCSC96djZGTmtFOTRFaGVpV1Q4cklFZkRoTGVucGpDVEdVSXVTRmFNdnpj?=
+ =?utf-8?B?aUZockE2STlBelpkOFN2MEhacXpyVTRRV0VUVDY2MmpQVHo1OWMxTkd0ckY3?=
+ =?utf-8?B?SXZDZ2lGY3R5a2pLRS9EZ3h1TjArS01ZOWh6S2UydGNCNkg5S0VURVJHL2g5?=
+ =?utf-8?B?ZjlHWmpURU00NU1ESmllbXVicXpGem9kMm1HTG4ySmxlamRObXQzSmhwdWQ4?=
+ =?utf-8?B?OUhyTEVkb2pFL1J0SFhIRktSYlhaWFdtcmRCT1MrYUZoWlQ2NmMxRkRGRERx?=
+ =?utf-8?B?MFNralFPQmNhRXV1Q0JsZG43RGxIcmJKWXJBVWVVZzVrcEFZbXlJQlJVMnJh?=
+ =?utf-8?B?V1R1dWVOSmNVeENFK3VZcDVXS0NWeDNpbTFQK0FTRitmRnNTc2c4NzF2SEht?=
+ =?utf-8?B?djBwdGxMRWYyZm1zR0Rtek9PS3kvWHVmV004dUtEdi81a2t1SHo5S25rWlFn?=
+ =?utf-8?B?VXNPVUx3dDdreXBHaVpKamM5R2dQdnpDL0ZiaFpUd1ZOQW9KdHVnN2VaY1RX?=
+ =?utf-8?B?Z0N0TkdCamtSQnpLZExyQ3UvQ01hYTU1aVgzaWJ5djJlTzZWTmg1RldyZ2RQ?=
+ =?utf-8?B?ak1XL0JWZ093eTEzS00yVWw0MUU3OWVtOFNYYmdxYnBLQ05BQllwQmxnSlhX?=
+ =?utf-8?B?a0JkM3pSSGUwc2UyUzRBcW9HV0w0WEI5S1dMZ2pSRWdqcnFhdUk2dz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.8\))
-Subject: Re: [PATCH RFC] gpio: loongson-64bit: Add back the support for
- gsi_idx_map
-From: Miao Wang <shankerwangmiao@gmail.com>
-In-Reply-To: <fb6dbc208d771911988d60685f6145b6132c66b6.camel@xry111.site>
-Date: Mon, 6 Jul 2026 22:45:48 +0800
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <brgl@kernel.org>,
- Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-gpio@vger.kernel.org,
- Yinbo Zhu <zhuyinbo@loongson.cn>,
- Linus Walleij <linusw@kernel.org>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>,
- Juxin Gao <gaojuxin@loongson.cn>,
- Mika Westerberg <westeri@kernel.org>,
- Mingcong Bai <jeffbai@aosc.io>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <782E1F07-5E90-42D2-A2E6-4404C53B4C05@gmail.com>
-References: <20260630-loongson-gpio-v1-1-576908831fa0@gmail.com>
- <CAMRc=MdtRj6c3Bg72QMaAEMPovNyUdqWL_qDPGb1p=Cu=cETvA@mail.gmail.com>
- <akOxdBR_-rOweHXB@ashevche-desk.local>
- <B77A4E49-774C-4DB2-9CA6-FFBE14F1EF94@gmail.com>
- <akTDj-YJjuDOBc0i@ashevche-desk.local>
- <A12FA264-0A0B-4CB3-BBCC-51380591F0E1@gmail.com>
- <akTRyQqXuSU6pl71@ashevche-desk.local>
- <AA7111AC-196F-41F7-A47B-E5118F7D26F2@gmail.com>
- <akThvlKr5MdbNloj@ashevche-desk.local>
- <73df1090f513777f3c0c4bfd1b9fc01f430ce9c3.camel@xry111.site>
- <aks67K3v2VNIkyRF@ashevche-desk.local>
- <B6BABD9E-104C-405C-9D9C-8B063791B20F@gmail.com>
- <fb6dbc208d771911988d60685f6145b6132c66b6.camel@xry111.site>
-To: Xi Ruoyao <xry111@xry111.site>
-X-Mailer: Apple Mail (2.3826.700.81.1.8)
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f31e02ae-ef3b-4912-01cd-08dedb74d83e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2026 15:40:02.3497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UDMryE9elejx8Enkj5mAPlMXN00HApQecChHRUMdSppLgNnw7Hrg7e4Jk5OGAQMA4dwcpFvqY2L/ZF4IkAfICA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11141
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [2.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
+	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-39528-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-39529-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER(0.00)[shenwei.wang@oss.nxp.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:brgl@kernel.org,m:devnull+shankerwangmiao.gmail.com@kernel.org,m:chenhuacai@kernel.org,m:lvjianmin@loongson.cn,m:kernel@xen0n.name,m:jiaxun.yang@flygoat.com,m:linux-gpio@vger.kernel.org,m:zhuyinbo@loongson.cn,m:linusw@kernel.org,m:zhanghongchen@loongson.cn,m:liupeibao@loongson.cn,m:gaojuxin@loongson.cn,m:westeri@kernel.org,m:jeffbai@aosc.io,m:xry111@xry111.site,m:devnull@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:shenwei.wang@oss.nxp.com,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:andersson@kernel.org,m:mathieu.poirier@linaro.org,m:frank.li@nxp.com,m:s.hauer@pengutronix.de,m:skhan@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kernel@pengutronix.de,m:festevam@gmail.com,m:shenwei.wang@nxp.com,m:peng.fan@nxp.com,m:devicetree@vger.kernel.org,m:linux-remoteproc@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-imx@nxp.com,m:arnaud.pouliquen@foss.st.com,m:b-padhi@ti.com,m:andrew@lunn.ch,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shenwei.wang@oss.nxp.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.linux.dev,lists.infradead.org,foss.st.com,ti.com,lunn.ch];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,shankerwangmiao.gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5133A7127DB
+X-Rspamd-Queue-Id: A6AD4712D86
 
-
-
-> 2026=E5=B9=B47=E6=9C=886=E6=97=A5 22:26=EF=BC=8CXi Ruoyao =
-<xry111@xry111.site> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Mon, 2026-07-06 at 19:43 +0800, Miao Wang wrote:
->> Hi,
->>>=20
->>> Right.
->>>=20
->>> So, let me state again, we need an input from Loongson on =
-clarification on what
->>> to do with the property. Because what I read from your reply is that =
-property
->>> must stay and specification update was a wrong move.
->>>=20
->>=20
->> If Interrupt() repeated in _CRS is allowed, then I don't think it is =
-a wrong
->> move, but we are considering about existing hardware and firmware =
-which are
->> not following this change. If repeated Interrupt() is not allowed, =
-then this
->> would be another story.
->=20
-> If repeated Interrupt() is not allowed (I'm unsure yet if it's allowed
-> too) we can still use the hard coded logic like m % 8 or MIN(m, 4)
-> instead of gsi_idx_map.  AFAIK these mappings are hard-wired in the =
-chip
-> (i.e. not programmable by the firmware) so having the _HID is enough.
-
-So will this PoC work? When irq resources cannot be fetched directly, =
-try
-to use a static backup mapping instead.
-
-diff --git a/drivers/gpio/gpio-loongson-64bit.c =
-b/drivers/gpio/gpio-loongson-64bit.c
-index 0fdf15faa344..5de05c61cc82 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -24,6 +24,12 @@ enum loongson_gpio_mode {
- 	BYTE_CTRL_MODE,
- };
-=20
-+enum loongson_gpio_mapping_mode {
-+	MAPPING_NONE,
-+	MAPPING_MODULO,
-+	MAPPING_CLAMP,
-+};
-+
- struct loongson_gpio_chip_data {
- 	const char		*label;
- 	enum loongson_gpio_mode	mode;
-@@ -37,6 +43,7 @@ struct loongson_gpio_chip_data {
- 	unsigned int		intsts_offset;
- 	unsigned int		intdual_offset;
- 	unsigned int		intr_num;
-+	enum loongson_gpio_mapping_mode mapping_mode;
- 	irq_flow_handler_t	irq_handler;
- 	const struct irq_chip	*girqchip;
- };
-@@ -130,11 +137,23 @@ static int loongson_gpio_set(struct gpio_chip =
-*chip, unsigned int pin, int value
- 	return 0;
- }
-=20
-+static unsigned int loongson_gpio_backup_irq_mapping(const struct =
-loongson_gpio_chip_data *chip_data,
-+						     unsigned int pin)
-+{
-+	if (chip_data->mapping_mode =3D=3D MAPPING_MODULO)
-+		return pin % chip_data->intr_num;
-+	else if (chip_data->mapping_mode =3D=3D MAPPING_CLAMP)
-+		return MIN(pin, chip_data->intr_num - 1);
-+
-+	return pin;
-+}
-+
- static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int =
-offset)
- {
- 	unsigned int u;
- 	struct platform_device *pdev =3D =
-to_platform_device(chip->parent);
- 	struct loongson_gpio_chip *lgpio =3D =
-to_loongson_gpio_chip(chip);
-+	int irq;
-=20
- 	if (lgpio->chip_data->mode =3D=3D BIT_CTRL_MODE) {
- 		/* Get the register index from offset then multiply by =
-bytes per register */
-@@ -145,7 +164,13 @@ static int loongson_gpio_to_irq(struct gpio_chip =
-*chip, unsigned int offset)
- 		writeb(1, lgpio->reg_base + =
-lgpio->chip_data->inten_offset + offset);
- 	}
-=20
--	return platform_get_irq(pdev, offset);
-+	irq =3D platform_get_irq_optional(pdev, offset);
-+	if (irq =3D=3D -ENXIO && lgpio->chip_data->intr_num !=3D 0) {
-+		irq =3D platform_get_irq(pdev, =
-loongson_gpio_backup_irq_mapping(lgpio->chip_data, offset));
-+	} else if (irq < 0) {
-+		irq =3D platform_get_irq(pdev, offset);
-+	}
-+	return irq;
- }
-=20
- static void loongson_gpio_irq_ack(struct irq_data *data)
-@@ -430,6 +455,8 @@ static const struct loongson_gpio_chip_data =
-loongson_gpio_ls3a5000_data =3D {
- 	.in_offset =3D 0xc,
- 	.out_offset =3D 0x8,
- 	.inten_offset =3D 0x14,
-+	.intr_num =3D 8,
-+	.mapping_mode =3D MAPPING_MODULO,
- };
-=20
- static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data =3D =
-{
-@@ -439,6 +466,8 @@ static const struct loongson_gpio_chip_data =
-loongson_gpio_ls7a_data =3D {
- 	.in_offset =3D 0xa00,
- 	.out_offset =3D 0x900,
- 	.inten_offset =3D 0xb00,
-+	.intr_num =3D 5,
-+	.mapping_mode =3D MAPPING_CLAMP,
- };
-=20
- /* LS7A2000 chipset GPIO */
-@@ -468,6 +497,8 @@ static const struct loongson_gpio_chip_data =
-loongson_gpio_ls3a6000_data =3D {
- 	.in_offset =3D 0xc,
- 	.out_offset =3D 0x8,
- 	.inten_offset =3D 0x14,
-+	.intr_num =3D 8,
-+	.mapping_mode =3D MAPPING_MODULO,
- };
-=20
- static const struct of_device_id loongson_gpio_of_match[] =3D {
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hlbndlaSBXYW5nIChP
+U1MpDQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDI1LCAyMDI2IDEwOjU1IEFNDQo+IFRvOiBMaW51
+cyBXYWxsZWlqIDxsaW51c3dAa2VybmVsLm9yZz47IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJyZ2xA
+a2VybmVsLm9yZz47DQo+IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+OyBSb2IgSGVy
+cmluZyA8cm9iaEBrZXJuZWwub3JnPjsgS3J6eXN6dG9mDQo+IEtvemxvd3NraSA8a3J6aytkdEBr
+ZXJuZWwub3JnPjsgQ29ub3IgRG9vbGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsgQmpvcm4NCj4g
+QW5kZXJzc29uIDxhbmRlcnNzb25Aa2VybmVsLm9yZz47IE1hdGhpZXUgUG9pcmllcg0KPiA8bWF0
+aGlldS5wb2lyaWVyQGxpbmFyby5vcmc+OyBGcmFuayBMaSA8ZnJhbmsubGlAbnhwLmNvbT47IFNh
+c2NoYSBIYXVlcg0KPiA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gQ2M6IFNodWFoIEtoYW4g
+PHNraGFuQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsg
+bGludXgtDQo+IGRvY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IFBlbmd1dHJvbml4IEtlcm5lbCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBG
+YWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+OyBTaGVud2VpDQo+IFdhbmcgPHNoZW53
+ZWkud2FuZ0BueHAuY29tPjsgUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+Ow0KPiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVtb3RlcHJvY0B2Z2VyLmtlcm5lbC5vcmc7DQo+
+IGlteEBsaXN0cy5saW51eC5kZXY7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZzsgZGwtbGludXgtaW14IDxsaW51eC0NCj4gaW14QG54cC5jb20+OyBBcm5hdWQgUE9VTElRVUVO
+IDxhcm5hdWQucG91bGlxdWVuQGZvc3Muc3QuY29tPjsgYi0NCj4gcGFkaGlAdGkuY29tOyBBbmRy
+ZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQo+IFN1YmplY3Q6IFtQQVRDSCB2MTQgMC81XSBFbmFi
+bGUgUmVtb3RlIEdQSU8gb3ZlciBSUE1TRyBvbiBpLk1YIFBsYXRmb3JtDQo+IA0KPiBGcm9tOiBT
+aGVud2VpIFdhbmcgPHNoZW53ZWkud2FuZ0BueHAuY29tPg0KPiANCj4gU3VwcG9ydCB0aGUgcmVt
+b3RlIGRldmljZXMgb24gdGhlIHJlbW90ZSBwcm9jZXNzb3IgdmlhIHRoZSBSUE1TRyBidXMgb24g
+aS5NWA0KPiBwbGF0Zm9ybS4NCj4gDQo+IENoYW5nZXMgaW4gdjE0Og0KPiAgLSBVcGRhdGUgZ3Bp
+by1ycG1zZy5yc3QgcGVyIE1hdGhpZXXigJlzIGZlZWRiYWNrLg0KDQpIaSBNYXRoaWV1LCANCg0K
+Q291bGQgeW91IHBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3UgaGF2ZSBhbnkgZnVydGhlciBjb21t
+ZW50cyBvbiB0aGlzIHZlcnNpb24/DQoNClRoYW5rcywNClNoZW53ZWkNCg0KPiAgLSBBbGlnbiB0
+aGUgcnBtc2ctZ3BpbyBkcml2ZXIgd2l0aCB0aGUgcmV2aXNlZCBncGlvLXJwbXNnLnJzdC4NCj4g
+IC0gTW9kaWZ5IHJwbXNnLWNvcmUgdG8gZW5hYmxlIHByZWZpeC1iYXNlZCBtYXRjaGluZyBvZiBS
+UE1TRyBkZXZpY2UgSURzLg0KPiANCj4gQ2hhbmdlcyBpbiB2MTM6DQo+ICAtIGRyb3AgdGhlIHN1
+cHBvcnQgZm9yIGxlZ2FjeSBOWFAgZmlybXdhcmUuDQo+ICAtIHJlbW92ZSB0aGUgZml4ZWRfdXAg
+aG9va3MgZnJvbSB0aGUgcnBtc2cgZ3BpbyBkcml2ZXIuDQo+ICAtIGNvZGUgY2xlYW51cC4NCj4g
+DQoNCg==
 
