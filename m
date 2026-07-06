@@ -1,420 +1,238 @@
-Return-Path: <linux-gpio+bounces-39494-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id mkztJsZyS2pzRgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39494-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:17:58 +0200
+	id DgvAEG52S2poRwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39496-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:33:34 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2043670E85C
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA50170EA33
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 11:33:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=226LxmgD;
-	dmarc=pass (policy=reject) header.from=bootlin.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39494-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39494-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=cirrus.com header.s=PODMain02222019 header.b=bMLqfAh3;
+	dkim=pass header.d=cirrus4.onmicrosoft.com header.s=selector2-cirrus4-onmicrosoft-com header.b=Klk6VVJk;
+	dmarc=pass (policy=reject) header.from=cirrus.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39496-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39496-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2DD0B309D214
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 09:11:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 17C4E303957D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 09:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18ACC4252DA;
-	Mon,  6 Jul 2026 08:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06C6D477E43;
+	Mon,  6 Jul 2026 09:00:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891693F9F32
-	for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2026 08:57:02 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783328229; cv=none; b=D2R0K6bdbzKg/N/I2FmdjF/U33jPlVdku9P+ZWl01n/j4xMV8rH9Lz7s5ICGUD/YYnLPcCojQmgQJeDQ+6WlBefyXhi1DjnuRoOD2vXO/uWoh6Oz2OruNXMYMCBZQ1LB+cSB5uVKfBVcildYSaUgSSJYtvTIdaxd00+XrVgVSFI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783328229; c=relaxed/simple;
-	bh=wORaGP4//9vVX5KYq6wgckhG1BIiCPbskHNhQHXCxF4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=G6cpGWC9iV5kYGtZa5sgf4OIJShWn1NsLIyxjoiP/XqhciiY2EujLuCtGmpwrLmrdOZKoUQh8AQHQcjL+jpPogEKPrcSxmAoJqZXRYudiXGK/q9cxPcU3Sc6CZyG2AFY0HjM6yqZaR3KlwqL5PmteqWV3CUNF5OcMDPejQp0woA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=226LxmgD; arc=none smtp.client-ip=185.246.85.4
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 6F1644E40CA6;
-	Mon,  6 Jul 2026 08:56:59 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2C3F2601A2;
-	Mon,  6 Jul 2026 08:56:59 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6433611BB9BF5;
-	Mon,  6 Jul 2026 10:56:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1783328218; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=kfFPiegXNTBdwL7ERGkc+qHbAJDd2t8DcXD4UdKo670=;
-	b=226LxmgDjx9k9eSuB9lzIsww26Zz8Ic9NQLh0i4uMKUs5Gns2LhFiuf3n4DK4rypNVQe6A
-	/TpEfY4XWaVCUItIlaFrreQ60DyDdR4yrIhQ7Ifkk9ediqJJ2qtvj5eNbgG2rYPxTMINl5
-	QsFHXtk2CV2yU84tHFQIqppoEDMmr6XdW0fhgucdghDZOnx/TxPtMEEUhG8myLxd0CUBa4
-	+nmESPjYRIUYipXI5FEiL+Dc7T2FY2aE/d1SC9wXNZJQ2ZpqDc3Rmj96g4Bxos7X2yrQfw
-	MoilbPUhQ3q+DMaGgK9IdAQ/+MinohXiBRAcDgWPzwvaqv3OMIbAC9w90W8ARg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8038941D4D0;
+	Mon,  6 Jul 2026 09:00:23 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783328435; cv=fail; b=LulYqkGUI9KLT+HsDX/O7kp8z4zGcwchWR8fzmh3GdUE4D2UWk6QR2/8ilSjr4Ht8EmwPmgTyj6sn+Svrc64Yf6qU28JlkVhSb+qkObY+SSYShcAMpQO1/19g/7Iyi4cFFyf4bhzFtWK5NlVJswg4UFgwv7hmB1mjyng1UQYJb4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783328435; c=relaxed/simple;
+	bh=RtYHqMgr0NU4OVLmUleG6248SRimyDyU4tWYfKq/dm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7Xf5zhQSu8cMf8Ft+4TVu7lqLAZ2MYXoyXjk9gMEFQYvCPYpTV/ysfbvhPYpsGD4RWsT+OzmWzuUGm1gDk+DNMhL8WeSHAZK0xUz2xfIJB3UGyMsbS1Erk4cS1AiYgNvuscpvkIymUHiKlh9OpBTYbqEuges9NgTKHyHAEUk04=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=bMLqfAh3; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=Klk6VVJk; arc=fail smtp.client-ip=67.231.152.168
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6664tcK7949871;
+	Mon, 6 Jul 2026 03:59:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=W7zTdAPH+TXAdRMtIP
+	thOEcKQYB07fE8iVtuOy0v018=; b=bMLqfAh3NGmmr9WRKp2ZWhSmdWTNLnUAGt
+	gzQrxTlKCl0mV2EaT2KFQAE/et6YTq5SA9by7/29Gy4BZgNTaN0444rqlusbSkgT
+	6jg8tj9cdwzRkcxUOKL1KrHnNnKhHGTNSaPTmeUF3xuXVYD8pMtLdYq3EMvHzmSp
+	vhycKS2FixKBCH+Mmi0nGLHty9Q22Qf4SZKG3bcKzPlX/ow7cXUvct+7oy3mu1qW
+	JF04dn2/uSLweWAT/5vEjsoCi9etD6eEpkFNNBfZF8dvGq/P3Yku6AgybyhWd0Jc
+	+4UgaoMsZ8CBum9pnGCRAOdIcPCho7NSII7oi816yQvxqe667y9Q==
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11020135.outbound.protection.outlook.com [52.101.61.135])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 4f6xkjj2x7-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 06 Jul 2026 03:59:16 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=M9MC4/iKv5zqKV6ZR7QrH7VzDWEeLByieWrqjYa5uxcASqIcaWbAe1LPPAUPOQ1y8gzvWHQafJVrrgGodyK4HaRHMhU5uaTFIOEv5jR/IQJaJyaJjCDzNdP+b5Q8ofFo5hbGx09EF0Mx3mDd0vCdm7xNACy/ASbAmZG8bD2XBoTJEuJKCvH5DgV5vrCm3McKOIcHOgvvczd1LhXehwgqEU9J6xTepfxSG1IHbMEBg/NxUqW49CEyPFJIst8NQZQDtjGYux/V++xsH6PGBNYjCJxOuQcVYnzJUjKrzRU31teas7avd3k3J1psFwgH3yfepnx6xX1kKPWlbZuow/5zQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W7zTdAPH+TXAdRMtIPthOEcKQYB07fE8iVtuOy0v018=;
+ b=HDWAoqueSymwRO3WB02Ymdx73WTeblygthAx5neAKSHTFSIJqhszNwi966BqGIt+CLbd/I7AQfEGfIj7OG3slax0sFh17OVd7AR/H66edZ5TFipgbP5gMljINcYua2Ce0+8jSBHt8G8dTK8xKd0NW/Ll3wUwME/pw5VXEAaEDQXN5qs8e6LX+TYmUhEJxKDQKR8PIJz4YAIsjPHpbQNm1+E3/agd5T2d+qs/XOZVHSlCRcp0JSkHGZ61VywdbN4MrSJPaKOiUwk3p07/yKzIkoiUM7TVG7Bg1XDZMkW1ufnms52vkq+PCEKZ3k8Pb2QMczeQJ06j8LVZvYcEXCNy1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 84.19.233.75) smtp.rcpttodomain=alpha.franken.de
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W7zTdAPH+TXAdRMtIPthOEcKQYB07fE8iVtuOy0v018=;
+ b=Klk6VVJkFH80dtgDknsd2RyhlEGoN1sh4GNPODXZ5FzwuZQh1mhWxp5JoOlFTRak3NAtTQKFuVD0UvBjIfdqWkDkz6FCSZ4HTl/AAibRpuMTJ6+YOOcB5TTIe7M9ipyiosa2kCMuuQPePptcgGCj6GB83dx2pYDDus7FKELDpKk=
+Received: from BN9PR03CA0634.namprd03.prod.outlook.com (2603:10b6:408:13b::9)
+ by PH9PR19MB015533.namprd19.prod.outlook.com (2603:10b6:510:3f5::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
+ 2026 08:59:13 +0000
+Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
+ (2603:10b6:408:13b:cafe::3a) by BN9PR03CA0634.outlook.office365.com
+ (2603:10b6:408:13b::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.8 via Frontend Transport; Mon, 6
+ Jul 2026 08:59:12 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ opensource.cirrus.com discourages use of 84.19.233.75 as permitted sender)
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.6
+ via Frontend Transport; Mon, 6 Jul 2026 08:59:11 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id D0075406541;
+	Mon,  6 Jul 2026 08:59:09 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id B0054820244;
+	Mon,  6 Jul 2026 08:59:09 +0000 (UTC)
+Date: Mon, 6 Jul 2026 09:59:08 +0100
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <brgl@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Frank Li <Frank.Li@nxp.com>, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Linus Walleij <linusw@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-phy@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 05/13] mfd: replace linux/gpio.h inclusions
+Message-ID: <aktuXCpaALsRheb6@opensource.cirrus.com>
+References: <20260629132633.1300009-1-arnd@kernel.org>
+ <20260629132633.1300009-6-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 06 Jul 2026 10:56:54 +0200
-Message-Id: <DJRD3C0919EP.CTZYPXDY93HI@bootlin.com>
-Cc: <linuxppc-dev@lists.ozlabs.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 08/12] soc: fsl: qe: Convert to generic IRQ chip
-From: "Paul Louvel" <paul.louvel@bootlin.com>
-To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Paul Louvel"
- <paul.louvel@bootlin.com>, "Qiang Zhao" <qiang.zhao@nxp.com>, "Thomas
- Gleixner" <tglx@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Linus Walleij" <linusw@kernel.org>, "Bartosz Golaszewski"
- <brgl@kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael
- Ellerman" <mpe@ellerman.id.au>, "Nicholas Piggin" <npiggin@gmail.com>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260703-qe-pic-gpios-v1-0-6c3e706e27dc@bootlin.com>
- <20260703-qe-pic-gpios-v1-8-6c3e706e27dc@bootlin.com>
- <34946670-2a76-47fa-af82-3d70cdc9d8f0@kernel.org>
-In-Reply-To: <34946670-2a76-47fa-af82-3d70cdc9d8f0@kernel.org>
-X-Last-TLS-Session-Version: TLSv1.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260629132633.1300009-6-arnd@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|PH9PR19MB015533:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e04cdb3-c894-4118-e436-08dedb3cd8b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700016|61400799027|82310400026|23010399003|11063799006|4143699003|56012099006|16102099003|22082099003|18002099003|41080700001;
+X-Microsoft-Antispam-Message-Info:
+	E7EefTCcah0FnuBJTu3BFgcPoSrXou1um5pue+t5IVo0U2jvMIMnvLx02Ipfzz59YfgwEzG1uBUs87Aqpi65BWoynCtkz2olyEs0Rn9nXyPFmtAV8xeskLpF061dkmW20YejjTI5eEG7SPwDGCljBO332GzfSV3m8xJ6C7q9ClFSmwHn0ZHKX+EjbHizhJDUf8hx4ejeknrgKz1df9zRMo1Vxe+Tr7H0EbNqBrV3ioEDKO3U0dF/QTxrVg0xhHV3vIWmH76eTHu5Abgepe5kQvTnxjVWl+paPaN3unoRBQKl5nOIg0Uw+7QUCwCzjViSb/x4SgAfbBL8UUbOwTSpoAmNq2N/OxButDkBFcB+ytkJmblmDAIckKqfLEVK7wnQO6odfxRWx8NpdrVHHRInC92Yx1ygIFUO503rFks04JJQcrLXWWV7CBmc02lrYXc4ITuqAHv8jnO5QskZJ8X+sI+GT1uL49MIa6ti+ebEvAkYNN45g3dx2W9eqQOJOWDF5DyvqBVg1GMdpbf1JQh/NP9S8T5EpjA+ZOaD+7uCvIScXWRYn00b0GAlCkfeCAobyLezcNaNu9Tg1iZ/Cb/UD4PMpC4W1jQob9ZpssuV9aNCM1gFFKiNv9O/VTuEpDoK4SyMEaKmD205IIL6uFuPZpw1MroL8zTCLMFTGFLCVyUkbV3LtaxpA8AD3Jt7ubGQr5Y0Z15NrQE7UOZP3sjDB3Snhq5MjlNybjKyXLvI66u1CUnIAX5iT3Bp8BcgviQkP64qKckDzUqCb9IgeVy3IA==
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700016)(61400799027)(82310400026)(23010399003)(11063799006)(4143699003)(56012099006)(16102099003)(22082099003)(18002099003)(41080700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	DiyzAXyNfQGF6VbQhGkTwlCrxhKL9g403kU4ahVcQBL/KEsOSGh9qVjPxxzwla1qGooSdeo8Xd/z1YeZ4PuqeiBG+zcaK//fCSDdYmwUfgod+N907jTL0x3G2Codkon0qbJhj3nGLgpTxxVv65U3MWuOQUEGl86upDAzP6Ejtzb8slYXN2QsMZhvAB4a+IkbAmXCQJ7Jz+t8SjgUH2fc9Hn/IY6IG68g9bCGA91/E7MyFHS7AMKmScSwK6Fygc6Nx0rVxAR3+VKC6LKXDkXe/qV28ICznLcix+E8cRO2K8b9AXBvEjNo2f5VoEJyFne3LXI6ALWcIIhhz3jdj6qRbJOgQOoVQnUHmfqrGalpErN/7ekIUU3NBTMwmcf9nImko8BXv9xIAHqSqCaULM9iX6deLCWj2pxGLG7LF6xu8nygfv1VmD4MYv4HOnB/OOmf
+X-Exchange-RoutingPolicyChecked:
+	FRSD54SnQ1qI2gmVdSWq6RSzvcuctmLyUZHR5rXhavwYTKFsWb7SGJdETrTBiOtDS83sMfQwhlB9/JUnDiCmL+rzaYqFkgsw+ZBnF9fcY3jChnWJ1OfxRCxpaKwR69Wcbwus35MtkW6PVb2oT3kfUysaTqBwE8ipX+Ami6orheeopuUceRm/3sIzDsaCufK9wtNTeGS1XA+DuRKAVviePh+uoMpSsTVDZ2PBV+3HGc6tQ55dXEkkserUeJZjYnK3axPiY49AQckXRMsp7cFY62IdHDK42sgVtVSIu46FJ02ypePIyqCmdiPvAcDRjWvL4kKP7pKHiHlZh7IL3bI3ag==
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 08:59:11.1660
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e04cdb3-c894-4118-e436-08dedb3cd8b6
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN2PEPF000044AA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH9PR19MB015533
+X-Proofpoint-ORIG-GUID: zFDT0csb4S-tm93ITy2SivemNmFAxJBd
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA5MCBTYWx0ZWRfXx1GZDdP24liE
+ LIks8zvGjw9tLhWUDqxot634kbzQzuqF4b9uRINg8GOLB8E+Q9801e5VidLFO2I0XfCQZ5uq0Gv
+ PIDWz1Nn/GVHEEKFMeCYTJ9+N725Myc=
+X-Authority-Analysis: v=2.4 cv=YYiNIQRf c=1 sm=1 tr=0 ts=6a4b6e64 cx=c_pps
+ a=3NCrMMJo8uPYhFoENQJqcw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=KfkQE9S9VqCBgivYGm0O:22
+ a=w1d2syhTAAAA:8 a=29hDNoCiTdFBKAxBKhsA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA5MCBTYWx0ZWRfX6z+sQEL7UD63
+ yVaycn/q22MZhuAh1Gd8QkGdvY6yLNH5VxQx0HtmOlNHpXKzw0QAnuIXsydz+IchY0UuMoBis6V
+ IwkyHoxKakFCJ+3erqmF/XxSoPMcd9/cQHsFHSuLXxu/krQeG1DdImt5UGUa+ntYkl7OlumwjQ5
+ fOB4mMsM64ByeMwlQ2ELeHiXF67hsh4hWbFAKBnZkLY8LhvEGKV4DlVX+t1+bFN0k0zrQL98QDs
+ K4qKh2lyfp33EEyi3zOY78qrqrm7CMyTc+fjIYDisEKF6Gs/NGw7C4z5LdjIDnsA3ilEY+UJHOW
+ 2jLhBavV0jlHXaAMF6fDRirxuWLeSgyCL+TUbouJXyTplW1xzkeZJ6dg2IG7n9db2I3rzLiKfiY
+ d5yMZnKg/v6y1rsnqRcS7xmnerfO51OjeuYR0mUJwwYEyIWfpR25XEo+5gIxRWYm6tju73UaJbI
+ 5D8bIsPox0OQHdoOv6w==
+X-Proofpoint-GUID: zFDT0csb4S-tm93ITy2SivemNmFAxJBd
+X-Proofpoint-Spam-Reason: safe
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	MV_CASE(0.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[cirrus.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_DKIM_ALLOW(-0.20)[cirrus.com:s=PODMain02222019,cirrus4.onmicrosoft.com:s=selector2-cirrus4-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	TAGGED_FROM(0.00)[bounces-39496-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39494-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linuxppc-dev@lists.ozlabs.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:thomas.petazzoni@bootlin.com,m:chleroy@kernel.org,m:paul.louvel@bootlin.com,m:qiang.zhao@nxp.com,m:tglx@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:maddy@linux.ibm.com,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:arnd@kernel.org,m:linux-gpio@vger.kernel.org,m:arnd@arndb.de,m:brgl@kernel.org,m:andrew@lunn.ch,m:sebastian.hesselbarth@gmail.com,m:gregory.clement@bootlin.com,m:Frank.Li@nxp.com,m:robert.jarzmik@free.fr,m:krzk@kernel.org,m:gerg@linux-m68k.org,m:tsbogend@alpha.franken.de,m:hauke@hauke-m.de,m:zajec5@gmail.com,m:ysato@users.sourceforge.jp,m:glaubitz@physik.fu-berlin.de,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:linux@dominikbrodowski.net,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-samsung-soc@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-media@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-sunxi@lists.linux.dev,m:linux-phy@lists.infradead.org,m:linux-rockchip@lists.infradead.org,m:linux-sound@vger.kernel.org,m:sebastianhesselbarth@gmail.com,m:dmitrytor
+ okhov@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,bootlin.com,nxp.com,linux.ibm.com,ellerman.id.au,gmail.com];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER(0.00)[ckeepax@opensource.cirrus.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,arndb.de,kernel.org,lunn.ch,gmail.com,bootlin.com,nxp.com,free.fr,linux-m68k.org,alpha.franken.de,hauke-m.de,users.sourceforge.jp,physik.fu-berlin.de,redhat.com,dominikbrodowski.net,lists.infradead.org,opensource.cirrus.com,lists.linux-m68k.org,lists.linux.dev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cirrus4.onmicrosoft.com:dkim,vger.kernel.org:from_smtp,opensource.cirrus.com:mid,opensource.cirrus.com:from_mime,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,cirrus.com:email,cirrus.com:dkim,arndb.de:email];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paul.louvel@bootlin.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ckeepax@opensource.cirrus.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[cirrus.com:+,cirrus4.onmicrosoft.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:mid,bootlin.com:from_mime,bootlin.com:url,bootlin.com:email,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	RCVD_COUNT_SEVEN(0.00)[10]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2043670E85C
+X-Rspamd-Queue-Id: DA50170EA33
 
-On Mon Jul 6, 2026 at 9:29 AM CEST, Christophe Leroy (CS GROUP) wrote:
-> Hi Paul,
->
-> Le 03/07/2026 =C3=A0 15:30, Paul Louvel a =C3=A9crit=C2=A0:
->> The generic IRQ chip framework is available to handle IRQ chips. Using
->> this framework for the QE interrupt controller allows to simplify the
->> driver. Indeed, the framework internally handles operations coded
->> directly in the driver.
->>=20
->> Add a select dependency to GENERIC_IRQ_CHIP in the PPC platform Kconfig.
->>=20
->> Signed-off-by: Paul Louvel <paul.louvel@bootlin.com>
->> ---
->>   arch/powerpc/platforms/Kconfig   |   1 +
->>   drivers/soc/fsl/qe/qe_ports_ic.c | 103 ++++++++++++++++++++++++++-----=
---------
->>   2 files changed, 70 insertions(+), 34 deletions(-)
->>=20
->> diff --git a/arch/powerpc/platforms/Kconfig b/arch/powerpc/platforms/Kco=
-nfig
->> index c4e61843d9d9..b0b3a80f8cde 100644
->> --- a/arch/powerpc/platforms/Kconfig
->> +++ b/arch/powerpc/platforms/Kconfig
->> @@ -232,6 +232,7 @@ config QE_GPIO
->>   	bool "QE GPIO support"
->>   	depends on QUICC_ENGINE
->>   	select GPIOLIB
->> +	select GENERIC_IRQ_CHIP
->>   	help
->>   	  Say Y here if you're going to use hardware that connects to the
->>   	  QE GPIOs.
->> diff --git a/drivers/soc/fsl/qe/qe_ports_ic.c b/drivers/soc/fsl/qe/qe_po=
-rts_ic.c
->> index c8b73b0aa233..d022aa224f6d 100644
->> --- a/drivers/soc/fsl/qe/qe_ports_ic.c
->> +++ b/drivers/soc/fsl/qe/qe_ports_ic.c
->> @@ -20,63 +20,65 @@ struct qepic_data {
->>   	void __iomem *reg;
->>   	struct irq_domain *host;
->>   	int irq;
->> +	struct irq_chip_generic *gc;
->>   };
->>  =20
->>   static void qepic_mask(struct irq_data *d)
->>   {
->> -	struct qepic_data *data =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
->>  =20
->> -	clrbits32(data->reg + CEPIMR, 1 << (31 - irqd_to_hwirq(d)));
->> +	clrbits32(gc->reg_base + ct->regs.mask, d->mask);
->
-> Is there a real added value with this change ?
->
-> Previously we had:
->
-> 00000000 <qepic_mask>:
->     0:	81 03 00 18 	lwz     r8,24(r3)
->     4:	81 28 00 00 	lwz     r9,0(r8)
->     8:	7c 00 04 ac 	hwsync
->     c:	81 29 00 10 	lwz     r9,16(r9)
->    10:	0c 09 00 00 	twi     0,r9,0
->    14:	4c 00 01 2c 	isync
->    18:	80 e3 00 08 	lwz     r7,8(r3)
->    1c:	3d 40 80 00 	lis     r10,-32768
->    20:	81 08 00 00 	lwz     r8,0(r8)
->    24:	7d 4a 3c 30 	srw     r10,r10,r7
->    28:	7d 29 50 78 	andc    r9,r9,r10
->    2c:	7c 00 04 ac 	hwsync
->    30:	91 28 00 10 	stw     r9,16(r8)
->    34:	4e 80 00 20 	blr
->
-> Now we have:
->
-> 00000000 <qepic_mask>:
->     0:	80 e3 00 18 	lwz     r7,24(r3)
->     4:	81 03 00 10 	lwz     r8,16(r3)
->     8:	81 27 00 00 	lwz     r9,0(r7)
->     c:	81 48 00 94 	lwz     r10,148(r8)
->    10:	7d 29 52 14 	add     r9,r9,r10
->    14:	7c 00 04 ac 	hwsync
->    18:	81 49 00 00 	lwz     r10,0(r9)
->    1c:	0c 0a 00 00 	twi     0,r10,0
->    20:	4c 00 01 2c 	isync
->    24:	80 c3 00 00 	lwz     r6,0(r3)
->    28:	81 27 00 00 	lwz     r9,0(r7)
->    2c:	81 08 00 94 	lwz     r8,148(r8)
->    30:	7d 4a 30 78 	andc    r10,r10,r6
->    34:	7d 29 42 14 	add     r9,r9,r8
->    38:	7c 00 04 ac 	hwsync
->    3c:	91 49 00 00 	stw     r10,0(r9)
->    40:	4e 80 00 20 	blr
->
-> We now have three more indirect loads (8x lwz instead of 5x), for=20
-> loading some value which is already known at compile time.
->
->
->>   }
->>  =20
->>   static void qepic_unmask(struct irq_data *d)
->>   {
->> -	struct qepic_data *data =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
->>  =20
->> -	setbits32(data->reg + CEPIMR, 1 << (31 - irqd_to_hwirq(d)));
->> +	setbits32(gc->reg_base + ct->regs.mask, d->mask);
->>   }
->>  =20
->>   static void qepic_end(struct irq_data *d)
->>   {
->> -	struct qepic_data *data =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
->>  =20
->> -	out_be32(data->reg + CEPIER, 1 << (31 - irqd_to_hwirq(d)));
->> +	out_be32(gc->reg_base + ct->regs.eoi, d->mask);
->> +}
->> +
->> +static void qepic_calc_mask(struct irq_data *d)
->> +{
->> +	d->mask =3D 1 << (31 - irqd_to_hwirq(d));
->>   }
->>  =20
->>   static int qepic_set_type(struct irq_data *d, unsigned int flow_type)
->>   {
->> -	struct qepic_data *data =3D irq_data_get_irq_chip_data(d);
->> -	unsigned int vec =3D (unsigned int)irqd_to_hwirq(d);
->> +	struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
->> +	struct irq_chip_type *ct =3D irq_data_get_chip_type(d);
->>  =20
->>   	switch (flow_type & IRQ_TYPE_SENSE_MASK) {
->>   	case IRQ_TYPE_EDGE_FALLING:
->> -		setbits32(data->reg + CEPICR, 1 << (31 - vec));
->> +		setbits32(gc->reg_base + ct->regs.type, d->mask);
->>   		return 0;
->>   	case IRQ_TYPE_EDGE_BOTH:
->>   	case IRQ_TYPE_NONE:
->> -		clrbits32(data->reg + CEPICR, 1 << (31 - vec));
->> +		clrbits32(gc->reg_base + ct->regs.type, d->mask);
->>   		return 0;
->>   	}
->>   	return -EINVAL;
->>   }
->>  =20
->> -static struct irq_chip qepic =3D {
->> -	.name =3D "QEPIC",
->> -	.irq_mask =3D qepic_mask,
->> -	.irq_unmask =3D qepic_unmask,
->> -	.irq_eoi =3D qepic_end,
->> -	.irq_set_type =3D qepic_set_type,
->> -};
->> -
->>   static void qepic_cascade(struct irq_desc *desc)
->>   {
->>   	struct qepic_data *data =3D irq_desc_get_handler_data(desc);
->> +	struct irq_chip_type *ct =3D data->gc->chip_types;
->>   	struct irq_chip *chip =3D irq_desc_get_chip(desc);
->>   	unsigned long event, bit;
->>  =20
->>   	chained_irq_enter(chip, desc);
->>  =20
->> -	event =3D in_be32(data->reg + CEPIER);
->> +	event =3D in_be32(data->gc->reg_base + ct->regs.eoi);
->>   	if (!event) {
->>   		handle_bad_irq(desc);
->>   		goto out;
->> @@ -89,33 +91,64 @@ static void qepic_cascade(struct irq_desc *desc)
->>   	chained_irq_exit(chip, desc);
->>   }
->>  =20
->> -static int qepic_host_map(struct irq_domain *h, unsigned int virq, irq_=
-hw_number_t hw)
->> +static int qepic_chip_init(struct irq_chip_generic *gc)
->>   {
->> -	irq_set_chip_data(virq, h->host_data);
->> -	irq_set_chip_and_handler(virq, &qepic, handle_fasteoi_irq);
->> +	struct irq_chip_type *ct =3D gc->chip_types;
->> +
->> +	ct->regs.mask =3D CEPIMR;
->> +	ct->chip.irq_mask =3D qepic_mask;
->> +	ct->chip.irq_unmask =3D qepic_unmask;
->> +	ct->regs.eoi =3D CEPIER;
->> +	ct->chip.irq_eoi =3D qepic_end;
->> +	ct->regs.type =3D CEPICR;
->> +	ct->chip.irq_set_type =3D qepic_set_type;
->> +	ct->chip.irq_calc_mask =3D qepic_calc_mask;
->
-> Are ct->regs.mask, ct->regs.eoi and ct->regs.type used anywhere else=20
-> than locally in qepic_{mask/unmask/end/set_type} ?
+On Mon, Jun 29, 2026 at 03:26:25PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> linux/gpio.h should no longer be used, convert these instead to
+> either linux/gpio/consumer.h or linux/gpio/legacy.h as needed.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/mfd/arizona-irq.c         | 2 +-
+>  drivers/mfd/wm8994-irq.c          | 2 +-
 
-No they are not.
-The main purpose of these registers is that they are used in the generic ir=
-q
-chip framework functions like irq_gc_mask_set_bit(), which we dropped earli=
-er in
-favor of using our own hooks.
-At this stage, if you consider that the instructions overhead of the functi=
-ons
-above is already too much, it is better to get rid of the framework complet=
-ly
-then.
+For the wolfson bits:
 
->
-> Christophe
->
->> +
->>   	return 0;
->>   }
->>  =20
->> -static const struct irq_domain_ops qepic_host_ops =3D {
->> -	.map =3D qepic_host_map,
->> -};
->> +static int qepic_domain_init(struct irq_domain *d)
->> +{
->> +	struct qepic_data *data =3D d->host_data;
->>  =20
->> -static void qepic_remove(void *res)
->> +	irq_set_chained_handler_and_data(data->irq, qepic_cascade, data);
->> +
->> +	return 0;
->> +}
->> +
->> +static void qepic_domain_exit(struct irq_domain *d)
->>   {
->> -	struct qepic_data *data =3D res;
->> +	struct qepic_data *data =3D d->host_data;
->>  =20
->>   	irq_set_chained_handler_and_data(data->irq, NULL, NULL);
->> -	irq_domain_remove(data->host);
->>   }
->>  =20
->>   static int qepic_probe(struct platform_device *pdev)
->>   {
->> +	struct irq_domain_chip_generic_info dgc_info =3D {
->> +		.name		=3D "QEPIC",
->> +		.handler	=3D handle_fasteoi_irq,
->> +		.irqs_per_chip	=3D 32,
->> +		.num_ct		=3D 1,
->> +		.init		=3D qepic_chip_init,
->> +	};
->> +	struct irq_domain_info d_info =3D {
->> +		.fwnode		=3D of_fwnode_handle(pdev->dev.of_node),
->> +		.domain_flags	=3D IRQ_DOMAIN_FLAG_DESTROY_GC,
->> +		.size		=3D 32,
->> +		.hwirq_max	=3D 32,
->> +		.ops		=3D &irq_generic_chip_ops,
->> +		.dgc_info	=3D &dgc_info,
->> +		.init		=3D qepic_domain_init,
->> +		.exit		=3D qepic_domain_exit,
->> +	};
->>   	struct device *dev =3D &pdev->dev;
->>   	struct qepic_data *data;
->>  =20
->>   	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->>   	if (!data)
->>   		return -ENOMEM;
->> +	d_info.host_data =3D data;
->>  =20
->>   	data->reg =3D devm_platform_ioremap_resource(pdev, 0);
->>   	if (IS_ERR(data->reg))
->> @@ -125,14 +158,16 @@ static int qepic_probe(struct platform_device *pde=
-v)
->>   	if (data->irq < 0)
->>   		return data->irq;
->>  =20
->> -	data->host =3D irq_domain_create_linear(dev_fwnode(dev), 32, &qepic_ho=
-st_ops, data);
->> -	if (!data->host)
->> -		return -ENODEV;
->> +	data->host =3D devm_irq_domain_instantiate(dev, &d_info);
->> +	if (IS_ERR(data->host))
->> +		return PTR_ERR(data->host);
->>  =20
->> -	irq_set_chained_handler_and_data(data->irq, qepic_cascade, data);
->> -
->> -	return devm_add_action_or_reset(dev, qepic_remove, data);
->> +	data->gc =3D irq_get_domain_generic_chip(data->host, 0);
->> +	if (!data->gc)
->> +		return -ENODEV;
->> +	data->gc->reg_base =3D data->reg;
->>  =20
->> +	return 0;
->>   }
->>  =20
->>   static const struct of_device_id qepic_match[] =3D {
->>=20
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
 Thanks,
-Paul.
-
-
-
---=20
-Paul Louvel, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Charles
 
