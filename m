@@ -1,204 +1,202 @@
-Return-Path: <linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39535-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Vq00L4jlS2pHcQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:27:36 +0200
+	id HsDxL/fmS2rRcQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39535-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:33:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1268713DA3
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:27:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AB72713E96
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Jul 2026 19:33:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=VJFrGpJJ;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39534-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=avs52las;
+	dmarc=pass (policy=none) header.from=intel.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39535-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39535-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 702403013C63
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 17:15:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7A02C303C7CB
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2026 17:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4FE3806DD;
-	Mon,  6 Jul 2026 17:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6245B3AE189;
+	Mon,  6 Jul 2026 17:25:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1B137C11E;
-	Mon,  6 Jul 2026 17:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB44E39734E;
+	Mon,  6 Jul 2026 17:25:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783358103; cv=none; b=C/5e1SBWRv4DhC6sANmdhPKZe9DeGrBUA61uSzqj6FbDUKVwMOxbVS7uKnqaIGXphzIqVK4iDZ/bDhYXgbnMBv9NLGEQNunjYhNhH/VRFvRE15Dsk1QQwoUJxIVdyVIUj40W781vnVDBFFuG6os+2QYKN5kKvCJFyBHbhXF4G0I=
+	t=1783358705; cv=none; b=DEn9qxz0TVtLoweKfY6p7/vmXqdopTOksf/wwdjOPQfj37/hk9AgBMCFOvLeaIx/rg/sT8Ac/islT89kPXzUAT9pJxHl3bqH7HZYT9r+qXclymw9LN7zvHmzGdq0ij51EHo/8ilF8qty7PWt51xZ3tGYBhGR0HwBSPl1ZWY3DgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783358103; c=relaxed/simple;
-	bh=Cyrg0grsaRMPFMVwBK5PCRBknfGqtG3jJSiGJhjJh10=;
+	s=arc-20240116; t=1783358705; c=relaxed/simple;
+	bh=2y5ckWPYQJ8G2pY4u8ihalHWvoXMugXkPGDdogkateY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBvUM7zHwdpaZQe+DCYR2pZRNgHqDdXmT3w1RP2UmBCiK5c7iMuCh5/fcJeptWyI3pCqMpFdEJ4uC9rTEfW5o4BFvXIlMDdlERuL5KkzSCluZSQITmu4rxK09IrAY5NRG2j1tLClnc3wnkHYEKLFV1nFUiq+xOWgT7lhJq3i3Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJFrGpJJ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C1D1F000E9;
-	Mon,  6 Jul 2026 17:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783358101;
-	bh=FLCkRFY/xZawZM4IfpyQEQBqFJQifdjTe2UFwHN+pbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VJFrGpJJi0WdJNBZtw4v4b+k6Zqo9dKSW5u3hd7vNaqe7DRoSA3roX+lo8tzwWPFZ
-	 K1TViY4xZvQQiOF8+PF4HjiGkJfplG5LjYwmIzsFKVRG+XxlGYomGz5Vkwq95amvdx
-	 4zKPi5OQvVVaTlisaZtCHrIUvXLxnkqOzbxAnmv8h9TVZgfseJbA5cDFYpTDEV+ySc
-	 5VBBboakFE94TO9Hs6IKFdMnD6xRpVR7ac94ZnKkZ1pzArVTbiuCwyb/j5aliMrWeY
-	 b7Zsl7te9dxAspf/EMLA7iwGhksS8dopDR+/KyNe1c+kH8K7eK3tQ/NojTG/Iq6BMT
-	 7oMlJvppDzAnQ==
-Date: Mon, 6 Jul 2026 18:14:56 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Linus Walleij <linusw@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=PFPbaP34X1gid8I4Auf/7YoFbiWskWmuqtmG2WYrPmkLoPfriEgMJQXYcGxL8QFVJPLHQYUxA94uCw/dc6hKbeiJ+UguanbiM1pNAWWOlh9CCAOEqhMEU+qMU+F3bPnrKieEe1XZ3I0Tepr5xvisVLU0l6XUC+oW/DecJdzu5KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=avs52las; arc=none smtp.client-ip=192.198.163.10
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783358704; x=1814894704;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2y5ckWPYQJ8G2pY4u8ihalHWvoXMugXkPGDdogkateY=;
+  b=avs52lasllYV8MBfFnVNO0epufBg2NxTWDAL5HpNQLyVek09sPeF+fCv
+   VTjShPS2cMpyJo9nt1x4sDq+CEMerrl3+xDheD1ed59vWfS12HJAcSzaf
+   pvCj/5FveLp9qwAGYN4VoX8Ok1V813oT8KoizbJPj7c386bAK2lkwJirW
+   W+J5YbcuqnhlDJ7LUiJurfTJFtSpXvVqZX6vnVL17yby0bBjYU0jT7TTa
+   5HTiqJimCjRs7m7kotk7BfRESednPLCdLOsSfZD2UFdB4Xv6rxG+jeK1E
+   Llcs2oZE7XqSWSIjVsjObmOprtAdMpXtIZKQ5fk2pHkQBXEU6lW/AqXzJ
+   g==;
+X-CSE-ConnectionGUID: 3ge5sQZAT2O/L3y85c/o+Q==
+X-CSE-MsgGUID: TTaj8KzvSJa1Rp4jjN0H9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="95378605"
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="95378605"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:25:03 -0700
+X-CSE-ConnectionGUID: Lfe9lLBGTUu1ALhIe94NDQ==
+X-CSE-MsgGUID: Ovu7lWmMTmic8Fiot1bOlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="258093602"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.48])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:24:59 -0700
+Date: Mon, 6 Jul 2026 20:24:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: phy: motorola,cpcap-usb: add
- chrg_det interrupt
-Message-ID: <20260706-visitor-calorie-b805ac5af970@spud>
-References: <20260705101105.1798069-1-ivo.g.dimitrov.75@gmail.com>
- <20260705101105.1798069-2-ivo.g.dimitrov.75@gmail.com>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] software node: add fw_devlink support
+Message-ID: <akvk6Lv2TdtyV_Rb@ashevche-desk.local>
+References: <20260706-swnode-fw-devlink-v2-0-f39b09d50112@oss.qualcomm.com>
+ <20260706-swnode-fw-devlink-v2-2-f39b09d50112@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EHPotJN9Y/7sp6ZZ"
-Content-Disposition: inline
-In-Reply-To: <20260705101105.1798069-2-ivo.g.dimitrov.75@gmail.com>
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.26 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	MAILLIST(-0.15)[generic];
-	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:ivo.g.dimitrov.75@gmail.com,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:ivogdimitrov75@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39534-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[spud:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
-X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A1268713DA3
-
---EHPotJN9Y/7sp6ZZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260706-swnode-fw-devlink-v2-2-f39b09d50112@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39535-lists,linux-gpio=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,vger.kernel.org:from_smtp,linux.intel.com:from_mime,fwnode.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:dkim]
+X-Rspamd-Server: lfdr
+X-Rspamd-Queue-Id: 3AB72713E96
 
-On Sun, Jul 05, 2026 at 01:11:02PM +0300, Ivaylo Dimitrov wrote:
-> The CPCAP USB PHY driver uses the CPCAP charger detection interrupt
-> for DCP detection.
+On Mon, Jul 06, 2026 at 02:54:09PM +0200, Bartosz Golaszewski wrote:
+> Software nodes can be used to describe supplier-consumer relationships
+> between devices they represent using reference property entries. Unlike
+> for OF-nodes, driver core cannot yet use these references to create a
+> probe order that avoids needless probe deferrals on missing providers.
+> 
+> Implement software_node_add_links() modelled on of_fwnode_add_links().
+> For every DEV_PROP_REF property we resolve each referenced supplier and
+> create an fwnode link from the node to it. The driver core later promotes
+> these to device links and defers the consumer until the suppliers are
+> ready.
+> 
+> There's no allowlist like the one DT needs - devicetree phandles appear
+> in plenty of non-supplier contexts, but a software node only carries a
+> reference property when its author explicitly points at another node, so
+> we treat every reference as an intentional supplier dependency and link
+> all of them. Graph "remote-endpoint" references are skipped for now: they
+> go 2-ways between endpoint nodes and would create graph cycles without
+> the port-parent lifting DT does via get_con_dev(). References to
+> suppliers that aren't registered yet and self-references are ignored.
+> 
+> fw_devlink resolves the supplier device through fwnode->dev but the core
+> only records the owning device on the primary fwnode. When the software
+> node is a device's secondary fwnode, mirror the device pointer onto it in
+> software_node_notify() so the consumer can actually find the supplier
+> instead of deferring forever.
+> 
+> While at it: purge the fwnode links in software_node_release() now that
+> software nodes can own them.
 
-This is not currently true, the driver does not look for this interrupt
-at the time of this patch.
+...
 
-> Update the binding and example DTS to use the corresponding
-> "chrg_det" interrupt name.
+> +	/*
+> +	 * When the software node is the device's secondary firmware node,
+> +	 * the core only records the owning device on the primary fwnode
+> +	 * (see device_add()). fw_devlink resolves a supplier device through
+> +	 * fwnode->dev, so without this a consumer referencing the software
+> +	 * node could never find the supplier device and would defer forever.
+> +	 * Make fwnode.dev point to its owner in that case.
+> +	 */
+> +	if (dev_fwnode(dev) != &swnode->fwnode && !swnode->fwnode.dev)
 
-Sounds to me like this new interrupt is optional, since until now it has
-not been needed? The patch however makes it mandatory. I think your
-driver patch also makes it mandatory, which will break older
-devicetrees.
+Can we use device_match_fwnode() here?
 
-What makes this ABI break okay?
+> +		swnode->fwnode.dev = dev;
+> +
 
-Thanks,
-Conor.
+...
 
->=20
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> ---
->  .../devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml     | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy=
-=2Eyaml b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
-> index 0febd04a61f4..523a8f8480d0 100644
-> --- a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
-> @@ -30,6 +30,7 @@ properties:
->        - description: se1 interrupt
->        - description: dm interrupt
->        - description: dp interrupt
-> +      - description: charger detection interrupt
-> =20
->    interrupt-names:
->      description: Interrupt names
-> @@ -43,6 +44,7 @@ properties:
->        - const: se1
->        - const: dm
->        - const: dp
-> +      - const: chrg_det
-> =20
->    io-channels:
->      description: IIO ADC channels used by the USB PHY
-> @@ -91,10 +93,10 @@ examples:
->          interrupts-extended =3D <
->              &cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
->              &cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
-> -            &cpcap 48 1
-> +            &cpcap 48 1 &cpcap 13 0
->          >;
->          interrupt-names =3D "id_ground", "id_float", "se0conn", "vbusvld=
-",
-> -                          "sessvld", "sessend", "se1", "dm", "dp";
-> +                          "sessvld", "sessend", "se1", "dm", "dp", "chrg=
-_det";
->          io-channels =3D <&cpcap_adc 2>, <&cpcap_adc 7>;
->          io-channel-names =3D "vbus", "id";
->          vusb-supply =3D <&vusb>;
-> --=20
-> 2.39.5
->=20
+> +	/*
+> +	 * Drop the device pointer mirrored onto a secondary software node in
+> +	 * software_node_notify(). For a primary software node the core owns
+> +	 * fwnode->dev and clears it in device_del().
+> +	 */
+> +	if (dev_fwnode(dev) != &swnode->fwnode && swnode->fwnode.dev == dev)
+> +		swnode->fwnode.dev = NULL;
 
---EHPotJN9Y/7sp6ZZ
-Content-Type: application/pgp-signature; name=signature.asc
+Ditto.
 
------BEGIN PGP SIGNATURE-----
+Note, it does check passed fwnode pointer against NULL, but looking at
+the above &swnode->fwnode must never be NULL, so basically device_match_node()
+will be an equivalent replacement.
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCakvikAAKCRB4tDGHoIJi
-0v+aAP9LtdSSmr/h68scZGIFlgV6ysH5j3UmXqH1E2gDLiQUNwEA3nVaHeU2gU7A
-6DvEFs8Okg6Y6JMPXLUM2uDUSeiDOwY=
-=kZwB
------END PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
---EHPotJN9Y/7sp6ZZ--
+
 
