@@ -1,196 +1,161 @@
-Return-Path: <linux-gpio+bounces-39555-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7hcRIOOjTGr5nQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39555-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:59:47 +0200
+	id eBplKCWjTGrWnQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:56:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E08C8718364
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:59:46 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 414247182FB
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:56:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39555-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39555-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=realtek.com header.s=dkim header.b=BT1muqJf;
+	dmarc=pass (policy=none) header.from=realtek.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CDA5730128CD
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 06:52:50 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A4B70300598A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 06:56:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F251435950;
-	Tue,  7 Jul 2026 06:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 046B73D333B;
+	Tue,  7 Jul 2026 06:56:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CA43AD515
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 06:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F233B42D4;
+	Tue,  7 Jul 2026 06:56:21 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783407165; cv=none; b=ov9msCUPuGm5AxbqxoXgNVxEq9a7LO2rja5u93kXlMknZExMMGIxBUpC1peKMBk3JraVM9QALG5vc/fwbkEdiBgy44puMRTXRpBVb8jhHgLV1WtSVWCVHxGBEuKrp3WePTevs4gF70LUCxN1tXCo0L+Hg0lmjfthSM64Kwm345k=
+	t=1783407387; cv=none; b=DlIjq0UgaM8EbspLangIlsZkymIJamcnxnETwmvR/zBenXWGt4BCZUVq3LKT6NWpFUjQOiNt6TaqODhMpVCaJjTBBgAlpxI21Rw2K9ROIHRDA0x5yDjEc6t3czN/zixQ1T72l07L4argMOChgY/yL2yzZq/XDI49jDXJ2H+DKcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783407165; c=relaxed/simple;
-	bh=gD/q7SKmBrC0OtQIWUnnzJ0urKpnYBI77eKOVOV42ZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U1JrTamdImch6EYU/9sIi838bLKLRezAJYoRZElqrd/IJZ+bD3noDY5CvAk694/XBQ8VpcdFFEFIrF6nAIPH+pWb76n/zIh6jUD6xxz56HARO2/IKF1YuO9XDPcNHlv0gPmNRp1yusAuXtKCW3Yop3hPvItXNjJIQW7ydt/cj2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-96950b34a3eso1034401241.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 23:52:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783407155; x=1784011955;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=H1oWLi+zgA/mmqPta9lQQ7n/K/VL51Ngsb+MHJRTZdo=;
-        b=L0/6zHlAhydt0nAsYl+DXP8S4I4vwZdVuKlIuQyXeWFn+TqWuPx3osSBi7CNTtelgi
-         xi4/9Dyu253dsqIYSkgo3cKDMj+c96vZ21MKuls9TPJVzLcuE5QQdQ5z/HDQGpI4e/QP
-         x6yft4Iqv9FLkIpsdC0OuazqSIcicqNc2q+MBHYonC+xDs3C9+LSnsHUNwsZ9yeNFKKP
-         +HFkHURSyqILkPf+HW7h3mdsTs8jug+xpkAaYvs2PRagbZVIJIFrTl6ogO8dpEqyIKCg
-         OrkKjps+u+EyPXtpGVYGKD247k4NW51ra2WSRQ4/WHYDfQoxb1fkDPe4JN3uKsFGXu0J
-         SuqA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq77C8mjLEVuvtRNOwwUJNyKT2abN9uPdWwcPYYGTQUy14KGnBvg1cEI7KatVTIZ0KDQzltTngofkXr@vger.kernel.org
-X-Gm-Message-State: AOJu0YytUo6BsNCrMhMyxEg5JUk06PDwBYpRwXUv7wjTvY5ARgnJ2AO+
-	kTREIAXJ7Bqc71QHvFZ0J3tEjzXB1E/68Y32KOT/VObqGldo5sZsnr54/c3wWjAg
-X-Gm-Gg: AfdE7cnmmut2EHOjAqnfvIUXpBmDXyXFCfr4RHrEHE6391u8S2c2u5e4dA6yhVfhlTz
-	K8itgtak09Tk8PLJjpgosFXS4PhlfxeOglmxPqp5if6FLCSevKxoLrC1dBT5VBOhCYhmT/3moH9
-	jrgNN7aSixx1goKceMfSWqpUjnA9sU2qsJIZHfVrQBcwHq566N4Bd7iZAO3uPT28m0Kuz4XYCOS
-	FQo+SU9+bNjKr8aQ8b74ubi2D93YZ8bc/9ptAdydyvCtBHA9pY5IXNKf+830IzPWhzqk4G8oFQd
-	t4wr81zyPmyimEOWwssLjFLpqs/J/1hnHraZTtQYw52We2CEsmAk0EvTOJtN58Fx7u3NcHNMCvr
-	Xd9g8U3SIBcZ+ESEVvyGqgrSXDWrFL3vrDvKC1o7+Qnix9XH/6jsIcXbcE6/UKn6NoIqwyxW5Ob
-	OqFnZXwwWCwWyfXO0DXlJGWoHGovXckBj9bPDnaZ9MccUII9AMdg==
-X-Received: by 2002:a05:6102:914:b0:660:d26b:506e with SMTP id ada2fe7eead31-744b79c1be9mr2250810137.1.1783407155355;
-        Mon, 06 Jul 2026 23:52:35 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-73e173b2b2csm6767631137.0.2026.07.06.23.52.34
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jul 2026 23:52:34 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-73be40e5c4cso1010924137.0
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2026 23:52:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrOpkT2yxuBY/k/3V+iGoLOKCLswGHACKpSlNsmPgSlzBSmI2zwEY8RjW7e5O1QSrUKIahyqTgXayF+@vger.kernel.org
-X-Received: by 2002:a05:6102:1606:b0:740:2717:a2d5 with SMTP id
- ada2fe7eead31-744b79c1bddmr1806938137.6.1783407153869; Mon, 06 Jul 2026
- 23:52:33 -0700 (PDT)
+	s=arc-20240116; t=1783407387; c=relaxed/simple;
+	bh=mt6rUjgJc+IuOzhtFCcGRB1t052B3wNDIX5do0o14+8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NfeCACXKz63MdiJPj08/gDvcpKr8SR9XCEUd84/nrCepv5eapSwWpTsbwUoW/+QncCnr0TIFqZukyWlnSX8YkSlok4M31GXoXpsh3EyT9K4jPkQ4f4qB7ds/BEpIBDhaB+VYuJg9cWfXpMFHWG9RT052l5qHk+XQkfhH5TwCBlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=BT1muqJf; arc=none smtp.client-ip=211.75.126.72
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 6676tP2w9996839, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1783407325; bh=mt6rUjgJc+IuOzhtFCcGRB1t052B3wNDIX5do0o14+8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=BT1muqJfV9uvba4UeuBvFhB489eDtIdc082idO4/M8yYIYlG05iWs0nKwyNt4ETiq
+	 oDY1NMvGa9VkFabtoEAsWKXnNhuG7AxF7aLL0ol/5JvrC3iDvK62XJ1l9Km5GvY1RV
+	 gnYzNbdM/Bn72XCVI643rwoFWtbzTsUH0V8NeRWC0DhbcWd46Yj/mqTqe76z4uFacu
+	 u/6I+RVYsp1qNn4817dJOhZY3cn8bs+3ujhc8QwZIOEx7Tvgm/8DGkd09DBipbvxzB
+	 GIUdCP3VQDNcKPAr6T/Bp3efE0IxJrEdw9y1Re00yyLcy1RQ04V4yCz1jzdA7tt4tY
+	 /gOU2olcAc4MA==
+Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
+	by rtits2.realtek.com.tw (8.15.2/3.29/5.94) with ESMTPS id 6676tP2w9996839
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 7 Jul 2026 14:55:25 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 7 Jul 2026 14:55:26 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Tue, 7 Jul 2026 14:55:26 +0800
+From: =?utf-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	"linusw@kernel.org" <linusw@kernel.org>, "brgl@kernel.org" <brgl@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"afaerber@suse.com" <afaerber@suse.com>, "mwalle@kernel.org"
+	<mwalle@kernel.org>, "andriy.shevchenko@intel.com"
+	<andriy.shevchenko@intel.com>, =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?=
+	<tychang@realtek.com>
+CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	"linux-realtek-soc@lists.infradead.org"
+	<linux-realtek-soc@lists.infradead.org>,
+	=?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
+	=?utf-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
+	=?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+Subject: RE: (subset) [PATCH v4 0/4] gpio: realtek: Add support for Realtek
+ DHC RTD1625
+Thread-Topic: (subset) [PATCH v4 0/4] gpio: realtek: Add support for Realtek
+ DHC RTD1625
+Thread-Index: AQHdAijOhwVVCHLFCkaSAZ80GLo1NbZP+P+AgBG4dLA=
+Date: Tue, 7 Jul 2026 06:55:26 +0000
+Message-ID: <a00c475a6ce0469682305c4b4269b181@realtek.com>
+References: <20260622092335.1166876-1-eleanor.lin@realtek.com>
+ <178246069898.6685.11577448681947659397.b4-ty@oss.qualcomm.com>
+In-Reply-To: <178246069898.6685.11577448681947659397.b4-ty@oss.qualcomm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260704151521.211335-1-marek.vasut+renesas@mailbox.org>
- <20260704151521.211335-2-marek.vasut+renesas@mailbox.org> <CAMRc=MeyKGv75rTLauZuGxSfgjCPXVE_r=A7uNduRr6kAd43aA@mail.gmail.com>
- <edc7505e-1103-42d7-b88d-013ca10753b3@mailbox.org>
-In-Reply-To: <edc7505e-1103-42d7-b88d-013ca10753b3@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 7 Jul 2026 08:52:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXQQWmn612R3y6qSXOZ7YMwZcfrBTrQZ9GzGekhFhtWSw@mail.gmail.com>
-X-Gm-Features: AVVi8CefYSfbwNIrN8ylhp-z_YSTf7aaF8Cz88JDJCE3fX10J7HfmxqA13tE8IY
-Message-ID: <CAMuHMdXQQWmn612R3y6qSXOZ7YMwZcfrBTrQZ9GzGekhFhtWSw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: rcar: Add R-Car X5H (R8A78000) support
-To: Marek Vasut <marek.vasut@mailbox.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [0.44 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39555-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
-	FORGED_RECIPIENTS(0.00)[m:marek.vasut@mailbox.org,m:brgl@kernel.org,m:conor+dt@kernel.org,m:krzk+dt@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39556-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:linusw@kernel.org,m:brgl@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:afaerber@suse.com,m:mwalle@kernel.org,m:andriy.shevchenko@intel.com,m:tychang@realtek.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-realtek-soc@lists.infradead.org,m:cy.huang@realtek.com,m:stanley_chang@realtek.com,m:james.tai@realtek.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[realtek.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	R_DKIM_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mailbox.org:email,linux-m68k.org:from_mime,linux-m68k.org:email,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:email,realtek.com:from_mime,realtek.com:dkim,realtek.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E08C8718364
+X-Rspamd-Queue-Id: 414247182FB
 
-Hi Marek,
-
-Thanks for your patch!
-
-On Mon, 6 Jul 2026 at 21:44, Marek Vasut <marek.vasut@mailbox.org> wrote:
-> On 7/6/26 11:19 AM, Bartosz Golaszewski wrote:
-> >> +static inline int gpio_rcar_remap_offset(struct gpio_rcar_priv *p, int *offs)
-> >> +{
->
-> I am hoping to get some input on this remap function.
-
-I haven't looked at your patch in detail yet, but the remap function
-was the first thing that struck my eyes.  This might impact performance
-of bit-banging and of the sloppy logic analyzer.
-Have you looked at the code generated by the compiler?
-Perhaps it would be better to use a table, like sci_port_params.regs[]
-in the sh-sci driver, and riic_of_data.regs in the riic driver?
-
-> >> +    /* R-Car Gen4 and older do not need any offset remap. */
-> >> +    if (!p->info.has_layout_gen5)
-> >> +            return 0;
-> >> +
-> >> +    /*
-> >> +     * R-Car Gen5 register layout is slightly different and the offsets
-> >> +     * that have to be added to or subtracted from each register offset
-> >> +     * can be divided into five groups, listed below.
-> >> +     */
-> >> +    switch (*offs) {
-> >> +    case IOINTSEL...OUTDT:
-> >> +            return 0;
-> >> +    case INDT:
-> >> +            *offs += 0x10;
-> >> +            return 0;
-> >> +    case INTDT...EDGLEVEL:
-> >> +            fallthrough;
-> >> +    case BOTHEDGE:
-> >> +            *offs += 0x70;
-> >> +            return 0;
-> >> +    case OUTDTSEL:
-> >> +            *offs -= 0x34;
-> >> +            return 0;
-> >> +    case INEN:
-> >> +            *offs -= 0x38;
-> >> +            return 0;
-> >> +    default:
-> >> +            /*
-> >> +             * This here must never be reached, if this is reached, that
-> >> +             * means there is a catastrophic failure in the driver. Skip
-> >> +             * any IO read/write to prevent further damage.
-> >> +             */
-> >> +            WARN_ON(1);
-> >> +            return -EINVAL;
-> >> +    }
-> >> +}
-> >> +
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgQmFydG9zeiwNCg0KPiBPbiBNb24sIDIyIEp1biAyMDI2IDE3OjIzOjMxICswODAwLCBZdS1D
+aHVuIExpbiB3cm90ZToNCj4gPiBUaGlzIHNlcmllcyBhZGRzIEdQSU8gc3VwcG9ydCBmb3IgdGhl
+IFJlYWx0ZWsgREhDIFJURDE2MjUgU29DLg0KPiA+DQo+ID4gVW5saWtlIHRoZSBleGlzdGluZyBk
+cml2ZXIgKGdwaW8tcnRkLmMpIHdoaWNoIHVzZXMgc2hhcmVkIGJhbmsNCj4gPiByZWdpc3RlcnMs
+IHRoZSBSVEQxNjI1IGZlYXR1cmVzIGEgcGVyLXBpbiByZWdpc3RlciBhcmNoaXRlY3R1cmUgd2hl
+cmUNCj4gPiBlYWNoIEdQSU8gbGluZSBpcyBtYW5hZ2VkIGJ5IGl0cyBvd24gZGVkaWNhdGVkIDMy
+LWJpdCBjb250cm9sDQo+ID4gcmVnaXN0ZXIuIFRoaXMgZGlzdGluY3QgaGFyZHdhcmUgZGVzaWdu
+IHJlcXVpcmVzIGEgbmV3LCBzZXBhcmF0ZSBkcml2ZXIuDQo+ID4NCj4gPiBbLi4uXQ0KPiANCj4g
+QXBwbGllZCwgdGhhbmtzIQ0KPiANCj4gWzEvNF0gZHQtYmluZGluZ3M6IGdwaW86IHJlYWx0ZWs6
+IEFkZCByZWFsdGVrLHJ0ZDE2MjUtZ3Bpbw0KPiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9i
+cmdsL2MvOGYzMjgwOGUxNTMwYjIyMjllMDc2OTVmYjM5YzU0ZmVlOTEwYmQ0YQ0KPiBbMi80XSBn
+cGlvOiBSZXBsYWNlICJkZWZhdWx0IHkiIHdpdGggImRlZmF1bHQgQVJDSF9SRUFMVEVLIiBpbiBL
+Y29uZmlnDQo+IA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL2JyZ2wvYy9iNWQyM2ZjZGIxMjk3
+MmM1MjJlOTZmOTBhYjQ4YmU4YTBkOTcxYjBlDQo+IFszLzRdIGdwaW86IHJlYWx0ZWs6IEFkZCBk
+cml2ZXIgZm9yIFJlYWx0ZWsgREhDIFJURDE2MjUgU29DDQo+IA0KPiBodHRwczovL2dpdC5rZXJu
+ZWwub3JnL2JyZ2wvYy9hNTdlMjdjNDNiMDMxNWVlODZjNjg5NjUxMGQ2OWJlNTI1N2UwOTNlDQo+
+IA0KDQpUaGFuayB5b3UgZm9yIGFwcGx5aW5nIHRoZSBwYXRjaGVzIQ0KDQpJJ20gY3VycmVudGx5
+IHdvcmtpbmcgb24gdjYgb2YgdGhlIHBhdGNoIHNlcmllcyB0aGF0IGluY29ycG9yYXRlcyBBbmR5
+J3MNCmdwaW8tcmVnbWFwIHBhdGNoZXMsIGFuZCBpdCBzaG91bGQgYnVpbGQgb24gdG9wIG9mIGdw
+aW8vZm9yLW5leHQuIEhvd2V2ZXIsDQpJIGhhdmUgYSBjb25mbGljdCB3aXRoIHRoZSBkcml2ZXIg
+cGF0Y2ggdGhhdCB3YXMgYWxyZWFkeSBhcHBsaWVkLg0KDQpDb3VsZCB5b3UgcGxlYXNlIHJldmVy
+dCB0aGF0IGNvbW1pdCBmcm9tIGdwaW8vZm9yLW5leHQ/DQoNCkJlc3QgUmVnYXJkcywNCll1LUNo
+dW4NCg0KPiBCZXN0IHJlZ2FyZHMsDQo+IC0tDQo+IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRv
+c3ouZ29sYXN6ZXdza2lAb3NzLnF1YWxjb21tLmNvbT4NCg==
 
