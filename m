@@ -1,161 +1,193 @@
-Return-Path: <linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eBplKCWjTGrWnQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:56:37 +0200
+	id UCLjNwGpTGoXnwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39557-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 09:21:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 414247182FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 08:56:37 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6308F71866A
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 09:21:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=realtek.com header.s=dkim header.b=BT1muqJf;
-	dmarc=pass (policy=none) header.from=realtek.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39556-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=baylibre.com header.s=google header.b="YNRpGF5/";
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39557-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39557-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A4B70300598A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 06:56:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 00AA6307135E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 07:13:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 046B73D333B;
-	Tue,  7 Jul 2026 06:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665023D1CCA;
+	Tue,  7 Jul 2026 07:13:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F233B42D4;
-	Tue,  7 Jul 2026 06:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4610B3B14A9
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 07:13:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783407387; cv=none; b=DlIjq0UgaM8EbspLangIlsZkymIJamcnxnETwmvR/zBenXWGt4BCZUVq3LKT6NWpFUjQOiNt6TaqODhMpVCaJjTBBgAlpxI21Rw2K9ROIHRDA0x5yDjEc6t3czN/zixQ1T72l07L4argMOChgY/yL2yzZq/XDI49jDXJ2H+DKcw=
+	t=1783408398; cv=none; b=Y6Q0Tv/TmCZQEmIgxEiVAQrt5w88DmGEsKz7uykF9VbDv4Q8uUFzKLwZr6LJj97qziA0uk/0lIcwgX01tVM/73obuOQYx/6YEZoHhQkO8/xefrpy3OImAa0XAmnibZE2ECHVVgPqoc3UHnL0bMtgN1HMQ0iZvWfdZh1yFjXmLTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783407387; c=relaxed/simple;
-	bh=mt6rUjgJc+IuOzhtFCcGRB1t052B3wNDIX5do0o14+8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NfeCACXKz63MdiJPj08/gDvcpKr8SR9XCEUd84/nrCepv5eapSwWpTsbwUoW/+QncCnr0TIFqZukyWlnSX8YkSlok4M31GXoXpsh3EyT9K4jPkQ4f4qB7ds/BEpIBDhaB+VYuJg9cWfXpMFHWG9RT052l5qHk+XQkfhH5TwCBlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=BT1muqJf; arc=none smtp.client-ip=211.75.126.72
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 6676tP2w9996839, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1783407325; bh=mt6rUjgJc+IuOzhtFCcGRB1t052B3wNDIX5do0o14+8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=BT1muqJfV9uvba4UeuBvFhB489eDtIdc082idO4/M8yYIYlG05iWs0nKwyNt4ETiq
-	 oDY1NMvGa9VkFabtoEAsWKXnNhuG7AxF7aLL0ol/5JvrC3iDvK62XJ1l9Km5GvY1RV
-	 gnYzNbdM/Bn72XCVI643rwoFWtbzTsUH0V8NeRWC0DhbcWd46Yj/mqTqe76z4uFacu
-	 u/6I+RVYsp1qNn4817dJOhZY3cn8bs+3ujhc8QwZIOEx7Tvgm/8DGkd09DBipbvxzB
-	 GIUdCP3VQDNcKPAr6T/Bp3efE0IxJrEdw9y1Re00yyLcy1RQ04V4yCz1jzdA7tt4tY
-	 /gOU2olcAc4MA==
-Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
-	by rtits2.realtek.com.tw (8.15.2/3.29/5.94) with ESMTPS id 6676tP2w9996839
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 7 Jul 2026 14:55:25 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 7 Jul 2026 14:55:26 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
- 15.02.2562.017; Tue, 7 Jul 2026 14:55:26 +0800
-From: =?utf-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	"linusw@kernel.org" <linusw@kernel.org>, "brgl@kernel.org" <brgl@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"afaerber@suse.com" <afaerber@suse.com>, "mwalle@kernel.org"
-	<mwalle@kernel.org>, "andriy.shevchenko@intel.com"
-	<andriy.shevchenko@intel.com>, =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?=
-	<tychang@realtek.com>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-	"linux-realtek-soc@lists.infradead.org"
-	<linux-realtek-soc@lists.infradead.org>,
-	=?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-	=?utf-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
-	=?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-Subject: RE: (subset) [PATCH v4 0/4] gpio: realtek: Add support for Realtek
- DHC RTD1625
-Thread-Topic: (subset) [PATCH v4 0/4] gpio: realtek: Add support for Realtek
- DHC RTD1625
-Thread-Index: AQHdAijOhwVVCHLFCkaSAZ80GLo1NbZP+P+AgBG4dLA=
-Date: Tue, 7 Jul 2026 06:55:26 +0000
-Message-ID: <a00c475a6ce0469682305c4b4269b181@realtek.com>
-References: <20260622092335.1166876-1-eleanor.lin@realtek.com>
- <178246069898.6685.11577448681947659397.b4-ty@oss.qualcomm.com>
-In-Reply-To: <178246069898.6685.11577448681947659397.b4-ty@oss.qualcomm.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1783408398; c=relaxed/simple;
+	bh=o2oLniKM13hnZyuUn7cvH6Cnp9Sck61RTCQgMFrG0SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RoNUEJRG+qxoarmlRyFKwUF5CcWfLgLXNbFLgM6+WP5bqAnmqwHO+99vNVkYkUFY0xHMp7uD9KaRGURK6QKyTyO72VskwgvEH2ewK67wgL9E0UzEYs0eHfpsVBoxmTS+TK7aCaaad4F6mMbn9t/8HmxZdeG3oUtuyIU6f6d73bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=YNRpGF5/; arc=none smtp.client-ip=209.85.221.49
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-45fd464d51fso1951234f8f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2026 00:13:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1783408393; x=1784013193; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=o2oLniKM13hnZyuUn7cvH6Cnp9Sck61RTCQgMFrG0SU=;
+        b=YNRpGF5/4a3GmJ+cT0Tm+T+TDzVjFj7199W9ElRLVc07r+SaeoFCnE57BbYiyHdTh8
+         /X3tUqtY5w+JK9/mOX76z0dogzcnieNUV/aNVzuomkBp89rnGMC08IIcvTmVmHVNVH9e
+         covAAcdCoWrHc3zTNRVGcVzQS6ZUkuygCpezBcHsHC5zMUm1+U7USp2I96NmZMWjnqpK
+         7lwBm6T2J+E83PyJaiIF7jK2O0pE3x/iNcgj91SeiKz0Y8HFVATfs5um/ZQu+zvixl62
+         VqQb5D8yDnei4tL7TsFaMKncirx9usC9Ra4rl+pX6vJk+KetM74AJNXuqpvMQlPXgbL4
+         Nl7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783408393; x=1784013193;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=o2oLniKM13hnZyuUn7cvH6Cnp9Sck61RTCQgMFrG0SU=;
+        b=DxQQ+8opXLAzT0UaNk1qVwgLoGGkEWufaLp+4nYzmUAFVKcnL03/f0Gg54kbrlBafS
+         +NscG04cLPrXYDGwQDaIlWLz2jaNh09SMoO0kqCiYBlSCXhgOxC1A9PDVNu+ok2ZFOYA
+         uEoFY7QFpJJoBzAarKBD781ZDHgcyPh3cXd1yrp/+vCBTEnBLNe/JP2zPAPvluAW/bcd
+         avTNVh7wfUnFsSd2uhsRRUGCIYYIIioUdlf5pqaozkb6VNq54hv5YBsovnXVjPHf4xqs
+         BNaxjLU3gSUckxr8mKz/1Jn4Mx05gG/9v8upiv0inO7kJVNIP8kG0Z+bFuYkuwa3y/ki
+         /SMw==
+X-Gm-Message-State: AOJu0YwMYJwuMMA7/zakTrSse0ljMKRtldJgLJIcH395NNvxCCWStyG0
+	nm5QDYe8DHnvssL9CmEfiqoS+slK+tREbc8/QJvNle4iyyvym9Z1Q5291uD1BSI1y5k=
+X-Gm-Gg: AfdE7ckn61dIhO85+mGeyk3Zp+CSfxlRYiBqzcuUn5+y5dWCR3MCQxuJ96sd2FdjNu3
+	E9DMxMf5456Sqggmf/MmqiJ35zfmO6JK4XC8bcI+Aw15MWdZdGZpfMyETkAI0gSwXZs5dm3UQCD
+	ttN4Hguie8Cpp68x864mUJ4DYYshh365ohjpmgdRdiMlJazxyzojO3hjPFD6X4TPzkCa2YP2oRz
+	nSmd+YITyPnaNby+19zPXffCvY8+KRHlSDlZzSEphsI2z7g644zqOcK7ZXHUc7MNmB3SevOmPmx
+	o+s4IK3mS27lh9n5eoHIKXGf3w6TJn4zbteCaxVGVWxfAVoQQWkLZO+r9+n0x+X0bIP7Ujwiwft
+	Mgbl6YQjAgOrL9NVLqtjizBMnBR47G18+ysynpdsTqmO8xs016TjjaRhYtjZCgPenKf3Kfw03+6
+	OHLXMPAj3AXtimglWyTa4XyUC1BaKnjCl32Tc1O3WVtRUo6Xhz8C6ZqV+JnrhEwpEU7+ZS74RNt
+	DP5VY0qHjv7BUE=
+X-Received: by 2002:a05:600c:5288:b0:490:b2c9:e284 with SMTP id 5b1f17b1804b1-493df09608emr41577735e9.30.1783408392868;
+        Tue, 07 Jul 2026 00:13:12 -0700 (PDT)
+Received: from localhost (p200300f65f47db0437b4d928ee3eb6f8.dip0.t-ipconnect.de. [2003:f6:5f47:db04:37b4:d928:ee3e:b6f8])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493e0f41014sm30858915e9.6.2026.07.07.00.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2026 00:13:10 -0700 (PDT)
+Date: Tue, 7 Jul 2026 09:13:09 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2] gpio: mvebu: fix devres LIFO ordering between GPIO
+ chip and IRQ domain
+Message-ID: <akykuME0Y3eLOA2q@monoceros>
+References: <20260706232223.774895-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hr5mygvtcaxfa33e"
+Content-Disposition: inline
+In-Reply-To: <20260706232223.774895-1-rosenp@gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.44 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39556-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:linusw@kernel.org,m:brgl@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:afaerber@suse.com,m:mwalle@kernel.org,m:andriy.shevchenko@intel.com,m:tychang@realtek.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-realtek-soc@lists.infradead.org,m:cy.huang@realtek.com,m:stanley_chang@realtek.com,m:james.tai@realtek.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:andy.shevchenko@gmail.com,m:linux-kernel@vger.kernel.org,m:andyshevchenko@gmail.com,s:lists@lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[realtek.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:email,realtek.com:from_mime,realtek.com:dkim,realtek.com:mid]
+	DMARC_NA(0.00)[baylibre.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39557-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[baylibre.com:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,gmail.com];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,baylibre.com:from_mime,baylibre.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 414247182FB
+X-Rspamd-Queue-Id: 6308F71866A
 
-SGkgQmFydG9zeiwNCg0KPiBPbiBNb24sIDIyIEp1biAyMDI2IDE3OjIzOjMxICswODAwLCBZdS1D
-aHVuIExpbiB3cm90ZToNCj4gPiBUaGlzIHNlcmllcyBhZGRzIEdQSU8gc3VwcG9ydCBmb3IgdGhl
-IFJlYWx0ZWsgREhDIFJURDE2MjUgU29DLg0KPiA+DQo+ID4gVW5saWtlIHRoZSBleGlzdGluZyBk
-cml2ZXIgKGdwaW8tcnRkLmMpIHdoaWNoIHVzZXMgc2hhcmVkIGJhbmsNCj4gPiByZWdpc3RlcnMs
-IHRoZSBSVEQxNjI1IGZlYXR1cmVzIGEgcGVyLXBpbiByZWdpc3RlciBhcmNoaXRlY3R1cmUgd2hl
-cmUNCj4gPiBlYWNoIEdQSU8gbGluZSBpcyBtYW5hZ2VkIGJ5IGl0cyBvd24gZGVkaWNhdGVkIDMy
-LWJpdCBjb250cm9sDQo+ID4gcmVnaXN0ZXIuIFRoaXMgZGlzdGluY3QgaGFyZHdhcmUgZGVzaWdu
-IHJlcXVpcmVzIGEgbmV3LCBzZXBhcmF0ZSBkcml2ZXIuDQo+ID4NCj4gPiBbLi4uXQ0KPiANCj4g
-QXBwbGllZCwgdGhhbmtzIQ0KPiANCj4gWzEvNF0gZHQtYmluZGluZ3M6IGdwaW86IHJlYWx0ZWs6
-IEFkZCByZWFsdGVrLHJ0ZDE2MjUtZ3Bpbw0KPiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9i
-cmdsL2MvOGYzMjgwOGUxNTMwYjIyMjllMDc2OTVmYjM5YzU0ZmVlOTEwYmQ0YQ0KPiBbMi80XSBn
-cGlvOiBSZXBsYWNlICJkZWZhdWx0IHkiIHdpdGggImRlZmF1bHQgQVJDSF9SRUFMVEVLIiBpbiBL
-Y29uZmlnDQo+IA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL2JyZ2wvYy9iNWQyM2ZjZGIxMjk3
-MmM1MjJlOTZmOTBhYjQ4YmU4YTBkOTcxYjBlDQo+IFszLzRdIGdwaW86IHJlYWx0ZWs6IEFkZCBk
-cml2ZXIgZm9yIFJlYWx0ZWsgREhDIFJURDE2MjUgU29DDQo+IA0KPiBodHRwczovL2dpdC5rZXJu
-ZWwub3JnL2JyZ2wvYy9hNTdlMjdjNDNiMDMxNWVlODZjNjg5NjUxMGQ2OWJlNTI1N2UwOTNlDQo+
-IA0KDQpUaGFuayB5b3UgZm9yIGFwcGx5aW5nIHRoZSBwYXRjaGVzIQ0KDQpJJ20gY3VycmVudGx5
-IHdvcmtpbmcgb24gdjYgb2YgdGhlIHBhdGNoIHNlcmllcyB0aGF0IGluY29ycG9yYXRlcyBBbmR5
-J3MNCmdwaW8tcmVnbWFwIHBhdGNoZXMsIGFuZCBpdCBzaG91bGQgYnVpbGQgb24gdG9wIG9mIGdw
-aW8vZm9yLW5leHQuIEhvd2V2ZXIsDQpJIGhhdmUgYSBjb25mbGljdCB3aXRoIHRoZSBkcml2ZXIg
-cGF0Y2ggdGhhdCB3YXMgYWxyZWFkeSBhcHBsaWVkLg0KDQpDb3VsZCB5b3UgcGxlYXNlIHJldmVy
-dCB0aGF0IGNvbW1pdCBmcm9tIGdwaW8vZm9yLW5leHQ/DQoNCkJlc3QgUmVnYXJkcywNCll1LUNo
-dW4NCg0KPiBCZXN0IHJlZ2FyZHMsDQo+IC0tDQo+IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRv
-c3ouZ29sYXN6ZXdza2lAb3NzLnF1YWxjb21tLmNvbT4NCg==
+
+--hr5mygvtcaxfa33e
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCHv2] gpio: mvebu: fix devres LIFO ordering between GPIO
+ chip and IRQ domain
+MIME-Version: 1.0
+
+On Mon, Jul 06, 2026 at 04:22:23PM -0700, Rosen Penev wrote:
+> During driver removal, devres cleans up in LIFO order. The IRQ domain
+> was created and its devm cleanup action registered after
+> devm_gpiochip_add_data(), so the domain was destroyed before the GPIO
+> chip was deregistered. If gpiod_to_irq() is called on a pin during
+> this window, mvebu_gpio_to_irq() passes the freed mvchip->domain to
+> irq_create_mapping().
+
+Without having looked at your patch, I would expect that there is a
+similar window during probe where calling gpiod_to_irq() between
+devm_gpiochip_add_data() and IRQ domain creation results in an invalid
+mvchip->domain being passed to irq_create_mapping(), right?
+
+> Fix by moving the IRQ domain creation, devm cleanup action registration,
+> generic chip allocation, and chip type setup before
+> devm_gpiochip_add_data(). This ensures the GPIO chip is torn down
+> first (preventing new IRQ mappings), then the IRQ domain is removed,
+> and finally mvchip is freed.
+>=20
+> Fixes: 644ee70267a9 ("gpio: mvebu: fix irq domain leak")
+
+If the above is right, the referenced commit only creates the issue at
+driver detach. The issue at probe time exists since=20
+fefe7b092345 ("gpio: introduce gpio-mvebu driver for Marvell SoCs")
+which has `gpiochip_add(&mvchip->chip);` before coping for irqs.
+
+Best regards
+Uwe
+
+--hr5mygvtcaxfa33e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpMpwMACgkQj4D7WH0S
+/k6PkQf/cjApnE5nXUCQ8GAQc8ZrWWggNhmY6A0+vciz1er1sQwxQrcXOEn2jNl4
+XVW+M0TE8l8VoYsFQZxLgZm/6FUuyCGcwejFvKD6yFlyebtO6WIp8yS0H//6Gj24
+F6nwP1fQ9CCLvGKpv3A829p+wP1+VVnqkWbCFc3aueAov5oLlBaa4Fxe8eAHWFng
+TNdZ+qlRjfypuRFwp9xV6qFrWnw5O9ghuqFDu+BOy4qlxdLYC4WNizu5N8GwvDgp
+yp+YYtDCOWZ/UNVxGtCXdzWJHY/r+mW7cidAXNDswkmq7VAu7YCs6G6Qkx0ZLiTj
+b4TFO5TAuWvLJyBK13Mj3/A/lsx5Lg==
+=vBwG
+-----END PGP SIGNATURE-----
+
+--hr5mygvtcaxfa33e--
 
