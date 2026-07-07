@@ -1,199 +1,193 @@
-Return-Path: <linux-gpio+bounces-39596-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39599-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ppTpCWtNTWqSxwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39596-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 21:03:07 +0200
+	id mLK3IGVSTWpxyQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39599-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 21:24:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75B4F71ED18
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 21:03:06 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A4FC71F2CD
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 21:24:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=VW6kuO7v;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39596-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39596-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b="KPOR/Oyl";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39599-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39599-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 674B73085CE3
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 19:01:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C63553010BD5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 19:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4066A2F7F1D;
-	Tue,  7 Jul 2026 19:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC344386C15;
+	Tue,  7 Jul 2026 19:24:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CDD3A0E8E
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 19:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F9B3546D8;
+	Tue,  7 Jul 2026 19:24:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783450866; cv=none; b=n9zKPQ+ikrK9FIh+wJyqh57ia4qER6MiVlwg6ytk7wKL+Us8zW11YDGCfuLeZmFh3DPqLZmLtNCOAUq1Jx/MF8wSPvf3Pb1OscqtQeKLFxMG7iWrHQXdBYM8PflvxOZcSBnilOTziw7j45tAy3go8QW6Eguk1C5y+hBH8h0RG80=
+	t=1783452255; cv=none; b=H2YFfFuTzNLOzrPLbhTAdhuhfXG7BlWuD6Yv16gFjy/KW6PIYQkB/H6om3B714MKNKPx1WNnUjkOteskIr8blBFeMWZeyb5oZvJzjJ5IDGFzmrAbPT+Nj3JcJ0jaS1K91nlPKIGhTCHHskenQCj//b0Tw49HTU0yPfnD6XXOyPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783450866; c=relaxed/simple;
-	bh=IwcMHfwnLLFVSsitBehmP/d9zkapDiPSC74fJVhWDKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bl3mdUxGWEQq+b+CaEzv0qvoCjxJ1sYIloMaV/Wat6MbE+6RCJtxsK0Lb8YOLD4D2Tyr71AZA46KyfBTqlzsMlE6xvOzOwnbRlqQ+zVObQLphi/T5rSFaxKN9ACDdv4xnCijQdf5ENTZMGweQPvx+Ckf3s5j8YZ8ZsIg2bY1AEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VW6kuO7v; arc=none smtp.client-ip=209.85.128.41
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-493c52cde9eso44382745e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2026 12:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783450863; x=1784055663; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9U+Mm7+UlibCZMW00t912Atja0ya4M2ty/S6lVSlezQ=;
-        b=VW6kuO7vIsosZGAPrZvJUoT+aOdwmwXLQF4BP9aXD+/MNZapccZic9rAIk3JzjzgJu
-         HYs+2Y69Ps+YM81PTyVPEb8dLiOsTouN+NJL8P8dFzgJPbQZENYIX24NKPmKT8Sf9Gyq
-         jFP/Xj/t/JjKZ0v/XdC4lwbZSS7gXfxPS3G3uWKUrf44yezxOsPwYWWjbzTThtprmgUw
-         h9GzS4TqR7UyYIeMdZRIZpwDr/oKRTpas9mi6/UaJpaSp7Uh+VSfDmg+xCwBtI1PaF98
-         oJXcmf/EM7VSDtZb6XAuaT5DvoFdgzycit1O7wNRpAwqVyILoLddczUnzkiZt/XUu+Nr
-         PMkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783450863; x=1784055663;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=9U+Mm7+UlibCZMW00t912Atja0ya4M2ty/S6lVSlezQ=;
-        b=c//vBkqOLEarm++LjC8Xr5EYiLZP2qUbNtZDN72pUazQrmWHHZ7LPR7kZCALZEqbFX
-         HkLRcLsQ0GzJGAIfuSZh6TOcoC5HQJ/ofCEZZJq/DlUH5RRxhd9WdhxHmngwQ7Yx6lFO
-         tySj89AWXMpEsgeXxEuXjgt9UsOlmIXBdr3k6gvf8Ifsjo/ENlBFygB+zJ+WRMM3gmvN
-         +KTAGoVmyH45BgfCzWeM1Q12Yp1hynh5GvFUj7r9GkJBC0dcS+JSpIs7UOInjdYHHu9M
-         1v+p6hSmim4kk0cQxDkX3arcLKoIbN1/+48YC+wQsrYWFPQdCWad0/NPPck7tHmFOgxe
-         1UAw==
-X-Forwarded-Encrypted: i=1; AHgh+RpLW89vIQN8XSuph5DBdrALwKlmtIoB+pT+qS79+RuXq2RfewAiHp8JJmfPLGpKU4fTMt0w08wEz1EJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWjwP8q/0C5CiiRJdGUl+QLdWxhbikfNrbgFhB45dmVdolroFz
-	H6AQJ3jcObjqPJPD+ckDa1+JsrsHZBRZINe6iFHxtqpgREVtfwb/KMcU
-X-Gm-Gg: AfdE7cmxnHiRUN7K9odJ4lW9+hbzn1elI7iKAyOkLS3Yzhfd9uOLGHyeCzPyTYBttjq
-	QoVPtSgVD5/qY9ZwZ/QgL4abY4/knq5DwVB9tmjSsbXU0bTCPQ9ohS+jwGZtrj5I0I0uvI9o9bY
-	/jo63z72E7et+XtiLVuqk3HctUyiZUFCtrUa9K10z0jYYfSVDz4IOIt3eu5nwzoi+ijV28n86rn
-	lwRlfdPNDol2yTn0IrtHrH8g99wbwh31PYEA1jLqBHuoXUfQMmte5fPMLtzRJq36ITM/B6NA11G
-	XetuJrGExn/WfYrjyjQmtBsW2svJVx34D4D6YUxctqShN+dKENo85bhgZ1SyL+NspOE3EoznbiX
-	WfyGVTLNlYRXMzPPSae9oGJaMyo0+sGZgZb5l+j4W5GjfsGLjPFHrMhWikM4YFDSp0uc8njWCj/
-	eC6pWdcDDqlNy9Kj6XuwlOqHjA
-X-Received: by 2002:a05:600c:8b6c:b0:492:4a50:41fe with SMTP id 5b1f17b1804b1-493df092ac5mr73198175e9.22.1783450862462;
-        Tue, 07 Jul 2026 12:01:02 -0700 (PDT)
-Received: from [192.168.1.10] ([95.43.220.235])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-493e0f5bc78sm90260455e9.14.2026.07.07.12.01.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2026 12:01:01 -0700 (PDT)
-Message-ID: <81a7e0f6-8731-4bae-b06c-932f5c57d4dc@gmail.com>
-Date: Tue, 7 Jul 2026 22:01:00 +0300
+	s=arc-20240116; t=1783452255; c=relaxed/simple;
+	bh=Bt/q0n0w05U5iaF1GtMTt+11t9g0yfG2q6EzIbfOXug=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HU1WwI0QvNDlj1IXlQkvtK0SmF1EMRvkvkmAPtWvbAAPED+dZZ30zHELX8sKSbQtvioEjYNnZErOMF+K13NB30BafSmoLuRaG0ZP3TWCjcN84A/QHk/cOP/hzTwfVHUTwxcAf5gons/qwge48TuAzJDPWU72AaQ8wj9QtWTM7lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPOR/Oyl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1261BC2BCB8;
+	Tue,  7 Jul 2026 19:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783452255;
+	bh=Bt/q0n0w05U5iaF1GtMTt+11t9g0yfG2q6EzIbfOXug=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=KPOR/Oyl8KGu+3g1h6r37PWwVBXhCB7QWz9MGSDwB+XqmJ7uE8PzEYYYsHbVyzTTL
+	 59xb52GQYUtCCRbvvUGuOdpPP4Ggb3HW4m2FHwOucDdUj44Ckx59LgDrIAIgMyVngo
+	 6ilRDJl72LnHD+1+CbQpASzjP5COuk4CYlKC6aUZObbWbLyd/Da6wKu4wHzaypcn+Y
+	 /oFcQ1m/fgzyvY0j0LDvImOBPk44sWVQlp2GN5aLAySM4C4LqdiJIcjeARAWyFfMnw
+	 Eqt0ftvCcf+0FbiE8TxpBCN353RWkEDdSAu6L8UQ59mprxUqTJZ4x/gA0H5xcXHYvU
+	 IFloJ0JW1h8iQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BFFC43458;
+	Tue,  7 Jul 2026 19:24:14 +0000 (UTC)
+From: Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>
+Subject: [PATCH RFC 0/5] mfd: ls2kbmc: multiple fixes for this driver
+Date: Wed, 08 Jul 2026 03:24:01 +0800
+Message-Id: <20260708-ls2kbmc-mod-v1-0-c344bf5defa3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: phy: motorola,cpcap-usb: add chrg_det
- interrupt
-To: Conor.Dooley@microchip.com, conor@kernel.org
-Cc: vkoul@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, aaro.koskinen@iki.fi,
- andreas@kemnade.info, khilman@baylibre.com, rogerq@kernel.org,
- tony@atomide.com, linusw@kernel.org, brgl@kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20260705101105.1798069-1-ivo.g.dimitrov.75@gmail.com>
- <20260705101105.1798069-2-ivo.g.dimitrov.75@gmail.com>
- <20260706-visitor-calorie-b805ac5af970@spud>
- <2b192691-54d8-4449-a18c-b87266c6c73c@gmail.com>
- <dad556ba-5965-42a0-b78a-2d417b2f6837@microchip.com>
-Content-Language: en-GB
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-In-Reply-To: <dad556ba-5965-42a0-b78a-2d417b2f6837@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFJSTWoC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDMyMz3Zxio+yk3GTd3PwUXVMjA0tDS2MDA8skIyWgjoKi1LTMCrBp0Up
+ Bbs5KsbW1AHs6g9piAAAA
+X-Change-ID: 20260626-ls2kbmc-mod-5209193009b2
+To: Binbin Zhou <zhoubinbin@loongson.cn>, 
+ Chong Qiao <qiaochong@loongson.cn>, Lee Jones <lee@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, Corey Minyard <corey@minyard.net>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, 
+ Yinbo Zhu <zhuyinbo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ mfd@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Miao Wang <shankerwangmiao@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2483;
+ i=shankerwangmiao@gmail.com; s=20250715; h=from:subject:message-id;
+ bh=Bt/q0n0w05U5iaF1GtMTt+11t9g0yfG2q6EzIbfOXug=;
+ b=owEBbQKS/ZANAwAKAbAx48p7/tluAcsmYgBqTVJUE1eQTF0tg4qKpKE5TVY5SQc+fBqBfzKle
+ yUccej24LCJAjMEAAEKAB0WIQREqPWPgPJBxluezBOwMePKe/7ZbgUCak1SVAAKCRCwMePKe/7Z
+ bkPoD/4/pk8IBhQUNkY07oLMfY2c91J8OSgnwPm2aPokh0VuS2pSqLhxSOdoS9QcJHNuJL3XiE6
+ AUVfsReXZjtrMXQ9z7prcoi2Jt1Owdqz7sP0xrOD8f97JfQbbzUoowt2L0LWb1u1d2EHNKElrxl
+ LogcRw0v8wIIVFxP8r9/znRTNk0Nhs75h0tSvFgyKYSpCYsCklYr13HV0/rSfzr1nqA/nGb/byY
+ TuFjdxEYYV+vzQgAMTIxHeLqeivFG/uETr8z6CugA/BhZGkX9FYIpqeWgTF5/V2EfLGXeg/MciL
+ xu8ia6AVrY470yJrXt2JlznIZaVhgh1vw0K/n6w7CrBfNUiFLxTwp+rMke/vcDxZs3IXouFPWv+
+ vhQi2LWJ8M8bdGxNkGQegyAsqtHByXYwO51MAI8QHydwrPcU2NQBUWKmA7HW1fn0mmos2Yn5Lmo
+ BhYxt++D54YydtEOyrzw9hoSZukcXBar2N40bl8d+cv9fFqUjhcpo2EwVOJ149zvbcswJ/1gtby
+ lkLE8WKUIai1qGwkX+uVXwy+UnefrBxsYNkhxwlb+/6C+Pm++/sHghyBz6JmbDjVMpdIKqYREci
+ lu/wxKWXdlXkmdBa4uaLRtRDgK+DPp0LFoOcDegK9jsJdOD3D4/PIj7uj45zGe4fzPs+ZmLAJPl
+ MQGTldZy+zCkmkA==
+X-Developer-Key: i=shankerwangmiao@gmail.com; a=openpgp;
+ fpr=6FAEFF06B7D212A774C60BFDFA0D166D6632EF4A
+X-Endpoint-Received: by B4 Relay for shankerwangmiao@gmail.com/20250715
+ with auth_id=462
+X-Original-From: Miao Wang <shankerwangmiao@gmail.com>
+Reply-To: shankerwangmiao@gmail.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:zhoubinbin@loongson.cn,m:qiaochong@loongson.cn,m:lee@kernel.org,m:chenhuacai@kernel.org,m:corey@minyard.net,m:linusw@kernel.org,m:brgl@kernel.org,m:xry111@xry111.site,m:kernel@xen0n.name,m:zhuyinbo@loongson.cn,m:jiaxun.yang@flygoat.com,m:mfd@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:shankerwangmiao@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39596-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:Conor.Dooley@microchip.com,m:conor@kernel.org,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39599-lists,linux-gpio=lfdr.de,shankerwangmiao.gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FREEMAIL_REPLYTO(0.00)[gmail.com];
+	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	HAS_REPLYTO(0.00)[shankerwangmiao@gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	FREEMAIL_CC(0.00)[xry111.site,xen0n.name,loongson.cn,flygoat.com,lists.linux.dev,vger.kernel.org,gmail.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,microchip.com:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 75B4F71ED18
+X-Rspamd-Queue-Id: 1A4FC71F2CD
+
+Previously, the driver has been introduced to support the Loongson 2K
+BMC running on the Loongson Servers, which is essential to prevent
+the system from hanging when the BMC is being reset and the default
+efi-framebuffer is being used. However, there are some drawbacks in the
+driver.
+
+Firstly, the driver tries to read and write to the connected PCI-E host
+controller registers, assuming that the BMC is connected to LS7A PCI-E
+host controller. This assumption should be true for real products, but
+to prevent from accidentally reading and writing to the wrong PCI-E host
+controller, this driver should be modified to check this before
+accessing the registers.
+
+Secondly, the driver uses non-exported functions to tell the vt
+subsystem to redraw the screen, preventing the driver from being
+compiling as a module. This can be fixed by using the exported
+functions instead.
+
+Thirdly, the driver directly accesses the GPIO controller registers
+using hard-coded addresses, which might conflict with the loaded GPIO
+controller driver for the same GPIO controller. This is fixed in this
+series by using the GPIO subsystem APIs instead. However, legacy GPIO
+APIs have to be used in this fixed to correctly request a GPIO
+descriptor from the GPIO subsystem, which might be further discussed
+to find a better solution.
+
+Finally, there is a minor issue in the driver where it changes the
+mode string describing the screen resolution during probing, which
+prevents the device from being probed again if -EPROBE_DEFER is
+returned by the probe function.
+
+I have tested the changes in this series on a single-socket Loongson
+3C6000 server with a Loongson 2K BMC, and the driver works as expected
+when the corresponding GPIO driver is additionally loaded.
+
+Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
+---
+Miao Wang (5):
+      mfd: ls2kbmc: make a copy when parsing mode string
+      mfd: ls2kbmc: sanity check for the connected pci port
+      mfd: ls2kbmc: redraw using exported functions
+      mfd: ls2kbmc: able to compile as a module
+      mfd: ls2kbmc: capture the reset event of BMC through GPIO
+
+ drivers/mfd/Kconfig         |   2 +-
+ drivers/mfd/ls2k-bmc-core.c | 224 ++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 174 insertions(+), 52 deletions(-)
+---
+base-commit: 0e35b9b6ec0ffcc5e23cbdec09f5c622ad532b53
+change-id: 20260626-ls2kbmc-mod-5209193009b2
+
+Best regards,
+-- 
+Miao Wang <shankerwangmiao@gmail.com>
 
 
-
-On 7.07.26 г. 12:58 ч., Conor.Dooley@microchip.com wrote:
-> On 06/07/2026 22:25, Ivaylo Dimitrov wrote:
->>
->> Hi,
->>
->> On 6.07.26 г. 20:14 ч., Conor Dooley wrote:
->>> On Sun, Jul 05, 2026 at 01:11:02PM +0300, Ivaylo Dimitrov wrote:
->>>> The CPCAP USB PHY driver uses the CPCAP charger detection interrupt
->>>> for DCP detection.
->>>
->>> This is not currently true, the driver does not look for this interrupt
->>> at the time of this patch.
->>>
->>
->> Right, this is bad wording caused by the fact that initially the driver
->> patch came before the binding patch.
->>
->>>> Update the binding and example DTS to use the corresponding
->>>> "chrg_det" interrupt name.
->>>
->>> Sounds to me like this new interrupt is optional, since until now it has
->>> not been needed? The patch however makes it mandatory. I think your
->>> driver patch also makes it mandatory, which will break older
->>> devicetrees.
->>>
->>
->> Oh, it is indeed not needed for proper DCP/SDP detection, after some
->> experiments I was able to teach the driver to do proper detection by
->> using current interrupts only.
->>
->>> What makes this ABI break okay?
->>>
->>
->> Will send new series with schema/DT patches dropped.
-> 
-> I think the devicetree patches are fine, provided you add
-> a minItems of N-1 so that the new interrupt is optional.
-> Dropping them would mean that the documentation for this device
-> remains incomplete since that interrupt does exist.
-> 
-
-Ok, will add that change in the next version, however, I will still
-change the driver patch to not use chrg_det interrupt.
-
-Thanks and Regards,
-Ivo
-
-> Cheers,
-> Conor.
-> 
 
