@@ -1,177 +1,185 @@
-Return-Path: <linux-gpio+bounces-39571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id qSltKJe1TGoXogEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39571-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 10:15:19 +0200
+	id KATxNaS4TGq/ogEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39572-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 10:28:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA29A718FA4
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 10:15:18 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7701B71917A
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Jul 2026 10:28:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=arndb.de header.s=fm1 header.b=xpvw0O67;
-	dkim=pass header.d=messagingengine.com header.s=fm2 header.b="l i3FHAC";
-	dmarc=pass (policy=none) header.from=arndb.de;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39571-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39571-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=L0RTCN1n;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39572-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39572-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3D43B3013BAB
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 08:15:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 299713028EF9
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 08:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9D430E0CC;
-	Tue,  7 Jul 2026 08:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A29973126BF;
+	Tue,  7 Jul 2026 08:22:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FD430E0E9;
-	Tue,  7 Jul 2026 08:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D07F2C237C
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 08:22:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783412116; cv=none; b=LYmgARfPGEDvlI5aAvPWET/GcfpNebVj14oL3kn/8ByouO2hAKtlCcwNFKJdFltm7kxL22ekpOZCHIB1IA+EUDjbhNzz/8BDGtUyaQeiQI8aGs1qRlaJZvD9MDzJ+bgh3UufIP0Nxt+LENyf9PxZWH5JALONxWaTDdEA2CYU7r8=
+	t=1783412550; cv=none; b=FDjnLVZxdfYUi8PB5sqOysVbeOQzodZ8WOiD0McsOjApKrCfZKbOLba3p3pJaUgUx/XBUCBF9yAufb8VzunRvREqjuD+vZk3R7V1uJf1RZsWnPlAJZloqWAqMhVinJcVioHVtPt4PenamM9GLzGAKuhsYLVTYM0AdPEuLcJzJq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783412116; c=relaxed/simple;
-	bh=V/famXhnFdJPvG7m+YRcRj/upoYmTRYMNHqshosi2BU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=fJ895KRooSgPEzSKzDer7gG6RIy+L5j2TQgxxBO+fi62Gh5NLDz+WMx+ltH82vL39mu1haSr+hpgeMXYc0yVA/9pIVZ0yZDCmsnPlq9zeBn8fnlVRay9vBvQWdR7qRONji9+rk1+Pd0s7PHfiZNBwl3BgLYkcky+SctImJtLNz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=xpvw0O67; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=li3FHACE; arc=none smtp.client-ip=202.12.124.154
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id B41967A0144;
-	Tue,  7 Jul 2026 04:15:13 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Tue, 07 Jul 2026 04:15:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1783412113;
-	 x=1783498513; bh=ksJfUuprun+MhATLDi0LER8gCeLSodgatS7pFZp+C0k=; b=
-	xpvw0O67yy5FBKU6rOXtWOrtWspRY7P6BVM/obWyN3sERt8ykH4V9veFkIVlYAVk
-	jyGIg2Z+FwpRv4MPZ/khFehaMiusfCX/sspcqbfqbyzrE3FLoNW8HIyhFfdVY38K
-	1/roiqwuVUPC7Z1gWOf0cOKayXhHG3p1SrRg7HQIj6fBucbqxvKoyedU5GMoWlPd
-	55aBTtQbVryQIAE4Esgzu39XNacL/L6oiNJ3PLLpYeWyesBBQLhLJBxtJZDXVK4h
-	ez1QYwJrbThAkL0AfaJBg/Ho0CbPvYyRFQDkUw3VobjngZVdPIEvHFZm6Rl6PSj/
-	nXjPLDNGfve1gOVvZwmPOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1783412113; x=
-	1783498513; bh=ksJfUuprun+MhATLDi0LER8gCeLSodgatS7pFZp+C0k=; b=l
-	i3FHACEhOUORRioWZk0bAsZIUwd61EqaAwtJjl1nwJDlF9iqp5flel5T2flTDLkT
-	COa/wRbQSoNZze6DzitWefsIKUs+A640L5l/PNzeCB6gUxS/j1q/K9YN1wf6HyGd
-	aaAFCbo2aKWsfWHA2VTI62x7J5XzMo0z7UsfkALhy3k5lCW8itl6CKIBLycDnx5+
-	NWyhQ9FAjMo8huYc8+j0GzGO4Tws54MsBuwid1EqADHUR5eDEinTtTjfgmC8e/dm
-	ZvHCOibHm9hquHLsoqtMy1k8IBVT6kxKatFBpNyQnF4HSseghq+Fu1aELu6+DqVE
-	lEGe3YpnzMB9fXk4D5HZg==
-X-ME-Sender: <xms:kLVMat593qrpDI2j9Id5XiMvpmEv_vp_HFU52-1H1dRTI0m20fruew>
-    <xme:kLVMalvfBw4caDNKyoWxSmuo1VJJXV84rP-my4YdDpWoucr9sVJySpl7Lqw20LM_Z
-    7Au8B2IbThteDnXXzXW0KgAq2os6rO4EE9hXlhDIIuoElwho4ZdIA>
-X-ME-Proxy-Cause: dmFkZTGmDHHJeVxwC3PNVwH9WBFHWFauttB5daISxm+xlRx9GY+UQqKoNlbj9PfeQY+pGf
-    HP++0AgB3cUYgY75wzCwa2iZ6HNfDwO5g/XzBWjVGfOYqkiI5k9n2imT1G7LN2XJyFWLwn
-    voKiqNjUigloECOJAk/DYPtO2WxxGtuT8awPZCThuizoUwsp65wngOCKUdE0yXeNXRXQax
-    htuNPfLOQcPMLZ5Ib7Kp8h3RbTIPN8ng3Iz3BD04Yf4tjyzOSPXIDWgvi5k67dsWJkcbXr
-    KorK7n13sCthqzXSzVsBb0Ljjt7jaDJApmib+6v3kvStB8zBScrKyZL6RwBj4QlNr7ltG1
-    eDLhTKHl5xUUehs5lVlsNezLtupqtzL5Bgc/1ActDuIIbAhezWiO9cueth/u3jj6+uZUdP
-    Ja/GqS4GFOHFpsJZQF9BovNxDccSBxBCaTzcXs5qehbAYB4aD6qQuLilrDgpX2PhSjf61N
-    VRymSULBAxBbPMeBC4l9fOVv5kaRLfZ+ROLktLwpBYOVZ+LhRl5BKYp9R5ZgM9PU6cj/Bl
-    99yOczeWYSXyKvWxmW75IYsJRL/JKmA34ryZUjoiPXD5GbTWH7HPtpTRxHIuqM+pfVGLY0
-    7gQBH24P8t9ctcvzM7LH3VIkDF0kRWGLmtkL055FFL11UygUjaDkxSEpw1WA
-X-ME-Proxy: <xmx:kbVMahIROndA0W6gg4nPmlihoo8ISGUnMR2bd0M6zq4qQcsKbcAaxw>
-    <xmx:kbVMatkmSVmQOoCmFqH1T7AaAYuOVfA3W6P8bpEQ8zeds4_jrpG8uw>
-    <xmx:kbVMaqZ8H4SldcilE0xndpdvLO4FKPMp_gTpOPutNGb08i6CdoYJxw>
-    <xmx:kbVMap8dOeD0pDh6YMIEwZQSmUfRg6tpnQLQzU3P001qIIU7XcKS-w>
-    <xmx:kbVMarrASjHC69LJ0Y7c6fEUk-luVa3zeNjtLZKamQPDR28w3oqz-uQP>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E57831820082; Tue,  7 Jul 2026 04:15:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1783412550; c=relaxed/simple;
+	bh=ltAiiJOY4Rh6R3USCVTRewP6JRiLBCJCatFHoJxYfOY=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BYkI69aZkjqXRA8UksH+SON5YRXXCu/G1YXIGMxa12A0x3Ak2CqglsxU0y5AuN/LAzQzdFYNf8F3v84hS/SWnc9EJ1xnzDtKSpi3oVQ2J9gaerDg6QpMrw55QXFz2ORaRY1qKlqzupZd+P9glvYLLWD8g/h7LRJ53u+PmI4faDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0RTCN1n; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBD01F00ACF
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 08:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783412549;
+	bh=ltAiiJOY4Rh6R3USCVTRewP6JRiLBCJCatFHoJxYfOY=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=L0RTCN1n4h2MOCTtx/K1SWL7s1kbREzTYeE3CG9SXhN/tB5cuOAFtujxs59gfZM/B
+	 H+2JJCNXQcWYFpd54b2GOsZWCrPavSHZX4v2nbHDU9oQZAQPRHqnf6fsdSicTG+kzw
+	 0dBl9jrxU6w4/JDKsri7DfGc15iEe5DXDX2zjXNvJoL3hzIV4/kO5JxFtgpythM9dM
+	 wafj4/9Yvblp1ubcGoy9DqcPVpQYdGkhHURM3IBd1KV1cTe2BthukMMG9fT2cN9KhM
+	 9PCcJKoTz+gNcksL23jQwultmJ1GeyKYcyWNNxwr0slpIGzxbEVNyFAQnEuDQVq5Bi
+	 HZ/aDKVkdrpSA==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39b38198496so33391501fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2026 01:22:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqJ9l3gB/0qCk5mqYBgyIIGmUyoGIolnAME27FMQObHOMQKB1i2DL45A67/w/0sk3n4mrPP45dOx+dd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4c8KqQX8/V4tZnUJoZKVmc8YQzrDDO67qK3N7T1Vt0rAKrb5Y
+	TfUbzWvrPs5Npg+mSLea+6pUFXiOD71j8j4r6KT08NwuXZIu/ELRgljoPl2Q4xQqhyFaDmdOngj
+	qkO3ZFXkm066hVfzkIr4yu7PTt0MG7zrIIMHTp8IGhA==
+X-Received: by 2002:a05:651c:234d:10b0:399:8a8e:64e4 with SMTP id
+ 38308e7fff4ca-39c5ffc9258mr7569231fa.19.1783412547763; Tue, 07 Jul 2026
+ 01:22:27 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 7 Jul 2026 01:22:26 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 7 Jul 2026 01:22:26 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <akyxXxtj8nyCs-yf@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A29kydqouFdV
-Date: Tue, 07 Jul 2026 10:14:52 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bartosz Golaszewski" <brgl@kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Russell King" <linux@armlinux.org.uk>, "Linus Walleij" <linusw@kernel.org>,
- soc@lists.linux.dev
-Message-Id: <1cb45fa8-df33-4e6b-be0a-63abdaf9d0a8@app.fastmail.com>
-In-Reply-To: 
- <CAMRc=MdfRs13TAqRqwff+=v3SrTXynyhCb75udG46hmwTRwuKw@mail.gmail.com>
-References: <20260706-sa1100-swnode-v1-0-332759bbd930@gmail.com>
- <CAMRc=MdfRs13TAqRqwff+=v3SrTXynyhCb75udG46hmwTRwuKw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] ARM: sa1100: convert gpio-keys to software nodes
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20260622092335.1166876-1-eleanor.lin@realtek.com>
+ <178246069898.6685.11577448681947659397.b4-ty@oss.qualcomm.com>
+ <a00c475a6ce0469682305c4b4269b181@realtek.com> <CAMRc=Md-iOQ5qb5uPZcKJkpS8fmYscw8TRXqe7rRrJS7acE32w@mail.gmail.com>
+ <akyxXxtj8nyCs-yf@ashevche-desk.local>
+Date: Tue, 7 Jul 2026 01:22:26 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MfD2j3xt1dXojFbyn=Df_9epMgEmLvSdCAfS7BSS6HD6w@mail.gmail.com>
+X-Gm-Features: AVVi8CfM53nWTpEzDBmB2ofkWlre7XvkEwA0f3764nQdW9C9z_xUKQQo5Zl9o_8
+Message-ID: <CAMRc=MfD2j3xt1dXojFbyn=Df_9epMgEmLvSdCAfS7BSS6HD6w@mail.gmail.com>
+Subject: Re: (subset) [PATCH v4 0/4] gpio: realtek: Add support for Realtek
+ DHC RTD1625
+To: "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc: =?UTF-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-realtek-soc@lists.infradead.org" <linux-realtek-soc@lists.infradead.org>, 
+	=?UTF-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>, 
+	=?UTF-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>, 
+	=?UTF-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	"linusw@kernel.org" <linusw@kernel.org>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"afaerber@suse.com" <afaerber@suse.com>, "mwalle@kernel.org" <mwalle@kernel.org>, 
+	=?UTF-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.65 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux@armlinux.org.uk,m:linusw@kernel.org,m:soc@lists.linux.dev,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39571-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39572-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,vger.kernel.org:from_smtp,realtek.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:eleanor.lin@realtek.com,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-realtek-soc@lists.infradead.org,m:cy.huang@realtek.com,m:stanley_chang@realtek.com,m:james.tai@realtek.com,m:bartosz.golaszewski@oss.qualcomm.com,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:afaerber@suse.com,m:mwalle@kernel.org,m:tychang@realtek.com,m:brgl@kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,messagingengine.com:dkim,arndb.de:from_mime,arndb.de:email,arndb.de:dkim,app.fastmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EA29A718FA4
+X-Rspamd-Queue-Id: 7701B71917A
 
-On Tue, Jul 7, 2026, at 10:08, Bartosz Golaszewski wrote:
-> On Tue, 7 Jul 2026 05:13:59 +0200, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> said:
->> This patch series converts StrongARM SA-1100 evaluation and handheld
->> boards (Assabet, Collie, and HP iPAQ H3xxx) from legacy platform data
->> (struct gpio_keys_platform_data) to static software nodes and device
->> properties.
+On Tue, 7 Jul 2026 09:57:19 +0200, "andriy.shevchenko@intel.com"
+<andriy.shevchenko@intel.com> said:
+> On Tue, Jul 07, 2026 at 12:24:16AM -0700, Bartosz Golaszewski wrote:
+>> On Tue, 7 Jul 2026 08:55:26 +0200, "Yu-Chun Lin [=E6=9E=97=E7=A5=90=E5=
+=90=9B]"
+>> <eleanor.lin@realtek.com> said:
+>> >> On Mon, 22 Jun 2026 17:23:31 +0800, Yu-Chun Lin wrote:
+>
+> [...]
+>
+>> >> Applied, thanks!
+>> >>
+>> >> [1/4] dt-bindings: gpio: realtek: Add realtek,rtd1625-gpio
+>> >>
+>> >> https://git.kernel.org/brgl/c/8f32808e1530b2229e07695fb39c54fee910bd4=
+a
+>> >> [2/4] gpio: Replace "default y" with "default ARCH_REALTEK" in Kconfi=
+g
+>> >>
+>> >> https://git.kernel.org/brgl/c/b5d23fcdb12972c522e96f90ab48be8a0d971b0=
+e
+>> >> [3/4] gpio: realtek: Add driver for Realtek DHC RTD1625 SoC
+>> >>
+>> >> https://git.kernel.org/brgl/c/a57e27c43b0315ee86c6896510d69be5257e093=
+e
+>> >
+>> > Thank you for applying the patches!
+>> >
+>> > I'm currently working on v6 of the patch series that incorporates Andy=
+'s
+>> > gpio-regmap patches, and it should build on top of gpio/for-next. Howe=
+ver,
+>> > I have a conflict with the driver patch that was already applied.
+>> >
+>> > Could you please revert that commit from gpio/for-next?
 >>
->> The first patch registers a shared software node for the SA-1100 SoC
->> GPIO controller in drivers/gpio/gpio-sa1100.c, attaching its firmware
->> node directly to the GPIO chip prior to registration. The subsequent
->> patches convert the board setup files to define static software nodes
->> referencing the SoC GPIO controller directly, allowing pin bindings to
->> be resolved via the attached firmware node without relying on name
->> matching.
->>
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Can you just post the series as a follow-up? I try to avoid rebases unle=
+ss
+>> absolutely necessary.
+>
+> Would be just leading reverts in the series appropriate? Otherwise it wil=
+l give
+> a lot of additional work for peanuts.
+>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Yes, that's alright. It will make the review easier. We can then squash the
+reverts with the new patches when applying.
 
-> Will this board not die?
-
-I have proposed removing almost all remaining non-DT board files
-including this one after the next LTS kernel, i.e. in the
-7.4 merge window, see
-
-https://lore.kernel.org/all/20260701212353.2196041-15-arnd@kernel.org/
-
-       Arnd
+Bart
 
