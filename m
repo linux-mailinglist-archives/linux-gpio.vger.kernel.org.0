@@ -1,155 +1,238 @@
-Return-Path: <linux-gpio+bounces-39669-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39670-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zY8xBGs+TmpEJgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39669-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 14:11:23 +0200
+	id wQoaFnBATmq+JgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39670-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 14:20:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69494726293
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 14:11:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE1F7263C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 14:19:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nSaCmAW1;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39669-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39669-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=qkH5sWiS;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39670-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39670-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D68723015879
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 12:11:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1FAE030376AC
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 12:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564AC43B6D6;
-	Wed,  8 Jul 2026 12:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C414642087C;
+	Wed,  8 Jul 2026 12:16:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26456433BCA
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 12:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F76F43C07F
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 12:16:15 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783512676; cv=none; b=NFhYNaUgyu2eSu8tq8Kpq4FWkMmdxHmL7ETu+6Hn66X4L3J8JmlKcskK8dfFxgpKdBaXAfq7Y4hFrQfxDIMPcRxCgn8d/uzIQktBREQT+pXLCh3BwzFGqEJL5ltWL+aq2YmFYWlo8pZ8e48Eu0n5/wFCCD6ChGkUxd6mOV9sD8Q=
+	t=1783512977; cv=none; b=pr3NBwlpNM34U5Wf4vMIiqHc1LN6bGiq9CdeTYMUThmutsigk4H0wCC2uTVCyPz88cUEZlkoTQkpGWNoGck22Ych2PtvTBrdUTy5CJhcMC0GRaScC2IMQkAh9faqf+5/XE67qpgHAU9j3PMr7GeKKQT3ubyoMBDZ6dcLhxwmGes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783512676; c=relaxed/simple;
-	bh=9XFl8zhfIdtbVtF+MBYsmjs9nphGy10yikvKHTESCWM=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fk+92tW2qlsa3534/fnEUCvMi9xTDd7/GNN0G89ej74eTJw2247w5ZMz7uFKM86CdDHqXNcWPl4o928ZZCKjSxr9MpN527IBa25KCnpBHDo4Tbc/V8M4XCN+6yLvYY5LIzT24n9n0MhzpDw0NYoHi10hcVF7VWtgaHu/N3AxSuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSaCmAW1; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79E11F000E9
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 12:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783512674;
-	bh=+aReIHWUe3pnm26ufIxwwHa7nTfBwUN5Z58KtGwdNB4=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=nSaCmAW1UAPT2QoN1TvrkFGsUDUTkhAopEid8ClkXqAmNv+R1Wct+7NjF2TYdp1DA
-	 Fw2AjYsm3zYHvtTiTYgdFpMpkcf2k8L8rQELwYOJ1uprhzhPu1mkS2FYnm1X2ItJ4C
-	 cJ7XfyEEvYdyXl5NldfViJNaYWcadpwbiG2yJNecPAYoZj1ZGP9CfkXRm3zZr/3jAT
-	 cUj3auysaPr6PMYoQ3Q7B+Ao4zi9QA0/dbB4N+9QRktrRC5QZAe8EtfnHOE8R8c2Cb
-	 mn9hIsYx4ONMuS+AK/kIj9rPuGmM/GlXklWwGcHlsH5B2ScZH8wvXXwkGpKqQ0IqmX
-	 n/cAUx0HZVAHQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5aec139da7eso847059e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 05:11:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrWtvjIvPMoJUqjXCJbhslAHegJRzBH8M3KJrLKWUYSmgtcJnnOIxTfj9TceeNzD/A6kinqJAulZxqQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8wW3VQyUd3m+32jKqgujFqZNqFLQybKlYlNQVR2PNXnnhep8E
-	SMt4XBoxA+4F19fTRUezgCsXsXnrAhwhIPsorlNzn7AmkaTUGFU35YqYbIlSftaf74Sl0ncuApH
-	lxikqJ3XFcgga56Ze8p/dfnGWh7MMuUBK4FGrQ+C1Jw==
-X-Received: by 2002:a05:6512:252b:b0:5b0:12a4:2264 with SMTP id
- 2adb3069b0e04-5b012a423fcmr482455e87.13.1783512673495; Wed, 08 Jul 2026
- 05:11:13 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 05:11:12 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 05:11:12 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260707233511.1272686-1-rosenp@gmail.com>
+	s=arc-20240116; t=1783512977; c=relaxed/simple;
+	bh=89j/Vg+mxUc+a6GV2Yklth3BpvuokAtPW5SuG5t75Mg=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=uvCTZa3mp5rd077ftIUh2v84RRulBMeTdHHW78ZRiGLxWPhIXmXkR+UyfWzAFG3Mb6v95glRCFagSbEPEhjX4HVU1yC1I4qAfGkmpB9l72/avlse8y1+t+yEvQb4J+vXxhGhuOJSfnzaLqABKT+mIMDl9r6ntKWk0zqf9U+jJ4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qkH5sWiS; arc=none smtp.client-ip=209.85.214.175
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2cad85b7b5aso500715ad.1
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 05:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783512975; x=1784117775; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=WtPxIe9ZDXTB4bAnWWhC43OWYPlhSUNmRAB3alNpo8Q=;
+        b=qkH5sWiSyarNKV5aC4KiWnvMhcn5HtHnlBvGC+DP7kUTQfX8KXfVOkPlccJOxMzA0T
+         5mejjhtwQFxCJBAgLgN3lt81TAx03qR5XmhZqiuxaFABuFnlr5vB1gHzWWC3vE0UpjAb
+         wIaNgLopiOLFKJLzGwNBxF5kJ0VdrxHuf/7nq2/AR1V8LqFCh5Hl2H4tZ7KmPl3DNvep
+         U/49nMzdAQQpMuSDlAawwJPIWbiQxZG4ccW1Ah1fJtQ9W0pi5W72+LBe8VrNVALV/IpR
+         ZvnJygbp8EYuJSFSNCWUGyc2RL6reeZf+CEePa79R8XxErM+oDwWmP3lVRqJQqlCOPiq
+         CUPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783512975; x=1784117775;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WtPxIe9ZDXTB4bAnWWhC43OWYPlhSUNmRAB3alNpo8Q=;
+        b=omfJcwTt8sLQQEvYz3f8cU/UgqRVQ9l24MP2iszXR+TxgPSoVCnjqbDLWiExtScN8X
+         dUCvyemuMHxzPB6GRJIsDkh7rPd0luHr0wGeog+h7i4mHMUL7lwVVsKH9fYch6BJZbUY
+         d2oYHh/uvQTte+/W90pKZ7BVGLd6W7fYmyqnPAfKRwq490ke2v2xCq0M3zpkfk0uJlRG
+         ZVu5dKAFdJqpi19rdopI9yPJAKXKLPMVw1wjfRu1FIhooxxTVx9GSVvBkeTyJmapxJhy
+         wiB8DyAWwlf54Qx6Cur/xmrP+8D5w+upb5OY9a29kGMKe286bV7gWnfFAcCAo7aaFzgP
+         uRmg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp2dYn06zITtbsCMTE0TSDRevNbR9gHGAYmuebk3a6KtZrwJm49cqNs2zIhxUY0i+lUGlfaYIYN2JHY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze7iCbmc8fToi0zVbsjULhxaGJ9obbIvwxGOWrGxapVadOWwPu
+	9eAyDVav0nsd9ko7D6b4ocNFmMPB8GgeUmVNtDRg8sDNqonuRJ5wY/J68u5Kd3EJ
+X-Gm-Gg: AfdE7cmdZXQpfDRJTY9LGtUFl9/Ul9wYUkBoH1amd2N0O6FLefr3pwAKMlau+yb6bMt
+	uVp2sVu89LHgQfqabNbvwNlzwI5lEbQasppwa36XJIRhBIVyyc9YnR5wp0Uq9vrcxFu2tZIswT3
+	1Av0lsjpoBt4lsBKSiNRTNzx+rvbGi0177RQbTrOF2qbISNLSrxmTaiKg2TclQ/5WrhIvxwISS5
+	s+nICgHdwjXmodSqfGEj6SdZQxuGnRIx+du6rKKUxyS8MIRHXnwpydKxQxM6waTZp359IuUdyfG
+	ChcFShkKOvYstOH2Km8G2NJKR5X7qvTtrNDss4QBCz5Q8nIN8kZ347WBHE8y3qc4vjY8wRIFk4n
+	JGPuvqxERPYRfcAwsofJEzhsPasAxFoBLasQYx8LyqU/mPSU8/Qfj2BLPky4PT4IZQM5fRQbmGh
+	h1dG1ySUhIq/TRLjtdHdZlq1Ha700GR09/X5O/fFAk8JVaLQ==
+X-Received: by 2002:a17:902:d585:b0:2c0:db23:4a6 with SMTP id d9443c01a7336-2ccea33a741mr19490865ad.1.1783512974833;
+        Wed, 08 Jul 2026 05:16:14 -0700 (PDT)
+Received: from smtpclient.apple ([23.247.139.92])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d1e284sm27267735ad.40.2026.07.08.05.16.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jul 2026 05:16:14 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260707233511.1272686-1-rosenp@gmail.com>
-Date: Wed, 8 Jul 2026 05:11:12 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Me3hfzzZq=ZvobyYTnu-Kv32psnsJUbuJ7Y78tKmqinMw@mail.gmail.com>
-X-Gm-Features: AVVi8Cc4jRMGhxihfS1pPF3_7wYL3OUHhhQfm_5rIMABF6bxJyBddSAwBYSj6zM
-Message-ID: <CAMRc=Me3hfzzZq=ZvobyYTnu-Kv32psnsJUbuJ7Y78tKmqinMw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: convert to noirq suspend/resume to prevent
- interrupt storm on resume
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.8\))
+Subject: Re: [PATCH RFC v2 7/7] mfd: ls2kbmc: Capture the reset event of BMC
+ through GPIO
+From: Miao Wang <shankerwangmiao@gmail.com>
+In-Reply-To: <CAMRc=MeDq6=u66hc+ChmJA9iKRhsYFhg7rKkCGh2BA=--VGkcw@mail.gmail.com>
+Date: Wed, 8 Jul 2026 20:15:55 +0800
+Cc: Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>,
+ Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ mfd@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net,
+ Binbin Zhou <zhoubinbin@loongson.cn>,
+ Chong Qiao <qiaochong@loongson.cn>,
+ Lee Jones <lee@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Corey Minyard <corey@minyard.net>,
+ Linus Walleij <linusw@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C8B03257-3909-4323-B183-331F7CB1DA3E@gmail.com>
+References: <20260708-ls2kbmc-mod-v2-0-2afdd1741766@gmail.com>
+ <20260708-ls2kbmc-mod-v2-7-2afdd1741766@gmail.com>
+ <CAMRc=MeDq6=u66hc+ChmJA9iKRhsYFhg7rKkCGh2BA=--VGkcw@mail.gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+X-Mailer: Apple Mail (2.3826.700.81.1.8)
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39669-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-39670-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:devnull+shankerwangmiao.gmail.com@kernel.org,m:xry111@xry111.site,m:kernel@xen0n.name,m:zhuyinbo@loongson.cn,m:jiaxun.yang@flygoat.com,m:mfd@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:openipmi-developer@lists.sourceforge.net,m:zhoubinbin@loongson.cn,m:qiaochong@loongson.cn,m:lee@kernel.org,m:chenhuacai@kernel.org,m:corey@minyard.net,m:linusw@kernel.org,m:brgl@kernel.org,m:devnull@kernel.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shankerwangmiao@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-gpio,shankerwangmiao.gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 69494726293
+X-Rspamd-Queue-Id: AEE1F7263C7
 
-On Wed, 8 Jul 2026 01:35:11 +0200, Rosen Penev <rosenp@gmail.com> said:
-> The driver uses the legacy .suspend/.resume callbacks, but sets
-> IRQCHIP_MASK_ON_SUSPEND on the irq_chip. During resume, the PM core
-> runs dpm_resume_noirq() first, which calls irq_pm_resume() to unmask
-> interrupts, and only then runs dpm_resume() which invokes the driver's
-> .resume callback to restore GPIO registers (GPIO_IN_POL, GPIO_IO_CONF,
-> mask registers).
->
-> This ordering means interrupts are unmasked while the hardware is still
-> in its reset state, potentially with incorrect polarities, causing
-> spurious level-triggered interrupts before local IRQs are re-enabled.
->
-> Convert the driver from legacy .suspend/.resume callbacks to noirq
-> callbacks via dev_pm_ops. The noirq phase runs before resume_device_irqs()
-> on resume and after suspend_device_irqs() on suspend, ensuring GPIO
-> registers are restored before interrupts are unmasked.
->
-> Assisted-by: opencode:big-pickle
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  drivers/gpio/gpio-mvebu.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index a556fdb267a9..1df763e60726 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -979,9 +979,9 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
->  	},
->  };
->
-> -static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
-> +static int mvebu_gpio_suspend(struct device *dev)
+Hi
 
-Needs __maybe_unused for SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
+> 2026=E5=B9=B47=E6=9C=888=E6=97=A5 19:36=EF=BC=8CBartosz Golaszewski =
+<brgl@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On Tue, 7 Jul 2026 23:16:31 +0200, Miao Wang via B4 Relay
+> <devnull+shankerwangmiao.gmail.com@kernel.org> said:
+>> From: Miao Wang <shankerwangmiao@gmail.com>
+>>=20
+>> The reset event of BMC is captured through GPIO. However, this driver
+>> bypasses the GPIO framework and directly accesses the GPIO controller
+>> through the fixed address. When the same GPIO controller is also
+>> exposed through ACPI and probed by the corresponding GPIO driver,
+>> there would be a conflict between the two drivers.
+>>=20
+>> This patch will try to find the GPIO through declared GPIO pin in the
+>> _CRS resources of the ACPI node. If no such delaration is found, the
+>> driver will fall back to search for the correct GPIO controller and =
+pin
+>> according to the fixed address and pin number. A possible DSDT
+>> declaration for the GPIO pin might be as follows:
+>>=20
+>>    Device (BMC0) {
+>>        Name (_ADR, ...) // Match the PCI address of the BMC device
+>>        // \_SB.GPO1 is the ACPI path of the GPIO controller
+>>        Name (_CRS, ResourceTemplate () {
+>>            GpioInt (Edge, ActiveLow, Exclusive, PullNone, 0,
+>>                     "\\_SB.GPO1", 0) {
+>>                14 // 14 is the GPIO pin number
+>>            }
+>>    }
+>>=20
+>> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
+>> ---
+>> drivers/mfd/ls2k-bmc-core.c | 162 =
++++++++++++++++++++++++++++++++-------------
+>> 1 file changed, 115 insertions(+), 47 deletions(-)
+>>=20
+>> diff --git a/drivers/mfd/ls2k-bmc-core.c =
+b/drivers/mfd/ls2k-bmc-core.c
+>> index =
+f87224105b3720cca97dcef089dad63fe57bc8c2..7187b2dfddc3acfb9fdf3cb3b4675299=
+928dd03a 100644
+>> --- a/drivers/mfd/ls2k-bmc-core.c
+>> +++ b/drivers/mfd/ls2k-bmc-core.c
+>> @@ -26,6 +26,9 @@
+>> #include <linux/stop_machine.h>
+>> #include <linux/vt_kern.h>
+>> #include <linux/console.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/gpio/driver.h>
+>> +#include <linux/gpio.h>
+>=20
+> I've stopped here because this is a legacy header that must not be =
+included
+> and none of the interfaces in it must be used, as per the - very loud =
+- comment
+> at the top of that file.
 
-Bart
+I fully understand using the legacy interface is deprecated. However, =
+there
+seems no other way to obtain a gpio line description after a gpio device
+is found using gpio_device_find(). As the comment shows in the code =
+below,
+the only place I use the legacy interface is:
+
+gdev =3D gpio_device_find(...);
+desc =3D gpio_device_get_desc(gdev, LS2K_BMC_RESET_GPIO);
+
+// XXX: might be better to use gpiod_request()
+legacy_gpio =3D desc_to_gpio(desc);
+devm_gpio_request_one(..., legacy_gpio, ...);
+return gpio_to_desc(legacy_gpio);
+
+I just borrowed the legacy gpio interface to request the irq =
+description. I
+think that gpiod_request() should be better to be used here, but it is =
+not
+an interface that is exposed. As a result, I post this patch as a PoC =
+here
+to discuss and find a better way to achieve this.
+
+Cheers,
+
+Miao Wang=
 
