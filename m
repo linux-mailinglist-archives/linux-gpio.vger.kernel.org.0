@@ -1,220 +1,243 @@
-Return-Path: <linux-gpio+bounces-39632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id y6k2H7sXTmoiDAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39632-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 11:26:19 +0200
+	id dDABKbMgTmr8DgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39633-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:04:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6A0D723B12
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 11:26:18 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4584572403E
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:04:35 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=TznWPk+O;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39632-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39632-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=bootlin.com header.s=dkim header.b="JSJik8//";
+	dmarc=pass (policy=reject) header.from=bootlin.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39633-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39633-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 24009300601C
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 09:22:03 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0841D301A10A
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 10:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CE9340913C;
-	Wed,  8 Jul 2026 09:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ECD538B7BB;
+	Wed,  8 Jul 2026 10:04:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795A4407CC7
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 09:21:57 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783502518; cv=pass; b=Q8yPwGiMxBhKolf7QQ367IkX/BDBA0alt+grcYkgnVBF/eQ5aVr9OGjTwjAv0U9lHHjc190RuZSF3RBtxAROacl3czlg4UcojgESvFfa6HVozkZwKL6KMfRLB91bHIHrtDi6M3NhYE9uqfwxNczLbxpNAlGhvhmBAYVgOo3W2y8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783502518; c=relaxed/simple;
-	bh=FzuO37FheM7KIuzMW3zbeCtTiAbRuDEuW1Sis3sP09c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fs015y0q5fDUkLDKmaWYJVOgNnN/LtfCDSrnI+9ix4pg3jK82N1z0ORWm3sXW5VdFB073+Z9T+7Vr/Mb/uKAjHcAbRikdEIuZLAaWT2IWPVKIXMA+bW5i1SruHjRGhqYb46g4xQk4bTTNwxO0+Kop6loio5LPgl2LatqruNKyz4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TznWPk+O; arc=pass smtp.client-ip=209.85.208.43
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-698aa7ba3e6so864835a12.1
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 02:21:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783502516; cv=none;
-        d=google.com; s=arc-20260327;
-        b=UvONfEG33zYCzugYcAnnej30rc1jPW3n2R31mj0sYyX9SGKF0txVeD9pV302t3LH+x
-         /KsxjB6AUr30KJLHHZeF70hgo5HiosNRAljwwAmW3ymDH67gZmH/ziStkVyQEXRCxAOy
-         OyjFf665nb6YA8Xm+sz4A5pSaZ4dlI/ysaIp+XgtM/c2FTGiU105YBqFbZwQUpuvpeTQ
-         K4Ou5DLaohbj/u3l5wO8iU30oYcUl8gofpeJOtw5UyCQEOmff+30GbaxuNqFEfWZDvwl
-         BN1GPMP8RCUzRv0ll9vHj27kSKKy0hAMklZAls8Bi5bZtRnZm4f2dNySKXuJMTVJ1kQF
-         CNKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FzuO37FheM7KIuzMW3zbeCtTiAbRuDEuW1Sis3sP09c=;
-        fh=c92RV6FhANWzAnULoz66nI3guj05WV7xJnYXpYLi7vQ=;
-        b=YDsixZAb3CjGVW033bxox8wARlxQbR6hMqO1G4hmV00rlv228heKkF8mlJsJotaGFP
-         xt/KlKIpLi4cf+eCsKKUZ8vWsNGRX4DByPV3jHMad6yEsphyuK4ZHVI5hF801Pac8TgX
-         TMd51CxX3XY3BtrLEgxKLdIxME70lwX7lksV+hmDxWltp00vFZcDwSXtkDQBOPOATL5m
-         1LryuvkfC2EmAK7/Lc6Fm9GFzepBpDnvCUWBBoUX9a0+NFyNpAKT6xT/plaw2gpp+Ff4
-         vmdG4hsC356eU071Sa6GcLdN+3xNyqgP4giQOEA2nS44PzV3k2hBaAL16WG8oC6LcTYz
-         Ks4g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783502516; x=1784107316; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FzuO37FheM7KIuzMW3zbeCtTiAbRuDEuW1Sis3sP09c=;
-        b=TznWPk+OnAN+qCtE52c5KQHBqf7ucFdnqnCOgEucHpoqy0oRR5UhekSd//JcLGU4KK
-         wUoO6cs9Tlg8kfCE1RL73beDiHHF7cnDEdIKtrcUMtEIiowTPzK8hrP9M0LYEjywoonN
-         k1bADrCDoIo5vPC3zNaiPOBgsXjwLPcyeOqxmBnEN/iP8hYyjd/e0gD1pWJXNB/Gg+r6
-         ls5OAbLPuRhqb/JevqrjMcHPPln2Nu/uMOi/XoDJBqkb/z0UmmMqCzx03i0sWC6MNt6O
-         w304KPyloXTebIDN3EvylQ6z0taxkzYoW9IysF4zRsm8+ch4TSZVJlds5GHzLfF3F70P
-         dc6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783502516; x=1784107316;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FzuO37FheM7KIuzMW3zbeCtTiAbRuDEuW1Sis3sP09c=;
-        b=YXvleCgxqyVvAr6LKZO1zVmuNmbHr4XomK1FSdRaihlHGPC0gdl+76XAQBjyIjdRHI
-         rhaSR8DVpviY+mzrcMJG7i0Jc5Ap0POTLnhkFeHJlVWazlo4qUj20D/nrI3oskVBzYyV
-         DIbhHicE8kO1UKteqoC1IyDQudxPtyIu//lX9ey/dEwrMRrP9HVu/P3phHLibnqET4BJ
-         Cz1DexQt+RsZZBMZ5fUaC9mDmgGAsMLlYdMJqUZOGurc+GHwPuvf87UZhm4vo6I4tG8N
-         HxkutmDxcI1Uk9axCc4Pp6ofRjPMeXtqBJURTER5DjN+tGzUMqD8OlfNk9Px2ZnDXnFC
-         hCIA==
-X-Forwarded-Encrypted: i=1; AHgh+RowO8E+S/LOKyJa7z3Gm3UxBwn5cZbtuqihzfvU/qvo+2Zml66bTmlBC1LsZEbXp5MvuQLcbB3Ua7nE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCvZM8yzFz3+kIPMIDfz6VPpfzEEmhSE41hDtRBqpFhKmAZXp1
-	csgPrQh65sePp4g6kbG4fYYe/s1Cx8NIEP2BP8iD/BQWyYIvhQWemKTfPeiGWv6yD74HcfDjmER
-	KVLEyBRvAgsCCh214r8a72Q8HulUhv98=
-X-Gm-Gg: AfdE7ckVIJMpI4hGqqashAKev/1px4sEOJ9B10BKTkzaxGOVwaWkLL4AuXI2guzYVS9
-	hHZqFy9AN/mSe9t9qQnyRZ7Tzfno+cH29D+ETWRIM3+Af17aDEWvptfniH9jyR8u8ZxsHjmKgh+
-	vi+eyzPyQc2TiqPsZ/mqInyPD3PSVVk9htcJaksUlzqtE4/NFc/wUfvRBcNp8+7S7ko2zsBixYc
-	d520+jgsmlHWd/coLZ5JPhOJ/Ymhg+XoklA4ws+XM36pvDhW1ByQUT1XYXKYwqAuT/y4iHhZcwz
-	yWusA8kxOyk2/RcgMbuVezp3u3YwIoigVQSmbrd4F+JtjEQFCqsF2VTRDO6UJiWO4vA6zrz824u
-	KCmTXod8L9qI9VWlJ6bMXp5QILcfGwSu5ZpB0pwe0riIOR/dzuh1KgOcBnQ==
-X-Received: by 2002:a17:906:ee8c:b0:c15:ce72:9347 with SMTP id
- a640c23a62f3a-c15ce729415mr77168966b.19.1783502515610; Wed, 08 Jul 2026
- 02:21:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9513890F0;
+	Wed,  8 Jul 2026 10:04:22 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783505064; cv=none; b=U+h1rsaVtPEpjhw97czv9qL7gOiUyvKF9/tG8G6o6h2DHRt68Ip/J+krsYPEVnJzssYKQALBIVgG/wUG2r4o5ZtMpPjKqlSr3gBRfzMJnSH0V2xOZQs/IonDnD10T44iGNssNY9NE5eZnmViPx57ct8xN9WUhsrQ8B7JnfoOm2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783505064; c=relaxed/simple;
+	bh=K5M9eQNsPTwK1Pb2MbjOOmIyIv4BnY9GthleSmPbrlM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lKy83wWDnT4PRqZqAOZ2DJxHtMpr7b/cTc9+ZpRm4xSNbgBNRxq57fcQ0hH0TxOJx/Gov7YNA+kcANvXwOgFf2MdPsXjwYevhku5u3RYEPSy2iPuz5t0lBWWzH04UPRXHVB63U0PPaSHYZkPO95OcJPvSI3FoMclI66wLoI/rMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JSJik8//; arc=none smtp.client-ip=185.246.85.4
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id AC2054E40CF2;
+	Wed,  8 Jul 2026 10:04:20 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 74F6B60337;
+	Wed,  8 Jul 2026 10:04:20 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 23D9811BC31A3;
+	Wed,  8 Jul 2026 12:04:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1783505058; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=dapdUZsmq38t8TKgkYjpjuGLpN++XKdT6bObS/bqssI=;
+	b=JSJik8//86rk6lpVzXStWSdMmHFlkS+T5elE4FAssEpE/BixcaLaJq4gO0EAF9PhXVCvuA
+	A1UjggPxhuHGRLdTrmhORA3qyQtnqD7Aak6R18gwrlrqZY/WTAr2pY5Zt2GUaJ7Hoq4CZ/
+	YFCq/J9hZXT+b6L0xFTRCGCp5UoydjCq4QNfqrmuf8xSbFkVOI1d4IKYHv5TQls1YSv9R4
+	9yJYAwd7olF40K6oDM1d8020ODSEn23Qz3RGcuc6Fm0wtBysE3a8m3X6D482IHBNtvRt90
+	EM3zPz2Iqod9PXoGPc/3rFZOgp+YH2dZ3Z96oRyp5cXmD9RS8CPpyNt7rPWTDw==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Richard Cheng <icheng@nvidia.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Cc: driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v9 0/9] lan966x pci device: Add support for SFPs, PCI part
+Date: Wed,  8 Jul 2026 12:02:50 +0200
+Message-ID: <20260708100302.517792-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260706-upboard-pinctrl-add-upboard-intc1055-support-v4-0-cedce0802d3d@gmail.com>
- <20260706-upboard-pinctrl-add-upboard-intc1055-support-v4-2-cedce0802d3d@gmail.com>
- <65fef790-0e8d-4c29-bbd6-ed6b9dc65fc3@bootlin.com> <CANYHO6qfRL-5rJevKrYySai5MoWjNm9xvVOkMVAmt8YN-cZPnQ@mail.gmail.com>
- <b2ee8bf9-de42-441a-97fb-2e42ad882b5e@bootlin.com>
-In-Reply-To: <b2ee8bf9-de42-441a-97fb-2e42ad882b5e@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 8 Jul 2026 12:21:19 +0300
-X-Gm-Features: AVVi8CfpYAZWqojc7S7uxSpjqYNXJkXD2HpFoMg5gwxpiPYmaua6mTEjaw0tCyI
-Message-ID: <CAHp75VcGGC8Z5vGN+RQtSA2N+s9ViH-tHi_BjT-_SWPVVoLQxA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] pinctrl: upboard: add device id INTC1055 based UP
- boards support
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: GaryWang <is0124@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Daniele Cleri <danielecleri@aaeon.eu>, JunYingLai <junyinglai@aaeon.com.tw>, 
-	Louis Chen <louischen@aaeon.com.tw>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39632-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[andyshevchenko@gmail.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com,linux.intel.com,kernel.org,aaeon.eu,aaeon.com.tw,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:thomas.richard@bootlin.com,m:is0124@gmail.com,m:mika.westerberg@linux.intel.com,m:andy@kernel.org,m:linusw@kernel.org,m:danielecleri@aaeon.eu,m:junyinglai@aaeon.com.tw,m:louischen@aaeon.com.tw,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39633-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[nvidia.com,lunn.ch,kernel.org,linuxfoundation.org,google.com,cirrus.com,opensource.cirrus.com,linux.intel.com,gmail.com,stgolabs.net,intel.com,zohomail.com,amd.com,bootlin.com];
+	FORGED_SENDER(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[41];
+	FORGED_RECIPIENTS(0.00)[m:icheng@nvidia.com,m:andrew@lunn.ch,m:robh@kernel.org,m:saravanak@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:bhelgaas@google.com,m:david.rhodes@cirrus.com,m:rf@opensource.cirrus.com,m:ckeepax@opensource.cirrus.com,m:linusw@kernel.org,m:lenb@kernel.org,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:dave@stgolabs.net,m:jic23@kernel.org,m:dave.jiang@intel.com,m:alison.schofield@intel.com,m:vishal.l.verma@intel.com,m:djbw@kernel.org,m:iweiny@kernel.org,m:ming.li@zohomail.com,m:lizhi.hou@amd.com,m:herve.codina@bootlin.com,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-sound@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-cxl@vger.kernel.org,m:allan.nielsen@microchip.com,m:horatiu.vultur@microchip.com,m:daniel.machon@microchip.com,m:stee
+ n.hegelund@microchip.com,m:luca.ceresoli@bootlin.com,m:thomas.petazzoni@bootlin.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andyshevchenko@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,bootlin.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A6A0D723B12
+X-Rspamd-Queue-Id: 4584572403E
 
-On Wed, Jul 8, 2026 at 10:49=E2=80=AFAM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 7/7/26 5:55 PM, GaryWang wrote:
-> > On Tue, Jul 7, 2026 at 7:50=E2=80=AFPM Thomas Richard
-> > <thomas.richard@bootlin.com> wrote:
-> >> On 7/6/26 12:36 PM, Gary Wang wrote:
+Hi,
 
-...
+Previously, I sent a big picture series adding support for SFP ports
+available on the LAN966x PCI device [0].
 
-> >> I tested the IOs:
-> >> - pwm0 does not work.
-> > you have to use our pwm kernel module for pwm test, I'll provide later.
->
-> Ack
+In this series patches touch several parts and sub-system in the kernel.
+Reviews have be done and it makes sense to split the series and send
+parts separately.
 
-Can you, folks, elaborate why this is a requirement and what exactly
-is not working?
+This current series is the extraction of patches related to issues in
+the PCI subsystem. It has to be seen as a continuation of the big
+picture series but related to this specific core part.
 
-> >> - uart1 partially works: TX is okay, but loopback doesn't work. Signal
-> >> is bad when I add a loopback. Looks like pinctrl misconfig on SoC side=
-.
-> > uart1 tested ok on our side, if you loop TX/RX do not forget to turn of=
-f
-> > hardware flow control. and we have executed cmd as below to make sure
-> > direction is set all right.
-> > echo "uart1_grp uart1" >
-> > /sys/kernel/debug/pinctrl/upboard-pinctrl/pinmux-select
->
-> I did some tests with/without flow control using linux-serial-test tool.
+Patches 1 to 6 introduce and use fw_devlink_set_device() in already
+existing code. No functional change but the introduction of the
+fw_devlink_set_device() wrapper.
 
-I'm sorry it's not so clear to me, does it mean the serial interface
-is (still) not properly working or you have done that pinmux
-configuration and everything becomes fine (as Tested-by tag suggests)?
+Patch 7 avoid a dangling pointer.
 
-...
+Patches 8 and 9 fix fw_devlink issues specific to PCI and the
+device-tree nodes created during enumeration.
 
-> >> - for SPI, MOSI and CLK are okay, but not CS.
-> > Do you have enabled spi in BIOS HAT configuration?
-> > CS0 should be ok, it's SOC defined, CS1 is optional, users can activate=
- low by
-> > himself before read/write, actually all gpio can be manually used as CS=
- pin.
->
-> I applied an ACPI overlay. I'll test it again.
+[0] https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
 
-I suppose this part is not as critical and I just wonder what the test
-results are.
+Best regards,
+Hervé
 
-...
+Changes:
 
-> Anyway these are not related to this patch series.
-> Thanks for the clarification.
->
-> Tested-by: Thomas Richard <thomas.richard@bootlin.com>
+v8 -> v9
+  v8: https://lore.kernel.org/all/20260630102804.413563-1-herve.codina@bootlin.com/
 
-So, after all, are they all good to go?
+  - Patch 7 (new patch in v9)
+    Clear fwnode->dev during root bridge node removal (avoid a dangling
+    pointer).
 
---=20
-With Best Regards,
-Andy Shevchenko
+  - Patch 8 (patch 7 in v8)
+    Clear fwnode->dev during PCI device node removal.
+
+v7 -> v8
+  v7: https://lore.kernel.org/all/20260511155930.34604-1-herve.codina@bootlin.com/
+
+  Rebase on top of v7.2-rc1
+
+  - patches 4 and 5
+    Add 'Reviewed-by: Andy Shevchenko'
+
+  - Other Patches
+    No other changes
+
+v6 -> v7
+
+  Rebase on top of v7.1-rc1
+
+  - Patch 1
+     Add Cc stable. Needed for patches 11 and 12
+
+  - Patches 2 to 5
+    No changes
+
+  - Patch 6
+     Add Cc stable. Needed for patch 13
+     Add 'Acked-by: Bjorn Helgaas'
+
+  - Patch 7
+     Fix a typo in commit log
+     Add Fixes tag + Cc stable
+     Add 'Acked-by: Bjorn Helgaas'
+
+  - Patch 8
+     Add Fixes tag + Cc stable
+     Add 'Acked-by: Bjorn Helgaas'
+Older iterations:
+  Patches 6 to 13 in the big picture series
+  https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
+
+Herve Codina (9):
+  driver core: fw_devlink: Introduce fw_devlink_set_device()
+  drivers: core: Use fw_devlink_set_device()
+  pinctrl: cs42l43: Use fw_devlink_set_device()
+  cxl/test: Use device_set_node()
+  cxl/test: Use fw_devlink_set_device()
+  PCI: of: Use fw_devlink_set_device()
+  PCI: of: Clear fwnode->dev during root bridge node removal
+  PCI: of: Set fwnode device of newly created PCI device nodes
+  PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
+    node
+
+ drivers/base/core.c                      |  4 ++--
+ drivers/pci/of.c                         | 12 ++++++++++--
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c |  2 +-
+ include/linux/fwnode.h                   |  6 ++++++
+ tools/testing/cxl/test/cxl.c             |  4 ++--
+ 5 files changed, 21 insertions(+), 7 deletions(-)
+
+-- 
+2.54.0
+
 
