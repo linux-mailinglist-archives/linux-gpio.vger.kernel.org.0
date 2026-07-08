@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-39641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id pAGcNd8iTmp5DwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39641-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:13:51 +0200
+	id UtUoEZ4hTmotDwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39642-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:08:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3246A7241C1
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:13:51 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D7377240D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 12:08:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=Q9jg6Tjn;
+	dkim=pass header.d=bootlin.com header.s=dkim header.b=QhcocFqC;
 	dmarc=pass (policy=reject) header.from=bootlin.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39641-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39641-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39642-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39642-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 211CB313DA01
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 10:05:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B725B302285B
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 10:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE00C3E5A01;
-	Wed,  8 Jul 2026 10:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53433F8EAF;
+	Wed,  8 Jul 2026 10:05:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B25390C85;
-	Wed,  8 Jul 2026 10:05:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E97338E8A8;
+	Wed,  8 Jul 2026 10:05:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783505107; cv=none; b=npJsO/cJCBvV6WS161Sek5eClkmq9+0ptaZnb/czEpdyv0NnzTbOupHckq/WH2SCgEIGflb1cjHB586a9z5PZjy4bJf2sQksE8/txk0O/xq2o5jBbGKFuNR6QzuN/IG7oKQFW7A3W07OvpazBR+FwULzc0CNlbpQ/HYiQELJfno=
+	t=1783505111; cv=none; b=EOctpBw2e+en3fPqvUgtZLMlQ/AO6m9wm7ypHPD0RmWVkfj+s7cBnN38VMYBH48xpS/EcOlyyqaCQNil36HAZbS2pKfB13riDwatI8MpL0YpXoBTF8mS03n28NPNK6WKMt29U59k86iKJq1So0j1oGpa2cBu48N3HVOZO+UiE10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783505107; c=relaxed/simple;
-	bh=ot0ZUZZAvX2dWnG+6ZdjH0wAviaK+ovjXv80kHGhr8M=;
+	s=arc-20240116; t=1783505111; c=relaxed/simple;
+	bh=ZO3CPaachQ9of39ED6ljme0Gb2h+6QSksq8qavKxWy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EDBbJaRFNTgkZLDL3MPnSMH/u75XlQcxfS+I+URQgqDlcRaRQYwRMmjBwxwKMgh2OYwg4P6t8nWF7I+9CfFGjpsqVXcKQwiqkS0FjKjGV0SAic3fRviw3sY/v+zKKtuVTZGFAcT5ruQPNk8x+YUad+cRuiicnfaePGj4iN5Mh4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Q9jg6Tjn; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=iOfZ5XUZHmc/W/5imp08mKiIapQfbYpria8tPNFJCEmgBo2H58V3KSrs8dPyYDQ8sN+5w9s7gp49YsaMogJB+ZV9hB9J7dQd3qtkagOJTiSF2Al/QHDEV4FKIVzyp7pes6kL1onY36n56HOysXzZlc7ztL9Bl8Edxosi99ETUZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QhcocFqC; arc=none smtp.client-ip=185.246.85.4
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 299D71A0ED6;
-	Wed,  8 Jul 2026 10:05:05 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id F076C4E40CF2;
+	Wed,  8 Jul 2026 10:05:08 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id EFA9260337;
-	Wed,  8 Jul 2026 10:05:04 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2FFBE11BC3414;
-	Wed,  8 Jul 2026 12:04:58 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id C2AE060337;
+	Wed,  8 Jul 2026 10:05:08 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6FB2A11BC31A3;
+	Wed,  8 Jul 2026 12:05:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1783505102; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1783505106; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Vy314oL/7UUB26ONuI2+X1y4jcu1eRSAEDyN4HB9Vfk=;
-	b=Q9jg6Tjnz6yPc1ahCgBwmx4X85IEkOVEmhe11cYp5HQAyJedpfu7T2A3XFROV/QWWxwlnM
-	D5Y1kA/n61gNRoU73IEqVYa4wM0hfwFOJtkOukF/B+xqXoATSwkeyirPTRGkPhF3AM9rE4
-	e0xIkrLN5JWCgcZSewgxav0IL9dqBR7bc6tBuLIXxcoANG7BJXhqaVC0tdLDfTY9PJcAt7
-	JbCH777uJYAUfoXbxb4Et+XW7DxoOgrbr+pbNqmzGX7KV2ti/6/S27Dh2gA/VdqP9lBYIF
-	1vWIoqXeJE58COwQ0j/PDYKz7Su2ScYH6EWP6/7bmv6JLXoVjumW9IuFDPbhAg==
+	bh=HajgvDDuiFnLBfzyeG/8/2SdD3nFHBqBhyDSk8qlAuc=;
+	b=QhcocFqCwf9aMgYOOdLLHbS2EESzmWJYXMtFZGeca7Zw2orGBoBmJg46Hb5XTXiLxbVpJN
+	nVjcHnLSDOZRHZQNUIFYXXCu0O0jdL/86ds7jqHoZHm2iO4c+xkw07Bw0vADdCXU3DhaI7
+	osafN+Qkfp4ZikOAGJAuJcGmuVh/5qFbnF7HojPc/KYaFlgmRoJs0h9biO47dMK7QfUyXx
+	WA5pl3GcqRJ+9dbc7PAY/hyuidfDf+OLIcB/BvREQcXmjiPHZdzMhzfBkANi9UvdwvXEYq
+	tqeyez8fTmM7kHBkWHqoYu1OzqVHd+6tCP8QlXraPib7OOGT+y9ouG4ob5bHkA==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Richard Cheng <icheng@nvidia.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -94,9 +94,9 @@ Cc: driver-core@lists.linux.dev,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	stable@vger.kernel.org
-Subject: [PATCH v9 8/9] PCI: of: Set fwnode device of newly created PCI device nodes
-Date: Wed,  8 Jul 2026 12:02:58 +0200
-Message-ID: <20260708100302.517792-9-herve.codina@bootlin.com>
+Subject: [PATCH v9 9/9] PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge node
+Date: Wed,  8 Jul 2026 12:02:59 +0200
+Message-ID: <20260708100302.517792-10-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260708100302.517792-1-herve.codina@bootlin.com>
 References: <20260708100302.517792-1-herve.codina@bootlin.com>
@@ -114,14 +114,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[42];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39641-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39642-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:icheng@nvidia.com,m:andrew@lunn.ch,m:robh@kernel.org,m:saravanak@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:bhelgaas@google.com,m:david.rhodes@cirrus.com,m:rf@opensource.cirrus.com,m:ckeepax@opensource.cirrus.com,m:linusw@kernel.org,m:lenb@kernel.org,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:dave@stgolabs.net,m:jic23@kernel.org,m:dave.jiang@intel.com,m:alison.schofield@intel.com,m:vishal.l.verma@intel.com,m:djbw@kernel.org,m:iweiny@kernel.org,m:ming.li@zohomail.com,m:lizhi.hou@amd.com,m:herve.codina@bootlin.com,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-sound@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-gpio@vger.kernel.org,m:linux-acpi@vger.kernel.org,m:linux-cxl@vger.kernel.org,m:allan.nielsen@microchip.com,m:horatiu.vultur@microchip.com,m:daniel.machon@microchip.com,m:stee
  n.hegelund@microchip.com,m:luca.ceresoli@bootlin.com,m:thomas.petazzoni@bootlin.com,m:stable@vger.kernel.org,s:lists@lfdr.de];
@@ -139,64 +139,64 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DKIM_TRACE(0.00)[bootlin.com:+];
 	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:from_mime,bootlin.com:email,bootlin.com:mid,bootlin.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,bootlin.com:from_mime,bootlin.com:email,bootlin.com:mid,bootlin.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3246A7241C1
+X-Rspamd-Queue-Id: 1D7377240D5
 
-Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
-nodes are created and filled based on PCI core information but the
-fwnode device field is not set.
+During the instantiation of devices described by a device-tree overlay
+applied on a PCI device, devlink displays the following kind of debug
+messages instead of creating the expected links:
+   'Not linking xxxx - might never become dev'
 
-When later an overlay is applied, this confuses fw_devlink. Indeed,
-without any device attached to the node, fw_devlink considers that this
-node will never become a device. When this node is pointed as a
-supplier, devlink looks at its ancestors in order to find a node with a
-device that could be used as the supplier.
+Without those expected links, the device removal order cannot be
+correct.
 
-In the PCI use case, this leads to links that wrongly use the PCI root
-bridge device as the supplier instead of the expected PCI device.
+Those debug traces are printed by fw_devlink_create_devlink(). In our
+use case, they are all printed because the supplier of the link has at
+least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+set.
 
-Setting the fwnode device to the device of the PCI device allows devlink
-to use this device as a supplier and so, correct links are created.
+The culprit ancestor is the PCI root bridge.
 
-Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+The fwnode related to the PCI root bridge is created dynamically by the
+of_pci_make_host_bridge_node() function. During this creation
+fwnode_dev_initialized() is called which set the FWNODE_FLAG_INITIALIZED
+flag.
+
+Calling fwnode_dev_initialized() tells devlink that the device related
+to this node is handled out of the driver core. This is not correct in
+our case. Indeed the device related to this firmware node is handled
+using driver core mechanisms and is fully compliant devlink
+expectations.
+
+Simply remove the fwnode_dev_initialized() call. With that done, the
+devlink debug messages are no more displayed and links that were missing
+are correctly created.
+
+Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
 Cc: stable@vger.kernel.org
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/of.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/of.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 8dd558a490bb..ca83006b7c7e 100644
+index ca83006b7c7e..cb2470ca592f 100644
 --- a/drivers/pci/of.c
 +++ b/drivers/pci/of.c
-@@ -657,6 +657,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
- 	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
- 		return;
+@@ -813,7 +813,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+ 	 */
+ 	of_node_set_flag(np, OF_POPULATED);
+ 	fw_devlink_set_device(&np->fwnode, &bridge->dev);
+-	fwnode_dev_initialized(&np->fwnode, true);
  
-+	fw_devlink_set_device(&np->fwnode, NULL);
- 	device_remove_of_node(&pdev->dev);
- 	of_changeset_revert(np->data);
- 	of_changeset_destroy(np->data);
-@@ -709,6 +710,13 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- 	if (ret)
- 		goto out_free_node;
- 
-+	/*
-+	 * Set the fwnode device in order to have fw_devlink creating links
-+	 * pointing to this PCI device instead of walking up to the PCI host
-+	 * bridge.
-+	 */
-+	fw_devlink_set_device(&np->fwnode, &pdev->dev);
-+
  	ret = of_changeset_apply(cset);
  	if (ret)
- 		goto out_free_node;
 -- 
 2.54.0
 
