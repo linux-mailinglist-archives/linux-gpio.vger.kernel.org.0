@@ -1,162 +1,189 @@
-Return-Path: <linux-gpio+bounces-39619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ik/6Gn6STWpm2QEAu9opvQ
-	(envelope-from <linux-gpio+bounces-39619-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 01:57:50 +0200
+	id iZgdOG+XTWqP2gEAu9opvQ
+	(envelope-from <linux-gpio+bounces-39620-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 02:18:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2B96720842
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 01:57:49 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A71267209C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 02:18:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=gR39VxgR;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=GNO9n+Xa;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39619-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39619-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39620-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39620-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 72323303ADF2
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2026 23:57:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F1465301BBAD
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 00:18:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B18395276;
-	Tue,  7 Jul 2026 23:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F21CF1DDC1D;
+	Wed,  8 Jul 2026 00:18:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245D2314A65
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2026 23:57:44 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783468665; cv=none; b=Gg0x4SO6ebHr17q/kpKBxBkOgOJfVYICLv+Nc/rVYls0S+hwnXuTCduN6gf1e/nuFhcNwHLCB+5CArWeKKudUdK8HAqE+riSV5m4jM5VkHyTXb1dw1Ku3jriGQ90lyVEKbirmqKhLqvPrPrelzghu79vhahiXXVUwMwnWRk9AIs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783468665; c=relaxed/simple;
-	bh=mGH2HAOi0TNj45O+XuKLfX/dRuUkO7FRMffdRyeFGoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=STt0eY+rnfaQQLeLDrCTINwq9D4PDYBT96C+9MQsIouELAwDilEDBw/m0NShI4Pjc7bnFI8UsdGc63b9jPGI+LRU6UaiehXsJNCjnxMVn1I9srXSVqd8PeGPFJxRoG5tb4ydXdGKx8y9wJhrOpG3yMiXsUJY/TJQML4eQ9WfPo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gR39VxgR; arc=none smtp.client-ip=209.85.161.53
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6a321bb0328so21313eaf.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2026 16:57:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644231A5B8A
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 00:18:51 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783469932; cv=pass; b=kYIf/hK1bAeYVqgyLzaAsdv5xC49jgKxIl9S7SjU+hZr4+4F3iZkZWtql/yxZFcoAMS6qm7Vi5c+ybwKwwJKaw1EYg2mPFFdjJGtc1qrOf4pVKHRwBkguEXD2xmlnyJ7qQFgKeYXsVhWesO6J91nBlUHDaRsr8pzQU57uckXfbw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783469932; c=relaxed/simple;
+	bh=h0kEDvJmvrIwjVeRvKLvkt5p3k0dgNwG24okDayHckM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YS9F6NLlIcOLIpp1/20vamejDntZn2sTVCXIZglh1lCnL8ELxQfdAAGFUi0IuYZ7mC9+LN4EMyoscBnvJz1iUcsc+pe2aUwrxo1HpJcjH3PaVIQG+VGsbzBRxT8PXsbd6gRMwB3sh1F5Iu/JyW1jaKQyTk0e66B8+0VG+HRYcW8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNO9n+Xa; arc=pass smtp.client-ip=209.85.208.47
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-698a9f11776so167570a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2026 17:18:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783469930; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cjqXg2PMXdeOrmq5II/fPDgz0EDFGciW0QdOH/8Rv8v33cCspeUyMhNgBP3s5gkUrW
+         m0xXVgAoYvK6lrraa7iG2weiBlMaw2rQfFGIYSCzllAepjbdcYA+V0J2mHNmXXYD833I
+         SCwa5iUvOKVyBV2ArXznx7KQ77NTeLoBjgEkoqwkNUcECqlbA9ACQAbbrkJVYH21HTb8
+         9WklvUPdF5BcA210JGgiNISDSlKLSrRwhkfIOofaYT7m7DkY5YPsRCV5CNRQctXgYWa9
+         X9ihOl7qHEuTY6rILmdJnnx2eN+OoeKl9cnIzBL9zbWtgE0aciBTBWqUGbE370nehtzC
+         xe5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=h0kEDvJmvrIwjVeRvKLvkt5p3k0dgNwG24okDayHckM=;
+        fh=9bl8MKoWhTSP0GAJkyoHpC4X8Fd7lZ/gHfVa5xEztRY=;
+        b=EY662rIUqd6G0baDS/ipPnsMwaPlABmzOR39ZiVPvrsby7cJuzrpgcgN4tsPsUZwrU
+         aAJ9gyoUKimwujLceY/HxWKB+bCXtVOy5IhU0WxO08X5orb9z4mFmcscDy8hR+AJspVo
+         sQAc7jQ+aG9CqMQFKi+POomzDW4RW/RLkdNqkFgqnH843sizmgmMwzZfuYaDnrAQ1oip
+         +YUxJjnIF/rVoCxjwIJN0BI+cjUXsB0Hx6KQx75n47G6BuzRyEezA70EYYWcaAGpZf46
+         qNlox6zr01zhkzpD5sk9IrBaMDnGaSlK7g6k33/QofCAMRtGQkh31k7WyxnltTDqEyVM
+         h+iw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783468663; x=1784073463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=er6pkGgqUgqjUSkeHs8hENATy3dGAIc5vSPhqVqK9VM=;
-        b=gR39VxgRgKDdHRfOuUYBmh+PVE5MUGxH4RKllaera4Brdv1kj9cY7NbVVCNJdJ2Lwb
-         SV8B7h0MT0JbUAsnUkXzhjGysLkY2byyxT2Pa6Av9IA4zTWp2nSJqE1pUDlnX3WBBXPa
-         7jjGLj+Cb8ldxNZkuO18JyKO5WMI90oxI08iD8H9VByvkeWQoOdg72/A8U3egL+LjWfJ
-         n/7BtjTXuhJHjXr159c5bi9vwjicnNwc/vv7ya/BQghuqL+norRpjVNhvE9zGzLx9wh2
-         cIelL1hJx1BhF0W8AwV7zLeb5NDQdY4YcRPFcYI/Jjma8xVee/EEW1nZ612rzYKzl813
-         BmAg==
+        d=gmail.com; s=20251104; t=1783469930; x=1784074730; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=h0kEDvJmvrIwjVeRvKLvkt5p3k0dgNwG24okDayHckM=;
+        b=GNO9n+XaJQFhxfdBOU/KmmdxJIWsuPCL0NS8aet+efJYy4v0HFNEM9fFf0CGgpMp3G
+         a1c+RsziGkSMe54W5MgI3ejrKtgU4Y3pylejRwj/Lnnmkp0vQ2LEnPm6eAbY1H0ia9Of
+         wW5W9A4D8yLek1MuyjtcX2gGEkksb/SAbsWjbpHY69yTBntgYrwBhohDCrY2wzPXmueo
+         ttogJRCY2TOmkOW2+kynTpNX0QorUzq8PJCtC0hh5IdN2dCBbRP8ZYQlh2lb2GkthsC6
+         2DbSoNtlw2JPewgszeFBXiGFkC8dAsN1FozWCqaLoyTWowEDfp+ESBVMTVbyXoTSvbQH
+         k1Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783468663; x=1784073463;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=er6pkGgqUgqjUSkeHs8hENATy3dGAIc5vSPhqVqK9VM=;
-        b=X7zjE5BUk4NHEfIvnvCqZ1k7d+/0FfK9gqQZATDppoeKax14ZslzFaHC5KavJ+qmHw
-         V8m5W5X2LHLV0+KC1Fbgh3NW0/4N46x+CaeeuPAA9ZIedv6cA1HZOm/F4NWr7GnY8IkR
-         avICbRyfxvyuON6jAIVfmvc6LDQhlFaePkQ1QTZLQIIMC6NMrOEQW0yWkuQ43Q2o0VPM
-         Ej+qvy1ROmFzvEzmcpBpyYcWRCAt3fS8E6Zj0vV/ogCIYyIiQDQjFMXcOCOF+jJeDMYi
-         dxytiW9kweKraKnoICMiPEMntDQrLWdnMySw+h0N08dTW/wvu03YnyEWRO9vU+WI/HLD
-         FOrw==
-X-Forwarded-Encrypted: i=1; AFNElJ/a37a1GyuvTClXEBWFhZCsQPZtiMqkKW4c/W+1BMvd4ix2H5RDU3rZf/9iQZVqAmzg/SJfwv2L598Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlQuqx7YUvr5eyq7fzuxvhk12sj47UNJDtUDPEXCejvTwIHuH4
-	e+StZ0Jz+K5c1ZdtTkCNbQ/9d+LBk2cb/hKXdv4zB2xiHREVn8VgKSJS
-X-Gm-Gg: AfdE7clK/KeBxwtzd6pBkU3pEqGkrE7aM8xA9btONU8qvYOafAvGTe5aMupZEtw1m45
-	9wi72aNztn6v560OCZOM0D/Jn8H8/St24rbkrZ1QWowjSNbLJlQn4B945FywhSfJTrzbRbzvpDf
-	fqtZygAZgH0cyO5nWTpaIX+ADPgeuTDKDhUqYKvZ3rPFbMuuObA6TWPQ7DpirxNvR9Lt2cLGoTs
-	2Oyn0vhS8aQgQh7vgZsys+gJ26akKeWVVVGNrgaj4l2x8oJgjCU48tuXlkJ1g/uiBj09NzAaLH9
-	TtskKE+AD1n6vh4Ta4/awacBwesvZRa55iDmMr8uiPbrYGdnfrnkovICfUSDD0d79sIVlCWPnrb
-	uA2UqlIqJfRe0l/1Aq1ARBEwTiHYdEr5yzg/xz+6UlxlO5iI7OEv4bpAo/DsAla8gfc2ZrE+CKd
-	2cDOZJTig=
-X-Received: by 2002:a05:6820:f023:b0:6a2:9bbd:367a with SMTP id 006d021491bc7-6a36d8735c1mr193412eaf.12.1783468662946;
-        Tue, 07 Jul 2026 16:57:42 -0700 (PDT)
-Received: from fedora ([187.142.231.66])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6a36a5ef513sm763159eaf.6.2026.07.07.16.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 16:57:42 -0700 (PDT)
-From: Cihan Karadag <cihan.cihan@gmail.com>
-To: Bartosz Golaszewski <brgl@kernel.org>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Cihan Karadag <cihan.cihan@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: gpio: add gpio-cdev-uaf to .gitignore
-Date: Tue,  7 Jul 2026 17:57:05 -0600
-Message-ID: <20260707235707.1349969-1-cihan.cihan@gmail.com>
-X-Mailer: git-send-email 2.54.0
+        d=1e100.net; s=20251104; t=1783469930; x=1784074730;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=h0kEDvJmvrIwjVeRvKLvkt5p3k0dgNwG24okDayHckM=;
+        b=GaSVHG33y95Lt8QTqmxiDm7RBRW+afIERz71UZG2HccFzsm/baMY4oHYBMkFZ2svp4
+         6YWcVblYDK8kkxY+AWslAbW1qT2VlqS4f7/Mw5tFSt35aeTPbUOfCwIamIIAFyF8EviC
+         RbzBzBvoBGZBj+GnntMIwX+SYiVnriwCvdBMSCmVCTOiOBKT43Ib0hL61usXxICccXlr
+         RUgb+E6AHd1AaFtC/F2yejRoNfZqxMfQKsuwF/xfPlIhOXRWlDt4n/YRzZ1HZ62F9CQ9
+         eVXvDTBk0lwhsKOjeOLiG50fRDAiUfAUvpwY7hoaEqNzbR/tcJFFYYOa/A8dFEW5Rf5E
+         Mvug==
+X-Gm-Message-State: AOJu0YyUGYR8wUoCK7Z161oSJRXXx2mBE1pTOrFAaF2pvO0b6RrtkG80
+	arxHhKCQmU3b8yYtutcIH5+pywb4GFgSnsccEcsS6+H2Pmzxlzrwd4BU1gAMTwPq7wqCkIs/CcH
+	Euxv3t+GOiKwUHotHNQm44dAS6saf3VU=
+X-Gm-Gg: AfdE7cmHZMoJmI2yzcGhM0sXla2HwDCkpSMLfHqqBYsqsEBYh1x5OAnX8dIV0OCvqis
+	mbbhCQAtS9wTUNB3FYe1VV4/PLX8yr0S4Gv4ah2GYjct1XlXlLHdHXciCrEN/qjP/+U+NWYq3x4
+	n7EZPe31xfOc0MW0uln8d371ZdMVwZuI8QjWrTG+nFZhGvOTtJUrpIvNDLWH8R6Z43uAruvqjYf
+	IOzTx3Fdg0qrWdBJIJGHN0qZz+uonP6AAUKiUl/lbGK9PZx1J8pjMsy1WZz6IClhZ6BuJSr06jG
+	TDn0CT7xq7vCQEvuy1eKOw9SjyRjuXNN6c8HkkkShIJ3QLy5xJWqcITdJFCzcgR0LM9cGlSYlrt
+	ZQnhWuvbRFjf9g5CXAqprJEsHw6RGs3NzlaMcX3muM6bW/I6hLYOZxfbOwR7H49MHL3oO+2qZWT
+	XNoBeYdHM=
+X-Received: by 2002:a05:6402:5d1:b0:695:f580:a66f with SMTP id
+ 4fb4d7f45d1cf-69ab4497e97mr11740a12.21.1783469929463; Tue, 07 Jul 2026
+ 17:18:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260706232223.774895-1-rosenp@gmail.com> <akykuME0Y3eLOA2q@monoceros>
+In-Reply-To: <akykuME0Y3eLOA2q@monoceros>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 7 Jul 2026 17:18:38 -0700
+X-Gm-Features: AVVi8Cf_ouAmT7cXa_N1zMDYiLzFQClVJ7CTsObXQSHkE2rizAqIrqj7qRLUtQ4
+Message-ID: <CAKxU2N9dHfS_tRypZmHNSK6+AU+BDaB9=P7Y4xtq_++QDaD+cQ@mail.gmail.com>
+Subject: Re: [PATCHv2] gpio: mvebu: fix devres LIFO ordering between GPIO chip
+ and IRQ domain
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[cihancihan@gmail.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39619-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39620-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:u.kleine-koenig@baylibre.com,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:andy.shevchenko@gmail.com,m:linux-kernel@vger.kernel.org,m:andyshevchenko@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:linusw@kernel.org,m:cihan.cihan@gmail.com,m:shuah@kernel.org,m:bamv2005@gmail.com,m:tzungbi@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:cihancihan@gmail.com,s:lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cihancihan@gmail.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,gmail.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,baylibre.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B2B96720842
+X-Rspamd-Queue-Id: A71267209C9
 
-Commit c7f92042d3f3 ("selftests: gpio: Add gpio-cdev-uaf tests") added
-the gpio-cdev-uaf binary to TEST_GEN_PROGS_EXTENDED but never added it
-to .gitignore. Building it with:
-
-    make -C tools/testing/selftests/gpio TARGETS=gpio
-
-leaves gpio-cdev-uaf as an untracked file.
-
-Fixes: c7f92042d3f3 ("selftests: gpio: Add gpio-cdev-uaf tests")
-Signed-off-by: Cihan Karadag <cihan.cihan@gmail.com>
----
- tools/testing/selftests/gpio/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/gpio/.gitignore b/tools/testing/selftests/gpio/.gitignore
-index ededb077a3a69..16f74de479f17 100644
---- a/tools/testing/selftests/gpio/.gitignore
-+++ b/tools/testing/selftests/gpio/.gitignore
-@@ -2,3 +2,4 @@
- gpio-mockup-cdev
- gpio-chip-info
- gpio-line-name
-+gpio-cdev-uaf
--- 
-2.54.0
-
+On Tue, Jul 7, 2026 at 12:13=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> On Mon, Jul 06, 2026 at 04:22:23PM -0700, Rosen Penev wrote:
+> > During driver removal, devres cleans up in LIFO order. The IRQ domain
+> > was created and its devm cleanup action registered after
+> > devm_gpiochip_add_data(), so the domain was destroyed before the GPIO
+> > chip was deregistered. If gpiod_to_irq() is called on a pin during
+> > this window, mvebu_gpio_to_irq() passes the freed mvchip->domain to
+> > irq_create_mapping().
+>
+> Without having looked at your patch, I would expect that there is a
+> similar window during probe where calling gpiod_to_irq() between
+> devm_gpiochip_add_data() and IRQ domain creation results in an invalid
+> mvchip->domain being passed to irq_create_mapping(), right?
+This patch fixes that.
+>
+> > Fix by moving the IRQ domain creation, devm cleanup action registration=
+,
+> > generic chip allocation, and chip type setup before
+> > devm_gpiochip_add_data(). This ensures the GPIO chip is torn down
+> > first (preventing new IRQ mappings), then the IRQ domain is removed,
+> > and finally mvchip is freed.
+> >
+> > Fixes: 644ee70267a9 ("gpio: mvebu: fix irq domain leak")
+>
+> If the above is right, the referenced commit only creates the issue at
+> driver detach. The issue at probe time exists since
+> fefe7b092345 ("gpio: introduce gpio-mvebu driver for Marvell SoCs")
+> which has `gpiochip_add(&mvchip->chip);` before coping for irqs.
+Will fix.
+>
+> Best regards
+> Uwe
 
