@@ -1,172 +1,153 @@
-Return-Path: <linux-gpio+bounces-39656-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39657-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FADaG7A2TmqJJAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39656-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 13:38:24 +0200
+	id gWhOCNQ4Tmr9JAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39657-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 13:47:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC45D725EFA
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 13:38:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D61F725FF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 13:47:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Jubsw54k;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39656-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39656-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=c9ot8YXq;
+	dmarc=pass (policy=none) header.from=intel.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39657-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39657-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9B03930546A4
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 11:36:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0DCEB3066213
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 11:40:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96399433BD0;
-	Wed,  8 Jul 2026 11:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE14434E3D;
+	Wed,  8 Jul 2026 11:40:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC5042EEA2
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 11:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1567433BA0;
+	Wed,  8 Jul 2026 11:40:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783510569; cv=none; b=p/ziNlVuuF38gfznmx0gAo3QIOyZWyih8ELLSRhewXGoqXrvtlLB060JXcSjeszGnI+lHzmuZLGrYGVG1HbNHlsqwjOCy0pTzzQ+lWW1+Z7v4hDq1CUf4sgv8mtR06GJI798SSm1luZjtNVLp2eWQetvpktMUpqfFC8X3iOozNE=
+	t=1783510834; cv=none; b=KXfaYLZUrUawUmdimMKE+CMLvsWsTaeEvnxvUCNgs9X+6gIhd2Bsbx0K67fkLY9zBCCOf9Z6qrOpsYmLeusSCkMCwq5KKDuEMiwK05pP6ENXl7tz5TsvO3ReESV6muQeiM0Ddcooz8H2XN/C6oyYMDymAJRhM4jzREd4d8m0VKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783510569; c=relaxed/simple;
-	bh=7/rcNDUSa1dXDw7IONyqkMuj9L8KQzOfslnJi+BczBs=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DlPsnDhf7LS8VZ5J3FPicLXapCbJjpm+s4RcsEcS1WJO5ghNoTx96D1xWKK5R1y31I46cgh2HPiSH6jgnMlgVBfvNc60ha3GA7g74yzHJBIHv8sl5Tl3aIxD5xQYXxijzuyeCDC7jqJ1mH6XtGOIKVUbEesYrgiHznYsmM8eR1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jubsw54k; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2047A1F00ADE
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 11:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783510568;
-	bh=VJqmVkipn9LS5P7QGj3CtnPtrgKv94L3h9lYbmlzwUw=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=Jubsw54kDR27sWbSj9dUqkbKXgNxC91fBonXo1MhKc1+a7dUaZ6iYUqdoK4nbeF/R
-	 d5UxICS9BwycYLDv53TebSDts6WzFNgkKas9Jo4BqfCp/3R1CZQRKOwla5ZXdstcu7
-	 2hOi/gtguSYnLSPhXrmslk8pl8N9ufYs7T4tNObqTZIJqWBsqg2nAMl7j0ORObShld
-	 nXg1tcb/f3REvwgaxBz3iXyJ/Ouh5tgnpXVm49YtqLzK/UvygXzn7lESTWDFUQOCPu
-	 Z76eT8EmUFSrnWuOhnCtdXmV0fYh/85uufKtlOcw7iMJDI2UvTRa7WhEqiv+mgDGOM
-	 K2BtfrB11uLug==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-39b03d41976so4777051fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 04:36:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrHprfHToIBmt863g9vNOSSER8wCtCzWPJTUwZuSqXzT4dpQYh9cGP7EFlbddZS9dIhksgeWWJE3qq6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTk3fFYGfHuiYrGhUckhOKrr1vsaj8OZY/5VJYAhSVwl0VVZSv
-	pAZtXqNN4fFStjuThA7+XpOlyxhzPaHQg1WYGu1yuMmGyLEbmWWqVp5KgPTYLdZkzbkyJFqdeKs
-	cvN9E2Otn6jnQoOqQppA9mwR4BnbTANFujTRV9zW0qw==
-X-Received: by 2002:a05:651c:2220:b0:39a:fffc:ccac with SMTP id
- 38308e7fff4ca-39c799ff7c0mr5084711fa.35.1783510566653; Wed, 08 Jul 2026
- 04:36:06 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 04:36:05 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 04:36:05 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260708-ls2kbmc-mod-v2-7-2afdd1741766@gmail.com>
+	s=arc-20240116; t=1783510834; c=relaxed/simple;
+	bh=dpLYqUgKFJe2E1L9qfI5UGDCSJeERNm5s4u56p1sYPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXzUz3EoNhkj3K6vKwdimaF2Gf+vsj8jVAASE3oSCRtD3BI8Pk/ficBHSyhKw1wK8c4tKOIWHMH6bVdWuG+xobdEzG1s2VYFrovyb44hq60NxaxbME9vb81T1Db85XCDZgndBi95uN027jWGDDEVM6QCa3Bm5KNCLGx8mJBlyE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c9ot8YXq; arc=none smtp.client-ip=198.175.65.10
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783510833; x=1815046833;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dpLYqUgKFJe2E1L9qfI5UGDCSJeERNm5s4u56p1sYPk=;
+  b=c9ot8YXqSoa0EqJ98uVkwgnega3UiMZEiIKnzGOTn87/BNNjpCfzHeEi
+   XqqKGe0r9u91Zy/donf4077E0xJp4hQ83K+but47OGNcYkbZjbKKcwEC/
+   kAvD3lsH743p6hUam/a1vm661Mu6RtabDfo7hVCfTBJkKwnuotSYYqtp6
+   nSnN34MnrwUSY5yx53h2/Jgkg9LMJreanwxPQuMDcuG/wLISupE3WAJ3d
+   itD5Wg/94Gplf4uSAuHJze+M067BG/DTTzQafjMLfOrJesgjWg9pPUzxO
+   ft2UYYoo0UpsPqTq8kW2zC9uBkDicUZ7qXuooY3O/6qOn8sXwOjwerbsz
+   Q==;
+X-CSE-ConnectionGUID: x0DaG3eZQverG8lWpZ/HBg==
+X-CSE-MsgGUID: HYZEOTMCR7K5zdO4dT3b/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="101593695"
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="101593695"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 04:40:33 -0700
+X-CSE-ConnectionGUID: OsXS0JGsQzOIdQReTdx6aA==
+X-CSE-MsgGUID: wpZWCAdIS16CO26XRFJI0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="258570827"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.100])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 04:40:28 -0700
+Date: Wed, 8 Jul 2026 14:40:26 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] software node: add kunit tests for fw_devlink
+ support
+Message-ID: <ak43KoUF1pPo55gY@ashevche-desk.local>
+References: <20260706-swnode-fw-devlink-v2-0-f39b09d50112@oss.qualcomm.com>
+ <20260706-swnode-fw-devlink-v2-3-f39b09d50112@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260708-ls2kbmc-mod-v2-0-2afdd1741766@gmail.com> <20260708-ls2kbmc-mod-v2-7-2afdd1741766@gmail.com>
-Date: Wed, 8 Jul 2026 04:36:05 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MeDq6=u66hc+ChmJA9iKRhsYFhg7rKkCGh2BA=--VGkcw@mail.gmail.com>
-X-Gm-Features: AVVi8CephY5s0HC-Zzpi16U-IPSPutNk5n1kFwIKZoryZVIr-16Wmha0OSORi0M
-Message-ID: <CAMRc=MeDq6=u66hc+ChmJA9iKRhsYFhg7rKkCGh2BA=--VGkcw@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 7/7] mfd: ls2kbmc: Capture the reset event of BMC
- through GPIO
-To: shankerwangmiao@gmail.com
-Cc: Miao Wang via B4 Relay <devnull+shankerwangmiao.gmail.com@kernel.org>, 
-	Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, mfd@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	Binbin Zhou <zhoubinbin@loongson.cn>, Chong Qiao <qiaochong@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Corey Minyard <corey@minyard.net>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260706-swnode-fw-devlink-v2-3-f39b09d50112@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39656-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:shankerwangmiao@gmail.com,m:devnull+shankerwangmiao.gmail.com@kernel.org,m:xry111@xry111.site,m:kernel@xen0n.name,m:zhuyinbo@loongson.cn,m:jiaxun.yang@flygoat.com,m:mfd@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:openipmi-developer@lists.sourceforge.net,m:zhoubinbin@loongson.cn,m:qiaochong@loongson.cn,m:lee@kernel.org,m:chenhuacai@kernel.org,m:corey@minyard.net,m:linusw@kernel.org,m:brgl@kernel.org,m:devnull@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39657-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
+	HAS_ORG_HEADER(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,shankerwangmiao.gmail.com];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CC45D725EFA
+X-Rspamd-Queue-Id: 9D61F725FF8
 
-On Tue, 7 Jul 2026 23:16:31 +0200, Miao Wang via B4 Relay
-<devnull+shankerwangmiao.gmail.com@kernel.org> said:
-> From: Miao Wang <shankerwangmiao@gmail.com>
->
-> The reset event of BMC is captured through GPIO. However, this driver
-> bypasses the GPIO framework and directly accesses the GPIO controller
-> through the fixed address. When the same GPIO controller is also
-> exposed through ACPI and probed by the corresponding GPIO driver,
-> there would be a conflict between the two drivers.
->
-> This patch will try to find the GPIO through declared GPIO pin in the
-> _CRS resources of the ACPI node. If no such delaration is found, the
-> driver will fall back to search for the correct GPIO controller and pin
-> according to the fixed address and pin number. A possible DSDT
-> declaration for the GPIO pin might be as follows:
->
->     Device (BMC0) {
->         Name (_ADR, ...) // Match the PCI address of the BMC device
->         // \_SB.GPO1 is the ACPI path of the GPIO controller
->         Name (_CRS, ResourceTemplate () {
->             GpioInt (Edge, ActiveLow, Exclusive, PullNone, 0,
->                      "\\_SB.GPO1", 0) {
->                 14 // 14 is the GPIO pin number
->             }
->     }
->
-> Signed-off-by: Miao Wang <shankerwangmiao@gmail.com>
-> ---
->  drivers/mfd/ls2k-bmc-core.c | 162 +++++++++++++++++++++++++++++++-------------
->  1 file changed, 115 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> index f87224105b3720cca97dcef089dad63fe57bc8c2..7187b2dfddc3acfb9fdf3cb3b4675299928dd03a 100644
-> --- a/drivers/mfd/ls2k-bmc-core.c
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -26,6 +26,9 @@
->  #include <linux/stop_machine.h>
->  #include <linux/vt_kern.h>
->  #include <linux/console.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio.h>
+On Mon, Jul 06, 2026 at 02:54:10PM +0200, Bartosz Golaszewski wrote:
+> Add a kunit test suite for fw_devlink support for software nodes.
+> 
+> Most cases call add_links() directly and inspect the resulting fwnode
+> supplier/consumer lists: a single reference, multiple references, a
+> reference to an unregistered node, a "remote-endpoint" reference and a
+> reference array. The last case is end-to-end - it registers real consumer
+> and supplier platform devices together with their drivers, adds the
+> consumer first and checks that fw_devlink defers its probe until the
+> supplier has been bound.
 
-I've stopped here because this is a legacy header that must not be included
-and none of the interfaces in it must be used, as per the - very loud - comment
-at the top of that file.
+Always in favour for the new test cases!
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
