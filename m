@@ -1,151 +1,179 @@
-Return-Path: <linux-gpio+bounces-39685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2/cAAdrPTmpSUgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39685-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 00:31:54 +0200
+	id SY2aLBTUTmq2UwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39686-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 00:49:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EF6A72AE43
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 00:31:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33F4172AF4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 00:49:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=k2eHq3Y1;
-	dmarc=pass (policy=reject) header.from=mailbox.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39685-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39685-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=jT+gqW2k;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39686-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39686-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8F724303B4C6
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 22:31:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E982F306CF3F
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 22:48:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347E83FD152;
-	Wed,  8 Jul 2026 22:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50ABE3769F4;
+	Wed,  8 Jul 2026 22:48:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953642F3C19;
-	Wed,  8 Jul 2026 22:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC46D30C618
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 22:48:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783549908; cv=none; b=UGdbB+YTVOaR3R49QLcwI57LiPHTgpTtR+8m7LWjLYrKHRyykWGQPGeW/GKXm7J35j/cciS3NZHMnbW8UP2X9FthxcVRlbOpegv/4e87pq9oaynVMUgc2hJ7YDqnFyZsXg16QZyt8InOh+fw9N0S8HKlcS0MSRKcJ4D1DbLYyzg=
+	t=1783550909; cv=none; b=JLw0kGH1BZHfzdv/LfI3ikUNhV6TIj3JAmi/c+FxsbNagXdBzBPfdp/XWLRz/KI4U9qvqLTM3uUZSruRl2ASK3uVnlXzoWuXwpl1ZEuXRUlcIc5nqreFfU5APEZVq1rf9GE1Y+FKYSqHqWtvHArMYCQAAcMjd6RQnAUvEYFB0NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783549908; c=relaxed/simple;
-	bh=TwPNIap4o9alfoMGrHjKWF4JR0px4d7fD/wJeY6TlV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=laC7jUOszs6z0CUsVMIWlwW1kbn3bjhLdvQdTCuWLJbkSV/ScRgJ7YTB5pZwAyTfYSemW/j75Aj3Br0JWqqjc6unEzwiym+8lp1XGMA8edz80XIcNfAVuF+0GAiFWH8hGstxOl8YakmBUvbc3itNppld0T/g3bYZ9dizpHowDas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=k2eHq3Y1; arc=none smtp.client-ip=80.241.56.172
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gwXrb2NCfzMlHw;
-	Thu, 09 Jul 2026 00:31:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1783549903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=153NGcG1DPWuSXRcq4z9zBLGMIc6zuyh1qAdI4RAZiI=;
-	b=k2eHq3Y1gdAukQn2jHL3lPY6q2pTwZmYCQfEiX/3LfjZH+0YnWX76gdlkczjxYYo95aUJz
-	hdonlaaoddJsyIm2RDY9iqEGDfG8vIn73MoJ6JiCcj4+OWYLImLmM2hMgqyvijNB6osGU1
-	IueO2hsKXV3lNyJbRQSYwig1PQmGB4/bb4MglHtRoyYYmB9bJwAobTCzll46KpA+LWGsbX
-	+XffLbtofMiAckleXsbpoxo/DlAk4PxOo34VE/LTUMF/qI6YeJykz+hItU/NA6SqEEnh1r
-	0ahc95ox2Uw3F6rvCFp55XsE8SiTiwbrNeDuYS0+Sx32pKv/IGOqmXEoa+RRgg==
-Message-ID: <9ecabfec-d428-4c64-b398-4e80baaf3752@mailbox.org>
-Date: Thu, 9 Jul 2026 00:31:40 +0200
+	s=arc-20240116; t=1783550909; c=relaxed/simple;
+	bh=nQX/Kn5G3ZH/L8fZkAmyxEeI7mV90VwZj8IHlC9nZec=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oyGnXAddAVNNFpDK/nP2Hb0yDZJXi9Q5doPnTrMRTHskeoCC0cGfUg0GzXd8VxW/GFSOXBHzK9i6qE+xw6TlpwxWYgU2PGNuuRXEwaTtS1WG9tT+2TX4Ukr/NUJksLitF45GprifZrNtM0gHD82P9FitjcVjLwFnO4fkYw783Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jT+gqW2k; arc=none smtp.client-ip=209.85.160.171
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-51c01089e8aso6966701cf.2
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 15:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783550907; x=1784155707; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=kOIU/Q+WQzJvS79ZfIzIzsTDKkVRFJ8CsUMjqnigyQI=;
+        b=jT+gqW2kll22Bsbpkqz4PTNYbdZVjVl2k8/uyCEd3pE5AHgM0v2hROI1ZR98zkBGDY
+         aAMTqnmpjHd+yXKLMe1c+bAh9Ny36tz9OmdUfVUToM3IhcDw6+kBRflu+zEFOR91eIyl
+         uYY5XGQdZnu7v59eVLeeRW72xVrGDBpsXrJxXGCKg73bDznjFyL/Hluw3linfZog/8VB
+         g2gYxLuv1mA5IdfydwGHIFSFRilzJmeJ445i2ukuXIZAPLyPpw7l6khlgCdDSoWAS0cU
+         MDch8H8O+MxmpR4doaIT4VsvwjWpwa7BdE0liZ98d+WjerhVYvHKAaBn8DtKiQ7bxe2t
+         Ttmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783550907; x=1784155707;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=kOIU/Q+WQzJvS79ZfIzIzsTDKkVRFJ8CsUMjqnigyQI=;
+        b=CSZ+0Q6ghev/OcqRN6viYC6oKD6SCUcwKc8dZ1baN+JWxNjuFPCsznQ1W3VQFSbe9s
+         AMAgZRIHzvvDJai5aaRCmQVHFndLQN/hC8AZ4OWVqWFCrj8WsmW3fUjN9j3Zrd5sXTyk
+         4X1PXNah5HMDp99UWqOsguNEa+qBSysNKEm2v8fH4kzagQ9/HGAquPp+xiTJfBrVUGR2
+         9MFvZJoHCwQtBdRI5q/z7MlJmZXVkiEiS8GRGFauepD0H6EaiPFfi+CKB2H2NHTql6Oz
+         c7kcH0w9lIsJftES/5Vc6iRKOsAPL1swTryMZzTNGLQuupZl/0TgBKIACaPQFTicrK/o
+         tOfQ==
+X-Gm-Message-State: AOJu0Yw8FeKjSYt6sRR3C4ocTY3RJCf1X8C1HGEJeOH3w1ePlPjL9E2/
+	Te7aVDjfZPjx1rY7WzY2YUyrXBDd/X+Spc8OL8JeGhD3S/MdyDCsqBeJJHsuzQ==
+X-Gm-Gg: AfdE7cnqTzdox00zhPXS9yqv0qR2gYpk0Sg5y+N6CnQDlOp+4RCHZ850w88AUdTTd+c
+	rOeAJER9fFdZAsUc3DKdfj6ENDQoRU6/TfVqZjT9NUBzIUPV76nYgWIawzcD15jICCGE+jVI/Hk
+	McrvGck0cYZOJdqpGKp6ywPf1EW14/zTfqBvh0PhemSycuO7BgUhdSb8MZ+f9HsMqB/d8TbXI1X
+	qyO8T48HGL+eGmalwgrQMamNPVJ9x6wTpTkR6VOOVKPcRj0msJn4VXmXzlilSs+zxEe2HZlzyOJ
+	z5dCY5+eXJh7e2C/H3k2Moee6msHYXmmkcs4BRt8IODyRTqOx6SUqtujpRlEacxNVtbXa6/U9aS
+	lGfwcsmPmV9bc3x7aSGJ0et4Fz9NjmFXPXacybanjqhsEMXYyr6y+pr5I0l0bXLzsOFGLno4Dhj
+	QXycBJpAJLqZPSXy2Ebsyu+L75v350bImbb4XAJUGvuKkAxv4pz1yX8IKfLQ3lFu3UNst4vToWd
+	qExOjiVa2LYScmbydLMgXphPnsfiDZWuXW/UjjQOu7s0nH4qp8Bd0QBq15koBPpxg==
+X-Received: by 2002:ac8:7f81:0:b0:51b:f40b:2faa with SMTP id d75a77b69052e-51c8b3e32aemr50992231cf.52.1783550906576;
+        Wed, 08 Jul 2026 15:48:26 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8000:7a86::e35])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51c41e084e8sm142990171cf.28.2026.07.08.15.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 15:48:25 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCHv2] gpio: mvebu: use devm_clk_get_optional_enabled()
+Date: Wed,  8 Jul 2026 15:48:22 -0700
+Message-ID: <20260708224822.960617-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] gpio: rcar: Add R-Car X5H (R8A78000) support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20260704151521.211335-1-marek.vasut+renesas@mailbox.org>
- <20260704151521.211335-2-marek.vasut+renesas@mailbox.org>
- <CAMRc=MeyKGv75rTLauZuGxSfgjCPXVE_r=A7uNduRr6kAd43aA@mail.gmail.com>
- <edc7505e-1103-42d7-b88d-013ca10753b3@mailbox.org>
- <CAMuHMdXQQWmn612R3y6qSXOZ7YMwZcfrBTrQZ9GzGekhFhtWSw@mail.gmail.com>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <CAMuHMdXQQWmn612R3y6qSXOZ7YMwZcfrBTrQZ9GzGekhFhtWSw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 272722f82881645b40f
-X-MBO-RS-META: 1mwb6twn3dfq1me165a49ir9q7udb4g3
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[mailbox.org,reject];
-	R_DKIM_ALLOW(-0.20)[mailbox.org:s=mail20150812];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39685-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[marek.vasut@mailbox.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:geert@linux-m68k.org,m:brgl@kernel.org,m:conor+dt@kernel.org,m:krzk+dt@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[mailbox.org:+];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[marek.vasut@mailbox.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39686-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,lunn.ch,vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:thierry.reding@gmail.com,m:ralph.sennhauser@gmail.com,m:robh@kernel.org,m:andrew@lunn.ch,m:linux-kernel@vger.kernel.org,m:thierryreding@gmail.com,m:ralphsennhauser@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4EF6A72AE43
+X-Rspamd-Queue-Id: 33F4172AF4A
 
-On 7/7/26 8:52 AM, Geert Uytterhoeven wrote:
+The clock is obtained without doing any sort of cleanup on remove or
+anywhere else. Use the proper function to handle this. When it fails
+with -EPROBE_DEFER for example, return so that it can be handled. When
+the clock is not found, it's NULL and not a PTR_ERR. Handle that as
+well.
 
-Hello Geert,
+Fixes: 757642f9a584e ("gpio: mvebu: Add limited PWM support")
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ v2: return -ENOENT as before.
+ drivers/gpio/gpio-mvebu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->> On 7/6/26 11:19 AM, Bartosz Golaszewski wrote:
->>>> +static inline int gpio_rcar_remap_offset(struct gpio_rcar_priv *p, int *offs)
->>>> +{
->>
->> I am hoping to get some input on this remap function.
-> 
-> I haven't looked at your patch in detail yet, but the remap function
-> was the first thing that struck my eyes.  This might impact performance
-> of bit-banging and of the sloppy logic analyzer.
-
-Regarding the performance impact -- yes, this will impact performance. 
-Both the remap function and register table look up will, but at least 
-the remap function is small and (subset of it) ends up inlined, the 
-indirect look up table is bigger and unlikely to be inlined. That is why 
-I opted for this over a table look up.
-
-> Have you looked at the code generated by the compiler?
-
-I did, but there is a lot of inlining going on.
-
-> Perhaps it would be better to use a table, like sci_port_params.regs[]
-> in the sh-sci driver, and riic_of_data.regs in the riic driver?
-
-Please see above.
-
-[...]
-
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 8d3acadb0d68..a863b0bf46ff 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -833,8 +833,8 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 		offset = 0;
+ 	}
+ 
+-	if (IS_ERR(mvchip->clk))
+-		return PTR_ERR(mvchip->clk);
++	if (!mvchip->clk)
++		return -ENOENT;
+ 
+ 	chip = devm_pwmchip_alloc(dev, mvchip->chip.ngpio, sizeof(*mvpwm));
+ 	if (IS_ERR(chip))
+@@ -1182,10 +1182,10 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 		return id;
+ 	}
+ 
+-	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+ 	/* Not all SoCs require a clock.*/
+-	if (!IS_ERR(mvchip->clk))
+-		clk_prepare_enable(mvchip->clk);
++	mvchip->clk = devm_clk_get_optional_enabled(&pdev->dev, NULL);
++	if (IS_ERR(mvchip->clk))
++		return PTR_ERR(mvchip->clk);
+ 
+ 	mvchip->soc_variant = soc_variant;
+ 	mvchip->chip.label = dev_name(&pdev->dev);
 -- 
-Best regards,
-Marek Vasut
+2.55.0
+
 
