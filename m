@@ -1,118 +1,118 @@
-Return-Path: <linux-gpio+bounces-39682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id xlK9DciiTmqqRAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39682-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 21:19:36 +0200
+	id wYw+ASOlTmpYRQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39683-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 21:29:39 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81C0D729D66
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 21:19:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 70B50729DE7
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Jul 2026 21:29:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=QBm6EIgl;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=rhKFxJD2;
 	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39682-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39682-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39683-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39683-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 37966303C01F
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 19:19:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7FE8B3054837
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2026 19:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A201C35A3B9;
-	Wed,  8 Jul 2026 19:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81BD83D0938;
+	Wed,  8 Jul 2026 19:27:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7D831282F
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 19:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481803C456D
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2026 19:27:23 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783538371; cv=pass; b=AAtGEsiIHeFFFYQcs0diumopN35s374deuHUYfGpB/JtATAq4yu01UbkV+E6wXSEIGtC1eyLVW6r1gJ6+AYN2XWhwunm5K1z5nU4H4LK+UP6OXvAhtM9u95zIIT3TItCJSDMElSCfW5L5t69/gF2OVukSYGRgBaG2k3O+HhNd0Y=
+	t=1783538847; cv=pass; b=urJtJoQTSigoiOa0qAg3jJ5nc9wRUzsGngIEAJpNFnY9cRfyeVdFvAo8VbXoTNkDbDPSBmS5OhXWSduJhVS548/oQEYPZUe3jIdqKPGfCQFNXMoz2enELgH3tIFz7qGOsbpncDX5Bsz4BNGOJxetsyAyYih8wTYR6EZ7KjWCiaA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783538371; c=relaxed/simple;
-	bh=2cL6bOG2O4om8rYVPB4gTRNQs4thGASvFB4lZxVrLJ8=;
+	s=arc-20240116; t=1783538847; c=relaxed/simple;
+	bh=q+EHH6mTt8DlQfOX/+AMwbuSuVaj4VQOfgBDwKE8suM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rYFj0h97MrAkOp5C8nyKTQEvGJgIPtJC5OVUn6e4afK0Er+wI91B1yHaIAx5PSXN4/6ju8MOJBBwse//sZokpc13iPJ/W3/W8AZRN6An1fv74KRMIJuZHHIJtDnQtaskgh3Yw9BjV8esX2kmoh7Z8lihvqie4PRwjsLq8+6ZJ7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBm6EIgl; arc=pass smtp.client-ip=209.85.208.53
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6974a6e54dbso1700671a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 12:19:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783538368; cv=none;
+	 To:Cc:Content-Type; b=AGNcFuqL1TM5iGZiuZsckx4XFWTGp7j1bEjTD7JDucdccfYQpZtRKbQu+UX0mjz0RDMdL3KfS1eL5z9jAf4Gw3uPR9jO6Qo7xFHdkg3CVv8h50PQCICZrhvmT6BZrUUoKLVJ13KvIrbL20AsXMKBVJUahJruPXTHFB/HCRpKNlk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rhKFxJD2; arc=pass smtp.client-ip=209.85.167.49
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5aeb77b3afbso983989e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2026 12:27:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783538842; cv=none;
         d=google.com; s=arc-20260327;
-        b=lpweBVBjpTnpN1lvdMhaxNYEFfD29mq+jLtK4PE4y9tfZWRW9CSJ/AzECpcgAsQH3G
-         Gp2kW8qN1s2e2vBOSUxS8s/t8gfBv+/Cfo3nUPYFPoLJH7qOYyAcB+BNS8oHQxh24b9U
-         dVzmvqXMEnReo+xjwyP9Z4TzV6j674N8kE9rYEnsziEWqii6y/WBNHjU0zKHlRiwR4Ej
-         UsOwr1TpzmWtRAIV/a2LKkuSiFr8GTSKrufX6PxMmtjYXuAF1lhuH2B6PBtPShcbWj0q
-         EQsYVBZiBgm+Nb1YuP4FnuoZCu/9DOPyWIltCbmz6M2mcYZfcqi3WXMlTvwG7Qu+89Xj
-         bFSg==
+        b=sJIz0rFLr0IxjMxOaVb3p/Pa+w8fgquJU82He23q+/KZBm1HtllhkW4rFVV1evA5mQ
+         XnQZCpJRXVLQGBqHb3+AsFMxSCsVEE0gYthMxUl9dKc+JYhk9WC3XHl0TEzBMeWqZuu4
+         7PvWxsbbXedxpR/A64ha9NTQCHpdDc5e0jv390gs3twD77DYzUJhmWMx2XMTI+mApax/
+         TSk8x8uP6CCWQP2Tpx/Sa7f7LqoOzo+oBGxPM/CR/FfIgUcQKGd4G4KXrj+iip7QYnIY
+         fyCbUIqsIcIvDPy5rvUpx9whMmdJ0ZPJnHPJ8tK3k9E6v52fwSACR9KLN+3tcVmYKNCe
+         2HLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=6ysNoCQ+zmWRVJ2IKOKpvmZsFxBRd+4QOdpweg1uVk0=;
-        fh=sPpb+5VbmBGv4qik/y/j3VsZMo13hIDHyEpZNVZS300=;
-        b=EiEdYmzzeuoY7Wa5NZAs7Fb0+J9VDw+nEMzUCwGiXA7bCcmeWoJjnaOR8972la2DHK
-         UpXkIvdPnW7IwIw3xZ2N3aQ6iCJ3xYEPy9CsU5xXfBWFeVs8v7tjbUaLCH5Qqeu6ndTF
-         qKa7PuI9AVqbydlFHooIngAUQ6Rfh3WNLj2A4XkyCpdEeYV22Odpkpco5ZlZpapo03r6
-         HVrZ69jVy3JYpcdR1SW+XpHuNLKgc5j44V+6OWLm23DJU5uocqhg5ZGEn3WL9DyU7E1B
-         4qcUfweIwpNAArvBkV0G5XLekJLVBF9vASWAf9M5UueN15ZA4MC2v7HaBiveutM6Rfxt
-         2WCQ==;
+        bh=qv1qQ/5k1Vxu8jQwNMgms0di0ceoaMwgTBc54Kvm/A8=;
+        fh=YxNAuD1GNc+IsJ0X+XAOGjOqtCSnYof5kJ9exY9PqwU=;
+        b=UI6ZcCz5F/CroRfZp4Ks20dBws4J2GKW4qErssRN8vXHYaDlPrWpALg4IE2CBGFnAL
+         V0Q/+GDPQT7EGCPSshr/4SzlgsIsyb4gVF+h2alSQ1Usavx2Ve6aRzXWWipVFDGQ6hC5
+         IuQoXnJNkoi9vGpVm9BpNuItTXUpUNdAl/EXl9qOHdFgPyrLvT042c7gskgJ2lrZCCVK
+         Altf42QEj6yPJKqAMqohzC9e6DhbNKxx1wT8BaR60emIjC9ZN5Hsmk8lOekEKSy4yqmT
+         RZl1SUYr9OsrWKruN47VAfzlFo71djMAAYSVAQUvczHVk4y7qZwHwib49AWiQM2Iwm7z
+         eUrA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783538368; x=1784143168; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1783538842; x=1784143642; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=6ysNoCQ+zmWRVJ2IKOKpvmZsFxBRd+4QOdpweg1uVk0=;
-        b=QBm6EIgltiFvVhjin1LKuGRWvX+z5ls2zNgnn/RupKdRHJJuLZABYaqSfEgjZUaxJu
-         6kxZjtU7lT4ldoTqHkgUdFdFtRT1xKUI0Cc1RUeEvDQwpB/3GUbobOxylSZtw415U7bc
-         ZmfK+HpRE1Q7DfRCHT8mxqC2jXC5YkpOKwqO+dft9ZAjNsjSAym3Z0twg45cvrmx/Qth
-         evlK/6RGSwy88gbORBrmL6tcw+D915AnjFQkLHmqNS2mRo5PmSY2VROKomVhurjoMKEr
-         DTagIQQSNT9Ld77o9Z25pZmFZANGTONIi61UK3okbZnnE66iR8YuUG7TJn4BlmA04t1i
-         bJ9w==
+        bh=qv1qQ/5k1Vxu8jQwNMgms0di0ceoaMwgTBc54Kvm/A8=;
+        b=rhKFxJD21G1KKGREN96S61Jj4MOMsM5/Pjm5lXEBvcEq0brsVPFoGcWVYp0wkUSqwZ
+         Jeasfcmngh39jE56hK54/yAF9r1jEGtteyct1+meq1Fggs0qhILOrRIExI3TEMck3Eai
+         1r7xhVXPg2yxe3fCFaW5L+hieC76DRAajbyfWiQLAPPvuQDquHKnu35nbTqtQHdgjl0W
+         xsB0pdEo26ts4G37a3L2vW5h8GPCM/Q90OUpqrVFhCY8jmn64j5c52DTOUsYQVCFGVhS
+         kxg4V/+bxsoxfUUd8Xk53WR2dmxoz07TLpUtnas0Kw4qNCTSJy2w2RMilaL3UqTbGq+y
+         P3Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783538368; x=1784143168;
+        d=1e100.net; s=20251104; t=1783538842; x=1784143642;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6ysNoCQ+zmWRVJ2IKOKpvmZsFxBRd+4QOdpweg1uVk0=;
-        b=Kvr0qYBDz+v+tLouz0Kt41R/ELI95hiWWQEoshB4JJwijB5KLnOL/O7N6roITDp7cB
-         fPln73YIOAKQ2NEjwFZEsv9kldpoX23uTUS0sAJ228qiSC6xSNWw3ZnzplNitYviYOGM
-         cvNwpPNnAscX7QWiMV4ia5CTBXr1+r4Goe0Qj9k1zOavxVpZL67clALR6np1V7Z04RX1
-         GV0Ez0gNYkgAjciEBtR/gU9ZXGEMCIkxyZ7FCeoUJEyv1icdBhnNcjzAHbDRdkln/MU2
-         HTaJNq5oogWy7sD2I+YK9GzPmWl2vInzSoIA4q9jSeiSOd81frMLoBc1NTuiX8qAM7v6
-         I1wQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpEgZG2OXXUqx1pHD2ruXhF0QdEHQQiuCPGkqTwmDbZCFkZPzEXLXizfqWgXmagD3SZR5E+lj9w3PvZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYgNydFmRTJVQPLx6zvL/OprvKHHYZomJLp9UbNTM3Cf3AwPQL
-	S5HMLDRNdM9M//je14pwCp7UzA6LQBT+kLnroGbaLv0PTK0/M2YIgXFEakKhyeWzvBWizxM7tlp
-	8Dtf43yyWTSy4xndxTyGGcCM9Nd7W7hdcxfMK
-X-Gm-Gg: AfdE7cnGyRjP8xY4h3qs1+76zR9nG0xcob/1gRPVmOkJHWngClmzY6I3jX6h7FVVuAv
-	haB/TuGv3v+tR6+ZSJmwctG/O4pWtvRXqsPQvtD66Zo692rsMdKwcG+qp8jlshngGBxVVlOijJq
-	LLhtDRU50vVpAiGeKLSY8p6AXogPTwqSSML0DTXOqEuVX4EOkI6boxBRIXKV/Z6WPhvEx5wFORS
-	deNL3z3FHADGblNmKWnhHpfCRzfqIHH7EDdhUm5CEzfTK34xnX7kaarxefcoPRp8qCZbbvZbYwH
-	u4IO/oT2xcFwmEt0Mro6eAqs0dv2cmiLuosEwrgRSCEtINi1nhQfvDBjhz/0rTMH3MEQ7DhjDX0
-	pUUiyGYEVIo9OS/o4/WFTKXgnB/A1GkKwdYUU9XRneKbkYnHVtpm9SqLXXen/aoN1PZ3c6AcYui
-	uv96Go1rk=
-X-Received: by 2002:a05:6402:428e:b0:698:c1f6:7438 with SMTP id
- 4fb4d7f45d1cf-69ab44a84c0mr1713195a12.28.1783538368314; Wed, 08 Jul 2026
- 12:19:28 -0700 (PDT)
+        bh=qv1qQ/5k1Vxu8jQwNMgms0di0ceoaMwgTBc54Kvm/A8=;
+        b=az6mV5g9Fvr2zw3v6tspKIMgbNCb/1qCmWT4BIPIbuY8hR/+MANt1lUuWT5m2tFiV7
+         pFIVK1u+AFmasgODipRuKP0/g0fb+vSuF55w8W4wt+AzYFtgrd3khMpS0MGPiLFHdGrL
+         Q+pLbeaEsFm/FO8qTfhBY0Iz0zHO5mdkYJyjPE8f1CNiKf9Yy1zQYFUimPq01OcDRAaW
+         J0Ztck5RbU7hLqAOy/5rvA0OIwp/mlh8DpgqfVnJInb0dCbI80y37peKOfd/Bp0jGHlk
+         +sn8/5U//J95WKKrBWOwzsyjr6+gRrx7wXTIA4sJJePqQ37cT3zoqLwycZhKkk9SXJml
+         frdg==
+X-Gm-Message-State: AOJu0YyN21UpTEeRxikyGvvQrWncEif2sZx4oHX7KcvJgbcj9GIuBw66
+	mYf7pOltXvdSYzHXzx/H2+1WsjUk6VKaMl2wq5nbQ641YFf8yQhPyLV9+JAUFXyq2WtjZeyJZky
+	1GGI59sirmSXyn0XmK5KfPQCd3shjePI=
+X-Gm-Gg: AfdE7cnl5yF5dIhOSJSgfs1+Mr3rgjT/yZxH3lwBQk77kbDOrgH1MRF3nUF4pb229aY
+	xZwt0n5610Ie9WN7QC8brjDQCh7YTrPPE2zyLREVwAdjbcIgkSZE3wJsvztYWuheijQC8XB+4Bm
+	W+vT1NKygY4Y8t2ofTquAIhUjY0T0fKAlgtNO/NDzfY9CiGMbFibA5S8q5ofoyCRNgRsjKO7Vtr
+	7KYavVaTyzEPFuhrad+TA/hAqYulaYy5kB5AX69qYm2XP8E5gdLAhdxX3YrSXNwQy+FGMRrANAn
+	OQfB/Q1sGXNL70r3hRgTi243oYXOior6ZGMvuiVs1U6Z7gbGyY2vD04YJTeqgHNLK3H/zeZa95d
+	yTSz8P9nxl/a7U8Cz2bi1yL3JjAamVqBI549vOQ4X/wxE/adytQk5N3otPr654QE3VmvLdp/f3P
+	MHtNvPkqo=
+X-Received: by 2002:a05:6512:134c:b0:5b0:149a:987b with SMTP id
+ 2adb3069b0e04-5b0149a9bf5mr308680e87.16.1783538841803; Wed, 08 Jul 2026
+ 12:27:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260707233511.1272686-1-rosenp@gmail.com> <CAMRc=Me3hfzzZq=ZvobyYTnu-Kv32psnsJUbuJ7Y78tKmqinMw@mail.gmail.com>
-In-Reply-To: <CAMRc=Me3hfzzZq=ZvobyYTnu-Kv32psnsJUbuJ7Y78tKmqinMw@mail.gmail.com>
+References: <20260707230651.1138887-1-rosenp@gmail.com> <d5a86921-db3d-458e-b826-b0bac370832e@lunn.ch>
+In-Reply-To: <d5a86921-db3d-458e-b826-b0bac370832e@lunn.ch>
 From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 8 Jul 2026 12:19:17 -0700
-X-Gm-Features: AVVi8Cdpys3sGmRiE83B9KYbiyXEsPECp9hqzwXxGDe6SZp0Cgd6AnCUAyTBvAQ
-Message-ID: <CAKxU2N-Nbe9YcWKw-ps3DY1-_N+Uw0NUJT8KCK6hm7P4oDqaqg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: convert to noirq suspend/resume to prevent
- interrupt storm on resume
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-gpio@vger.kernel.org
+Date: Wed, 8 Jul 2026 12:27:09 -0700
+X-Gm-Features: AVVi8Cfumm-nRWTY1AONgoLWKQEGA8D0avyUeOQNTyLpV4gNTYw5UyQSH_0I0i4
+Message-ID: <CAKxU2N_aMvgOwEnmGbCB33k=KOKnk8=-RPK_aJCwV7tn3GcHKw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: use devm_clk_get_optional_enabled()
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Ralph Sennhauser <ralph.sennhauser@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
@@ -124,74 +124,68 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39682-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:andrew@lunn.ch,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:robh@kernel.org,m:ralph.sennhauser@gmail.com,m:thierry.reding@gmail.com,m:linux-kernel@vger.kernel.org,m:ralphsennhauser@gmail.com,m:thierryreding@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:brgl@kernel.org,m:linusw@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39683-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lunn.ch:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 81C0D729D66
+X-Rspamd-Queue-Id: 70B50729DE7
 
-On Wed, Jul 8, 2026 at 5:11=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.org=
-> wrote:
+On Wed, Jul 8, 2026 at 7:27=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> On Wed, 8 Jul 2026 01:35:11 +0200, Rosen Penev <rosenp@gmail.com> said:
-> > The driver uses the legacy .suspend/.resume callbacks, but sets
-> > IRQCHIP_MASK_ON_SUSPEND on the irq_chip. During resume, the PM core
-> > runs dpm_resume_noirq() first, which calls irq_pm_resume() to unmask
-> > interrupts, and only then runs dpm_resume() which invokes the driver's
-> > .resume callback to restore GPIO registers (GPIO_IN_POL, GPIO_IO_CONF,
-> > mask registers).
-> >
-> > This ordering means interrupts are unmasked while the hardware is still
-> > in its reset state, potentially with incorrect polarities, causing
-> > spurious level-triggered interrupts before local IRQs are re-enabled.
-> >
-> > Convert the driver from legacy .suspend/.resume callbacks to noirq
-> > callbacks via dev_pm_ops. The noirq phase runs before resume_device_irq=
-s()
-> > on resume and after suspend_device_irqs() on suspend, ensuring GPIO
-> > registers are restored before interrupts are unmasked.
-> >
-> > Assisted-by: opencode:big-pickle
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-mvebu.c | 15 +++++++++------
-> >  1 file changed, 9 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > index a556fdb267a9..1df763e60726 100644
-> > --- a/drivers/gpio/gpio-mvebu.c
-> > +++ b/drivers/gpio/gpio-mvebu.c
-> > @@ -979,9 +979,9 @@ static const struct of_device_id mvebu_gpio_of_matc=
-h[] =3D {
-> >       },
-> >  };
-> >
-> > -static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message=
-_t state)
-> > +static int mvebu_gpio_suspend(struct device *dev)
+> On Tue, Jul 07, 2026 at 04:06:51PM -0700, Rosen Penev wrote:
+> > The clock is obtained without doing any sort of cleanup on remove or
+> > anywhere else.
 >
-> Needs __maybe_unused for SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
-I see __maybe_unused and #ifdef for code like this. Which is prefered?
+> Given this is a SoC gpio controller, it is very unlikely it every gets
+> unloaded. There is no remove method, so is it even possible to remove
+> it?
+Not that I know of. My devices don't.
 >
-> Bart
+> How did you test this?
+I have two mvebu devices currently (sold the third).
+>
+> > -     if (IS_ERR(mvchip->clk))
+> > -             return PTR_ERR(mvchip->clk);
+> > +     if (!mvchip->clk)
+> > +             return -ENODEV;
+>
+> You should not replace one error code with another.
+This section of the code is a result of the older API returning a
+PTR_ERR when clock is missing. New one does not. Reading the code it
+looks like it returns -ENOENT.
+>
+> This driver has been in use for over 14 years, without anybody having
+> problems with it. The SoCs themselves are EOL. They were used in NAS
+> boxes, which do tend to have a long life, but i doubt there are many
+> left still running a modern kernel.
+Still have one. It's unfortunate that ARM32 userspace is getting
+deprecated by a bunch of tools.
+>
+> Changes like this seems pointless, and just waste everybody's time.
+This was a sashiko tagged issue.
+>
+>         Andrew
+>
 
