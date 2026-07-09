@@ -1,76 +1,77 @@
-Return-Path: <linux-gpio+bounces-39723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id NR0lEF5hT2pCfgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39723-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:52:46 +0200
+	id d9CgHmxhT2pFfgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39724-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:53:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C38CF72E82E
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0662472E83B
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:53:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=analog.com header.s=DKIM header.b=NzSxWxXf;
+	dkim=pass header.d=analog.com header.s=DKIM header.b=DaJYNLbt;
 	dmarc=pass (policy=quarantine) header.from=analog.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39723-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39723-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39724-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39724-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 006E73047902
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2026 08:50:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 28FC73065D31
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2026 08:51:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9663EA977;
-	Thu,  9 Jul 2026 08:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5640F3F0746;
+	Thu,  9 Jul 2026 08:50:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AAF3CE4B1;
-	Thu,  9 Jul 2026 08:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE3F289367;
+	Thu,  9 Jul 2026 08:50:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783587054; cv=none; b=rdrHfDT0zfmscEb+hvVa51SU8Sy/qOvXWWJ/QsQSdXbqlIwjIFV0zFseocdQjH2Hpd2eQLwt7js69OD4OV+7kNPry4TGXLMxPai5sFbn/5bdFpHHqruOxevIz4niBRkQ5Rlr1WyvR+JlfHiwK7op6lHyNV8WPHWFZ3bTQc1GK/M=
+	t=1783587056; cv=none; b=krFWUS9mn8fmADm5rm7zncHHj6T4GPUlgSR+4ZTuFzsegwpMk4s8I6SxGmty+p/gLg2vRFU2s9bl9gFfnOEUkFnWl0xEo3NhH/lbItGUmumBwvH+3F0BDUApMW5FQVslX9aSdQrznOMbDnk/oe0l193zRdqAcq/EhWd5gITtiaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783587054; c=relaxed/simple;
-	bh=bi9PWVrJuxHBQcOWRM2ZSnjMGuXeMgPX3Nc171NmM+c=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=YNbVcysV5D8bK9U2Crg9QKqcEXIJzgkAqmaj+YqtA6w3qxqJ6KhgR29qo51EwUmX66+HON+O+zH9LhcAPOfHv5pGwDqml+mUNzkI6b28/0yFFYK809w/7um/ypkKW3eLocOwXaH3oq7NBGrkgDBSbZztbAJMrqCmvfwq3R2lEqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=NzSxWxXf; arc=none smtp.client-ip=148.163.135.77
+	s=arc-20240116; t=1783587056; c=relaxed/simple;
+	bh=qoKJRxCDvhOI/3abcr0nC1nh+TpgnhS2WICWL066dv4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=q9wyUygP5F5E2FdfPOUEvmtk0cn6ZNMAAkXqP8DdumnDCnu155Z+DVkvkiadMlSEbBDqGSd7YEVFBCkXP5uKqMS8K98657qFckSt59s69D5+gq54cHaKPCTNl4/wR9A50zWATrf6MKuLGyFXWVI/b0WpFlfTs7gwgHQdqLGZPOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=DaJYNLbt; arc=none smtp.client-ip=148.163.135.77
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6697qG21413646;
-	Thu, 9 Jul 2026 04:50:40 -0400
+	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6697qGcj413647;
+	Thu, 9 Jul 2026 04:50:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=s7+RLKVKEtBtM3zaZvamjXSp1Pe
-	p5+RPJ3cd61Exs9A=; b=NzSxWxXfn1HHn1Wq1P8/2UtdbkmPleD5rY7OlNs3e/3
-	axcvmw7Zjb14xAHTj06plJDtoo8szRR85qO2HuHmrESHIr4NyVdD392RRQUcerwb
-	Q1Ayp+sJx0VIDZtOyfLlI8RGv3/7QjIgc1pVpUmuxL6Yw3TSR5Owrk4H3N8cKDm3
-	T9Nyt2Y9fz0wKzdE+YMizbv1QuahtueRW02RjLWfj6MQcGM41xMzdFlvE8/h9BdG
-	XJqWA4ttbxU00eDlh+hEudkYEABCK7gjjLV9Soag0r5rJmIgrFzt5DukAWzV3LDB
-	9DN0SMCRpK+ZFAShk/4Vmg7jBQ+Mk6WzqCMsQp4FdiQ==
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=2ZSHG
+	Go1dc4mzZi79OfTPBAmym/lpLtjKTPVmVM1+r8=; b=DaJYNLbtlGOOesc5XrKCE
+	NiDkHN5712UiDQZU3nSEZBitkj6hts9O4003wey3i7paL/UVhdDSqzttQs3whZMn
+	Se7rnI9pNpzBV6wGoyAqzp1y7RePI9K64ckTkIF8lDBeR+hglyWIcIPAIM2wpTHc
+	iRrwulYuBX/jLTdl00YfsUcRCkKJI0rAI6CKLWq3tTXwiebEiHS9v4HmcFjtBEyD
+	++g0uAXVCMQ+HioUpI3nnVQjK4YU0mbsNmxlPnsaZgA8qKnIqhFiDMw3PpzFSHXJ
+	k1Ye17XYjBZuIandkovHSjaccGmBpC3JHvUoaxAvgu7xmSvYsnvyj2abJzSIDkL4
+	Q==
 Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4fa7mug6hv-1
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4fa7mug6hy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 04:50:40 -0400 (EDT)
+	Thu, 09 Jul 2026 04:50:42 -0400 (EDT)
 Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 6698odGs003581
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 6698ofVp003591
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 9 Jul 2026 04:50:39 -0400
+	Thu, 9 Jul 2026 04:50:41 -0400
 Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
  ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.37; Thu, 9 Jul 2026 04:50:39 -0400
+ 15.2.1748.37; Thu, 9 Jul 2026 04:50:41 -0400
 Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
  ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.37; Thu, 9 Jul 2026 04:50:39 -0400
+ 15.2.1748.37; Thu, 9 Jul 2026 04:50:41 -0400
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
  (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
- Transport; Thu, 9 Jul 2026 04:50:38 -0400
+ Transport; Thu, 9 Jul 2026 04:50:41 -0400
 Received: from HYB-e1y2fvUQ3cx.ad.analog.com (HYB-e1y2fvUQ3cx.ad.analog.com [10.44.3.70])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 6698oLQu015849;
-	Thu, 9 Jul 2026 04:50:23 -0400
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 6698oLQv015849;
+	Thu, 9 Jul 2026 04:50:34 -0400
 From: Janani Sunil <janani.sunil@analog.com>
-Subject: [PATCH 0/6] iio: adc: Add AD7768/AD7768-4 ADC driver support
-Date: Thu, 9 Jul 2026 10:50:11 +0200
-Message-ID: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
+Date: Thu, 9 Jul 2026 10:50:12 +0200
+Subject: [PATCH 1/6] dt-bindings: iio: adc: Add AD7768
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,11 +79,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAMNgT2oC/x3MQQqAIBBA0avErBNGIbWuEi1Ep5qNxQgSSHdPW
- r7F/w0KCVOBZWggVLnwlTv0OEA8Qz5IceoGg8aiQ69Ccs56lYQridIYk57MbKNB6M0ttPPz/9b
- tfT/rRp30XwAAAA==
-X-Change-ID: 20260708-ad7768-driver-10cd15296c20
+Content-Transfer-Encoding: 7bit
+Message-ID: <20260709-ad7768-driver-v1-1-44e1194fd96a@analog.com>
+References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
+In-Reply-To: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
 To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
         Michael Hennerich
 	<Michael.Hennerich@analog.com>,
@@ -105,41 +105,39 @@ CC: <linux@analog.com>, <linux-iio@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <jananisunil.dev@gmail.com>, Janani Sunil <janani.sunil@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783587021; l=5451;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783587021; l=8597;
  i=janani.sunil@analog.com; s=20260507; h=from:subject:message-id;
- bh=bi9PWVrJuxHBQcOWRM2ZSnjMGuXeMgPX3Nc171NmM+c=;
- b=l+WwEXmyCqSV5++zxa5+d+Y+H32OEitgDntYKOuYH98a2Sam7IBLRdU56N1d7fgTO9wgPQvCe
- WjVMXmkZ5rlCQ6hhkWaUjVwNPvfyQFGJt475hQP4Yb3Ldc8ibQBnRar
+ bh=qoKJRxCDvhOI/3abcr0nC1nh+TpgnhS2WICWL066dv4=;
+ b=z8U6zZK1UsO+k6dCeUQhgTDykcMrRmzHoAuSP2DFvQeVtJftFDiF9Bs87Hs69Qhpe7OpLj/4P
+ xYiC79j648CD/Wj117N+eK6PJJtxs+DC0Q5HMryQtrtoz0qiWBe21Bb
 X-Developer-Key: i=janani.sunil@analog.com; a=ed25519;
  pk=e25MyjRLPY3RWrYm/LrJ+/+t1MZJUbkgIW5CZg+g+hA=
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: fASKV-jZnKemKbLRdbZlbiJ0q7IdrttC
-X-Authority-Analysis: v=2.4 cv=Bv6tB4X5 c=1 sm=1 tr=0 ts=6a4f60e0 cx=c_pps
+X-Proofpoint-GUID: V5cYK9tq97KD25WESPrsfUawXDVmmFyr
+X-Authority-Analysis: v=2.4 cv=Bv6tB4X5 c=1 sm=1 tr=0 ts=6a4f60e3 cx=c_pps
  a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=0sLvza09kfJOxVLZPwjg:22 a=Z0pTeXoby7EwIRygza74:22 a=gAnH3GRIAAAA:8
- a=VwQbUJbxAAAA:8 a=IpJZQVW2AAAA:8 a=8b9GpE9nAAAA:8 a=07d9gI8wAAAA:8
- a=ag1SF4gXAAAA:8 a=pGLkceISAAAA:8 a=k0hceuYl1n33KlZN5j0A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=IawgGOuG5U0WyFbmm1f5:22 a=T3LWEMljR5ZiDmsYVIUa:22
- a=e2CUPOnPG4QKp8I52DXD:22 a=Yupwre4RP9_Eg_Bd0iYG:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA4MyBTYWx0ZWRfXzXg+PA+TIvAj
- MiK6IXzSk6ehhGYFRz9lNAWeQz0RJzVG8G134WD3ewH2KT/W4uPtoMevvn8157wCgWqQjOExJJw
- dGD3PxYjjjSYfzsACASzo9bOm1Om2JPxzjzIzPCv2VGydyiOz1EIQnCWcel1M6G59ttH3uTxqGQ
- C7T89fU7bANKEZpJBWlxEjJV8WhKizeS4rcWp8fCp4366xJC62c2JQ63wvf5kEBqACvb/b9o6VM
- kmaiQ1JWVEayYkLFRgDkq5HegFOlph1b0qBlR/h5V/W/t1csgOXsau986Q47Sy/HPNfSmFMO60M
- bRuS/p+kKjvi6i/gLm81TVhRPF1ehTpwMgEb+qlna04PVdtZSM6K/dtFEjsVzgoJo1WR5MzlH6p
- jWOtV88S4Ig26+BP/4Y1fvKQdM/l8CvSVE97KcCw8Szowo8kA6bVN1GKOeTMrydc10cEVc+G7rv
- nNV43Vtp5qg8eIomkAA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA4MyBTYWx0ZWRfX+V6pIqsHxzsv
- hxPbfe4sR8vfQywZjukzp1LxXf/BoAQetQIWj5IFD0GlgSFUvPEQaIw7K50J75noUNgemN4AUnb
- xfd5aSpDBor1bRUkkCUu0d+/w/Xc3lNuMqY5A5+KPZ9WfCc4skZR
-X-Proofpoint-ORIG-GUID: fASKV-jZnKemKbLRdbZlbiJ0q7IdrttC
+ a=0sLvza09kfJOxVLZPwjg:22 a=Z0pTeXoby7EwIRygza74:22 a=gEfo2CItAAAA:8
+ a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=YXAFElg86Y56I11HveQA:9
+ a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA4MyBTYWx0ZWRfX56mAwHI9WBbh
+ dJpDe3PyIrjukuJkR+7HNXVD29iF8F2el1dmKgjkkJ9mtV1cR6FjTufg/6qaKSuMKPDTea3aAmt
+ 9qbmyi+xi5HiD9+OozrPBwN8r/YTNRxwAiy3Ez4nRQAjSv401rEh7r0HOQ5FnLGPo2BuUXZAHhm
+ 01Sx5vwoADcHVC/N7j+I8CH7/qi7WYp8MsbNoAzSYv2p/rJBZWTGLg+DaN3kkVpstH0K+d27+td
+ vBJGX4yZod5fwivs9mjaOBy3us8qydxttmAH5NUUs3kzgCpN9yiDBdhSkoohDmb82aG5IKpuxMb
+ Yv17R6n58omg4sffAxcAQBajGXc0oPTlQXKd14P9JD28NBIVgZPVenz0J0OrpeemUSVAGABu/MK
+ +NirHxMZWT0O456otnUlO0c37yzKu6WvcaT6WELuSn7NfRMwIN8ha8nXdKn0FmV5Ge7IHTHCBHG
+ M/7DiXhYDv6fKiPSKxg==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA4MyBTYWx0ZWRfX+m1mY0kmKE8e
+ ilZr5lPWwmcJcEyjY5dmiPwkYy2+oI3aOH5ku05vyoZbCPCpuPdeLK5Z8LEzmfHxE3uWRDhzgUp
+ f2Z6hfN+Jkrv1OXqTHCrCjj0Ch0YvlopZmnBI++AlgqvXXmbIf5j
+X-Proofpoint-ORIG-GUID: V5cYK9tq97KD25WESPrsfUawXDVmmFyr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  phishscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0
- clxscore=1011 impostorscore=0 priorityscore=1501 spamscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 priorityscore=1501 spamscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090083
 X-Rspamd-Action: no action
@@ -155,13 +153,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39723-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39724-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:nuno.sa@analog.com,m:Michael.Hennerich@analog.com,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:olivier.moysan@foss.st.com,m:p.zabel@pengutronix.de,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux@analog.com,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:jananisunil.dev@gmail.com,m:janani.sunil@analog.com,m:krzk@kernel.org,m:conor@kernel.org,m:jananisunildev@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[janani.sunil@analog.com,linux-gpio@vger.kernel.org];
 	FREEMAIL_CC(0.00)[analog.com,vger.kernel.org,gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,devicetree.org:url,analog.com:dkim,analog.com:mid,analog.com:from_mime,analog.com:url,analog.com:email];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -176,127 +174,328 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_SEVEN(0.00)[10]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C38CF72E82E
+X-Rspamd-Queue-Id: 0662472E83B
 
-Add support for Analog Devices AD7768 and AD7768-4, 24-bit simultaneous
-sampling Sigma-Delta ADCs with configurable power and performance modes.
-
-Datasheet:
-https://www.analog.com/media/en/technical-documentation/data-sheets/ad7768.pdf
-
-**Device Overview:**
-The AD7768 is an 8-channel, 24-bit simultaneous sampling ADC. The
-AD7768-4 is a 4-channel variant. Both support configurable power modes,
-programmable decimation filters, and a high-speed serial interface with
-1, 2, 4, or 8 data output lines. Per-channel offset, gain, and phase
-calibration registers are available.
-
-**Features Implemented:**
-- Support for AD7768 (8-channel) and AD7768-4 (4-channel) via device
-  match data.
-- Configurable power modes (fast, median, low power) with associated
-  decimation rate and output data rate tables.
-- Per-channel offset, gain, and phase calibration via IIO attributes.
-- SPI communication with custom regmap bus for the device's protocol.
-- IIO backend integration with adi-axi-adc for high-speed data capture.
-- CRC data integrity verification over the serial interface.
-- GPIO auxiliary driver to expose the 5 on-chip GPIO pins.
-
-**Patch Summary:**
-1. **dt-bindings**: Binding documentation for AD7768 and AD7768-4,
-   covering SPI interface, clock, power supplies, reference voltage,
-   reset GPIO, serial data lane count, and on-chip GPIO controller.
-2. **iio: backend**: Add CRC enable/disable backend operation for data
-   integrity verification over the high-speed serial interface.
-3. **iio: adi-axi-adc**: Implement the new CRC backend operation.
-4. **driver**: Core IIO driver for AD7768/AD7768-4 with regmap, power
-   mode, calibration, and IIO backend support. Registers an auxiliary
-   device to expose the GPIO functionality.
-5. **gpio**: Auxiliary bus GPIO driver for the AD7768's 5 general-purpose
-   I/O pins, reusing the parent's regmap and runtime PM.
-6. **docs**: Driver documentation.
-
-**Testing:**
-The driver was compiled and tested on the EVAL-AD7768FMCZ using a
-Zedboard with a mainline kernel.
-
-**Driver Rationale:**
-The AD7768/AD7768-4 warrants its own driver due to several
-device-specific characteristics:
-
-1. A custom SPI framing protocol: register reads and writes use 16-bit
-   frames with embedded read/write bits and register address fields,
-   requiring a custom regmap bus implementation rather than the standard
-   SPI regmap backend.
-
-2. A coupled power mode / sample rate model: available output data rates
-   are not a flat list but depend on the active power mode (fast, median,
-   low power), each with its own set of valid decimation rates. This
-   relationship must be managed in the driver.
-
-3. Simultaneous sampling across all channels with per-channel calibration
-   registers (24-bit offset, gain, and phase) that are laid out
-   differently between the 8-channel AD7768 and the 4-channel AD7768-4,
-   requiring device-specific register mapping.
-
-4. IIO backend integration for high-speed data capture via adi-axi-adc,
-   including CRC data integrity verification over the serial interface.
-
-5. On-chip GPIO: 5 general-purpose I/O pins exposed via an auxiliary bus
-   driver, sharing the parent's regmap and runtime PM.
-
-To: Nuno Sá <nuno.sa@analog.com>
-To: Michael Hennerich <Michael.Hennerich@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-To: Andy Shevchenko <andy@kernel.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Olivier Moysan <olivier.moysan@foss.st.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-To: Linus Walleij <linusw@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux@analog.com
-Cc: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: jananisunil.dev@gmail.com
+Devicetree Bindings for AD7768-4 (4 channel) and AD7768 (8 channel)
+simultaneous sampling ADC
 
 Signed-off-by: Janani Sunil <janani.sunil@analog.com>
 ---
-Janani Sunil (6):
-      dt-bindings: iio: adc: Add AD7768
-      iio: backend: Add support for CRC
-      iio: adc: adi-axi-adc: Add support for CRC
-      iio: adc: Add AD7768 IIO Driver support
-      gpio: ad7768: Add AD7768 GPIO auxiliary driver
-      Documentation: iio: Add AD7768 Documentation
+ .../devicetree/bindings/iio/adc/adi,ad7768.yaml    | 285 +++++++++++++++++++++
+ MAINTAINERS                                        |   7 +
+ 2 files changed, 292 insertions(+)
 
- .../devicetree/bindings/iio/adc/adi,ad7768.yaml    |  285 +++++
- Documentation/iio/ad7768.rst                       |  207 ++++
- Documentation/iio/index.rst                        |    1 +
- MAINTAINERS                                        |   10 +
- drivers/gpio/Kconfig                               |   10 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-ad7768.c                         |  208 ++++
- drivers/iio/adc/Kconfig                            |   16 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/ad7768.c                           | 1291 ++++++++++++++++++++
- drivers/iio/adc/adi-axi-adc.c                      |   20 +
- drivers/iio/industrialio-backend.c                 |   33 +
- include/linux/iio/backend.h                        |    4 +
- 13 files changed, 2087 insertions(+)
----
-base-commit: b75697ef53e435d894833dad2a8c2fa882cb9b19
-change-id: 20260708-ad7768-driver-10cd15296c20
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768.yaml
+new file mode 100644
+index 000000000000..b74fe6aef01c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768.yaml
+@@ -0,0 +1,285 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7768.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7768 and AD7768-4 ADC
++
++maintainers:
++  - Janani Sunil <janani.sunil@analog.com>
++
++description: |
++  The AD7768 is a 8-channel, 24-bit simultaneous sampling ADC with configurable
++  power and performance modes. The AD7768-4 is a 4-channel version.
++
++  Datasheet at:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7768.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7768
++      - adi,ad7768-4
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: Master clock (MCLK)
++
++  avdd-supply:
++    description: Analog power supply AVDD1 (4.5V to 5.5V)
++
++  avss-supply:
++    description: Analog ground/negative supply AVSS (0V to -2.75V)
++
++  dvdd-supply:
++    description: Analog power supply AVDD2 (2.0V to 5.5V)
++
++  iovdd-supply:
++    description: Digital I/O power supply (1.8V or 2.25V to 3.6V)
++
++  vref-supply:
++    description: ADC reference voltage supply
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to the active-low RESET pin
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++  adi,data-lines-number:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2, 4, 8]
++    description:
++      Number of data output lines used for serial interface.
++      AD7768 supports 1, 2, or 8 lines. AD7768-4 supports 1 or 4 lines.
++
++  adi,common-mode-output:
++    $ref: /schemas/types.yaml#/definitions/string
++    enum:
++      - avdd-avss-half
++      - 1.65V
++      - 2.5V
++      - 2.14V
++    description:
++      Common mode voltage output selection.
++
++  adi,vcm-power-down:
++    type: boolean
++    description: Power down the common mode output buffer
++
++  adi,power-mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    enum:
++      - low
++      - median
++      - fast
++    description:
++      Power mode selection.
++
++  io-backends:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  "^channel@[0-7]$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the device.
++      AD7768 supports channels 0-7, AD7768-4 supports channels 0-3.
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 7
++        description: The channel number
++
++      adi,ch-mode:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 1
++        description: |
++          Channel mode selection. The AD7768 supports two independent
++          configuration profiles (Mode A and Mode B) for filter and
++          decimation settings. Each channel can be assigned to either mode:
++            0 - Channel uses Mode A filter and decimation settings
++            1 - Channel uses Mode B filter and decimation settings
++
++      adi,prebuf-pos-en:
++        type: boolean
++        description: Enable positive input precharge buffer
++
++      adi,prebuf-neg-en:
++        type: boolean
++        description: Enable negative input precharge buffer
++
++      adi,refbuf-pos-en:
++        type: boolean
++        description: Enable positive reference buffer
++
++      adi,refbuf-neg-en:
++        type: boolean
++        description: Enable negative reference buffer
++
++    required:
++      - reg
++      - adi,ch-mode
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - avdd-supply
++  - avss-supply
++  - dvdd-supply
++  - iovdd-supply
++  - vref-supply
++  - adi,data-lines-number
++  - adi,common-mode-output
++  - io-backends
++
++dependencies:
++  gpio-controller:
++    - '#gpio-cells'
++  '#gpio-cells':
++    - gpio-controller
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: adi,ad7768-4
++    then:
++      properties:
++        adi,data-lines-number:
++          enum: [1, 4]
++      patternProperties:
++        "^channel@[0-3]$":
++          properties:
++            reg:
++              maximum: 3
++        "^channel@[4-7]$": false
++    else:
++      properties:
++        adi,data-lines-number:
++          enum: [1, 2, 8]
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "adi,ad7768";
++            reg = <0>;
++            spi-max-frequency = <1000000>;
++
++            avdd-supply = <&avdd_regulator>;
++            avss-supply = <&avss_regulator>;
++            dvdd-supply = <&dvdd_regulator>;
++            iovdd-supply = <&iovdd_regulator>;
++            vref-supply = <&vref_regulator>;
++            reset-gpios = <&gpio0 86 GPIO_ACTIVE_LOW>;
++
++            clocks = <&ad7768_mclk>;
++
++            adi,data-lines-number = <8>;
++            adi,common-mode-output = "2.5V";
++            adi,vcm-power-down;
++            adi,power-mode = "median";
++            gpio-controller;
++            #gpio-cells = <2>;
++
++            io-backends = <&iio_backend>;
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            channel@0 {
++                reg = <0>;
++                adi,ch-mode = <0>;
++                adi,prebuf-pos-en;
++                adi,refbuf-pos-en;
++            };
++
++            channel@1 {
++                reg = <1>;
++                adi,ch-mode = <1>;
++                adi,prebuf-pos-en;
++                adi,prebuf-neg-en;
++                adi,refbuf-pos-en;
++                adi,refbuf-neg-en;
++            };
++
++            channel@7 {
++                reg = <7>;
++                adi,ch-mode = <1>;
++                adi,prebuf-pos-en;
++                adi,refbuf-pos-en;
++            };
++        };
++    };
++
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@1 {
++            compatible = "adi,ad7768-4";
++            reg = <1>;
++            spi-max-frequency = <1000000>;
++
++            avdd-supply = <&avdd_regulator>;
++            avss-supply = <&avss_regulator>;
++            dvdd-supply = <&dvdd_regulator>;
++            iovdd-supply = <&iovdd_regulator>;
++            vref-supply = <&vref_regulator>;
++
++            clocks = <&ad7768_mclk>;
++
++            adi,data-lines-number = <4>;
++            adi,common-mode-output = "2.14V";
++            adi,power-mode = "fast";
++
++            io-backends = <&iio_backend>;
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            channel@0 {
++                reg = <0>;
++                adi,ch-mode = <0>;
++                adi,prebuf-pos-en;
++                adi,refbuf-pos-en;
++            };
++
++            channel@3 {
++                reg = <3>;
++                adi,ch-mode = <1>;
++                adi,prebuf-pos-en;
++                adi,refbuf-pos-en;
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2b1ec46c5919..d667a0411f28 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1633,6 +1633,13 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+ F:	drivers/iio/adc/ad7768-1.c
+ F:	include/dt-bindings/iio/adc/adi,ad7768-1.h
+ 
++ANALOG DEVICES INC AD7768 DRIVER
++M:	Janani Sunil <janani.sunil@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768.yaml
++
+ ANALOG DEVICES INC AD7780 DRIVER
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ M:	Renato Lui Geh <renatogeh@gmail.com>
 
-Best regards,
 -- 
-Janani Sunil <janani.sunil@analog.com>
+2.43.0
 
 
