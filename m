@@ -1,83 +1,85 @@
-Return-Path: <linux-gpio+bounces-39717-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39718-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bXQ3EChYT2pVewIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39717-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:13:28 +0200
+	id V1nhJndYT2pzewIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39718-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:14:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9075F72E1AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DAB6772E1E0
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Jul 2026 10:14:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LVy0b4BW;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ux62Zy5f;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39717-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39717-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39718-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39718-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E07930FF282
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2026 08:07:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 98B773093FFA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2026 08:08:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBFC63E7BA9;
-	Thu,  9 Jul 2026 08:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C10493E8685;
+	Thu,  9 Jul 2026 08:08:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0873E8335
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2026 08:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DFC3C4572
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2026 08:08:09 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783584438; cv=none; b=iR/y7wyjLfTOb25Wbjbdn3r7E8SnZ69bmO16Dc1GEhMLzQzrUMB0dN53wXnhZWO3NDfJaZL7s6rd/o2zVgAWUGfJ3pAi2tFN/t3AlV31WDNOLhzPY4KkUSJjdk/OEvtPgpV1nM7Il7djLK55tQojO+v5p5XqBIg/uwkjNuj5Ci8=
+	t=1783584490; cv=none; b=BSfTlG7Mf1qYLI4E2vOSIbHb/1v6rBTpYv/Wra+BjFuNhm6C+2kHGfDUu3XlyOuGUeA2eWxMr+ji/v3kHYX9cLj0TcGRjjcXxv1xW+Qv88Nr/qgCwgEZy3bcdtsmdtZjVo2Vw7bnyKFICv9Hw1zTOt1eqJ4mhtmZUOfKZVe4Nx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783584438; c=relaxed/simple;
-	bh=PCZKJhxu4VtflLZBqcUMucKaOgBGaHhzk44+FWk3YpQ=;
+	s=arc-20240116; t=1783584490; c=relaxed/simple;
+	bh=5k+yUkL2u9R8PYEHwZTlNzjBWR/vuezkFKvt3cCnPe4=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sn33W4/MtpB2Xo+0AyjHukV4mZ4iNEN8DSkgbJ/Jx+QiQ+ybGhR4FhCW1mKDDfKawct1yhXBzSv4DXLenDs1Titp5aByVT2ParmvKn9KXUC0hbcVMCSo3kcx0hRvrC1C4DGMxFBJ8IxKHjcqnqyJugOhP3X+8e1GZcTchPONBiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVy0b4BW; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D72861F000E9
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2026 08:07:16 +0000 (UTC)
+	 To:Cc:Content-Type; b=CHIl/yDf+v4UCDzGGK/ji+LSpV2GNk4/NQGSFz+2rGXLeIAVX/KH25Unq4bpiLsU0p0xAdHkXVF0HERZGSxJ22Cv9nwU0jCag6WrUgCt/mZCED6O1L9sG9VVEeE69ShdHjZr3tEVWNhdWrjiqAay6DfjaW5YyqPxEOrJEozGvd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux62Zy5f; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20C41F00A3E
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2026 08:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783584436;
-	bh=lIepizMbCh3N2ETXzfyVIdMH2wjf/7Wp5IvuWcd67oA=;
+	s=k20260515; t=1783584489;
+	bh=4YNTOKpiXEn8yxR56QF39aLhjNwhkZZtgvmM50CfwGQ=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=LVy0b4BWDRneolVOXQOtxR2J8slkIbiGgEJWo1QgftDIn0z+KG1Uz+iWaMNOpRGWd
-	 27MWEzxlzjoLLUv7A4FzXRUQwv3xTdzs869xD1faDnWSyXPjJmMoXp/eJ4RK+bjIF8
-	 DPoVrQDmUM/57BxzDC/FHzlfUKcOydzz4qqw/cb4z5nX6cCLKeUnA3czT6jSeZV/zr
-	 meQkK9QrKAmb8m/ykwO1t46DRsYruuN3oYg9ki+SHlF7QE1+CB/bmTN3MaQbxX5KCM
-	 C3g4/jQuQ4Pg+Tflp1dVeH6cfpJJoXgRbEllwksamAR6QzVPTU5JzDckdFjrYCfeIk
-	 ao+C7mBhsDngA==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-39c62764c7cso5797951fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2026 01:07:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rp6sVcKM1tmx+4iS0qIj8caG0Ymh9/X1UCSM2M/j5bQ54OSjBYs3doJ6pqNhjb1nuH+YlQ8JKZIPtPh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdarGAyIeY+5KJ07Fzxg4yvoek353V8hgUNFP8TnDDv3RVng1L
-	ffvf1hT3iFhjGb/g1afJn/501TMCF+7A4NEZtqblH4ZeXH7u33SJ51Hnr3EbLD8OMH7OzsVU8hW
-	U3miUPXgFF7FuLhMCDkyIAKxVWOryGxvNfQ3O6rUxjg==
-X-Received: by 2002:a05:6512:2398:b0:5ae:a4f9:fca with SMTP id
- 2adb3069b0e04-5b016d51892mr367468e87.15.1783584435662; Thu, 09 Jul 2026
- 01:07:15 -0700 (PDT)
+	b=Ux62Zy5f9mvccgk/XeKAQysW4Ghu1BDizBeNG7OJlCYVe8MqdBRvqaHyYQjRNgkeV
+	 pzmOw+tprxK4VY5azHo62r3ipqQIo+vyLps1hxBCzenEwpMTe3PqguNMgbvfRiVd+D
+	 Ehx360+YsygHxHDXgbN5O+yXv7xtaefydrbDa/TH5JFgrBkSxi/TD0KPdZmKPnhn65
+	 TCzJy11jZ4M6unuXei08x6y/wVV2A1CAUeJ8BE5xuxUefMiIVj9xUHH4EwPw9gHtQa
+	 SrS7hXSyjK6kkjsC8N/aMjC0Pv6oHC9Kpa/767G1HTF7+UV2G+oKwdxltDJdk4Okzb
+	 yVo7L1MeEoNlg==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-39b2d353713so14483451fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2026 01:08:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoNPpdG+/rfQck18HXqyp3JmeUF7EUTfQiuzDDIUC4S/7vOa+8a/HvGqHxiySUBmwMGGQe5IEgRYx08@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys+Du3Lj8FQ8egOcRIpmb2Q5VWyYkeRxLy6+ef4KsNl/xjHdwd
+	NK4vsMmlABtZ4rUziBiJc2TZRsK/AMQ4xuS02duma10HNOR8qOGL79NoidgltayzpkB4DkChapV
+	7ltQk8llGvPMv43Ik8lvF3z1URYHF1aqheqaxFnriLA==
+X-Received: by 2002:a05:651c:2124:b0:39a:e29b:d63f with SMTP id
+ 38308e7fff4ca-39c799c06edmr12895941fa.32.1783584487674; Thu, 09 Jul 2026
+ 01:08:07 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 9 Jul 2026 04:07:14 -0400
+ HTTPREST; Thu, 9 Jul 2026 01:08:06 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 9 Jul 2026 04:07:14 -0400
+ HTTPREST; Thu, 9 Jul 2026 01:08:06 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <CAKxU2N-Nbe9YcWKw-ps3DY1-_N+Uw0NUJT8KCK6hm7P4oDqaqg@mail.gmail.com>
+In-Reply-To: <CAKxU2N_FN_O1g82NVUO=0HFudnAxNGybOc55BnNhO=iyzrC5_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260707233511.1272686-1-rosenp@gmail.com> <CAMRc=Me3hfzzZq=ZvobyYTnu-Kv32psnsJUbuJ7Y78tKmqinMw@mail.gmail.com>
- <CAKxU2N-Nbe9YcWKw-ps3DY1-_N+Uw0NUJT8KCK6hm7P4oDqaqg@mail.gmail.com>
-Date: Thu, 9 Jul 2026 04:07:14 -0400
-X-Gmail-Original-Message-ID: <CAMRc=MfnQ6Cm9tUmNypiLrbskku29vEc4CWHBUPTVu086D2n5A@mail.gmail.com>
-X-Gm-Features: AVVi8CcSMnkiQN_i1hEpgLBFbisF0t_CCZOLZUWgWyx57a5PHltVoD7gJtI8n_I
-Message-ID: <CAMRc=MfnQ6Cm9tUmNypiLrbskku29vEc4CWHBUPTVu086D2n5A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: convert to noirq suspend/resume to prevent
- interrupt storm on resume
+References: <20260707232742.1235008-1-rosenp@gmail.com> <CAMRc=MdKfO=v99DohN=64xc2PT6mxL3VNhnx7vRp+iNuKROYQQ@mail.gmail.com>
+ <CAKxU2N_FN_O1g82NVUO=0HFudnAxNGybOc55BnNhO=iyzrC5_A@mail.gmail.com>
+Date: Thu, 9 Jul 2026 01:08:06 -0700
+X-Gmail-Original-Message-ID: <CAMRc=McHUTujtnn8w_qMzjQStfjhLoVhOVOtr93jcn4j0Ln=7Q@mail.gmail.com>
+X-Gm-Features: AVVi8CdSCEUVXdx7ZZW1Ws_425_NRQxWUPsGWjvwY6Z4gty23Ns3AEvcvPIz42o
+Message-ID: <CAMRc=McHUTujtnn8w_qMzjQStfjhLoVhOVOtr93jcn4j0Ln=7Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: validate ngpios before use
 To: Rosen Penev <rosenp@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Jason Cooper <jason@lakedaemon.net>, 
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, 
+	open list <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
@@ -91,79 +93,83 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:linusw@kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:brgl@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39717-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39718-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:linusw@kernel.org,m:arnd@arndb.de,m:jason@lakedaemon.net,m:thomas.petazzoni@free-electrons.com,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:brgl@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9075F72E1AF
+X-Rspamd-Queue-Id: DAB6772E1E0
 
-On Wed, 8 Jul 2026 21:19:17 +0200, Rosen Penev <rosenp@gmail.com> said:
-> On Wed, Jul 8, 2026 at 5:11=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+On Wed, 8 Jul 2026 21:18:25 +0200, Rosen Penev <rosenp@gmail.com> said:
+> On Wed, Jul 8, 2026 at 5:06=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
 rg> wrote:
 >>
->> On Wed, 8 Jul 2026 01:35:11 +0200, Rosen Penev <rosenp@gmail.com> said:
->> > The driver uses the legacy .suspend/.resume callbacks, but sets
->> > IRQCHIP_MASK_ON_SUSPEND on the irq_chip. During resume, the PM core
->> > runs dpm_resume_noirq() first, which calls irq_pm_resume() to unmask
->> > interrupts, and only then runs dpm_resume() which invokes the driver's
->> > .resume callback to restore GPIO registers (GPIO_IN_POL, GPIO_IO_CONF,
->> > mask registers).
+>> On Wed, 8 Jul 2026 01:27:42 +0200, Rosen Penev <rosenp@gmail.com> said:
+>> > If ngpios is read as 0 from device tree, it is passed via
+>> > irq_alloc_domain_generic_chips() as irqs_per_chip, which leads to a
+>> > division by zero in DIV_ROUND_UP(d->revmap_size, irqs_per_chip).
+>> > Reject ngpios =3D=3D 0 early.
 >> >
->> > This ordering means interrupts are unmasked while the hardware is stil=
-l
->> > in its reset state, potentially with incorrect polarities, causing
->> > spurious level-triggered interrupts before local IRQs are re-enabled.
->> >
->> > Convert the driver from legacy .suspend/.resume callbacks to noirq
->> > callbacks via dev_pm_ops. The noirq phase runs before resume_device_ir=
-qs()
->> > on resume and after suspend_device_irqs() on suspend, ensuring GPIO
->> > registers are restored before interrupts are unmasked.
->> >
+>> > Fixes: fefe7b0923459 ("gpio: introduce gpio-mvebu driver for Marvell S=
+oCs")
 >> > Assisted-by: opencode:big-pickle
 >> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 >> > ---
->> >  drivers/gpio/gpio-mvebu.c | 15 +++++++++------
->> >  1 file changed, 9 insertions(+), 6 deletions(-)
+>> >  drivers/gpio/gpio-mvebu.c | 5 +++++
+>> >  1 file changed, 5 insertions(+)
 >> >
 >> > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
->> > index a556fdb267a9..1df763e60726 100644
+>> > index 39c1a13e1b65..c7cbfbfb4800 100644
 >> > --- a/drivers/gpio/gpio-mvebu.c
 >> > +++ b/drivers/gpio/gpio-mvebu.c
->> > @@ -979,9 +979,9 @@ static const struct of_device_id mvebu_gpio_of_mat=
-ch[] =3D {
->> >       },
->> >  };
+>> > @@ -1175,6 +1175,11 @@ static int mvebu_gpio_probe(struct platform_dev=
+ice *pdev)
+>> >               return -ENODEV;
+>> >       }
 >> >
->> > -static int mvebu_gpio_suspend(struct platform_device *pdev, pm_messag=
-e_t state)
->> > +static int mvebu_gpio_suspend(struct device *dev)
+>> > +     if (!ngpios) {
+>> > +             dev_err(&pdev->dev, "ngpios must be greater than 0\n");
+> Sashiko suggests upper limit bound as well.
 >>
->> Needs __maybe_unused for SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
-> I see __maybe_unused and #ifdef for code like this. Which is prefered?
+>> return dev_err_probe()?
+> surrounding code doesn't use it. dev_err_probe is mostly useful with
+> variable error codes anyway.
 
-__maybe_unused is cleaner. Please add some newlines between quoted parts of
-your emails and your responses for better readability. I'm finding myself
-looking for where your response starts.
+It doesn't use it becuase it didn't exist when this driver was written. If
+you're touching it, you may as well use the more recent interface which sav=
+es
+you a couple lines.
 
 Bart
+
+>>
+>> > +             return -EINVAL;
+>> > +     }
+>> > +
+>> >       id =3D of_alias_get_id(pdev->dev.of_node, "gpio");
+>> >       if (id < 0) {
+>> >               dev_err(&pdev->dev, "Couldn't get OF id\n");
+>> > --
+>> > 2.55.0
+>> >
+>> >
+>
 
