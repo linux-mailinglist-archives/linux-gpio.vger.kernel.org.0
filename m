@@ -1,64 +1,76 @@
-Return-Path: <linux-gpio+bounces-39838-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39839-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zywrK4cOUWoa+wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39838-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 17:23:51 +0200
+	id xZPVAOsXUWo0/QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39839-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 18:03:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B44E073C338
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 17:23:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EF3873C747
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 18:03:54 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=pqrs.dk header.s=key1 header.b=1ie5J2yh;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39838-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39838-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UPenvW+m;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39839-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39839-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 53B8230430C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 15:23:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5BFB13094718
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 15:55:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA6762FD69E;
-	Fri, 10 Jul 2026 15:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BF143933E;
+	Fri, 10 Jul 2026 15:55:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22203362152
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 15:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46593064AE;
+	Fri, 10 Jul 2026 15:55:35 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783696977; cv=none; b=sG4U2+uzisZQN6qz6KMHYoMj0Uuk0t5YdK3GEWlH0m5sJPslzgexqsC5iM0zQRDMYYnXEdBSCiwsA1gzhK2ImKAlwCM5cAbDmGKJrLDe0q/iUw5komypgxlyE9n6UYDwnRoy+n1guD/B6vJ6+O7nu81QPtshwZlFocQgMDMpewg=
+	t=1783698937; cv=none; b=J56b7thSfNxJ/7sOzzqagF7F62Cz7EFaXTeyRmIh7XebSL1N9ujqv5219tePwgWggSQT8gYQyRpeZ60jClid1+CCAYa5J1/dw+rpCi9ymvYpFUNl0CCZZEIa0cLonhesSiHH0UOOyALK4hXpVhXVZR/tqvB+/a+hFw/dnWMKkO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783696977; c=relaxed/simple;
-	bh=HcRdaAu+YXh+oqiaQgcC0oWhTIqjAakazYG64v+Dyn0=;
+	s=arc-20240116; t=1783698937; c=relaxed/simple;
+	bh=hODZdIRLKtZI2OTDibqWc8vf1QCRK5j84bqQrg4FUKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucvwc6ndF9/uqozdwlJfQiyTcmXDiclKrs8K6Iq2F2dB2I2d4jrY0dR95NY9MaO0MYrPCsMR7hXD3Ge98pyIpW0TG9FQeFilKGCynqEAKU5n2bWO4a+h5wC5qX5VsH1vJ6z5j3l9T3XqQiMWRI3MqXNdFkJPmlEnPLGKvMnqI8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=1ie5J2yh; arc=none smtp.client-ip=91.218.175.184
-Date: Fri, 10 Jul 2026 17:22:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1783696965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9R8U/eYnNbuglVICT64v2YDxI3a9qvevZ58PLGIGQS8=;
-	b=1ie5J2yhF6zMiCjIvCyjHYnHhKxyU2OKxL10tXyU/4+dcu9n/fCMfO9V5I3j0E7Ka/NflJ
-	nR8E3J5dsCF691kKdRnwil3ZaM14Czwxh2gMqZqTqxSXMyZDJynSyub0Aluw0OClcUdVwf
-	zYd5xuKOqEB4kFTgrPFKlVFoZTENdswasSqT8VmA9KfZ25NCQPLfGygHzA1CEAvWhcRJSo
-	ydQqv2RbhJoBOLy28wXKJzfBi/KzrLlXaYF+SDX0U/umFZCCS1PfR0oTC55L9rpi5VsXBk
-	F4GBgu6Kdj+8wimc6DdAQF353fHa6P54X/+zM9FQfXhIe36VL613FpbihmjWTQ==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Peter Rosin <peda@axentia.se>, David Jander <david@protonic.nl>, kernel@pengutronix.de, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v15 4/6] pinctrl: add NXP MC33978/MC34978 pinctrl driver
-Message-ID: <alEKklx_X4cP3Ire@pqrs.dk>
-References: <20260710101358.2606941-1-o.rempel@pengutronix.de>
- <20260710101358.2606941-5-o.rempel@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=geyv2gdmBfX22j8x1i9d8ucZuPAcShy8WB+BeKtPRTG6CEDl2B7DjjqCBtFhNnJ8NPrksFdeDO3VWUNUUpL/ZJbigpTINAvdrx9nBdrGBcTru6hii3XelALqPIOWwt4J4KobPwpdyw3O+gD9DdiWCB3rBvHyshlnOvyxLfF4sLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPenvW+m; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3C31F000E9;
+	Fri, 10 Jul 2026 15:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783698935;
+	bh=SuBn+qM9tZrJlvXW+nzoxQ4e9HtFDIaF9zBrPfyVFeA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UPenvW+mFXYRa5Xjsm6aXAqYufOqCJ5V7fxPkJr2mIKaD/B0InGGoaeo1ry1282gY
+	 AKm5H+mLP65IpFPClBzRBZkk1fVyz+2KA6R4USZWlbw3NxAH1sCRKDSuxbd5xRWFoe
+	 qG/9OoIrV5HUXKI0DQSKkd8vxf+nCDV6NZpa7GSZJtpHqyQzFJcA+EcpyJbc/YfGMC
+	 ss0/TyqbVZdom5eYeAoAIDtmYbVvZntsEud+VeGpomsb648OJ3lhr6X1B64K/dkdK1
+	 AKoIEXnVP11RNyMIAsXL6yCd1UhMyxG9mx6yfj7Fk92OCkFdnzvZhI+i8410pJGon1
+	 lY1HoUNgUt8yg==
+Date: Fri, 10 Jul 2026 08:55:33 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-usb@vger.kernel.org, Han Gao <rabenda.cn@gmail.com>,
+	Yao Zi <ziyao@disroot.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Subject: Re: [PATCH 11/12] riscv: dts: thead: Add Lichee Pi 4A IO expansions
+Message-ID: <alEV9XJ2pr23CJ3B@gen8>
+References: <20260507081710.4090814-1-zhengxingda@iscas.ac.cn>
+ <20260507081710.4090814-12-zhengxingda@iscas.ac.cn>
+ <b8fc8356212012d92186a1a4cd3ad641f01461a6.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,90 +79,70 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260710101358.2606941-5-o.rempel@pengutronix.de>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8fc8356212012d92186a1a4cd3ad641f01461a6.camel@icenowy.me>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[pqrs.dk:s=key1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:o.rempel@pengutronix.de,m:linux@roeck-us.net,m:lee@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:peda@axentia.se,m:david@protonic.nl,m:kernel@pengutronix.de,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[alvin@pqrs.dk,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39838-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	DMARC_NA(0.00)[pqrs.dk];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:uwu@icenowy.me,m:guoren@kernel.org,m:wefu@redhat.com,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:gregkh@linuxfoundation.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:jszhang@kernel.org,m:p.zabel@pengutronix.de,m:linux-riscv@lists.infradead.org,m:linux-clk@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-phy@lists.infradead.org,m:linux-usb@vger.kernel.org,m:rabenda.cn@gmail.com,m:ziyao@disroot.org,m:emil.renner.berthing@canonical.com,m:krzk@kernel.org,m:conor@kernel.org,m:rabendacn@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39839-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER(0.00)[fustini@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alvin@pqrs.dk,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[pqrs.dk:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[fustini@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,baylibre.com,linaro.org,linuxfoundation.org,dabbelt.com,eecs.berkeley.edu,ghiti.fr,pengutronix.de,lists.infradead.org,vger.kernel.org,gmail.com,disroot.org,canonical.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,pqrs.dk:from_mime,pqrs.dk:dkim,pqrs.dk:mid]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[gen8:mid,canonical.com:email,iscas.ac.cn:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B44E073C338
+X-Rspamd-Queue-Id: 8EF3873C747
 
-Hi Oleksij,
+On Fri, Jul 10, 2026 at 10:56:08PM +0800, Icenowy Zheng wrote:
+> 在 2026-05-07四的 16:17 +0800，Icenowy Zheng写道：
+> > From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > 
+> > Lichee Pi 4A has 3 I2C IO expansion chips onboard, connected to the
+> > I2C0/1/3 busses.
+> > 
+> > Add device tree nodes for them.
+> > 
+> > Signed-off-by: Emil Renner Berthing
+> > <emil.renner.berthing@canonical.com>
+> > [Icenowy: added commit description]
+> > Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+> 
+> I am going to send a newer revision of PATCH 9~11 in a few days,
+> because the I2C1 controller is already added to the mainline device
+> tree for Wi-Fi support, although the already-merged patches are a
+> little weird.
 
-On Fri, Jul 10, 2026 at 12:13:53PM +0200, Oleksij Rempel wrote:
-> +/*
-> + * Defensive wrappers for hierarchical IRQ proxying.
-> + *
-> + * gpiolib's hierarchical allocation exposes a lifecycle gap: the child
-> + * descriptor is registered before irq_domain_alloc_irqs_parent() fully
-> + * instantiates the parent chip.
-> + *
-> + * During consumer probe (e.g., gpiod_to_irq()), irq_create_fwspec_mapping()
-> + * allocates the hierarchy. As part of this, irq_domain_set_info() initializes
-> + * the top-level irq_desc and calls __irq_set_handler(). If the irq_desc
-> + * requires locking, __irq_get_desc_lock() will invoke the child's
-> + * .irq_bus_lock before the parent allocation is complete.
-> + *
-> + * Upstream generic helpers (e.g., irq_chip_mask_parent) blindly dereference
-> + * data->parent_data->chip, causing an immediate NULL pointer panic during
-> + * this gap. These wrappers check for a valid parent chip to safely drop
-> + * premature locking or masking events while the legacy subsystem hierarchy
-> + * is still assembling itself.
-> + */
+Thanks, that would be great if you can submit the series again. I'll
+make sure to promptly review this time as it would be get to have USB
+support upstream. Hopefully there is a way to configure I2C1 so that it
+works for both USB and WiFi module.
 
-I encountered the same problem while working on a pinctrl/GPIO driver
-this week. While searching lore to see if I'm doing it wrong, I found
-this series. Such wrappers fix the problem for me too (although in my
-case, it's not a slow bus, so it crashes in .irq_mask instead of
-.irq_bus_lock).
-
-But I see that in a previous version, you were reordering things in
-gpiochip_hierarchy_irq_domain_alloc(). Why did you abandon this
-approach?
-
-Just wondering if we can find a more generic solution which doesn't
-require such drivers to add this defensive boilerplate. Another option
-might be to move such checks into the generic helpers.
-
-
-> +static void mc33978_gpio_irq_mask(struct irq_data *data)
-> +{
-> +	struct irq_data *parent = data->parent_data;
-> +
-> +	if (parent && parent->chip && parent->chip->irq_mask)
-> +		parent->chip->irq_mask(parent);
-> +}
-
-Kind regards,
-Alvin
+Drew
 
