@@ -1,150 +1,143 @@
-Return-Path: <linux-gpio+bounces-39780-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39781-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Tl8gNIstUGrBugIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39780-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 01:23:55 +0200
+	id vvEiId09UGoDvgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39781-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:33:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 761187363B8
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 01:23:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E772E73662F
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:33:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=maslowski.xyz header.s=mail header.b=FzT9y8Xb;
-	dmarc=pass (policy=reject) header.from=maslowski.xyz;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39780-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39780-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=lFvBJkWP;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39781-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39781-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 292A8301D068
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2026 23:23:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D7BAC301DD96
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:33:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DFF3B6352;
-	Thu,  9 Jul 2026 23:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C830C1A9FA0;
+	Fri, 10 Jul 2026 00:33:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.maslowski.xyz (mail.maslowski.xyz [45.77.158.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DEE347BAF;
-	Thu,  9 Jul 2026 23:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D4D495E5;
+	Fri, 10 Jul 2026 00:33:29 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783639429; cv=none; b=Tn0CxMf4y6h/9EB8HQ9iDO7nItUJMx5JnSGqSPZlhIkoqpK856/yOA7EptmoW9omrS0pnnLqtownMSZ8w8uxO6GuNITZThpTfAHxfdVzTBX4A8bGBGfFMk6T701oDeTc7k7DWw82feL3LYexFfV4ypa27qmHmo6EIKK8cUrUk1Y=
+	t=1783643610; cv=none; b=nVRKN+cl2DforWo49HTYwkp4A2hJZZdo2bmgcK4ogQXgi0URkhLyhcckiKRqp87sgG2OxREQzopppeQiuaI0hgFStDTstiTSE0q/5vAWeIXOh+VMXCf9tac1R/nxqfsOkyy5MBmRaIbmmnDLK8F+tPZW2WvPWV0o97FSMByta1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783639429; c=relaxed/simple;
-	bh=6p4mTHct6xG4EjksULhZhC0FBM6s3IkWFA5OdscgQ9g=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=OoQFoCd0EjA4SzV6mBSoxzgGD+yvBylQy28tGzCLngQnq8teQiH77KPfZ76S4iF0H6T0N5AvE3SCOR6iDy+hx9pVeXctzeTGc3/oLomg03BNfwxKwrWjGk9KieJyqbMugFzkxWsPi76pTOSPkvj+9r+rdVedPUWhJG7TbJZWRIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maslowski.xyz; spf=pass smtp.mailfrom=maslowski.xyz; dkim=pass (2048-bit key) header.d=maslowski.xyz header.i=@maslowski.xyz header.b=FzT9y8Xb; arc=none smtp.client-ip=45.77.158.94
-Received: from localhost (public-gprs387849.centertel.pl [37.47.146.74])
-	by mail.maslowski.xyz (Postfix) with ESMTPSA id EB0CE7D5AC;
-	Thu,  9 Jul 2026 23:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=maslowski.xyz;
-	s=mail; t=1783639063;
-	bh=6p4mTHct6xG4EjksULhZhC0FBM6s3IkWFA5OdscgQ9g=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=FzT9y8Xb8ZNgiWivEhcuM9ax/2mZEvdYBOIH9b3rFWRnv+oUTd3enuolQPLD7SKOq
-	 hRTkLGZtoXjWkqAB8SwxF51ELLrVeAJWbycZ2TxTnHyGBf3I4J26pqjITfSQwXXblc
-	 7OyjEgrjZ0dTD2rOMo1ncmD1z3KiP/Q8yDuUv2o8/bVhRFjtcZYb0/Yu4EadKso4Tj
-	 BlBZH9/wr1tt6PGKIkNac2nB7j9vzkaiEYtSJttq1Vlpf4S4+SMPZ+9Ps/mqHJfEO+
-	 MAsSfXywvllxKToDmvCYNk4kr3PzsrUnGhoK0Rqo1rJssb78m7yhYLw/irtxpvdesY
-	 IHgcA1OmICZrQ==
+	s=arc-20240116; t=1783643610; c=relaxed/simple;
+	bh=VIWaWdmCTNiGUYLagvsCwLwIzAsy1g/SrJ0Hu5DDmwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IgkQdHbWw5pqx8oDNtU/6rJ/ywE6DRNl70g7D59X7M5hftwRdMPkrYSwwnqPScy4iXoedhv/TLb4+kUM0Y4F6UIKCHl8XWjFjFLkDGgmXKXb31xcpblT1Mul4c+uVC5Y9/tfs1OQVBwcZDvTBPTaff4XhLDwSoDjacfcn0RTKjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFvBJkWP; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 143D41F000E9;
+	Fri, 10 Jul 2026 00:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783643609;
+	bh=qPTn250nmvi6i01OD/7X3vu+1rxTpDsUJQ9pJQgfjxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=lFvBJkWPonlED4WimT5099jDJhXo/2gqq5Zwm+6oSXaA+weoSNcyquj0MyCL/Stiv
+	 qLNnDhjX2pG3ELf4pTyUUIga7j9WD1pNFK6rqxQclM+UYhnFagDSK0iVt80caKT6js
+	 4i/MNqQ4VNO05lR7KE9Lnpg5/4SkTcDrc1rsjnY80OxhXOhboq703QNZabuXHPBX7l
+	 w+FsdY/ejUSHy1ALcDZfS4b+W9Sz3PRQXlG1AH7lcZn/2sJcLc7gcq9F3ZHczrxeu6
+	 VN2BySCV56+C3GcPJ1H8Y3w/QTZHNvXzhSQlsOw0sL9cmkVPj0EVyzu40GxQWsalQT
+	 eBbC2h7rBdtpg==
+Date: Fri, 10 Jul 2026 01:33:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Janani Sunil <janani.sunil@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Olivier
+ Moysan <olivier.moysan@foss.st.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Linus Walleij <linusw@kernel.org>, Bartosz
+ Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, linux@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+ jananisunil.dev@gmail.com
+Subject: Re: [PATCH 1/6] dt-bindings: iio: adc: Add AD7768
+Message-ID: <20260710013322.595f8ee4@jic23-huawei>
+In-Reply-To: <36df7c4f-82ea-4ed5-a4f9-3a29c75dc99a@baylibre.com>
+References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
+	<20260709-ad7768-driver-v1-1-44e1194fd96a@analog.com>
+	<36df7c4f-82ea-4ed5-a4f9-3a29c75dc99a@baylibre.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 10 Jul 2026 01:17:39 +0200
-Message-Id: <DJUFA03SIN5C.1A8B6N89448P0@maslowski.xyz>
-To: "Janne Grunau" <j@jannau.net>
-Cc: "Sven Peter" <sven@kernel.org>, "Neal Gompa" <neal@gompa.dev>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>,
- "Wim Van Sebroeck" <wim@linux-watchdog.org>, "Guenter Roeck"
- <linux@roeck-us.net>, "Linus Walleij" <linusw@kernel.org>, "Mark Kettenis"
- <kettenis@openbsd.org>, "Andi Shyti" <andi.shyti@kernel.org>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Sasha
- Finkelstein" <k@chaosmail.tech>, <asahi@lists.linux.dev>,
- <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 08/11] dt-bindings: i2c: apple,i2c: Add t6030 and t6031
- compatibles
-From: =?utf-8?q?Piotr_Mas=C5=82owski?= <piotr@maslowski.xyz>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260709-apple-t603x-initial-devices-v1-0-55b305833123@jannau.net> <20260709-apple-t603x-initial-devices-v1-8-55b305833123@jannau.net>
-In-Reply-To: <20260709-apple-t603x-initial-devices-v1-8-55b305833123@jannau.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[maslowski.xyz,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[maslowski.xyz:s=mail];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39780-lists,linux-gpio=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_SENDER(0.00)[piotr@maslowski.xyz,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:j@jannau.net,m:sven@kernel.org,m:neal@gompa.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:linusw@kernel.org,m:kettenis@openbsd.org,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FORGED_RECIPIENTS(0.00)[m:dlechner@baylibre.com,m:janani.sunil@analog.com,m:nuno.sa@analog.com,m:Michael.Hennerich@analog.com,m:andy@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:olivier.moysan@foss.st.com,m:p.zabel@pengutronix.de,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux@analog.com,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:jananisunil.dev@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:jananisunildev@gmail.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39781-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[piotr@maslowski.xyz,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[maslowski.xyz:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[analog.com,kernel.org,foss.st.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org,gmail.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,maslowski.xyz:from_mime,maslowski.xyz:dkim,maslowski.xyz:mid]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 761187363B8
+X-Rspamd-Queue-Id: E772E73662F
 
-Hello. This is the tiniest possible nitpick, but it could
-throw somebody off when grepping through commit messages so:
+> > +  adi,common-mode-output:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    enum:
+> > +      - avdd-avss-half
+> > +      - 1.65V
+> > +      - 2.5V
+> > +      - 2.14V
+> > +    description:
+> > +      Common mode voltage output selection.  
+> 
+> Why not using standard regulator provider bindings for this?
 
-On Thu Jul 9, 2026 at 9:30 AM CEST, Janne Grunau wrote:
-> The i2c block on Apple silicon M3 Pro, Max and Ultra SoCs are compatible
-> with the t8103 (M1) one. Add "apple,t6030-i2c" for M3 Pro and
-> "apple,t6031-i2c" for M3 Max and Ultra as per-S0C compatibles.
-
-You've got a '0' (zero) instead of an 'O' here.  ^
-
->
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  Documentation/devicetree/bindings/i2c/apple,i2c.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml b/Docum=
-entation/devicetree/bindings/i2c/apple,i2c.yaml
-> index 9e59200ad37b..d39f5e3f1df4 100644
-> --- a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
-> @@ -24,6 +24,8 @@ properties:
->        - items:
->            - enum:
->                - apple,t6020-i2c
-> +              - apple,t6030-i2c
-> +              - apple,t6031-i2c
->                - apple,t8122-i2c
->            - const: apple,t8103-i2c
->        - items:
-
-Cheers,
-Piotr Mas=C5=82owski
+Interesting question.  If that was done there would need to be
+a consumer which means explicit modelling of any analog circuit.
+We do that in a few cases but so far (and yup this is a driver thing
+in a dt-binding) I don't think we have any way to consumer data when
+a backend is involved.
+	
+> 
+> > +
+> > +  adi,vcm-power-down:
+> > +    type: boolean
+> > +    description: Power down the common mode output buffer  
+> 
+> Is the buffer separate from the output? In that case I would expect
+> buffer to be in the property name, otherwise this should just be
+> part of the enum options above (and the default one at that).
+> 
 
