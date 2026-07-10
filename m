@@ -1,54 +1,55 @@
-Return-Path: <linux-gpio+bounces-39843-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39844-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XAdPHnY7UWpTBAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39843-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:35:34 +0200
+	id 95YWAXs7UWpYBAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39844-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:35:39 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2BFC73D625
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:35:33 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15D9573D62D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:35:38 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=disroot.org header.s=mail header.b="T51G/uhb";
+	dkim=pass header.d=disroot.org header.s=mail header.b=czhy6zBn;
 	dmarc=pass (policy=reject) header.from=disroot.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39843-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39843-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39844-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39844-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 31C0D302A71D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 18:35:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 61356300B526
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 18:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE065379C2A;
-	Fri, 10 Jul 2026 18:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CE537F8AD;
+	Fri, 10 Jul 2026 18:35:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49CB3749E7;
-	Fri, 10 Jul 2026 18:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3A928373;
+	Fri, 10 Jul 2026 18:35:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783708521; cv=none; b=rOCRYscU6imgo1KB/J1jR1O5QhP+C7bo0Cun7wC61YMuSXwaN1y02VrQSvnqBhSkgYFf+0JDFb6CmK0OVvhDWrgLZd1vr0MxBaHYBgbWOtxdrSPlJ9GFu/nOoDhuy1H7yxuiwVk2Tr7dePaGK12YudRU0GkiJJ35Eq/sDlqccGQ=
+	t=1783708523; cv=none; b=FdX27dTV6CCixdxA4+U/lRtWVTH6rNINRf9NbAj1758k3Lfv+99RHYXwczEk3MLkBWLNBo9E0J8ekG/F07QQKNL1t3Fh9ADvE6XQaBUUqQeZFj/jBA/3IC65OSuVVonRiJXiierouRV0Qf4djVJslEfTh8dKEiL2IS+LpcilfMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783708521; c=relaxed/simple;
-	bh=dgYiK9KMY+RtlaTkj1TO2jyMUcHwtb8HvGdYAFnAWms=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UZrCO+tPFLcuNLm2TfcuY96GZDEgCb52/JmHzIOcUQVaBSMH3BLhoktb80LtqHjwGY9jP+4gOrL7ZtsRqrkm7lbuyakVExtMZTk5/q7ESWBlIh+h5AYgrXE+PW229LnU5tUL+suMPTvikgezwfgHr+KHFmpTiEIQ9HnDIQg1WhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=T51G/uhb; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1783708523; c=relaxed/simple;
+	bh=OJFOEtomlUKrob8c1WEjI4Vz2MMTWoh83CnazceU5x0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WXMQah+u8YNoym6vB8CnOhLb4rwWK4yzTNE55fQ9zJrliRLYDKjyz9CqYTNrIQivFa7hADsCI5jyd1un6xV+iZjf2w8g9cfFxUuje0gFF4tduTcBqmQK5LORbe4e5C+2ipK4olesf83pGOfiQURvTeDJMHg+mOEhqk6SA9gHR5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=czhy6zBn; arc=none smtp.client-ip=178.21.23.139
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 1A8EF86D22;
-	Fri, 10 Jul 2026 20:35:16 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id EEA0D86012;
+	Fri, 10 Jul 2026 20:35:18 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 7tUOzMIi-HVe; Fri, 10 Jul 2026 20:35:15 +0200 (CEST)
+ id LK6z6iB-4mhU; Fri, 10 Jul 2026 20:35:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1783708515; bh=dgYiK9KMY+RtlaTkj1TO2jyMUcHwtb8HvGdYAFnAWms=;
-	h=From:To:Cc:Subject:Date;
-	b=T51G/uhbbkdo15xlJlefRbj+OmbzKElqW77xiZC1DA4eykgHtEkvKr60u1/C95STa
-	 dYx03Qw+CqCyF9SoORB03YrK5c2Yzq5bD2OIh0P0Z9dCDfZ4j1IBucaRqbFtC95RjU
-	 Xzyl+m/FFirZ4xSkN3kXpIN5TBcazXdkKUyL5K9IlKfY154PcJPvx7c11q4S72HeEm
-	 Sgoz7UkshOGd4TkbEzwLSLgAqPlDmBMlRxF2+5kGELxvL4MBuV0O9SAMBV6tCmI+iD
-	 NGpW9a57mGqXTnWFlxr/tK5d9KWWkYml/gl3ZW0iuSNzSNyt5YoDMN67/YGfLwgKrl
-	 vU64k1VMJvR5A==
+	t=1783708518; bh=OJFOEtomlUKrob8c1WEjI4Vz2MMTWoh83CnazceU5x0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=czhy6zBnHVttfSJI25skbQgzi4ZJV63lS1OB9/Iykxuguoy5GA+jWBh2Sedh226ZG
+	 rXvH1QgYvSXu6SCGucIdHjkmccmI5Ss/mpBQZQ3cy2uOGnJ/DnCTCyodeoYp0IRRfH
+	 xSlR2LgQ9AhgK2CSP6kvV0ZIjDC9P32VaANckJU99gT5LmuVNB2erfu6AGHI7+7/Fi
+	 CGPZAMCi5QEZ2tKZh/lhcYqlSkceCFd+SUYj6iCEq8dAQRJljgQ9n30WblcgxGYTlH
+	 o0npjUS2iQvTZdxKjbfnZMt0gCXiCyOaKz+nJs6b/eYZKBngEPhaBL55GRoaILX8ix
+	 XsLEJSdDX8jbw==
 From: Rustam Adilov <adilov@disroot.org>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
@@ -56,9 +57,11 @@ To: Linus Walleij <linusw@kernel.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Rustam Adilov <adilov@disroot.org>
-Subject: [PATCH 0/2] gpio: realtek-otto: make the driver work with SWAP_IO_SPACE
-Date: Fri, 10 Jul 2026 23:34:37 +0500
-Message-ID: <20260710183439.996923-1-adilov@disroot.org>
+Subject: [PATCH 1/2] gpio: realtek-otto: use __raw_readl/writel in realtek_gpio_update_line_imr()
+Date: Fri, 10 Jul 2026 23:34:38 +0500
+Message-ID: <20260710183439.996923-2-adilov@disroot.org>
+In-Reply-To: <20260710183439.996923-1-adilov@disroot.org>
+References: <20260710183439.996923-1-adilov@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,12 +75,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39843-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39844-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:sander@svanheule.net,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:adilov@disroot.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -96,39 +99,42 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,disroot.org:from_mime,disroot.org:dkim,disroot.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,disroot.org:from_mime,disroot.org:email,disroot.org:mid,disroot.org:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F2BFC73D625
+X-Rspamd-Queue-Id: 15D9573D62D
 
-This patch series changes gpio-realtek-otto to be functional around
-SWAP_IO_SPACE config.
+In preparation for upcoming changes to how bank reads and writes
+are defined in this driver, change the ioread32 and iowrite32 to
+their __raw variants. The realtek_gpio_update_line_imr() function
+is used by all devices regardless of GPIO_PORTS_REVERSED flag and
+thus this is the only place where there shouldn't be any byte
+swapping whether SWAP_IO_SPACE config is enabled or not and that
+is only possible with __raw_readl and __raw_writel.
 
-Firstly the ioread32 and iowrite32 in realtek_gpio_update_line_imr()
-have to be changed to their __raw variants as it is the only point in
-the driver where both devices with ports reversed and without meet.
+Signed-off-by: Rustam Adilov <adilov@disroot.org>
+---
+ drivers/gpio/gpio-realtek-otto.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Secondly, the bank_read/write and the flag for generic gpio config
-have to be separated from GPIO_PORTS_REVERSED as they have to be
-changed to the opposite one when SWAP_IO_SPACE is enabled. The
-device_is_big_endian() function seem to be a good choice for it.
-That does mean the rtl838x, rtl839x and rtl931x has to add
-big-endian property to their gpio controller nodes for gpio to be
-operational without SWAP_IO_SPACE.
-
-I have tested it on my RTL9607C machine with SWAP_IO_SPACE enabled
-and with big-endian property set under gpio controller node and it
-was working fine.
-
-Rustam Adilov (2):
-  gpio: realtek-otto: use __raw_readl/writel in
-    realtek_gpio_update_line_imr()
-  gpio: realtek-otto: decide bank_read/write by device endianness
-
- drivers/gpio/gpio-realtek-otto.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek-otto.c
+index 4a606bad5848..491fde846d46 100644
+--- a/drivers/gpio/gpio-realtek-otto.c
++++ b/drivers/gpio/gpio-realtek-otto.c
+@@ -176,10 +176,10 @@ static void realtek_gpio_update_line_imr(struct realtek_gpio_ctrl *ctrl, unsigne
+ 	u32 reg_val;
+ 
+ 	reg += 4 * (line_shift / 32);
+-	reg_val = ioread32(reg);
++	reg_val = __raw_readl(reg);
+ 	reg_val &= ~(REALTEK_GPIO_IMR_LINE_MASK << shift);
+ 	reg_val |= (irq_type & irq_mask & REALTEK_GPIO_IMR_LINE_MASK) << shift;
+-	iowrite32(reg_val, reg);
++	__raw_writel(reg_val, reg);
+ }
+ 
+ static void realtek_gpio_irq_ack(struct irq_data *data)
 -- 
 2.55.0
 
