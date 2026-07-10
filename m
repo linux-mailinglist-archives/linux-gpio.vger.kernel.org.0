@@ -1,70 +1,70 @@
-Return-Path: <linux-gpio+bounces-39782-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id JMu/MqU+UGopvgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39782-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:36:53 +0200
+	id zDjcKlA/UGpKvgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:39:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8608D736661
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D0CC73667C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:39:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=g5S9GZzg;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Cd7frvkK;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39782-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39782-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E07F63029A68
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:36:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A95403019124
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:39:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4FA1C3BF7;
-	Fri, 10 Jul 2026 00:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F384D1D5160;
+	Fri, 10 Jul 2026 00:39:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FDC126C03;
-	Fri, 10 Jul 2026 00:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE7B126C03;
+	Fri, 10 Jul 2026 00:39:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783643807; cv=none; b=R6wxVdRr2aqjt/FCjHtCRuIW77220AyqMFg+JAp1rBQ6kO4ZyVOmRlAMiqlWNhyRgWyckaPQaaMVDbLUcKWNAzaAbd16i95xWglLXmucXvvXqMlYP1uxkC9GU4Zjt3B2HJrf382UhO8FG0QMNlXIutMlLLVcD0x8PL5hvIT7hZE=
+	t=1783643980; cv=none; b=JufLM0uLOCTRSZakFFuMb6nXbv92o0elRQU6O55p//Cbh2monnCPN2kn8CfJoWXT/hKR0NzZkOyCvWJ7DDQ6YA4AEz2oF/1ucN8G74gjrhmIS1rqneC7a+X0r5hi0BD6CbRS3Q9/hMO6EpNTfzm2dh+36EHCtIn1/hZHhwzxEuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783643807; c=relaxed/simple;
-	bh=y0ReA3FUmiRYjz1pM8SySQ19jkjKvSIiDSeaJpMX2zg=;
+	s=arc-20240116; t=1783643980; c=relaxed/simple;
+	bh=Dr7wNDpnCLhPgmsZh9mO0N8f3MMtddw8Z2Iq/F+/UMw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SKJaurV3q9zYj9VBLE/fu/JfqDaeRFPegI3hZqCPgj1EeSjw7/W5M6BCcUUX3CdVRm5fzUsowL9ErdKWWE0o+3eXbmrpbCT405oPohs+iuY5bsZGONYHLBqCsoV6K+2TnLmHDov5QrUc9hMD4UMf+DXlBylLot03vQMZW9LjBNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5S9GZzg; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D837C1F000E9;
-	Fri, 10 Jul 2026 00:36:42 +0000 (UTC)
+	 MIME-Version:Content-Type; b=k/aYo5Q3+osApZzOQCXCnDmgNz7poSUqMotkim8Kw/WoULjquJ0u1INXLlQqVuUs/CU0HFJelvzdzGmKOVRlwrYWqIO5GN7W2sYUAf8c8VWz1LpZ8O61R4SKwvTC+0NG2GSTOIqFrOwQz+VAPZhHnAHZztwBV7I2ZFdKGAL27o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cd7frvkK; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81EC1F000E9;
+	Fri, 10 Jul 2026 00:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783643805;
-	bh=LkU8EBkA44L7LZPGszAlWuIZvDx7GkqaiXRmR+MfVQw=;
+	s=k20260515; t=1783643979;
+	bh=S7/2z0KcqlF8o/cYzy1/YD3Ak63mbGsLjPu+K0kB3MY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=g5S9GZzg6lL3904SZer0QuLix8Cl7ZWatBbjoFlI1o2ZZNAfk5oHIeS1FY6cORUET
-	 pkMyUs/YVRjNTr1NO2LeggFMK1u+jEybBiGXibDEb6AdYi877/Jrdr2CusRvQWf4Wj
-	 2NpnC00NmGg+zgJObd/35eC6TtLBNnpJ8r1i97oZAap2ZcljOXFtCsq413Zmb5n1XE
-	 k5sCs8sYgYPySI9rZ9LnWlxj/IShDeycN0PQOnijLqb5o6wEcKHgGtrHPg8p205bNi
-	 XK3lArujHjExBqY4/dQZL96V8ctim0k3Do2XgDWzutjogV6sYtRigD2eYfSUYVf5L2
-	 KA1pOSbwfOXXg==
-Date: Fri, 10 Jul 2026 01:36:38 +0100
+	b=Cd7frvkKFoLA5Jb9urdruQH5/fpnozCulLCafn9W+U0/2hP94t9baiaLMLzgl9+Rz
+	 Jixnj6ur2S4rcAd3S/ngBfUypxkU8gsJU46vLGbAYkxbN9lEu6lXOZpESx8+sF1Lqs
+	 NNT5qn5oqiHVCQjgVjNbQ7Mf4+fKkbttIqTl623VwCFIzSMfnPH3+07SvnuCbfwO41
+	 adaA55Jfk/Gnlr/baJN4xOtXABUgDk0V/yo80ObohVog9ooIW4qdNahG30JNjnn99A
+	 Pnuy3kkB/MGV2D8J+D/hZLoBIo5gc/LpEoQNy9/3cuazPTts5F7uGnV18h8gU0NMUW
+	 v9AWqkCNATrHg==
+Date: Fri, 10 Jul 2026 01:39:32 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Janani Sunil <janani.sunil@analog.com>
 Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Olivier
- Moysan <olivier.moysan@foss.st.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Linus Walleij <linusw@kernel.org>, Bartosz
+ <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
+ Andy Shevchenko <andy@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, Olivier Moysan <olivier.moysan@foss.st.com>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Linus Walleij <linusw@kernel.org>, Bartosz
  Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
  <skhan@linuxfoundation.org>, <linux@analog.com>,
  <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
  <linux-doc@vger.kernel.org>, <jananisunil.dev@gmail.com>
-Subject: Re: [PATCH 2/6] iio: backend: Add support for CRC
-Message-ID: <20260710013638.79e094a6@jic23-huawei>
-In-Reply-To: <20260709-ad7768-driver-v1-2-44e1194fd96a@analog.com>
+Subject: Re: [PATCH 3/6] iio: adc: adi-axi-adc: Add support for CRC
+Message-ID: <20260710013932.66f0b3c1@jic23-huawei>
+In-Reply-To: <20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
 References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
-	<20260709-ad7768-driver-v1-2-44e1194fd96a@analog.com>
+	<20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -91,7 +91,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39782-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39783-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -109,64 +109,36 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8608D736661
+X-Rspamd-Queue-Id: 0D0CC73667C
 
-On Thu, 9 Jul 2026 10:50:13 +0200
+On Thu, 9 Jul 2026 10:50:14 +0200
 Janani Sunil <janani.sunil@analog.com> wrote:
 
-> Add a backend operation to enable or disable Cyclic Redundancy Check
-> processing for data integrity verification. When enabled, the backend
-> will generate, verify, or process CRC information for data samples
-> transmitted over the interface, allowing the host to detect corrupted
-> samples.
+> Add support for enabling and disabling Cyclic Redundancy Check (CRC)
+> processing in the AXI ADC backend. CRC provides data integrity verification
+> for high-speed ADC data streams, ensuring reliable data transfer between
+> the ADC frontend and backend processing systems.
 > 
 > Signed-off-by: Janani Sunil <janani.sunil@analog.com>
 > ---
->  drivers/iio/industrialio-backend.c | 33 +++++++++++++++++++++++++++++++++
->  include/linux/iio/backend.h        |  4 ++++
->  2 files changed, 37 insertions(+)
-> 
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
-> index f7a4be8ec320..379a426931cd 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -886,6 +886,39 @@ int iio_backend_num_lanes_set(struct iio_backend *back, unsigned int num_lanes)
->  }
->  EXPORT_SYMBOL_NS_GPL(iio_backend_num_lanes_set, "IIO_BACKEND");
+>  drivers/iio/adc/adi-axi-adc.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+
+>  static const struct regmap_config axi_adc_regmap_config = {
+>  	.val_bits = 32,
+>  	.reg_bits = 32,
+> @@ -615,6 +633,8 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
+>  	.num_lanes_set = axi_adc_num_lanes_set,
+>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+>  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+Sashiko caught that this needs kernel-doc.
+https://sashiko.dev/#/patchset/20260709-ad7768-driver-v1-0-44e1194fd96a%40analog.com
+
+> +	.crc_enable = axi_adc_crc_enable,
+> +	.crc_disable = axi_adc_crc_disable,
+>  };
 >  
-> +/**
-> + * iio_backend_crc_enable - Enable the CRC generation.
-> + * @back: Backend device
-> + *
-> + * Enable Cyclic Redundancy Check processing for data integrity
-> + * verification. When enabled, the backend will generate, verify, or process
-
-Verification should be on previous line - under 80 chars.
-
-> + * CRC information for data samples transmitted over the interface.
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_crc_enable(struct iio_backend *back)
-> +{
-> +	return iio_backend_op_call(back, crc_enable);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_crc_enable, "IIO_BACKEND");
-> +
-> +/**
-> + * iio_backend_crc_disable - Disable the CRC generation.
-> + * @back: Backend device
-> + *
-> + * Disable Cyclic Redundancy Check processing. When disabled, the backend
-> + * will stop generating, verifying, or processing CRC information for data samples.
-
-Odd line wrap.  Keep to a consistent <= 80 chars unless there is a reason
-to do otherwise.
-
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
+>  static const struct iio_backend_info adi_axi_adc_generic = {
+> 
 
 
