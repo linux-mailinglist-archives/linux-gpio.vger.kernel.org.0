@@ -1,175 +1,190 @@
-Return-Path: <linux-gpio+bounces-39855-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39856-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id aOW8M/1MUWpxCAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39855-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 21:50:21 +0200
+	id 39HmA9ZQUWoMCQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39856-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:06:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B66C73DF2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 21:50:21 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0924473E00A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:06:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kwiboo.se header.s=fe-e1b5cab7be header.b=AvmtNw24;
-	dmarc=pass (policy=quarantine) header.from=kwiboo.se;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39855-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39855-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WD0uMvEp;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39856-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39856-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D53ED303A65F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 19:50:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A5BEB3008443
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:06:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9610D38F233;
-	Fri, 10 Jul 2026 19:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0ED13921E4;
+	Fri, 10 Jul 2026 20:06:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BB033A6E9
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 19:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A472392831
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:06:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783713010; cv=none; b=cFPYTYJXEjs1QgfGZphEwV8sLk6SbmS03qpEJQzkIcFzB+AHxIoE0SykHj/4tiLP9HmronrP1+82y0K4agkPj1kLUgP5VzPZdDUJYvBI72ILfFjx1YnPn8QDApH95EduVuuJQiejUjHgMVRPVM4UEvFK9XYfmTcoc1IGue8CrLs=
+	t=1783714000; cv=none; b=s4VlWmXm+gYGC9czuTvtmnjGs6aMWboz7+ggrLHxRCa/x4Hc22baYaqq+rL0wWwzg6z5iP12uLXaqCnhx2F8/8VSbVzIUAaQ1QkOFGE+sunui8j2zhxl+/0LSCpXe1WYwQYk+ZnJbbsrOtwJyjSBZYVAfO16tMlyaOR7QkdEooc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783713010; c=relaxed/simple;
-	bh=WucpsYI69zUjxgCnQpH7VeayPXFlu3a6JmojAh0xuXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DgbGxHa4f4hfq1rTBJHJff6GgYHsCMyJm+Vw9oyX0TtfBzRDagaU507FqpJhkKd95i1p626qdK6FN/Ndh477D5PMZz3qV3smuX+FaWOiPwiIOyptwqnl6FGO8+KSyAPljG7lt4LFsPz/sfYVes82T2OddkDawBWjunojRHFmCBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=AvmtNw24; arc=none smtp.client-ip=149.28.215.223
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1783713007;
- bh=G97p3I72zO6HSzwQX3GsrN/RHi2gmwpFncs/h5lZiNA=;
- b=AvmtNw24ODMRQgcUsgrZ7N+tCJBuHFhayq45BRVMl1Xo5d4vbs86pmwdKZSOckOZiuI/oTwEH
- rVkhK6dHYeISZQTQpOU5kxD0u+kCcA8dkSGF6ycyGnKrdblxjbx9jPiDLzNc03WTZfpYdsG1q/A
- 90AokbF0d9kuVtRxLZIxKL58VISZrsk7rR7P2YBrJNgFNO/NULVoH83fIIyKed95WJhU9YDYLQu
- hT1iO40uS6MJVeTMJ+EiIg+Qt6iyMxNKOCyW3YZ+trmiXxrzEmBzmNauhh0knPeBsLBodkW3mDu
- 60hNCN45pom5vupAq97DWm9pe2oQKrXT89VSi/gcP20g==
-X-Forward-Email-ID: 6a514ca876cf32b2f5f788d4
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 2.10.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <2127e98d-d411-4be9-aac0-bc3684339faa@kwiboo.se>
-Date: Fri, 10 Jul 2026 21:48:52 +0200
+	s=arc-20240116; t=1783714000; c=relaxed/simple;
+	bh=VTtJMkoIE7aY9ADQYgKgI9tia/pJhvsGnk0AWgm65VU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nUSOR6iEPamyOy9XkCPH2pk9LDmPz+wSdUGwxcwJyhkkxHO4YAM2uFMcH00YgoSbPotWoE5OhR/i53uF/YbHbwZzpub1RyoB5jVbj1oTs/92/qBjHFJNHHLU71vGgMFRqohuOepC7mv+TOPBe9K6oiZj25FnKTqZgavXyVDRcK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WD0uMvEp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E2F1F0155D
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783713998;
+	bh=B9Kk8b2yeKJda2bcD7uscL9OAXJzdAoXShPD9wofJ1Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=WD0uMvEpmZ4hjD/0FYhelcJkG2V8mh5HWOkjkEDVb+ET9E29v/9HpaUWFL0KG8S1c
+	 tWXnEMY+7mgl00OYFq4k+2h1AdtW0B6YwVQCN9m0kaupFYZbmSrKfdSR4HESs9vtJS
+	 IH7B6PdHTJxE3PB5WY2YBFyoLvJu1AeOomuPwEQjCHP7UzLiezOyi66t3HYde6crCJ
+	 XjWxgov+Ts4Ut1zJ/WpJJlRPASZGEDilLzeLl9Fcz/wROM5nagZves8f0FdBjBFhUF
+	 lsUb5iPHK9+u2ZPCmxxX71TYTz6Y72MzwuaGciu7sIYOLVtLJzTYbKj7eHojZHoh/x
+	 ndvoTXlgEuJ6w==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5b0231a3e86so200275e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 13:06:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpakINxcrsjNbdsGXEppE7jpbAoApy3AkjYHF6S/e0lDpfF4/WfbZZplwkVDaNO0b+JRjZ5LGhSOXJM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn5wmhP4sdYummPkkgHqXDE3RScZ64LX65wqgsXZ2qce5FiXPH
+	INRIHRAcEqQlXGe3tEX2wpMwa6LTEUY7YNFUNP1rJnq9OFjSWAZPjHDlSIA+eNtrw3Y6Qxe1tOP
+	U94rxkgOiJRaaEM7bKVLOAOafNj0oRp0=
+X-Received: by 2002:ac2:5547:0:b0:5b0:f9d:f7b9 with SMTP id
+ 2adb3069b0e04-5b023564b81mr79634e87.2.1783713997465; Fri, 10 Jul 2026
+ 13:06:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/12] dt-bindings: pinctrl: rockchip: Add RV1106
- compatible
-To: Simon Glass <sjg@chromium.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- Fabio Estevam <festevam@nabladev.com>, linux-arm-kernel@lists.infradead.org,
- Conor Dooley <conor+dt@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Rob Herring <robh@kernel.org>, huang lin <hl@rock-chips.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260706195818.3906949-1-sjg@chromium.org>
- <20260706195818.3906949-4-sjg@chromium.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20260706195818.3906949-4-sjg@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com> <20260709-ad7768-driver-v1-5-44e1194fd96a@analog.com>
+In-Reply-To: <20260709-ad7768-driver-v1-5-44e1194fd96a@analog.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 10 Jul 2026 22:06:24 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=iqrJV=Qbe=O8iycMZZVmVbjzPG47Bf_SUVjUb+4AcxA@mail.gmail.com>
+X-Gm-Features: AUfX_myotWGi2qG-MCbfVtZjA7xuips9ZVSbzGCI_OB1AcLKfs_3jsKmDONnS60
+Message-ID: <CAD++jL=iqrJV=Qbe=O8iycMZZVmVbjzPG47Bf_SUVjUb+4AcxA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] gpio: ad7768: Add AD7768 GPIO auxiliary driver
+To: Janani Sunil <janani.sunil@analog.com>, Michael Walle <mwalle@kernel.org>
+Cc: =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Olivier Moysan <olivier.moysan@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	linux@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, jananisunil.dev@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kwiboo.se,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kwiboo.se:s=fe-e1b5cab7be];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39855-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[jonas@kwiboo.se,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:sjg@chromium.org,m:heiko@sntech.de,m:linux-rockchip@lists.infradead.org,m:devicetree@vger.kernel.org,m:festevam@nabladev.com,m:linux-arm-kernel@lists.infradead.org,m:conor+dt@kernel.org,m:jeffy.chen@rock-chips.com,m:krzk+dt@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:hl@rock-chips.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39856-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:janani.sunil@analog.com,m:mwalle@kernel.org,m:nuno.sa@analog.com,m:Michael.Hennerich@analog.com,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:olivier.moysan@foss.st.com,m:p.zabel@pengutronix.de,m:brgl@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux@analog.com,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:jananisunil.dev@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:jananisunildev@gmail.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[analog.com,kernel.org,baylibre.com,foss.st.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org,gmail.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jonas@kwiboo.se,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kwiboo.se:+];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,analog.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4B66C73DF2A
+X-Rspamd-Queue-Id: 0924473E00A
 
-Hi Simon,
+Hi Janani,
 
-On 7/6/2026 9:57 PM, Simon Glass wrote:
-> Add the compatible for the pin controller of the Rockchip RV1106 and
-> its RV1103 package variant.
+thanks for your patch!
 
-The RV1106/RV1103 has a dedicated GPIO IOC regs block for each GPIO
-controller. Something that seem to be different compared to other
-Rockchip pinctrl/gpio controllers.
+On Thu, Jul 9, 2026 at 10:51=E2=80=AFAM Janani Sunil <janani.sunil@analog.c=
+om> wrote:
 
-I think we possible need to have a rockchip,ioc or similar added to each
-gpio bank for this variant.
+> The AD7768/AD7768-4 ADC exposes 5 general-purpose I/O pins that can be
+> independently configured as inputs or outputs. Add an auxiliary bus drive=
+r
+> to expose these pins as a GPIO chip, registered by the parent IIO driver.
+>
+> The driver uses the parent's regmap for register access and delegates
+> runtime power management to the parent device.
+>
+> Signed-off-by: Janani Sunil <janani.sunil@analog.com>
 
-Address mapping for gpio controllers and ioc regs.
+(...)
 
-  GPIO0		FF380000	32KB
-  GPIO1_IOC	FF388000	32KB
-  [...]
-  GPIO1		FF530000	32KB
-  GPIO1_IOC	FF538000	32KB
-  GPIO2		FF540000	32KB
-  GPIO2_IOC	FF548000	32KB
-  GPIO3		FF550000	32KB
-  GPIO3_IOC	FF558000	32KB
-  GPIO4		FF560000	32KB
-  GPIO4_IOC	FF568000	32KB
+When I look at these functions I see they are very close to something
+the GPIO_REGMAP helpers should be able to do.
 
-I even made a note of this in my mainline U-Boot tree at [1]:
+Bascically all that stops you from doing this is:
 
-  FIXME: range overlap gpio2+, u-boot pinctrl driver
-  fail pinconf of gpio2+ unless regmap cover all banks.
+> +static int ad7768_gpio_direction_input(struct gpio_chip *chip,
+> +                                      unsigned int offset)
+> +{
+> +       struct ad7768_gpio_state *st =3D gpiochip_get_data(chip);
+> +
+> +       PM_RUNTIME_ACQUIRE_IF_ENABLED_AUTOSUSPEND(st->parent, pm);
+> +       int ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
 
-Something I simply ignored at the time when I played around booting my
-RV1106/RV1103 boards using mainline U-Boot. However, this is something
-that should be fixed in a proper way for mainline Linux.
+These two things.
 
-[1] https://git.u-boot-project.org/u-boot/contributors/kwiboo/u-boot/-/blob/rk3562/arch/arm/dts/rv1106.dtsi#L130-137
+> +static int ad7768_gpio_get_direction(struct gpio_chip *chip,
+> +                                    unsigned int offset)
+> +{
+> +       struct ad7768_gpio_state *st =3D gpiochip_get_data(chip);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       PM_RUNTIME_ACQUIRE_IF_ENABLED_AUTOSUSPEND(st->parent, pm);
+> +       ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
+> +       if (ret)
+> +               return ret;
 
-Regards,
-Jonas
+Here again, etc.
 
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> ---
-> 
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> index 9b3cbeb54fed..81747bb53056 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -51,6 +51,7 @@ properties:
->        - rockchip,rk3576-pinctrl
->        - rockchip,rk3588-pinctrl
->        - rockchip,rv1103b-pinctrl
-> +      - rockchip,rv1106-pinctrl
->        - rockchip,rv1108-pinctrl
->        - rockchip,rv1126-pinctrl
->  
+Can't we just add a
 
+struct device *pm_dev; to struct gpio_regmap_config, pass
+st->parent there at init, modify drivers/gpio/gpio-regmap.c adding:
+
+static int gpio_regmap_pm(struct gpio_regmap *gpio)
+{
+    PM_RUNTIME_ACQUIRE_IF_ENABLED_AUTOSUSPEND(gpio->pm_device, pm);
+    ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
+    if (ret)
+        return ret;
+    return 0;
+}
+
+And call this in each of the standard callbacks so gpio-regmap.c
+can handle PM as well for free? The above can be an ifdef stub if
+runtime PM is not enabled.
+
+Yours,
+Linus Walleij
 
