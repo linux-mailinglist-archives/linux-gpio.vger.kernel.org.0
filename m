@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zDjcKlA/UGpKvgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:39:44 +0200
+	id OlgjGx1BUGqIvgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:47:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D0CC73667C
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:39:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFB837366BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:47:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Cd7frvkK;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=n26oLl7f;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39783-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A95403019124
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:39:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4C0903022970
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:46:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F384D1D5160;
-	Fri, 10 Jul 2026 00:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A47BC1A6814;
+	Fri, 10 Jul 2026 00:46:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE7B126C03;
-	Fri, 10 Jul 2026 00:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736722AD3F;
+	Fri, 10 Jul 2026 00:46:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783643980; cv=none; b=JufLM0uLOCTRSZakFFuMb6nXbv92o0elRQU6O55p//Cbh2monnCPN2kn8CfJoWXT/hKR0NzZkOyCvWJ7DDQ6YA4AEz2oF/1ucN8G74gjrhmIS1rqneC7a+X0r5hi0BD6CbRS3Q9/hMO6EpNTfzm2dh+36EHCtIn1/hZHhwzxEuQ=
+	t=1783644384; cv=none; b=PnccmGzn5lcBMzMrzul11FD0kM/YJDmxzI0zn+IvmKa1UJFCUwPXOR98VpVtkhEb5uS3lo1FoPqTkhgFfY6feWozN+kruVNL00eDFnodrEuu8n0G7dea79Snq8HyNg7+eON88IGDKVKlJEnArgkF/Z4S8LhOGze9W/p1wlZU/sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783643980; c=relaxed/simple;
-	bh=Dr7wNDpnCLhPgmsZh9mO0N8f3MMtddw8Z2Iq/F+/UMw=;
+	s=arc-20240116; t=1783644384; c=relaxed/simple;
+	bh=NcAY33Cz+Y07dZSUoRE4dYMoOX/ODftBQ6ejSLDLCig=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k/aYo5Q3+osApZzOQCXCnDmgNz7poSUqMotkim8Kw/WoULjquJ0u1INXLlQqVuUs/CU0HFJelvzdzGmKOVRlwrYWqIO5GN7W2sYUAf8c8VWz1LpZ8O61R4SKwvTC+0NG2GSTOIqFrOwQz+VAPZhHnAHZztwBV7I2ZFdKGAL27o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cd7frvkK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81EC1F000E9;
-	Fri, 10 Jul 2026 00:39:36 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ZQ52rdw32Lshb1ZZ2M3gyXJdhXi7X1UUQXrRiTHMRq7vMVE7J22LY/y2/rZecMBjBesBPULZpUnf6MPyo2wxAMTqkPyoo0aIhEBjGszlZqIksTfYZendhzVjI5JbOv/+pstSuZ0Gbn/R8wBXMErZ3RZdqxe2Ok7u/5/M8WLo2K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n26oLl7f; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5956F1F000E9;
+	Fri, 10 Jul 2026 00:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783643979;
-	bh=S7/2z0KcqlF8o/cYzy1/YD3Ak63mbGsLjPu+K0kB3MY=;
+	s=k20260515; t=1783644383;
+	bh=13E5iFkRhhPo8tsl5s9roEJL6c2uaz4ktKevVkLd3/I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Cd7frvkKFoLA5Jb9urdruQH5/fpnozCulLCafn9W+U0/2hP94t9baiaLMLzgl9+Rz
-	 Jixnj6ur2S4rcAd3S/ngBfUypxkU8gsJU46vLGbAYkxbN9lEu6lXOZpESx8+sF1Lqs
-	 NNT5qn5oqiHVCQjgVjNbQ7Mf4+fKkbttIqTl623VwCFIzSMfnPH3+07SvnuCbfwO41
-	 adaA55Jfk/Gnlr/baJN4xOtXABUgDk0V/yo80ObohVog9ooIW4qdNahG30JNjnn99A
-	 Pnuy3kkB/MGV2D8J+D/hZLoBIo5gc/LpEoQNy9/3cuazPTts5F7uGnV18h8gU0NMUW
-	 v9AWqkCNATrHg==
-Date: Fri, 10 Jul 2026 01:39:32 +0100
+	b=n26oLl7fvkRaj9R0WlIMV9CH2IijPq0UbKzEoXjkl6V3zPgfQU6pqoeIgXJWJIKQs
+	 R8WnP75NkWglA4FGzr0WfYVH2hQmRxKbEdKD3CY1FE1//vfxrouyUEVHx9LObYbmSC
+	 EFSFATVRBr6ADR3Kg447bHV10pnJAftkOJjiBvRkgiYrWn14nWd/vAOlhZKNm3dS1Y
+	 qpInly4maBuEpmP37Ax7YP3GdlytUCsn+PlrT4puoIZKiV30efH2I0eAbOfCZlzzrh
+	 1pXW2ltxzjOSkgUZFem3MOiJHHWfnhl1uS+eY4I8DAIvgK+TGrFEGWoRZgZiahkg6v
+	 QkNLnaFK4UXfA==
+Date: Fri, 10 Jul 2026 01:46:17 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Janani Sunil <janani.sunil@analog.com>
 Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Michael Hennerich
@@ -61,7 +61,7 @@ Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Michael Hennerich
  <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
  <linux-doc@vger.kernel.org>, <jananisunil.dev@gmail.com>
 Subject: Re: [PATCH 3/6] iio: adc: adi-axi-adc: Add support for CRC
-Message-ID: <20260710013932.66f0b3c1@jic23-huawei>
+Message-ID: <20260710014617.323acf6e@jic23-huawei>
 In-Reply-To: <20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
 References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
 	<20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
@@ -82,7 +82,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -91,7 +91,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39783-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39784-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -106,10 +106,10 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0D0CC73667C
+X-Rspamd-Queue-Id: BFB837366BE
 
 On Thu, 9 Jul 2026 10:50:14 +0200
 Janani Sunil <janani.sunil@analog.com> wrote:
@@ -120,24 +120,17 @@ Janani Sunil <janani.sunil@analog.com> wrote:
 > the ADC frontend and backend processing systems.
 > 
 > Signed-off-by: Janani Sunil <janani.sunil@analog.com>
-> ---
->  drivers/iio/adc/adi-axi-adc.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+The 'other things' I found bit from Sashiko is interesting. Far as I can
+tell it is right and [devm_]mutex_init() is missing for lock
+in struct adi_axi_adc_state().  
 
->  static const struct regmap_config axi_adc_regmap_config = {
->  	.val_bits = 32,
->  	.reg_bits = 32,
-> @@ -615,6 +633,8 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
->  	.num_lanes_set = axi_adc_num_lanes_set,
->  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
-Sashiko caught that this needs kernel-doc.
-https://sashiko.dev/#/patchset/20260709-ad7768-driver-v1-0-44e1194fd96a%40analog.com
+Nuno, looks like it was from:
+7ecb8ee5c93b ("iio: adc: adi-axi-adc: support digital interface calibration")
 
-> +	.crc_enable = axi_adc_crc_enable,
-> +	.crc_disable = axi_adc_crc_disable,
->  };
->  
+Which indeed adds the lock with a mutex_init()
+
+Jonathan
+
 >  static const struct iio_backend_info adi_axi_adc_generic = {
 > 
 
