@@ -1,215 +1,148 @@
-Return-Path: <linux-gpio+bounces-39825-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39826-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nkXeH3XaUGpI6QIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39825-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 13:41:41 +0200
+	id wJMiCKXsUGoy8gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39826-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 14:59:17 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5662F73A5B5
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 13:41:41 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6038473AFCC
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 14:59:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=mgJlBoez;
-	dmarc=pass (policy=none) header.from=samsung.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39825-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39825-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=pqrs.dk header.s=key1 header.b=IxtdpbbR;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39826-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39826-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 76670305A4CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 11:39:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D4002301048B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 12:54:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC2441B36C;
-	Fri, 10 Jul 2026 11:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1063427A06;
+	Fri, 10 Jul 2026 12:54:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BCA4252C3
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 11:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96114279E4
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 12:54:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783683501; cv=none; b=qyLC7BgJMZLG+6iK0n297KRyVBk70c0izZp64ZdpuIl43faiIbTkaZlvdnFS4AWUphwO2ADLbONJH5s3XUU7CllArS9fY6wtQK2kjBACoP1rghzwbHxYuK048QUXDcSP14diU8jkgf/e5r+kNYVQz5wox5h49Hiv5efac/qCsvM=
+	t=1783688062; cv=none; b=NbFtEBCpSzG9JYXR+IeGJAIaDO9yG0x6RLRgThhFshu2A73yB7BpABW2LCW4ELXX+yC4wZBG07osHJ+fe615STyd5b5WVziOSC1q9nPVfFCUqeQPQGel9UcGUnwczzSHzJCnbG8diNpo3OIWdA2L8ysm3KdCSSTrnkePOzL1Ry8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783683501; c=relaxed/simple;
-	bh=X7pq3PyhM1o+IcurE1qdIIJe71ZzKZqVhCOunB17O7w=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=tYHA2Z7GzBZmp+HqZTIpRbEx5lT9mv3eqFrjrECpVi02YBfTYydN9OF6bp8a6rRt0kfd+PUzzG5Lbp3d/p/YkKkBRJPkoaau3zqYFwiPZ/gBbJXkyEhPzCmW/Po/bY3Qf21EYEBArJMb9pshiLkD7FaQqLM+FUW6sacjqpYhfXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mgJlBoez; arc=none smtp.client-ip=203.254.224.34
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260710113802epoutp04e60000063d3dc9fcbb10a6f5ff6620b1~A6q1c3k-E0572305723epoutp04k
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 11:38:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260710113802epoutp04e60000063d3dc9fcbb10a6f5ff6620b1~A6q1c3k-E0572305723epoutp04k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1783683482;
-	bh=BfsfxWnMvDHbHaU5VleFMtOa5AisCyr1aIft1Ku+Wz4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=mgJlBoezVDK93yp3oAvOl+5PQ18Edl33ssGWuA4AvO4GPIa6xarv1+gzmlffDsbCn
-	 VE/oiHgUbHP/A/EA6X0OCYxy2LAP4ic59DkfjjR6M69LawDG3yTwhVFxfJW2I7AOqq
-	 v75HmHzVlAKfRBMw77BqMg6C9z8uoCZCipWvZXhU=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20260710113802epcas5p391861cea9a4c63274e786b6e52bad052~A6q00Vt0c2132921329epcas5p3M;
-	Fri, 10 Jul 2026 11:38:02 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.94]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4gxVFP0dzGz2SSKY; Fri, 10 Jul
-	2026 11:38:01 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260710113800epcas5p2a5461c3d10e8c69add826fc62806d6e3~A6qy-C7ya0882308823epcas5p2x;
-	Fri, 10 Jul 2026 11:38:00 +0000 (GMT)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20260710113758epsmtip17831fbbbe17cf8bbc0feeb897f44aeee~A6qxpCEm20474004740epsmtip1f;
-	Fri, 10 Jul 2026 11:37:58 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Peter Griffin'"
-	<peter.griffin@linaro.org>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linusw@kernel.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<hajun.sung@samsung.com>
-In-Reply-To: <54c419d0-b0cb-4add-8d74-94a40804f33e@kernel.org>
-Subject: RE: [PATCH v3 5/6] arm64: dts: exynos: add initial support for
- Samsung Exynos8855 smdk
-Date: Fri, 10 Jul 2026 17:07:57 +0530
-Message-ID: <152801dd1060$8f3baae0$adb300a0$@samsung.com>
+	s=arc-20240116; t=1783688062; c=relaxed/simple;
+	bh=6EcN/TZasrXpOc4QnFmZeOhBJDdssaJcwOfFFfx7hJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8J6qW83N9K2ziYfqHXHUZ1+IVJrcx8HZOwAIFCYEdfAsBt85URR3IPq3zehiiOJdZXKOKR+sdIlMgGMWczvIvIEfJioT/sYEsgyxYebKMHeQh0RbtLkjzv8Sa0qEpw1iIE9ittvJEnnHZsVAGdGSnsh7U0BJIppePMkP33fSME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=IxtdpbbR; arc=none smtp.client-ip=95.215.58.186
+Date: Fri, 10 Jul 2026 14:53:36 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
+	t=1783688046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r1nNPIOy+vk1eS1mBs5XE7gdt5FtCACODKoLi7FSYZw=;
+	b=IxtdpbbR0TvI9QSjsenyMNxYxm8IVpkuwJX2RJCc4+KDOETBEKnKKGv2Ua3O/3EEz1vH1N
+	GD1OVSXLCWQrpzyLxsKpytRN+jXiMdvevNphKXvXZ4V1r+0isppxKGxeLbodYHbdlBbAw4
+	kzqsPu5z52rffmlakP6VAdwB+i7c7Ea59XG6xFZ8qLYG1mSSCUi6BgOSqJ4DHqmgD0B02W
+	VGJVSblf+0pUnzColAtt0wwNPBZ8wcqhRvHSqWUoUBQRnIJu8gCwMhYsBM98i6QuBcaSiK
+	JvxWn8riIAtsDpEMuQwaNUecED1EDYKU3o0nwOuvfh6uoNbrJCZ7Y+nyzUxYnA==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	David Jander <david@protonic.nl>
+Subject: Re: [PATCH v15 6/6] mux: add NXP MC33978/MC34978 AMUX driver
+Message-ID: <alDqEXnZmejphvio@pqrs.dk>
+References: <20260710101358.2606941-1-o.rempel@pengutronix.de>
+ <20260710101358.2606941-7-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQCQM7wiCxtRwyhZTDec7lkhalOHFwIex+rgAd5cQHMByjDVPgF/2VxQAn303Q8By1kGcQFci0CruJjxDHA=
-Content-Language: en-us
-X-CMS-MailID: 20260710113800epcas5p2a5461c3d10e8c69add826fc62806d6e3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-543,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260627165422epcas5p4e4c6bce0e2daa6d08a9ec18afde9ce0e
-References: <CGME20260627165422epcas5p4e4c6bce0e2daa6d08a9ec18afde9ce0e@epcas5p4.samsung.com>
-	<20260627171228.2687857-1-alim.akhtar@samsung.com>
-	<20260627171228.2687857-6-alim.akhtar@samsung.com>
-	<CADrjBPqYSTDExrBrYYf2z=23Ci8VqF9zXvbc+njDm1d4Ojrjrg@mail.gmail.com>
-	<14cf01dd1052$4de88670$e9b99350$@samsung.com>
-	<9eb6b0ef-cbc1-4b2f-b607-986f28ec46ee@kernel.org>
-	<14e201dd1055$b7173940$2545abc0$@samsung.com>
-	<54c419d0-b0cb-4add-8d74-94a40804f33e@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260710101358.2606941-7-o.rempel@pengutronix.de>
+X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[samsung.com:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[pqrs.dk:s=key1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39825-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,samsung.com:from_mime,samsung.com:email,samsung.com:mid,samsung.com:dkim,linaro.org:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
-	FORGED_SENDER(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:o.rempel@pengutronix.de,m:linux@roeck-us.net,m:lee@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:peda@axentia.se,m:kernel@pengutronix.de,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:david@protonic.nl,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[alvin@pqrs.dk,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39826-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DMARC_NA(0.00)[pqrs.dk];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:peter.griffin@linaro.org,m:robh@kernel.org,m:conor+dt@kernel.org,m:linusw@kernel.org,m:linux-samsung-soc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:hajun.sung@samsung.com,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alvin@pqrs.dk,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[pqrs.dk:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pqrs.dk:from_mime,pqrs.dk:dkim,pqrs.dk:mid,analog.com:email,vger.kernel.org:from_smtp,pengutronix.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5662F73A5B5
+X-Rspamd-Queue-Id: 6038473AFCC
 
+On Fri, Jul 10, 2026 at 12:13:55PM +0200, Oleksij Rempel wrote:
+> Add a mux-control driver for the 24-to-1 analog multiplexer (AMUX)
+> embedded in the NXP MC33978/MC34978 Multiple Switch Detection
+> Interface (MSDI) devices.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
+Reviewed-by: Alvin Šipraga <alvin.sipraga@analog.com>
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: Friday, July 10, 2026 3:55 PM
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; 'Peter Griffin'
-> <peter.griffin=40linaro.org>
-> Cc: robh=40kernel.org; conor+dt=40kernel.org; linusw=40kernel.org; linux-=
-samsung-
-> soc=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> devicetree=40vger.kernel.org; linux-gpio=40vger.kernel.org;
-> hajun.sung=40samsung.com
-> Subject: Re: =5BPATCH v3 5/6=5D arm64: dts: exynos: add initial support f=
-or Samsung
-> Exynos8855 smdk
->=20
-> On 10/07/2026 12:20, Alim Akhtar wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> >> Sent: Friday, July 10, 2026 3:30 PM
-> >> To: Alim Akhtar <alim.akhtar=40samsung.com>; 'Peter Griffin'
-> >> <peter.griffin=40linaro.org>
-> >> Cc: robh=40kernel.org; conor+dt=40kernel.org; linusw=40kernel.org;
-> >> linux-samsung- soc=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> >> devicetree=40vger.kernel.org; linux-gpio=40vger.kernel.org;
-> >> hajun.sung=40samsung.com
-> >> Subject: Re: =5BPATCH v3 5/6=5D arm64: dts: exynos: add initial suppor=
-t
-> >> for Samsung
-> >> Exynos8855 smdk
-> >>
-> >> On 10/07/2026 11:55, Alim Akhtar wrote:
-> >>>>> ---
-> >>>>>  arch/arm64/boot/dts/exynos/Makefile           =7C   1 +
-> >>>>>  .../boot/dts/exynos/exynos8855-pinctrl.dtsi   =7C 574
-> ++++++++++++++++++
-> >>>>>  .../arm64/boot/dts/exynos/exynos8855-smdk.dts =7C  32 +
-> >>>>>  arch/arm64/boot/dts/exynos/exynos8855.dtsi    =7C 204 +++++++
-> >>>>>  4 files changed, 811 insertions(+)  create mode 100644
-> >>>>> arch/arm64/boot/dts/exynos/exynos8855-pinctrl.dtsi
-> >>>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos8855-smdk.dts
-> >>>>>  create mode 100644 arch/arm64/boot/dts/exynos/exynos8855.dtsi
-> >>>>> +       =7D;
-> >>> =5Bsnip=5D
-> >>>>> +
-> >>>>> +       oscclk: clock-oscclk =7B
-> >>>>> +               compatible =3D =22fixed-clock=22;
-> >>>>> +               clock-output-names =3D =22oscclk=22;
-> >>>>> +               =23clock-cells =3D <0>;
-> >>>>> +       =7D;
-> >>>>
-> >>>> Small nit, but I believe oscclk node should be ordered
-> >>>> alpha-numerically by the node name. See
-> >>>> https://docs.kernel.org/devicetree/bindings/dts-coding-
-> >>>> style.html
-> >>>>
-> >>> Thanks, will update in v4
-> >>
-> >>
-> >> The node feels ordered, no? clock before cpu?
-> >>
-> > Right, =22 ordered alpha-numerically by the node name=22
-> >
-> > Krzysztof, do you want to send v4 with all the reviewed-by tag collecte=
-d?
->=20
-> No need, there are no changes planned, right? I just give it a day or two=
- if Peter
-> or someone wants to review this one in such case.
->=20
-Sure, no changes for now.=20
-Thanks=21
+One small comment below.
 
-> Best regards,
-> Krzysztof
+[...]
 
+> +static int mc33978_mux_set(struct mux_control *mux, int state)
+> +{
+> +	struct mux_chip *mux_chip = mux->chip;
+> +	struct mc33978_mux_priv *priv = mux_chip_priv(mux_chip);
+> +	int ret;
+> +
+> +	if (state < 0 || state >= MC33978_NUM_AMUX_CH)
+> +		return -EINVAL;
+> +
+> +	ret = regmap_update_bits(priv->map, MC33978_REG_AMUX_CTRL,
+> +				 MC33978_AMUX_CTRL_MASK, state);
+> +	if (ret)
+> +		dev_err(priv->dev, "failed to set AMUX channel %d: %d\n",
+> +			state, ret);
+
+Especially for iio, I can imagine a consumer might keep polling even if
+the mux .set returns an error. So maybe ratelimit this print?
+
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct mux_control_ops mc33978_mux_ops = {
+> +	.set = mc33978_mux_set,
+> +};
 
