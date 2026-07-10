@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39785-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OlgjGx1BUGqIvgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:47:25 +0200
+	id x/KZMXFNUGqLwQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39785-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 03:40:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFB837366BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 02:47:24 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99EDE73686A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 03:40:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=n26oLl7f;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NxeLZXfI;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39784-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39785-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39785-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4C0903022970
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 00:46:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 05C4C301AB94
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 01:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A47BC1A6814;
-	Fri, 10 Jul 2026 00:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 638E734F497;
+	Fri, 10 Jul 2026 01:39:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736722AD3F;
-	Fri, 10 Jul 2026 00:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB0E2AEF5;
+	Fri, 10 Jul 2026 01:39:56 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783644384; cv=none; b=PnccmGzn5lcBMzMrzul11FD0kM/YJDmxzI0zn+IvmKa1UJFCUwPXOR98VpVtkhEb5uS3lo1FoPqTkhgFfY6feWozN+kruVNL00eDFnodrEuu8n0G7dea79Snq8HyNg7+eON88IGDKVKlJEnArgkF/Z4S8LhOGze9W/p1wlZU/sQ=
+	t=1783647597; cv=none; b=l83iluxY6iin2qkcMx5YZ6QzWDru4G85mW/6m56Q1yoO8MlpyODa1XzrSG5iqc/NjT5OIJ7Z7xr/qN0fBE91d1y9XRqsHGR5jaMi+i3zSKdeX5JKT6f/tqxQRSoFSK8xetaklNO6QK5fQ8AqPKoBKywrWtAloNcB6ZgoSA0bIcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783644384; c=relaxed/simple;
-	bh=NcAY33Cz+Y07dZSUoRE4dYMoOX/ODftBQ6ejSLDLCig=;
+	s=arc-20240116; t=1783647597; c=relaxed/simple;
+	bh=cUBVyZI3iYzLKWMJuqgnvmoXqw3n6EnxScqGD+AWtVo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZQ52rdw32Lshb1ZZ2M3gyXJdhXi7X1UUQXrRiTHMRq7vMVE7J22LY/y2/rZecMBjBesBPULZpUnf6MPyo2wxAMTqkPyoo0aIhEBjGszlZqIksTfYZendhzVjI5JbOv/+pstSuZ0Gbn/R8wBXMErZ3RZdqxe2Ok7u/5/M8WLo2K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n26oLl7f; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5956F1F000E9;
-	Fri, 10 Jul 2026 00:46:21 +0000 (UTC)
+	 MIME-Version:Content-Type; b=tNDGnx1gW1owre63NqCyO3LsRyfn5Z1zhyUqdyH4+/cCQ+GJWdtsYh6tVvZzx26/QQ5eiGew7chJNTw8W2DDcjd0CVVKle2mYCl2IJ+FR7xTE3JMn3KPsgHmKSHsmM5Vu474MbGAYVmD/TLxAhK++e8NGETabXtT98i/ppvmrw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxeLZXfI; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B901F000E9;
+	Fri, 10 Jul 2026 01:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783644383;
-	bh=13E5iFkRhhPo8tsl5s9roEJL6c2uaz4ktKevVkLd3/I=;
+	s=k20260515; t=1783647595;
+	bh=EQuZbHgu/I8MUtI51d+1TjEXGoO04JHKmOy5gEswLS8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=n26oLl7fvkRaj9R0WlIMV9CH2IijPq0UbKzEoXjkl6V3zPgfQU6pqoeIgXJWJIKQs
-	 R8WnP75NkWglA4FGzr0WfYVH2hQmRxKbEdKD3CY1FE1//vfxrouyUEVHx9LObYbmSC
-	 EFSFATVRBr6ADR3Kg447bHV10pnJAftkOJjiBvRkgiYrWn14nWd/vAOlhZKNm3dS1Y
-	 qpInly4maBuEpmP37Ax7YP3GdlytUCsn+PlrT4puoIZKiV30efH2I0eAbOfCZlzzrh
-	 1pXW2ltxzjOSkgUZFem3MOiJHHWfnhl1uS+eY4I8DAIvgK+TGrFEGWoRZgZiahkg6v
-	 QkNLnaFK4UXfA==
-Date: Fri, 10 Jul 2026 01:46:17 +0100
+	b=NxeLZXfIPrLnn1rdtiSLe0YI3yMgsXdI+sfwgbbzw0EWl7qZy+DqiPqZc8QWDQTxz
+	 suXaK1qkuhTDt5/8AxA/5E9dxNEwD+59Mz7V8/6EMy4t7mdzybYFFTiNjkj0w1rLZh
+	 36H0hi4YaNbtqHQDEuUEw1ESDsMdGFzO4NdQINgc4fWDz8DAJBQvS5earkFjvdHKon
+	 ILWaxUv832hsw+LwZEnZJ+Dbn3mjwjPPzaScwSitCcj1g1/WT5nRZ09LZoR3sU2qvq
+	 aNCLaIf2IXT15JjlHQWYdeayMt8q9exRVoDhV4gqObvrmRQQRPV0qn3SgxKPlxHdwX
+	 2nIYQBDoQL2nA==
+Date: Fri, 10 Jul 2026 02:39:47 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Janani Sunil <janani.sunil@analog.com>
 Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Michael Hennerich
@@ -60,11 +60,11 @@ Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Michael Hennerich
  <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
  <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
  <linux-doc@vger.kernel.org>, <jananisunil.dev@gmail.com>
-Subject: Re: [PATCH 3/6] iio: adc: adi-axi-adc: Add support for CRC
-Message-ID: <20260710014617.323acf6e@jic23-huawei>
-In-Reply-To: <20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
+Subject: Re: [PATCH 1/6] dt-bindings: iio: adc: Add AD7768
+Message-ID: <20260710023947.0056f29e@jic23-huawei>
+In-Reply-To: <20260709-ad7768-driver-v1-1-44e1194fd96a@analog.com>
 References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
-	<20260709-ad7768-driver-v1-3-44e1194fd96a@analog.com>
+	<20260709-ad7768-driver-v1-1-44e1194fd96a@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -82,7 +82,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -91,7 +91,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39784-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39785-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -106,32 +106,30 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BFB837366BE
+X-Rspamd-Queue-Id: 99EDE73686A
 
-On Thu, 9 Jul 2026 10:50:14 +0200
-Janani Sunil <janani.sunil@analog.com> wrote:
+> +
+> +      adi,prebuf-pos-en:
 
-> Add support for enabling and disabling Cyclic Redundancy Check (CRC)
-> processing in the AXI ADC backend. CRC provides data integrity verification
-> for high-speed ADC data streams, ensuring reliable data transfer between
-> the ADC frontend and backend processing systems.
-> 
-> Signed-off-by: Janani Sunil <janani.sunil@analog.com>
-The 'other things' I found bit from Sashiko is interesting. Far as I can
-tell it is right and [devm_]mutex_init() is missing for lock
-in struct adi_axi_adc_state().  
+Spell out precharge and probably enable as well so
+adi,prechargebuf-pos-enable
 
-Nuno, looks like it was from:
-7ecb8ee5c93b ("iio: adc: adi-axi-adc: support digital interface calibration")
 
-Which indeed adds the lock with a mutex_init()
-
-Jonathan
-
->  static const struct iio_backend_info adi_axi_adc_generic = {
-> 
-
+> +        type: boolean
+> +        description: Enable positive input precharge buffer
+> +
+> +      adi,prebuf-neg-en:
+> +        type: boolean
+> +        description: Enable negative input precharge buffer
+> +
+> +      adi,refbuf-pos-en:
+> +        type: boolean
+> +        description: Enable positive reference buffer
+> +
+> +      adi,refbuf-neg-en:
+> +        type: boolean
+> +        description: Enable negative reference buffer
 
