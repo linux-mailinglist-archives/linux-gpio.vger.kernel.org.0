@@ -1,190 +1,242 @@
-Return-Path: <linux-gpio+bounces-39797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ch2yBrSwUGoE3gIAu9opvQ
-	(envelope-from <linux-gpio+bounces-39797-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 10:43:32 +0200
+	id im+OGuSwUGoW3gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-39798-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 10:44:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 639F07389B2
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 10:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DB2E7389DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 10:44:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=M8fWec8t;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39797-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39797-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=UGTXI5E0;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39798-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39798-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 99AAF30075C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 08:38:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8AB5B300EA9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 08:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C35F3EEAE0;
-	Fri, 10 Jul 2026 08:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789B83F0AAD;
+	Fri, 10 Jul 2026 08:38:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73383AEF56
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 08:38:09 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783672691; cv=pass; b=t9OHmgQ2OxBYsxv7PQbpzBr8dk3FiOulAEy5F2tZ6pJffXsJXiQkN9wYmgmhDlhZP6+0CyHT90xqc0hvuHwkJgCCWLPVHPV5GTOn0nRO8QF7PXMeGi/QQZ1wwXWaVZEARsRT8oxmYnBl8BHgUCFMl7VKs3HURQgGgA9DYmH9QSQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783672691; c=relaxed/simple;
-	bh=sg51iyKLuA9elMxp0JAp7EJsh+MA/vO8Ah/bMdRkH1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dV1HZBgI6NtEoTeU1jbASEsC2df0BpWqvIyokwO888Tw3akxG4scH5c0/SiclO3UakIzy3E+K4plC1F9GEsyx6eix7kkSfgwdxxd1Do2XcPGEC4a5+qLAywqO+VHJXPHtDBD4rmQ5scIp/0qPqfnCGKxwagba4GNri5AQaY4v+w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8fWec8t; arc=pass smtp.client-ip=209.85.221.50
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-47c6e9a694bso358191f8f.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 01:38:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783672688; cv=none;
-        d=google.com; s=arc-20260327;
-        b=nfXvWSZf5qjfslxlTEJADqrqkFLTLbM6qPqOVEVG77x/jWUYVhhWoAimZePwtODdcd
-         CFIW+Mv+yhl1BxpayIqNMZppx9IW5xeoE2BQbYpWWh0oR9cjqDGIpAru9VeEJRiNpw6+
-         9BcsBTEn8p2oLrGi5fvGo6VYtwn3TLURGteD/LIkNj1DxwdleIgEWaeTIf6CKZOtQR7z
-         4A35m+Jj9sqRc0/QM2I4+3QiZv7NBIqrsjWdXgXO0+3Fug9bKMtk2REi3tCqKy7cIt44
-         u8IND6fxopZWbRhPC6QJr8Y7jny81u+GT84DizXogchzerUhY/SHW/CmCFaVANloH1iz
-         cQDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=sg51iyKLuA9elMxp0JAp7EJsh+MA/vO8Ah/bMdRkH1g=;
-        fh=vFAzA06KFTBj/O4duEKaVCFH1KzUmb5wxY0ia22WKjE=;
-        b=dKbJX9+83OPk9Gqki+MtRRP/ntR+VPjskpQL58psfMO4SAcEHwi8FRfOA0D/SxcP5t
-         iq8T6hH4JrO7+so4gSkaoFUIXqyih0KFmH2aalEOctOiYzzkH9D/FUk67A8nyg74HT+I
-         TDSFKIpcoRSDer2JvjJtQWIliRVx+uG+RMyyVsPZpb6AvmOW/2niKLfNUPMDSOJxi7Jb
-         8Ru7RoHIzZRQbUr0H+DJerjnK1t6uW7vWjEbX/k0LC/2KQgJTNR+5wZkCqa/YquqJxcq
-         VAc/oifEf4h9gF+hfypjWqsmx28Mhuh8evUk0v8JQnzD1qABGz+AvYIPKEMuQxjz4X0I
-         IeXA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783672688; x=1784277488; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=sg51iyKLuA9elMxp0JAp7EJsh+MA/vO8Ah/bMdRkH1g=;
-        b=M8fWec8tarRxP7f2gKOuDsYKK+Q+tzO4Ens0EZdoVOdFk9izbzMtbUV4Fj1J7iWxpA
-         4qHzAwmnmC5dT85c/w6FPbieX1fiOo5TBgx+JcNOIZnhy5f7IgYQVCZJniJO+EGj/QQk
-         V7BFyP3xpcgaUtu0pJd3vXXCRkw0U2eeLD3/KOkC6MfwkrqFQclNpxan9YPsLxr2XNBA
-         ejo33Y8u0YyUh/bhiCcxAevM6nP7qxik2T16lMD/Slzobmv9nU0yuksCS5xOqY00e2uD
-         MdVxQiTpbl48A12E6K2rI3o1Y5RE5/oB5vV3tpGQqkfxX9reX/Mtvwwj8x/RYPvv7h1y
-         +hfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783672688; x=1784277488;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sg51iyKLuA9elMxp0JAp7EJsh+MA/vO8Ah/bMdRkH1g=;
-        b=HwYeOm31fdvCJXc3t9LBz/IhYyS0TpUCkm3LERjMEckTx9//RZ8fzxudLhLyxBzBE7
-         ieuiVm71PVKYMOwC0zD1vzD6/14PNduypv05rruAIR+Gatlh9Vj2VSnv+LtkHaJWm+KX
-         BuJr2Bm4rzrmWWTv+dRe5lhy89JkhuYk+XLBH3pZp0NprTLQd4lO097SBCG7UPkzwqiY
-         osPsKQ8hJLGDdiljmjGmVMaktEfMGJ3yT++Jg78NaGCswfThtByuy42BAo2+QFB/oO/9
-         LH3aSBE4crHKf8Ul4ULCilKdqMjMrG4+9PZCpsl1U0aVbkHGSnm5nOdSM/RcgROBu7pK
-         49tg==
-X-Forwarded-Encrypted: i=1; AHgh+RpIqUaZHU8zWFZFFR3/+X2pMJ/kILwVdpFcRRy2Hz/2+HMODIfZHqHwYuQ7xExB45A0OMhP2pUcMtFe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP3M/QFvVfEgZM8H/RNQ9YNW33vvUJlek/DvSp6DCPZxsO4+VQ
-	asIwBiA2EA5ctjFSl7eCLTDwVs8T31z+dGlJaIk9tX+IT3DHB2tm6+CXSFXMcdbN19FZxk+WYAR
-	sGMH8kJaXzJrTz4Mn5FHnJDoUews2R8A=
-X-Gm-Gg: AfdE7cl8ctkOEQ4OKFtRtbrMYGfzZDWnxKBU7udCIKGeim6tqzxfSf10gbuW5Z6ZTWN
-	j+PSbV9FH/nUYJR32mqGRUskhBmIqOceLB2IK+lOgfHFwaArAAr5evpKhESG4uJLzcbfjranS6l
-	YaeFetTMJD3829o3fLSkqIkwG/tH/jAcMMP9CixHNIvmixTrBuk+7I9XZSILZdgEY8deLEAIAO0
-	ZP16QbA/UxJS8++MV26r7kUTu2l8wGT9j8EfZqNGKVSmorIjjMUgDdGfUwWDFptUAe+AqjZ6nk=
-X-Received: by 2002:a05:6000:481e:b0:47f:25e5:2f14 with SMTP id
- ffacd0b85a97d-47f25e5300bmr1645044f8f.29.1783672687837; Fri, 10 Jul 2026
- 01:38:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224E13D79F9;
+	Fri, 10 Jul 2026 08:38:51 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783672733; cv=none; b=Cro1wdNh1c5pUh4XlYhSLfr2jJUqT2j3QPR79EtuB0LnMblfU7+NoorvB+qlawX4s898uRpShxsQTJOXw+QfKlFq7IC4PBu2vg6TdVRZKQ5rVRnCLCuRW0QwSDBo/FXQHQTmrJjxnDuuwtoDFIg7HmhdcX/btGuYmppnWNY69Xw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783672733; c=relaxed/simple;
+	bh=dpRfMvlSINQNlSRIRhFvRt1RUWd3BndT1K1wyLx5Lvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z4tZ4rdi/AEqZQCdWE03QPbTRo9VjNKCpYqBkMlepcy7xucwY4RF6QCq8BBQ3ibDX3pGWql1XGR78quxGWH/iSAp0YO0JFwTvJJnsXFmE1qnkdWcpDPZGx4ZBtu25YMU5MeVj+3j3x3hUK7HhOUSE1YyFmnSHD4GNeuXcM6ZgzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGTXI5E0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F4D1F000E9;
+	Fri, 10 Jul 2026 08:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783672731;
+	bh=cpvrx4tFOz3jWh0MkNiBbPUfVVjjeSGFY+Zp/pTTVUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UGTXI5E0OAwaaQJCF0aPJW3LSQciLWBMT1hlLz4UjY6vUJ3iWTK+g41f4nC6SrddV
+	 gjr6K7JaOo7kYVk+JENRovfqVzPbVpSrnfDQki/0kAwOTjykHBVPshX+PYXd5XKFeI
+	 E0aD+GWzVE1bwI3NYVtApDZq/RKARMYGU1eVOCAoH0fNbm8H8LPOdbDpUec7XYRiwV
+	 9rJAcS1oc/Wmx6mcBCRWRdfiCtnI1N45rrWyL7CGfLOKoz/3x4WijBfiJ34I5Qra5X
+	 67IvjkU9rZBwuaHQSqwM1WiaCt3bg9z7ph/Ni88xR1IAnhFyXorIwAooJBWdW9Y8zG
+	 ycWxnwBPneVPQ==
+Date: Fri, 10 Jul 2026 09:38:42 +0100
+From: Sudeep Holla <sudeep.holla@kernel.org>
+To: Michal Simek <michal.simek@amd.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	linux-kernel@vger.kernel.org, monstr@monstr.eu, git@amd.com,
+	vincent.guittot@linaro.org, Souvik.Chakravarty@arm.com,
+	Alex Shi <alexs@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Dongliang Mu <dzm91@hust.edu.cn>,
+	Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Pavel Machek <pavel@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Stephen Boyd <sboyd@kernel.org>, Ulf Hansson <ulfh@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Yanteng Si <si.yanteng@linux.dev>, arm-scmi@vger.kernel.org,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	"open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	"open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>,
+	"open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+	"open list:ENERGY MODEL" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC PATCH] firmware: scmi: Make SCMI arch independent
+Message-ID: <20260710-macho-pristine-tanuki-b0d3ce@sudeepholla>
+References: <d7f7e8c9589d937b60e43168845ab4fda15037a3.1783603600.git.michal.simek@amd.com>
+ <ak_Eu_eQKalPMwo-@pluto>
+ <77110e77-941d-4173-b2f5-6f3cf4858339@amd.com>
+ <20260710-lemon-pogona-of-wind-b3a003@sudeepholla>
+ <5f5e8341-dbcc-4467-976e-35d007ae148e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <alAJJr5ATEZdHBBA@ashevche-desk.local>
-In-Reply-To: <alAJJr5ATEZdHBBA@ashevche-desk.local>
-From: GaryWang <is0124@gmail.com>
-Date: Fri, 10 Jul 2026 16:37:56 +0800
-X-Gm-Features: AUfX_mxjFR83NZqIumwsitpjOBz1jpUe2367CguwXIcxYIUoKA2eoT3gDXHV2Qk
-Message-ID: <CANYHO6rgn19uxjmc+1xv-pmadZQ1EaePmwvC3Kfy-E6ckwcYqA@mail.gmail.com>
-Subject: Re: Up Squared Pro 7000 (UPN-ADLN01) broken BIOS?
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, JunYingLai <junyinglai@aaeon.com.tw>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, linux-gpio@vger.kernel.org, 
-	=?UTF-8?B?SmFzb25IdWFuZyDpu4Pku4HmnbA=?= <JasonHuang@aaeon.com.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f5e8341-dbcc-4467-976e-35d007ae148e@amd.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:michal.simek@amd.com,m:cristian.marussi@arm.com,m:sudeep.holla@kernel.org,m:linux-kernel@vger.kernel.org,m:monstr@monstr.eu,m:git@amd.com,m:vincent.guittot@linaro.org,m:Souvik.Chakravarty@arm.com,m:alexs@kernel.org,m:andy@kernel.org,m:brgl@kernel.org,m:bmasney@redhat.com,m:dlechner@baylibre.com,m:dzm91@hust.edu.cn,m:festevam@gmail.com,m:Frank.Li@nxp.com,m:linux@roeck-us.net,m:jic23@kernel.org,m:corbet@lwn.net,m:lenb@kernel.org,m:lgirdwood@gmail.com,m:linusw@kernel.org,m:lukasz.luba@arm.com,m:broonie@kernel.org,m:mturquette@baylibre.com,m:nuno.sa@analog.com,m:pavel@kernel.org,m:peng.fan@nxp.com,m:kernel@pengutronix.de,m:p.zabel@pengutronix.de,m:rafael@kernel.org,m:s.hauer@pengutronix.de,m:skhan@linuxfoundation.org,m:sboyd@kernel.org,m:ulfh@kernel.org,m:viresh.kumar@linaro.org,m:si.yanteng@linux.dev,m:arm-scmi@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-clk@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-gpio@vger.
+ kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-iio@vger.kernel.org,m:linux-pm@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:junyinglai@aaeon.com.tw,m:thomas.richard@bootlin.com,m:linux-gpio@vger.kernel.org,m:JasonHuang@aaeon.com.tw,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39797-lists,linux-gpio=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[is0124@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[46];
+	FORGED_SENDER(0.00)[sudeep.holla@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39798-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[is0124@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[sudeep.holla@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[arm.com,kernel.org,vger.kernel.org,monstr.eu,amd.com,linaro.org,redhat.com,baylibre.com,hust.edu.cn,gmail.com,nxp.com,roeck-us.net,lwn.net,analog.com,pengutronix.de,linuxfoundation.org,linux.dev,lists.linux.dev,lists.infradead.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sudeepholla:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 639F07389B2
+X-Rspamd-Queue-Id: 0DB2E7389DD
 
-Add AAEON software JunYing.
+On Fri, Jul 10, 2026 at 09:42:09AM +0200, Michal Simek wrote:
+> 
+> 
+> On 7/10/26 09:35, Sudeep Holla wrote:
+> > On Fri, Jul 10, 2026 at 09:03:32AM +0200, Michal Simek wrote:
+> > > 
+> > > 
+> > > On 7/9/26 17:56, Cristian Marussi wrote:
+> > > > On Thu, Jul 09, 2026 at 03:27:00PM +0200, Michal Simek wrote:
+> > > > > On heterogenious systems like AMD/Xilinx FPGA there is a need to talk to
+> > > > > SCMI server from different architectures than ARM that's why remove
+> > > > > ARM/ARM64 Kconfig dependency with also remove ARM from description and
+> > > > > rename folder to reflect it.
+> > > > 
+> > > > While I understand dropping the dependency on ARM (I always wanted to do
+> > > > that and test if it worked at all on some otehr archs with QEMU), I am
+> > > > not sure about the whole renaming party ? why is needed just for
+> > > > cosmetic reasons ? it is at the end an arm originated protocol so I dont
+> > > > see it as a being wrong to be named as such even though used by other
+> > > > archs...I have not really strong opinion on this...
+> > > 
+> > > I have been in CC on U-Boot RPMI patches which got to my attention because
+> > > I don't want to have another interface for MB-V(riscv-) running in
+> > > programmable logic and have another server in the system doing the same
+> > > thing.
+> > > 
+> > 
+> > Ah that's interesting. I wasn't aware of that. I still agree with the move
+> > in principle, but how does that align with these:
+> > 
+> > drivers/clk/clk-rpmi.c
+> > drivers/irqchip/irq-riscv-rpmi-sysmsi.c
+> > include/linux/mailbox/riscv-rpmi-message.h
+> > drivers/mailbox/riscv-sbi-mpxy-mbox.c(Should be fine as it is just transport)
+> 
+> I am having separate discussion on u-boot mailing list about RPMI and it's
+> usage on non riscv architectures because one raised argument was that it is
+> community driver spec compare to SCMI which is owned by ARM. But IMHO only
+> for riscv.
+> 
 
-Hi Andy,
-yeah the ACPI flag should not set for HAT pins, JunYin knows it,
-They clear the ACPI flag from the driver now, their BIOS uses the default
-from CRB, but they should fix it from the BIOS to match the right usage.
+IIRC in LPC 2024, we did discuss opening up SCMI so that RISCV could use it as
+is instead of copying quite a lot from SCMI for RPMI in some closed groups.
 
-BR,
-Gary.
+Here is the summary we got from couple of RISC-V vendors at the time:
+"
+RPMI is comparable to Arm SCMI, but it includes RISC-V-specific services such
+as HART State Management, CPPC, Management Mode, and RAS Agent. The SBI MPXY
+extension enables secure and non-secure system partitions to exchange RPMI
+messages, allows an M-mode RPMI transport to be shared with S-mode, and lets
+hypervisors virtualize RPMI for guests or VMs.
 
-On Fri, Jul 10, 2026 at 4:48=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> Hi!
->
-> Since I have been playing with the $Subject board, I wondering if I miss
-> something or the BIOS configuration is utterly broken. The problem what
-> I see is that most of the pins on the SoC are marked with [ACPI] if you
-> look at the debugfs 'pins' file for INTC1057:00 device instance.
->
-> This means *none* of them (which are user visible via HAT connector) may
-> serve as an interrupt resource to the OS. How the OS should request inter=
-rupts
-> on those pins?
->
-> As far as I understand that the BIOS does initial settings of CPLD and
-> basically I can use transparently the pins as per their configuration don=
-e
-> in BIOS. Right?
->
-> Btw, do we have any contacts to engineers in AAEON or whoever who does th=
-ese
-> UP boards nowadays?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+RPMI development is already well advanced, with much of the client-driver work
+implemented in OpenSBI. Supervisor software can access selected RPMI services
+through SBI MPXY. A permissively licensed reference implementation, librpmi,
+is also available for platform vendors.
+
+RPMI was created after evaluating Arm SCMI, mainly to support RISC-V-specific
+requirements.
+"
+
+I didn't pursue it any further following some of these followup discussions
+post LPC 2024.
+
+> > 
+> > Now I feel we need some alignment before making $subject move.
+> > 
+> > > Based on that we had discussed about it with Vincent and Souvik (we missed
+> > > you there) about using SCMI on non ARM platform and both of them didn't see
+> > > the concern to be marked as ARM only protocol.
+> > > Truth is that some of protocols have ARM in description, file names, etc but
+> > > some of them not. That's why I think it is good time to sync it up and
+> > > enable
+> > > running this protocol on other SOCs.
+> > > 
+> > > > ... my concern really is ... wont this full scale rename simply generate
+> > > > a lot of un-needed churn for future fixes and/or backporting ?
+> > > I don't think it is going to be a big problem because it is just git mv
+> > > which git is able to gracefully handle.
+> > > 
+> > 
+> > Otherwise it may end up being unnecessary churn though I completely agree
+> > with the git/backporting aspects. Just don't want to churn things up until
+> > we have some plan and further changes/users of this move.
+> 
+> As I wrote above AMD/Xilinx platform with SCMI server where ARM RPU/APUs
+> (with multiple VMs) and Microblaze-V in programmable logic acting as
+> separate agents is going to be the first user. And for being able to run
+> SCMI on Linux running on Microblaze-V I need enable SCMI on non ARM
+> architecture.
+> 
+
+Ah OK, if the plan is to just use SCMI as is and having "ARM/arm" name is
+a blocker, then sure we can get that done. Hope you are aware of and already
+considered some of the RISC-V specifics listed above and ruled out any of
+those as concerns to use SCMI on RISC-V platforms.
+
+-- 
+Regards,
+Sudeep
 
