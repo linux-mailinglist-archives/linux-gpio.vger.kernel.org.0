@@ -1,50 +1,51 @@
-Return-Path: <linux-gpio+bounces-39860-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39861-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BaK8GHBiUWqODgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39860-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 23:21:52 +0200
+	id yMR7EJZiUWqcDgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39861-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 23:22:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFC0873EC58
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 23:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF97173EC87
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 23:22:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dOCG7RLq;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iz4zFz1H;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39860-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39860-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39861-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39861-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8A6223010524
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 21:19:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7203630580B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 21:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C9953B5F48;
-	Fri, 10 Jul 2026 21:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E543B6348;
+	Fri, 10 Jul 2026 21:19:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470653B4EAA;
-	Fri, 10 Jul 2026 21:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8783B4EAA;
+	Fri, 10 Jul 2026 21:19:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783718344; cv=none; b=HA8OXozMaB/Eot9kpM89LGpdaOOk17MBuHRnJf4PDg1hQUM0RehcoabEg/ufG7vnbyHvWq9/2hFRWDccHrS+/eiRrh+TISX/hYJBUJCLWsD+CDnwparg9x1CwfHnmIFFCv4Dppb1GKlWVA24UamYEPnEg1CIkiKGz/C8luXXbjE=
+	t=1783718348; cv=none; b=AB3WK8ZGDzTaWV4RKms+kC63InLG96QjOgXTnT12u+pCc4Id8LWMykn3TzO+Kh3GzeviBmXbIf/74KksxmQwrJeG1OOHJwyEHCLNXSu8un0lJ6xaNZJox5XfOHoKM4RR+btnEanW6x5KhauOctpJgh5ZxIq3dPdnZfAGomERolQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783718344; c=relaxed/simple;
-	bh=7VgHi4Y9L2SOPytkfgYbGVWI7YTf+ZUJgXGUavjwtxk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hFw0RAde1IZGna2fathb2ALUKDW/NZVSvI/ux0BNFD4stMxlBowtHj1MYviCjMGpTAV7RC9vrpcYs32FNRBCCdLvMHz6Wl8K2AkPtEcX08BpR/0Vp2geEjn4wHRDe6iZqbBspN9fJ7tFVTNzoqDBODwqw6d0XMYKJIiFYp+N7/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOCG7RLq; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164C71F000E9;
-	Fri, 10 Jul 2026 21:18:58 +0000 (UTC)
+	s=arc-20240116; t=1783718348; c=relaxed/simple;
+	bh=rRpuGGpA1n7ztGc/QpkwkeAxpt5qro269Sj/gA+9ojM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Chl3eVus8Tec/5jUICGo08Y4keGa5eadz1CFvDGQvglJU6ziA5CeeR4xgG61qvL6bCrkFOOPYX2alsW0r4kQjmfbfitoetSYj5pJztU90y5qlDa8z4QvbLzj3KY1mWGPw3zvo3WuqbWh99kKCGyeWawOpxe/I5Mli57sKelzIWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz4zFz1H; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED651F00A3A;
+	Fri, 10 Jul 2026 21:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783718342;
-	bh=c3VGwn/zHIAeMdqewunrMP3NaW3k6iPGymktB8Q2e1Y=;
-	h=From:To:Cc:Subject:Date;
-	b=dOCG7RLqdxBDJpFQ5a0dgJIwtuYc54B0Gu1NnN1lbQZP0vMIE5HMBBOFOjWervabb
-	 jOESP3GnDbyFO6ZJvvQqBnW4dC+tXiOyh+0L1ZRonKmNqa0/wj/SazpsjPf9PtBLEt
-	 vk9U914wL0pILPT5laaWTxLrEm/9pF3sbOw8oLfes6SjnmI19m+jYA3Qu2uBzCvN5g
-	 OYyAPHiC6HuCcduXwTc7F0cTgabE2Eu81aWToW7uhZpAxcT0VMzor6x8kOeKxeMTj/
-	 V4GMwaFX0cwOLzbzCGwJD/+jsWsaVRALaz9xs7Zxqf0PmGr3ewN0O2FryIfH9dZStv
-	 EITiBv6miuwGQ==
+	s=k20260515; t=1783718347;
+	bh=VqoRWtbSdRYWkK8l3vZejtzyP7685EcW/OvuSEMQC1I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=iz4zFz1H85iDeZ48qPyL6Mvu5J+nMS05c/A18Tm3MptFK8nEMnqRmOS/hH+DFsBIU
+	 xHfiuA89aRSgKVmJn0hNEJv9rNtc88J5TXbHRupwBPSLVO/o0zM1qOIfYXPd3TKxep
+	 H9XbumDE6itxl6lQElT7Tf9SxyI+nI2DZQ4Rg0b0DnwgBjPt+bjDE9MeEYnLty73R7
+	 hP6bDqMlm9R9yyqIARw4yrb5t5Srr6ovWAcE0a7fsxzOE9RPK6yjrEkhU5SuOahqZw
+	 X4VzjA5Scb6yzyGKnt7s5L9OZUnXnneorohPTnCskUKOR/mh8261JvxYcf9mgYoLIR
+	 ihgCp+BjhF7DQ==
 From: Arnd Bergmann <arnd@kernel.org>
 To: linux-gpio@vger.kernel.org,
 	Linus Walleij <linusw@kernel.org>,
@@ -63,11 +64,14 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-sh@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-input@vger.kernel.org,
-	linux-leds@vger.kernel.org
-Subject: [PATCH v6 0/6] gpiolib: fence off legacy interfaces
-Date: Fri, 10 Jul 2026 23:18:48 +0200
-Message-Id: <20260710211854.1371746-1-arnd@kernel.org>
+	linux-leds@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH 1/6] [v6] Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY
+Date: Fri, 10 Jul 2026 23:18:49 +0200
+Message-Id: <20260710211854.1371746-2-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260710211854.1371746-1-arnd@kernel.org>
+References: <20260710211854.1371746-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,10 +92,10 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39860-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39861-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:glaubitz@physik.fu-berlin.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:dmitry.torokhov@gmail.com,m:lee@kernel.org,m:pavel@kernel.org,m:linux-sh@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-leds@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	FORGED_RECIPIENTS(0.00)[m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:glaubitz@physik.fu-berlin.de,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:dave.hansen@linux.intel.com,m:x86@kernel.org,m:hpa@zytor.com,m:dmitry.torokhov@gmail.com,m:lee@kernel.org,m:pavel@kernel.org,m:linux-sh@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-leds@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -103,79 +107,72 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[arndb.de,physik.fu-berlin.de,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,vger.kernel.org];
+	FREEMAIL_CC(0.00)[arndb.de,physik.fu-berlin.de,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,gmail.com,vger.kernel.org,oss.qualcomm.com];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arndb.de:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AFC0873EC58
+X-Rspamd-Queue-Id: CF97173EC87
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-This is the remainder of the series previously posted in [1] and [2].
+This driver converts information from ACPI in x86 based tablets and
+laptops into platform_data for the gpio_keys driver, using the obsolete
+gpio number based interfaces.
 
-I only made one trivial chance suggested by Andy Shevchenko and
-reordered the series to have the input patches first.
+This should really be converted to some other method, but since the
+conversion is nontrivial, have this one select GPIOLIB_LEGACY for the
+time being.
 
-Dmitry Torokhov asked about having an immutable branch, so I would
-suggest sharing the two input patches between the mfd and gpio
-trees, and everything else go through the gpio tree only.
+This enables turning GPIOLIB_LEGACY off by default on most kernel
+builds. Since the driver is only used on x86 portables, add a CONFIG_X86
+dependency, which means non-x86 allmodconfig builds usuallly build
+without the legacy gpio support.
 
-     Arnd
+Link: https://lore.kernel.org/all/ah-1z9LhVG0wtfBw@google.com/
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com> # for input
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v5: This was part of an earlier "x86/platform: select legacy
+    gpiolib interfaces where used" patch that covered several
+    drivers. This is the only one left as of linux-7.2-rc1
+---
+ drivers/input/misc/Kconfig            | 3 +++
+ drivers/input/misc/soc_button_array.c | 1 -
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/all/20260520183815.2510387-1-arnd@kernel.org/
-[2] https://lore.kernel.org/all/20260629130329.1291953-1-arnd@kernel.org/
-
-Arnd Bergmann (6):
-  [v6] Input: soc_button_array - select CONFIG_GPIOLIB_LEGACY
-  [v6] Input: gpio-keys: make legacy gpiolib optional
-  [v6] leds: gpio: make legacy gpiolib interface optional
-  [v6] sh: select legacy gpiolib interface
-  [v6] x86/olpc: select GPIOLIB_LEGACY
-  [v6] gpiolib: turn off legacy interface by default
-
- arch/sh/Kconfig                           |  1 +
- arch/sh/boards/Kconfig                    |  8 ++++
- arch/sh/boards/mach-highlander/Kconfig    |  1 +
- arch/sh/boards/mach-rsk/Kconfig           |  3 ++
- arch/x86/Kconfig                          |  1 +
- arch/x86/platform/olpc/olpc-xo1-sci.c     |  2 +-
- drivers/gpio/Kconfig                      |  9 +++-
- drivers/input/keyboard/gpio_keys.c        |  9 ++--
- drivers/input/keyboard/gpio_keys_polled.c |  4 +-
- drivers/input/misc/Kconfig                |  3 ++
- drivers/input/misc/soc_button_array.c     |  1 -
- drivers/leds/leds-gpio.c                  | 52 +++++++++++++++--------
- drivers/mfd/rohm-bd71828.c                |  1 -
- drivers/mfd/rohm-bd718x7.c                |  1 -
- include/linux/gpio_keys.h                 |  2 +
- include/linux/leds.h                      |  2 +
- sound/pci/Kconfig                         |  1 +
- sound/pci/cs5535audio/cs5535audio_olpc.c  |  2 +-
- 18 files changed, 75 insertions(+), 28 deletions(-)
-
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 1f6c57dba030..9c66e3a67127 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -892,6 +892,9 @@ config INPUT_IDEAPAD_SLIDEBAR
+ config INPUT_SOC_BUTTON_ARRAY
+ 	tristate "Windows-compatible SoC Button Array"
+ 	depends on KEYBOARD_GPIO && ACPI
++	depends on X86
++	depends on GPIOLIB
++	select GPIOLIB_LEGACY
+ 	help
+ 	  Say Y here if you have a SoC-based tablet that originally runs
+ 	  Windows 8 or a Microsoft Surface Book 2, Pro 5, Laptop 1 or later.
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index b8cad415c62c..a6c984205123 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -15,7 +15,6 @@
+ #include <linux/dmi.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio_keys.h>
+-#include <linux/gpio.h>
+ #include <linux/platform_device.h>
+ 
+ static bool use_low_level_irq;
 -- 
 2.39.5
 
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Walleij <linusw@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>
-Cc: linux-sh@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-input@vger.kernel.org
-Cc: linux-leds@vger.kernel.org
 
