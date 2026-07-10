@@ -1,147 +1,135 @@
-Return-Path: <linux-gpio+bounces-39857-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39858-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OSvvKWNTUWpwCQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39857-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:17:39 +0200
+	id vs09KY9XUWpRCwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39858-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:35:27 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3560F73E0C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:17:39 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06D5C73E659
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 22:35:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hqJ8lWyf;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gUBrtBlk;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39857-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39857-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39858-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39858-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4759C3013D4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:17:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2020530C752B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2026 20:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88239378D9A;
-	Fri, 10 Jul 2026 20:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B9238B158;
+	Fri, 10 Jul 2026 20:30:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5486234A76F
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBBA38C42F
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:30:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783714633; cv=none; b=gQX7svX7gjzfudE2WK8nXKNtapeLCGt1AETIwIy90HGu8t+08qYtjdm99xX42GdRg2Ft+UaZvtEKDlBd+Arr7TrBdzbaDUkz9NvrlNgnHrYf06YjT3OwopBSYDevx4cKFwI2XmRiaElKUe6arQulG4OyJnkDelEJK99Ih1TnPnI=
+	t=1783715409; cv=none; b=syJJfzJVMPnJnS9lTwiQK53biyzyhziGFnFoPQyyD5gKMvgCLIp6lVBVNagz3eFBx8NIHCm93PCrr8HzvO02oZ1Dtit5WqEAUtWd7CpPrUT7dxpshzexLg0K1rX8eRPb0wrxr9FO9Y9QzGt4R4P4goKp8eKrJRRVQicvxPYlbnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783714633; c=relaxed/simple;
-	bh=tQPbVbfxwect0GU4Sdbz+MR0Fwi568qtnWkuB9xn3nI=;
+	s=arc-20240116; t=1783715409; c=relaxed/simple;
+	bh=g1RZDUi7dmfHqz7HG7N5VHozu1EUFuTkNzT7Y8iTCjk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CNxASSHfGI//8X+XYsoYmd6RQ8eK3ut/xtrx46ppfS+DQxmU+8ASfHVlswDHu0wQ3OxNvNY5MtQYoF7bFhT4wHTEFhhRwZRzznHc4IoODnGblTiByW/E1ArSrfUxdZcv+DOovFVgMjVZL1u/roK46ryKTBT9uarUXgP6UGil1Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqJ8lWyf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3071F00A3D
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:17:11 +0000 (UTC)
+	 To:Cc:Content-Type; b=mROajOxFe/EplyVOrFSV9yqACCyJ/pN3KFWOi6Ms14BhlLTpKNn2lGmWx1zCHFE3uohnCi0U2Z3fTL9imT7ugx6Bj7E8BOS+gabJiXNCwzx5q2AOK+m13Ad6gHHpXRA/nFU06guW++YHnGBYIgTCK+JhA1uGWx6FPNTsRegVdVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUBrtBlk; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D83201F00ACF
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 20:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783714632;
-	bh=kVxn3DZhdGrpJ7FFDLro7VI16MvBN6YAJO3dopkK6bE=;
+	s=k20260515; t=1783715407;
+	bh=g1RZDUi7dmfHqz7HG7N5VHozu1EUFuTkNzT7Y8iTCjk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=hqJ8lWyflEMUTaA05MQHqxhXHJbMt/h5NVA4XggKhXokhzA8ZPwyOy57BCSBgu8dW
-	 +xndV5LXUS7JG13edZsln3kRg3qMXz4Ca9KR/ZbIoeBMoZuja4MWVDwuVaJRAk9TBz
-	 4XUTPiJwY2HJrd2TZ7OWTxNgUivRM42+roYEUuvJv1M4JHbYqryI7efPEHqNctroeH
-	 g2CLNP3kOM0Y1P9+qLI6CNk3J0R6Gc6XD8SHnEUQ1e2IYcbHS2OTD+e8SytlsaFVio
-	 qz1UqZb3uMnVmI2OPikF+86czrAll6ItDC0x5OkCYTtj7an9nGMgKpO/XZc/lkIBa3
-	 NeXjpq4XrHABQ==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5aeb6d00883so1223698e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 13:17:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrcMJTansYI0i7sVFrncNXWXReDfxN2ppISZ7acF33EFDWpbuhkOGKnddJ7jH31Q3rQlTlDzGk9doDM@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbCwfX8wrD64sk/ROxRnXiS6FL2SbiA7v6g6rHE556WSWM+L63
-	/m1Xs6wCMn7O3Qilnin93m1J+FoKK6uDf2QeLPFoVi9L1JsLhgNtBBTLN8Scd0z5q5CyBi9nTxp
-	7AmFzMCCIOvyj0JxgQLQwBUZjyjSQJIw=
-X-Received: by 2002:a05:6512:21cb:b0:5b0:190a:5b54 with SMTP id
- 2adb3069b0e04-5b023698addmr71572e87.42.1783714630728; Fri, 10 Jul 2026
- 13:17:10 -0700 (PDT)
+	b=gUBrtBlkVBehkmSrXfeUeRGqq84rmT48nO0J25GHh5VJZwzIxzZjNse13ScMGc+gJ
+	 m8qa4RITtEa/6PUV38mhmyauB8nPYsfzeT/Llqg1eoqLlLPyD+MORlaTlPgFJtXeHD
+	 3d0oG7nMw1mDRCBRJ+7L/mSU/5KgH9xob0BSugNBkj6B5DBx9aHRvL04FBukxvve93
+	 9HQfTBtOMD1VGNdP/9+BwOHDY7526Q1dnO2ph2XEuKqjKwpbwQWw3szHTSo5WBNKlp
+	 MlWPVMIY9R62tpeuPblEIlzGMQxZL6WZ1yZ7CuOGm9quRe+9HmduM/pYXPcsG6R7+W
+	 vXLgPTG9o4BkA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aeae771c49so1440048e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2026 13:30:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rpe76jp9LDfPRBTq13Ko2VLmfVkcKTR5ufw+xtu4dSShUfWa4lq7vPOIrmogCprZ+kTbdDPA7nLnD/w@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgaZAp7+7/t1o+NNybFLrMOUSP4vlryZ+exLyE1+01cSAfUQtG
+	oD87EKvhkQFfswYN2W8FSJmfKssIkrFJwEHXBqJ2O7snVR6MW22cmqILevxJfKf0IENYcfRV+y5
+	qgudJfejV5//FSjewBtY4ZQ5zMW+wH0k=
+X-Received: by 2002:a05:6512:2529:b0:5b0:1b78:4962 with SMTP id
+ 2adb3069b0e04-5b0236bb5c4mr137507e87.50.1783715406670; Fri, 10 Jul 2026
+ 13:30:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260705070422.764-1-ceohunk@gmail.com> <87cxwulkl9.fsf@trenco.lwn.net>
-In-Reply-To: <87cxwulkl9.fsf@trenco.lwn.net>
+References: <20260709063450.1615041-1-justin.yeh@mediatek.com>
+In-Reply-To: <20260709063450.1615041-1-justin.yeh@mediatek.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 10 Jul 2026 22:16:58 +0200
-X-Gmail-Original-Message-ID: <CAD++jLm9oDeMrJU3NAW3333qvVso5P4WxQBgp6-OngOL5_fFiw@mail.gmail.com>
-X-Gm-Features: AUfX_mw4ORYsmrA46OyiqMjntDFb94AtBYMCMf7lHIgUwLGcBsKCW3uY8_blLRw
-Message-ID: <CAD++jLm9oDeMrJU3NAW3333qvVso5P4WxQBgp6-OngOL5_fFiw@mail.gmail.com>
-Subject: Re: [PATCH] docs: driver-api: pin-control: fix spelling of below
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Yuhong Cheng <ceohunk@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org
+Date: Fri, 10 Jul 2026 22:29:54 +0200
+X-Gmail-Original-Message-ID: <CAD++jLn00-Qdy=uerGkBJUT5gsTjr685HYe9hcnc3ubxbcDgdQ@mail.gmail.com>
+X-Gm-Features: AUfX_myXqmF5Z9qSM89g-I7i4RZgYi-3UQwo4ZzGGQsHH7hMMjQ_teIFD1NMZKM
+Message-ID: <CAD++jLn00-Qdy=uerGkBJUT5gsTjr685HYe9hcnc3ubxbcDgdQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] pinctrl: mediatek: Enable module build support
+To: Justin Yeh <justin.yeh@mediatek.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Project_Global_Chrome_Upstream_Group@mediatek.com, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39857-lists,linux-gpio=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:corbet@lwn.net,m:ceohunk@gmail.com,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,collabora.com,mediatek.com,lists.infradead.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39858-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:justin.yeh@mediatek.com,m:sean.wang@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:Project_Global_Chrome_Upstream_Group@mediatek.com,m:linux-mediatek@lists.infradead.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lwn.net:email]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mediatek.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3560F73E0C2
+X-Rspamd-Queue-Id: 06D5C73E659
 
-On Fri, Jul 10, 2026 at 9:18=E2=80=AFPM Jonathan Corbet <corbet@lwn.net> wr=
-ote:
+Hi Justin,
 
-> Yuhong Cheng <ceohunk@gmail.com> writes:
->
-> > Fix the spelling of 'bellow' to 'below' in the PM API section.
-> >
-> > Signed-off-by: Yuhong Cheng <ceohunk@gmail.com>
-> > ---
-> >  Documentation/driver-api/pin-control.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/d=
-river-api/pin-control.rst
-> > index 1f585ecca..80106e44a 100644
-> > --- a/Documentation/driver-api/pin-control.rst
-> > +++ b/Documentation/driver-api/pin-control.rst
-> > @@ -1175,7 +1175,7 @@ Possible standard state names are: "default", "in=
-it", "sleep" and "idle".
-> >    selected after the driver probe.
-> >
-> >  - the ``sleep`` and ``idle`` states are for power management and can o=
-nly
-> > -  be selected with the PM API bellow.
-> > +  be selected with the PM API below.
-> >
->
-> Applied, thanks.
+thanks for your patches!
 
-Do you especially want it? I queued some stuff on top after merging it,
-so would be great to keep it in the pinctrl tree...
+On Thu, Jul 9, 2026 at 8:35=E2=80=AFAM Justin Yeh <justin.yeh@mediatek.com>=
+ wrote:
+
+> This series lets the MediaTek pinctrl drivers be built as loadable
+> kernel modules. This is required for Android GKI + vendor_dlkm
+> deployments, where vendor-specific drivers must be kept separate from
+> the GKI vmlinux and loaded as modules from the vendor partition.
+
+Nice series, I see Chen-Yu has some more comments and a
+separare cleanup patch may be needed for mtk_eint IIUC,
+but definitely getting there!
 
 Yours,
 Linus Walleij
