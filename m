@@ -1,85 +1,47 @@
-Return-Path: <linux-gpio+bounces-39880-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39881-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rU3aA0DyUWrvKgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39880-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 09:35:28 +0200
+	id mp3dBNz2UWqyKwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39881-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 09:55:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 927CD740BE5
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 09:35:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6545E740D01
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 09:55:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=AVUYdWB3;
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39880-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39880-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=davidgow.net (policy=none);
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39881-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39881-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 05D633037F74
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 07:34:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C86B6302206F
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 07:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 936F533F597;
-	Sat, 11 Jul 2026 07:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B7FB381E92;
+	Sat, 11 Jul 2026 07:55:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3FC35E1CB
-	for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2026 07:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3686F372B57;
+	Sat, 11 Jul 2026 07:54:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783755270; cv=none; b=Clba8Uf2NFUxG6dhgHIqaLVvCMVEZDz1EGInl01kLXO3NxBGupD1lT9lZwrMqeimiDUlz0Ew3peAkub1GsdT09b3NiuJ3oO3O21Y5ttc0hz22484D/xyTQcrC48JF4ugpRQ/uiouQdoVCQLyGXzvSl+GJZX4V++yLgPqNniziBI=
+	t=1783756500; cv=none; b=M4v/QxJuH3bnOHm7AhA43oxzNq0DHzXi87GWMu71i0fpUpu6G5cT0/0KwUAsmDFrgXhbU5yieT7amVBKZxBXApExNywMkOfd8F+GwOLrUmRKlmY0P0gfD9ErLTpv/TgJupu1XkhsL7QcNvwLJhe56dmC9s3qeZJdb98WkwxfOHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783755270; c=relaxed/simple;
-	bh=gUnPJvqa+6hCH/9HCtTO8STc6X6BWHZ70c5H6AKWsOg=;
+	s=arc-20240116; t=1783756500; c=relaxed/simple;
+	bh=AVt5pKjQRYHCQxOiuhK3gxGkUjA/wr75dbeCZ6A0VwA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GalytsIwOyOy5xR/1nmyeTV74il1oe6TCS/FilFvegCRjlBLt8tPxVXsHdDnQko7mew8mgqGJG6dyMvGZM96SmPVW6MSglfaRrhmBxWihNbm3UzIWU2aF7kV/X2gHkzsIae2LtrPaEhoOGsFCtA5EfH0Du9Kk7PKNPBqz7uywcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVUYdWB3; arc=none smtp.client-ip=209.85.167.46
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aeb6d00883so1567785e87.1
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2026 00:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783755265; x=1784360065; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aBafLctpeA1AoyzErbEa9EGgxzwRbfKFWoPKc6c7bv4=;
-        b=AVUYdWB3WfvWD9/jCidP0U7zRkAI7QnX4kmNcHjB6Nosq4CWaZlW0hNhy2LM6kgpWe
-         TWeOEWd21tnxJAl6DPVycHqgm9166I3BafNhzXVO9hS6LEulcv+AlPncKAl7GvVrR03Q
-         iCvt2f7qMPGyswDv6RE6LdZAC8T7nBCACNeECjWvasy2/IQ6mcUH99GfG+odlxT5vxDc
-         faI4NAbgRuPvGxueHmF2X4sAqU7TBPz2sj2hy41Y3HsZaAYU2w0jJYHYvY8gACqUio0A
-         PKN2hjadzNTtEb4X+/A4fXYRXB4crD0SpHGqL5UMuZ2Is9WMaTouNVWbOrjTDz6nyty1
-         dqQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783755265; x=1784360065;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=aBafLctpeA1AoyzErbEa9EGgxzwRbfKFWoPKc6c7bv4=;
-        b=Zz/A7p/9HuTSTp+j26pj9dZQWwoVyLIxiSMJYD8FLC3NsCOhAkxZr5PckiLkfkH5y9
-         3/l8VDJvs+xA30JKp9w/W/yqaWk0Dt7uuudZqE0QuysA9Q86dsxjKhAErOqksAe4RGLx
-         S1XR9+od3snrktf0E002WzzkLhAYVKxHnZISgxK4n3d1wurG5328TWrw/B7GA/AVpFZY
-         RdeGXcrZOeL1PD5cce3rcpo9254bnTXwtu/I1qc/NempgHXdRx9rbDMoGPjgcaBRA6qp
-         /Wesv/N1/C7ZU9GFpSv5gdK5yHO18zr4bE9/7GzDq98efihZtiuuvVOJPt7Dg4eGzVtU
-         YdAg==
-X-Forwarded-Encrypted: i=1; AHgh+Rouw/jHjsB+I3nco7q63uO8Nhhm2RzXLotYVZg21lh3kY9BvxUS4fFERZtQWIYq6LEHxGcoPNmaPYxD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp1Y/s0Lom8pAI+h8pHsMeuv/inMPOOV88yQ2HebEbDXTClBkJ
-	GVglMchuqcB6T2+ZLwX06bCI0EzHGVPjJzxnwcdhdVpvhlqvZ1r+Dz60
-X-Gm-Gg: AfdE7cla/fQwOM5rFRmLur2nforjP3hLEFK92kyi/gNrGDpU/AfXjM6WpHfz9XeNL6T
-	hdoMB5WjjttMg9o0tAODGkEFwb8taIZDj0jjytN/it8xHTeZ5/koX/Hqm/NDoVCU++IMJ3dfxYs
-	MsAIEun/Rw2ZQPRFKUsDmnDIXairs22YX8XxkguJg8/oRgWV/IKVwRlt3S74jCRNZb/5c8ksD8K
-	aGj4SeWTHtzWhfLIGLs5L7flsBEsHx+eqNwKS/zwaNcMd1YJ9wzxJBK458oBfS9SAOovnfln2uO
-	vc2jvl8Olgg00hwm6e9qJ3AS9TzaCP5vzAp2gsS6gHMNmLsTZWubF9bxzhFmdkmrb/0l/unYtQU
-	WF0pDOfm8AV1j3zqdM9oqpNxQ5CQaC5B/ufevj+rgr3G3yM+Ur+Shr2axaF1TiHQqiLI8DCTv2G
-	HAm3VGanH5vQzoDJ3vZyBvtDj0MJexDxPVETFT19pTJLVk/hs6KgXIH0ois6BQbQb2nW0esQ==
-X-Received: by 2002:a05:6512:3f8:b0:5ae:bf45:e3be with SMTP id 2adb3069b0e04-5b0236689cdmr321070e87.21.1783755264967;
-        Sat, 11 Jul 2026 00:34:24 -0700 (PDT)
-Received: from ?IPV6:2a00:1fa0:4322:18e2:4e2b:60a6:4ce2:33fb? ([2a00:1fa0:4322:18e2:4e2b:60a6:4ce2:33fb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b01ca9dd41sm1117527e87.48.2026.07.11.00.34.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jul 2026 00:34:23 -0700 (PDT)
-Message-ID: <de1d491e-159e-41c2-b145-4d09db091031@gmail.com>
-Date: Sat, 11 Jul 2026 10:34:19 +0300
+	 In-Reply-To:Content-Type; b=P/Ce4cP6+gHML69R9f3+ouwlSykuii9s3ofdCnBlmNNpyiT0pvbwyavCgX6DtfAOGNtAiFTcZpLqRaK9QQ+9ks6KnGF9ESdizYtjOP3r1sHNxhh1XxGsTHaaknjTrVTUzW5VRR5yWU72xkH9M/eDR9ZhW2Otr6pkqm0pnkjoq78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=davidgow.net; spf=pass smtp.mailfrom=davidgow.net; arc=none smtp.client-ip=203.29.242.92
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+	id 8A00A1EA71D; Sat, 11 Jul 2026 15:54:50 +0800 (AWST)
+X-Spam-Level: 
+Received: from [IPV6:2001:8003:8810:ea00::41b] (unknown [IPv6:2001:8003:8810:ea00::41b])
+	by sphereful.davidgow.net (Postfix) with ESMTPSA id 936081EA6CA;
+	Sat, 11 Jul 2026 15:54:46 +0800 (AWST)
+Message-ID: <21eb8388-df9b-4c53-8de9-5ed103892fec@davidgow.net>
+Date: Sat, 11 Jul 2026 15:54:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,84 +49,250 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/10] ASoC: replace linux/gpio.h inclusions
-To: Arnd Bergmann <arnd@kernel.org>, linux-gpio@vger.kernel.org,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Gregory Clement <gregory.clement@bootlin.com>, Frank Li <Frank.Li@nxp.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>,
- Krzysztof Kozlowski <krzk@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <zajec5@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Dominik Brodowski <linux@dominikbrodowski.net>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, patches@opensource.cirrus.com,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-input@vger.kernel.org,
- linux-sunxi@lists.linux.dev, linux-phy@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-References: <20260710211954.1373336-1-arnd@kernel.org>
- <20260710211954.1373336-7-arnd@kernel.org>
+Subject: Re: [PATCH v3 1/5] kunit: provide a set of fwnode-oriented helpers
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <raemoar63@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Bartosz Golaszewski <brgl@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Linus Walleij <linusw@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-acpi@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-gpio@vger.kernel.org
+References: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com>
+ <20260710-swnode-fw-devlink-v3-1-993f31874e40@oss.qualcomm.com>
 Content-Language: en-US
-From: Sergey Shtylyov <sergei.shtylyov@gmail.com>
-In-Reply-To: <20260710211954.1373336-7-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: David Gow <david@davidgow.net>
+In-Reply-To: <20260710-swnode-fw-devlink-v3-1-993f31874e40@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[davidgow.net : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39880-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39881-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:arnd@kernel.org,m:linux-gpio@vger.kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:arnd@arndb.de,m:andrew@lunn.ch,m:sebastian.hesselbarth@gmail.com,m:gregory.clement@bootlin.com,m:Frank.Li@nxp.com,m:robert.jarzmik@free.fr,m:krzk@kernel.org,m:gerg@linux-m68k.org,m:tsbogend@alpha.franken.de,m:hauke@hauke-m.de,m:zajec5@gmail.com,m:ysato@users.sourceforge.jp,m:glaubitz@physik.fu-berlin.de,m:dmitry.torokhov@gmail.com,m:linux@dominikbrodowski.net,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-samsung-soc@vger.kernel.org,m:patches@opensource.cirrus.com,m:linux-m68k@lists.linux-m68k.org,m:linux-mips@vger.kernel.org,m:linux-sh@vger.kernel.org,m:linux-input@vger.kernel.org,m:linux-sunxi@lists.linux.dev,m:linux-phy@lists.infradead.org,m:linux-rockchip@lists.infradead.org,m:linux-sound@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:sebastianhesselbarth@gmail.com,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[sergeishtylyov@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[arndb.de,lunn.ch,gmail.com,bootlin.com,nxp.com,free.fr,kernel.org,linux-m68k.org,alpha.franken.de,hauke-m.de,users.sourceforge.jp,physik.fu-berlin.de,dominikbrodowski.net,vger.kernel.org,lists.infradead.org,opensource.cirrus.com,lists.linux-m68k.org,lists.linux.dev,oss.qualcomm.com];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[oss.qualcomm.com,linux.dev,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org];
+	FORGED_SENDER(0.00)[david@davidgow.net,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:brendan.higgins@linux.dev,m:raemoar63@gmail.com,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sergeishtylyov@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[david@davidgow.net,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,vger.kernel.org:from_smtp,arndb.de:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 927CD740BE5
+X-Rspamd-Queue-Id: 6545E740D01
 
-On 7/11/26 12:19 AM, Arnd Bergmann wrote:
-
-> From: Arnd Bergmann <arnd@arndb.de>
+Le 10/07/2026 à 21:51, Bartosz Golaszewski a écrit :
+> Provide three new kunit-managed helpers for test cases that need to
+> register/create dynamic software nodes.
 > 
-> linux/gpio.h is going away,s o use linux/gpio/consumer.h instead.
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
 
-   s/s o/ so/?
+Thanks: these look good to me. I'm assuming they'll head in with the 
+rest of the series, rather than separately via the kselftest/kunit tree.
 
+Reviewed-by: David Gow <david@davidgow.net>
+
+Cheers,
+-- David
+
+>   include/kunit/fwnode.h |  26 +++++++++++
+>   lib/kunit/Makefile     |   1 +
+>   lib/kunit/fwnode.c     | 116 +++++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 143 insertions(+)
 > 
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>[...]
-
-MBR, Sergey
+> diff --git a/include/kunit/fwnode.h b/include/kunit/fwnode.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..239bc71eb5072ccead0beb51fc0882bab69c6877
+> --- /dev/null
+> +++ b/include/kunit/fwnode.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * KUnit resource management helpers for firmware nodes.
+> + *
+> + * Copyright (C) Qualcomm Technologies, Inc. and/or its subsidiaries
+> + */
+> +
+> +#ifndef _KUNIT_FWNODE_H
+> +#define _KUNIT_FWNODE_H
+> +
+> +struct kunit;
+> +struct fwnode_handle;
+> +struct property_entry;
+> +struct software_node;
+> +
+> +struct fwnode_handle *
+> +kunit_fwnode_create_software_node(struct kunit *test,
+> +				  const struct property_entry *properties,
+> +				  const struct fwnode_handle *parent);
+> +struct fwnode_handle *
+> +kunit_software_node_register(struct kunit *test,
+> +			     const struct software_node *node);
+> +int kunit_software_node_register_node_group(struct kunit *test,
+> +					    const struct software_node *const *nodes);
+> +
+> +#endif /* _KUNIT_FWNODE_H */
+> diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> index 2e8a6b71a2ab07a738964a7ef0f442fd53e085b1..204e02b10eba1030c6d511991fe2f6271de64603 100644
+> --- a/lib/kunit/Makefile
+> +++ b/lib/kunit/Makefile
+> @@ -11,6 +11,7 @@ kunit-objs +=				test.o \
+>   					attributes.o \
+>   					device.o \
+>   					platform.o \
+> +					fwnode.o \
+>   					bug.o
+>   
+>   ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
+> diff --git a/lib/kunit/fwnode.c b/lib/kunit/fwnode.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..332490f07fae78e0fbf2930f9c80da0cc7dce028
+> --- /dev/null
+> +++ b/lib/kunit/fwnode.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) Qualcomm Technologies, Inc. and/or its subsidiaries
+> + */
+> +
+> +#include <kunit/fwnode.h>
+> +#include <kunit/test.h>
+> +
+> +#include <linux/fwnode.h>
+> +#include <linux/property.h>
+> +
+> +KUNIT_DEFINE_ACTION_WRAPPER(fwnode_remove_software_node_wrapper,
+> +			    fwnode_remove_software_node,
+> +			    struct fwnode_handle *);
+> +
+> +/**
+> + * kunit_fwnode_create_software_node() - Create a kunit-managed software node
+> + * @test: Test context
+> + * @properties: Properties to use to create the new software node
+> + * @parent: Parent of this software node
+> + *
+> + * Create a test-managed software node and return its firmware node handle.
+> + * The software node is removed after the test case completes.
+> + *
+> + * Returns:
+> + * Firmware node handle of the newly created software node or IS_ERR() on
+> + * failure.
+> + */
+> +struct fwnode_handle *
+> +kunit_fwnode_create_software_node(struct kunit *test,
+> +				  const struct property_entry *properties,
+> +				  const struct fwnode_handle *parent)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +	int ret;
+> +
+> +	fwnode = fwnode_create_software_node(properties, parent);
+> +	if (IS_ERR(fwnode))
+> +		return fwnode;
+> +
+> +	ret = kunit_add_action_or_reset(test, fwnode_remove_software_node_wrapper,
+> +					fwnode);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(kunit_fwnode_create_software_node);
+> +
+> +KUNIT_DEFINE_ACTION_WRAPPER(software_node_unregister_wrapper,
+> +			    software_node_unregister,
+> +			    const struct software_node *);
+> +
+> +/**
+> + * kunit_software_node_register() - Register a kunit-managed software node
+> + * @test: Test context
+> + * @swnode: Software node to register
+> + *
+> + * Register a test-managed software node and return its firmware node handle.
+> + * The software node is unregistered after the test case completes.
+> + *
+> + * Returns:
+> + * Firmware node handle of the registered software node or IS_ERR() on failure.
+> + */
+> +struct fwnode_handle *
+> +kunit_software_node_register(struct kunit *test,
+> +			     const struct software_node *swnode)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +	int ret;
+> +
+> +	ret = software_node_register(swnode);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	fwnode = software_node_fwnode(swnode);
+> +	if (WARN_ON(!fwnode))
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	ret = kunit_add_action_or_reset(test, software_node_unregister_wrapper,
+> +					(void *)swnode);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(kunit_software_node_register);
+> +
+> +KUNIT_DEFINE_ACTION_WRAPPER(software_node_unregister_node_group_wrapper,
+> +			    software_node_unregister_node_group,
+> +			    const struct software_node *const *);
+> +
+> +/**
+> + * kunit_software_node_register_node_group() - Register a kunit-managed software node group
+> + * @test: Test context
+> + * @nodes: Software node group to register
+> + *
+> + * Register a test-managed software node group. The nodes are unregistered
+> + * after the test case completes.
+> + *
+> + * Returns:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int kunit_software_node_register_node_group(struct kunit *test,
+> +					    const struct software_node *const *nodes)
+> +{
+> +	int ret;
+> +
+> +	ret = software_node_register_node_group(nodes);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return kunit_add_action_or_reset(test, software_node_unregister_node_group_wrapper,
+> +					 (void *)nodes);
+> +}
+> +EXPORT_SYMBOL_GPL(kunit_software_node_register_node_group);
+> 
 
 
