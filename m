@@ -1,48 +1,50 @@
-Return-Path: <linux-gpio+bounces-39909-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39910-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DKZYM0evUmpSSQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39909-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 23:01:59 +0200
+	id M53xMI6vUmpmSQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39910-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 23:03:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B054742E0F
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 23:01:59 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2094E742E55
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 23:03:10 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=nabladev.com header.s=dkim header.b=caKqo02X;
+	dkim=pass header.d=nabladev.com header.s=dkim header.b=LHmh6EZp;
 	dmarc=pass (policy=reject) header.from=nabladev.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39909-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39909-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39910-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39910-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 172443013848
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF0CA30221D2
 	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 21:01:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46985314A9E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96BA331813A;
 	Sat, 11 Jul 2026 21:01:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx.nabladev.com (mx.nabladev.com [178.251.229.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009161D95A3;
-	Sat, 11 Jul 2026 21:01:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCA12BE7BA;
+	Sat, 11 Jul 2026 21:01:55 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783803717; cv=none; b=q5LR4WJCWnReTqQ/zHyygM0CuAei+kdl656PJV+xnXPA6XwRUByct3ncREumJnfvo07/HVztGX9Ehhsx90eAuc456Aqmb3rSpohTjsTJGtI5YQone8q7ZP3CROP4b1FKBxpKvbjHiqO5L2T8UEL5ILbeCdu9BM3uTt4zkMDzWj4=
+	t=1783803717; cv=none; b=TKOaHZAj3wenbDhyYxu3ITZreiKUNpTHuW/FobbqT5E6ip3fDcGWjosyBqVfPwN1KIDbVZtQhylyD8HpAmUxGydPKUToLaPW8mnFRVPUGFM8VT29e4BpDmX4eEpGlE0ZZcNwNvTFHDYZuerSXCJ1MjSxbntqtMb+MRHGncgazKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783803717; c=relaxed/simple;
-	bh=d2TbjcNG+rAGinbwS7nExGx6R+2yw7dFXBna0/jmTW4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T6cQbI4WdUQPdp3zP0bH6UVW3bsubBa9gXpSaPeI3aaKX7HAGLT4ZffjCb7wtlPVw/LDU/BdeNxM4FYO30ug55bggxIBSk52qqFBUvz3vfIs+rVws532KD57G0+8+zpg5SjNMzGYhBkAb7yMLeTvq4/zMD2iNzjCau26LjoQzls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com; spf=pass smtp.mailfrom=nabladev.com; dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b=caKqo02X; arc=none smtp.client-ip=178.251.229.89
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B0EDA11955F;
-	Sat, 11 Jul 2026 23:01:43 +0200 (CEST)
+	bh=MzqgoMuJIdGP189HE9PGMmOiYz8iwUT82y8AbS4CGZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AQopnC4EJ9NjopUW+qdzLP0yFy8gtSnpasisgHcRrQfOz2De7QDQV7C2+rc36BvzMy1ckTmUOzsXxqd9FQoFLTp7/0yLRf6+obzzuZpjWeRx0Xm8VEMDnqTWtKmNEIDwRU/C658tNWUyD7e4o49pjfYfHoKJE4+8CFOxSGD2FKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nabladev.com; spf=pass smtp.mailfrom=nabladev.com; dkim=pass (2048-bit key) header.d=nabladev.com header.i=@nabladev.com header.b=LHmh6EZp; arc=none smtp.client-ip=178.251.229.89
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5581A119823;
+	Sat, 11 Jul 2026 23:01:47 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nabladev.com;
-	s=dkim; t=1783803706; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=Rj799asYESt2ZmvriKsA91s4jrkLenTh+VOfuk6Qwy8=;
-	b=caKqo02Xhwa5z3geI79f/1mpYhZ8RaxILEV+m24lrur9xhFIWkYGbtXT4N2ZDOi2WEihi1
-	/eT3e4HNKMxb8p5u19XO0y0YQ/JCH8axaTWfEB+b8PWbIXHY7FgcNNg9qsjT880iVGupwj
-	b7riLwpThRoOXlpF2ZaXBU+ZjKV8obL/lqBtQsyiD8DNlZLdbu5u7z6ej3EDqBZ8v0wQGE
-	bkL9PvjjFUow6Gs9DNVVVMCTm44vKenFMxgC8GId2NH2UsYrUaT1woqq4Rf06cH6MLXhii
-	gRqZGMOQfLjA3rlRIuOhhlfpB/3kE6cHXjC9mBdkXl5vu/+SrrS+q0a6AgZ0Zw==
+	s=dkim; t=1783803707; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=2eerO83FR9XLVJDLYJUhN9olbnCS8UH6ub1IdYOkeRY=;
+	b=LHmh6EZpP36TorzqAJRec9nu4MuXA3Ib02qlFKHh/CKqDTtfKCvwv1lpmJ4Gf+pc0/ndjN
+	sRLAkTQgtn0xPJCBpr+6GrTQwPqi0LWqUly8VpB0RQ831jGPwBOmGjFqB8/YTgA/Wxmna2
+	HGYYA5tvT7YjeHaPfqn0Q2lbxcMjDU3GFy58uXcj88X7j4A0aRdKt+fNQIosw3hIPNKT5F
+	4jpV+lYTd9uFrntsOMEp8+8Rbc4avOG1lRpdzumtxc7o19IUaxQ3JBekob0it8QbOvDzXg
+	l03Oekbdw4dzgaKSKYAJ878xaIPJTn0A5fVWkLS4oFGqD+Plt0RlK+47d72Ccg==
 From: Marek Vasut <marex@nabladev.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: Marek Vasut <marex@nabladev.com>,
@@ -57,10 +59,12 @@ Cc: Marek Vasut <marex@nabladev.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 00/10] arm64: dts: st: Add support for DH electronics STM32MP23xx/STM32MP25xx DHCOS SoM and Breakout Board and DHSBC
-Date: Sat, 11 Jul 2026 22:59:29 +0200
-Message-ID: <20260711210131.236025-1-marex@nabladev.com>
+Subject: [PATCH 01/10] dt-bindings: arm: stm32: Document STM32MP23xx/STM32MP25xx DHCOS SoM and Breakout Board and DHSBC
+Date: Sat, 11 Jul 2026 22:59:30 +0200
+Message-ID: <20260711210131.236025-2-marex@nabladev.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260711210131.236025-1-marex@nabladev.com>
+References: <20260711210131.236025-1-marex@nabladev.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,13 +80,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[nabladev.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[nabladev.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39909-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39910-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -101,11 +105,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3B054742E0F
+X-Rspamd-Queue-Id: 2094E742E55
 
 This stm32mp25xx-dhcos-bb board is a stack of DHCOS SoM based on
 STM32MP25xx SoC (1200MHz / crypto capabilities) populated on SoM
@@ -130,48 +134,7 @@ The DHSBC carrier board contains the following peripherals:
 - USB-C / DP port
 - Expansion connector
 
-Marek Vasut (10):
-  dt-bindings: arm: stm32: Document STM32MP23xx/STM32MP25xx DHCOS SoM
-    and Breakout Board and DHSBC
-  dt-bindings: gpio: pca95xx: Document Kinetic KTS1622
-  arm64: dts: st: Fix SDMMC1 indent on stm32mp231
-  arm64: dts: st: Fix SDMMC1 indent on stm32mp251
-  arm64: dts: st: Add SDMMC2 and SDMMC3 nodes on stm32mp231
-  arm64: dts: st: Add SDMMC2 and SDMMC3 nodes on stm32mp251
-  arm64: dts: st: Add OMM node on stm32mp231
-  arm64: dts: st: Add pinmux nodes for DH electronics
-    STM32MP23xx/STM32MP25xx DHCOS SoM and Breakout Board
-  arm64: dts: st: Add support for DH electronics STM32MP23xx/STM32MP25xx
-    DHCOS SoM and Breakout Board and DHSBC
-  MAINTAINERS: Add DH electronics DHCOS SoM entry and fix email address
-
- .../devicetree/bindings/arm/stm32/stm32.yaml  |  18 +
- .../bindings/gpio/gpio-pca95xx.yaml           |   3 +
- MAINTAINERS                                   |   3 +-
- arch/arm64/boot/dts/st/Makefile               |  10 +
- arch/arm64/boot/dts/st/stm32mp231.dtsi        |  86 ++-
- arch/arm64/boot/dts/st/stm32mp23xc.dtsi       |   7 +
- .../boot/dts/st/stm32mp23xx-dhcos-bb.dts      |  15 +
- .../boot/dts/st/stm32mp23xx-dhcos-som.dtsi    |  51 ++
- arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 564 ++++++++++++++++++
- arch/arm64/boot/dts/st/stm32mp251.dtsi        |  32 +-
- ...mp255c-dhcos-dhsbc-overlay-imx219-x10.dtso | 111 ++++
- .../boot/dts/st/stm32mp255c-dhcos-dhsbc.dts   | 189 ++++++
- arch/arm64/boot/dts/st/stm32mp25xc.dtsi       |   7 +
- .../boot/dts/st/stm32mp25xx-dhcos-bb.dts      |  15 +
- .../boot/dts/st/stm32mp25xx-dhcos-som.dtsi    |  51 ++
- .../boot/dts/st/stm32mp2xxx-dhcos-som.dtsi    | 442 ++++++++++++++
- 16 files changed, 1601 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/boot/dts/st/stm32mp23xc.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp23xx-dhcos-bb.dts
- create mode 100644 arch/arm64/boot/dts/st/stm32mp23xx-dhcos-som.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp255c-dhcos-dhsbc-overlay-imx219-x10.dtso
- create mode 100644 arch/arm64/boot/dts/st/stm32mp255c-dhcos-dhsbc.dts
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xc.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xx-dhcos-bb.dts
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xx-dhcos-som.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp2xxx-dhcos-som.dtsi
-
+Signed-off-by: Marek Vasut <marex@nabladev.com>
 ---
 Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
 Cc: Bartosz Golaszewski <brgl@kernel.org>
@@ -185,7 +148,46 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-gpio@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-stm32@st-md-mailman.stormreply.com
+---
+ .../devicetree/bindings/arm/stm32/stm32.yaml   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index c6af3a46364fc..2045dc2e54a60 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -196,6 +196,18 @@ properties:
+           - const: ultratronik,stm32mp157c-ultra-fly-sbc
+           - const: st,stm32mp157
+ 
++      - description: DH STM32MP251 DHCOS SoM based Boards
++        items:
++          - const: dh,stm32mp251a-dhcos-bb
++          - const: dh,stm32mp251a-dhcos-som
++          - const: st,stm32mp251
++
++      - description: DH STM32MP255 DHCOS SoM based Boards
++        items:
++          - const: dh,stm32mp255c-dhcos-dhsbc
++          - const: dh,stm32mp255c-dhcos-som
++          - const: st,stm32mp255
++
+       - description: ST STM32MP257 based Boards
+         items:
+           - enum:
+@@ -203,6 +215,12 @@ properties:
+               - st,stm32mp257f-ev1
+           - const: st,stm32mp257
+ 
++      - description: DH STM32MP231 DHCOS SoM based Boards
++        items:
++          - const: dh,stm32mp231a-dhcos-bb
++          - const: dh,stm32mp231a-dhcos-som
++          - const: st,stm32mp231
++
+       - description: ST STM32MP235 based Boards
+         items:
+           - enum:
 -- 
 2.53.0
 
