@@ -1,207 +1,181 @@
-Return-Path: <linux-gpio+bounces-39896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kjrYALV0UmouQAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39896-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 18:52:05 +0200
+	id VYIOHmyGUmqGQgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39897-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 20:07:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 469E174247F
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 18:52:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19196742746
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 20:07:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="qnb2V/4B";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39896-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39896-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="LD3Zd/km";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39897-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39897-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18A53302DF77
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 16:48:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DF28F301D30B
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2026 18:07:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE413C4B83;
-	Sat, 11 Jul 2026 16:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533263CF670;
+	Sat, 11 Jul 2026 18:07:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9393CC314
-	for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2026 16:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DBE270545;
+	Sat, 11 Jul 2026 18:07:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783788529; cv=none; b=qMgsFbipy9IFu+XdgzDXlftZYfqTCMa49qkiFO4f8VCBouuSLY6K6k4kg1ymyqz41A7i3VOnwbtxw6RcKWCJivjWfW5r3K6R5rE4BiQ3A27D5+6W1qqo7OnT2eHGX250oOdEvigKu3nG6hlbTLXnrpwhuOgh2nT9RSSzv2jLPgQ=
+	t=1783793239; cv=none; b=FOQ7fSn/9gI1Ga91grg0p3fKnGywpuKxs5/x2jxQrGfIJqJ7Ibk/q1y5fsxGWeN9nZBPf3tfqDP6oN0nzaZXO7d+ceSpR4vkQtEsXBf2NJ8OxOtYlTh0XWHTPHzRmEPKdwzgYtD9/XyYkDH5mrGMRDN2G+P+hdE5vJn+9ZsD8Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783788529; c=relaxed/simple;
-	bh=yVMP8UAtXlu981/AZfXfuu6ntdCZq3l09RETxP3vnIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UB4ffSor47dlEIfXylWhDmvVkW9ghOsA2hXaTJkmKnwMS+psPSjjG+yuX8GBvXQ1GUyjkAWWfhfkYLtqC3NjHQd3w1tVjjPXqP2DXTTVtSgvSV3i2+ofiwu5UwqnW4BDN46u2vLbOxPOJ7moV99HeAEHM0IBgueJ0t620KzykBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qnb2V/4B; arc=none smtp.client-ip=209.85.128.42
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-493f431e317so17017435e9.0
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2026 09:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783788516; x=1784393316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VDpn6H9slILEKuaZA30ay5+GU6mS2ER9t41k8f7Sm/c=;
-        b=qnb2V/4BHecTg/Bstd2nMyetg96JxjdqwwEPGpBQV5kC4m6oim5hvw2ownjnEQoxYH
-         EM13pqUiExGCOUWveiovV5Pg48IAbgut8sqqnJT1ALmvnN2KD87IcZCFd9ImEvkfXxmn
-         Doi5wQsapjWOtcNS9F8g1TKg8Pyi1wllbLirUo2oHlNM/nli0n97PJydxOhtrLmE8wed
-         hdCSoFHJBZWA2Zo0IDzpfwIi9CgJStbrG4wfrHeYTtW3TPyYJbZhXEhJ5SJgWmChmn03
-         II5dudICvCtO3WqRhour/Sp9RQ/Apou673hl1XN0cR7SJPXMEnuGTo9+3d/XHS4k/ZAi
-         +G8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783788516; x=1784393316;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VDpn6H9slILEKuaZA30ay5+GU6mS2ER9t41k8f7Sm/c=;
-        b=XVee8TLxG6ShzShnTh5gF7s9A5mx3yODFFi0N5+rfBm4JzMQIOQlJPrdhNDnl9cZRH
-         Vmkua2StaGDvigQs6WDqikWcJ6EqhXYFWSR4i4Jnme03sAtmq04L/XWJNBBaJJDaJfL4
-         vlImbt04JdrhLbpI4X1QVzt+NCLf2kJI2uWYoIu1CE4zJDLtCH8F+sFO3ydeLNPYIANz
-         tfRVursRpOtSIWnUgPOYa5IIUnYMZM4Ug5PBg2+Bix5gOejrlWWO5XLY/Jrwv/XLbSLD
-         3+Xg8Uw1smc8enIDioJO1xWh4GCbWixhvHr4x1LGbNtOgfE0FGnewbWovphHD3SQcdJv
-         ivuA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro6oszveyzi36GMrPn83HN/d4crFPiKDYcNl62Ai4X7rkHcoMF9RJ1SfhtxZPL0gopqSx9YhELmjxyu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2vMiRY7IyOXkAQB4vjgjNPEfcKj3mYpMeMpLxQWGOyw2o6DZw
-	jGExC9YyBNtTvkn9IybGpWv2LW28DCj8q5VGUZVtINAsRhd9JyDqw5/a
-X-Gm-Gg: AfdE7cnzuFnzxDuAktToy5KR5s15T7kB+c8axQbCJZmbXDgU3Z9N4AOnoPTbctMAjB5
-	6galArUAyWy9fYQfybJaN4CAGnlHpX7wyiBYdLng7aTmGflf3CUhDTdODI6AEX9flsiRnzXKWMd
-	dvzzW9ZrF6El1Kk7/PQ9HSboIEtgn1iQ3b+wYyThBnwAe6r74M9a6TZfyu9T1MGYzVs7iws4i6d
-	/im4cf8nOmcqzTnBE25GTnV5pm4T4oSJGaW7XDFqvxBMhK2uYn68/LjiYKtjjJcT2lvA3wlhfJ8
-	MjhYzhNuOB+/TrU47/+qrLD6Bpu7IAA0XHEAETNgZdpDIv90wEQtDVlZ9hqrE6Ov+OOaNLPGGSD
-	/UrC5MMfCA3FMcZ5RaeLKiNbsyPnJTqW5YEPg/HN7wQi5x/JulJsKWd78nWBouD49LOixsEosPR
-	pOTYx1hB45xjhnDQ1jgFClsH0pMqD4NVkwpA==
-X-Received: by 2002:a5d:5c89:0:b0:476:cfa0:a976 with SMTP id ffacd0b85a97d-47f2dcb60fcmr3613474f8f.5.1783788515836;
-        Sat, 11 Jul 2026 09:48:35 -0700 (PDT)
-Received: from localhost.localdomain ([95.43.220.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9e4d83bdsm69152875f8f.13.2026.07.11.09.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jul 2026 09:48:35 -0700 (PDT)
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	--cc=linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [PATCH v4 6/6] ARM: dts: ti: cpcap-mapphone: add USB safe pinctrl state
-Date: Sat, 11 Jul 2026 19:47:54 +0300
-Message-Id: <20260711164754.185565-7-ivo.g.dimitrov.75@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260711164754.185565-1-ivo.g.dimitrov.75@gmail.com>
-References: <20260711164754.185565-1-ivo.g.dimitrov.75@gmail.com>
+	s=arc-20240116; t=1783793239; c=relaxed/simple;
+	bh=xIuTnUtLhw6lM6OFhkQay1V7xU9qDRZauTQNVJpn7b0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gYnXmnAFTd2Iw+7MBznhNu0dduIYTi7a+QpY8hkTQihhdn7LpRpzjvSl3leZtBLz1hIqiTUuiAyg2t4uE7ZHkIUvvYvyw372+HnIyQSVt7TlsJaA7OoAlYHyFfVFX4qCqcKSOS4JfmP6D4QsDmHFrequn/A0h5i7jP4PsGhYfwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LD3Zd/km; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86F01F000E9;
+	Sat, 11 Jul 2026 18:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783793237;
+	bh=3yQYE3I1VWOsP0zi5++Mo0sGNVCEsyBpnoRXKY7lCJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LD3Zd/kmLN1zN1WLP+kF6xRypUpBQgpvhgE4rJAYoNOYDw5i45U+7H9t3y65vmid+
+	 KPNfFp+TIo3z1k7K6q9KWGlo2RCdMtQLibZUeN2gk4r1x+A9pNLX8SSm3O6kzAnabo
+	 XyCpBCJ6I1gJ7ViBmal+/1GpeCCxWc0aeUujFEW5atHw8Gu7qUOonUH4aEw+oxHpYk
+	 QuknZv74ixQ880MvW+4P4yT1+XGaIvCZL1KKXHNujJhdT9fmqpVZIpLn3+GRWw+P+c
+	 lWBx0nA94nkrmhOTFyRTeqwmhYiUvfOpdVVn4A30zem+KiIGsWA8FApvfHQ+7IXbiO
+	 24/266JxITXlw==
+Date: Sat, 11 Jul 2026 13:07:14 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+Subject: Re: [PATCH v4 7/7] arm64: dts: qcom: x1e80100: Add deepest idle state
+Message-ID: <alKEUhRgyoPs0q0c@baldur>
+References: <20260707-hamoa_pdc_v3-v4-0-dfd1f4a3ae89@oss.qualcomm.com>
+ <20260707-hamoa_pdc_v3-v4-7-dfd1f4a3ae89@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260707-hamoa_pdc_v3-v4-7-dfd1f4a3ae89@oss.qualcomm.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-4.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-39896-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	FORGED_RECIPIENTS(0.00)[m:maulik.shah@oss.qualcomm.com,m:konradybcio@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:tglx@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:sneh.mankad@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:neil.armstrong@linaro.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:aaro.koskinen@iki.fi,m:andreas@kemnade.info,m:khilman@baylibre.com,m:rogerq@kernel.org,m:tony@atomide.com,m:linusw@kernel.org,m:brgl@kernel.org,m:--cc=linux-phy@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-omap@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:ivo.g.dimitrov.75@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:ivogdimitrov75@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ivogdimitrov75@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FORGED_SENDER(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39897-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,baldur:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 469E174247F
+X-Rspamd-Queue-Id: 19196742746
 
-Add a pinctrl state that configures the USB interface pins into a safe
-GPIO configuration. This allows the CPCAP USB PHY driver to place the
-pins into a defined state whenever the USB interface is not active.
+On Tue, Jul 07, 2026 at 02:51:39PM +0530, Maulik Shah wrote:
+> Add deepest idle state as GPIO IRQs can work as wakeup capable interrupts
+> in deepest idle state.
+> 
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- .../dts/ti/omap/motorola-cpcap-mapphone.dtsi  |  3 ++-
- .../dts/ti/omap/motorola-mapphone-common.dtsi | 19 +++++++++++++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+There's a lot of implied background in this sentence. When you write
+commit messages, please intend for them to be read by someone who don't
+have your background insight to the problem. In fact, if someone asks
+you about this sentence in 5 years would you be able to retell exactly
+why we ended up with this patch?
 
-diff --git a/arch/arm/boot/dts/ti/omap/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/ti/omap/motorola-cpcap-mapphone.dtsi
-index 51a858021541..368cb539997f 100644
---- a/arch/arm/boot/dts/ti/omap/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/motorola-cpcap-mapphone.dtsi
-@@ -120,7 +120,8 @@ cpcap_usb2_phy: phy {
- 			pinctrl-1 = <&usb_ulpi_pins>;
- 			pinctrl-2 = <&usb_utmi_pins>;
- 			pinctrl-3 = <&uart3_pins>;
--			pinctrl-names = "default", "ulpi", "utmi", "uart";
-+			pinctrl-4 = <&usb_safe_pins>;
-+			pinctrl-names = "default", "ulpi", "utmi", "uart", "safe";
- 			#phy-cells = <0>;
- 			interrupts-extended =
- 				<&cpcap 15 0>, <&cpcap 14 0>, <&cpcap 28 0>,
-diff --git a/arch/arm/boot/dts/ti/omap/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/ti/omap/motorola-mapphone-common.dtsi
-index acac3c243c7a..475ffe678e76 100644
---- a/arch/arm/boot/dts/ti/omap/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/motorola-mapphone-common.dtsi
-@@ -352,6 +352,25 @@ OMAP4_IOPAD(0x1c8, PIN_INPUT_PULLUP | MUX_MODE7)
- 		>;
- 	};
- 
-+	usb_safe_pins: usb-safe-pins {
-+		pinctrl-single,pins = <
-+		OMAP4_IOPAD(0x196, MUX_MODE7)
-+		OMAP4_IOPAD(0x198, MUX_MODE7)
-+		OMAP4_IOPAD(0x1b2, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1b4, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1b6, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1b8, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1ba, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1bc, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1be, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1c0, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1c2, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1c4, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1c6, PIN_INPUT_PULLUP | MUX_MODE7)
-+		OMAP4_IOPAD(0x1c8, PIN_INPUT_PULLUP | MUX_MODE7)
-+		>;
-+	};
-+
- 	/*
- 	 * Note that the v3.0.8 stock userspace dynamically remuxes uart1
- 	 * rts pin probably for PM purposes to PIN_INPUT_PULLUP | MUX_MODE7
--- 
-2.39.5
+Please rewrite this to start with a problem description, then describe
+the user-visible change.
 
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+
+> Update entry/exit-latency-us to follow DSDT for cluster_cl5 idle state.
+
+I don't have strong opinions about bundling this part of the change - it
+could be argued that it's a separate change, but I won't force it.
+
+But as written I think any reasonable language parser would consider
+this to be related to the addition of the deepest idle state, not "While
+we're adding the new state, also adjust the cluster_cl5 latencies with
+values from production configuration."
+
+Regards,
+Bjorn
+
+> 
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/hamoa.dtsi | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/hamoa.dtsi b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> index 054f9c4ad192..933d81fe7841 100644
+> --- a/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> @@ -299,10 +299,18 @@ cluster_cl4: cluster-sleep-0 {
+>  			cluster_cl5: cluster-sleep-1 {
+>  				compatible = "domain-idle-state";
+>  				arm,psci-suspend-param = <0x01000054>;
+> -				entry-latency-us = <2200>;
+> -				exit-latency-us = <4000>;
+> +				entry-latency-us = <2000>;
+> +				exit-latency-us = <2000>;
+>  				min-residency-us = <7000>;
+>  			};
+> +
+> +			domain_ss3: domain-sleep-0 {
+> +				compatible = "domain-idle-state";
+> +				arm,psci-suspend-param = <0x0200c354>;
+> +				entry-latency-us = <2500>;
+> +				exit-latency-us = <2500>;
+> +				min-residency-us = <9000>;
+> +			};
+>  		};
+>  	};
+>  
+> @@ -461,7 +469,7 @@ cluster_pd2: power-domain-cpu-cluster2 {
+>  
+>  		system_pd: power-domain-system {
+>  			#power-domain-cells = <0>;
+> -			/* TODO: system-wide idle states */
+> +			domain-idle-states = <&domain_ss3>;
+>  		};
+>  	};
+>  
+> 
+> -- 
+> 2.43.0
+> 
 
