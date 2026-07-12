@@ -1,225 +1,219 @@
-Return-Path: <linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2Ro+H+bIU2oQfAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:03:34 +0200
+	id R/DSGjHJU2oYfAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:04:49 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FC7174572E
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:03:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E35674573E
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:04:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jf3Nb94H;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=sntech.de header.s=gloria202408 header.b=Gt1Rprs4;
+	dmarc=pass (policy=quarantine) header.from=sntech.de;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 14A8B302A50D
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 16:59:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E2A75303641D
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 17:00:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98B503655D4;
-	Sun, 12 Jul 2026 16:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84E33655E2;
+	Sun, 12 Jul 2026 17:00:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517471A239A;
-	Sun, 12 Jul 2026 16:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01A233F5B3;
+	Sun, 12 Jul 2026 17:00:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783875551; cv=none; b=ElcNqiuAHm+iNRM5xxsn46J/mIgtECp/bMaHdC/ff8+GkuCdPyxNtEquNuyUxl3va7+1v7Rz620r3dydJqJzihSnXFwL2t7XaopO9NndUaxyupxBe1jgQL/KKZ/LmFV8shqAbgzXfepubMAjkhG15rbiVHrgmjLRjK5RkUR3AwE=
+	t=1783875638; cv=none; b=b9rSanoylX0cfJFRk025ocLHTm6DX2LeDU53ZNNVtFiuhxCPlZvC/TjfgS7skPaYwJpN3xSWUqW4COO1kSQgFeaBxB/3VE9vS1l8WFjz3ogQFJCfT1iPUsgCc0b9unDVZXuxP8UE/zgmDs+OBhs4sIWmJBiQegl5mx2++UIim4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783875551; c=relaxed/simple;
-	bh=mSp7DKzuJHsvVxwokX8VtjfogrcPbIQ5e7AR3Y3BA7E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=ZhCg6gYZ94Myk1353wtaoLBKleFou4YjyrmBxEW4Llxim1Y5jDzKAeorPThWWnmUU3qmM0I0dhStTKer1G3XiU9LLxlg4gr/8mUVtX257O6Ob5ocSe/LCFKjIJDbLz+K6w+kZYFd+Zx4ez0CNtEmSi6VPTpY8bfwg2vbw6kIs7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf3Nb94H; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE911F000E9;
-	Sun, 12 Jul 2026 16:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783875549;
-	bh=e1dmvE3Tlm+yvRV2mRiPOlbKn5bOWrgkA2i+qs4+eRI=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To;
-	b=jf3Nb94HJ4+X2dF/jEl7zUQEbDNo6GB9Tq03LorRZdwonP0lHMsBmz3Fv6fCRsLCV
-	 IDeCKkR6U0e7lufP/J2n4TC8Mqx+Wm8uN+PyESWtp5vhrevY03vekUe5ycBqJeI7n0
-	 waLcZlBx0eTHEafLCAI1lDs2aFxujINJhszYa+rOE5gRmPwREiSCymY3xYbGcWSEVU
-	 KJ70Isq7mj0rqrnyI/2FxiZ9pRbSvUhhz+pRGn0MVbEitS+O7PekvZGFR03ywwkgZk
-	 kybT94jnuKTVL1MXyJPj+6xV4H4QKn6Uv8w2rBiJW/6FH/GawOB0+r2hqUh65yADft
-	 P/Cza+VB4TBuA==
+	s=arc-20240116; t=1783875638; c=relaxed/simple;
+	bh=/PLqj/FIB5HTtSo6gizl6/u5i+tTV2Mi1tQ/3VWekJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WV5srMksEL1k3TUSSyAATf6DV5AXxHW35RUSb401xZtEa8IVh89lHy7UnMuIAhGE5+oO5uhmNVMsakvddx5K5koUP1y4wTF1mmNqFfMvSCirsEFQwzcXK0ABjC+awDUtdDhiT2kePaJwqR28jEN7ZSqJHEKamUXnonF7AVNX8Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Gt1Rprs4; arc=none smtp.client-ip=185.11.138.130
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=EYmNQeN1MMv3XCMLlgvSMjuvdlpxNtGkNTF/uC1tgH4=; b=Gt1Rprs4T9rS1j+zsV8bvuaMOJ
+	t7HxPBa1j1m0JItJ5WHAaWmlGPpF6gFPbEzako2YaWKDyPn6RpFFl4wPFmJ1G2cHh/cWOFXV0pDy+
+	7665P+rXo5HJU+a3PhPpKTFetM0t/Sa8R+4diZkHEP6hE1gveOaDX+bV/sKq6dazewNDTq8zDAvND
+	gUrbd7EdSaUWOX1CMI34fTuWJRq1ENfwlklPur7u/lGYipW6uo+xYUVCTbBt2dGwB7W1/6Y4yOUUX
+	m31AslFuztVTIFfri4hisKAwxoxiKZI/VKR9FTzI8FUf1R02FbZskhoHiVUbPb9ts/qLgc4If5Cif
+	I0jf13Ig==;
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Simon Glass <sjg@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ Fabio Estevam <festevam@nabladev.com>, linux-arm-kernel@lists.infradead.org,
+ Simon Glass <sjg@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>,
+ Linus Walleij <linusw@kernel.org>, huang lin <hl@rock-chips.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] pinctrl: rockchip: Add RV1106 pinctrl support
+Date: Sun, 12 Jul 2026 19:00:13 +0200
+Message-ID: <13316226.iMDcRRXYNz@diego>
+In-Reply-To: <20260706195818.3906949-5-sjg@chromium.org>
+References:
+ <20260706195818.3906949-1-sjg@chromium.org>
+ <20260706195818.3906949-5-sjg@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 12 Jul 2026 18:59:04 +0200
-Message-Id: <DJWR3RYAWYAI.LQC41HSN2I94@kernel.org>
-Subject: Re: [PATCH v3 0/5] software node: provide support for fw_devlink
-Cc: "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
- <david@davidgow.net>, "Rae Moar" <raemoar63@gmail.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>, "Daniel Scally" <djrscally@gmail.com>,
- "Heikki Krogerus" <heikki.krogerus@linux.intel.com>, "Sakari Ailus"
- <sakari.ailus@linux.intel.com>, "Bartosz Golaszewski" <brgl@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Linus Walleij" <linusw@kernel.org>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <linux-acpi@vger.kernel.org>, <driver-core@lists.linux.dev>,
- <linux-gpio@vger.kernel.org>
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com>
-In-Reply-To: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[sntech.de,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[sntech.de:s=gloria202408];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39932-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[dakr@kernel.org,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_RECIPIENTS(0.00)[m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:sjg@chromium.org,m:linux-rockchip@lists.infradead.org,m:devicetree@vger.kernel.org,m:festevam@nabladev.com,m:linux-arm-kernel@lists.infradead.org,m:jeffy.chen@rock-chips.com,m:linusw@kernel.org,m:hl@rock-chips.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_SENDER(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39933-lists,linux-gpio=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[sntech.de:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sntech.de:from_mime,sntech.de:email,sntech.de:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,diego:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1FC7174572E
+X-Rspamd-Queue-Id: 5E35674573E
 
-On Fri Jul 10, 2026 at 3:51 PM CEST, Bartosz Golaszewski wrote:
-> Bartosz Golaszewski (5):
->       kunit: provide a set of fwnode-oriented helpers
->       software node: add fw_devlink support
->       software node: add kunit tests for fw_devlink support
->       MAINTAINERS: add myself as reviewer of software node support
->       gpio: kunit: add test cases verifying swnode devlink support
+Am Montag, 6. Juli 2026, 21:58:00 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Simon Glass:
+> Add pinctrl support for the Rockchip RV1106, taken from the vendor
+> kernel in the Luckfox Pico SDK [1] at commit 824b817f8 (a Linux
+> 5.10.160 kernel tree). The IOC registers are spread across several
+> blocks, addressed through per-bank offsets, with the GPIO0 block in the
+> PMU. The drive strength uses the RK3568-style exponential encoding.
+>=20
+> The RV1103 is a package variant of the RV1106 with fewer pins and uses
+> the same pin controller.
+>=20
+> [1] https://github.com/LuckfoxTECH/luckfox-pico
+>=20
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> ---
+>=20
+>  drivers/pinctrl/pinctrl-rockchip.c | 208 +++++++++++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-rockchip.h |   1 +
+>  2 files changed, 209 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl=
+=2Drockchip.c
+> index 7e0fcd45fd26..f9cbcb955853 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
 
-Overall looks good, but I think the two issues pointed out by Sashiko are v=
-alid.
-In addition, I also found a memory leak in the gpiolib kunit test:
+[...]
 
-	unreferenced object 0xffff88810296b2c0 (size 32):
-	  comm "kunit_try_catch", pid 1096, jiffies 4294694235
-	  hex dump (first 32 bytes):
-	    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-	    66 6f 6f 00 00 00 00 00 00 00 00 00 00 00 00 00  foo.............
-	  backtrace (crc a62f59c2):
-	    __kmalloc_noprof+0x216/0x510
-	    desc_set_label+0x46/0xc0
-	    gpiod_request_commit+0xd5/0x140
-	    gpiod_request+0x49/0x170
-	    gpiod_find_and_request+0x2be/0x520
-	    gpiod_get_index+0x56/0x70
-	    devm_gpiod_get+0x1b/0x90
-	    0xffffffffc0401ff8
-	    platform_probe+0x58/0x90
-	    really_probe+0x1bc/0x490
-	    __driver_probe_device+0xa2/0x140
-	    driver_probe_device+0x1e/0x110
-	    __device_attach_driver+0xc2/0x140
-	    bus_for_each_drv+0x117/0x170
-	    __device_attach+0xd5/0x1c0
-	    device_initial_probe+0x34/0x50
+> @@ -3310,6 +3470,7 @@ static int rockchip_set_drive_perpin(struct rockchi=
+p_pin_bank *bank,
+>  		ret =3D strength;
+>  		goto config;
+>  	} else if (ctrl->type =3D=3D RV1103B ||
+> +		   ctrl->type =3D=3D RV1106 ||
+>  		   ctrl->type =3D=3D RK3506 ||
+>  		   ctrl->type =3D=3D RK3528 ||
+>  		   ctrl->type =3D=3D RK3562 ||
+> @@ -3482,6 +3643,7 @@ static int rockchip_get_pull(struct rockchip_pin_ba=
+nk *bank, int pin_num)
+>  				: PIN_CONFIG_BIAS_DISABLE;
+>  	case PX30:
+>  	case RV1103B:
+> +	case RV1106:
+>  	case RV1108:
+>  	case RK3188:
+>  	case RK3288:
+> @@ -3547,6 +3709,7 @@ static int rockchip_set_pull(struct rockchip_pin_ba=
+nk *bank,
+>  		break;
+>  	case PX30:
+>  	case RV1103B:
+> +	case RV1106:
+>  	case RV1108:
+>  	case RV1126:
+>  	case RK3188:
+> @@ -3843,6 +4006,7 @@ static bool rockchip_pinconf_pull_valid(struct rock=
+chip_pin_ctrl *ctrl,
+>  		return pull ? false : true;
+>  	case PX30:
+>  	case RV1103B:
+> +	case RV1106:
+>  	case RV1108:
+>  	case RV1126:
+>  	case RK3188:
+> @@ -4623,6 +4787,48 @@ static struct rockchip_pin_ctrl rv1103b_pin_ctrl _=
+_maybe_unused =3D {
+>  	.schmitt_calc_reg	=3D rv1103b_calc_schmitt_reg_and_bit,
+>  };
+> =20
+> +static struct rockchip_pin_bank rv1106_pin_banks[] =3D {
+> +	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0",
+> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
+> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
+> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
+> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU),
 
-I came up with the following diff to resolve those issues.
+sashiko is correct here,
+only pins 0-6 have drive-strength registers.
 
-diff --git a/drivers/base/test/swnode-devlink-test.c b/drivers/base/test/sw=
-node-devlink-test.c
-index 6f59f13214fc..143b9c4047a0 100644
---- a/drivers/base/test/swnode-devlink-test.c
-+++ b/drivers/base/test/swnode-devlink-test.c
-@@ -17,6 +17,10 @@
- #include <kunit/platform_device.h>
- #include <kunit/test.h>
+Some different setting starts at the 0x30 mark.
 
-+KUNIT_DEFINE_ACTION_WRAPPER(device_remove_software_node_wrapper,
-+                           device_remove_software_node,
-+                           struct device *);
-+
- static int swnode_count_suppliers(struct fwnode_handle *fwnode)
- {
-        struct fwnode_link *link;
-@@ -294,6 +298,9 @@ static void swnode_devlink_test_probe_order(struct kuni=
-t *test)
+This should be easy to handle in rv1106_calc_drv_reg_and_bit()
 
-        ret =3D device_add_software_node(&supplier->dev, &supplier_swnode);
-        KUNIT_ASSERT_EQ(test, ret, 0);
-+       ret =3D kunit_add_action_or_reset(test, device_remove_software_node=
-_wrapper,
-+                                       &supplier->dev);
-+       KUNIT_ASSERT_EQ(test, ret, 0);
-        ret =3D device_create_managed_software_node(&consumer->dev,
-                                                  consumer_props, NULL);
-        KUNIT_ASSERT_EQ(test, ret, 0);
-@@ -313,8 +320,6 @@ static void swnode_devlink_test_probe_order(struct kuni=
-t *test)
 
-        /* Tear down the consumer (and its device link) before the supplier=
-. */
-        kunit_platform_device_unregister(test, consumer);
--
--       device_remove_software_node(&supplier->dev);
- }
 
- static struct kunit_case swnode_test_cases[] =3D {
-diff --git a/drivers/gpio/gpiolib-kunit.c b/drivers/gpio/gpiolib-kunit.c
-index ad961cf97aee..7798f8a8e602 100644
---- a/drivers/gpio/gpiolib-kunit.c
-+++ b/drivers/gpio/gpiolib-kunit.c
-@@ -449,6 +449,9 @@ static void gpio_swnode_probe_defer_on_unregistered(str=
-uct kunit *test)
+> +	PIN_BANK_IOMUX_FLAGS_OFFSET(1, 32, "gpio1",
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    0, 0x08, 0x10, 0x18),
+> +	PIN_BANK_IOMUX_FLAGS_OFFSET(2, 32, "gpio2",
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    0x10020, 0x10028, 0, 0),
 
-        pdata =3D dev_get_platdata(&cons->dev);
-        KUNIT_ASSERT_EQ(test, pdata->gpio_err, 0);
-+
-+       /* Tear down the consumer before the provider to free the GPIO. */
-+       kunit_platform_device_unregister(test, cons);
- }
+in theory only the first offset should be necessary here - same for the
+other bank's offsets.
 
- static int gpio_swnode_probe_order_test_init(struct kunit *test)
-@@ -614,9 +617,17 @@ static struct kunit_case gpio_unbind_with_consumers_te=
-sts[] =3D {
-        { }
- };
+=46or offset-values of 0, the driver will automatically create the right,
+offset increments. 8 for 4bit wide iomuxes.
 
-+static int gpio_unbind_test_init(struct kunit *test)
-+{
-+       device_link_wait_removal();
-+
-+       return 0;
-+}
-+
- static struct kunit_suite gpio_unbind_with_consumers_test_suite =3D {
-        .name =3D "gpio-unbind-with-consumers",
-        .test_cases =3D gpio_unbind_with_consumers_tests,
-+       .init =3D gpio_unbind_test_init,
- };
+See
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
+vers/pinctrl/pinctrl-rockchip.c#n4344
 
- kunit_test_suites(
+
+So with the drive-strength thing fixed
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+
+Heiko
+
+
 
