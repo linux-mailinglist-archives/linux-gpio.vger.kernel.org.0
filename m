@@ -1,141 +1,124 @@
-Return-Path: <linux-gpio+bounces-39923-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id c4X1MP5dU2q4aAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39923-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 11:27:26 +0200
+	id 1U6XBRNfU2rxaAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39924-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 11:32:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 061397443F6
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 11:27:26 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 734F974441C
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 11:32:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=sang-engineering.com header.s=k1 header.b=D76ALQco;
+	dkim=pass header.d=sang-engineering.com header.s=k1 header.b=jUt1TQwl;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39923-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39923-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39924-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39924-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D28B9300DDE4
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 09:27:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4C498300A12F
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 09:32:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE2E2FD1DA;
-	Sun, 12 Jul 2026 09:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E00113148D8;
+	Sun, 12 Jul 2026 09:31:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDB83770B
-	for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 09:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC9A194A6C
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 09:31:55 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783848444; cv=none; b=aFpn06aEn90U37rgyI6wgkqiXk5e962KNYjxtP/1W+ZaMDSFddtSu4Hyj5j1tqPnCHrXjhvYYR1GU4z3Xs7QOaPMS2fkSjPXxHYgzAJEY7wfg+lL1HJRsCABU9VF1ivZ56OOtRf4uPNjZYclb5OHT/WeBeeqJjRdWLfay1rd3Fo=
+	t=1783848718; cv=none; b=tvOOb+qu/FQO4nIApFCodXayXC8Rzch4IUDSM8Qh4F3CDUTPi9NToul5WyAfKOA1TU0/iBN4ZsOCKXUY2VoepUL4TP/AruDQoaTW4nIBhMlYNqFH6XNF5rCtOCnm4cg8Y+hXPmEeBDgs1Bt3Qj4SojfxioKh+hrzuESzzEYGlTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783848444; c=relaxed/simple;
-	bh=HGEhgo6nwKWERdeZN3j/7g/1mXMipMryk6U50sgalao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZqeIj8gSsPL8yo/klAwICag/VEj5uRSJjKs9xdYKhWu9JiASukrrRrAobONcCXfhKyVY3B7gy4nLehPhcM4zviEqGQ6tCLXzEZ47Ef9Umce7eubjzdOcBxzZRodUA2lYfPJRRWUzxsvsuxrD/ZDCO/j1bmsFIti2oxiRrIq6Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=D76ALQco; arc=none smtp.client-ip=194.117.254.33
+	s=arc-20240116; t=1783848718; c=relaxed/simple;
+	bh=uOHV6GeWeJxMoeQVeCFfwBjwXBS8G4Vko/F0a3VyftI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LY6r/6BGJ5O2mimMZ+eEGoghPsWkem2YmxU/15mBa1mQWvhHeDsjfeE65/fHbeObu0T14oAPytjS9gIwuqEoEJTF7YH4X+GG+0kLSIcL9CjXxmVzCwEbqEizUSXX2/POayZ2rmq1/D4QM4p1Nt64Bb3VFyRQP1R+Huhj/U8f8NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jUt1TQwl; arc=none smtp.client-ip=194.117.254.33
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=HGEh
-	go6nwKWERdeZN3j/7g/1mXMipMryk6U50sgalao=; b=D76ALQcoJrmzHsBZ846w
-	8FTMwX8JWXTp/Sfkp2m6wroXM5+NdcxFrmNi/ohaHaeSgPHn6VgnU9eohuDx8oY+
-	SWMRE+8Wcai9u0XACKHVdTKmAIc1oGc6CPGT1TW9eNbA6WuGmoCVLD4WWGhX7sY+
-	/cOYxTwJxvkyqzK5SrI933+ZnJ9ai4Ru9cmLBjl9blUFdgKUsEZ8CyKt/EvEmqWG
-	/uU8bpIHl40ia5Xr6D5dXor4b4cmNwL8C9Dg581NA0CQQChtI4ed+YMN1PK8Hm5l
-	uYCY6txvzmMJPfeB2ufwrB1On26Bw1AZ1zIKJnH46uW+k8mtqQwRUHrOh63AHlxv
-	qQ==
-Received: (qmail 2178118 invoked from network); 12 Jul 2026 11:27:20 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jul 2026 11:27:20 +0200
-X-UD-Smtp-Session: l3s3148p1@vpaWlGZWwLQujnun
-Date: Sun, 12 Jul 2026 11:27:19 +0200
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=9dKe0bFkJgWBTt
+	ums8uQV2GtI1zJa6OLV0ZzK7az+n4=; b=jUt1TQwlfiVUC4OOgHT9ygj5aLEsWx
+	K2kl13ki180b5MAfAcyR/STJbM/Z2fj093J0go4OB7an6+ajijab1S7aw/W8eVyC
+	ZsT3tnqGXTQEIu14yoqypWJoooI0WLJMOByjhmfGoWTy/+r3V9qdOZSs1k90vonY
+	OnriMp/JroQ1zC1oXKhr0tLA4FRKeWabOK50l549xnIZHDru4Io2C1SgqTgYzFlM
+	6K6IWMTqxBwHLPqvAX1bRj7wu0BsI54LZFfc5pVgDXLbQTSo8rzbjzXM74B1+Ib0
+	gG37DFBbXF1itQD4UekWPhV0PL7bRseK54s4qaAFAgt9cFpXSEjjarCQ==
+Received: (qmail 2179342 invoked from network); 12 Jul 2026 11:31:53 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jul 2026 11:31:53 +0200
+X-UD-Smtp-Session: l3s3148p1@/ifqpGZWnpAujnun
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-Cc: linusw@kernel.org, brgl@kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: Fix memory leak in
- gpio_la_poll_probe()
-Message-ID: <alNd92hOOETILWG-@ninjato>
-References: <20260710064838.153528-1-nihaal@cse.iitm.ac.in>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Abdun Nihaal <nihaal@cse.iitm.ac.in>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: sloppy-logic-analyzer: add a comment explaining the buffer init
+Date: Sun, 12 Jul 2026 11:31:48 +0200
+Message-ID: <20260712093148.21446-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CDHTHxDTxpMC5KsV"
-Content-Disposition: inline
-In-Reply-To: <20260710064838.153528-1-nihaal@cse.iitm.ac.in>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:nihaal@cse.iitm.ac.in,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	DMARC_NA(0.00)[sang-engineering.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linux-renesas-soc@vger.kernel.org,m:nihaal@cse.iitm.ac.in,m:wsa+renesas@sang-engineering.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:wsa@sang-engineering.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_NA(0.00)[sang-engineering.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39924-lists,linux-gpio=lfdr.de,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[sang-engineering.com:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39923-lists,linux-gpio=lfdr.de,renesas];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sang-engineering.com:from_mime,sang-engineering.com:dkim,ninjato:mid]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sang-engineering.com:from_mime,sang-engineering.com:email,sang-engineering.com:mid,sang-engineering.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 061397443F6
+X-Rspamd-Queue-Id: 734F974441C
 
+To avoid more false positive reports of "leaking memory" when
+fops_buf_size_set() returns an error.
 
---CDHTHxDTxpMC5KsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/gpio/gpio-sloppy-logic-analyzer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Jul 10, 2026 at 12:18:36PM +0530, Abdun Nihaal wrote:
+diff --git a/drivers/gpio/gpio-sloppy-logic-analyzer.c b/drivers/gpio/gpio-sloppy-logic-analyzer.c
+index 2bbd308ca08e..6748ddce3c19 100644
+--- a/drivers/gpio/gpio-sloppy-logic-analyzer.c
++++ b/drivers/gpio/gpio-sloppy-logic-analyzer.c
+@@ -237,6 +237,7 @@ static int gpio_la_poll_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Initially allocate a buffer. It currently is NULL */
+ 	fops_buf_size_set(priv, GPIO_LA_DEFAULT_BUF_SIZE);
+ 
+ 	priv->descs = devm_gpiod_get_array(dev, "probe", GPIOD_IN);
+-- 
+2.47.3
 
-> The memory allocated for priv->blob.data is not freed in the error paths
-> that follow the fops_buf_size_set() call in gpio_la_poll_probe(), as
-> well as in the remove function.
-
-There is no memory allocated at that time. Hmm, maybe I should add a
-comment explaining it.
-
-
---CDHTHxDTxpMC5KsV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmpTXfcACgkQFA3kzBSg
-Kbbm8w/7BuU3C2v20yqERaoi5yj/MvUjL3d6rsVNj3Q6ubRu8306g7nh4DzbVEvM
-64AAl9HXU74qAxrZ5Le/4GFXTSkLpEbxxbitCCIXRNB7eug3/RX1EGbM7XO2LzKl
-3n+yAMsZM9YID95TrxEBsA4d2o0wkkjBH60DicOOITJfw9f8cxMU3Pne3UqXCOS4
-edQwjKDdpjNsvKL1DQgV8c8+P/f22odgPhY521APFEJzBAWDULXGc1mt/PQd+Ftb
-oB5sp/MsDN2Vjypt2f2TWZzPL7B5rObvWT+21aNj+phrxfQerCyjngftaAoqsONE
-/qwrEoWwzDGauoPWIQt/T85TtZ2LMdkFhJDe4PX+XczXATEggaEq0wI6oPra+EvE
-YFD6lCvkCLocn67dRtOUJCgKCGqeuofhn373v39c+py96jFrYnNftazqFMZl3DVg
-rcxgFCu+3COsyBqb5x79uwVSHgBtE1b+OdHdnU8e/tx78eNPublExKhmnKOrwnTO
-IxdJKYV06RIlgxx3nEEaMzxKSJ7kxeMqP8SMKa3Sx2yBKfxHXNQzQouaizZMdUfl
-qnEDWmzZU6BbhIMr9sAO/N+Azy5AycPJobfrnBXWWJhlncDPJPqJ9XE87YInxZ90
-OGy0dqQJPZZXlwJCvWlXP46mp3iHYDIyXR2KuzN5PspObWFurUA=
-=0WDL
------END PGP SIGNATURE-----
-
---CDHTHxDTxpMC5KsV--
 
