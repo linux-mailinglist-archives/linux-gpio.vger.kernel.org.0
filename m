@@ -1,219 +1,200 @@
-Return-Path: <linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39934-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R/DSGjHJU2oYfAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:04:49 +0200
+	id RnG4MifVU2qgfQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39934-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:55:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E35674573E
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:04:47 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 460CA7458BC
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:55:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=sntech.de header.s=gloria202408 header.b=Gt1Rprs4;
-	dmarc=pass (policy=quarantine) header.from=sntech.de;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39933-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=Xk9LW3Oz;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39934-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39934-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E2A75303641D
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 17:00:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1CF2B301BA7C
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 17:55:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84E33655E2;
-	Sun, 12 Jul 2026 17:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30112369D4A;
+	Sun, 12 Jul 2026 17:55:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01A233F5B3;
-	Sun, 12 Jul 2026 17:00:34 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783875638; cv=none; b=b9rSanoylX0cfJFRk025ocLHTm6DX2LeDU53ZNNVtFiuhxCPlZvC/TjfgS7skPaYwJpN3xSWUqW4COO1kSQgFeaBxB/3VE9vS1l8WFjz3ogQFJCfT1iPUsgCc0b9unDVZXuxP8UE/zgmDs+OBhs4sIWmJBiQegl5mx2++UIim4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783875638; c=relaxed/simple;
-	bh=/PLqj/FIB5HTtSo6gizl6/u5i+tTV2Mi1tQ/3VWekJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WV5srMksEL1k3TUSSyAATf6DV5AXxHW35RUSb401xZtEa8IVh89lHy7UnMuIAhGE5+oO5uhmNVMsakvddx5K5koUP1y4wTF1mmNqFfMvSCirsEFQwzcXK0ABjC+awDUtdDhiT2kePaJwqR28jEN7ZSqJHEKamUXnonF7AVNX8Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Gt1Rprs4; arc=none smtp.client-ip=185.11.138.130
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=EYmNQeN1MMv3XCMLlgvSMjuvdlpxNtGkNTF/uC1tgH4=; b=Gt1Rprs4T9rS1j+zsV8bvuaMOJ
-	t7HxPBa1j1m0JItJ5WHAaWmlGPpF6gFPbEzako2YaWKDyPn6RpFFl4wPFmJ1G2cHh/cWOFXV0pDy+
-	7665P+rXo5HJU+a3PhPpKTFetM0t/Sa8R+4diZkHEP6hE1gveOaDX+bV/sKq6dazewNDTq8zDAvND
-	gUrbd7EdSaUWOX1CMI34fTuWJRq1ENfwlklPur7u/lGYipW6uo+xYUVCTbBt2dGwB7W1/6Y4yOUUX
-	m31AslFuztVTIFfri4hisKAwxoxiKZI/VKR9FTzI8FUf1R02FbZskhoHiVUbPb9ts/qLgc4If5Cif
-	I0jf13Ig==;
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Simon Glass <sjg@chromium.org>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- Fabio Estevam <festevam@nabladev.com>, linux-arm-kernel@lists.infradead.org,
- Simon Glass <sjg@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>,
- Linus Walleij <linusw@kernel.org>, huang lin <hl@rock-chips.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/12] pinctrl: rockchip: Add RV1106 pinctrl support
-Date: Sun, 12 Jul 2026 19:00:13 +0200
-Message-ID: <13316226.iMDcRRXYNz@diego>
-In-Reply-To: <20260706195818.3906949-5-sjg@chromium.org>
-References:
- <20260706195818.3906949-1-sjg@chromium.org>
- <20260706195818.3906949-5-sjg@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8A03672A5
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 17:54:59 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783878901; cv=pass; b=mOpmAs9vgYTqmOb7CTCvVuCLhUPta6C6fp++vJdsFSKLjpygsnB1BIzVuG/Lzs1N6iTQ+YpFZ46FImXYU1TakMR66Wo+uyhtJ9RdOh8SUCV+4Z1oHeHkU8J/h/OCvLS0N8W7OEfcqgIitzWyxBlhpR9buoah/f4HgsgpnIOOqxw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783878901; c=relaxed/simple;
+	bh=fc+IpUQ3nxL/5ehuQHd+IPjoUpneuBJkM4s9M0NB2Ag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hHCutgiIEuVasKW5T/hHf2I7QPPGnu24jf+ujsCok8zOALWLkqtE4ahZd6v0oe42uIPlxEiFklbYtM9aQXb+AMjhq4MKpMD3nKzNd2reVap+SrR/+7kIfAtWdLx/8ztazMP9er4lF9tsHsKZO4sEEd15Jmx/CK9FlFFwNQBGXcg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xk9LW3Oz; arc=pass smtp.client-ip=209.85.214.170
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ce7d2adef4so32280055ad.3
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 10:54:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783878898; cv=none;
+        d=google.com; s=arc-20260327;
+        b=qEhcjpxpIdHFLzvkiLr++Ev1Acqhb0lm43MJKyq230XsU7hyUKPiyr/EULZvLBxu/h
+         7WfQ1/HejSiUbNAaSUq2oVh0vceW7WdZk8OOAbbSP1YSXgZNjXU/FnR6hUhZ/u5mPM6z
+         Vjieh5IKSCfYALBtxJ2QzuBVxoPMnQ3JTuUYTh0KOSfwcJLDeQtONpsiE79xd6Vc1ZKd
+         rFHCr+oAREvkYofv66o5RKYRjXVKwYBUeIH0GSInojiZiF8lKO8/oSfwkKBTIi5rF+mB
+         Jjkk2epDR1ub0Vm8OMfoEwnc24j4BQHQDE4oabdGYzrJPMPGdqfDCVl56KYIzEgdUAF7
+         i3DQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=44M0iHbAGhfU0E5ExDjtW7aZAEv+cpa/Gl2E/ST/Kgo=;
+        fh=r1zmdVkqNCO1vfUkSqzn/MLhM5BQh7GomNh6i4K1Rng=;
+        b=grQJjNVuCvOSwVyni02e+MEkSd2mX1bkIZ73BlhSO7hejRK6rmzLrzHpLPKSurw415
+         99fHxe1Ru7oakvw+EBRdEhmFxB+07cZHTBRxzLY2W0wV98bPyLO8lyAQ2qp/dQ5e1OSK
+         p7j76gG5331MnaWR5qF65FDkIVm16n3q8tQGSd/t1qeH3UifdmjinyoKlsTcEGPflM+8
+         ViYPJXgqeFYjhp4MdiiiO1lT6yveFtPOzdreUJH3/pLXnk6U3aA03j1fsrp8+TBxjEI1
+         a9tW78UL/yVMbo572xTVqpl1zwnWMAcSHiOC6QjE9Tu5k8NoxqHkCIttYjz5EvziUZAN
+         pUfw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783878898; x=1784483698; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=44M0iHbAGhfU0E5ExDjtW7aZAEv+cpa/Gl2E/ST/Kgo=;
+        b=Xk9LW3OzvRruJ4VOuwqux1+NPk95JeqTGR466IFMnKnrJkBp17kHT1JkIBGVX0XUJO
+         +zBeO+4M/Dab4Jzj2ODDxzOyudxoDFUoqLyMEteALSjk9zd/0g0Xh02DNn5IF3UZqyT6
+         lm4X5AXiWqrPv8e84cHsgFq4UILDjmGZ5n/uRWjIZWbyhH1lRVOg347wI0k03Uqhi0S+
+         QY7impInoaf0Yorchx32dYnwMbjXA5JkyotfDXJsrbBWb70mAuHXS9rTnSz4jRIhsNq+
+         ALg0REAIuFX5519q7mupm+NajEBSI7sA5XvN0VYqVWbdXQ6mCasCz4mnsK61OCD9zYyY
+         211A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783878898; x=1784483698;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=44M0iHbAGhfU0E5ExDjtW7aZAEv+cpa/Gl2E/ST/Kgo=;
+        b=irW8xEbhQBd7U4GZ44MsZOtLHh1J7F/mTRFnU/Ilgd0299CU07IP4pXTI85Dr0G2xb
+         pb6Vpi+pZH4qjEPD/bLr3Z85d7p22bhCMCW1yPeSiL8nIENzQbUKOMB4EIYO0MiolQf8
+         zlOAS0t53P35HFkY2k/IW8qyqFKd7yZ8bKy6iK659L+5xW08VQN4LDGRsXnhPG+ZH8Np
+         AUcpnjyJuHhLURqI7AFgKAyhOihuZNOXXY75fu02qySkSpcKpQ1zn9LQDd70IUA+zdfw
+         ZoKTf7JpMBG8eqCuUHh5HL3QBga+1/6eQFgv10S6WJZEhjlZtScjHjK0G/4HVxrIc53c
+         Ts+w==
+X-Forwarded-Encrypted: i=1; AHgh+Ro3xZ7nu6udrPLCGOzo09Zypip5Sw1GKwzZjxZ2QtC3a/tFXS1/A8SrHFUnu+cu09gCoqEdtdn/MKP0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLvrvZP0Wrm4O/fZdvMMzZpHPoXRD4gjF92AEMW9jK5CynYk1H
+	bXNwfH9G5MvNkokJBoWnv1OeW12TesaIm+4QHDIDOwQGz68J+OCWp32uevCfshE9m5kZEX0h3o7
+	WJtPUhIgpSjUvLlyBowI4gIAAMrKbINU=
+X-Gm-Gg: AfdE7cm6tywO27WZ0bOp70roeTqqHBbhlkrszfXY4zovj8DD3WZ5qbI7jzuRTjQXFSm
+	q/5xRTV9kbMqOE+B5OgQBoYmmDpxDeOdVwEm/TdZ7s/fh4SWC1NIgTQSNYU5MoqHjtJuXn++B98
+	De3YlU+oIs585atOVJcjQgROjCrPG3hssAJdknXnf/hSknKkLLsIx1LJ8p4A5TcDECHcsMHjMF/
+	e+8w+Y0ItEB62+lVn9dsemZ+OlwNjAmSgisvGSovzIljMxCyLCp2p5WWc3DNtKtnkExWwUvO4PI
+	XNWiVHSWhR60i+Z2WfrwAfM+mgLEHxXjWv0UN+91lQ==
+X-Received: by 2002:a17:903:2347:b0:2c9:e961:d256 with SMTP id
+ d9443c01a7336-2ce9ec0f113mr59165295ad.27.1783878898518; Sun, 12 Jul 2026
+ 10:54:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+References: <cover.1782909323.git.mazziesaccount@gmail.com>
+ <043fc930caca4c436651e8fa77a1ae16a26d0a98.1782909323.git.mazziesaccount@gmail.com>
+ <20260709104839.GG2045740@google.com>
+In-Reply-To: <20260709104839.GG2045740@google.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Date: Sun, 12 Jul 2026 20:54:47 +0300
+X-Gm-Features: AVVi8CcL95qrnKnAwDam6L3CmPNXOQrdJCc5kyQJraLZys2_Y9aFOne1g2IfMvw
+Message-ID: <CANhJrGPJDjxv9xqXs9ZQ37O12yvUoxGxmL6chtteb__RdLrTPw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] mfd: Support for ROHM BD73800 PMIC core
+To: Lee Jones <lee@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
+	Matti Vaittinen <matti.vaittinen@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Brian Masney <bmasney@redhat.com>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[sntech.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[sntech.de:s=gloria202408];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:lee@kernel.org,m:matti.vaittinen@fi.rohmeurope.com,m:matti.vaittinen@linux.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:linusw@kernel.org,m:brgl@kernel.org,m:alexandre.belloni@bootlin.com,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-rtc@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39934-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:sjg@chromium.org,m:linux-rockchip@lists.infradead.org,m:devicetree@vger.kernel.org,m:festevam@nabladev.com,m:linux-arm-kernel@lists.infradead.org,m:jeffy.chen@rock-chips.com,m:linusw@kernel.org,m:hl@rock-chips.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_SENDER(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-39933-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[sntech.de:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[fi.rohmeurope.com,linux.dev,kernel.org,gmail.com,baylibre.com,redhat.com,bootlin.com,vger.kernel.org];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sntech.de:from_mime,sntech.de:email,sntech.de:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,diego:mid]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5E35674573E
+X-Rspamd-Queue-Id: 460CA7458BC
 
-Am Montag, 6. Juli 2026, 21:58:00 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Simon Glass:
-> Add pinctrl support for the Rockchip RV1106, taken from the vendor
-> kernel in the Luckfox Pico SDK [1] at commit 824b817f8 (a Linux
-> 5.10.160 kernel tree). The IOC registers are spread across several
-> blocks, addressed through per-bank offsets, with the GPIO0 block in the
-> PMU. The drive strength uses the RK3568-style exponential encoding.
->=20
-> The RV1103 is a package variant of the RV1106 with fewer pins and uses
-> the same pin controller.
->=20
-> [1] https://github.com/LuckfoxTECH/luckfox-pico
->=20
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> ---
->=20
->  drivers/pinctrl/pinctrl-rockchip.c | 208 +++++++++++++++++++++++++++++
->  drivers/pinctrl/pinctrl-rockchip.h |   1 +
->  2 files changed, 209 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl=
-=2Drockchip.c
-> index 7e0fcd45fd26..f9cbcb955853 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+to 9.7.2026 klo 13.48 Lee Jones (lee@kernel.org) kirjoitti:
+>
+> /* Sashiko Automation: Reviewed (0 Findings) */
+>
+> On Wed, 01 Jul 2026, Matti Vaittinen wrote:
+>
+> > From: Matti Vaittinen <mazziesaccount@gmail.com>
+> >
+> > The BD73800 integrates regulators, ADC (intended for accumulating current /
+> > voltage / power values), a real-time clock (RTC), clock gate and GPIOs.
+> >
+> > Add core support for ROHM BD73800 Power Management IC.
+> >
+> > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > ---
+> >  drivers/mfd/Kconfig              |  15 +-
+> >  drivers/mfd/rohm-bd71828.c       | 145 ++++++++++++++-
+> >  include/linux/mfd/rohm-bd73800.h | 307 +++++++++++++++++++++++++++++++
+> >  include/linux/mfd/rohm-generic.h |   1 +
+> >  4 files changed, 461 insertions(+), 7 deletions(-)
+> >  create mode 100644 include/linux/mfd/rohm-bd73800.h
+> >
 
-[...]
+Thank you Lee for review. I agree with your suggestions. I'll re-spin
+this probably at early August.
 
-> @@ -3310,6 +3470,7 @@ static int rockchip_set_drive_perpin(struct rockchi=
-p_pin_bank *bank,
->  		ret =3D strength;
->  		goto config;
->  	} else if (ctrl->type =3D=3D RV1103B ||
-> +		   ctrl->type =3D=3D RV1106 ||
->  		   ctrl->type =3D=3D RK3506 ||
->  		   ctrl->type =3D=3D RK3528 ||
->  		   ctrl->type =3D=3D RK3562 ||
-> @@ -3482,6 +3643,7 @@ static int rockchip_get_pull(struct rockchip_pin_ba=
-nk *bank, int pin_num)
->  				: PIN_CONFIG_BIAS_DISABLE;
->  	case PX30:
->  	case RV1103B:
-> +	case RV1106:
->  	case RV1108:
->  	case RK3188:
->  	case RK3288:
-> @@ -3547,6 +3709,7 @@ static int rockchip_set_pull(struct rockchip_pin_ba=
-nk *bank,
->  		break;
->  	case PX30:
->  	case RV1103B:
-> +	case RV1106:
->  	case RV1108:
->  	case RV1126:
->  	case RK3188:
-> @@ -3843,6 +4006,7 @@ static bool rockchip_pinconf_pull_valid(struct rock=
-chip_pin_ctrl *ctrl,
->  		return pull ? false : true;
->  	case PX30:
->  	case RV1103B:
-> +	case RV1106:
->  	case RV1108:
->  	case RV1126:
->  	case RK3188:
-> @@ -4623,6 +4787,48 @@ static struct rockchip_pin_ctrl rv1103b_pin_ctrl _=
-_maybe_unused =3D {
->  	.schmitt_calc_reg	=3D rv1103b_calc_schmitt_reg_and_bit,
->  };
-> =20
-> +static struct rockchip_pin_bank rv1106_pin_banks[] =3D {
-> +	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0",
-> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
-> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
-> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU,
-> +			     IOMUX_WIDTH_4BIT | IOMUX_SOURCE_PMU),
+Yours.
+    -- Matti
 
-sashiko is correct here,
-only pins 0-6 have drive-strength registers.
+-- 
 
-Some different setting starts at the 0x30 mark.
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-This should be easy to handle in rv1106_calc_drv_reg_and_bit()
+~~ When things go utterly wrong vim users can always type :help! ~~
 
-
-
-> +	PIN_BANK_IOMUX_FLAGS_OFFSET(1, 32, "gpio1",
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    0, 0x08, 0x10, 0x18),
-> +	PIN_BANK_IOMUX_FLAGS_OFFSET(2, 32, "gpio2",
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    IOMUX_WIDTH_4BIT,
-> +				    0x10020, 0x10028, 0, 0),
-
-in theory only the first offset should be necessary here - same for the
-other bank's offsets.
-
-=46or offset-values of 0, the driver will automatically create the right,
-offset increments. 8 for 4bit wide iomuxes.
-
-See
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
-vers/pinctrl/pinctrl-rockchip.c#n4344
-
-
-So with the drive-strength thing fixed
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-
-Heiko
-
-
+Discuss - Estimate - Plan - Report and finally accomplish this:
+void do_work(int time) __attribute__ ((const));
 
