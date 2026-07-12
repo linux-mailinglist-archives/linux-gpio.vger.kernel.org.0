@@ -1,200 +1,225 @@
-Return-Path: <linux-gpio+bounces-39931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id +7+JJ9i7U2rDeQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39931-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 18:07:52 +0200
+	id 2Ro+H+bIU2oQfAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:03:34 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 408CB7454CE
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 18:07:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FC7174572E
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 19:03:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=baylibre.com header.s=google header.b=bS5NqABn;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39931-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39931-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jf3Nb94H;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39932-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47FD2300A389
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 16:07:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 14A8B302A50D
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2026 16:59:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5079B3446CB;
-	Sun, 12 Jul 2026 16:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98B503655D4;
+	Sun, 12 Jul 2026 16:59:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAD7313E34
-	for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 16:07:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517471A239A;
+	Sun, 12 Jul 2026 16:59:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783872466; cv=none; b=Utzt+8rhVCbQmvpGOwHXvZ3LsXkTveRUgK4cIQX3QLH3ojbrzFgITQIvArRTELixHuCBPbZzky0dBqV0yd6mpwsPqhrqfK9jALEmzM+mGjjO4sdtZitLPR3OY0CVtNDhw67P7NNPOD9UryKC5a1px998YrrDbTkeUqA3UFeCsfc=
+	t=1783875551; cv=none; b=ElcNqiuAHm+iNRM5xxsn46J/mIgtECp/bMaHdC/ff8+GkuCdPyxNtEquNuyUxl3va7+1v7Rz620r3dydJqJzihSnXFwL2t7XaopO9NndUaxyupxBe1jgQL/KKZ/LmFV8shqAbgzXfepubMAjkhG15rbiVHrgmjLRjK5RkUR3AwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783872466; c=relaxed/simple;
-	bh=/Lvsg/ZJR/lfpgoUMIiOWitMqmPb9MoVhYs6ClRrfg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jufNjZYR9Ql82O033BBmhmp0pu7ErULs7cBxUKi8T0Ply7VbyzzBaEDX/xnS3FBoR7zJjOfDZ6fIHmid33rcpR2quyOpFTy77glaLuT/rrFfaQgjxSAH2xQarxNIeV9/WyHRVupWaQrQ1xo+BK8G+MfhVyaCvetKjysDx4UymqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=bS5NqABn; arc=none smtp.client-ip=209.85.160.45
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43b7e186a0cso816054fac.0
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2026 09:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783872463; x=1784477263; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=uVpYadVTuJ7Oa9ZoTB5rgj6lqcEBWKLs7QhoK6MvLlk=;
-        b=bS5NqABnb3IrzzCXGNzFQUFOq3VQgzYZKi+bhB+usfs5AjjguDll7xUPIPvq64mD+Y
-         VZCN/PjROGVKPdWskoa3068iA253zDh6Da6mCDh1pmmOmmySOw6I/CaQJSJplgpIjCen
-         xmIBp3/rG2TOu1xICOgMeFMyFYM/DvtqqkvMlVdqKvZdlxNNpI5C61GK/EblxEzFp6Ju
-         RyzT4/IhGjkMraU9Y+u0RF6oYavekZxC9fxJJPcDFi+pL2pxXpDnrL3dQyR+ktGLQaKM
-         uAds6MENRCW2CHoKYKDEt4MGjsE5YTeZnfPU0dGZZ4W3Tp3KXR2oep2ud39/+RsWx+1j
-         qK3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783872463; x=1784477263;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=uVpYadVTuJ7Oa9ZoTB5rgj6lqcEBWKLs7QhoK6MvLlk=;
-        b=owy/0vcmE6itQb39Z4fQzpvOjxS67OoF9c9K+j/L/osRd/K4uIBarKcxEBoMHxPj1F
-         Q0gRKYy3muEQxCwGWE6KNWDMdPx0DBmXgyDIwohpTX4HK9NXn3ZM91AJ4WLBlQBeesEE
-         pwYxd624nqpF0PfilceUFh8HGoKBGKgfReKXGSamp4x4GUp+TM6w9JVUARv6NWRi/xGO
-         Zy2pw9uGG3HoJVyGWVzhZN8YFRg5pwEmRuvhzCcZK4WO1GUm40/HfnZ+ifKvaLEi8ExV
-         UEa5rJEl5rbtGHJURzzSFis36L6AeBPWQWn2N3v6j2Y0h18lqjovl48D/ZeTXbv0lMPK
-         ZJiw==
-X-Forwarded-Encrypted: i=1; AFNElJ8FacBnemmvSN2LjXidqzIu3BVYIvM1Dj1OyCkIA0ap8MLv88r6eqpoxsw+EFN5RgEhjkuwoNxeg3X6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5/C01kG7v/tg21CRIalVLHUNSYlNd0Yf6o/1SoQMvfs5YLvdN
-	yKMkVMahamSfsBw3nrkWjSUQRVJIbNOX/S2Xv34wZLa4DPTvky+L7r5B6teFu/yi00c=
-X-Gm-Gg: AfdE7clOYc2g7VugpQZU7yk8KN6dYM6cjfezT4eXYnrta/LtdKFWIg4xRO64DJetoFS
-	jr2MO9OKWItxRSZq5p0idW80Gn5WSv8oZJuIqT18rZq98WN+ym2raFcPe64CxoFIyHEASgA+ar0
-	XkANwupLv2/TG5fAaEcR+1aiEp3Tl6mifl9LfCSihhXvFRdLsTywyaTxjwTpgf+iB52gQiGFUpc
-	W7vkj6Ix1cHcGEDA7IveUnl/BZ91QofyklsX9tOdIl8voH7NaTzcKf0B+O85TacmDMsJtaf+kor
-	KJGiE4PnKZOX3ev0W/o3cYSRYcWVBoClqkahk0K0DYUQrf2oycBfCtFN/R3e/q250Dfpjklxv0i
-	rE8BKWGHqvJDyDd96t+ltZW0y/2pJ7xsdEJZD7fGEfRStMI6ryALdFUYQ6pT8MEYQMkDEDhGTwY
-	9dq47+5GoMu5EmjzKsaU/TOgCGnrZwd+8qVJ/JQxmutJv6aI1ZxS61iFjAfndfKp8=
-X-Received: by 2002:a05:6870:e187:b0:449:a0db:5917 with SMTP id 586e51a60fabf-451f1445225mr2893250fac.41.1783872462881;
-        Sun, 12 Jul 2026 09:07:42 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:3af7:75b0:bf02:8cf8? ([2600:8803:e7e4:500:3af7:75b0:bf02:8cf8])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-455c73a335esm321788fac.12.2026.07.12.09.07.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jul 2026 09:07:41 -0700 (PDT)
-Message-ID: <4b548db9-323c-4754-8e91-26ce94669600@baylibre.com>
-Date: Sun, 12 Jul 2026 11:07:40 -0500
+	s=arc-20240116; t=1783875551; c=relaxed/simple;
+	bh=mSp7DKzuJHsvVxwokX8VtjfogrcPbIQ5e7AR3Y3BA7E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=ZhCg6gYZ94Myk1353wtaoLBKleFou4YjyrmBxEW4Llxim1Y5jDzKAeorPThWWnmUU3qmM0I0dhStTKer1G3XiU9LLxlg4gr/8mUVtX257O6Ob5ocSe/LCFKjIJDbLz+K6w+kZYFd+Zx4ez0CNtEmSi6VPTpY8bfwg2vbw6kIs7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf3Nb94H; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE911F000E9;
+	Sun, 12 Jul 2026 16:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783875549;
+	bh=e1dmvE3Tlm+yvRV2mRiPOlbKn5bOWrgkA2i+qs4+eRI=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To;
+	b=jf3Nb94HJ4+X2dF/jEl7zUQEbDNo6GB9Tq03LorRZdwonP0lHMsBmz3Fv6fCRsLCV
+	 IDeCKkR6U0e7lufP/J2n4TC8Mqx+Wm8uN+PyESWtp5vhrevY03vekUe5ycBqJeI7n0
+	 waLcZlBx0eTHEafLCAI1lDs2aFxujINJhszYa+rOE5gRmPwREiSCymY3xYbGcWSEVU
+	 KJ70Isq7mj0rqrnyI/2FxiZ9pRbSvUhhz+pRGn0MVbEitS+O7PekvZGFR03ywwkgZk
+	 kybT94jnuKTVL1MXyJPj+6xV4H4QKn6Uv8w2rBiJW/6FH/GawOB0+r2hqUh65yADft
+	 P/Cza+VB4TBuA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: iio: adc: Add AD7768
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Janani Sunil <janani.sunil@analog.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Olivier Moysan <olivier.moysan@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux@analog.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org, jananisunil.dev@gmail.com
-References: <20260709-ad7768-driver-v1-0-44e1194fd96a@analog.com>
- <20260709-ad7768-driver-v1-1-44e1194fd96a@analog.com>
- <36df7c4f-82ea-4ed5-a4f9-3a29c75dc99a@baylibre.com>
- <20260710013322.595f8ee4@jic23-huawei>
- <a96caaaf-5cac-4bc0-9e74-e48b6fe0afc1@baylibre.com>
- <20260712023918.119fbecd@jic23-huawei>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260712023918.119fbecd@jic23-huawei>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Sun, 12 Jul 2026 18:59:04 +0200
+Message-Id: <DJWR3RYAWYAI.LQC41HSN2I94@kernel.org>
+Subject: Re: [PATCH v3 0/5] software node: provide support for fw_devlink
+Cc: "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
+ <david@davidgow.net>, "Rae Moar" <raemoar63@gmail.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>, "Daniel Scally" <djrscally@gmail.com>,
+ "Heikki Krogerus" <heikki.krogerus@linux.intel.com>, "Sakari Ailus"
+ <sakari.ailus@linux.intel.com>, "Bartosz Golaszewski" <brgl@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Linus Walleij" <linusw@kernel.org>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <linux-acpi@vger.kernel.org>, <driver-core@lists.linux.dev>,
+ <linux-gpio@vger.kernel.org>
+To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com>
+In-Reply-To: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-39932-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39931-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:jic23@kernel.org,m:janani.sunil@analog.com,m:nuno.sa@analog.com,m:Michael.Hennerich@analog.com,m:andy@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:olivier.moysan@foss.st.com,m:p.zabel@pengutronix.de,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:skhan@linuxfoundation.org,m:linux@analog.com,m:linux-iio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:jananisunil.dev@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:jananisunildev@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	DMARC_NA(0.00)[baylibre.com];
+	FORGED_SENDER(0.00)[dakr@kernel.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FORGED_RECIPIENTS(0.00)[m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[analog.com,kernel.org,foss.st.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org,gmail.com];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:from_mime,baylibre.com:email,baylibre.com:mid,baylibre.com:dkim,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 408CB7454CE
+X-Rspamd-Queue-Id: 1FC7174572E
 
-On 7/11/26 8:39 PM, Jonathan Cameron wrote:
-> On Sat, 11 Jul 2026 09:40:32 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> On 7/9/26 7:33 PM, Jonathan Cameron wrote:
->>>>> +  adi,common-mode-output:
->>>>> +    $ref: /schemas/types.yaml#/definitions/string
->>>>> +    enum:
->>>>> +      - avdd-avss-half
->>>>> +      - 1.65V
->>>>> +      - 2.5V
->>>>> +      - 2.14V
->>>>> +    description:
->>>>> +      Common mode voltage output selection.    
->>>>
->>>> Why not using standard regulator provider bindings for this?  
->>>
->>> Interesting question.  If that was done there would need to be
->>> a consumer which means explicit modelling of any analog circuit.
->>> We do that in a few cases but so far (and yup this is a driver thing
->>> in a dt-binding) I don't think we have any way to consumer data when
->>> a backend is involved.  
->>
->> There is also the regulator-always-on property, so strictly speaking,
->> a consumer is not required.
-> 
-> Makes some sense I guess.
-> 
-> How would the voltage be controlled?  Set min and max to same value?
+On Fri Jul 10, 2026 at 3:51 PM CEST, Bartosz Golaszewski wrote:
+> Bartosz Golaszewski (5):
+>       kunit: provide a set of fwnode-oriented helpers
+>       software node: add fw_devlink support
+>       software node: add kunit tests for fw_devlink support
+>       MAINTAINERS: add myself as reviewer of software node support
+>       gpio: kunit: add test cases verifying swnode devlink support
 
-yes
+Overall looks good, but I think the two issues pointed out by Sashiko are v=
+alid.
+In addition, I also found a memory leak in the gpiolib kunit test:
 
-> 
-> J
->>
->>> 	  
->>>>  
->>>>> +
->>>>> +  adi,vcm-power-down:
->>>>> +    type: boolean
->>>>> +    description: Power down the common mode output buffer    
->>>>
->>>> Is the buffer separate from the output? In that case I would expect
->>>> buffer to be in the property name, otherwise this should just be
->>>> part of the enum options above (and the default one at that).
->>>>  
->>
-> 
+	unreferenced object 0xffff88810296b2c0 (size 32):
+	  comm "kunit_try_catch", pid 1096, jiffies 4294694235
+	  hex dump (first 32 bytes):
+	    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+	    66 6f 6f 00 00 00 00 00 00 00 00 00 00 00 00 00  foo.............
+	  backtrace (crc a62f59c2):
+	    __kmalloc_noprof+0x216/0x510
+	    desc_set_label+0x46/0xc0
+	    gpiod_request_commit+0xd5/0x140
+	    gpiod_request+0x49/0x170
+	    gpiod_find_and_request+0x2be/0x520
+	    gpiod_get_index+0x56/0x70
+	    devm_gpiod_get+0x1b/0x90
+	    0xffffffffc0401ff8
+	    platform_probe+0x58/0x90
+	    really_probe+0x1bc/0x490
+	    __driver_probe_device+0xa2/0x140
+	    driver_probe_device+0x1e/0x110
+	    __device_attach_driver+0xc2/0x140
+	    bus_for_each_drv+0x117/0x170
+	    __device_attach+0xd5/0x1c0
+	    device_initial_probe+0x34/0x50
 
+I came up with the following diff to resolve those issues.
+
+diff --git a/drivers/base/test/swnode-devlink-test.c b/drivers/base/test/sw=
+node-devlink-test.c
+index 6f59f13214fc..143b9c4047a0 100644
+--- a/drivers/base/test/swnode-devlink-test.c
++++ b/drivers/base/test/swnode-devlink-test.c
+@@ -17,6 +17,10 @@
+ #include <kunit/platform_device.h>
+ #include <kunit/test.h>
+
++KUNIT_DEFINE_ACTION_WRAPPER(device_remove_software_node_wrapper,
++                           device_remove_software_node,
++                           struct device *);
++
+ static int swnode_count_suppliers(struct fwnode_handle *fwnode)
+ {
+        struct fwnode_link *link;
+@@ -294,6 +298,9 @@ static void swnode_devlink_test_probe_order(struct kuni=
+t *test)
+
+        ret =3D device_add_software_node(&supplier->dev, &supplier_swnode);
+        KUNIT_ASSERT_EQ(test, ret, 0);
++       ret =3D kunit_add_action_or_reset(test, device_remove_software_node=
+_wrapper,
++                                       &supplier->dev);
++       KUNIT_ASSERT_EQ(test, ret, 0);
+        ret =3D device_create_managed_software_node(&consumer->dev,
+                                                  consumer_props, NULL);
+        KUNIT_ASSERT_EQ(test, ret, 0);
+@@ -313,8 +320,6 @@ static void swnode_devlink_test_probe_order(struct kuni=
+t *test)
+
+        /* Tear down the consumer (and its device link) before the supplier=
+. */
+        kunit_platform_device_unregister(test, consumer);
+-
+-       device_remove_software_node(&supplier->dev);
+ }
+
+ static struct kunit_case swnode_test_cases[] =3D {
+diff --git a/drivers/gpio/gpiolib-kunit.c b/drivers/gpio/gpiolib-kunit.c
+index ad961cf97aee..7798f8a8e602 100644
+--- a/drivers/gpio/gpiolib-kunit.c
++++ b/drivers/gpio/gpiolib-kunit.c
+@@ -449,6 +449,9 @@ static void gpio_swnode_probe_defer_on_unregistered(str=
+uct kunit *test)
+
+        pdata =3D dev_get_platdata(&cons->dev);
+        KUNIT_ASSERT_EQ(test, pdata->gpio_err, 0);
++
++       /* Tear down the consumer before the provider to free the GPIO. */
++       kunit_platform_device_unregister(test, cons);
+ }
+
+ static int gpio_swnode_probe_order_test_init(struct kunit *test)
+@@ -614,9 +617,17 @@ static struct kunit_case gpio_unbind_with_consumers_te=
+sts[] =3D {
+        { }
+ };
+
++static int gpio_unbind_test_init(struct kunit *test)
++{
++       device_link_wait_removal();
++
++       return 0;
++}
++
+ static struct kunit_suite gpio_unbind_with_consumers_test_suite =3D {
+        .name =3D "gpio-unbind-with-consumers",
+        .test_cases =3D gpio_unbind_with_consumers_tests,
++       .init =3D gpio_unbind_test_init,
+ };
+
+ kunit_test_suites(
 
