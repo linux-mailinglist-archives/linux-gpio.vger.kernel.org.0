@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-39943-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39944-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CYOnJliRVGrMnQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39943-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:18:48 +0200
+	id el1HFvSSVGrJngMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39944-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:25:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00100747F1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:18:47 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFE097481D9
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:25:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nHFyHMkJ;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WDUzqBkr;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39943-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39943-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39944-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39944-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 231E7303432B
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 07:17:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E36EA3028E96
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 07:21:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B305B371D1F;
-	Mon, 13 Jul 2026 07:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4872F36D9EC;
+	Mon, 13 Jul 2026 07:21:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B2036F8F0;
-	Mon, 13 Jul 2026 07:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D95369208;
+	Mon, 13 Jul 2026 07:21:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783927054; cv=none; b=u94Pjl9gO0KZ6TT69SQNT6sAHUz/rg8w2qwWGmrRT9VzfAu2140NLI8fnF1opnT9L7VnIn5qafPGldhLQkabAie1UIytYgYPLl9H8DGk7yuClP7igdDqhKPEyTHRYk7/QnJAXASBHLYh1TYFjLz0pnkl2ze+mv7TmtGDO3GUTOQ=
+	t=1783927267; cv=none; b=J026giuZV8ag1XjyasCJiRFtZu+E8rIWGdWYbGcfuidntBePkHWbRWIlX9Q6H4GEfj99xPhqn+7FG6a5qZHUL3NJxfvfZAN2hFNqiWxxJJFBizueaNfHULwQvUbuwaVSajnW++AR9Vakj0lICscutPW57ELJVoyUw56nYlNd8g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783927054; c=relaxed/simple;
-	bh=vyybhEh8PKk3vyT4oI4jCm9a19ruelsebq4ZoJG6dJ4=;
+	s=arc-20240116; t=1783927267; c=relaxed/simple;
+	bh=bh+yWpaolJOY4sNtQpKR1RIVMCXF1XcI2rvHN1xdAFE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YuuzcVrUqZgI9CUcTmme37QPWLbiW2CcL1mA/n2altGuV7kwPvXx9xrUevMrCObHcPdaJTAhp95atE/pacmpu2CWP26RBblrGNWWDo+bbmenmqgqcZ+WiGRxOfi4g4KOdxx/7PEv4zhHoXRhh+t6SPj9J/ogdvluDmd6bjS1H5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHFyHMkJ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C491F000E9;
-	Mon, 13 Jul 2026 07:17:28 +0000 (UTC)
+	 MIME-Version:Content-Type; b=F0S6+6rwao0cX2WAngDMw/21WYDF4AxvWH8FxtxRisKxusSIchO0ECNnSLYCJ5vQ0bItCZukJD6mC5QKLxS0NftVFYao9BJOcPaLKY+jgClf46Du81MJ6JxqPCND0M/osXenkggkEEeUA4qoELISV+O8/tafNBZYhrIUuwT+Yyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDUzqBkr; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11DFA1F00A3A;
+	Mon, 13 Jul 2026 07:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783927052;
-	bh=/AAvWdg2tf7XP0ClRJ7QU4XdfQ70zfzUpBK5iJU8WwM=;
+	s=k20260515; t=1783927265;
+	bh=9kh43brSP66vzmTm95XDdhXt8cQARCKIA1zAbg8pOVM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=nHFyHMkJP2WBYIOdOxc0UBT0Ihj/u5mg9JK7iZbPdOZcBPMx9K92N7r6UHN2pXRG6
-	 TsiD0GeqmCY7B79z0R4GUEkqis1tasFpHsNuBr9LisGw4Ao6Ukos5MYagXHVnM315V
-	 Ma6h8YkqIeT1O8GKOGJIWId2ZiM35RcjJxGXpwXDx0qitUOS8/D6U1T3jttFYYXX9h
-	 LbY2psslNEOJGn1cAVKD96rO/K4KAIIsj5LaW9fcbi6XQhuYCnwGZA/2xnuh3esJ2e
-	 MCgdqC4U3n2YZL9dHTsogxBNYYRCRLyeBQATWMGsD74DAm/bXf3goK6Nzv6BMRAiYV
-	 5PEyeo4rWMj4A==
+	b=WDUzqBkrtCpK6dx62PadWwp7PdY5wC7lf0VjbjmJK4tvqJx75MzyAy0mZqQOcOjdI
+	 aCn7dPFajLxErrr+E9spI5pjB4T8pE8nNrqjP0c/Bwv4Ky3f37mhUu/rikPQ6tzWKM
+	 WDU0JAU4t4AJSzjSGFEm/y5uekRIs5mwyGhPQFqUivv1ED97uD8VaJeRlZzTR6/mv3
+	 yFy2oBa9iB/ufr+aGIplCjWMumy6f1qHDS7EySrxExjixdVCABjq0+Y/OOc2pmkfXQ
+	 mazTF43ahrtGVU5DJA3YnNii5uCWbgi8ZhrcRchZY/HUqXbpzq04atSsniG9pkl6oi
+	 q7VTkZyLPCX+g==
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: peter.griffin@linaro.org, robh@kernel.org, conor+dt@kernel.org, 
  linusw@kernel.org, Alim Akhtar <alim.akhtar@samsung.com>
@@ -55,8 +55,8 @@ Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
 In-Reply-To: <20260627171228.2687857-1-alim.akhtar@samsung.com>
 References: <20260627171228.2687857-1-alim.akhtar@samsung.com>
 Subject: Re: (subset) [PATCH v3 0/6] Add minimal Exynos8855 SoC support
-Message-Id: <178392704864.26180.1741165766885448528.b4-ty@b4>
-Date: Mon, 13 Jul 2026 09:17:28 +0200
+Message-Id: <178392726162.27536.18104050175290327938.b4-ty@b4>
+Date: Mon, 13 Jul 2026 09:21:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,7 +72,7 @@ X-Spamd-Result: default: False [-4.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [-4.66 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-39943-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39944-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -96,11 +96,11 @@ X-Spamd-Result: default: False [-4.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 00100747F1C
+X-Rspamd-Queue-Id: DFE097481D9
 
 
 On Sat, 27 Jun 2026 22:42:22 +0530, Alim Akhtar wrote:
@@ -117,12 +117,12 @@ On Sat, 27 Jun 2026 22:42:22 +0530, Alim Akhtar wrote:
 
 Applied, thanks!
 
-[2/6] dt-binding: pinctrl: samsung: Add exynos8855-pinctrl compatible
-      https://git.kernel.org/pinctrl/samsung/c/8e8bad1e2ab599174c21dd2d0ba6fcf5f82dafa5
-[3/6] pinctrl: samsung: Add Exynos8855 pinctrl configuration
-      https://git.kernel.org/pinctrl/samsung/c/d441836c9d704d0f3db5dbf44df87af2ba7a9d26
-[4/6] dt-bindings: pinctrl: samsung: Add exynos8855-wakeup-eint compatible
-      https://git.kernel.org/pinctrl/samsung/c/7cd3475913736239696e0111d4d5845d9e0a79b6
+[1/6] dt-binding: ARM: samsung: Add Samsung Exynos8855
+      https://git.kernel.org/krzk/linux/c/4b4a2ce19af5badef165c109d0d6d9f7c102914a
+[5/6] arm64: dts: exynos: add initial support for Samsung Exynos8855 smdk
+      https://git.kernel.org/krzk/linux/c/f03058d3768c3ec4af0fab7a36d0631423cb3cf5
+[6/6] MAINTAINERS: Add entry for Samsung Exynos8855 SoC
+      https://git.kernel.org/krzk/linux/c/a87d503a0ab077b0d9892290ab7dbec29f922eb1
 
 Best regards,
 -- 
