@@ -1,142 +1,160 @@
-Return-Path: <linux-gpio+bounces-39988-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39989-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id KMOcDLDzVGqEhwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39988-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 16:18:24 +0200
+	id IXXrD1L8VGqoiQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39989-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 16:55:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB31C74C457
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 16:18:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B605174CA5D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 16:55:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=RWfucWvH;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39988-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39988-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=sang-engineering.com header.s=k1 header.b=EBZLW1Hm;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39989-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39989-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C6B82301FAAB
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 14:18:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DA08D3052664
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 14:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ECAD42EED6;
-	Mon, 13 Jul 2026 14:18:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C013435EEA;
+	Mon, 13 Jul 2026 14:50:20 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E2B3FFFAD
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 14:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA042E019
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 14:50:14 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783952301; cv=none; b=uev/VZwrJSCSJcCfSeDH4fV0DaqjopIlz+G2v+obDmV25H6/k0GfNGa/qK6dRyh5Vt1O9aSCL3qQYCPzFj3VMgW9MyiIDLpPjtRMb8CRwyRQtEcd5jlHTalp5drRZRvTnrr5D0Znf0x4FqW0Cc6u2zcDZwZOnHmUvFbccORCIzw=
+	t=1783954219; cv=none; b=FLaDQoX1udHfuUMyEc89+9npfS2FCHlOyORIjUdUwOCWjkPV+TbJXnlv4tK/S+YUwIvueosHpRfq1+44/RvFFM36361jsghJi5oBstvqEkyllBjVM8Ju2v2Qtv9+veqUqoZWuCWZt8nooT4JGSiDRin++WNq332DeC3iMv2IQmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783952301; c=relaxed/simple;
-	bh=EBr+StBQaquXk3XdVvkiNNyF8d/Ab7P8NnNzmXoifBM=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=opOLMHdRz+7NV7zFyN7r0byP4FmvYBTWu8uH11gjsBMj+9/gME2JnOPKVAS/heYVs7Wto+DQHN8DKEjjPZ/duAkBqvUphfpKIxr/KfKcFW8h4XHv+ZpamdT+4AAlYUvPBVy0DkxCLIiXsPRUwwSQo73CzYLNDgPGJdKdUDcLD2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWfucWvH; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047EE1F00A3E
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 14:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783952300;
-	bh=EBr+StBQaquXk3XdVvkiNNyF8d/Ab7P8NnNzmXoifBM=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=RWfucWvHD1wC9Ta+3sBXa6LGjWyoxLdWVK1Dbp7tvk6spvh2gS1NKU8NduBcV5Y6r
-	 76AnVZIgGmjPwCfB5N05iit0NbZZHjKFB7U175oeqkkjRdGP+pCn46CRWMf6763djU
-	 IwUjZzliugTDaA3bX80RITh7xD3g5yqGAvdDAF2BGuFSqjoH359CcFNPcf0h/sEG3H
-	 rR7VfitGitBDPjzv9dpH26wsDGX5G2TN4ZV6dcIDx7phr+/HSwzVwuoe0gn6n9AfQd
-	 RHbYIarntTuHDfFglumbsV/XLT7C/Ot1HgwxWyvydykZ0mRTqoyJksXmxhfUOX1JA8
-	 vxniZDoavbeAw==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39c8dbf4ef0so25536451fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 07:18:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqY7sP6mceZS2kCP1BqEQYG/p/ybtv07S7naAp8+hXbx/W3H2J0OF+vmlZ2gebHR3E0rQD3EnEpMVcO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9tJsgmERW1/12cewYtfksLmBcZPFHQ7Z8APQa1ZDT1W2NzIMb
-	wzQHnoEM8TAwzlxll0x0XUFc/snDWawEco8QuyRECN+Ql0hqQa3CkyF0x+pXMOJKSFmyM0w1HOn
-	ePmeE+5vAVbnU2ClmJn/lvCWAxkO0gCG+Irha6ywR4w==
-X-Received: by 2002:a2e:ab89:0:b0:39b:119d:aa02 with SMTP id
- 38308e7fff4ca-39ca9f110b1mr19280971fa.5.1783952298631; Mon, 13 Jul 2026
- 07:18:18 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 13 Jul 2026 07:18:16 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 13 Jul 2026 07:18:16 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260713121518.2724474-2-ravi.hothi@oss.qualcomm.com>
+	s=arc-20240116; t=1783954219; c=relaxed/simple;
+	bh=Xcd/do+xvqGyt7l7LhBbgFpZdp6/A+ra8TikIp/CivI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9jzIcvJm7i+b8xN20xuRR2VbO2NlYvBfHjZ6gyysAjyaQVJQqiievby4cwjXuDuHaLBMAs7+9u/MXCDUwFNYNR7TpTT1c6Vb0PDq3DjumRVmBDrOxyNupODxIZDz+aNLiUIV4Wd7Hmq706IYUqwMcl2yVMq4IlpJkiW9DzAqxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=EBZLW1Hm; arc=none smtp.client-ip=194.117.254.33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=ra6R
+	DpbJc/+pCiiy5iSsUgRgX45ZA7jHJ1CdoYshOIE=; b=EBZLW1Hm6nwlf8E6V71p
+	/HyScUdL9auTtDtuU/99dxGgxMRaJLYr2zbT71dtU7XyrQUQYNSLK2AiO13YfMra
+	qvz/WqtWTVwKEwMZHssovChJlIasOrI/p2ntTarhE8ZGRCrzE0UrvFVQevTbvNfh
+	tz/CV5Moxj5uSYzGfaXO2NZxTX/Pza/Yn+GnPo8i19Iy1QM4KgUmgllPi0rzbvX7
+	l0AO6y7u9VgOgwH5iRvHC2lyyp7k1c7xFoL6+3Ys6jrbjwytZtPSCQpYqTuGph5W
+	IyNma7uq1Ql6PnzQzBOdJz9OQ4u0194NYNiF+OuKj8XcSZOuiyDC6jaD6Tgv+k1+
+	gg==
+Received: (qmail 2678472 invoked from network); 13 Jul 2026 16:50:11 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jul 2026 16:50:11 +0200
+X-UD-Smtp-Session: l3s3148p1@+n4VNX9WQOQujntq
+Date: Mon, 13 Jul 2026 16:50:10 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Abdun Nihaal <nihaal@cse.iitm.ac.in>
+Cc: linusw@kernel.org, brgl@kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: Fix memory leak in
+ gpio_la_poll_probe()
+Message-ID: <alT7IvHFDSCw9kE1@ninjato>
+References: <20260710064838.153528-1-nihaal@cse.iitm.ac.in>
+ <alNd92hOOETILWG-@ninjato>
+ <rraksab74pmllyp5zqr3tlbqe65twqgan5362hitk236mxguci@uhcrd2hzdi5c>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260713121518.2724474-1-ravi.hothi@oss.qualcomm.com> <20260713121518.2724474-2-ravi.hothi@oss.qualcomm.com>
-Date: Mon, 13 Jul 2026 07:18:16 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Md+DypoyJZz7FF-2Qq4OV-LpwJjU7G5m9sphqUTgz4dCw@mail.gmail.com>
-X-Gm-Features: AVVi8CeJcmxzYNtE9SV1HDAWbxFYQTjog2sJp3oYHFfnP-tRYCiMD77iDC0D37c
-Message-ID: <CAMRc=Md+DypoyJZz7FF-2Qq4OV-LpwJjU7G5m9sphqUTgz4dCw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom,milos-lpass-lpi-pinctrl:
- Add Eliza pinctrl
-To: Ravi Hothi <ravi.hothi@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mohammad.rafi.shaik@oss.qualcomm.com, ajay.nandam@oss.qualcomm.com, 
-	kernel test robot <lkp@intel.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Luca Weiss <luca.weiss@fairphone.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xNzZbAT0VPa7Im/Y"
+Content-Disposition: inline
+In-Reply-To: <rraksab74pmllyp5zqr3tlbqe65twqgan5362hitk236mxguci@uhcrd2hzdi5c>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39988-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:ravi.hothi@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:mohammad.rafi.shaik@oss.qualcomm.com,m:ajay.nandam@oss.qualcomm.com,m:lkp@intel.com,m:andersson@kernel.org,m:brgl@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:luca.weiss@fairphone.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email,vger.kernel.org:from_smtp,intel.com:email];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:nihaal@cse.iitm.ac.in,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	DMARC_NA(0.00)[sang-engineering.com];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-39989-lists,linux-gpio=lfdr.de,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[5];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BB31C74C457
+X-Rspamd-Queue-Id: B605174CA5D
 
-On Mon, 13 Jul 2026 14:15:17 +0200, Ravi Hothi
-<ravi.hothi@oss.qualcomm.com> said:
-> Document compatible for Qualcomm Eliza SoC LPASS LPI pin controller.
-> Eliza has the same pin mux functions as Milos but uses a different
-> slew rate register layout where the slew rate field is in the same
-> GPIO config register rather than a separate dedicated register. As a
-> result, Eliza only has a single reg entry instead of two.
->
-> Signed-off-by: Ravi Hothi <ravi.hothi@oss.qualcomm.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/r/202607032107.RMly13RH-lkp@intel.com/
 
-That's misleading - the robot pointed out an issue in your v1. This patch
-doesn't fix an issue it found - it's a new feature.
+--xNzZbAT0VPa7Im/Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Don't send a v3 if not needed but I'll drop it when applying once we get an ack
-for this.
+Hi Nihaal,
 
-Bart
+> What I meant was that after the priv->blob.data is allocated
+> successfully in fops_buf_size_set(), the subsequent error returns in
+> gpio_la_poll_probe() don't free the buffer, but directly return (since
+> all the other allocations are device managed). And so I feel that there
+> is a leak possible here.
+
+This is actually true. We should fix this.
+
+> If you prefer, I can remove the return code check for theh
+> fops_buf_size_set() call and just have the devm_add_action_or_reset()
+> part for releasing.
+
+Yeah, I would like this. I think this part confused me a little when
+reviewing. I will accept the patch with the retval check removed.
+
+> We are using a prototype static analysis tool based on LLVM, which we
+> are building for a research project.
+
+Well, you got one success report now :)
+
+Thanks and happy hacking,
+
+   Wolfram
+
+
+--xNzZbAT0VPa7Im/Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmpU+x4ACgkQFA3kzBSg
+KbbfmQ//Q+SnypjpgBA+iX/2lfkbQeGdoGc/gWHsU+HHjgpE/DlgDZ7+tUs9cquM
+JIHrB3NCqIPGFiT/PCCjpHBYhFCWPaXbGL+e2tObo9RnO+MRnpMCshMigWKea8u5
+71HJU0QKDzpi5n8gNIjTZn6q1MiklktTl3dWQxTfFg3yZvs3K4CvR1X2IbCvxGoB
+oXj0jjRBRWj/wppBF7DyYaMlzmCT/LkK1i+77x379WTVTau/MoqonYntzRIvxtXw
+BIe5Ws6OppI4ENzodhKz4vtJsAuw1e+Fr/ujh8Z1igf55sGgvIAe1Fe0hNu6/NtP
+xGSt3n6PnS5sTltR+tWcARcOCa5vcR6mJlZwergO/ACfg0f0BcPuJMaf1/vzzqTA
+hN81dlGEkfsKMClSWStUbRypTLkgNilH+oZRL4gLGw+tIWCaUwTbfFg00iBChu0r
+X1aMfUHgbX5Au0RSMcnNN+HbyfRT6ioXpBKzrFAisrYcg0N150uRRg575lGmplHb
+YG339QX4fEUfh1mnBVCHWietLaro2jpol3G62pqHnvG8mOUAr8yhmBAH5Z7j+iH7
+7anwp4wa7TawizuIfi2RZkadRvI4ejgGvTVYi2l8UX2FIBmpxYyQV9w02DNKdhxx
+5H9kugD/6nBMFrXu/1p96ycG/JN21mweWA4eLpSSDsnF3COQkuw=
+=hrae
+-----END PGP SIGNATURE-----
+
+--xNzZbAT0VPa7Im/Y--
 
