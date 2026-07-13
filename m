@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-39946-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39947-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HLo4JEiZVGpeoAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39946-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:52:40 +0200
+	id VAGHOJ+ZVGpvoAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39947-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:54:07 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B63E74863A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:52:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CFF5748678
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:54:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fp3vseqK;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LYJfhOg+;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39946-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39946-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39947-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39947-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D4A973024C86
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 07:48:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07CB430053CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 07:49:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 461F739448F;
-	Mon, 13 Jul 2026 07:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A2DF394464;
+	Mon, 13 Jul 2026 07:49:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107673932F6;
-	Mon, 13 Jul 2026 07:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6643939A2;
+	Mon, 13 Jul 2026 07:49:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783928939; cv=none; b=nim/j6pyLUSms4p4BE3NMRObTjuRNRP+LdtGiLAzoOpGdoNllkNkSF2/D13vgKo17Owndub5G91ido2kYOXVzMWTe4EmFJB2eOgpcmauP4yu9CB8r+QHPdTxNec1GaRt811bguwqxOtK3qw8Nm9TiKYQM9E9MJfFsMTGEyDVOwM=
+	t=1783928990; cv=none; b=SmoZQpLmhsADS9dsvK+pxtlWnhi3je2HE4PlPKEtpp6/yZffia0BG+qhijT+zwZtoa1GWHtm8s6+HyTVI1ibuwFclVXxpDQ7FdXxNYPhsDq2t4Z98TmlxZY8gGesChHXRoRuQvE6fX8ysqWAVuOVD+V2DNO7CywWOeDHtLgcneI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783928939; c=relaxed/simple;
-	bh=HLORW+XXiV6OA8LqvvwOgOR6CHvebxHRcMvcbvaEE0k=;
+	s=arc-20240116; t=1783928990; c=relaxed/simple;
+	bh=8z1X4rDCLNIn4uMUjJt5pFrJZRpKCWMo8T1ntNApPCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSqamJgoD7izVEZ9KKGn7yjQMPsEAvv7t9wVnHnMRxODk+tNGDzWq79f8oKUMqJvwfN7POiHmmEhlMbqUziZLPQSXVfaAMs/7cyqTBdRs2UJpi2tO5/1hmnOS2RV02XbXEvbayWSfDa7BB15AE02AGlSpi78A1Sq/3kOBuqdews=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fp3vseqK; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D47B1F000E9;
-	Mon, 13 Jul 2026 07:48:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUbIxlqIpEQrZ+WOrQrzM93tCIH6xrsc3xDtGENLb4AHJaniDBF8oXWbPfkCVGObc+DvRuoKybCwHSZunwbucW8X/eHGAA3Vl10VgkNfvuyq2Cb0aBmoU5DFUmGOEVfpTxUF+BNixVr9/hND499y7gdEMQuq2Od6UH7CuzA4uZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYJfhOg+; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A93831F00A3A;
+	Mon, 13 Jul 2026 07:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783928937;
-	bh=vtYE5RfYHFnoyGWcHHst1Z2VO14NI1Ws98iIJKm7chk=;
+	s=k20260515; t=1783928988;
+	bh=Rfmhg39OXz6idRUtZ/yz7s9wg55pQ2awUJp2Z5oo0Mk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fp3vseqKOvUvObhmR1LYdYwYu8s8SJsyj7vD7WrmhiIC5uR3oqKbRvvYBRs80Tpn6
-	 sUtmTlI9jHbOZub9kQWTDURVvbECD6jORXCc7KkVv+lpuO9g47Aceiq62qisAfZiNa
-	 Whcqdo+iQx+D793P7E5MJ5Dl8ss7GWUcN8ZHajb3z/VQnjwYxtVVzB74BgogKyBXKj
-	 xH+A5yyeGWxQSI1aYrsSV2IDQmfMI85/jI56MNcjpLk69T8BGVurczBwnSdWUtqxXS
-	 MgF1oyFNZp70n1g6vzBv38OS0fMXCeyQlcrPv9ZcFBWOtNJMsCDaPXSTjZoLJQv/7y
-	 mVNVdSh/RWePg==
-Date: Mon, 13 Jul 2026 09:48:53 +0200
+	b=LYJfhOg+WG9R3Wi4cJ985Q6VWKdmpp6ETkmF7dw1JK/JxoCfh+SG5Ly8oVGTdiQFh
+	 qpjr+atMbSqd5m6rvKffRbwcEn6xOm9UmhJF1Dh0GZa1mJKkmt+1I+wdlOQDAIOpSw
+	 BGEUYyrRt9p+TP8nyz5ywrSN6xbdaBvbv4sQCeIyYT7E72IxDkWnDTp/YrxPq4m7vf
+	 R7n3ew/n3AhHglHjjbOdJCau7HRYXjdSfAzvn8dLZr9RhR+PaGpSzEMZGci+EeOi5F
+	 S9olo6B8ALjZgUmg4IViN9D3avBE6CtpS5KDYsd3FaQYSijmweOyahEwTNAfYuZAXt
+	 bpxm+fQoubt4A==
+Date: Mon, 13 Jul 2026 09:49:43 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Marek Vasut <marex@nabladev.com>
 Cc: linux-arm-kernel@lists.infradead.org, 
@@ -55,11 +55,11 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
 	kernel@dh-electronics.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 01/10] dt-bindings: arm: stm32: Document
- STM32MP23xx/STM32MP25xx DHCOS SoM and Breakout Board and DHSBC
-Message-ID: <20260713-tireless-sly-squirrel-04c7e5@quoll>
+Subject: Re: [PATCH 02/10] dt-bindings: gpio: pca95xx: Document Kinetic
+ KTS1622
+Message-ID: <20260713-literate-influential-kagu-59fcd5@quoll>
 References: <20260711210131.236025-1-marex@nabladev.com>
- <20260711210131.236025-2-marex@nabladev.com>
+ <20260711210131.236025-3-marex@nabladev.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260711210131.236025-2-marex@nabladev.com>
+In-Reply-To: <20260711210131.236025-3-marex@nabladev.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
@@ -90,7 +90,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-39946-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39947-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -103,30 +103,24 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,quoll:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,quoll:mid,qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nabladev.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1B63E74863A
+X-Rspamd-Queue-Id: 3CFF5748678
 
-On Sat, Jul 11, 2026 at 10:59:30PM +0200, Marek Vasut wrote:
->        - description: ST STM32MP257 based Boards
->          items:
->            - enum:
-> @@ -203,6 +215,12 @@ properties:
->                - st,stm32mp257f-ev1
->            - const: st,stm32mp257
->  
-> +      - description: DH STM32MP231 DHCOS SoM based Boards
-> +        items:
-> +          - const: dh,stm32mp231a-dhcos-bb
-> +          - const: dh,stm32mp231a-dhcos-som
-> +          - const: st,stm32mp231
+On Sat, Jul 11, 2026 at 10:59:31PM +0200, Marek Vasut wrote:
+> The Kinetic Technologies KTS1622 is a 16-bit general-purpose I/O
+> expander via the I2C bus for microcontrollers when additional I/Os
+> are needed while keeping interconnections to the minimum. Datasheet
+> comparison suggests that it is compatible with TCAL6416, add the
+> compatible string and TCAL6416 as a fallback compatible.
 
-This should be after st,stm32mp157 group and before st,stm32mp251 to be
-sorted by fallback compatible.
+Your commit msgs feel too early wrapped.
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 
-Anyway, not a big deal, so:
+> 
+> Signed-off-by: Marek Vasut <marex@nabladev.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
 Best regards,
 Krzysztof
