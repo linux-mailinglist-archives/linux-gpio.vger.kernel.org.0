@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-39991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39994-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 9rlXILv/VGqrigAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39991-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 17:09:47 +0200
+	id rBfaDBwEVWrEiwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39994-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 17:28:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 108E474CD55
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 17:09:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BBD374D0A2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 17:28:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=GABsGShK;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39991-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39991-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=Y6cKoCcr;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39994-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39994-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4225E301067B
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:09:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B3A0233C90C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:09:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED946377EC3;
-	Mon, 13 Jul 2026 15:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3264A395AF5;
+	Mon, 13 Jul 2026 15:07:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB37F34029E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4263438A7;
 	Mon, 13 Jul 2026 15:07:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783955273; cv=none; b=rxqhSoyNKZ188cO3yGU/TWliYGrZHFCPPiihRWCDch1RWC5mq2pdJJfnOaysI1rmpo4AQe7YPGa3cVZgOFoNYzU3wvoQz4lgcjQgIG3NK25itKIa13rEPYL8BLiQ7yutMk9XjHzV7rz7p/cq3gw6MBPB3Uvm1vGQquy2JU1lAYo=
+	t=1783955273; cv=none; b=NIcQRICawoOZRxEb1gAaHyYkfQILOdxtkYvZYjEPNZlMy7b4uUkgMnFL074DqnIsjcts5reeDoNNpXv/vG5h+ew74TDjSOIkWNEKusqvflQD6LIKsJHfrkMQ9YNvkqPfkXiWTn17vpF98/NHZdejzVSsykOfaqpaa6aAiUguFvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783955273; c=relaxed/simple;
-	bh=pWuRmK/lvCohXgAZnOXGTEEgVS8UJF27uDGMTJ9a2Nc=;
+	bh=U5bSQzEJordwZtFUYTfsUo3eeIgE6RHruUe7bn59ORk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B1K/O7GfDnu0TiEVDRwWGS48g2Oxhr5rpbV5qM/Tr7jd9PwLKpBxHsxXJl164VIHhVKNOD+7oNSWbswdd3CkFMwEIta4J3XYa6CtuTOPHklwHHp4xYFgxg2pSxiWNMu4HU0BoCME9rjCh/mYdDZtcEqDs9OAP2dANOoNhMy3Vd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GABsGShK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 54C65C2BCB9;
+	 In-Reply-To:To:Cc; b=fA5SkbmoQcrkKhCex4dChynxf4wA44W444iAdR+SzYT4/l05ZQu2N+ao2ZpNn6wm4UDTXMHV3wM43ZuVjY7tKW3e4p0aWPKTjUewSzvo3CrLy7pXuQvS66PAS0EEbzfnPyRurYhoWn/L7yMmA/nCYAdFXXWDpvz/JXCZUE8J+Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6cKoCcr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 73A52C2BCC7;
 	Mon, 13 Jul 2026 15:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1783955273;
-	bh=pWuRmK/lvCohXgAZnOXGTEEgVS8UJF27uDGMTJ9a2Nc=;
+	bh=U5bSQzEJordwZtFUYTfsUo3eeIgE6RHruUe7bn59ORk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GABsGShKY9RyB+crazCaCxFiTyJyvOLdU7zOdxwilN+9SkJEgrEOmxCIO+VoQiL/o
-	 mHWOzsdTy6CTdGwAETi3WaMA0mSIidRRj/KC27wsuQo52hxd294S0jZDr7m506XGzs
-	 f5/HR8AuIpCDahQ3psd6JhRaNNHZtnLKOHadAj4M9tzYdAolNrzsdW5cqsM0y2Xhvc
-	 49BKpWzExT+WwLUVh2SZ0nLeZB6jza3Y2famF52WUHYMkmvaBGMMLv3kHw6GVrN1Ns
-	 MK+tb6nHwydY1emRh2SB6PDD+BBuxo2yasmuFu+bOCeD56HeyNFJ2miauJQQXbe32w
-	 81qqEaX7NB7wQ==
+	b=Y6cKoCcrK/Sz/BByyC73uzVeKtz5BqNwHVWjrS3R9eThJktbjvx9tsiY4+upDCzrz
+	 kWiyT872XkAbHlAMx9NtuPOb6rA407SNSSUAKquSYeHDb570SHQfUyxe7sej+jSGef
+	 +PDSSUdMN+5Ehr2mGUbKiSlS65wx7I6qjV7dy4DDAtEHmyw6PqclGb93SSLstySVEP
+	 7lvd90Nmg0FvEBvEgGrjZwCOcj7QO/qcNIYKcOyqvuEep7/ZXrNmV5um9iAtV2DWvH
+	 QrO9ZSh5uXJfiOpl01MHYN+9SdC/s1kJKabXUWGpVeFdSf7aRjyJFFtlFP6dMsX7+B
+	 qgAZ3Z8xRnkJA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C05AC44501;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C228C44507;
 	Mon, 13 Jul 2026 15:07:53 +0000 (UTC)
 From: Nikolai Burov via B4 Relay <devnull+nikolai.burov.jolla.com@kernel.org>
-Date: Mon, 13 Jul 2026 18:06:21 +0300
-Subject: [PATCH v2 1/3] dt-bindings: pinctrl: mediatek: Add MT6858
+Date: Mon, 13 Jul 2026 18:06:22 +0300
+Subject: [PATCH v2 2/3] pinctrl: mediatek: Add driver for MT6858
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260713-mt6858-pinctrl-v2-1-1bd072e3206c@jolla.com>
+Message-Id: <20260713-mt6858-pinctrl-v2-2-1bd072e3206c@jolla.com>
 References: <20260713-mt6858-pinctrl-v2-0-1bd072e3206c@jolla.com>
 In-Reply-To: <20260713-mt6858-pinctrl-v2-0-1bd072e3206c@jolla.com>
 To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -72,14 +72,13 @@ To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-mediatek@lists.infradead.org, Nikolai Burov <nikolai.burov@jolla.com>, 
- Nikolai Burov <nikolai.burov+review@abscue.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+ Nikolai Burov <nikolai.burov+review@abscue.de>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783955270; l=6302;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783955270; l=134527;
  i=nikolai.burov@jolla.com; s=20260707; h=from:subject:message-id;
- bh=TxSc8fJL7HQZpyDdZ/01rMbgxyEamqNF+r+0Zh0YQ4s=;
- b=Zzq7ZEcY/26R8jSsDZTbjJKeEeDgJLQJSj6ogHIxBeLq25+vbLGu9tcfZEQe1Q+ge6FjZfujh
- zmmV/SpCGJ2B90dThTIZ0bLAs6ajtBlz+0lsBseVINPBeyqdjHNHycP
+ bh=8ryRcXQyIMGWYVFYNpb41o4i5lOAzc6iKWHFqp8iIZI=;
+ b=gX4Ys/oTXxTrovNfVOnwK/+8YT2R61gHFpxFxaEXXoAR7psEx6GK4xecssFb5owd7TqZg/jSI
+ beeXdCml4kNCa1mIz48WutAQaj4poDbc9R5e2/xbQzJ5yRFFTXbkcK6
 X-Developer-Key: i=nikolai.burov@jolla.com; a=ed25519;
  pk=yzpa+PD+ovHUFMIOBA9o2QqGwI110jM6hdGHLc7jtoQ=
 X-Endpoint-Received: by B4 Relay for nikolai.burov@jolla.com/20260707 with
@@ -93,19 +92,19 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39991-lists,linux-gpio=lfdr.de,nikolai.burov.jolla.com];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:sean.wang@kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:nikolai.burov@jolla.com,m:nikolai.burov+review@abscue.de,m:krzysztof.kozlowski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,m:nikolai.burov@abscue.de,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-39994-lists,linux-gpio=lfdr.de,nikolai.burov.jolla.com];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:sean.wang@kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:nikolai.burov@jolla.com,m:nikolai.burov+review@abscue.de,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,m:nikolai.burov@abscue.de,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com];
 	FORGED_SENDER(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -120,218 +119,3853 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,jolla.com:mid,jolla.com:email,jolla.com:replyto]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mediatek.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,jolla.com:mid,jolla.com:email,jolla.com:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 108E474CD55
+X-Rspamd-Queue-Id: 3BBD374D0A2
 
 From: Nikolai Burov <nikolai.burov@jolla.com>
 
-Add new DT bindings for the pin controller found in the MT6858
-(MediaTek Dimensity 7100) SoC.
+Add a pinctrl driver for the MT6858 (MediaTek Dimensity 7100) SoC.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Signed-off-by: Nikolai Burov <nikolai.burov@jolla.com>
 ---
- .../bindings/pinctrl/mediatek,mt6858-pinctrl.yaml  | 190 +++++++++++++++++++++
- 1 file changed, 190 insertions(+)
+ drivers/pinctrl/mediatek/Kconfig              |   10 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6858.c     | 1407 +++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6858.h | 2378 +++++++++++++++++++++++++
+ 4 files changed, 3796 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6858-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6858-pinctrl.yaml
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index 97980cc28b9c..95c5250150d7 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -166,6 +166,16 @@ config PINCTRL_MT6797
+ 	default ARM64 && ARCH_MEDIATEK
+ 	select PINCTRL_MTK_PARIS
+ 
++config PINCTRL_MT6858
++	bool "MediaTek MT6858 pin control"
++	depends on OF
++	depends on ARM64 || COMPILE_TEST
++	default ARM64 && ARCH_MEDIATEK
++	select PINCTRL_MTK_PARIS
++	help
++	  Say yes here to support pin controller and gpio driver
++	  on the MediaTek MT6858 SoC.
++
+ config PINCTRL_MT6878
+ 	bool "MediaTek MT6878 pin control"
+ 	depends on OF
+diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
+index 6dc17b0c23f9..6ee3833dc6e2 100644
+--- a/drivers/pinctrl/mediatek/Makefile
++++ b/drivers/pinctrl/mediatek/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_PINCTRL_MT6765)		+= pinctrl-mt6765.o
+ obj-$(CONFIG_PINCTRL_MT6779)		+= pinctrl-mt6779.o
+ obj-$(CONFIG_PINCTRL_MT6795)		+= pinctrl-mt6795.o
+ obj-$(CONFIG_PINCTRL_MT6797)		+= pinctrl-mt6797.o
++obj-$(CONFIG_PINCTRL_MT6858)		+= pinctrl-mt6858.o
+ obj-$(CONFIG_PINCTRL_MT6878)		+= pinctrl-mt6878.o
+ obj-$(CONFIG_PINCTRL_MT6893)		+= pinctrl-mt6893.o
+ obj-$(CONFIG_PINCTRL_MT7622)		+= pinctrl-mt7622.o
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6858.c b/drivers/pinctrl/mediatek/pinctrl-mt6858.c
 new file mode 100644
-index 000000000000..9b834e87afde
+index 000000000000..07f72d9d531f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6858-pinctrl.yaml
-@@ -0,0 +1,190 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/mediatek,mt6858-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pinctrl/mediatek/pinctrl-mt6858.c
+@@ -0,0 +1,1407 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2025 MediaTek Inc.
++ *               Alice Chao <alice.chao@mediatek.com>
++ * Copyright (c) 2026 Jolla Mobile Ltd
++ *               Nikolai Burov <nikolai.burov@jolla.com>
++ */
 +
-+title: MediaTek MT6858 Pin Controller
++#include <linux/module.h>
++#include "pinctrl-mtk-mt6858.h"
++#include "pinctrl-paris.h"
 +
-+maintainers:
-+  - Nikolai Burov <nikolai.burov@jolla.com>
++/* MT6858 have multiple bases to program pin configuration listed as the below:
++ * GPIO_BASE: 0x10005000
++ * IOCFG_LM_BASE: 0x11B20000
++ * IOCFG_RB_BASE: 0x11C10000
++ * IOCFG_BM2_BASE: 0x11D10000
++ * IOCFG_BM_BASE: 0x11D30000
++ * IOCFG_BM1_BASE: 0x11D40000
++ * IOCFG_LT_BASE: 0x11E20000
++ * IOCFG_LT1_BASE: 0x11E30000
++ * IOCFG_RT_BASE: 0x11ED0000
++ * IOCFG_RT1_BASE: 0x11EE0000
++ * _i_based could be used to indicate what base the pin should be mapped into.
++ */
 +
-+description:
-+  The MediaTek's MT6858 Pin controller is used to control SoC pins.
++#define PIN_FIELD_BASE(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits) \
++	PIN_FIELD_CALC(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits, \
++			32, 0)
 +
-+properties:
-+  compatible:
-+    const: mediatek,mt6858-pinctrl
++static const struct mtk_pin_field_calc mt6858_pin_mode_range[] = {
++	/* Pin mode field is 5 bits with 8 bit stride */
++	PIN_FIELD(0, 196, 0x0300, 0x10, 0, 8),
++};
 +
-+  reg:
-+    items:
-+      - description: gpio base
-+      - description: lm group IO
-+      - description: rb group IO
-+      - description: bm2 group IO
-+      - description: bm group IO
-+      - description: bm1 group IO
-+      - description: lt group IO
-+      - description: lt1 group IO
-+      - description: rt group IO
-+      - description: rt1 group IO
-+      - description: eint south group IO
-+      - description: eint west group IO
-+      - description: eint east group IO
-+      - description: eint center group IO
++static const struct mtk_pin_field_calc mt6858_pin_dir_range[] = {
++	PIN_FIELD(0, 196, 0x0000, 0x10, 0, 1),
++};
 +
-+  reg-names:
-+    items:
-+      - const: base
-+      - const: lm
-+      - const: rb
-+      - const: bm2
-+      - const: bm
-+      - const: bm1
-+      - const: lt
-+      - const: lt1
-+      - const: rt
-+      - const: rt1
-+      - const: eint0
-+      - const: eint1
-+      - const: eint2
-+      - const: eint3
++static const struct mtk_pin_field_calc mt6858_pin_di_range[] = {
++	PIN_FIELD(0, 196, 0x0200, 0x10, 0, 1),
++};
 +
-+  interrupts:
-+    maxItems: 1
++static const struct mtk_pin_field_calc mt6858_pin_do_range[] = {
++	PIN_FIELD(0, 196, 0x0100, 0x10, 0, 1),
++};
 +
-+  interrupt-controller: true
++static const struct mtk_pin_field_calc mt6858_pin_ies_range[] = {
++	PIN_FIELD_BASE(0, 0, 8, 0x0060, 0x10, 4, 1),
++	PIN_FIELD_BASE(1, 1, 8, 0x0060, 0x10, 5, 1),
++	PIN_FIELD_BASE(2, 2, 8, 0x0060, 0x10, 6, 1),
++	PIN_FIELD_BASE(3, 3, 8, 0x0060, 0x10, 8, 1),
++	PIN_FIELD_BASE(4, 4, 8, 0x0060, 0x10, 9, 1),
++	PIN_FIELD_BASE(5, 5, 8, 0x0060, 0x10, 10, 1),
++	PIN_FIELD_BASE(6, 6, 8, 0x0060, 0x10, 11, 1),
++	PIN_FIELD_BASE(7, 7, 8, 0x0060, 0x10, 12, 1),
++	PIN_FIELD_BASE(8, 8, 5, 0x0060, 0x10, 15, 1),
++	PIN_FIELD_BASE(9, 9, 5, 0x0060, 0x10, 16, 1),
++	PIN_FIELD_BASE(10, 10, 5, 0x0060, 0x10, 9, 1),
++	PIN_FIELD_BASE(11, 11, 5, 0x0060, 0x10, 10, 1),
++	PIN_FIELD_BASE(12, 12, 5, 0x0060, 0x10, 11, 1),
++	PIN_FIELD_BASE(13, 13, 7, 0x0030, 0x10, 0, 1),
++	PIN_FIELD_BASE(14, 14, 7, 0x0030, 0x10, 1, 1),
++	PIN_FIELD_BASE(15, 15, 7, 0x0030, 0x10, 2, 1),
++	PIN_FIELD_BASE(16, 16, 7, 0x0030, 0x10, 3, 1),
++	PIN_FIELD_BASE(17, 17, 7, 0x0030, 0x10, 4, 1),
++	PIN_FIELD_BASE(18, 18, 6, 0x0020, 0x10, 0, 1),
++	PIN_FIELD_BASE(19, 19, 6, 0x0020, 0x10, 1, 1),
++	PIN_FIELD_BASE(20, 20, 6, 0x0020, 0x10, 2, 1),
++	PIN_FIELD_BASE(21, 21, 5, 0x0060, 0x10, 12, 1),
++	PIN_FIELD_BASE(22, 22, 5, 0x0060, 0x10, 13, 1),
++	PIN_FIELD_BASE(23, 23, 8, 0x0060, 0x10, 7, 1),
++	PIN_FIELD_BASE(24, 24, 5, 0x0060, 0x10, 14, 1),
++	PIN_FIELD_BASE(25, 25, 2, 0x0050, 0x10, 14, 1),
++	PIN_FIELD_BASE(26, 26, 3, 0x0060, 0x10, 1, 1),
++	PIN_FIELD_BASE(27, 27, 2, 0x0050, 0x10, 0, 1),
++	PIN_FIELD_BASE(28, 28, 2, 0x0050, 0x10, 1, 1),
++	PIN_FIELD_BASE(29, 29, 2, 0x0050, 0x10, 2, 1),
++	PIN_FIELD_BASE(30, 30, 2, 0x0050, 0x10, 3, 1),
++	PIN_FIELD_BASE(31, 31, 2, 0x0050, 0x10, 4, 1),
++	PIN_FIELD_BASE(32, 32, 2, 0x0050, 0x10, 5, 1),
++	PIN_FIELD_BASE(33, 33, 2, 0x0050, 0x10, 6, 1),
++	PIN_FIELD_BASE(34, 34, 2, 0x0050, 0x10, 7, 1),
++	PIN_FIELD_BASE(35, 35, 4, 0x0050, 0x10, 4, 1),
++	PIN_FIELD_BASE(36, 36, 8, 0x0060, 0x10, 0, 1),
++	PIN_FIELD_BASE(37, 37, 8, 0x0060, 0x10, 1, 1),
++	PIN_FIELD_BASE(38, 38, 8, 0x0060, 0x10, 2, 1),
++	PIN_FIELD_BASE(39, 39, 8, 0x0060, 0x10, 3, 1),
++	PIN_FIELD_BASE(40, 40, 1, 0x0050, 0x10, 11, 1),
++	PIN_FIELD_BASE(41, 41, 1, 0x0050, 0x10, 8, 1),
++	PIN_FIELD_BASE(42, 42, 1, 0x0050, 0x10, 10, 1),
++	PIN_FIELD_BASE(43, 43, 1, 0x0050, 0x10, 12, 1),
++	PIN_FIELD_BASE(44, 44, 1, 0x0050, 0x10, 9, 1),
++	PIN_FIELD_BASE(45, 45, 5, 0x0060, 0x10, 17, 1),
++	PIN_FIELD_BASE(46, 46, 5, 0x0060, 0x10, 19, 1),
++	PIN_FIELD_BASE(47, 47, 5, 0x0060, 0x10, 20, 1),
++	PIN_FIELD_BASE(48, 48, 5, 0x0060, 0x10, 18, 1),
++	PIN_FIELD_BASE(49, 49, 4, 0x0050, 0x10, 26, 1),
++	PIN_FIELD_BASE(50, 50, 4, 0x0050, 0x10, 25, 1),
++	PIN_FIELD_BASE(51, 51, 1, 0x0050, 0x10, 28, 1),
++	PIN_FIELD_BASE(52, 52, 1, 0x0050, 0x10, 27, 1),
++	PIN_FIELD_BASE(53, 53, 5, 0x0060, 0x10, 25, 1),
++	PIN_FIELD_BASE(54, 54, 5, 0x0060, 0x10, 21, 1),
++	PIN_FIELD_BASE(55, 55, 5, 0x0060, 0x10, 24, 1),
++	PIN_FIELD_BASE(56, 56, 5, 0x0060, 0x10, 22, 1),
++	PIN_FIELD_BASE(57, 57, 5, 0x0060, 0x10, 23, 1),
++	PIN_FIELD_BASE(58, 58, 3, 0x0060, 0x10, 21, 1),
++	PIN_FIELD_BASE(59, 59, 3, 0x0060, 0x10, 22, 1),
++	PIN_FIELD_BASE(60, 60, 3, 0x0060, 0x10, 24, 1),
++	PIN_FIELD_BASE(61, 61, 3, 0x0060, 0x10, 23, 1),
++	PIN_FIELD_BASE(62, 62, 8, 0x0060, 0x10, 25, 1),
++	PIN_FIELD_BASE(63, 63, 8, 0x0060, 0x10, 26, 1),
++	PIN_FIELD_BASE(64, 64, 8, 0x0060, 0x10, 28, 1),
++	PIN_FIELD_BASE(65, 65, 8, 0x0060, 0x10, 27, 1),
++	PIN_FIELD_BASE(66, 66, 1, 0x0050, 0x10, 17, 1),
++	PIN_FIELD_BASE(67, 67, 1, 0x0050, 0x10, 18, 1),
++	PIN_FIELD_BASE(68, 68, 1, 0x0050, 0x10, 20, 1),
++	PIN_FIELD_BASE(69, 69, 1, 0x0050, 0x10, 19, 1),
++	PIN_FIELD_BASE(70, 70, 1, 0x0050, 0x10, 21, 1),
++	PIN_FIELD_BASE(71, 71, 1, 0x0050, 0x10, 22, 1),
++	PIN_FIELD_BASE(72, 72, 1, 0x0050, 0x10, 24, 1),
++	PIN_FIELD_BASE(73, 73, 1, 0x0050, 0x10, 23, 1),
++	PIN_FIELD_BASE(74, 74, 1, 0x0050, 0x10, 13, 1),
++	PIN_FIELD_BASE(75, 75, 1, 0x0050, 0x10, 14, 1),
++	PIN_FIELD_BASE(76, 76, 1, 0x0050, 0x10, 16, 1),
++	PIN_FIELD_BASE(77, 77, 1, 0x0050, 0x10, 15, 1),
++	PIN_FIELD_BASE(78, 78, 3, 0x0060, 0x10, 25, 1),
++	PIN_FIELD_BASE(79, 79, 3, 0x0060, 0x10, 26, 1),
++	PIN_FIELD_BASE(80, 80, 3, 0x0060, 0x10, 28, 1),
++	PIN_FIELD_BASE(81, 81, 3, 0x0060, 0x10, 27, 1),
++	PIN_FIELD_BASE(82, 82, 8, 0x0060, 0x10, 13, 1),
++	PIN_FIELD_BASE(83, 83, 8, 0x0060, 0x10, 14, 1),
++	PIN_FIELD_BASE(84, 84, 8, 0x0060, 0x10, 15, 1),
++	PIN_FIELD_BASE(85, 85, 8, 0x0060, 0x10, 16, 1),
++	PIN_FIELD_BASE(86, 86, 8, 0x0060, 0x10, 17, 1),
++	PIN_FIELD_BASE(87, 87, 8, 0x0060, 0x10, 18, 1),
++	PIN_FIELD_BASE(88, 88, 4, 0x0050, 0x10, 19, 1),
++	PIN_FIELD_BASE(89, 89, 4, 0x0050, 0x10, 21, 1),
++	PIN_FIELD_BASE(90, 90, 4, 0x0050, 0x10, 20, 1),
++	PIN_FIELD_BASE(91, 91, 4, 0x0050, 0x10, 22, 1),
++	PIN_FIELD_BASE(92, 92, 4, 0x0050, 0x10, 24, 1),
++	PIN_FIELD_BASE(93, 93, 4, 0x0050, 0x10, 23, 1),
++	PIN_FIELD_BASE(94, 94, 4, 0x0050, 0x10, 7, 1),
++	PIN_FIELD_BASE(95, 95, 4, 0x0050, 0x10, 8, 1),
++	PIN_FIELD_BASE(96, 96, 4, 0x0050, 0x10, 6, 1),
++	PIN_FIELD_BASE(97, 97, 4, 0x0050, 0x10, 9, 1),
++	PIN_FIELD_BASE(98, 98, 5, 0x0060, 0x10, 8, 1),
++	PIN_FIELD_BASE(99, 99, 9, 0x0040, 0x10, 0, 1),
++	PIN_FIELD_BASE(100, 100, 9, 0x0040, 0x10, 1, 1),
++	PIN_FIELD_BASE(101, 101, 9, 0x0040, 0x10, 2, 1),
++	PIN_FIELD_BASE(102, 102, 9, 0x0040, 0x10, 3, 1),
++	PIN_FIELD_BASE(103, 103, 9, 0x0040, 0x10, 4, 1),
++	PIN_FIELD_BASE(104, 104, 9, 0x0040, 0x10, 5, 1),
++	PIN_FIELD_BASE(105, 105, 9, 0x0040, 0x10, 6, 1),
++	PIN_FIELD_BASE(106, 106, 5, 0x0060, 0x10, 0, 1),
++	PIN_FIELD_BASE(107, 107, 4, 0x0050, 0x10, 0, 1),
++	PIN_FIELD_BASE(108, 108, 4, 0x0050, 0x10, 1, 1),
++	PIN_FIELD_BASE(109, 109, 5, 0x0060, 0x10, 1, 1),
++	PIN_FIELD_BASE(110, 110, 5, 0x0060, 0x10, 2, 1),
++	PIN_FIELD_BASE(111, 111, 5, 0x0060, 0x10, 3, 1),
++	PIN_FIELD_BASE(112, 112, 5, 0x0060, 0x10, 4, 1),
++	PIN_FIELD_BASE(113, 113, 4, 0x0050, 0x10, 2, 1),
++	PIN_FIELD_BASE(114, 114, 4, 0x0050, 0x10, 3, 1),
++	PIN_FIELD_BASE(115, 115, 5, 0x0060, 0x10, 5, 1),
++	PIN_FIELD_BASE(116, 116, 4, 0x0050, 0x10, 10, 1),
++	PIN_FIELD_BASE(117, 117, 4, 0x0050, 0x10, 5, 1),
++	PIN_FIELD_BASE(118, 118, 3, 0x0060, 0x10, 4, 1),
++	PIN_FIELD_BASE(119, 119, 3, 0x0060, 0x10, 0, 1),
++	PIN_FIELD_BASE(120, 120, 3, 0x0060, 0x10, 5, 1),
++	PIN_FIELD_BASE(121, 121, 3, 0x0060, 0x10, 6, 1),
++	PIN_FIELD_BASE(122, 122, 7, 0x0030, 0x10, 7, 1),
++	PIN_FIELD_BASE(123, 123, 3, 0x0060, 0x10, 7, 1),
++	PIN_FIELD_BASE(124, 124, 1, 0x0050, 0x10, 26, 1),
++	PIN_FIELD_BASE(125, 125, 7, 0x0030, 0x10, 8, 1),
++	PIN_FIELD_BASE(126, 126, 2, 0x0050, 0x10, 15, 1),
++	PIN_FIELD_BASE(127, 127, 2, 0x0050, 0x10, 16, 1),
++	PIN_FIELD_BASE(128, 128, 2, 0x0050, 0x10, 17, 1),
++	PIN_FIELD_BASE(129, 129, 2, 0x0050, 0x10, 18, 1),
++	PIN_FIELD_BASE(130, 130, 3, 0x0060, 0x10, 8, 1),
++	PIN_FIELD_BASE(131, 131, 3, 0x0060, 0x10, 9, 1),
++	PIN_FIELD_BASE(132, 132, 3, 0x0060, 0x10, 10, 1),
++	PIN_FIELD_BASE(133, 133, 3, 0x0060, 0x10, 11, 1),
++	PIN_FIELD_BASE(134, 134, 3, 0x0060, 0x10, 12, 1),
++	PIN_FIELD_BASE(135, 135, 8, 0x0060, 0x10, 19, 1),
++	PIN_FIELD_BASE(136, 136, 8, 0x0060, 0x10, 20, 1),
++	PIN_FIELD_BASE(137, 137, 7, 0x0030, 0x10, 5, 1),
++	PIN_FIELD_BASE(138, 138, 7, 0x0030, 0x10, 6, 1),
++	PIN_FIELD_BASE(139, 139, 3, 0x0060, 0x10, 13, 1),
++	PIN_FIELD_BASE(140, 140, 3, 0x0060, 0x10, 17, 1),
++	PIN_FIELD_BASE(141, 141, 3, 0x0060, 0x10, 14, 1),
++	PIN_FIELD_BASE(142, 142, 3, 0x0060, 0x10, 18, 1),
++	PIN_FIELD_BASE(143, 143, 3, 0x0060, 0x10, 2, 1),
++	PIN_FIELD_BASE(144, 144, 3, 0x0060, 0x10, 3, 1),
++	PIN_FIELD_BASE(145, 145, 3, 0x0060, 0x10, 15, 1),
++	PIN_FIELD_BASE(146, 146, 3, 0x0060, 0x10, 19, 1),
++	PIN_FIELD_BASE(147, 147, 2, 0x0050, 0x10, 8, 1),
++	PIN_FIELD_BASE(148, 148, 2, 0x0050, 0x10, 11, 1),
++	PIN_FIELD_BASE(149, 149, 5, 0x0060, 0x10, 6, 1),
++	PIN_FIELD_BASE(150, 150, 5, 0x0060, 0x10, 7, 1),
++	PIN_FIELD_BASE(151, 151, 3, 0x0060, 0x10, 16, 1),
++	PIN_FIELD_BASE(152, 152, 3, 0x0060, 0x10, 20, 1),
++	PIN_FIELD_BASE(153, 153, 2, 0x0050, 0x10, 9, 1),
++	PIN_FIELD_BASE(154, 154, 2, 0x0050, 0x10, 12, 1),
++	PIN_FIELD_BASE(155, 155, 2, 0x0050, 0x10, 10, 1),
++	PIN_FIELD_BASE(156, 156, 2, 0x0050, 0x10, 13, 1),
++	PIN_FIELD_BASE(157, 157, 8, 0x0060, 0x10, 21, 1),
++	PIN_FIELD_BASE(158, 158, 8, 0x0060, 0x10, 23, 1),
++	PIN_FIELD_BASE(159, 159, 8, 0x0060, 0x10, 22, 1),
++	PIN_FIELD_BASE(160, 160, 8, 0x0060, 0x10, 24, 1),
++	PIN_FIELD_BASE(161, 161, 5, 0x0060, 0x10, 26, 1),
++	PIN_FIELD_BASE(162, 162, 5, 0x0060, 0x10, 28, 1),
++	PIN_FIELD_BASE(163, 163, 5, 0x0060, 0x10, 27, 1),
++	PIN_FIELD_BASE(164, 164, 5, 0x0060, 0x10, 29, 1),
++	PIN_FIELD_BASE(165, 165, 4, 0x0050, 0x10, 11, 1),
++	PIN_FIELD_BASE(166, 166, 4, 0x0050, 0x10, 12, 1),
++	PIN_FIELD_BASE(167, 167, 4, 0x0050, 0x10, 13, 1),
++	PIN_FIELD_BASE(168, 168, 4, 0x0050, 0x10, 14, 1),
++	PIN_FIELD_BASE(169, 169, 4, 0x0050, 0x10, 15, 1),
++	PIN_FIELD_BASE(170, 170, 4, 0x0050, 0x10, 16, 1),
++	PIN_FIELD_BASE(171, 171, 4, 0x0050, 0x10, 17, 1),
++	PIN_FIELD_BASE(172, 172, 4, 0x0050, 0x10, 18, 1),
++	PIN_FIELD_BASE(173, 173, 1, 0x0050, 0x10, 0, 1),
++	PIN_FIELD_BASE(174, 174, 1, 0x0050, 0x10, 7, 1),
++	PIN_FIELD_BASE(175, 175, 1, 0x0050, 0x10, 3, 1),
++	PIN_FIELD_BASE(176, 176, 1, 0x0050, 0x10, 4, 1),
++	PIN_FIELD_BASE(177, 177, 1, 0x0050, 0x10, 5, 1),
++	PIN_FIELD_BASE(178, 178, 1, 0x0050, 0x10, 6, 1),
++	PIN_FIELD_BASE(179, 179, 1, 0x0050, 0x10, 1, 1),
++	PIN_FIELD_BASE(180, 180, 1, 0x0050, 0x10, 2, 1),
++	PIN_FIELD_BASE(181, 181, 1, 0x0050, 0x10, 25, 1),
++	PIN_FIELD_BASE(182, 182, 9, 0x0040, 0x10, 11, 1),
++	PIN_FIELD_BASE(183, 183, 9, 0x0040, 0x10, 13, 1),
++	PIN_FIELD_BASE(184, 184, 9, 0x0040, 0x10, 7, 1),
++	PIN_FIELD_BASE(185, 185, 9, 0x0040, 0x10, 8, 1),
++	PIN_FIELD_BASE(186, 186, 9, 0x0040, 0x10, 9, 1),
++	PIN_FIELD_BASE(187, 187, 9, 0x0040, 0x10, 15, 1),
++	PIN_FIELD_BASE(188, 188, 9, 0x0040, 0x10, 16, 1),
++	PIN_FIELD_BASE(189, 189, 9, 0x0040, 0x10, 17, 1),
++	PIN_FIELD_BASE(190, 190, 9, 0x0040, 0x10, 18, 1),
++	PIN_FIELD_BASE(191, 191, 9, 0x0040, 0x10, 12, 1),
++	PIN_FIELD_BASE(192, 192, 9, 0x0040, 0x10, 14, 1),
++	PIN_FIELD_BASE(193, 193, 9, 0x0040, 0x10, 10, 1),
++	PIN_FIELD_BASE(194, 194, 9, 0x0040, 0x10, 19, 1),
++	PIN_FIELD_BASE(195, 195, 9, 0x0040, 0x10, 20, 1),
++	PIN_FIELD_BASE(196, 196, 6, 0x0020, 0x10, 3, 1),
++};
 +
-+  '#interrupt-cells':
-+    const: 2
++static const struct mtk_pin_field_calc mt6858_pin_smt_range[] = {
++	PIN_FIELD_BASE(0, 0, 8, 0x0110, 0x10, 4, 1),
++	PIN_FIELD_BASE(1, 1, 8, 0x0110, 0x10, 5, 1),
++	PIN_FIELD_BASE(2, 2, 8, 0x0110, 0x10, 6, 1),
++	PIN_FIELD_BASE(3, 3, 8, 0x0110, 0x10, 8, 1),
++	PIN_FIELD_BASE(4, 4, 8, 0x0110, 0x10, 9, 1),
++	PIN_FIELD_BASE(5, 5, 8, 0x0110, 0x10, 10, 1),
++	PIN_FIELD_BASE(6, 6, 8, 0x0110, 0x10, 11, 1),
++	PIN_FIELD_BASE(7, 7, 8, 0x0110, 0x10, 12, 1),
++	PIN_FIELD_BASE(8, 8, 5, 0x00e0, 0x10, 15, 1),
++	PIN_FIELD_BASE(9, 9, 5, 0x00e0, 0x10, 16, 1),
++	PIN_FIELD_BASE(10, 10, 5, 0x00e0, 0x10, 9, 1),
++	PIN_FIELD_BASE(11, 11, 5, 0x00e0, 0x10, 10, 1),
++	PIN_FIELD_BASE(12, 12, 5, 0x00e0, 0x10, 11, 1),
++	PIN_FIELD_BASE(13, 13, 7, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(14, 14, 7, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(15, 15, 7, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(16, 16, 7, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(17, 17, 7, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(18, 18, 6, 0x00c0, 0x10, 0, 1),
++	PIN_FIELD_BASE(19, 19, 6, 0x00c0, 0x10, 1, 1),
++	PIN_FIELD_BASE(20, 20, 6, 0x00c0, 0x10, 2, 1),
++	PIN_FIELD_BASE(21, 21, 5, 0x00e0, 0x10, 12, 1),
++	PIN_FIELD_BASE(22, 22, 5, 0x00e0, 0x10, 13, 1),
++	PIN_FIELD_BASE(23, 23, 8, 0x0110, 0x10, 7, 1),
++	PIN_FIELD_BASE(24, 24, 5, 0x00e0, 0x10, 14, 1),
++	PIN_FIELD_BASE(25, 25, 2, 0x00c0, 0x10, 14, 1),
++	PIN_FIELD_BASE(26, 26, 3, 0x00f0, 0x10, 1, 1),
++	PIN_FIELD_BASE(27, 27, 2, 0x00c0, 0x10, 0, 1),
++	PIN_FIELD_BASE(28, 28, 2, 0x00c0, 0x10, 1, 1),
++	PIN_FIELD_BASE(29, 29, 2, 0x00c0, 0x10, 2, 1),
++	PIN_FIELD_BASE(30, 30, 2, 0x00c0, 0x10, 3, 1),
++	PIN_FIELD_BASE(31, 31, 2, 0x00c0, 0x10, 4, 1),
++	PIN_FIELD_BASE(32, 32, 2, 0x00c0, 0x10, 5, 1),
++	PIN_FIELD_BASE(33, 33, 2, 0x00c0, 0x10, 6, 1),
++	PIN_FIELD_BASE(34, 34, 2, 0x00c0, 0x10, 7, 1),
++	PIN_FIELD_BASE(35, 35, 4, 0x0100, 0x10, 4, 1),
++	PIN_FIELD_BASE(36, 36, 8, 0x0110, 0x10, 0, 1),
++	PIN_FIELD_BASE(37, 37, 8, 0x0110, 0x10, 1, 1),
++	PIN_FIELD_BASE(38, 38, 8, 0x0110, 0x10, 2, 1),
++	PIN_FIELD_BASE(39, 39, 8, 0x0110, 0x10, 3, 1),
++	PIN_FIELD_BASE(40, 40, 1, 0x00b0, 0x10, 2, 1),
++	PIN_FIELD_BASE(41, 41, 1, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(42, 42, 1, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(43, 43, 1, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(44, 44, 1, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(45, 45, 5, 0x00e0, 0x10, 17, 1),
++	PIN_FIELD_BASE(46, 46, 5, 0x00e0, 0x10, 17, 1),
++	PIN_FIELD_BASE(47, 47, 5, 0x00e0, 0x10, 17, 1),
++	PIN_FIELD_BASE(48, 48, 5, 0x00e0, 0x10, 17, 1),
++	PIN_FIELD_BASE(49, 49, 4, 0x0100, 0x10, 18, 1),
++	PIN_FIELD_BASE(50, 50, 4, 0x0100, 0x10, 17, 1),
++	PIN_FIELD_BASE(51, 51, 1, 0x00b0, 0x10, 18, 1),
++	PIN_FIELD_BASE(52, 52, 1, 0x00b0, 0x10, 17, 1),
++	PIN_FIELD_BASE(53, 53, 5, 0x00e0, 0x10, 22, 1),
++	PIN_FIELD_BASE(54, 54, 5, 0x00e0, 0x10, 18, 1),
++	PIN_FIELD_BASE(55, 55, 5, 0x00e0, 0x10, 21, 1),
++	PIN_FIELD_BASE(56, 56, 5, 0x00e0, 0x10, 19, 1),
++	PIN_FIELD_BASE(57, 57, 5, 0x00e0, 0x10, 20, 1),
++	PIN_FIELD_BASE(58, 58, 3, 0x00f0, 0x10, 21, 1),
++	PIN_FIELD_BASE(59, 59, 3, 0x00f0, 0x10, 22, 1),
++	PIN_FIELD_BASE(60, 60, 3, 0x00f0, 0x10, 24, 1),
++	PIN_FIELD_BASE(61, 61, 3, 0x00f0, 0x10, 23, 1),
++	PIN_FIELD_BASE(62, 62, 8, 0x0110, 0x10, 25, 1),
++	PIN_FIELD_BASE(63, 63, 8, 0x0110, 0x10, 26, 1),
++	PIN_FIELD_BASE(64, 64, 8, 0x0110, 0x10, 28, 1),
++	PIN_FIELD_BASE(65, 65, 8, 0x0110, 0x10, 27, 1),
++	PIN_FIELD_BASE(66, 66, 1, 0x00b0, 0x10, 7, 1),
++	PIN_FIELD_BASE(67, 67, 1, 0x00b0, 0x10, 8, 1),
++	PIN_FIELD_BASE(68, 68, 1, 0x00b0, 0x10, 10, 1),
++	PIN_FIELD_BASE(69, 69, 1, 0x00b0, 0x10, 9, 1),
++	PIN_FIELD_BASE(70, 70, 1, 0x00b0, 0x10, 11, 1),
++	PIN_FIELD_BASE(71, 71, 1, 0x00b0, 0x10, 12, 1),
++	PIN_FIELD_BASE(72, 72, 1, 0x00b0, 0x10, 14, 1),
++	PIN_FIELD_BASE(73, 73, 1, 0x00b0, 0x10, 13, 1),
++	PIN_FIELD_BASE(74, 74, 1, 0x00b0, 0x10, 3, 1),
++	PIN_FIELD_BASE(75, 75, 1, 0x00b0, 0x10, 4, 1),
++	PIN_FIELD_BASE(76, 76, 1, 0x00b0, 0x10, 6, 1),
++	PIN_FIELD_BASE(77, 77, 1, 0x00b0, 0x10, 5, 1),
++	PIN_FIELD_BASE(78, 78, 3, 0x00f0, 0x10, 25, 1),
++	PIN_FIELD_BASE(79, 79, 3, 0x00f0, 0x10, 26, 1),
++	PIN_FIELD_BASE(80, 80, 3, 0x00f0, 0x10, 28, 1),
++	PIN_FIELD_BASE(81, 81, 3, 0x00f0, 0x10, 27, 1),
++	PIN_FIELD_BASE(82, 82, 8, 0x0110, 0x10, 13, 1),
++	PIN_FIELD_BASE(83, 83, 8, 0x0110, 0x10, 14, 1),
++	PIN_FIELD_BASE(84, 84, 8, 0x0110, 0x10, 15, 1),
++	PIN_FIELD_BASE(85, 85, 8, 0x0110, 0x10, 16, 1),
++	PIN_FIELD_BASE(86, 86, 8, 0x0110, 0x10, 17, 1),
++	PIN_FIELD_BASE(87, 87, 8, 0x0110, 0x10, 18, 1),
++	PIN_FIELD_BASE(88, 88, 4, 0x0100, 0x10, 15, 1),
++	PIN_FIELD_BASE(89, 89, 4, 0x0100, 0x10, 15, 1),
++	PIN_FIELD_BASE(90, 90, 4, 0x0100, 0x10, 15, 1),
++	PIN_FIELD_BASE(91, 91, 4, 0x0100, 0x10, 16, 1),
++	PIN_FIELD_BASE(92, 92, 4, 0x0100, 0x10, 16, 1),
++	PIN_FIELD_BASE(93, 93, 4, 0x0100, 0x10, 16, 1),
++	PIN_FIELD_BASE(94, 94, 4, 0x0100, 0x10, 7, 1),
++	PIN_FIELD_BASE(95, 95, 4, 0x0100, 0x10, 8, 1),
++	PIN_FIELD_BASE(96, 96, 4, 0x0100, 0x10, 6, 1),
++	PIN_FIELD_BASE(97, 97, 4, 0x0100, 0x10, 9, 1),
++	PIN_FIELD_BASE(98, 98, 5, 0x00e0, 0x10, 8, 1),
++	PIN_FIELD_BASE(99, 99, 9, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(100, 100, 9, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(101, 101, 9, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(102, 102, 9, 0x00a0, 0x10, 3, 1),
++	PIN_FIELD_BASE(103, 103, 9, 0x00a0, 0x10, 4, 1),
++	PIN_FIELD_BASE(104, 104, 9, 0x00a0, 0x10, 5, 1),
++	PIN_FIELD_BASE(105, 105, 9, 0x00a0, 0x10, 6, 1),
++	PIN_FIELD_BASE(106, 106, 5, 0x00e0, 0x10, 0, 1),
++	PIN_FIELD_BASE(107, 107, 4, 0x0100, 0x10, 0, 1),
++	PIN_FIELD_BASE(108, 108, 4, 0x0100, 0x10, 1, 1),
++	PIN_FIELD_BASE(109, 109, 5, 0x00e0, 0x10, 1, 1),
++	PIN_FIELD_BASE(110, 110, 5, 0x00e0, 0x10, 2, 1),
++	PIN_FIELD_BASE(111, 111, 5, 0x00e0, 0x10, 3, 1),
++	PIN_FIELD_BASE(112, 112, 5, 0x00e0, 0x10, 4, 1),
++	PIN_FIELD_BASE(113, 113, 4, 0x0100, 0x10, 2, 1),
++	PIN_FIELD_BASE(114, 114, 4, 0x0100, 0x10, 3, 1),
++	PIN_FIELD_BASE(115, 115, 5, 0x00e0, 0x10, 5, 1),
++	PIN_FIELD_BASE(116, 116, 4, 0x0100, 0x10, 10, 1),
++	PIN_FIELD_BASE(117, 117, 4, 0x0100, 0x10, 5, 1),
++	PIN_FIELD_BASE(118, 118, 3, 0x00f0, 0x10, 4, 1),
++	PIN_FIELD_BASE(119, 119, 3, 0x00f0, 0x10, 0, 1),
++	PIN_FIELD_BASE(120, 120, 3, 0x00f0, 0x10, 5, 1),
++	PIN_FIELD_BASE(121, 121, 3, 0x00f0, 0x10, 6, 1),
++	PIN_FIELD_BASE(122, 122, 7, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(123, 123, 3, 0x00f0, 0x10, 7, 1),
++	PIN_FIELD_BASE(124, 124, 1, 0x00b0, 0x10, 16, 1),
++	PIN_FIELD_BASE(125, 125, 7, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(126, 126, 2, 0x00c0, 0x10, 15, 1),
++	PIN_FIELD_BASE(127, 127, 2, 0x00c0, 0x10, 16, 1),
++	PIN_FIELD_BASE(128, 128, 2, 0x00c0, 0x10, 17, 1),
++	PIN_FIELD_BASE(129, 129, 2, 0x00c0, 0x10, 18, 1),
++	PIN_FIELD_BASE(130, 130, 3, 0x00f0, 0x10, 8, 1),
++	PIN_FIELD_BASE(131, 131, 3, 0x00f0, 0x10, 9, 1),
++	PIN_FIELD_BASE(132, 132, 3, 0x00f0, 0x10, 10, 1),
++	PIN_FIELD_BASE(133, 133, 3, 0x00f0, 0x10, 11, 1),
++	PIN_FIELD_BASE(134, 134, 3, 0x00f0, 0x10, 12, 1),
++	PIN_FIELD_BASE(135, 135, 8, 0x0110, 0x10, 19, 1),
++	PIN_FIELD_BASE(136, 136, 8, 0x0110, 0x10, 20, 1),
++	PIN_FIELD_BASE(137, 137, 7, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(138, 138, 7, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(139, 139, 3, 0x00f0, 0x10, 13, 1),
++	PIN_FIELD_BASE(140, 140, 3, 0x00f0, 0x10, 17, 1),
++	PIN_FIELD_BASE(141, 141, 3, 0x00f0, 0x10, 14, 1),
++	PIN_FIELD_BASE(142, 142, 3, 0x00f0, 0x10, 18, 1),
++	PIN_FIELD_BASE(143, 143, 3, 0x00f0, 0x10, 2, 1),
++	PIN_FIELD_BASE(144, 144, 3, 0x00f0, 0x10, 3, 1),
++	PIN_FIELD_BASE(145, 145, 3, 0x00f0, 0x10, 15, 1),
++	PIN_FIELD_BASE(146, 146, 3, 0x00f0, 0x10, 19, 1),
++	PIN_FIELD_BASE(147, 147, 2, 0x00c0, 0x10, 8, 1),
++	PIN_FIELD_BASE(148, 148, 2, 0x00c0, 0x10, 11, 1),
++	PIN_FIELD_BASE(149, 149, 5, 0x00e0, 0x10, 6, 1),
++	PIN_FIELD_BASE(150, 150, 5, 0x00e0, 0x10, 7, 1),
++	PIN_FIELD_BASE(151, 151, 3, 0x00f0, 0x10, 16, 1),
++	PIN_FIELD_BASE(152, 152, 3, 0x00f0, 0x10, 20, 1),
++	PIN_FIELD_BASE(153, 153, 2, 0x00c0, 0x10, 9, 1),
++	PIN_FIELD_BASE(154, 154, 2, 0x00c0, 0x10, 12, 1),
++	PIN_FIELD_BASE(155, 155, 2, 0x00c0, 0x10, 10, 1),
++	PIN_FIELD_BASE(156, 156, 2, 0x00c0, 0x10, 13, 1),
++	PIN_FIELD_BASE(157, 157, 8, 0x0110, 0x10, 21, 1),
++	PIN_FIELD_BASE(158, 158, 8, 0x0110, 0x10, 23, 1),
++	PIN_FIELD_BASE(159, 159, 8, 0x0110, 0x10, 22, 1),
++	PIN_FIELD_BASE(160, 160, 8, 0x0110, 0x10, 24, 1),
++	PIN_FIELD_BASE(161, 161, 5, 0x00e0, 0x10, 23, 1),
++	PIN_FIELD_BASE(162, 162, 5, 0x00e0, 0x10, 25, 1),
++	PIN_FIELD_BASE(163, 163, 5, 0x00e0, 0x10, 24, 1),
++	PIN_FIELD_BASE(164, 164, 5, 0x00e0, 0x10, 26, 1),
++	PIN_FIELD_BASE(165, 165, 4, 0x0100, 0x10, 11, 1),
++	PIN_FIELD_BASE(166, 166, 4, 0x0100, 0x10, 11, 1),
++	PIN_FIELD_BASE(167, 167, 4, 0x0100, 0x10, 12, 1),
++	PIN_FIELD_BASE(168, 168, 4, 0x0100, 0x10, 12, 1),
++	PIN_FIELD_BASE(169, 169, 4, 0x0100, 0x10, 13, 1),
++	PIN_FIELD_BASE(170, 170, 4, 0x0100, 0x10, 13, 1),
++	PIN_FIELD_BASE(171, 171, 4, 0x0100, 0x10, 14, 1),
++	PIN_FIELD_BASE(172, 172, 4, 0x0100, 0x10, 14, 1),
++	PIN_FIELD_BASE(173, 173, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(174, 174, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(175, 175, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(176, 176, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(177, 177, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(178, 178, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(179, 179, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(180, 180, 1, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(181, 181, 1, 0x00b0, 0x10, 15, 1),
++	PIN_FIELD_BASE(182, 182, 9, 0x00a0, 0x10, 11, 1),
++	PIN_FIELD_BASE(183, 183, 9, 0x00a0, 0x10, 13, 1),
++	PIN_FIELD_BASE(184, 184, 9, 0x00a0, 0x10, 7, 1),
++	PIN_FIELD_BASE(185, 185, 9, 0x00a0, 0x10, 8, 1),
++	PIN_FIELD_BASE(186, 186, 9, 0x00a0, 0x10, 9, 1),
++	PIN_FIELD_BASE(187, 187, 9, 0x00a0, 0x10, 15, 1),
++	PIN_FIELD_BASE(188, 188, 9, 0x00a0, 0x10, 16, 1),
++	PIN_FIELD_BASE(189, 189, 9, 0x00a0, 0x10, 17, 1),
++	PIN_FIELD_BASE(190, 190, 9, 0x00a0, 0x10, 18, 1),
++	PIN_FIELD_BASE(191, 191, 9, 0x00a0, 0x10, 12, 1),
++	PIN_FIELD_BASE(192, 192, 9, 0x00a0, 0x10, 14, 1),
++	PIN_FIELD_BASE(193, 193, 9, 0x00a0, 0x10, 10, 1),
++	PIN_FIELD_BASE(194, 194, 9, 0x00a0, 0x10, 19, 1),
++	PIN_FIELD_BASE(195, 195, 9, 0x00a0, 0x10, 20, 1),
++	PIN_FIELD_BASE(196, 196, 6, 0x00c0, 0x10, 3, 1),
++};
 +
-+  gpio-controller: true
++static const struct mtk_pin_field_calc mt6858_pin_pu_range[] = {
++	PIN_FIELD_BASE(0, 0, 8, 0x00b0, 0x10, 4, 1),
++	PIN_FIELD_BASE(1, 1, 8, 0x00b0, 0x10, 5, 1),
++	PIN_FIELD_BASE(2, 2, 8, 0x00b0, 0x10, 6, 1),
++	PIN_FIELD_BASE(3, 3, 8, 0x00b0, 0x10, 8, 1),
++	PIN_FIELD_BASE(4, 4, 8, 0x00b0, 0x10, 9, 1),
++	PIN_FIELD_BASE(5, 5, 8, 0x00b0, 0x10, 10, 1),
++	PIN_FIELD_BASE(6, 6, 8, 0x00b0, 0x10, 11, 1),
++	PIN_FIELD_BASE(7, 7, 8, 0x00b0, 0x10, 12, 1),
++	PIN_FIELD_BASE(8, 8, 5, 0x00a0, 0x10, 15, 1),
++	PIN_FIELD_BASE(9, 9, 5, 0x00a0, 0x10, 16, 1),
++	PIN_FIELD_BASE(10, 10, 5, 0x00a0, 0x10, 9, 1),
++	PIN_FIELD_BASE(11, 11, 5, 0x00a0, 0x10, 10, 1),
++	PIN_FIELD_BASE(12, 12, 5, 0x00a0, 0x10, 11, 1),
++	PIN_FIELD_BASE(13, 13, 7, 0x0070, 0x10, 0, 1),
++	PIN_FIELD_BASE(14, 14, 7, 0x0070, 0x10, 1, 1),
++	PIN_FIELD_BASE(15, 15, 7, 0x0070, 0x10, 2, 1),
++	PIN_FIELD_BASE(16, 16, 7, 0x0070, 0x10, 3, 1),
++	PIN_FIELD_BASE(17, 17, 7, 0x0070, 0x10, 4, 1),
++	PIN_FIELD_BASE(21, 21, 5, 0x00a0, 0x10, 12, 1),
++	PIN_FIELD_BASE(22, 22, 5, 0x00a0, 0x10, 13, 1),
++	PIN_FIELD_BASE(23, 23, 8, 0x00b0, 0x10, 7, 1),
++	PIN_FIELD_BASE(24, 24, 5, 0x00a0, 0x10, 14, 1),
++	PIN_FIELD_BASE(25, 25, 2, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(26, 26, 3, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(27, 27, 2, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(28, 28, 2, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(29, 29, 2, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(30, 30, 2, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(31, 31, 2, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(32, 32, 2, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(33, 33, 2, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(34, 34, 2, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(35, 35, 4, 0x00b0, 0x10, 4, 1),
++	PIN_FIELD_BASE(36, 36, 8, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(37, 37, 8, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(38, 38, 8, 0x00b0, 0x10, 2, 1),
++	PIN_FIELD_BASE(39, 39, 8, 0x00b0, 0x10, 3, 1),
++	PIN_FIELD_BASE(40, 40, 1, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(41, 41, 1, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(42, 42, 1, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(43, 43, 1, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(44, 44, 1, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(45, 45, 5, 0x00a0, 0x10, 17, 1),
++	PIN_FIELD_BASE(46, 46, 5, 0x00a0, 0x10, 19, 1),
++	PIN_FIELD_BASE(47, 47, 5, 0x00a0, 0x10, 20, 1),
++	PIN_FIELD_BASE(48, 48, 5, 0x00a0, 0x10, 18, 1),
++	PIN_FIELD_BASE(49, 49, 4, 0x00b0, 0x10, 20, 1),
++	PIN_FIELD_BASE(50, 50, 4, 0x00b0, 0x10, 19, 1),
++	PIN_FIELD_BASE(51, 51, 1, 0x0090, 0x10, 28, 1),
++	PIN_FIELD_BASE(52, 52, 1, 0x0090, 0x10, 27, 1),
++	PIN_FIELD_BASE(53, 53, 5, 0x00a0, 0x10, 25, 1),
++	PIN_FIELD_BASE(54, 54, 5, 0x00a0, 0x10, 21, 1),
++	PIN_FIELD_BASE(55, 55, 5, 0x00a0, 0x10, 24, 1),
++	PIN_FIELD_BASE(56, 56, 5, 0x00a0, 0x10, 22, 1),
++	PIN_FIELD_BASE(57, 57, 5, 0x00a0, 0x10, 23, 1),
++	PIN_FIELD_BASE(58, 58, 3, 0x00a0, 0x10, 21, 1),
++	PIN_FIELD_BASE(59, 59, 3, 0x00a0, 0x10, 22, 1),
++	PIN_FIELD_BASE(60, 60, 3, 0x00a0, 0x10, 24, 1),
++	PIN_FIELD_BASE(61, 61, 3, 0x00a0, 0x10, 23, 1),
++	PIN_FIELD_BASE(62, 62, 8, 0x00b0, 0x10, 19, 1),
++	PIN_FIELD_BASE(63, 63, 8, 0x00b0, 0x10, 20, 1),
++	PIN_FIELD_BASE(64, 64, 8, 0x00b0, 0x10, 22, 1),
++	PIN_FIELD_BASE(65, 65, 8, 0x00b0, 0x10, 21, 1),
++	PIN_FIELD_BASE(66, 66, 1, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(67, 67, 1, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(68, 68, 1, 0x0090, 0x10, 20, 1),
++	PIN_FIELD_BASE(69, 69, 1, 0x0090, 0x10, 19, 1),
++	PIN_FIELD_BASE(70, 70, 1, 0x0090, 0x10, 21, 1),
++	PIN_FIELD_BASE(71, 71, 1, 0x0090, 0x10, 22, 1),
++	PIN_FIELD_BASE(72, 72, 1, 0x0090, 0x10, 24, 1),
++	PIN_FIELD_BASE(73, 73, 1, 0x0090, 0x10, 23, 1),
++	PIN_FIELD_BASE(74, 74, 1, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(75, 75, 1, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(76, 76, 1, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(77, 77, 1, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(78, 78, 3, 0x00a0, 0x10, 25, 1),
++	PIN_FIELD_BASE(79, 79, 3, 0x00a0, 0x10, 26, 1),
++	PIN_FIELD_BASE(80, 80, 3, 0x00a0, 0x10, 28, 1),
++	PIN_FIELD_BASE(81, 81, 3, 0x00a0, 0x10, 27, 1),
++	PIN_FIELD_BASE(94, 94, 4, 0x00b0, 0x10, 7, 1),
++	PIN_FIELD_BASE(95, 95, 4, 0x00b0, 0x10, 8, 1),
++	PIN_FIELD_BASE(96, 96, 4, 0x00b0, 0x10, 6, 1),
++	PIN_FIELD_BASE(97, 97, 4, 0x00b0, 0x10, 9, 1),
++	PIN_FIELD_BASE(98, 98, 5, 0x00a0, 0x10, 8, 1),
++	PIN_FIELD_BASE(99, 99, 9, 0x0080, 0x10, 0, 1),
++	PIN_FIELD_BASE(100, 100, 9, 0x0080, 0x10, 1, 1),
++	PIN_FIELD_BASE(101, 101, 9, 0x0080, 0x10, 2, 1),
++	PIN_FIELD_BASE(102, 102, 9, 0x0080, 0x10, 3, 1),
++	PIN_FIELD_BASE(103, 103, 9, 0x0080, 0x10, 4, 1),
++	PIN_FIELD_BASE(104, 104, 9, 0x0080, 0x10, 5, 1),
++	PIN_FIELD_BASE(105, 105, 9, 0x0080, 0x10, 6, 1),
++	PIN_FIELD_BASE(106, 106, 5, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(107, 107, 4, 0x00b0, 0x10, 0, 1),
++	PIN_FIELD_BASE(108, 108, 4, 0x00b0, 0x10, 1, 1),
++	PIN_FIELD_BASE(109, 109, 5, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(110, 110, 5, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(111, 111, 5, 0x00a0, 0x10, 3, 1),
++	PIN_FIELD_BASE(112, 112, 5, 0x00a0, 0x10, 4, 1),
++	PIN_FIELD_BASE(113, 113, 4, 0x00b0, 0x10, 2, 1),
++	PIN_FIELD_BASE(114, 114, 4, 0x00b0, 0x10, 3, 1),
++	PIN_FIELD_BASE(115, 115, 5, 0x00a0, 0x10, 5, 1),
++	PIN_FIELD_BASE(116, 116, 4, 0x00b0, 0x10, 10, 1),
++	PIN_FIELD_BASE(117, 117, 4, 0x00b0, 0x10, 5, 1),
++	PIN_FIELD_BASE(118, 118, 3, 0x00a0, 0x10, 4, 1),
++	PIN_FIELD_BASE(119, 119, 3, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(120, 120, 3, 0x00a0, 0x10, 5, 1),
++	PIN_FIELD_BASE(121, 121, 3, 0x00a0, 0x10, 6, 1),
++	PIN_FIELD_BASE(122, 122, 7, 0x0070, 0x10, 9, 1),
++	PIN_FIELD_BASE(123, 123, 3, 0x00a0, 0x10, 7, 1),
++	PIN_FIELD_BASE(124, 124, 1, 0x0090, 0x10, 26, 1),
++	PIN_FIELD_BASE(125, 125, 7, 0x0070, 0x10, 10, 1),
++	PIN_FIELD_BASE(126, 126, 2, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(127, 127, 2, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(128, 128, 2, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(129, 129, 2, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(130, 130, 3, 0x00a0, 0x10, 8, 1),
++	PIN_FIELD_BASE(131, 131, 3, 0x00a0, 0x10, 9, 1),
++	PIN_FIELD_BASE(132, 132, 3, 0x00a0, 0x10, 10, 1),
++	PIN_FIELD_BASE(133, 133, 3, 0x00a0, 0x10, 11, 1),
++	PIN_FIELD_BASE(134, 134, 3, 0x00a0, 0x10, 12, 1),
++	PIN_FIELD_BASE(135, 135, 8, 0x00b0, 0x10, 13, 1),
++	PIN_FIELD_BASE(136, 136, 8, 0x00b0, 0x10, 14, 1),
++	PIN_FIELD_BASE(137, 137, 7, 0x0070, 0x10, 5, 1),
++	PIN_FIELD_BASE(138, 138, 7, 0x0070, 0x10, 6, 1),
++	PIN_FIELD_BASE(139, 139, 3, 0x00a0, 0x10, 13, 1),
++	PIN_FIELD_BASE(140, 140, 3, 0x00a0, 0x10, 17, 1),
++	PIN_FIELD_BASE(141, 141, 3, 0x00a0, 0x10, 14, 1),
++	PIN_FIELD_BASE(142, 142, 3, 0x00a0, 0x10, 18, 1),
++	PIN_FIELD_BASE(143, 143, 3, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(144, 144, 3, 0x00a0, 0x10, 3, 1),
++	PIN_FIELD_BASE(145, 145, 3, 0x00a0, 0x10, 15, 1),
++	PIN_FIELD_BASE(146, 146, 3, 0x00a0, 0x10, 19, 1),
++	PIN_FIELD_BASE(147, 147, 2, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(148, 148, 2, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(149, 149, 5, 0x00a0, 0x10, 6, 1),
++	PIN_FIELD_BASE(150, 150, 5, 0x00a0, 0x10, 7, 1),
++	PIN_FIELD_BASE(151, 151, 3, 0x00a0, 0x10, 16, 1),
++	PIN_FIELD_BASE(152, 152, 3, 0x00a0, 0x10, 20, 1),
++	PIN_FIELD_BASE(153, 153, 2, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(154, 154, 2, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(155, 155, 2, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(156, 156, 2, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(157, 157, 8, 0x00b0, 0x10, 15, 1),
++	PIN_FIELD_BASE(158, 158, 8, 0x00b0, 0x10, 17, 1),
++	PIN_FIELD_BASE(159, 159, 8, 0x00b0, 0x10, 16, 1),
++	PIN_FIELD_BASE(160, 160, 8, 0x00b0, 0x10, 18, 1),
++	PIN_FIELD_BASE(161, 161, 5, 0x00a0, 0x10, 26, 1),
++	PIN_FIELD_BASE(162, 162, 5, 0x00a0, 0x10, 28, 1),
++	PIN_FIELD_BASE(163, 163, 5, 0x00a0, 0x10, 27, 1),
++	PIN_FIELD_BASE(164, 164, 5, 0x00a0, 0x10, 29, 1),
++	PIN_FIELD_BASE(165, 165, 4, 0x00b0, 0x10, 11, 1),
++	PIN_FIELD_BASE(166, 166, 4, 0x00b0, 0x10, 12, 1),
++	PIN_FIELD_BASE(167, 167, 4, 0x00b0, 0x10, 13, 1),
++	PIN_FIELD_BASE(168, 168, 4, 0x00b0, 0x10, 14, 1),
++	PIN_FIELD_BASE(169, 169, 4, 0x00b0, 0x10, 15, 1),
++	PIN_FIELD_BASE(170, 170, 4, 0x00b0, 0x10, 16, 1),
++	PIN_FIELD_BASE(171, 171, 4, 0x00b0, 0x10, 17, 1),
++	PIN_FIELD_BASE(172, 172, 4, 0x00b0, 0x10, 18, 1),
++	PIN_FIELD_BASE(173, 173, 1, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(174, 174, 1, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(175, 175, 1, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(176, 176, 1, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(177, 177, 1, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(178, 178, 1, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(179, 179, 1, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(180, 180, 1, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(181, 181, 1, 0x0090, 0x10, 25, 1),
++	PIN_FIELD_BASE(182, 182, 9, 0x0080, 0x10, 11, 1),
++	PIN_FIELD_BASE(183, 183, 9, 0x0080, 0x10, 13, 1),
++	PIN_FIELD_BASE(184, 184, 9, 0x0080, 0x10, 7, 1),
++	PIN_FIELD_BASE(185, 185, 9, 0x0080, 0x10, 8, 1),
++	PIN_FIELD_BASE(186, 186, 9, 0x0080, 0x10, 9, 1),
++	PIN_FIELD_BASE(187, 187, 9, 0x0080, 0x10, 15, 1),
++	PIN_FIELD_BASE(188, 188, 9, 0x0080, 0x10, 16, 1),
++	PIN_FIELD_BASE(189, 189, 9, 0x0080, 0x10, 17, 1),
++	PIN_FIELD_BASE(190, 190, 9, 0x0080, 0x10, 18, 1),
++	PIN_FIELD_BASE(191, 191, 9, 0x0080, 0x10, 12, 1),
++	PIN_FIELD_BASE(192, 192, 9, 0x0080, 0x10, 14, 1),
++	PIN_FIELD_BASE(193, 193, 9, 0x0080, 0x10, 10, 1),
++	PIN_FIELD_BASE(194, 194, 9, 0x0080, 0x10, 19, 1),
++	PIN_FIELD_BASE(195, 195, 9, 0x0080, 0x10, 20, 1),
++	PIN_FIELD_BASE(196, 196, 6, 0x0080, 0x10, 0, 1),
++};
 +
-+  '#gpio-cells':
-+    const: 2
++static const struct mtk_pin_field_calc mt6858_pin_pd_range[] = {
++	PIN_FIELD_BASE(0, 0, 8, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(1, 1, 8, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(2, 2, 8, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(3, 3, 8, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(4, 4, 8, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(5, 5, 8, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(6, 6, 8, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(7, 7, 8, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(8, 8, 5, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(9, 9, 5, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(10, 10, 5, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(11, 11, 5, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(12, 12, 5, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(13, 13, 7, 0x0060, 0x10, 0, 1),
++	PIN_FIELD_BASE(14, 14, 7, 0x0060, 0x10, 1, 1),
++	PIN_FIELD_BASE(15, 15, 7, 0x0060, 0x10, 2, 1),
++	PIN_FIELD_BASE(16, 16, 7, 0x0060, 0x10, 3, 1),
++	PIN_FIELD_BASE(17, 17, 7, 0x0060, 0x10, 4, 1),
++	PIN_FIELD_BASE(21, 21, 5, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(22, 22, 5, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(23, 23, 8, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(24, 24, 5, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(25, 25, 2, 0x0080, 0x10, 14, 1),
++	PIN_FIELD_BASE(26, 26, 3, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(27, 27, 2, 0x0080, 0x10, 0, 1),
++	PIN_FIELD_BASE(28, 28, 2, 0x0080, 0x10, 1, 1),
++	PIN_FIELD_BASE(29, 29, 2, 0x0080, 0x10, 2, 1),
++	PIN_FIELD_BASE(30, 30, 2, 0x0080, 0x10, 3, 1),
++	PIN_FIELD_BASE(31, 31, 2, 0x0080, 0x10, 4, 1),
++	PIN_FIELD_BASE(32, 32, 2, 0x0080, 0x10, 5, 1),
++	PIN_FIELD_BASE(33, 33, 2, 0x0080, 0x10, 6, 1),
++	PIN_FIELD_BASE(34, 34, 2, 0x0080, 0x10, 7, 1),
++	PIN_FIELD_BASE(35, 35, 4, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(36, 36, 8, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(37, 37, 8, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(38, 38, 8, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(39, 39, 8, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(40, 40, 1, 0x0080, 0x10, 11, 1),
++	PIN_FIELD_BASE(41, 41, 1, 0x0080, 0x10, 8, 1),
++	PIN_FIELD_BASE(42, 42, 1, 0x0080, 0x10, 10, 1),
++	PIN_FIELD_BASE(43, 43, 1, 0x0080, 0x10, 12, 1),
++	PIN_FIELD_BASE(44, 44, 1, 0x0080, 0x10, 9, 1),
++	PIN_FIELD_BASE(45, 45, 5, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(46, 46, 5, 0x0090, 0x10, 19, 1),
++	PIN_FIELD_BASE(47, 47, 5, 0x0090, 0x10, 20, 1),
++	PIN_FIELD_BASE(48, 48, 5, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(49, 49, 4, 0x0090, 0x10, 20, 1),
++	PIN_FIELD_BASE(50, 50, 4, 0x0090, 0x10, 19, 1),
++	PIN_FIELD_BASE(51, 51, 1, 0x0080, 0x10, 28, 1),
++	PIN_FIELD_BASE(52, 52, 1, 0x0080, 0x10, 27, 1),
++	PIN_FIELD_BASE(53, 53, 5, 0x0090, 0x10, 25, 1),
++	PIN_FIELD_BASE(54, 54, 5, 0x0090, 0x10, 21, 1),
++	PIN_FIELD_BASE(55, 55, 5, 0x0090, 0x10, 24, 1),
++	PIN_FIELD_BASE(56, 56, 5, 0x0090, 0x10, 22, 1),
++	PIN_FIELD_BASE(57, 57, 5, 0x0090, 0x10, 23, 1),
++	PIN_FIELD_BASE(58, 58, 3, 0x0090, 0x10, 21, 1),
++	PIN_FIELD_BASE(59, 59, 3, 0x0090, 0x10, 22, 1),
++	PIN_FIELD_BASE(60, 60, 3, 0x0090, 0x10, 24, 1),
++	PIN_FIELD_BASE(61, 61, 3, 0x0090, 0x10, 23, 1),
++	PIN_FIELD_BASE(62, 62, 8, 0x0090, 0x10, 19, 1),
++	PIN_FIELD_BASE(63, 63, 8, 0x0090, 0x10, 20, 1),
++	PIN_FIELD_BASE(64, 64, 8, 0x0090, 0x10, 22, 1),
++	PIN_FIELD_BASE(65, 65, 8, 0x0090, 0x10, 21, 1),
++	PIN_FIELD_BASE(66, 66, 1, 0x0080, 0x10, 17, 1),
++	PIN_FIELD_BASE(67, 67, 1, 0x0080, 0x10, 18, 1),
++	PIN_FIELD_BASE(68, 68, 1, 0x0080, 0x10, 20, 1),
++	PIN_FIELD_BASE(69, 69, 1, 0x0080, 0x10, 19, 1),
++	PIN_FIELD_BASE(70, 70, 1, 0x0080, 0x10, 21, 1),
++	PIN_FIELD_BASE(71, 71, 1, 0x0080, 0x10, 22, 1),
++	PIN_FIELD_BASE(72, 72, 1, 0x0080, 0x10, 24, 1),
++	PIN_FIELD_BASE(73, 73, 1, 0x0080, 0x10, 23, 1),
++	PIN_FIELD_BASE(74, 74, 1, 0x0080, 0x10, 13, 1),
++	PIN_FIELD_BASE(75, 75, 1, 0x0080, 0x10, 14, 1),
++	PIN_FIELD_BASE(76, 76, 1, 0x0080, 0x10, 16, 1),
++	PIN_FIELD_BASE(77, 77, 1, 0x0080, 0x10, 15, 1),
++	PIN_FIELD_BASE(78, 78, 3, 0x0090, 0x10, 25, 1),
++	PIN_FIELD_BASE(79, 79, 3, 0x0090, 0x10, 26, 1),
++	PIN_FIELD_BASE(80, 80, 3, 0x0090, 0x10, 28, 1),
++	PIN_FIELD_BASE(81, 81, 3, 0x0090, 0x10, 27, 1),
++	PIN_FIELD_BASE(94, 94, 4, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(95, 95, 4, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(96, 96, 4, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(97, 97, 4, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(98, 98, 5, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(99, 99, 9, 0x0070, 0x10, 0, 1),
++	PIN_FIELD_BASE(100, 100, 9, 0x0070, 0x10, 1, 1),
++	PIN_FIELD_BASE(101, 101, 9, 0x0070, 0x10, 2, 1),
++	PIN_FIELD_BASE(102, 102, 9, 0x0070, 0x10, 3, 1),
++	PIN_FIELD_BASE(103, 103, 9, 0x0070, 0x10, 4, 1),
++	PIN_FIELD_BASE(104, 104, 9, 0x0070, 0x10, 5, 1),
++	PIN_FIELD_BASE(105, 105, 9, 0x0070, 0x10, 6, 1),
++	PIN_FIELD_BASE(106, 106, 5, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(107, 107, 4, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(108, 108, 4, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(109, 109, 5, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(110, 110, 5, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(111, 111, 5, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(112, 112, 5, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(113, 113, 4, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(114, 114, 4, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(115, 115, 5, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(116, 116, 4, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(117, 117, 4, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(118, 118, 3, 0x0090, 0x10, 4, 1),
++	PIN_FIELD_BASE(119, 119, 3, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(120, 120, 3, 0x0090, 0x10, 5, 1),
++	PIN_FIELD_BASE(121, 121, 3, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(122, 122, 7, 0x0060, 0x10, 9, 1),
++	PIN_FIELD_BASE(123, 123, 3, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(124, 124, 1, 0x0080, 0x10, 26, 1),
++	PIN_FIELD_BASE(125, 125, 7, 0x0060, 0x10, 10, 1),
++	PIN_FIELD_BASE(126, 126, 2, 0x0080, 0x10, 15, 1),
++	PIN_FIELD_BASE(127, 127, 2, 0x0080, 0x10, 16, 1),
++	PIN_FIELD_BASE(128, 128, 2, 0x0080, 0x10, 17, 1),
++	PIN_FIELD_BASE(129, 129, 2, 0x0080, 0x10, 18, 1),
++	PIN_FIELD_BASE(130, 130, 3, 0x0090, 0x10, 8, 1),
++	PIN_FIELD_BASE(131, 131, 3, 0x0090, 0x10, 9, 1),
++	PIN_FIELD_BASE(132, 132, 3, 0x0090, 0x10, 10, 1),
++	PIN_FIELD_BASE(133, 133, 3, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(134, 134, 3, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(135, 135, 8, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(136, 136, 8, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(137, 137, 7, 0x0060, 0x10, 5, 1),
++	PIN_FIELD_BASE(138, 138, 7, 0x0060, 0x10, 6, 1),
++	PIN_FIELD_BASE(139, 139, 3, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(140, 140, 3, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(141, 141, 3, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(142, 142, 3, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(143, 143, 3, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(144, 144, 3, 0x0090, 0x10, 3, 1),
++	PIN_FIELD_BASE(145, 145, 3, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(146, 146, 3, 0x0090, 0x10, 19, 1),
++	PIN_FIELD_BASE(147, 147, 2, 0x0080, 0x10, 8, 1),
++	PIN_FIELD_BASE(148, 148, 2, 0x0080, 0x10, 11, 1),
++	PIN_FIELD_BASE(149, 149, 5, 0x0090, 0x10, 6, 1),
++	PIN_FIELD_BASE(150, 150, 5, 0x0090, 0x10, 7, 1),
++	PIN_FIELD_BASE(151, 151, 3, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(152, 152, 3, 0x0090, 0x10, 20, 1),
++	PIN_FIELD_BASE(153, 153, 2, 0x0080, 0x10, 9, 1),
++	PIN_FIELD_BASE(154, 154, 2, 0x0080, 0x10, 12, 1),
++	PIN_FIELD_BASE(155, 155, 2, 0x0080, 0x10, 10, 1),
++	PIN_FIELD_BASE(156, 156, 2, 0x0080, 0x10, 13, 1),
++	PIN_FIELD_BASE(157, 157, 8, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(158, 158, 8, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(159, 159, 8, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(160, 160, 8, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(161, 161, 5, 0x0090, 0x10, 26, 1),
++	PIN_FIELD_BASE(162, 162, 5, 0x0090, 0x10, 28, 1),
++	PIN_FIELD_BASE(163, 163, 5, 0x0090, 0x10, 27, 1),
++	PIN_FIELD_BASE(164, 164, 5, 0x0090, 0x10, 29, 1),
++	PIN_FIELD_BASE(165, 165, 4, 0x0090, 0x10, 11, 1),
++	PIN_FIELD_BASE(166, 166, 4, 0x0090, 0x10, 12, 1),
++	PIN_FIELD_BASE(167, 167, 4, 0x0090, 0x10, 13, 1),
++	PIN_FIELD_BASE(168, 168, 4, 0x0090, 0x10, 14, 1),
++	PIN_FIELD_BASE(169, 169, 4, 0x0090, 0x10, 15, 1),
++	PIN_FIELD_BASE(170, 170, 4, 0x0090, 0x10, 16, 1),
++	PIN_FIELD_BASE(171, 171, 4, 0x0090, 0x10, 17, 1),
++	PIN_FIELD_BASE(172, 172, 4, 0x0090, 0x10, 18, 1),
++	PIN_FIELD_BASE(173, 173, 1, 0x0080, 0x10, 0, 1),
++	PIN_FIELD_BASE(174, 174, 1, 0x0080, 0x10, 7, 1),
++	PIN_FIELD_BASE(175, 175, 1, 0x0080, 0x10, 3, 1),
++	PIN_FIELD_BASE(176, 176, 1, 0x0080, 0x10, 4, 1),
++	PIN_FIELD_BASE(177, 177, 1, 0x0080, 0x10, 5, 1),
++	PIN_FIELD_BASE(178, 178, 1, 0x0080, 0x10, 6, 1),
++	PIN_FIELD_BASE(179, 179, 1, 0x0080, 0x10, 1, 1),
++	PIN_FIELD_BASE(180, 180, 1, 0x0080, 0x10, 2, 1),
++	PIN_FIELD_BASE(181, 181, 1, 0x0080, 0x10, 25, 1),
++	PIN_FIELD_BASE(182, 182, 9, 0x0070, 0x10, 11, 1),
++	PIN_FIELD_BASE(183, 183, 9, 0x0070, 0x10, 13, 1),
++	PIN_FIELD_BASE(184, 184, 9, 0x0070, 0x10, 7, 1),
++	PIN_FIELD_BASE(185, 185, 9, 0x0070, 0x10, 8, 1),
++	PIN_FIELD_BASE(186, 186, 9, 0x0070, 0x10, 9, 1),
++	PIN_FIELD_BASE(187, 187, 9, 0x0070, 0x10, 15, 1),
++	PIN_FIELD_BASE(188, 188, 9, 0x0070, 0x10, 16, 1),
++	PIN_FIELD_BASE(189, 189, 9, 0x0070, 0x10, 17, 1),
++	PIN_FIELD_BASE(190, 190, 9, 0x0070, 0x10, 18, 1),
++	PIN_FIELD_BASE(191, 191, 9, 0x0070, 0x10, 12, 1),
++	PIN_FIELD_BASE(192, 192, 9, 0x0070, 0x10, 14, 1),
++	PIN_FIELD_BASE(193, 193, 9, 0x0070, 0x10, 10, 1),
++	PIN_FIELD_BASE(194, 194, 9, 0x0070, 0x10, 19, 1),
++	PIN_FIELD_BASE(195, 195, 9, 0x0070, 0x10, 20, 1),
++	PIN_FIELD_BASE(196, 196, 6, 0x0060, 0x10, 0, 1),
++};
 +
-+  gpio-ranges:
-+    maxItems: 1
++static const struct mtk_pin_field_calc mt6858_pin_pupd_range[] = {
++	PIN_FIELD_BASE(18, 18, 6, 0x0070, 0x10, 0, 1),
++	PIN_FIELD_BASE(19, 19, 6, 0x0070, 0x10, 1, 1),
++	PIN_FIELD_BASE(20, 20, 6, 0x0070, 0x10, 2, 1),
++	PIN_FIELD_BASE(82, 82, 8, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(83, 83, 8, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(84, 84, 8, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(85, 85, 8, 0x00a0, 0x10, 3, 1),
++	PIN_FIELD_BASE(86, 86, 8, 0x00a0, 0x10, 4, 1),
++	PIN_FIELD_BASE(87, 87, 8, 0x00a0, 0x10, 5, 1),
++	PIN_FIELD_BASE(88, 88, 4, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(89, 89, 4, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(90, 90, 4, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(91, 91, 4, 0x00a0, 0x10, 3, 1),
++	PIN_FIELD_BASE(92, 92, 4, 0x00a0, 0x10, 5, 1),
++	PIN_FIELD_BASE(93, 93, 4, 0x00a0, 0x10, 4, 1),
++};
 +
-+  gpio-line-names: true
++static const struct mtk_pin_field_calc mt6858_pin_r0_range[] = {
++	PIN_FIELD_BASE(18, 18, 6, 0x0090, 0x10, 0, 1),
++	PIN_FIELD_BASE(19, 19, 6, 0x0090, 0x10, 1, 1),
++	PIN_FIELD_BASE(20, 20, 6, 0x0090, 0x10, 2, 1),
++	PIN_FIELD_BASE(82, 82, 8, 0x00c0, 0x10, 0, 1),
++	PIN_FIELD_BASE(83, 83, 8, 0x00c0, 0x10, 1, 1),
++	PIN_FIELD_BASE(84, 84, 8, 0x00c0, 0x10, 2, 1),
++	PIN_FIELD_BASE(85, 85, 8, 0x00c0, 0x10, 3, 1),
++	PIN_FIELD_BASE(86, 86, 8, 0x00c0, 0x10, 4, 1),
++	PIN_FIELD_BASE(87, 87, 8, 0x00c0, 0x10, 5, 1),
++	PIN_FIELD_BASE(88, 88, 4, 0x00c0, 0x10, 0, 1),
++	PIN_FIELD_BASE(89, 89, 4, 0x00c0, 0x10, 2, 1),
++	PIN_FIELD_BASE(90, 90, 4, 0x00c0, 0x10, 1, 1),
++	PIN_FIELD_BASE(91, 91, 4, 0x00c0, 0x10, 3, 1),
++	PIN_FIELD_BASE(92, 92, 4, 0x00c0, 0x10, 5, 1),
++	PIN_FIELD_BASE(93, 93, 4, 0x00c0, 0x10, 4, 1),
++};
 +
-+# PIN CONFIGURATION NODES
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
++static const struct mtk_pin_field_calc mt6858_pin_r1_range[] = {
++	PIN_FIELD_BASE(18, 18, 6, 0x00a0, 0x10, 0, 1),
++	PIN_FIELD_BASE(19, 19, 6, 0x00a0, 0x10, 1, 1),
++	PIN_FIELD_BASE(20, 20, 6, 0x00a0, 0x10, 2, 1),
++	PIN_FIELD_BASE(82, 82, 8, 0x00d0, 0x10, 0, 1),
++	PIN_FIELD_BASE(83, 83, 8, 0x00d0, 0x10, 1, 1),
++	PIN_FIELD_BASE(84, 84, 8, 0x00d0, 0x10, 2, 1),
++	PIN_FIELD_BASE(85, 85, 8, 0x00d0, 0x10, 3, 1),
++	PIN_FIELD_BASE(86, 86, 8, 0x00d0, 0x10, 4, 1),
++	PIN_FIELD_BASE(87, 87, 8, 0x00d0, 0x10, 5, 1),
++	PIN_FIELD_BASE(88, 88, 4, 0x00d0, 0x10, 0, 1),
++	PIN_FIELD_BASE(89, 89, 4, 0x00d0, 0x10, 2, 1),
++	PIN_FIELD_BASE(90, 90, 4, 0x00d0, 0x10, 1, 1),
++	PIN_FIELD_BASE(91, 91, 4, 0x00d0, 0x10, 3, 1),
++	PIN_FIELD_BASE(92, 92, 4, 0x00d0, 0x10, 5, 1),
++	PIN_FIELD_BASE(93, 93, 4, 0x00d0, 0x10, 4, 1),
++};
 +
-+    patternProperties:
-+      '^pins':
-+        type: object
-+        $ref: /schemas/pinctrl/pincfg-node.yaml
-+        additionalProperties: false
-+        description:
-+          A pinctrl node should contain at least one subnodes representing the
-+          pinctrl groups available on the machine. Each subnode will list the
-+          pins it needs, and how they should be configured, with regard to muxer
-+          configuration, pullups, drive strength, input enable/disable and input
-+          schmitt.
++static const struct mtk_pin_field_calc mt6858_pin_drv_range[] = {
++	PIN_FIELD_BASE(0, 0, 8, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(1, 1, 8, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(2, 2, 8, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(3, 3, 8, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(4, 4, 8, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(5, 5, 8, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(6, 6, 8, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(7, 7, 8, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(8, 8, 5, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(9, 9, 5, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(10, 10, 5, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(11, 11, 5, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(12, 12, 5, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(13, 13, 7, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(14, 14, 7, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(15, 15, 7, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(16, 16, 7, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(17, 17, 7, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(18, 18, 6, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(19, 19, 6, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(20, 20, 6, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(21, 21, 5, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(22, 22, 5, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(23, 23, 8, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(24, 24, 5, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(25, 25, 2, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(26, 26, 3, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(27, 27, 2, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(28, 28, 2, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(29, 29, 2, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(30, 30, 2, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(31, 31, 2, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(32, 32, 2, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(33, 33, 2, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(34, 34, 2, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(35, 35, 4, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(36, 36, 8, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(37, 37, 8, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(38, 38, 8, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(39, 39, 8, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(40, 40, 1, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(41, 41, 1, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(42, 42, 1, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(43, 43, 1, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(44, 44, 1, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(45, 45, 5, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(46, 46, 5, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(47, 47, 5, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(48, 48, 5, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(49, 49, 4, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(50, 50, 4, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(51, 51, 1, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(52, 52, 1, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(53, 53, 5, 0x0020, 0x10, 6, 3),
++	PIN_FIELD_BASE(54, 54, 5, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(55, 55, 5, 0x0020, 0x10, 3, 3),
++	PIN_FIELD_BASE(56, 56, 5, 0x0010, 0x10, 27, 3),
++	PIN_FIELD_BASE(57, 57, 5, 0x0020, 0x10, 0, 3),
++	PIN_FIELD_BASE(58, 58, 3, 0x0020, 0x10, 3, 3),
++	PIN_FIELD_BASE(59, 59, 3, 0x0020, 0x10, 6, 3),
++	PIN_FIELD_BASE(60, 60, 3, 0x0020, 0x10, 12, 3),
++	PIN_FIELD_BASE(61, 61, 3, 0x0020, 0x10, 9, 3),
++	PIN_FIELD_BASE(62, 62, 8, 0x0020, 0x10, 15, 3),
++	PIN_FIELD_BASE(63, 63, 8, 0x0020, 0x10, 18, 3),
++	PIN_FIELD_BASE(64, 64, 8, 0x0020, 0x10, 24, 3),
++	PIN_FIELD_BASE(65, 65, 8, 0x0020, 0x10, 21, 3),
++	PIN_FIELD_BASE(66, 66, 1, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(67, 67, 1, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(68, 68, 1, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(69, 69, 1, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(70, 70, 1, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(71, 71, 1, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(72, 72, 1, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(73, 73, 1, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(74, 74, 1, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(75, 75, 1, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(76, 76, 1, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(77, 77, 1, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(78, 78, 3, 0x0020, 0x10, 15, 3),
++	PIN_FIELD_BASE(79, 79, 3, 0x0020, 0x10, 18, 3),
++	PIN_FIELD_BASE(80, 80, 3, 0x0020, 0x10, 24, 3),
++	PIN_FIELD_BASE(81, 81, 3, 0x0020, 0x10, 21, 3),
++	PIN_FIELD_BASE(82, 82, 8, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(83, 83, 8, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(84, 84, 8, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(85, 85, 8, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(86, 86, 8, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(87, 87, 8, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(88, 88, 4, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(89, 89, 4, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(90, 90, 4, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(91, 91, 4, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(92, 92, 4, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(93, 93, 4, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(94, 94, 4, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(95, 95, 4, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(96, 96, 4, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(97, 97, 4, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(98, 98, 5, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(99, 99, 9, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(100, 100, 9, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(101, 101, 9, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(102, 102, 9, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(103, 103, 9, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(104, 104, 9, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(105, 105, 9, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(106, 106, 5, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(107, 107, 4, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(108, 108, 4, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(109, 109, 5, 0x0000, 0x10, 3, 3),
++	PIN_FIELD_BASE(110, 110, 5, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(111, 111, 5, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(112, 112, 5, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(113, 113, 4, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(114, 114, 4, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(115, 115, 5, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(116, 116, 4, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(117, 117, 4, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(118, 118, 3, 0x0000, 0x10, 12, 3),
++	PIN_FIELD_BASE(119, 119, 3, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(120, 120, 3, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(121, 121, 3, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(122, 122, 7, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(123, 123, 3, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(124, 124, 1, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(125, 125, 7, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(126, 126, 2, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(127, 127, 2, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(128, 128, 2, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(129, 129, 2, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(130, 130, 3, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(131, 131, 3, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(132, 132, 3, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(133, 133, 3, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(134, 134, 3, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(135, 135, 8, 0x0010, 0x10, 27, 3),
++	PIN_FIELD_BASE(136, 136, 8, 0x0020, 0x10, 0, 3),
++	PIN_FIELD_BASE(137, 137, 7, 0x0000, 0x10, 15, 3),
++	PIN_FIELD_BASE(138, 138, 7, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(139, 139, 3, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(140, 140, 3, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(141, 141, 3, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(142, 142, 3, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(143, 143, 3, 0x0000, 0x10, 6, 3),
++	PIN_FIELD_BASE(144, 144, 3, 0x0000, 0x10, 9, 3),
++	PIN_FIELD_BASE(145, 145, 3, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(146, 146, 3, 0x0010, 0x10, 27, 3),
++	PIN_FIELD_BASE(147, 147, 2, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(148, 148, 2, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(149, 149, 5, 0x0000, 0x10, 18, 3),
++	PIN_FIELD_BASE(150, 150, 5, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(151, 151, 3, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(152, 152, 3, 0x0020, 0x10, 0, 3),
++	PIN_FIELD_BASE(153, 153, 2, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(154, 154, 2, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(155, 155, 2, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(156, 156, 2, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(157, 157, 8, 0x0020, 0x10, 3, 3),
++	PIN_FIELD_BASE(158, 158, 8, 0x0020, 0x10, 9, 3),
++	PIN_FIELD_BASE(159, 159, 8, 0x0020, 0x10, 6, 3),
++	PIN_FIELD_BASE(160, 160, 8, 0x0020, 0x10, 12, 3),
++	PIN_FIELD_BASE(161, 161, 5, 0x0020, 0x10, 9, 3),
++	PIN_FIELD_BASE(162, 162, 5, 0x0020, 0x10, 15, 3),
++	PIN_FIELD_BASE(163, 163, 5, 0x0020, 0x10, 12, 3),
++	PIN_FIELD_BASE(164, 164, 5, 0x0020, 0x10, 18, 3),
++	PIN_FIELD_BASE(165, 165, 4, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(166, 166, 4, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(167, 167, 4, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(168, 168, 4, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(169, 169, 4, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(170, 170, 4, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(171, 171, 4, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(172, 172, 4, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(173, 173, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(174, 174, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(175, 175, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(176, 176, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(177, 177, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(178, 178, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(179, 179, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(180, 180, 1, 0x0000, 0x10, 0, 3),
++	PIN_FIELD_BASE(181, 181, 1, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(182, 182, 9, 0x0010, 0x10, 3, 3),
++	PIN_FIELD_BASE(183, 183, 9, 0x0010, 0x10, 9, 3),
++	PIN_FIELD_BASE(184, 184, 9, 0x0000, 0x10, 21, 3),
++	PIN_FIELD_BASE(185, 185, 9, 0x0000, 0x10, 24, 3),
++	PIN_FIELD_BASE(186, 186, 9, 0x0000, 0x10, 27, 3),
++	PIN_FIELD_BASE(187, 187, 9, 0x0010, 0x10, 15, 3),
++	PIN_FIELD_BASE(188, 188, 9, 0x0010, 0x10, 18, 3),
++	PIN_FIELD_BASE(189, 189, 9, 0x0010, 0x10, 21, 3),
++	PIN_FIELD_BASE(190, 190, 9, 0x0010, 0x10, 24, 3),
++	PIN_FIELD_BASE(191, 191, 9, 0x0010, 0x10, 6, 3),
++	PIN_FIELD_BASE(192, 192, 9, 0x0010, 0x10, 12, 3),
++	PIN_FIELD_BASE(193, 193, 9, 0x0010, 0x10, 0, 3),
++	PIN_FIELD_BASE(194, 194, 9, 0x0010, 0x10, 27, 3),
++	PIN_FIELD_BASE(195, 195, 9, 0x0020, 0x10, 0, 3),
++	PIN_FIELD_BASE(196, 196, 6, 0x0000, 0x10, 9, 3),
++};
 +
-+        properties:
-+          pinmux:
-+            description:
-+              Integer array, represents gpio pin number and mux setting.
-+              Supported pin number and mux varies for different SoCs, and are
-+              defined as macros in arch/arm64/boot/dts/mediatek/mt6858-pinfunc.h
-+              for this SoC.
++static const struct mtk_pin_field_calc mt6858_pin_drv_adv_range[] = {
++	PIN_FIELD_BASE(36, 36, 8, 0x0030, 0x10, 0, 5),
++	PIN_FIELD_BASE(37, 37, 8, 0x0030, 0x10, 5, 5),
++	PIN_FIELD_BASE(38, 38, 8, 0x0030, 0x10, 10, 5),
++	PIN_FIELD_BASE(39, 39, 8, 0x0030, 0x10, 15, 5),
++	PIN_FIELD_BASE(126, 126, 2, 0x0020, 0x10, 18, 5),
++	PIN_FIELD_BASE(127, 127, 2, 0x0020, 0x10, 23, 5),
++	PIN_FIELD_BASE(128, 128, 2, 0x0030, 0x10, 0, 5),
++	PIN_FIELD_BASE(129, 129, 2, 0x0030, 0x10, 5, 5),
++	PIN_FIELD_BASE(139, 139, 3, 0x0030, 0x10, 6, 3),
++	PIN_FIELD_BASE(140, 140, 3, 0x0030, 0x10, 18, 3),
++	PIN_FIELD_BASE(141, 141, 3, 0x0030, 0x10, 9, 3),
++	PIN_FIELD_BASE(142, 142, 3, 0x0030, 0x10, 21, 3),
++	PIN_FIELD_BASE(143, 143, 3, 0x0030, 0x10, 0, 3),
++	PIN_FIELD_BASE(144, 144, 3, 0x0030, 0x10, 3, 3),
++	PIN_FIELD_BASE(145, 145, 3, 0x0030, 0x10, 12, 3),
++	PIN_FIELD_BASE(146, 146, 3, 0x0030, 0x10, 24, 3),
++	PIN_FIELD_BASE(147, 147, 2, 0x0020, 0x10, 0, 3),
++	PIN_FIELD_BASE(148, 148, 2, 0x0020, 0x10, 9, 3),
++	PIN_FIELD_BASE(149, 149, 5, 0x0030, 0x10, 0, 3),
++	PIN_FIELD_BASE(150, 150, 5, 0x0030, 0x10, 3, 3),
++	PIN_FIELD_BASE(151, 151, 3, 0x0030, 0x10, 15, 3),
++	PIN_FIELD_BASE(152, 152, 3, 0x0030, 0x10, 27, 3),
++	PIN_FIELD_BASE(153, 153, 2, 0x0020, 0x10, 3, 3),
++	PIN_FIELD_BASE(154, 154, 2, 0x0020, 0x10, 12, 3),
++	PIN_FIELD_BASE(155, 155, 2, 0x0020, 0x10, 6, 3),
++	PIN_FIELD_BASE(156, 156, 2, 0x0020, 0x10, 15, 3),
++	PIN_FIELD_BASE(157, 157, 8, 0x0030, 0x10, 20, 3),
++	PIN_FIELD_BASE(158, 158, 8, 0x0030, 0x10, 26, 3),
++	PIN_FIELD_BASE(159, 159, 8, 0x0030, 0x10, 23, 3),
++	PIN_FIELD_BASE(160, 160, 8, 0x0030, 0x10, 29, 3),
++	PIN_FIELD_BASE(161, 161, 5, 0x0030, 0x10, 6, 3),
++	PIN_FIELD_BASE(162, 162, 5, 0x0030, 0x10, 12, 3),
++	PIN_FIELD_BASE(163, 163, 5, 0x0030, 0x10, 9, 3),
++	PIN_FIELD_BASE(164, 164, 5, 0x0030, 0x10, 15, 3),
++};
 +
-+          drive-strength:
-+            enum: [2, 4, 6, 8, 10, 12, 14, 16]
++static const struct mtk_pin_field_calc mt6858_pin_rsel_range[] = {
++	PIN_FIELD_BASE(139, 139, 3, 0x00e0, 0x10, 6, 3),
++	PIN_FIELD_BASE(140, 140, 3, 0x00e0, 0x10, 18, 3),
++	PIN_FIELD_BASE(141, 141, 3, 0x00e0, 0x10, 9, 3),
++	PIN_FIELD_BASE(142, 142, 3, 0x00e0, 0x10, 21, 3),
++	PIN_FIELD_BASE(143, 143, 3, 0x00e0, 0x10, 0, 3),
++	PIN_FIELD_BASE(144, 144, 3, 0x00e0, 0x10, 3, 3),
++	PIN_FIELD_BASE(145, 145, 3, 0x00e0, 0x10, 12, 3),
++	PIN_FIELD_BASE(146, 146, 3, 0x00e0, 0x10, 24, 3),
++	PIN_FIELD_BASE(147, 147, 2, 0x00b0, 0x10, 0, 3),
++	PIN_FIELD_BASE(148, 148, 2, 0x00b0, 0x10, 9, 3),
++	PIN_FIELD_BASE(149, 149, 5, 0x00d0, 0x10, 0, 3),
++	PIN_FIELD_BASE(150, 150, 5, 0x00d0, 0x10, 3, 3),
++	PIN_FIELD_BASE(151, 151, 3, 0x00e0, 0x10, 15, 3),
++	PIN_FIELD_BASE(152, 152, 3, 0x00e0, 0x10, 27, 3),
++	PIN_FIELD_BASE(153, 153, 2, 0x00b0, 0x10, 3, 3),
++	PIN_FIELD_BASE(154, 154, 2, 0x00b0, 0x10, 12, 3),
++	PIN_FIELD_BASE(155, 155, 2, 0x00b0, 0x10, 6, 3),
++	PIN_FIELD_BASE(156, 156, 2, 0x00b0, 0x10, 15, 3),
++	PIN_FIELD_BASE(157, 157, 8, 0x0100, 0x10, 0, 3),
++	PIN_FIELD_BASE(158, 158, 8, 0x0100, 0x10, 6, 3),
++	PIN_FIELD_BASE(159, 159, 8, 0x0100, 0x10, 3, 3),
++	PIN_FIELD_BASE(160, 160, 8, 0x0100, 0x10, 9, 3),
++	PIN_FIELD_BASE(161, 161, 5, 0x00d0, 0x10, 6, 3),
++	PIN_FIELD_BASE(162, 162, 5, 0x00d0, 0x10, 12, 3),
++	PIN_FIELD_BASE(163, 163, 5, 0x00d0, 0x10, 9, 3),
++	PIN_FIELD_BASE(164, 164, 5, 0x00d0, 0x10, 15, 3),
++};
 +
-+          bias-pull-down:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull down.
-+              - enum: [100, 101, 102, 103]
-+                description: PUPD/R1/R0 pull down type. See MTK_PUPD_SET_R1R0_
-+                  defines in dt-bindings/pinctrl/mt65xx.h.
-+              - enum: [200, 201, 202, 203]
-+                description: RSEL pull down type. See MTK_PULL_SET_RSEL_ defines
-+                  in dt-bindings/pinctrl/mt65xx.h.
++static const unsigned int mt6858_pull_type[] = {
++	MTK_PULL_PU_PD_TYPE, /* 0 */
++	MTK_PULL_PU_PD_TYPE, /* 1 */
++	MTK_PULL_PU_PD_TYPE, /* 2 */
++	MTK_PULL_PU_PD_TYPE, /* 3 */
++	MTK_PULL_PU_PD_TYPE, /* 4 */
++	MTK_PULL_PU_PD_TYPE, /* 5 */
++	MTK_PULL_PU_PD_TYPE, /* 6 */
++	MTK_PULL_PU_PD_TYPE, /* 7 */
++	MTK_PULL_PU_PD_TYPE, /* 8 */
++	MTK_PULL_PU_PD_TYPE, /* 9 */
++	MTK_PULL_PU_PD_TYPE, /* 10 */
++	MTK_PULL_PU_PD_TYPE, /* 11 */
++	MTK_PULL_PU_PD_TYPE, /* 12 */
++	MTK_PULL_PU_PD_TYPE, /* 13 */
++	MTK_PULL_PU_PD_TYPE, /* 14 */
++	MTK_PULL_PU_PD_TYPE, /* 15 */
++	MTK_PULL_PU_PD_TYPE, /* 16 */
++	MTK_PULL_PU_PD_TYPE, /* 17 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 18 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 19 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 20 */
++	MTK_PULL_PU_PD_TYPE, /* 21 */
++	MTK_PULL_PU_PD_TYPE, /* 22 */
++	MTK_PULL_PU_PD_TYPE, /* 23 */
++	MTK_PULL_PU_PD_TYPE, /* 24 */
++	MTK_PULL_PU_PD_TYPE, /* 25 */
++	MTK_PULL_PU_PD_TYPE, /* 26 */
++	MTK_PULL_PU_PD_TYPE, /* 27 */
++	MTK_PULL_PU_PD_TYPE, /* 28 */
++	MTK_PULL_PU_PD_TYPE, /* 29 */
++	MTK_PULL_PU_PD_TYPE, /* 30 */
++	MTK_PULL_PU_PD_TYPE, /* 31 */
++	MTK_PULL_PU_PD_TYPE, /* 32 */
++	MTK_PULL_PU_PD_TYPE, /* 33 */
++	MTK_PULL_PU_PD_TYPE, /* 34 */
++	MTK_PULL_PU_PD_TYPE, /* 35 */
++	MTK_PULL_PU_PD_TYPE, /* 36 */
++	MTK_PULL_PU_PD_TYPE, /* 37 */
++	MTK_PULL_PU_PD_TYPE, /* 38 */
++	MTK_PULL_PU_PD_TYPE, /* 39 */
++	MTK_PULL_PU_PD_TYPE, /* 40 */
++	MTK_PULL_PU_PD_TYPE, /* 41 */
++	MTK_PULL_PU_PD_TYPE, /* 42 */
++	MTK_PULL_PU_PD_TYPE, /* 43 */
++	MTK_PULL_PU_PD_TYPE, /* 44 */
++	MTK_PULL_PU_PD_TYPE, /* 45 */
++	MTK_PULL_PU_PD_TYPE, /* 46 */
++	MTK_PULL_PU_PD_TYPE, /* 47 */
++	MTK_PULL_PU_PD_TYPE, /* 48 */
++	MTK_PULL_PU_PD_TYPE, /* 49 */
++	MTK_PULL_PU_PD_TYPE, /* 50 */
++	MTK_PULL_PU_PD_TYPE, /* 51 */
++	MTK_PULL_PU_PD_TYPE, /* 52 */
++	MTK_PULL_PU_PD_TYPE, /* 53 */
++	MTK_PULL_PU_PD_TYPE, /* 54 */
++	MTK_PULL_PU_PD_TYPE, /* 55 */
++	MTK_PULL_PU_PD_TYPE, /* 56 */
++	MTK_PULL_PU_PD_TYPE, /* 57 */
++	MTK_PULL_PU_PD_TYPE, /* 58 */
++	MTK_PULL_PU_PD_TYPE, /* 59 */
++	MTK_PULL_PU_PD_TYPE, /* 60 */
++	MTK_PULL_PU_PD_TYPE, /* 61 */
++	MTK_PULL_PU_PD_TYPE, /* 62 */
++	MTK_PULL_PU_PD_TYPE, /* 63 */
++	MTK_PULL_PU_PD_TYPE, /* 64 */
++	MTK_PULL_PU_PD_TYPE, /* 65 */
++	MTK_PULL_PU_PD_TYPE, /* 66 */
++	MTK_PULL_PU_PD_TYPE, /* 67 */
++	MTK_PULL_PU_PD_TYPE, /* 68 */
++	MTK_PULL_PU_PD_TYPE, /* 69 */
++	MTK_PULL_PU_PD_TYPE, /* 70 */
++	MTK_PULL_PU_PD_TYPE, /* 71 */
++	MTK_PULL_PU_PD_TYPE, /* 72 */
++	MTK_PULL_PU_PD_TYPE, /* 73 */
++	MTK_PULL_PU_PD_TYPE, /* 74 */
++	MTK_PULL_PU_PD_TYPE, /* 75 */
++	MTK_PULL_PU_PD_TYPE, /* 76 */
++	MTK_PULL_PU_PD_TYPE, /* 77 */
++	MTK_PULL_PU_PD_TYPE, /* 78 */
++	MTK_PULL_PU_PD_TYPE, /* 79 */
++	MTK_PULL_PU_PD_TYPE, /* 80 */
++	MTK_PULL_PU_PD_TYPE, /* 81 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 82 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 83 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 84 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 85 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 86 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 87 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 88 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 89 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 90 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 91 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 92 */
++	MTK_PULL_PUPD_R1R0_TYPE, /* 93 */
++	MTK_PULL_PU_PD_TYPE, /* 94 */
++	MTK_PULL_PU_PD_TYPE, /* 95 */
++	MTK_PULL_PU_PD_TYPE, /* 96 */
++	MTK_PULL_PU_PD_TYPE, /* 97 */
++	MTK_PULL_PU_PD_TYPE, /* 98 */
++	MTK_PULL_PU_PD_TYPE, /* 99 */
++	MTK_PULL_PU_PD_TYPE, /* 100 */
++	MTK_PULL_PU_PD_TYPE, /* 101 */
++	MTK_PULL_PU_PD_TYPE, /* 102 */
++	MTK_PULL_PU_PD_TYPE, /* 103 */
++	MTK_PULL_PU_PD_TYPE, /* 104 */
++	MTK_PULL_PU_PD_TYPE, /* 105 */
++	MTK_PULL_PU_PD_TYPE, /* 106 */
++	MTK_PULL_PU_PD_TYPE, /* 107 */
++	MTK_PULL_PU_PD_TYPE, /* 108 */
++	MTK_PULL_PU_PD_TYPE, /* 109 */
++	MTK_PULL_PU_PD_TYPE, /* 110 */
++	MTK_PULL_PU_PD_TYPE, /* 111 */
++	MTK_PULL_PU_PD_TYPE, /* 112 */
++	MTK_PULL_PU_PD_TYPE, /* 113 */
++	MTK_PULL_PU_PD_TYPE, /* 114 */
++	MTK_PULL_PU_PD_TYPE, /* 115 */
++	MTK_PULL_PU_PD_TYPE, /* 116 */
++	MTK_PULL_PU_PD_TYPE, /* 117 */
++	MTK_PULL_PU_PD_TYPE, /* 118 */
++	MTK_PULL_PU_PD_TYPE, /* 119 */
++	MTK_PULL_PU_PD_TYPE, /* 120 */
++	MTK_PULL_PU_PD_TYPE, /* 121 */
++	MTK_PULL_PU_PD_TYPE, /* 122 */
++	MTK_PULL_PU_PD_TYPE, /* 123 */
++	MTK_PULL_PU_PD_TYPE, /* 124 */
++	MTK_PULL_PU_PD_TYPE, /* 125 */
++	MTK_PULL_PU_PD_TYPE, /* 126 */
++	MTK_PULL_PU_PD_TYPE, /* 127 */
++	MTK_PULL_PU_PD_TYPE, /* 128 */
++	MTK_PULL_PU_PD_TYPE, /* 129 */
++	MTK_PULL_PU_PD_TYPE, /* 130 */
++	MTK_PULL_PU_PD_TYPE, /* 131 */
++	MTK_PULL_PU_PD_TYPE, /* 132 */
++	MTK_PULL_PU_PD_TYPE, /* 133 */
++	MTK_PULL_PU_PD_TYPE, /* 134 */
++	MTK_PULL_PU_PD_TYPE, /* 135 */
++	MTK_PULL_PU_PD_TYPE, /* 136 */
++	MTK_PULL_PU_PD_TYPE, /* 137 */
++	MTK_PULL_PU_PD_TYPE, /* 138 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 139 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 140 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 141 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 142 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 143 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 144 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 145 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 146 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 147 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 148 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 149 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 150 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 151 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 152 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 153 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 154 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 155 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 156 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 157 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 158 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 159 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 160 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 161 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 162 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 163 */
++	MTK_PULL_PU_PD_RSEL_TYPE, /* 164 */
++	MTK_PULL_PU_PD_TYPE, /* 165 */
++	MTK_PULL_PU_PD_TYPE, /* 166 */
++	MTK_PULL_PU_PD_TYPE, /* 167 */
++	MTK_PULL_PU_PD_TYPE, /* 168 */
++	MTK_PULL_PU_PD_TYPE, /* 169 */
++	MTK_PULL_PU_PD_TYPE, /* 170 */
++	MTK_PULL_PU_PD_TYPE, /* 171 */
++	MTK_PULL_PU_PD_TYPE, /* 172 */
++	MTK_PULL_PU_PD_TYPE, /* 173 */
++	MTK_PULL_PU_PD_TYPE, /* 174 */
++	MTK_PULL_PU_PD_TYPE, /* 175 */
++	MTK_PULL_PU_PD_TYPE, /* 176 */
++	MTK_PULL_PU_PD_TYPE, /* 177 */
++	MTK_PULL_PU_PD_TYPE, /* 178 */
++	MTK_PULL_PU_PD_TYPE, /* 179 */
++	MTK_PULL_PU_PD_TYPE, /* 180 */
++	MTK_PULL_PU_PD_TYPE, /* 181 */
++	MTK_PULL_PU_PD_TYPE, /* 182 */
++	MTK_PULL_PU_PD_TYPE, /* 183 */
++	MTK_PULL_PU_PD_TYPE, /* 184 */
++	MTK_PULL_PU_PD_TYPE, /* 185 */
++	MTK_PULL_PU_PD_TYPE, /* 186 */
++	MTK_PULL_PU_PD_TYPE, /* 187 */
++	MTK_PULL_PU_PD_TYPE, /* 188 */
++	MTK_PULL_PU_PD_TYPE, /* 189 */
++	MTK_PULL_PU_PD_TYPE, /* 190 */
++	MTK_PULL_PU_PD_TYPE, /* 191 */
++	MTK_PULL_PU_PD_TYPE, /* 192 */
++	MTK_PULL_PU_PD_TYPE, /* 193 */
++	MTK_PULL_PU_PD_TYPE, /* 194 */
++	MTK_PULL_PU_PD_TYPE, /* 195 */
++	MTK_PULL_PU_PD_TYPE, /* 196 */
++};
 +
-+          bias-pull-up:
-+            oneOf:
-+              - type: boolean
-+                description: normal pull up.
-+              - enum: [100, 101, 102, 103]
-+                description: PUPD/R1/R0 pull up type. See MTK_PUPD_SET_R1R0_
-+                  defines in dt-bindings/pinctrl/mt65xx.h.
-+              - enum: [200, 201, 202, 203]
-+                description: RSEL pull up type. See MTK_PULL_SET_RSEL_ defines
-+                  in dt-bindings/pinctrl/mt65xx.h.
++static const struct mtk_pin_reg_calc mt6858_reg_cals[PINCTRL_PIN_REG_MAX] = {
++	[PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt6858_pin_mode_range),
++	[PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt6858_pin_dir_range),
++	[PINCTRL_PIN_REG_DI] = MTK_RANGE(mt6858_pin_di_range),
++	[PINCTRL_PIN_REG_DO] = MTK_RANGE(mt6858_pin_do_range),
++	[PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt6858_pin_smt_range),
++	[PINCTRL_PIN_REG_IES] = MTK_RANGE(mt6858_pin_ies_range),
++	[PINCTRL_PIN_REG_PU] = MTK_RANGE(mt6858_pin_pu_range),
++	[PINCTRL_PIN_REG_PD] = MTK_RANGE(mt6858_pin_pd_range),
++	[PINCTRL_PIN_REG_DRV] = MTK_RANGE(mt6858_pin_drv_range),
++	[PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt6858_pin_pupd_range),
++	[PINCTRL_PIN_REG_R0] = MTK_RANGE(mt6858_pin_r0_range),
++	[PINCTRL_PIN_REG_R1] = MTK_RANGE(mt6858_pin_r1_range),
++	[PINCTRL_PIN_REG_DRV_ADV] = MTK_RANGE(mt6858_pin_drv_adv_range),
++	[PINCTRL_PIN_REG_RSEL] = MTK_RANGE(mt6858_pin_rsel_range),
++};
 +
-+          bias-disable: true
++static const char * const mt6858_pinctrl_register_base_names[] = {
++	"base", "lm", "rb", "bm2", "bm", "bm1", "lt", "lt1", "rt", "rt1",
++};
 +
-+          output-high: true
++static const struct mtk_eint_hw mt6858_eint_hw = {
++	.port_mask = 0xf,
++	.ports     = 3,
++	.ap_num    = 217,
++	.db_cnt    = 36,
++	.db_time   = debounce_time_mt6878,
++};
 +
-+          output-low: true
++static const struct mtk_pin_soc mt6858_data = {
++	.reg_cal = mt6858_reg_cals,
++	.pins = mtk_pins_mt6858,
++	.npins = ARRAY_SIZE(mtk_pins_mt6858),
++	.ngrps = ARRAY_SIZE(mtk_pins_mt6858),
++	.eint_hw = &mt6858_eint_hw,
++	.eint_pin = eint_pins_mt6858,
++	.nfuncs = 16,
++	.gpio_m = 0,
++	.base_names = mt6858_pinctrl_register_base_names,
++	.nbase_names = ARRAY_SIZE(mt6858_pinctrl_register_base_names),
++	.pull_type = mt6858_pull_type,
++	.bias_set_combo = mtk_pinconf_bias_set_combo,
++	.bias_get_combo = mtk_pinconf_bias_get_combo,
++	.drive_set = mtk_pinconf_drive_set_rev1,
++	.drive_get = mtk_pinconf_drive_get_rev1,
++	.adv_drive_get = mtk_pinconf_adv_drive_get_raw,
++	.adv_drive_set = mtk_pinconf_adv_drive_set_raw,
++};
 +
-+          input-enable: true
++static const struct of_device_id mt6858_pinctrl_of_match[] = {
++	{ .compatible = "mediatek,mt6858-pinctrl", .data = &mt6858_data },
++	{ /* sentinel */ }
++};
 +
-+          input-disable: true
++static struct platform_driver mt6858_pinctrl_driver = {
++	.driver = {
++		.name = "mt6858-pinctrl",
++		.of_match_table = mt6858_pinctrl_of_match,
++		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
++	},
++	.probe = mtk_paris_pinctrl_probe,
++};
 +
-+          input-schmitt-enable: true
++static int __init mt6858_pinctrl_init(void)
++{
++	return platform_driver_register(&mt6858_pinctrl_driver);
++}
++arch_initcall(mt6858_pinctrl_init);
 +
-+          input-schmitt-disable: true
++MODULE_DESCRIPTION("MediaTek MT6858 Pinctrl Driver");
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-mt6858.h b/drivers/pinctrl/mediatek/pinctrl-mtk-mt6858.h
+new file mode 100644
+index 000000000000..208db809717f
+--- /dev/null
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-mt6858.h
+@@ -0,0 +1,2378 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2025 MediaTek Inc.
++ *               Alice Chao <alice.chao@mediatek.com>
++ * Copyright (c) 2026 Jolla Mobile Ltd
++ *               Nikolai Burov <nikolai.burov@jolla.com>
++ */
 +
-+        required:
-+          - pinmux
++#ifndef __PINCTRL_MTK_MT6858_H
++#define __PINCTRL_MTK_MT6858_H
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - gpio-ranges
++#include "pinctrl-paris.h"
 +
-+additionalProperties: false
++#define EINT_INVALID_BASE 0xff
 +
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/mt65xx.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #define PINMUX_GPIO149__FUNC_SCL5 (MTK_PIN_NO(149) | 1)
-+    #define PINMUX_GPIO150__FUNC_SDA5 (MTK_PIN_NO(150) | 1)
++#define MTK_PIN_VEINT(_number)			\
++	MTK_PIN(				\
++		_number, "veint" #_number,	\
++		MTK_EINT_FUNCTION(0, _number),	\
++		DRV_GRP4,			\
++		MTK_FUNCTION(0, NULL)		\
++	)
 +
-+    pio: pinctrl@10005000 {
-+        compatible = "mediatek,mt6858-pinctrl";
-+        reg = <0x10005000 0x1000>,
-+              <0x11b20000 0x1000>,
-+              <0x11c10000 0x1000>,
-+              <0x11d10000 0x1000>,
-+              <0x11d30000 0x1000>,
-+              <0x11d40000 0x1000>,
-+              <0x11e20000 0x1000>,
-+              <0x11e30000 0x1000>,
-+              <0x11ed0000 0x1000>,
-+              <0x11ee0000 0x1000>,
-+              <0x11b00000 0x1000>,
-+              <0x11e60000 0x1000>,
-+              <0x11e80000 0x1000>,
-+              <0x1c01e000 0x1000>;
-+        reg-names = "base", "lm", "rb", "bm2", "bm", "bm1", "lt", "lt1",
-+                    "rt", "rt1", "eint0", "eint1", "eint2", "eint3";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&pio 0 0 197>;
-+        interrupt-controller;
-+        interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
-+        #interrupt-cells = <2>;
++static const struct mtk_pin_desc mtk_pins_mt6858[] = {
++	MTK_PIN(
++		0, "GPIO0",
++		MTK_EINT_FUNCTION(0, 0),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO0"),
++		MTK_FUNCTION(1, "TP_GPIO0_AO"),
++		MTK_FUNCTION(3, "MD_INT0"),
++		MTK_FUNCTION(5, "SCP_SCL4"),
++		MTK_FUNCTION(7, "DBG_MON_A0"),
++		MTK_FUNCTION(8, "IOBIST0")
++	),
++	MTK_PIN(
++		1, "GPIO1",
++		MTK_EINT_FUNCTION(0, 1),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO1"),
++		MTK_FUNCTION(1, "TP_GPIO1_AO"),
++		MTK_FUNCTION(2, "SRCLKENA2"),
++		MTK_FUNCTION(3, "MD_INT3"),
++		MTK_FUNCTION(4, "SCP_DMIC_CLK"),
++		MTK_FUNCTION(5, "DMIC_CLK"),
++		MTK_FUNCTION(6, "SCP_SCL5"),
++		MTK_FUNCTION(7, "DBG_MON_A1"),
++		MTK_FUNCTION(8, "IOBIST1")
++	),
++	MTK_PIN(
++		2, "GPIO2",
++		MTK_EINT_FUNCTION(0, 2),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO2"),
++		MTK_FUNCTION(1, "TP_GPIO2_AO"),
++		MTK_FUNCTION(3, "MD_INT4"),
++		MTK_FUNCTION(4, "SCP_DMIC_DAT"),
++		MTK_FUNCTION(5, "DMIC_DAT"),
++		MTK_FUNCTION(6, "SCP_SDA5"),
++		MTK_FUNCTION(7, "DBG_MON_A2"),
++		MTK_FUNCTION(8, "IOBIST2")
++	),
++	MTK_PIN(
++		3, "GPIO3",
++		MTK_EINT_FUNCTION(0, 3),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO3"),
++		MTK_FUNCTION(1, "TP_GPIO3_AO"),
++		MTK_FUNCTION(2, "SPI7_CLK"),
++		MTK_FUNCTION(3, "TP_UTXD2_VLP"),
++		MTK_FUNCTION(4, "SSPM_UTXD_AO_VLP"),
++		MTK_FUNCTION(5, "MD_MCIF_UTXD0"),
++		MTK_FUNCTION(8, "IOBIST3")
++	),
++	MTK_PIN(
++		4, "GPIO4",
++		MTK_EINT_FUNCTION(0, 4),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO4"),
++		MTK_FUNCTION(1, "TP_GPIO4_AO"),
++		MTK_FUNCTION(2, "SPI7_CSB"),
++		MTK_FUNCTION(3, "TP_URXD2_VLP"),
++		MTK_FUNCTION(4, "SSPM_URXD_AO_VLP"),
++		MTK_FUNCTION(5, "MD_MCIF_URXD0"),
++		MTK_FUNCTION(8, "IOBIST4")
++	),
++	MTK_PIN(
++		5, "GPIO5",
++		MTK_EINT_FUNCTION(0, 5),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO5"),
++		MTK_FUNCTION(1, "TP_GPIO5_AO"),
++		MTK_FUNCTION(2, "SPI7_MO"),
++		MTK_FUNCTION(8, "IOBIST5")
++	),
++	MTK_PIN(
++		6, "GPIO6",
++		MTK_EINT_FUNCTION(0, 6),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO6"),
++		MTK_FUNCTION(1, "TP_GPIO6_AO"),
++		MTK_FUNCTION(2, "SPI7_MI"),
++		MTK_FUNCTION(3, "GPS_PPS"),
++		MTK_FUNCTION(4, "MD32_0_GPIO0"),
++		MTK_FUNCTION(8, "IOBIST6")
++	),
++	MTK_PIN(
++		7, "GPIO7",
++		MTK_EINT_FUNCTION(0, 7),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO7"),
++		MTK_FUNCTION(1, "TP_GPIO7_AO"),
++		MTK_FUNCTION(2, "SRCLKENA1"),
++		MTK_FUNCTION(3, "PWM_1"),
++		MTK_FUNCTION(4, "MD32_1_GPIO0"),
++		MTK_FUNCTION(5, "SCP_SDA4"),
++		MTK_FUNCTION(6, "MD_INT4"),
++		MTK_FUNCTION(8, "IOBIST7")
++	),
++	MTK_PIN(
++		8, "GPIO8",
++		MTK_EINT_FUNCTION(0, 8),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO8"),
++		MTK_FUNCTION(1, "SSPM_JTAG_TRSTN_VCORE"),
++		MTK_FUNCTION(2, "SCP_JTAG0_TRSTN_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_MCU_TRST_B"),
++		MTK_FUNCTION(8, "IOBIST8")
++	),
++	MTK_PIN(
++		9, "GPIO9",
++		MTK_EINT_FUNCTION(0, 9),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO9"),
++		MTK_FUNCTION(1, "SSPM_JTAG_TCK_VCORE"),
++		MTK_FUNCTION(2, "SCP_JTAG0_TCK_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_MCU_TCK"),
++		MTK_FUNCTION(8, "IOBIST9")
++	),
++	MTK_PIN(
++		10, "GPIO10",
++		MTK_EINT_FUNCTION(0, 10),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO10"),
++		MTK_FUNCTION(1, "SSPM_JTAG_TMS_VCORE"),
++		MTK_FUNCTION(2, "SCP_JTAG0_TMS_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_MCU_TMS"),
++		MTK_FUNCTION(8, "IOBIST10")
++	),
++	MTK_PIN(
++		11, "GPIO11",
++		MTK_EINT_FUNCTION(0, 11),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO11"),
++		MTK_FUNCTION(1, "SSPM_JTAG_TDI_VCORE"),
++		MTK_FUNCTION(2, "SCP_JTAG0_TDI_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_MCU_TDI"),
++		MTK_FUNCTION(8, "IOBIST11")
++	),
++	MTK_PIN(
++		12, "GPIO12",
++		MTK_EINT_FUNCTION(0, 12),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO12"),
++		MTK_FUNCTION(1, "SSPM_JTAG_TDO_VCORE"),
++		MTK_FUNCTION(2, "SCP_JTAG0_TDO_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_MCU_TDO"),
++		MTK_FUNCTION(8, "IOBIST12")
++	),
++	MTK_PIN(
++		13, "GPIO13",
++		MTK_EINT_FUNCTION(0, 13),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO13"),
++		MTK_FUNCTION(1, "TP_GPIO8_AO"),
++		MTK_FUNCTION(2, "HFRP_JTAG0_TRSTN"),
++		MTK_FUNCTION(3, "MFG_EB_JTAG_TRSTN"),
++		MTK_FUNCTION(4, "SSPM_JTAG_TRSTN_VLP"),
++		MTK_FUNCTION(5, "SPM_JTAG_TRSTN_VLP"),
++		MTK_FUNCTION(6, "SCP_JTAG0_TRSTN_VLP"),
++		MTK_FUNCTION(7, "IO_JTAG_TRSTN"),
++		MTK_FUNCTION(8, "IOBIST13")
++	),
++	MTK_PIN(
++		14, "GPIO14",
++		MTK_EINT_FUNCTION(0, 14),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO14"),
++		MTK_FUNCTION(1, "TP_GPIO9_AO"),
++		MTK_FUNCTION(2, "HFRP_JTAG0_TCK"),
++		MTK_FUNCTION(3, "MFG_EB_JTAG_TCK"),
++		MTK_FUNCTION(4, "SSPM_JTAG_TCK_VLP"),
++		MTK_FUNCTION(5, "SPM_JTAG_TCK_VLP"),
++		MTK_FUNCTION(6, "SCP_JTAG0_TCK_VLP"),
++		MTK_FUNCTION(7, "IO_JTAG_TCK"),
++		MTK_FUNCTION(8, "IOBIST14")
++	),
++	MTK_PIN(
++		15, "GPIO15",
++		MTK_EINT_FUNCTION(0, 15),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO15"),
++		MTK_FUNCTION(1, "TP_GPIO10_AO"),
++		MTK_FUNCTION(2, "HFRP_JTAG0_TMS"),
++		MTK_FUNCTION(3, "MFG_EB_JTAG_TMS"),
++		MTK_FUNCTION(4, "SSPM_JTAG_TMS_VLP"),
++		MTK_FUNCTION(5, "SPM_JTAG_TMS_VLP"),
++		MTK_FUNCTION(6, "SCP_JTAG0_TMS_VLP"),
++		MTK_FUNCTION(7, "IO_JTAG_TMS"),
++		MTK_FUNCTION(8, "IOBIST15")
++	),
++	MTK_PIN(
++		16, "GPIO16",
++		MTK_EINT_FUNCTION(0, 16),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO16"),
++		MTK_FUNCTION(1, "TP_GPIO11_AO"),
++		MTK_FUNCTION(2, "HFRP_JTAG0_TDI"),
++		MTK_FUNCTION(3, "MFG_EB_JTAG_TDI"),
++		MTK_FUNCTION(4, "SSPM_JTAG_TDI_VLP"),
++		MTK_FUNCTION(5, "SPM_JTAG_TDI_VLP"),
++		MTK_FUNCTION(6, "SCP_JTAG0_TDI_VLP"),
++		MTK_FUNCTION(7, "IO_JTAG_TDI"),
++		MTK_FUNCTION(8, "IOBIST16")
++	),
++	MTK_PIN(
++		17, "GPIO17",
++		MTK_EINT_FUNCTION(0, 17),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO17"),
++		MTK_FUNCTION(1, "TP_GPIO12_AO"),
++		MTK_FUNCTION(2, "HFRP_JTAG0_TDO"),
++		MTK_FUNCTION(3, "MFG_EB_JTAG_TDO"),
++		MTK_FUNCTION(4, "SSPM_JTAG_TDO_VLP"),
++		MTK_FUNCTION(5, "SPM_JTAG_TDO_VLP"),
++		MTK_FUNCTION(6, "SCP_JTAG0_TDO_VLP"),
++		MTK_FUNCTION(7, "IO_JTAG_TDO"),
++		MTK_FUNCTION(8, "IOBIST17")
++	),
++	MTK_PIN(
++		18, "GPIO18",
++		MTK_EINT_FUNCTION(0, 18),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO18"),
++		MTK_FUNCTION(1, "MD1_SIM2_SRST"),
++		MTK_FUNCTION(2, "MD1_SIM1_SRST"),
++		MTK_FUNCTION(5, "IDDIG"),
++		MTK_FUNCTION(6, "TSFDC_EN"),
++		MTK_FUNCTION(8, "IOBIST18")
++	),
++	MTK_PIN(
++		19, "GPIO19",
++		MTK_EINT_FUNCTION(0, 19),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO19"),
++		MTK_FUNCTION(1, "MD1_SIM2_SCLK"),
++		MTK_FUNCTION(2, "MD1_SIM1_SCLK"),
++		MTK_FUNCTION(3, "TP_UTXD2_VCORE"),
++		MTK_FUNCTION(4, "SSPM_UTXD_AO_VCORE"),
++		MTK_FUNCTION(5, "MD32_1_TXD"),
++		MTK_FUNCTION(6, "UTXD2"),
++		MTK_FUNCTION(8, "IOBIST19")
++	),
++	MTK_PIN(
++		20, "GPIO20",
++		MTK_EINT_FUNCTION(0, 20),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO20"),
++		MTK_FUNCTION(1, "MD1_SIM2_SIO"),
++		MTK_FUNCTION(2, "MD1_SIM1_SIO"),
++		MTK_FUNCTION(3, "TP_URXD2_VCORE"),
++		MTK_FUNCTION(4, "SSPM_URXD_AO_VCORE"),
++		MTK_FUNCTION(5, "MD32_1_RXD"),
++		MTK_FUNCTION(6, "URXD2"),
++		MTK_FUNCTION(8, "IOBIST20")
++	),
++	MTK_PIN(
++		21, "GPIO21",
++		MTK_EINT_FUNCTION(0, 21),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO21"),
++		MTK_FUNCTION(1, "KPROW1"),
++		MTK_FUNCTION(2, "CONN_WIFI_TXD"),
++		MTK_FUNCTION(3, "CONN_BT_TXD"),
++		MTK_FUNCTION(4, "HFRP_UTXD1"),
++		MTK_FUNCTION(5, "TP_UTXD1_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_UART0_TXD"),
++		MTK_FUNCTION(7, "MD_UTXD1"),
++		MTK_FUNCTION(8, "IOBIST21")
++	),
++	MTK_PIN(
++		22, "GPIO22",
++		MTK_EINT_FUNCTION(0, 22),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO22"),
++		MTK_FUNCTION(1, "KPCOL1"),
++		MTK_FUNCTION(3, "PMSR_SMAP"),
++		MTK_FUNCTION(4, "HFRP_URXD1"),
++		MTK_FUNCTION(5, "TP_URXD1_VCORE"),
++		MTK_FUNCTION(6, "CONN_BGF_UART0_RXD"),
++		MTK_FUNCTION(7, "MD_URXD1"),
++		MTK_FUNCTION(8, "IOBIST22")
++	),
++	MTK_PIN(
++		23, "GPIO23",
++		MTK_EINT_FUNCTION(0, 23),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO23"),
++		MTK_FUNCTION(3, "CONN_TCXOENA_REQ"),
++		MTK_FUNCTION(5, "USB_DRVVBUS"),
++		MTK_FUNCTION(7, "DBG_MON_A6"),
++		MTK_FUNCTION(8, "IOBIST23")
++	),
++	MTK_PIN(
++		24, "GPIO24",
++		MTK_EINT_FUNCTION(0, 24),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO24"),
++		MTK_FUNCTION(1, "KPROW0"),
++		MTK_FUNCTION(2, "I2SIN2_MCK"),
++		MTK_FUNCTION(5, "USB_DRVVBUS"),
++		MTK_FUNCTION(7, "DBG_MON_B0"),
++		MTK_FUNCTION(8, "IOBIST24")
++	),
++	MTK_PIN(
++		25, "GPIO25",
++		MTK_EINT_FUNCTION(0, 25),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO25"),
++		MTK_FUNCTION(4, "PWM_3"),
++		MTK_FUNCTION(7, "DBG_MON_A8"),
++		MTK_FUNCTION(8, "IOBIST25")
++	),
++	MTK_PIN(
++		26, "GPIO26",
++		MTK_EINT_FUNCTION(0, 26),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO26"),
++		MTK_FUNCTION(1, "CMFLASH0"),
++		MTK_FUNCTION(2, "CONN_TCXOENA_REQ"),
++		MTK_FUNCTION(3, "MD32_0_GPIO0"),
++		MTK_FUNCTION(4, "PWM_0"),
++		MTK_FUNCTION(5, "VBUSVALID"),
++		MTK_FUNCTION(8, "IOBIST26")
++	),
++	MTK_PIN(
++		27, "GPIO27",
++		MTK_EINT_FUNCTION(0, 27),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO27"),
++		MTK_FUNCTION(1, "CMFLASH1"),
++		MTK_FUNCTION(6, "DAP_SONIC_SWCK"),
++		MTK_FUNCTION(7, "DBG_MON_A10"),
++		MTK_FUNCTION(8, "IOBIST27")
++	),
++	MTK_PIN(
++		28, "GPIO28",
++		MTK_EINT_FUNCTION(0, 28),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO28"),
++		MTK_FUNCTION(1, "CMFLASH2"),
++		MTK_FUNCTION(4, "GPS_PPS"),
++		MTK_FUNCTION(6, "DAP_SONIC_SWD"),
++		MTK_FUNCTION(7, "DBG_MON_A11"),
++		MTK_FUNCTION(8, "IOBIST28")
++	),
++	MTK_PIN(
++		29, "GPIO29",
++		MTK_EINT_FUNCTION(0, 29),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO29"),
++		MTK_FUNCTION(1, "CMFLASH3"),
++		MTK_FUNCTION(3, "SCL10"),
++		MTK_FUNCTION(6, "DAP_MD32_SWCK"),
++		MTK_FUNCTION(7, "DBG_MON_A12"),
++		MTK_FUNCTION(8, "IOBIST29")
++	),
++	MTK_PIN(
++		30, "GPIO30",
++		MTK_EINT_FUNCTION(0, 30),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO30"),
++		MTK_FUNCTION(3, "SDA10"),
++		MTK_FUNCTION(6, "DAP_MD32_SWD"),
++		MTK_FUNCTION(7, "DBG_MON_A13"),
++		MTK_FUNCTION(8, "IOBIST30")
++	),
++	MTK_PIN(
++		31, "GPIO31",
++		MTK_EINT_FUNCTION(0, 31),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO31"),
++		MTK_FUNCTION(1, "CMVREF0"),
++		MTK_FUNCTION(3, "SCL12"),
++		MTK_FUNCTION(7, "DBG_MON_A14"),
++		MTK_FUNCTION(8, "IOBIST31")
++	),
++	MTK_PIN(
++		32, "GPIO32",
++		MTK_EINT_FUNCTION(0, 32),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO32"),
++		MTK_FUNCTION(1, "CMVREF1"),
++		MTK_FUNCTION(3, "SDA12"),
++		MTK_FUNCTION(7, "DBG_MON_A15"),
++		MTK_FUNCTION(8, "IOBIST32")
++	),
++	MTK_PIN(
++		33, "GPIO33",
++		MTK_EINT_FUNCTION(0, 33),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO33"),
++		MTK_FUNCTION(1, "CMVREF2"),
++		MTK_FUNCTION(3, "USB_DRVVBUS"),
++		MTK_FUNCTION(7, "DBG_MON_A16"),
++		MTK_FUNCTION(8, "IOBIST33")
++	),
++	MTK_PIN(
++		34, "GPIO34",
++		MTK_EINT_FUNCTION(0, 34),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO34"),
++		MTK_FUNCTION(1, "CMVREF3"),
++		MTK_FUNCTION(3, "VBUSVALID"),
++		MTK_FUNCTION(7, "DBG_MON_A17"),
++		MTK_FUNCTION(8, "IOBIST34")
++	),
++	MTK_PIN(
++		35, "GPIO35",
++		MTK_EINT_FUNCTION(0, 35),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO35"),
++		MTK_FUNCTION(1, "CMVREF4"),
++		MTK_FUNCTION(3, "IDDIG"),
++		MTK_FUNCTION(7, "DBG_MON_A18"),
++		MTK_FUNCTION(8, "IOBIST35")
++	),
++	MTK_PIN(
++		36, "GPIO36",
++		MTK_EINT_FUNCTION(0, 36),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO36"),
++		MTK_FUNCTION(1, "CMMCLK0"),
++		MTK_FUNCTION(2, "CLKM0"),
++		MTK_FUNCTION(7, "DBG_MON_A19"),
++		MTK_FUNCTION(8, "IOBIST36")
++	),
++	MTK_PIN(
++		37, "GPIO37",
++		MTK_EINT_FUNCTION(0, 37),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO37"),
++		MTK_FUNCTION(1, "CMMCLK1"),
++		MTK_FUNCTION(2, "CLKM1"),
++		MTK_FUNCTION(4, "MD32_1_GPIO0"),
++		MTK_FUNCTION(7, "DBG_MON_A20"),
++		MTK_FUNCTION(8, "IOBIST37")
++	),
++	MTK_PIN(
++		38, "GPIO38",
++		MTK_EINT_FUNCTION(0, 38),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO38"),
++		MTK_FUNCTION(1, "CMMCLK2"),
++		MTK_FUNCTION(2, "CLKM2"),
++		MTK_FUNCTION(7, "DBG_MON_A21"),
++		MTK_FUNCTION(8, "IOBIST38")
++	),
++	MTK_PIN(
++		39, "GPIO39",
++		MTK_EINT_FUNCTION(0, 39),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO39"),
++		MTK_FUNCTION(1, "CMMCLK3"),
++		MTK_FUNCTION(2, "CLKM3"),
++		MTK_FUNCTION(7, "DBG_MON_A22"),
++		MTK_FUNCTION(8, "IOBIST39")
++	),
++	MTK_PIN(
++		40, "GPIO40",
++		MTK_EINT_FUNCTION(0, 40),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO40"),
++		MTK_FUNCTION(1, "I2SIN1_MCK"),
++		MTK_FUNCTION(2, "IDDIG"),
++		MTK_FUNCTION(3, "IRRX_IN"),
++		MTK_FUNCTION(4, "GPS_PPS"),
++		MTK_FUNCTION(6, "ANT_SEL8"),
++		MTK_FUNCTION(8, "IOBIST40")
++	),
++	MTK_PIN(
++		41, "GPIO41",
++		MTK_EINT_FUNCTION(0, 41),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO41"),
++		MTK_FUNCTION(1, "I2SIN1_BCK"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_AICE_TMSC"),
++		MTK_FUNCTION(6, "ANT_SEL9"),
++		MTK_FUNCTION(8, "IOBIST41")
++	),
++	MTK_PIN(
++		42, "GPIO42",
++		MTK_EINT_FUNCTION(0, 42),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO42"),
++		MTK_FUNCTION(1, "I2SIN1_LRCK"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_AICE_TCKC"),
++		MTK_FUNCTION(6, "ANT_SEL10"),
++		MTK_FUNCTION(8, "IOBIST42")
++	),
++	MTK_PIN(
++		43, "GPIO43",
++		MTK_EINT_FUNCTION(0, 43),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO43"),
++		MTK_FUNCTION(1, "I2SOUT1_DO"),
++		MTK_FUNCTION(4, "CONN_BGF_MCU_AICE_TMSC"),
++		MTK_FUNCTION(6, "ANT_SEL11"),
++		MTK_FUNCTION(8, "IOBIST43")
++	),
++	MTK_PIN(
++		44, "GPIO44",
++		MTK_EINT_FUNCTION(0, 44),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO44"),
++		MTK_FUNCTION(1, "I2SIN1_DI"),
++		MTK_FUNCTION(4, "CONN_BGF_MCU_AICE_TCKC"),
++		MTK_FUNCTION(6, "ANT_SEL12"),
++		MTK_FUNCTION(8, "IOBIST44")
++	),
++	MTK_PIN(
++		45, "GPIO45",
++		MTK_EINT_FUNCTION(0, 45),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO45"),
++		MTK_FUNCTION(1, "I2SIN2_BCK"),
++		MTK_FUNCTION(2, "SCL11"),
++		MTK_FUNCTION(3, "BPI_BUS10"),
++		MTK_FUNCTION(4, "MD_UCTS0"),
++		MTK_FUNCTION(5, "TP_UCTS1_VCORE"),
++		MTK_FUNCTION(6, "HFRP_UCTS1"),
++		MTK_FUNCTION(7, "DBG_MON_B1"),
++		MTK_FUNCTION(8, "IOBIST45")
++	),
++	MTK_PIN(
++		46, "GPIO46",
++		MTK_EINT_FUNCTION(0, 46),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO46"),
++		MTK_FUNCTION(1, "I2SIN2_LRCK"),
++		MTK_FUNCTION(2, "SDA11"),
++		MTK_FUNCTION(3, "BPI_BUS11"),
++		MTK_FUNCTION(4, "MD_URTS0"),
++		MTK_FUNCTION(5, "TP_URTS1_VCORE"),
++		MTK_FUNCTION(6, "HFRP_URTS1"),
++		MTK_FUNCTION(7, "DBG_MON_B2"),
++		MTK_FUNCTION(8, "IOBIST46")
++	),
++	MTK_PIN(
++		47, "GPIO47",
++		MTK_EINT_FUNCTION(0, 47),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO47"),
++		MTK_FUNCTION(1, "I2SOUT2_DO"),
++		MTK_FUNCTION(2, "SCL1"),
++		MTK_FUNCTION(3, "BPI_BUS12"),
++		MTK_FUNCTION(4, "MD_UCTS1"),
++		MTK_FUNCTION(5, "TP_UCTS2_VCORE"),
++		MTK_FUNCTION(6, "UCTS2"),
++		MTK_FUNCTION(7, "DBG_MON_B3"),
++		MTK_FUNCTION(8, "IOBIST47")
++	),
++	MTK_PIN(
++		48, "GPIO48",
++		MTK_EINT_FUNCTION(0, 48),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO48"),
++		MTK_FUNCTION(1, "I2SIN2_DI"),
++		MTK_FUNCTION(2, "SDA1"),
++		MTK_FUNCTION(3, "BPI_BUS13"),
++		MTK_FUNCTION(4, "MD_URTS1"),
++		MTK_FUNCTION(5, "TP_URTS2_VCORE"),
++		MTK_FUNCTION(6, "URTS2"),
++		MTK_FUNCTION(7, "DBG_MON_B4"),
++		MTK_FUNCTION(8, "IOBIST48")
++	),
++	MTK_PIN(
++		49, "GPIO49",
++		MTK_EINT_FUNCTION(0, 49),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO49"),
++		MTK_FUNCTION(1, "UTXD0"),
++		MTK_FUNCTION(2, "MBISTREADEN_TRIGGER"),
++		MTK_FUNCTION(3, "MD_UTXD1"),
++		MTK_FUNCTION(4, "HFRP_UTXD1"),
++		MTK_FUNCTION(5, "MD32_0_TXD"),
++		MTK_FUNCTION(6, "PTA_TXD"),
++		MTK_FUNCTION(8, "IOBIST49")
++	),
++	MTK_PIN(
++		50, "GPIO50",
++		MTK_EINT_FUNCTION(0, 50),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO50"),
++		MTK_FUNCTION(1, "URXD0"),
++		MTK_FUNCTION(2, "MBISTWRITEEN_TRIGGER"),
++		MTK_FUNCTION(3, "MD_URXD1"),
++		MTK_FUNCTION(4, "HFRP_URXD1"),
++		MTK_FUNCTION(5, "MD32_0_RXD"),
++		MTK_FUNCTION(6, "PTA_RXD"),
++		MTK_FUNCTION(8, "IOBIST50")
++	),
++	MTK_PIN(
++		51, "GPIO51",
++		MTK_EINT_FUNCTION(0, 51),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO51"),
++		MTK_FUNCTION(1, "UTXD1"),
++		MTK_FUNCTION(2, "TP_UTXD1_VLP"),
++		MTK_FUNCTION(3, "TP_UTXD2_VLP"),
++		MTK_FUNCTION(4, "CONN_BGF_UART0_TXD"),
++		MTK_FUNCTION(5, "SSPM_UTXD_AO_VLP"),
++		MTK_FUNCTION(6, "MD_MCIF_UTXD0"),
++		MTK_FUNCTION(7, "MD_UTXD0"),
++		MTK_FUNCTION(8, "IOBIST51")
++	),
++	MTK_PIN(
++		52, "GPIO52",
++		MTK_EINT_FUNCTION(0, 52),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO52"),
++		MTK_FUNCTION(1, "URXD1"),
++		MTK_FUNCTION(2, "TP_URXD1_VLP"),
++		MTK_FUNCTION(3, "TP_URXD2_VLP"),
++		MTK_FUNCTION(4, "CONN_BGF_UART0_RXD"),
++		MTK_FUNCTION(5, "SSPM_URXD_AO_VLP"),
++		MTK_FUNCTION(6, "MD_MCIF_URXD0"),
++		MTK_FUNCTION(7, "MD_URXD0"),
++		MTK_FUNCTION(8, "IOBIST52")
++	),
++	MTK_PIN(
++		53, "GPIO53",
++		MTK_EINT_FUNCTION(0, 53),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO53"),
++		MTK_FUNCTION(1, "JTRSTN_SEL1_VCORE"),
++		MTK_FUNCTION(2, "SPM_JTAG_TRSTN_VCORE"),
++		MTK_FUNCTION(8, "IOBIST53")
++	),
++	MTK_PIN(
++		54, "GPIO54",
++		MTK_EINT_FUNCTION(0, 54),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO54"),
++		MTK_FUNCTION(1, "JTCK_SEL1_VCORE"),
++		MTK_FUNCTION(2, "SPM_JTAG_TCK_VCORE"),
++		MTK_FUNCTION(8, "IOBIST54")
++	),
++	MTK_PIN(
++		55, "GPIO55",
++		MTK_EINT_FUNCTION(0, 55),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO55"),
++		MTK_FUNCTION(1, "JTMS_SEL1_VCORE"),
++		MTK_FUNCTION(2, "SPM_JTAG_TMS_VCORE"),
++		MTK_FUNCTION(8, "IOBIST55")
++	),
++	MTK_PIN(
++		56, "GPIO56",
++		MTK_EINT_FUNCTION(0, 56),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO56"),
++		MTK_FUNCTION(1, "JTDI_SEL1_VCORE"),
++		MTK_FUNCTION(2, "SPM_JTAG_TDI_VCORE"),
++		MTK_FUNCTION(8, "IOBIST56")
++	),
++	MTK_PIN(
++		57, "GPIO57",
++		MTK_EINT_FUNCTION(0, 57),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO57"),
++		MTK_FUNCTION(1, "JTDO_SEL1_VCORE"),
++		MTK_FUNCTION(2, "SPM_JTAG_TDO_VCORE"),
++		MTK_FUNCTION(8, "IOBIST57")
++	),
++	MTK_PIN(
++		58, "GPIO58",
++		MTK_EINT_FUNCTION(0, 58),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO58"),
++		MTK_FUNCTION(1, "SPI4_CLK"),
++		MTK_FUNCTION(2, "MD_UTXD0"),
++		MTK_FUNCTION(3, "UTXD2"),
++		MTK_FUNCTION(4, "TP_UTXD1_VCORE"),
++		MTK_FUNCTION(5, "MBISTREADEN_TRIGGER"),
++		MTK_FUNCTION(6, "EXTIF0_ACT"),
++		MTK_FUNCTION(7, "DAP_SONIC_SWCK"),
++		MTK_FUNCTION(8, "IOBIST58")
++	),
++	MTK_PIN(
++		59, "GPIO59",
++		MTK_EINT_FUNCTION(0, 59),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO59"),
++		MTK_FUNCTION(1, "SPI4_CSB"),
++		MTK_FUNCTION(2, "MD_URXD0"),
++		MTK_FUNCTION(3, "URXD2"),
++		MTK_FUNCTION(4, "TP_URXD1_VCORE"),
++		MTK_FUNCTION(5, "MBISTWRITEEN_TRIGGER"),
++		MTK_FUNCTION(6, "EXTIF0_PRI"),
++		MTK_FUNCTION(7, "DAP_SONIC_SWD"),
++		MTK_FUNCTION(8, "IOBIST59")
++	),
++	MTK_PIN(
++		60, "GPIO60",
++		MTK_EINT_FUNCTION(0, 60),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO60"),
++		MTK_FUNCTION(1, "SPI4_MO"),
++		MTK_FUNCTION(6, "EXTIF0_GNT_B"),
++		MTK_FUNCTION(7, "DAP_MD32_SWCK"),
++		MTK_FUNCTION(8, "IOBIST60")
++	),
++	MTK_PIN(
++		61, "GPIO61",
++		MTK_EINT_FUNCTION(0, 61),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO61"),
++		MTK_FUNCTION(1, "SPI4_MI"),
++		MTK_FUNCTION(7, "DAP_MD32_SWD"),
++		MTK_FUNCTION(8, "IOBIST61")
++	),
++	MTK_PIN(
++		62, "GPIO62",
++		MTK_EINT_FUNCTION(0, 62),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO62"),
++		MTK_FUNCTION(1, "SCP_SPI1_CK"),
++		MTK_FUNCTION(2, "SPI1_CLK"),
++		MTK_FUNCTION(3, "TP_UTXD1_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO0_AO"),
++		MTK_FUNCTION(6, "UTXD0"),
++		MTK_FUNCTION(7, "DBG_MON_A25"),
++		MTK_FUNCTION(8, "IOBIST62")
++	),
++	MTK_PIN(
++		63, "GPIO63",
++		MTK_EINT_FUNCTION(0, 63),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO63"),
++		MTK_FUNCTION(1, "SCP_SPI1_CS"),
++		MTK_FUNCTION(2, "SPI1_CSB"),
++		MTK_FUNCTION(3, "TP_URXD1_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO1_AO"),
++		MTK_FUNCTION(6, "URXD0"),
++		MTK_FUNCTION(7, "DBG_MON_A26"),
++		MTK_FUNCTION(8, "IOBIST63")
++	),
++	MTK_PIN(
++		64, "GPIO64",
++		MTK_EINT_FUNCTION(0, 64),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO64"),
++		MTK_FUNCTION(1, "SCP_SPI1_MO"),
++		MTK_FUNCTION(2, "SPI1_MO"),
++		MTK_FUNCTION(5, "TP_GPIO2_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A9"),
++		MTK_FUNCTION(8, "IOBIST64")
++	),
++	MTK_PIN(
++		65, "GPIO65",
++		MTK_EINT_FUNCTION(0, 65),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO65"),
++		MTK_FUNCTION(1, "SCP_SPI1_MI"),
++		MTK_FUNCTION(2, "SPI1_MI"),
++		MTK_FUNCTION(5, "TP_GPIO3_AO"),
++		MTK_FUNCTION(8, "IOBIST65")
++	),
++	MTK_PIN(
++		66, "GPIO66",
++		MTK_EINT_FUNCTION(0, 66),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO66"),
++		MTK_FUNCTION(1, "SCP_SPI2_CK"),
++		MTK_FUNCTION(2, "SPI2_CLK"),
++		MTK_FUNCTION(5, "TP_GPIO4_AO"),
++		MTK_FUNCTION(6, "UTXD1"),
++		MTK_FUNCTION(7, "DBG_MON_B13"),
++		MTK_FUNCTION(8, "IOBIST66")
++	),
++	MTK_PIN(
++		67, "GPIO67",
++		MTK_EINT_FUNCTION(0, 67),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO67"),
++		MTK_FUNCTION(1, "SCP_SPI2_CS"),
++		MTK_FUNCTION(2, "SPI2_CSB"),
++		MTK_FUNCTION(5, "TP_GPIO5_AO"),
++		MTK_FUNCTION(6, "URXD1"),
++		MTK_FUNCTION(7, "DBG_MON_B14"),
++		MTK_FUNCTION(8, "IOBIST67")
++	),
++	MTK_PIN(
++		68, "GPIO68",
++		MTK_EINT_FUNCTION(0, 68),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO68"),
++		MTK_FUNCTION(1, "SCP_SPI2_MO"),
++		MTK_FUNCTION(2, "SPI2_MO"),
++		MTK_FUNCTION(5, "TP_GPIO6_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B15"),
++		MTK_FUNCTION(8, "IOBIST68")
++	),
++	MTK_PIN(
++		69, "GPIO69",
++		MTK_EINT_FUNCTION(0, 69),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO69"),
++		MTK_FUNCTION(1, "SCP_SPI2_MI"),
++		MTK_FUNCTION(2, "SPI2_MI"),
++		MTK_FUNCTION(5, "TP_GPIO7_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B16"),
++		MTK_FUNCTION(8, "IOBIST69")
++	),
++	MTK_PIN(
++		70, "GPIO70",
++		MTK_EINT_FUNCTION(0, 70),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO70"),
++		MTK_FUNCTION(1, "SCP_SPI3_CK"),
++		MTK_FUNCTION(2, "SPI3_CLK"),
++		MTK_FUNCTION(3, "MD_INT4"),
++		MTK_FUNCTION(5, "TP_GPIO8_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B17"),
++		MTK_FUNCTION(8, "IOBIST70")
++	),
++	MTK_PIN(
++		71, "GPIO71",
++		MTK_EINT_FUNCTION(0, 71),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO71"),
++		MTK_FUNCTION(1, "SCP_SPI3_CS"),
++		MTK_FUNCTION(2, "SPI3_CSB"),
++		MTK_FUNCTION(3, "MD_INT3"),
++		MTK_FUNCTION(5, "TP_GPIO9_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B18"),
++		MTK_FUNCTION(8, "IOBIST71")
++	),
++	MTK_PIN(
++		72, "GPIO72",
++		MTK_EINT_FUNCTION(0, 72),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO72"),
++		MTK_FUNCTION(1, "SCP_SPI3_MO"),
++		MTK_FUNCTION(2, "SPI3_MO"),
++		MTK_FUNCTION(5, "TP_GPIO10_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B19"),
++		MTK_FUNCTION(8, "IOBIST72")
++	),
++	MTK_PIN(
++		73, "GPIO73",
++		MTK_EINT_FUNCTION(0, 73),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO73"),
++		MTK_FUNCTION(1, "SCP_SPI3_MI"),
++		MTK_FUNCTION(2, "SPI3_MI"),
++		MTK_FUNCTION(5, "TP_GPIO11_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B20"),
++		MTK_FUNCTION(8, "IOBIST73")
++	),
++	MTK_PIN(
++		74, "GPIO74",
++		MTK_EINT_FUNCTION(0, 74),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO74"),
++		MTK_FUNCTION(1, "SCP_SPI0_CK"),
++		MTK_FUNCTION(2, "SPI0_CLK"),
++		MTK_FUNCTION(3, "MD_INT0"),
++		MTK_FUNCTION(4, "BPI_BUS14"),
++		MTK_FUNCTION(5, "TP_GPIO12_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B5"),
++		MTK_FUNCTION(8, "IOBIST74")
++	),
++	MTK_PIN(
++		75, "GPIO75",
++		MTK_EINT_FUNCTION(0, 75),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO75"),
++		MTK_FUNCTION(1, "SCP_SPI0_CS"),
++		MTK_FUNCTION(2, "SPI0_CSB"),
++		MTK_FUNCTION(4, "BPI_BUS15"),
++		MTK_FUNCTION(5, "TP_GPIO13_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B6"),
++		MTK_FUNCTION(8, "IOBIST75")
++	),
++	MTK_PIN(
++		76, "GPIO76",
++		MTK_EINT_FUNCTION(0, 76),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO76"),
++		MTK_FUNCTION(1, "SCP_SPI0_MO"),
++		MTK_FUNCTION(2, "SPI0_MO"),
++		MTK_FUNCTION(4, "BPI_BUS16"),
++		MTK_FUNCTION(5, "TP_GPIO14_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B7"),
++		MTK_FUNCTION(8, "IOBIST76")
++	),
++	MTK_PIN(
++		77, "GPIO77",
++		MTK_EINT_FUNCTION(0, 77),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO77"),
++		MTK_FUNCTION(1, "SCP_SPI0_MI"),
++		MTK_FUNCTION(2, "SPI0_MI"),
++		MTK_FUNCTION(4, "BPI_BUS17"),
++		MTK_FUNCTION(5, "TP_GPIO15_AO"),
++		MTK_FUNCTION(7, "DBG_MON_B8"),
++		MTK_FUNCTION(8, "IOBIST77")
++	),
++	MTK_PIN(
++		78, "GPIO78",
++		MTK_EINT_FUNCTION(0, 78),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO78"),
++		MTK_FUNCTION(1, "SPI5_CLK"),
++		MTK_FUNCTION(2, "MD32_0_TXD"),
++		MTK_FUNCTION(3, "PTA_TXD"),
++		MTK_FUNCTION(4, "TP_UTXD2_VCORE"),
++		MTK_FUNCTION(5, "SSPM_UTXD_AO_VCORE"),
++		MTK_FUNCTION(6, "UTXD2"),
++		MTK_FUNCTION(7, "DBG_MON_B21"),
++		MTK_FUNCTION(8, "IOBIST78")
++	),
++	MTK_PIN(
++		79, "GPIO79",
++		MTK_EINT_FUNCTION(0, 79),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO79"),
++		MTK_FUNCTION(1, "SPI5_CSB"),
++		MTK_FUNCTION(2, "MD32_0_RXD"),
++		MTK_FUNCTION(3, "PTA_RXD"),
++		MTK_FUNCTION(4, "TP_URXD2_VCORE"),
++		MTK_FUNCTION(5, "SSPM_URXD_AO_VCORE"),
++		MTK_FUNCTION(6, "URXD2"),
++		MTK_FUNCTION(7, "DBG_MON_B22"),
++		MTK_FUNCTION(8, "IOBIST79")
++	),
++	MTK_PIN(
++		80, "GPIO80",
++		MTK_EINT_FUNCTION(0, 80),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO80"),
++		MTK_FUNCTION(1, "SPI5_MO"),
++		MTK_FUNCTION(7, "DBG_MON_B23"),
++		MTK_FUNCTION(8, "IOBIST80")
++	),
++	MTK_PIN(
++		81, "GPIO81",
++		MTK_EINT_FUNCTION(0, 81),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO81"),
++		MTK_FUNCTION(1, "SPI5_MI"),
++		MTK_FUNCTION(7, "DBG_MON_B24"),
++		MTK_FUNCTION(8, "IOBIST81")
++	),
++	MTK_PIN(
++		82, "GPIO82",
++		MTK_EINT_FUNCTION(0, 82),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO82"),
++		MTK_FUNCTION(1, "MSDC1_CLK"),
++		MTK_FUNCTION(2, "MFG_EB_JTAG_TCK"),
++		MTK_FUNCTION(3, "UDI_TCK"),
++		MTK_FUNCTION(4, "CONN_DSP_JCK"),
++		MTK_FUNCTION(8, "IOBIST82")
++	),
++	MTK_PIN(
++		83, "GPIO83",
++		MTK_EINT_FUNCTION(0, 83),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO83"),
++		MTK_FUNCTION(1, "MSDC1_CMD"),
++		MTK_FUNCTION(2, "MFG_EB_JTAG_TMS"),
++		MTK_FUNCTION(3, "UDI_TMS"),
++		MTK_FUNCTION(4, "CONN_DSP_JMS"),
++		MTK_FUNCTION(6, "TSFDC_VCO_RST"),
++		MTK_FUNCTION(8, "IOBIST83")
++	),
++	MTK_PIN(
++		84, "GPIO84",
++		MTK_EINT_FUNCTION(0, 84),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO84"),
++		MTK_FUNCTION(1, "MSDC1_DAT0"),
++		MTK_FUNCTION(2, "MFG_EB_JTAG_TDI"),
++		MTK_FUNCTION(3, "UDI_TDI"),
++		MTK_FUNCTION(4, "CONN_DSP_JDI"),
++		MTK_FUNCTION(6, "TSFDC_TSSEL2"),
++		MTK_FUNCTION(8, "IOBIST84")
++	),
++	MTK_PIN(
++		85, "GPIO85",
++		MTK_EINT_FUNCTION(0, 85),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO85"),
++		MTK_FUNCTION(1, "MSDC1_DAT1"),
++		MTK_FUNCTION(2, "MFG_EB_JTAG_TDO"),
++		MTK_FUNCTION(3, "UDI_TDO"),
++		MTK_FUNCTION(4, "CONN_DSP_JDO"),
++		MTK_FUNCTION(6, "TSFDC_TSSEL1"),
++		MTK_FUNCTION(8, "IOBIST85")
++	),
++	MTK_PIN(
++		86, "GPIO86",
++		MTK_EINT_FUNCTION(0, 86),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO86"),
++		MTK_FUNCTION(1, "MSDC1_DAT2"),
++		MTK_FUNCTION(2, "MFG_EB_JTAG_TRSTN"),
++		MTK_FUNCTION(3, "UDI_NTRST"),
++		MTK_FUNCTION(6, "TSFDC_TSSEL0"),
++		MTK_FUNCTION(8, "IOBIST86")
++	),
++	MTK_PIN(
++		87, "GPIO87",
++		MTK_EINT_FUNCTION(0, 87),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO87"),
++		MTK_FUNCTION(1, "MSDC1_DAT3"),
++		MTK_FUNCTION(2, "IRRX_IN"),
++		MTK_FUNCTION(4, "CONN_DSP_JINTP"),
++		MTK_FUNCTION(6, "TSFDC_RCK_SELB"),
++		MTK_FUNCTION(8, "IOBIST87")
++	),
++	MTK_PIN(
++		88, "GPIO88",
++		MTK_EINT_FUNCTION(0, 88),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO88"),
++		MTK_FUNCTION(1, "MD1_SIM1_SCLK"),
++		MTK_FUNCTION(2, "MD1_SIM2_SCLK"),
++		MTK_FUNCTION(4, "CONN_DSP_L5_JINTP"),
++		MTK_FUNCTION(6, "TSFDC_26M"),
++		MTK_FUNCTION(8, "IOBIST88")
++	),
++	MTK_PIN(
++		89, "GPIO89",
++		MTK_EINT_FUNCTION(0, 89),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO89"),
++		MTK_FUNCTION(1, "MD1_SIM1_SRST"),
++		MTK_FUNCTION(2, "MD1_SIM2_SRST"),
++		MTK_FUNCTION(3, "SPM_JTAG_TRSTN_VCORE"),
++		MTK_FUNCTION(5, "MCUPM_JTAG_TRSTN"),
++		MTK_FUNCTION(6, "TSFDC_SDO"),
++		MTK_FUNCTION(8, "IOBIST89")
++	),
++	MTK_PIN(
++		90, "GPIO90",
++		MTK_EINT_FUNCTION(0, 90),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO90"),
++		MTK_FUNCTION(1, "MD1_SIM1_SIO"),
++		MTK_FUNCTION(2, "MD1_SIM2_SIO"),
++		MTK_FUNCTION(3, "SPM_JTAG_TCK_VCORE"),
++		MTK_FUNCTION(4, "CONN_DSP_L5_JCK"),
++		MTK_FUNCTION(5, "MCUPM_JTAG_TCK"),
++		MTK_FUNCTION(6, "TSFDC_FOUT"),
++		MTK_FUNCTION(8, "IOBIST90")
++	),
++	MTK_PIN(
++		91, "GPIO91",
++		MTK_EINT_FUNCTION(0, 91),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO91"),
++		MTK_FUNCTION(1, "MD1_SIM2_SCLK"),
++		MTK_FUNCTION(2, "MD1_SIM1_SCLK"),
++		MTK_FUNCTION(3, "SPM_JTAG_TMS_VCORE"),
++		MTK_FUNCTION(4, "CONN_DSP_L5_JMS"),
++		MTK_FUNCTION(5, "MCUPM_JTAG_TMS"),
++		MTK_FUNCTION(6, "TSFDC_SCK"),
++		MTK_FUNCTION(8, "IOBIST91")
++	),
++	MTK_PIN(
++		92, "GPIO92",
++		MTK_EINT_FUNCTION(0, 92),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO92"),
++		MTK_FUNCTION(1, "MD1_SIM2_SRST"),
++		MTK_FUNCTION(2, "MD1_SIM1_SRST"),
++		MTK_FUNCTION(3, "SPM_JTAG_TDI_VCORE"),
++		MTK_FUNCTION(4, "CONN_DSP_L5_JDI"),
++		MTK_FUNCTION(5, "MCUPM_JTAG_TDI"),
++		MTK_FUNCTION(6, "TSFDC_SDI"),
++		MTK_FUNCTION(8, "IOBIST92")
++	),
++	MTK_PIN(
++		93, "GPIO93",
++		MTK_EINT_FUNCTION(0, 93),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO93"),
++		MTK_FUNCTION(1, "MD1_SIM2_SIO"),
++		MTK_FUNCTION(2, "MD1_SIM1_SIO"),
++		MTK_FUNCTION(3, "SPM_JTAG_TDO_VCORE"),
++		MTK_FUNCTION(4, "CONN_DSP_L5_JDO"),
++		MTK_FUNCTION(5, "MCUPM_JTAG_TDO"),
++		MTK_FUNCTION(6, "TSFDC_SCF"),
++		MTK_FUNCTION(8, "IOBIST93")
++	),
++	MTK_PIN(
++		94, "GPIO94",
++		MTK_EINT_FUNCTION(0, 94),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO94"),
++		MTK_FUNCTION(1, "MD_INT1_C2K_UIM0_HOT_PLUG"),
++		MTK_FUNCTION(2, "MD_INT2_C2K_UIM1_HOT_PLUG"),
++		MTK_FUNCTION(3, "SRCLKENAI0"),
++		MTK_FUNCTION(6, "MD_MCIF_UTXD0"),
++		MTK_FUNCTION(8, "IOBIST94")
++	),
++	MTK_PIN(
++		95, "GPIO95",
++		MTK_EINT_FUNCTION(0, 95),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO95"),
++		MTK_FUNCTION(1, "MD_INT2_C2K_UIM1_HOT_PLUG"),
++		MTK_FUNCTION(2, "MD_INT1_C2K_UIM0_HOT_PLUG"),
++		MTK_FUNCTION(3, "SRCLKENAI1"),
++		MTK_FUNCTION(4, "SRCLKENA1"),
++		MTK_FUNCTION(6, "MD_MCIF_URXD0"),
++		MTK_FUNCTION(8, "IOBIST95")
++	),
++	MTK_PIN(
++		96, "GPIO96",
++		MTK_EINT_FUNCTION(0, 96),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO96"),
++		MTK_FUNCTION(1, "DSI_TE"),
++		MTK_FUNCTION(7, "DBG_MON_B25"),
++		MTK_FUNCTION(8, "IOBIST96")
++	),
++	MTK_PIN(
++		97, "GPIO97",
++		MTK_EINT_FUNCTION(0, 97),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO97"),
++		MTK_FUNCTION(1, "LCM_RST"),
++		MTK_FUNCTION(7, "DBG_MON_B26"),
++		MTK_FUNCTION(8, "IOBIST97")
++	),
++	MTK_PIN(
++		98, "GPIO98",
++		MTK_EINT_FUNCTION(0, 98),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO98"),
++		MTK_FUNCTION(1, "DISP_PWM"),
++		MTK_FUNCTION(2, "PWM_2"),
++		MTK_FUNCTION(7, "DBG_MON_B27"),
++		MTK_FUNCTION(8, "IOBIST98")
++	),
++	MTK_PIN(
++		99, "GPIO99",
++		MTK_EINT_FUNCTION(0, 99),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO99"),
++		MTK_FUNCTION(1, "ANT_SEL0"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS17_ANT0"),
++		MTK_FUNCTION(3, "GPS_L1_ELNA_EN"),
++		MTK_FUNCTION(4, "EXT_FRAME_SYNC"),
++		MTK_FUNCTION(5, "SCL6"),
++		MTK_FUNCTION(8, "IOBIST99")
++	),
++	MTK_PIN(
++		100, "GPIO100",
++		MTK_EINT_FUNCTION(0, 100),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO100"),
++		MTK_FUNCTION(1, "ANT_SEL1"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS18_ANT1"),
++		MTK_FUNCTION(3, "GPS_L5_ELNA_EN"),
++		MTK_FUNCTION(4, "AGPS_SYNC"),
++		MTK_FUNCTION(5, "SDA6"),
++		MTK_FUNCTION(8, "IOBIST100")
++	),
++	MTK_PIN(
++		101, "GPIO101",
++		MTK_EINT_FUNCTION(0, 101),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO101"),
++		MTK_FUNCTION(1, "ANT_SEL2"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS19_ANT2"),
++		MTK_FUNCTION(3, "UDI_NTRST"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_TRST_B"),
++		MTK_FUNCTION(8, "IOBIST101")
++	),
++	MTK_PIN(
++		102, "GPIO102",
++		MTK_EINT_FUNCTION(0, 102),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO102"),
++		MTK_FUNCTION(1, "ANT_SEL3"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS20_ANT3"),
++		MTK_FUNCTION(3, "UDI_TCK"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_TCK"),
++		MTK_FUNCTION(8, "IOBIST102")
++	),
++	MTK_PIN(
++		103, "GPIO103",
++		MTK_EINT_FUNCTION(0, 103),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO103"),
++		MTK_FUNCTION(1, "ANT_SEL4"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS21_ANT4"),
++		MTK_FUNCTION(3, "UDI_TMS"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_TMS"),
++		MTK_FUNCTION(8, "IOBIST103")
++	),
++	MTK_PIN(
++		104, "GPIO104",
++		MTK_EINT_FUNCTION(0, 104),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO104"),
++		MTK_FUNCTION(1, "ANT_SEL5"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS16_OLAT5"),
++		MTK_FUNCTION(3, "UDI_TDI"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_TDI"),
++		MTK_FUNCTION(8, "IOBIST104")
++	),
++	MTK_PIN(
++		105, "GPIO105",
++		MTK_EINT_FUNCTION(0, 105),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO105"),
++		MTK_FUNCTION(1, "ANT_SEL6"),
++		MTK_FUNCTION(2, "CONN_TCXOENA_REQ"),
++		MTK_FUNCTION(3, "UDI_TDO"),
++		MTK_FUNCTION(4, "CONN_WF_MCU_TDO"),
++		MTK_FUNCTION(8, "IOBIST105")
++	),
++	MTK_PIN(
++		106, "GPIO106",
++		MTK_EINT_FUNCTION(0, 106),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO106"),
++		MTK_FUNCTION(1, "BPI_BUS0"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS10"),
++		MTK_FUNCTION(4, "MFG_TSFDC_EN"),
++		MTK_FUNCTION(5, "I2SOUT4_DATA0"),
++		MTK_FUNCTION(6, "ANT_SEL7"),
++		MTK_FUNCTION(8, "IOBIST106")
++	),
++	MTK_PIN(
++		107, "GPIO107",
++		MTK_EINT_FUNCTION(0, 107),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO107"),
++		MTK_FUNCTION(1, "BPI_BUS1"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS11_OLAT0"),
++		MTK_FUNCTION(4, "MFG_TSFDC_VCO_RST"),
++		MTK_FUNCTION(5, "I2SOUT4_DATA1"),
++		MTK_FUNCTION(6, "ANT_SEL8"),
++		MTK_FUNCTION(8, "IOBIST107")
++	),
++	MTK_PIN(
++		108, "GPIO108",
++		MTK_EINT_FUNCTION(0, 108),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO108"),
++		MTK_FUNCTION(1, "BPI_BUS2"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS12_OLAT1"),
++		MTK_FUNCTION(3, "CONN_TCXOENA_REQ"),
++		MTK_FUNCTION(4, "MFG_TSFDC_TSSEL2"),
++		MTK_FUNCTION(5, "I2SOUT4_DATA2"),
++		MTK_FUNCTION(6, "ANT_SEL9"),
++		MTK_FUNCTION(8, "IOBIST108")
++	),
++	MTK_PIN(
++		109, "GPIO109",
++		MTK_EINT_FUNCTION(0, 109),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO109"),
++		MTK_FUNCTION(1, "BPI_BUS3"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS13_OLAT2"),
++		MTK_FUNCTION(4, "MFG_TSFDC_TSSEL1"),
++		MTK_FUNCTION(5, "I2SOUT4_DATA3"),
++		MTK_FUNCTION(6, "ANT_SEL10"),
++		MTK_FUNCTION(8, "IOBIST109")
++	),
++	MTK_PIN(
++		110, "GPIO110",
++		MTK_EINT_FUNCTION(0, 110),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO110"),
++		MTK_FUNCTION(1, "BPI_BUS4"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS14_OLAT3"),
++		MTK_FUNCTION(3, "GPS_L1_ELNA_EN"),
++		MTK_FUNCTION(4, "MFG_TSFDC_TSSEL0"),
++		MTK_FUNCTION(5, "I2SIN4_BCK"),
++		MTK_FUNCTION(6, "ANT_SEL11"),
++		MTK_FUNCTION(8, "IOBIST110")
++	),
++	MTK_PIN(
++		111, "GPIO111",
++		MTK_EINT_FUNCTION(0, 111),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO111"),
++		MTK_FUNCTION(1, "BPI_BUS5"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS15_OLAT4"),
++		MTK_FUNCTION(3, "GPS_L5_ELNA_EN"),
++		MTK_FUNCTION(4, "MFG_TSFDC_RCK_SELB"),
++		MTK_FUNCTION(5, "I2SIN4_DATA0"),
++		MTK_FUNCTION(6, "ANT_SEL12"),
++		MTK_FUNCTION(8, "IOBIST111")
++	),
++	MTK_PIN(
++		112, "GPIO112",
++		MTK_EINT_FUNCTION(0, 112),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO112"),
++		MTK_FUNCTION(1, "BPI_BUS6"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS6"),
++		MTK_FUNCTION(3, "MIPI3_D_SDATA"),
++		MTK_FUNCTION(4, "MFG_TSFDC_SDO"),
++		MTK_FUNCTION(5, "I2SIN4_DATA1"),
++		MTK_FUNCTION(6, "ANT_SEL13"),
++		MTK_FUNCTION(8, "IOBIST112")
++	),
++	MTK_PIN(
++		113, "GPIO113",
++		MTK_EINT_FUNCTION(0, 113),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO113"),
++		MTK_FUNCTION(1, "BPI_BUS7"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS7"),
++		MTK_FUNCTION(3, "MIPI3_D_SCLK"),
++		MTK_FUNCTION(4, "MFG_TSFDC_FOUT"),
++		MTK_FUNCTION(5, "I2SIN4_DATA2"),
++		MTK_FUNCTION(6, "ANT_SEL14"),
++		MTK_FUNCTION(8, "IOBIST113")
++	),
++	MTK_PIN(
++		114, "GPIO114",
++		MTK_EINT_FUNCTION(0, 114),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO114"),
++		MTK_FUNCTION(1, "BPI_BUS8"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS8"),
++		MTK_FUNCTION(3, "MIPI4_D_SDATA"),
++		MTK_FUNCTION(4, "SCL9"),
++		MTK_FUNCTION(5, "I2SIN4_DATA3"),
++		MTK_FUNCTION(6, "ANT_SEL15"),
++		MTK_FUNCTION(8, "IOBIST114")
++	),
++	MTK_PIN(
++		115, "GPIO115",
++		MTK_EINT_FUNCTION(0, 115),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO115"),
++		MTK_FUNCTION(1, "BPI_BUS9"),
++		MTK_FUNCTION(2, "CONN_BPI_BUS9"),
++		MTK_FUNCTION(3, "MIPI4_D_SCLK"),
++		MTK_FUNCTION(4, "SDA9"),
++		MTK_FUNCTION(5, "I2SIN4_LRCK"),
++		MTK_FUNCTION(6, "ANT_SEL16"),
++		MTK_FUNCTION(8, "IOBIST115")
++	),
++	MTK_PIN(
++		116, "GPIO116",
++		MTK_EINT_FUNCTION(0, 116),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO116"),
++		MTK_FUNCTION(1, "MD_UCNT_A_TGL"),
++		MTK_FUNCTION(8, "IOBIST116")
++	),
++	MTK_PIN(
++		117, "GPIO117",
++		MTK_EINT_FUNCTION(0, 117),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO117"),
++		MTK_FUNCTION(1, "DIGRF_IRQ"),
++		MTK_FUNCTION(8, "IOBIST117")
++	),
++	MTK_PIN(
++		118, "GPIO118",
++		MTK_EINT_FUNCTION(0, 118),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO118"),
++		MTK_FUNCTION(8, "IOBIST118")
++	),
++	MTK_PIN(
++		119, "GPIO119",
++		MTK_EINT_FUNCTION(0, 119),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO119"),
++		MTK_FUNCTION(1, "AP_GOOD"),
++		MTK_FUNCTION(3, "CONN_WIFI_TXD"),
++		MTK_FUNCTION(4, "GPS_PPS"),
++		MTK_FUNCTION(5, "PMSR_SMAP"),
++		MTK_FUNCTION(6, "AGPS_SYNC"),
++		MTK_FUNCTION(8, "IOBIST119")
++	),
++	MTK_PIN(
++		120, "GPIO120",
++		MTK_EINT_FUNCTION(0, 120),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO120"),
++		MTK_FUNCTION(1, "KPCOL0_VLP"),
++		MTK_FUNCTION(8, "IOBIST120")
++	),
++	MTK_PIN(
++		121, "GPIO121",
++		MTK_EINT_FUNCTION(0, 121),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO121"),
++		MTK_FUNCTION(1, "SRCLKENAI0"),
++		MTK_FUNCTION(2, "SRCLKENAI1"),
++		MTK_FUNCTION(8, "IOBIST121")
++	),
++	MTK_PIN(
++		122, "GPIO122",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO122"),
++		MTK_FUNCTION(1, "WATCHDOG"),
++		MTK_FUNCTION(8, "IOBIST122")
++	),
++	MTK_PIN(
++		123, "GPIO123",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO123"),
++		MTK_FUNCTION(8, "IOBIST123")
++	),
++	MTK_PIN(
++		124, "GPIO124",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO124"),
++		MTK_FUNCTION(1, "SRCLKENA0"),
++		MTK_FUNCTION(8, "IOBIST124")
++	),
++	MTK_PIN(
++		125, "GPIO125",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO125"),
++		MTK_FUNCTION(1, "RTC32K_CK"),
++		MTK_FUNCTION(8, "IOBIST125")
++	),
++	MTK_PIN(
++		126, "GPIO126",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO126"),
++		MTK_FUNCTION(1, "SPMI_M_SCL"),
++		MTK_FUNCTION(8, "IOBIST126")
++	),
++	MTK_PIN(
++		127, "GPIO127",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO127"),
++		MTK_FUNCTION(1, "SPMI_M_SDA"),
++		MTK_FUNCTION(8, "IOBIST127")
++	),
++	MTK_PIN(
++		128, "GPIO128",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO128"),
++		MTK_FUNCTION(1, "SPMI_P_SCL"),
++		MTK_FUNCTION(8, "IOBIST128")
++	),
++	MTK_PIN(
++		129, "GPIO129",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO129"),
++		MTK_FUNCTION(1, "SPMI_P_SDA"),
++		MTK_FUNCTION(8, "IOBIST129")
++	),
++	MTK_PIN(
++		130, "GPIO130",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO130"),
++		MTK_FUNCTION(3, "BPI_BUS13"),
++		MTK_FUNCTION(8, "IOBIST130")
++	),
++	MTK_PIN(
++		131, "GPIO131",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO131"),
++		MTK_FUNCTION(1, "SPI6_CLK"),
++		MTK_FUNCTION(2, "KPROW2"),
++		MTK_FUNCTION(3, "BPI_BUS14"),
++		MTK_FUNCTION(4, "CONN_BT_TXD"),
++		MTK_FUNCTION(5, "MD32_1_TXD"),
++		MTK_FUNCTION(6, "PTA_TXD"),
++		MTK_FUNCTION(8, "IOBIST131")
++	),
++	MTK_PIN(
++		132, "GPIO132",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO132"),
++		MTK_FUNCTION(1, "SPI6_CSB"),
++		MTK_FUNCTION(2, "KPCOL2"),
++		MTK_FUNCTION(3, "BPI_BUS15"),
++		MTK_FUNCTION(5, "MD32_1_RXD"),
++		MTK_FUNCTION(6, "PTA_RXD"),
++		MTK_FUNCTION(8, "IOBIST132")
++	),
++	MTK_PIN(
++		133, "GPIO133",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO133"),
++		MTK_FUNCTION(1, "SPI6_MO"),
++		MTK_FUNCTION(2, "CLKM0"),
++		MTK_FUNCTION(3, "BPI_BUS16"),
++		MTK_FUNCTION(4, "CMFLASH2"),
++		MTK_FUNCTION(8, "IOBIST133")
++	),
++	MTK_PIN(
++		134, "GPIO134",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO134"),
++		MTK_FUNCTION(1, "SPI6_MI"),
++		MTK_FUNCTION(2, "CLKM1"),
++		MTK_FUNCTION(3, "BPI_BUS17"),
++		MTK_FUNCTION(4, "CMFLASH3"),
++		MTK_FUNCTION(8, "IOBIST134")
++	),
++	MTK_PIN(
++		135, "GPIO135",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO135"),
++		MTK_FUNCTION(1, "SCP_SCL1"),
++		MTK_FUNCTION(2, "CLKM2"),
++		MTK_FUNCTION(3, "SCP_DMIC_CLK"),
++		MTK_FUNCTION(4, "DMIC_CLK"),
++		MTK_FUNCTION(5, "TP_GPIO13_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A23"),
++		MTK_FUNCTION(8, "IOBIST135")
++	),
++	MTK_PIN(
++		136, "GPIO136",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO136"),
++		MTK_FUNCTION(1, "SCP_SDA1"),
++		MTK_FUNCTION(2, "CLKM3"),
++		MTK_FUNCTION(3, "SCP_DMIC_DAT"),
++		MTK_FUNCTION(4, "DMIC_DAT"),
++		MTK_FUNCTION(5, "TP_GPIO14_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A24"),
++		MTK_FUNCTION(8, "IOBIST136")
++	),
++	MTK_PIN(
++		137, "GPIO137",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO137"),
++		MTK_FUNCTION(2, "IRRX_IN"),
++		MTK_FUNCTION(3, "MD_INT0"),
++		MTK_FUNCTION(4, "SPMI_M_TRIG_FLAG"),
++		MTK_FUNCTION(5, "TP_GPIO15_AO"),
++		MTK_FUNCTION(6, "UFS_MPHY_SCL"),
++		MTK_FUNCTION(8, "IOBIST137")
++	),
++	MTK_PIN(
++		138, "GPIO138",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO138"),
++		MTK_FUNCTION(2, "PWM_VLP"),
++		MTK_FUNCTION(3, "MD_INT3"),
++		MTK_FUNCTION(5, "TP_GPIO0_AO"),
++		MTK_FUNCTION(6, "UFS_MPHY_SDA"),
++		MTK_FUNCTION(8, "IOBIST138")
++	),
++	MTK_PIN(
++		139, "GPIO139",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO139"),
++		MTK_FUNCTION(1, "SCL0"),
++		MTK_FUNCTION(4, "BPI_BUS18"),
++		MTK_FUNCTION(7, "DBG_MON_B28"),
++		MTK_FUNCTION(8, "IOBIST139")
++	),
++	MTK_PIN(
++		140, "GPIO140",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO140"),
++		MTK_FUNCTION(1, "SDA0"),
++		MTK_FUNCTION(4, "BPI_BUS19"),
++		MTK_FUNCTION(7, "DBG_MON_B29"),
++		MTK_FUNCTION(8, "IOBIST140")
++	),
++	MTK_PIN(
++		141, "GPIO141",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO141"),
++		MTK_FUNCTION(1, "SCL1"),
++		MTK_FUNCTION(2, "SCL9"),
++		MTK_FUNCTION(4, "BPI_BUS20"),
++		MTK_FUNCTION(7, "DBG_MON_B30"),
++		MTK_FUNCTION(8, "IOBIST141")
++	),
++	MTK_PIN(
++		142, "GPIO142",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO142"),
++		MTK_FUNCTION(1, "SDA1"),
++		MTK_FUNCTION(2, "SDA9"),
++		MTK_FUNCTION(4, "BPI_BUS21"),
++		MTK_FUNCTION(7, "DBG_MON_B31"),
++		MTK_FUNCTION(8, "IOBIST142")
++	),
++	MTK_PIN(
++		143, "GPIO143",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO143"),
++		MTK_FUNCTION(1, "SCL2"),
++		MTK_FUNCTION(7, "DBG_MON_B9"),
++		MTK_FUNCTION(8, "IOBIST143")
++	),
++	MTK_PIN(
++		144, "GPIO144",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO144"),
++		MTK_FUNCTION(1, "SDA2"),
++		MTK_FUNCTION(7, "DBG_MON_B10"),
++		MTK_FUNCTION(8, "IOBIST144")
++	),
++	MTK_PIN(
++		145, "GPIO145",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO145"),
++		MTK_FUNCTION(1, "SCL3"),
++		MTK_FUNCTION(3, "DMIC1_CLK"),
++		MTK_FUNCTION(7, "DBG_MON_B11"),
++		MTK_FUNCTION(8, "IOBIST145")
++	),
++	MTK_PIN(
++		146, "GPIO146",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO146"),
++		MTK_FUNCTION(1, "SDA3"),
++		MTK_FUNCTION(3, "DMIC1_DAT"),
++		MTK_FUNCTION(7, "DBG_MON_B12"),
++		MTK_FUNCTION(8, "IOBIST146")
++	),
++	MTK_PIN(
++		147, "GPIO147",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO147"),
++		MTK_FUNCTION(1, "SCL4"),
++		MTK_FUNCTION(7, "DBG_MON_A31"),
++		MTK_FUNCTION(8, "IOBIST147")
++	),
++	MTK_PIN(
++		148, "GPIO148",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO148"),
++		MTK_FUNCTION(1, "SDA4"),
++		MTK_FUNCTION(7, "DBG_MON_A7"),
++		MTK_FUNCTION(8, "IOBIST148")
++	),
++	MTK_PIN(
++		149, "GPIO149",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO149"),
++		MTK_FUNCTION(1, "SCL5"),
++		MTK_FUNCTION(8, "IOBIST149")
++	),
++	MTK_PIN(
++		150, "GPIO150",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO150"),
++		MTK_FUNCTION(1, "SDA5"),
++		MTK_FUNCTION(8, "IOBIST150")
++	),
++	MTK_PIN(
++		151, "GPIO151",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO151"),
++		MTK_FUNCTION(1, "SCL6"),
++		MTK_FUNCTION(2, "SCL11"),
++		MTK_FUNCTION(8, "IOBIST151")
++	),
++	MTK_PIN(
++		152, "GPIO152",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO152"),
++		MTK_FUNCTION(1, "SDA6"),
++		MTK_FUNCTION(2, "SDA11"),
++		MTK_FUNCTION(8, "IOBIST152")
++	),
++	MTK_PIN(
++		153, "GPIO153",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO153"),
++		MTK_FUNCTION(1, "SCL7"),
++		MTK_FUNCTION(7, "DBG_MON_A3"),
++		MTK_FUNCTION(8, "IOBIST153")
++	),
++	MTK_PIN(
++		154, "GPIO154",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO154"),
++		MTK_FUNCTION(1, "SDA7"),
++		MTK_FUNCTION(7, "DBG_MON_A4"),
++		MTK_FUNCTION(8, "IOBIST154")
++	),
++	MTK_PIN(
++		155, "GPIO155",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO155"),
++		MTK_FUNCTION(1, "SCL8"),
++		MTK_FUNCTION(7, "DBG_MON_A5"),
++		MTK_FUNCTION(8, "IOBIST155")
++	),
++	MTK_PIN(
++		156, "GPIO156",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO156"),
++		MTK_FUNCTION(1, "SDA8"),
++		MTK_FUNCTION(8, "IOBIST156")
++	),
++	MTK_PIN(
++		157, "GPIO157",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO157"),
++		MTK_FUNCTION(1, "SCP_SCL0"),
++		MTK_FUNCTION(3, "SCP_SCL5"),
++		MTK_FUNCTION(4, "TP_UCTS1_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO0_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A27"),
++		MTK_FUNCTION(8, "IOBIST157")
++	),
++	MTK_PIN(
++		158, "GPIO158",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO158"),
++		MTK_FUNCTION(1, "SCP_SDA0"),
++		MTK_FUNCTION(3, "SCP_SDA5"),
++		MTK_FUNCTION(4, "TP_URTS1_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO1_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A28"),
++		MTK_FUNCTION(8, "IOBIST158")
++	),
++	MTK_PIN(
++		159, "GPIO159",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO159"),
++		MTK_FUNCTION(1, "SCP_SCL1"),
++		MTK_FUNCTION(3, "SCP_SCL4"),
++		MTK_FUNCTION(4, "TP_UCTS2_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO2_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A29"),
++		MTK_FUNCTION(8, "IOBIST159")
++	),
++	MTK_PIN(
++		160, "GPIO160",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO160"),
++		MTK_FUNCTION(1, "SCP_SDA1"),
++		MTK_FUNCTION(3, "SCP_SDA4"),
++		MTK_FUNCTION(4, "TP_URTS2_VLP"),
++		MTK_FUNCTION(5, "TP_GPIO3_AO"),
++		MTK_FUNCTION(7, "DBG_MON_A30"),
++		MTK_FUNCTION(8, "IOBIST160")
++	),
++	MTK_PIN(
++		161, "GPIO161",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO161"),
++		MTK_FUNCTION(1, "SCP_SCL2"),
++		MTK_FUNCTION(2, "SCL10"),
++		MTK_FUNCTION(3, "SCP_DMIC_CLK"),
++		MTK_FUNCTION(4, "DMIC_CLK"),
++		MTK_FUNCTION(5, "TP_GPIO4_AO"),
++		MTK_FUNCTION(6, "EXTIF0_PRI"),
++		MTK_FUNCTION(8, "IOBIST161")
++	),
++	MTK_PIN(
++		162, "GPIO162",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO162"),
++		MTK_FUNCTION(1, "SCP_SDA2"),
++		MTK_FUNCTION(2, "SDA10"),
++		MTK_FUNCTION(3, "SCP_DMIC_DAT"),
++		MTK_FUNCTION(4, "DMIC_DAT"),
++		MTK_FUNCTION(5, "TP_GPIO5_AO"),
++		MTK_FUNCTION(6, "EXTIF0_GNT_B"),
++		MTK_FUNCTION(8, "IOBIST162")
++	),
++	MTK_PIN(
++		163, "GPIO163",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO163"),
++		MTK_FUNCTION(1, "SCP_SCL3"),
++		MTK_FUNCTION(2, "SCL12"),
++		MTK_FUNCTION(5, "TP_GPIO6_AO"),
++		MTK_FUNCTION(7, "MBISTREADEN_TRIGGER"),
++		MTK_FUNCTION(8, "IOBIST163")
++	),
++	MTK_PIN(
++		164, "GPIO164",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO164"),
++		MTK_FUNCTION(1, "SCP_SDA3"),
++		MTK_FUNCTION(2, "SDA12"),
++		MTK_FUNCTION(5, "TP_GPIO7_AO"),
++		MTK_FUNCTION(7, "MBISTWRITEEN_TRIGGER"),
++		MTK_FUNCTION(8, "IOBIST164")
++	),
++	MTK_PIN(
++		165, "GPIO165",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO165"),
++		MTK_FUNCTION(1, "MIPI0_D_SCLK"),
++		MTK_FUNCTION(2, "CONN_MIPI0_SCLK"),
++		MTK_FUNCTION(3, "BPI_BUS18"),
++		MTK_FUNCTION(6, "ANT_SEL17"),
++		MTK_FUNCTION(8, "IOBIST165")
++	),
++	MTK_PIN(
++		166, "GPIO166",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO166"),
++		MTK_FUNCTION(1, "MIPI0_D_SDATA"),
++		MTK_FUNCTION(2, "CONN_MIPI0_SDATA"),
++		MTK_FUNCTION(3, "BPI_BUS19"),
++		MTK_FUNCTION(6, "ANT_SEL18"),
++		MTK_FUNCTION(8, "IOBIST166")
++	),
++	MTK_PIN(
++		167, "GPIO167",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO167"),
++		MTK_FUNCTION(1, "MIPI1_D_SCLK"),
++		MTK_FUNCTION(2, "CONN_MIPI1_SCLK"),
++		MTK_FUNCTION(3, "BPI_BUS20"),
++		MTK_FUNCTION(6, "ANT_SEL19"),
++		MTK_FUNCTION(8, "IOBIST167")
++	),
++	MTK_PIN(
++		168, "GPIO168",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO168"),
++		MTK_FUNCTION(1, "MIPI1_D_SDATA"),
++		MTK_FUNCTION(2, "CONN_MIPI1_SDATA"),
++		MTK_FUNCTION(3, "BPI_BUS21"),
++		MTK_FUNCTION(6, "ANT_SEL20"),
++		MTK_FUNCTION(8, "IOBIST168")
++	),
++	MTK_PIN(
++		169, "GPIO169",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO169"),
++		MTK_FUNCTION(1, "MIPI2_D_SCLK"),
++		MTK_FUNCTION(3, "BPI_BUS10"),
++		MTK_FUNCTION(6, "MD_GPS_L1_BLANK"),
++		MTK_FUNCTION(8, "IOBIST169")
++	),
++	MTK_PIN(
++		170, "GPIO170",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO170"),
++		MTK_FUNCTION(1, "MIPI2_D_SDATA"),
++		MTK_FUNCTION(3, "BPI_BUS11"),
++		MTK_FUNCTION(6, "MD_GPS_L5_BLANK"),
++		MTK_FUNCTION(8, "IOBIST170")
++	),
++	MTK_PIN(
++		171, "GPIO171",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO171"),
++		MTK_FUNCTION(1, "MIPI_M_SCLK"),
++		MTK_FUNCTION(8, "IOBIST171")
++	),
++	MTK_PIN(
++		172, "GPIO172",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO172"),
++		MTK_FUNCTION(1, "MIPI_M_SDATA"),
++		MTK_FUNCTION(8, "IOBIST172")
++	),
++	MTK_PIN(
++		173, "GPIO173",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO173"),
++		MTK_FUNCTION(1, "AUD_CLK_MOSI"),
++		MTK_FUNCTION(3, "AUD_CLK_MOSI"),
++		MTK_FUNCTION(8, "IOBIST173")
++	),
++	MTK_PIN(
++		174, "GPIO174",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO174"),
++		MTK_FUNCTION(1, "AUD_SYNC_MOSI"),
++		MTK_FUNCTION(8, "IOBIST174")
++	),
++	MTK_PIN(
++		175, "GPIO175",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO175"),
++		MTK_FUNCTION(1, "AUD_DAT_MOSI0"),
++		MTK_FUNCTION(3, "AUD_DAT_MOSI0"),
++		MTK_FUNCTION(8, "IOBIST175")
++	),
++	MTK_PIN(
++		176, "GPIO176",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO176"),
++		MTK_FUNCTION(1, "AUD_DAT_MOSI1"),
++		MTK_FUNCTION(3, "AUD_DAT_MOSI1"),
++		MTK_FUNCTION(8, "IOBIST176")
++	),
++	MTK_PIN(
++		177, "GPIO177",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO177"),
++		MTK_FUNCTION(1, "AUD_NLE_MOSI0"),
++		MTK_FUNCTION(2, "AUD_SYNC_MISO"),
++		MTK_FUNCTION(8, "IOBIST177")
++	),
++	MTK_PIN(
++		178, "GPIO178",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO178"),
++		MTK_FUNCTION(1, "AUD_NLE_MOSI1"),
++		MTK_FUNCTION(2, "AUD_CLK_MISO"),
++		MTK_FUNCTION(3, "AUD_CLK_MISO"),
++		MTK_FUNCTION(8, "IOBIST178")
++	),
++	MTK_PIN(
++		179, "GPIO179",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO179"),
++		MTK_FUNCTION(1, "AUD_DAT_MISO0"),
++		MTK_FUNCTION(2, "VOW_DAT_MISO"),
++		MTK_FUNCTION(3, "AUD_DAT_MISO0"),
++		MTK_FUNCTION(8, "IOBIST179")
++	),
++	MTK_PIN(
++		180, "GPIO180",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO180"),
++		MTK_FUNCTION(1, "AUD_DAT_MISO1"),
++		MTK_FUNCTION(2, "VOW_CLK_MISO"),
++		MTK_FUNCTION(3, "AUD_DAT_MISO1"),
++		MTK_FUNCTION(8, "IOBIST180")
++	),
++	MTK_PIN(
++		181, "GPIO181",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO181"),
++		MTK_FUNCTION(1, "SCP_VREQ_VAO"),
++		MTK_FUNCTION(8, "IOBIST181")
++	),
++	MTK_PIN(
++		182, "GPIO182",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO182"),
++		MTK_FUNCTION(1, "CONN_TOP_CLK"),
++		MTK_FUNCTION(8, "IOBIST182")
++	),
++	MTK_PIN(
++		183, "GPIO183",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO183"),
++		MTK_FUNCTION(1, "CONN_TOP_DATA"),
++		MTK_FUNCTION(8, "IOBIST183")
++	),
++	MTK_PIN(
++		184, "GPIO184",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO184"),
++		MTK_FUNCTION(1, "CONN_BT_CLK"),
++		MTK_FUNCTION(8, "IOBIST184")
++	),
++	MTK_PIN(
++		185, "GPIO185",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO185"),
++		MTK_FUNCTION(1, "CONN_BT_DATA"),
++		MTK_FUNCTION(8, "IOBIST185")
++	),
++	MTK_PIN(
++		186, "GPIO186",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO186"),
++		MTK_FUNCTION(1, "CONN_HRST_B"),
++		MTK_FUNCTION(8, "IOBIST186")
++	),
++	MTK_PIN(
++		187, "GPIO187",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO187"),
++		MTK_FUNCTION(1, "CONN_WB_PTA"),
++		MTK_FUNCTION(8, "IOBIST187")
++	),
++	MTK_PIN(
++		188, "GPIO188",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO188"),
++		MTK_FUNCTION(1, "CONN_WF_CTRL0"),
++		MTK_FUNCTION(8, "IOBIST188")
++	),
++	MTK_PIN(
++		189, "GPIO189",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO189"),
++		MTK_FUNCTION(1, "CONN_WF_CTRL1"),
++		MTK_FUNCTION(8, "IOBIST189")
++	),
++	MTK_PIN(
++		190, "GPIO190",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO190"),
++		MTK_FUNCTION(1, "CONN_WF_CTRL2"),
++		MTK_FUNCTION(8, "IOBIST190")
++	),
++	MTK_PIN(
++		191, "GPIO191",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO191"),
++		MTK_FUNCTION(1, "CONN_TOP_CLK_2"),
++		MTK_FUNCTION(8, "IOBIST191")
++	),
++	MTK_PIN(
++		192, "GPIO192",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO192"),
++		MTK_FUNCTION(1, "CONN_TOP_DATA_2"),
++		MTK_FUNCTION(8, "IOBIST192")
++	),
++	MTK_PIN(
++		193, "GPIO193",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO193"),
++		MTK_FUNCTION(1, "CONN_HRST_B_2"),
++		MTK_FUNCTION(8, "IOBIST193")
++	),
++	MTK_PIN(
++		194, "GPIO194",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO194"),
++		MTK_FUNCTION(1, "GPS_L1_ELNA_EN"),
++		MTK_FUNCTION(2, "MD_GPS_L1_BLANK"),
++		MTK_FUNCTION(8, "IOBIST194")
++	),
++	MTK_PIN(
++		195, "GPIO195",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO195"),
++		MTK_FUNCTION(1, "GPS_L5_ELNA_EN"),
++		MTK_FUNCTION(2, "MD_GPS_L5_BLANK"),
++		MTK_FUNCTION(3, "ANT_SEL21"),
++		MTK_FUNCTION(5, "SPMI_P_TRIG_FLAG"),
++		MTK_FUNCTION(8, "IOBIST195")
++	),
++	MTK_PIN(
++		196, "GPIO196",
++		MTK_EINT_FUNCTION(NO_EINT_SUPPORT, NO_EINT_SUPPORT),
++		DRV_GRP4,
++		MTK_FUNCTION(0, "GPIO196"),
++		MTK_FUNCTION(1, "PAD_RESET_DRAM_0"),
++		MTK_FUNCTION(8, "IOBIST196")
++	),
++	MTK_PIN_VEINT(197),
++	MTK_PIN_VEINT(198),
++	MTK_PIN_VEINT(199),
++	MTK_PIN_VEINT(200),
++	MTK_PIN_VEINT(201),
++	MTK_PIN_VEINT(202),
++	MTK_PIN_VEINT(203),
++	MTK_PIN_VEINT(204),
++	MTK_PIN_VEINT(205),
++	MTK_PIN_VEINT(206),
++	MTK_PIN_VEINT(207),
++	MTK_PIN_VEINT(208),
++	MTK_PIN_VEINT(209),
++	MTK_PIN_VEINT(210),
++	MTK_PIN_VEINT(211),
++	MTK_PIN_VEINT(212),
++	MTK_PIN_VEINT(213),
++	MTK_PIN_VEINT(214),
++	MTK_PIN_VEINT(215),
++	MTK_PIN_VEINT(216),
++};
 +
-+        i2c5-pins {
-+            pins {
-+                pinmux = <PINMUX_GPIO149__FUNC_SCL5>,
-+                         <PINMUX_GPIO150__FUNC_SDA5>;
-+                bias-disable;
-+            };
-+        };
-+    };
++static struct mtk_eint_pin eint_pins_mt6858[] = {
++	MTK_EINT_PIN(0, 2, 0, 1),
++	MTK_EINT_PIN(1, 2, 1, 1),
++	MTK_EINT_PIN(2, 2, 2, 1),
++	MTK_EINT_PIN(3, 2, 3, 1),
++	MTK_EINT_PIN(4, 2, 4, 1),
++	MTK_EINT_PIN(5, 2, 5, 1),
++	MTK_EINT_PIN(6, 2, 6, 1),
++	MTK_EINT_PIN(7, 2, 7, 1),
++	MTK_EINT_PIN(8, 0, 0, 1),
++	MTK_EINT_PIN(9, 0, 1, 1),
++	MTK_EINT_PIN(10, 0, 2, 1),
++	MTK_EINT_PIN(11, 0, 3, 1),
++	MTK_EINT_PIN(12, 0, 4, 1),
++	MTK_EINT_PIN(13, 1, 0, 1),
++	MTK_EINT_PIN(14, 1, 1, 1),
++	MTK_EINT_PIN(15, 1, 2, 1),
++	MTK_EINT_PIN(16, 1, 3, 1),
++	MTK_EINT_PIN(17, 1, 4, 1),
++	MTK_EINT_PIN(18, 1, 5, 1),
++	MTK_EINT_PIN(19, 1, 6, 1),
++	MTK_EINT_PIN(20, 1, 7, 1),
++	MTK_EINT_PIN(21, 0, 5, 1),
++	MTK_EINT_PIN(22, 0, 6, 1),
++	MTK_EINT_PIN(23, 2, 8, 1),
++	MTK_EINT_PIN(24, 0, 7, 1),
++	MTK_EINT_PIN(25, 2, 18, 0),
++	MTK_EINT_PIN(26, 0, 8, 1),
++	MTK_EINT_PIN(27, 2, 9, 1),
++	MTK_EINT_PIN(28, 2, 10, 1),
++	MTK_EINT_PIN(29, 2, 11, 1),
++	MTK_EINT_PIN(30, 2, 12, 1),
++	MTK_EINT_PIN(31, 2, 13, 1),
++	MTK_EINT_PIN(32, 2, 14, 1),
++	MTK_EINT_PIN(33, 2, 15, 1),
++	MTK_EINT_PIN(34, 2, 16, 1),
++	MTK_EINT_PIN(35, 0, 9, 1),
++	MTK_EINT_PIN(36, 2, 17, 1),
++	MTK_EINT_PIN(37, 2, 19, 0),
++	MTK_EINT_PIN(38, 2, 20, 0),
++	MTK_EINT_PIN(39, 2, 21, 0),
++	MTK_EINT_PIN(40, 0, 10, 0),
++	MTK_EINT_PIN(41, 0, 11, 0),
++	MTK_EINT_PIN(42, 0, 12, 0),
++	MTK_EINT_PIN(43, 0, 13, 0),
++	MTK_EINT_PIN(44, 0, 14, 0),
++	MTK_EINT_PIN(45, 0, 15, 0),
++	MTK_EINT_PIN(46, 0, 16, 0),
++	MTK_EINT_PIN(47, 0, 17, 0),
++	MTK_EINT_PIN(48, 0, 18, 0),
++	MTK_EINT_PIN(49, 0, 19, 0),
++	MTK_EINT_PIN(50, 0, 20, 0),
++	MTK_EINT_PIN(51, 0, 21, 0),
++	MTK_EINT_PIN(52, 0, 22, 0),
++	MTK_EINT_PIN(53, 0, 23, 0),
++	MTK_EINT_PIN(54, 0, 24, 0),
++	MTK_EINT_PIN(55, 0, 25, 0),
++	MTK_EINT_PIN(56, 0, 26, 0),
++	MTK_EINT_PIN(57, 0, 27, 0),
++	MTK_EINT_PIN(58, 0, 28, 0),
++	MTK_EINT_PIN(59, 0, 29, 0),
++	MTK_EINT_PIN(60, 0, 30, 0),
++	MTK_EINT_PIN(61, 0, 31, 0),
++	MTK_EINT_PIN(62, 2, 22, 0),
++	MTK_EINT_PIN(63, 2, 23, 0),
++	MTK_EINT_PIN(64, 2, 24, 0),
++	MTK_EINT_PIN(65, 2, 25, 0),
++	MTK_EINT_PIN(66, 0, 32, 0),
++	MTK_EINT_PIN(67, 0, 33, 0),
++	MTK_EINT_PIN(68, 0, 34, 0),
++	MTK_EINT_PIN(69, 0, 35, 0),
++	MTK_EINT_PIN(70, 0, 36, 0),
++	MTK_EINT_PIN(71, 0, 37, 0),
++	MTK_EINT_PIN(72, 0, 38, 0),
++	MTK_EINT_PIN(73, 0, 39, 0),
++	MTK_EINT_PIN(74, 0, 40, 0),
++	MTK_EINT_PIN(75, 0, 41, 0),
++	MTK_EINT_PIN(76, 0, 42, 0),
++	MTK_EINT_PIN(77, 0, 43, 0),
++	MTK_EINT_PIN(78, 0, 44, 0),
++	MTK_EINT_PIN(79, 0, 45, 0),
++	MTK_EINT_PIN(80, 0, 46, 0),
++	MTK_EINT_PIN(81, 0, 47, 0),
++	MTK_EINT_PIN(82, 2, 26, 0),
++	MTK_EINT_PIN(83, 2, 27, 0),
++	MTK_EINT_PIN(84, 2, 28, 0),
++	MTK_EINT_PIN(85, 2, 29, 0),
++	MTK_EINT_PIN(86, 2, 30, 0),
++	MTK_EINT_PIN(87, 2, 31, 0),
++	MTK_EINT_PIN(88, 0, 48, 0),
++	MTK_EINT_PIN(89, 0, 49, 0),
++	MTK_EINT_PIN(90, 0, 50, 0),
++	MTK_EINT_PIN(91, 0, 51, 0),
++	MTK_EINT_PIN(92, 0, 52, 0),
++	MTK_EINT_PIN(93, 0, 53, 0),
++	MTK_EINT_PIN(94, 0, 54, 0),
++	MTK_EINT_PIN(95, 0, 55, 0),
++	MTK_EINT_PIN(96, 0, 56, 0),
++	MTK_EINT_PIN(97, 0, 57, 0),
++	MTK_EINT_PIN(98, 0, 58, 0),
++	MTK_EINT_PIN(99, 2, 32, 0),
++	MTK_EINT_PIN(100, 2, 33, 0),
++	MTK_EINT_PIN(101, 2, 34, 0),
++	MTK_EINT_PIN(102, 2, 35, 0),
++	MTK_EINT_PIN(103, 2, 36, 0),
++	MTK_EINT_PIN(104, 2, 37, 0),
++	MTK_EINT_PIN(105, 2, 38, 0),
++	MTK_EINT_PIN(106, 0, 59, 0),
++	MTK_EINT_PIN(107, 0, 60, 0),
++	MTK_EINT_PIN(108, 0, 61, 0),
++	MTK_EINT_PIN(109, 0, 62, 0),
++	MTK_EINT_PIN(110, 0, 63, 0),
++	MTK_EINT_PIN(111, 0, 64, 0),
++	MTK_EINT_PIN(112, 0, 65, 0),
++	MTK_EINT_PIN(113, 0, 66, 0),
++	MTK_EINT_PIN(114, 0, 67, 0),
++	MTK_EINT_PIN(115, 0, 68, 0),
++	MTK_EINT_PIN(116, 0, 69, 0),
++	MTK_EINT_PIN(117, 0, 70, 0),
++	MTK_EINT_PIN(118, 0, 71, 0),
++	MTK_EINT_PIN(119, 0, 72, 0),
++	MTK_EINT_PIN(120, 0, 73, 0),
++	MTK_EINT_PIN(121, 0, 74, 0),
++	MTK_EINT_PIN(122, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(123, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(124, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(125, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(126, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(127, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(128, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(129, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(130, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(131, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(132, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(133, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(134, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(135, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(136, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(137, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(138, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(139, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(140, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(141, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(142, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(143, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(144, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(145, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(146, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(147, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(148, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(149, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(150, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(151, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(152, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(153, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(154, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(155, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(156, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(157, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(158, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(159, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(160, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(161, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(162, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(163, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(164, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(165, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(166, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(167, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(168, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(169, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(170, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(171, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(172, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(173, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(174, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(175, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(176, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(177, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(178, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(179, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(180, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(181, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(182, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(183, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(184, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(185, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(186, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(187, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(188, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(189, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(190, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(191, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(192, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(193, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(194, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(195, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(196, EINT_INVALID_BASE, 0, 0),
++	MTK_EINT_PIN(197, 3, 0, 0),
++	MTK_EINT_PIN(198, 3, 1, 0),
++	MTK_EINT_PIN(199, 3, 2, 0),
++	MTK_EINT_PIN(200, 3, 3, 0),
++	MTK_EINT_PIN(201, 3, 4, 0),
++	MTK_EINT_PIN(202, 3, 5, 0),
++	MTK_EINT_PIN(203, 3, 6, 0),
++	MTK_EINT_PIN(204, 3, 7, 0),
++	MTK_EINT_PIN(205, 3, 8, 0),
++	MTK_EINT_PIN(206, 3, 9, 0),
++	MTK_EINT_PIN(207, 3, 10, 0),
++	MTK_EINT_PIN(208, 3, 11, 0),
++	MTK_EINT_PIN(209, 3, 12, 0),
++	MTK_EINT_PIN(210, 3, 13, 0),
++	MTK_EINT_PIN(211, 3, 14, 0),
++	MTK_EINT_PIN(212, 3, 15, 0),
++	MTK_EINT_PIN(213, 3, 16, 0),
++	MTK_EINT_PIN(214, 3, 17, 0),
++	MTK_EINT_PIN(215, 3, 18, 0),
++	MTK_EINT_PIN(216, 3, 19, 0),
++};
++
++#endif /* __PINCTRL_MTK_MT6858_H */
 
 -- 
 2.54.0
