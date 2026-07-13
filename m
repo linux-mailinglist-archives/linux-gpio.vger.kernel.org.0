@@ -1,89 +1,59 @@
-Return-Path: <linux-gpio+bounces-40009-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40010-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SCgiFtZ0VWqoogAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40009-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 01:29:26 +0200
+	id hdxkG0J1VWq0ogAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40010-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 01:31:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D299574FBA2
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 01:29:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB51474FBB2
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 01:31:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=F+XtzHy1;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40009-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40009-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=none;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40010-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40010-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2952C3006818
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 23:29:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7B20F3034ABE
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 23:31:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6963D3D1D;
-	Mon, 13 Jul 2026 23:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354F83B83E8;
+	Mon, 13 Jul 2026 23:31:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D6C396D2E
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 23:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38E834388A;
+	Mon, 13 Jul 2026 23:31:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783985361; cv=none; b=K9xSnYKxUsXraddqwNkzPHvdwXUuKzYxtaWH3gYQhE2MBQu4mw+qgKvxxVR7Y71s638QG9/HGHwRsvrgmQnxryn9TYBSaNTdENH05Leo7EbGWtAU143oRInDkb7I82MxT7sLKhEzsBxCnnvpUYVcoeuIkbtEy1R7Pk/zAC398sY=
+	t=1783985471; cv=none; b=a495mQUcPWvRvcfo/FTaHRdBOVb+sIZz6//2/KJjddNC0I5YVw4clOC79YVh8MK0ITd8k71nwcsj7Vcp2/ghxIw/89gPlvBSnGzkDXSx5QIkJghSauEWX2J/Nppa6fiixgabUed6LhID8m5bvFU9FFSqRsxjidK0G0fZWe1M+wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783985361; c=relaxed/simple;
-	bh=82WrTvzK6rnWNGMLZZKDDFGDlChYJxXWkSWFy4qOjjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ie9iyFukUmLDo4vYvhJgkveqz5RPdX+fLJZuCqkGMdcMy/6PYLVnYoddaK+ug+cJNV7q19HQVmqrBhTMVTSC74VCjsjFXflEwooptXKAzN9nkLeHzDeqe9lcB8OYIRDsX6JW6vfQi0XKdaQ+n2yUv/h4Wkudp7ovIk+ePfeyf0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F+XtzHy1; arc=none smtp.client-ip=209.85.216.49
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38e071ed6aeso975318a91.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 16:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783985360; x=1784590160; darn=vger.kernel.org;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2TRRmpqnsdCpySSH8C/9M0IgSzcJPTMpM/OkZS2qiqE=;
-        b=F+XtzHy1hLLPnpLLDHzFdPX8sR2W7hS77YbgKNRQYwsPBseXJ5zCBDPpzeY46/zJl9
-         CBMNhuMkJ2ufSBeqElDxmiYn2ZQVxD8iK6F+GldDQu3dlMxzVFycfzIvxlom1lwn+952
-         pb8K+J4hewGT+svX21XQqlGwN8YsFxKJH/6uUnM4naQkdGqkqvUzCy+8PztRhX3HON5N
-         1lxmhU0zKxBSn6YAjgzmP8XiFxSOzsK0xh9VPthmuzlPF4C9Y4mSiEpdroqIbVpG/OuA
-         1AUnacT3iQ/h759yFNJ9Iu9uunRi8uSKDcpSnHYcsnfjMLHWhEFjjcF/ophKyaeGzzrZ
-         h19A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783985360; x=1784590160;
-        h=content-disposition:content-type:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2TRRmpqnsdCpySSH8C/9M0IgSzcJPTMpM/OkZS2qiqE=;
-        b=FvOvHk0IoybWmMTYX6DxeGQ+n2SnZp/GUMkv0esJVdBCHHmOWvbk4+Mwz0mW3HVqtR
-         BhD/8vlf22ALTjaGfvOSDXugwbr98fkVcStUO+NYTrd4kPRFJUsdAcLnO+NYX95YvHME
-         mFm/MUSS1KwHNlEflOoxB2v5abgzDg/cJV3Zw4MSx4FFmYcgUrpPY6RfZl25L1HCy0Oo
-         Dt+drKthGloaHkhjlCSqQKuL1AG1tJmFmVQOQEx90RxqcIwyLw7z9iZZ1wpwWl4sUStU
-         F6ZH4f1GRygwLrdB1most/ZGiA1J6U6CjWIy3IAOaIIn8ujJYZwFXSPzjpsH5JMyg0iS
-         uslA==
-X-Forwarded-Encrypted: i=1; AHgh+RpApNRUfDfYvLIGqKpmaQypO4AQPG81kYPeMjy14UF1IcC37WK2SoLV4N2F0kQJc28OjwJRXdqSl3Of@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrlqzwZyXFUeal+veKpJ95wrauJRrxR59PDKA4mDelqaH4fHQb
-	osUeSSEW7Lm1xFQpvf6FhaeCzEMlEUIDFX3RNopbI65bLBjcnAyuVdLw
-X-Gm-Gg: AfdE7cnFkxkbZitujohfJahNcFun9/M+dh0zmjiNveFfslwGhYLiBUxRZsxKHkujKrU
-	QC108tIwqGEIZT9S8O9rzXqngiUiYifhAz+s01vfeF71AkA3F5ZBrCKL8y5SuqlUf2+nfTbp1iy
-	AttXcHQIBCWDqqR/AvJMgOJTEc0ZY3ODA9WDOae1GtpcwnvgLiQAB1OWL/iqU6E1drK0bdtrK0q
-	/j0ijfM/CfHCiZylBCzD9sC1qR15nz5SUePPhz9gTwluGnCFSX8mmTz3y5zgC0KwaKxJOGB5CHt
-	KBkF9gk4rsSJAefMwVyI+Fzn83qaHZcAVtQL7elcETK7zfBboSxlIoT2B3dmdY3wb9pVTaX3pXF
-	Yv8lqxTjqM+SQjFi7G3pe8qV6PMcdcgRC23uwrzf5ueeQX0oC1vpx9MUnddznGB5bALQNLJV7QF
-	WIQVs8i6IdpIQZXk63qsF0G/16DtUBBOiiAhapNeVS10kqB4/jTbQs1A==
-X-Received: by 2002:a05:6a21:e083:b0:3bf:7fa5:8922 with SMTP id adf61e73a8af0-3c1100092dfmr11320261637.2.1783985359646;
-        Mon, 13 Jul 2026 16:29:19 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:e15f:5d5f:580b:f2e9])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b84d6ce15sm33375141c88.5.2026.07.13.16.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 16:29:19 -0700 (PDT)
-Date: Mon, 13 Jul 2026 16:29:16 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: remove trailing comma from sentinel in
- GPIO_LOOKUP_SINGLE
-Message-ID: <alV0wIgZAY_InGYV@google.com>
+	s=arc-20240116; t=1783985471; c=relaxed/simple;
+	bh=qQhLs0bCrhNFjURSJookWUQUDRmPrMS36AzKJT1kcmc=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HtwjxLiOfaZQLko7zd6Ps8icCkpm1ZOQCri9/ZiIUsMABbjP3uEl++p6+Cvx+YbNrGoN6F3rHBJ9oD5RLRSXWHq278imnKcvANIbYUzj2kHOiz5YsLjb2mALIAdkwK+4J/9f4imA5BoAcCyqgg81cOkOaFba/AJmFzOk5TqOWq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.99)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1wjQ6z-000000000zU-2AOm;
+	Mon, 13 Jul 2026 23:30:57 +0000
+Date: Tue, 14 Jul 2026 00:30:53 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] gpiolib: tolerate gpio-hogs lacking a hogging state
+Message-ID: <4c67cf0839ccf57db35a826df6d8fc779531509a.1783974733.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,68 +63,109 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [1.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40009-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:andriy.shevchenko@linux.intel.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-40010-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[makrotopia.org];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:frank-w@public-files.de,m:andriy.shevchenko@linux.intel.com,m:mika.westerberg@linux.intel.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com,public-files.de,linux.intel.com,vger.kernel.org,lists.infradead.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[daniel@makrotopia.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daniel@makrotopia.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D299574FBA2
+X-Rspamd-Queue-Id: BB51474FBB2
 
-The GPIO_LOOKUP_SINGLE macro defines a lookup table with a single entry
-followed by an empty sentinel entry. The sentinel entry has a trailing
-comma which is unnecessary. Remove it.
+Commit d1d564ec4992 ("gpio: move hogs into GPIO core") made
+gpiochip_add_hog() return -EINVAL for hog nodes lacking any of the
+'input', 'output-low' or 'output-high' properties. The error is
+propagated by gpiochip_hog_lines() and fails registration of the
+whole GPIO chip.
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The previous OF-specific implementation tolerated such nodes:
+of_parse_own_gpio() warned "no hogging state specified, bailing out"
+and of_gpiochip_add_hog() stopped processing the node without failing
+chip registration.
+
+Some boards deliberately ship hog nodes without a hogging state in
+their base devicetree and supply the state via overlay, e.g. the PCIe
+slot key selection hogs on the BananaPi R4 Pro added in
+commit e309fa232d12 ("arm64: dts: mediatek: mt7988a-bpi-r4pro: rework
+pcie gpio-hog handling"), as the polarity set in the base devicetree
+could not be overridden from an overlay.
+
+Booting such a board without an overlay applied now fails to register
+the gpiochip. On the BananaPi R4 Pro this means the MT7988A pinctrl
+device fails to probe, all peripherals including the console UART
+defer forever, and the board finally hangs when clk_disable_unused()
+gates the clocks of the UART still in use by earlycon:
+
+  gpiochip_add_data_with_key: GPIOs 512..595 (pinctrl_moore) failed to register, -22
+  mt7988-pinctrl 1001f000.pinctrl: error -EINVAL: Failed to add gpio_chip
+  ...
+  clk: Disabling unused clocks
+  (hangs)
+
+Restore the previous behaviour by warning about hog nodes lacking a
+hogging state and skipping them instead of failing the registration
+of the whole GPIO chip.
+
+Fixes: d1d564ec4992 ("gpio: move hogs into GPIO core")
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
- include/linux/gpio/machine.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
-index 5eb88f5d0630..1a141056716f 100644
---- a/include/linux/gpio/machine.h
-+++ b/include/linux/gpio/machine.h
-@@ -54,7 +54,7 @@ static struct gpiod_lookup_table _name = {				\
- 	.dev_id = _dev_id,						\
- 	.table = {							\
- 		GPIO_LOOKUP(_key, _chip_hwnum, _con_id, _flags),	\
--		{},							\
-+		{ }							\
- 	},								\
- }
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e5fb60111151..c433a095907f 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -999,14 +999,17 @@ int gpiochip_add_hog(struct gpio_chip *gc, struct fwnode_handle *fwnode)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (fwnode_property_present(fwnode, "input"))
++	if (fwnode_property_present(fwnode, "input")) {
+ 		dflags |= GPIOD_IN;
+-	else if (fwnode_property_present(fwnode, "output-low"))
++	} else if (fwnode_property_present(fwnode, "output-low")) {
+ 		dflags |= GPIOD_OUT_LOW;
+-	else if (fwnode_property_present(fwnode, "output-high"))
++	} else if (fwnode_property_present(fwnode, "output-high")) {
+ 		dflags |= GPIOD_OUT_HIGH;
+-	else
+-		return -EINVAL;
++	} else {
++		gpiochip_warn(gc, "%pfwP: no hogging state specified, bailing out\n",
++			      fwnode);
++		return 0;
++	}
+ 
+ 	fwnode_property_read_string(fwnode, "line-name", &name);
  
 -- 
-2.55.0.795.g602f6c329a-goog
-
-
--- 
-Dmitry
+2.55.0
 
