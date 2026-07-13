@@ -1,218 +1,154 @@
-Return-Path: <linux-gpio+bounces-39981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39982-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wfhcNdLlVGrlggAAu9opvQ
-	(envelope-from <linux-gpio+bounces-39981-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:19:14 +0200
+	id xj8HCH3mVGofgwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-39982-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:22:05 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7368774B75F
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:19:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F01474B81B
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 15:22:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=collabora.com header.s=mail header.b=nvas8LQI;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39981-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39981-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=collabora.com;
+	dkim=pass header.d=sang-engineering.com header.s=k1 header.b=e0yVE8Rz;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39982-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39982-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 11AE73032583
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 13:11:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9D82C313F8DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 13:13:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19985419300;
-	Mon, 13 Jul 2026 13:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC56D420871;
+	Mon, 13 Jul 2026 13:13:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742294189D9;
-	Mon, 13 Jul 2026 13:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0FA419303
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 13:13:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783948302; cv=none; b=f1XIFKytH1v5Y45hnXWvbNSw6C863r6Yehj0KGKJp7mIeMIOWBfpHD08ALF8i+rDdh1LmG8K+L5N84czYxnHVW/5S/0mn6sRevFm09+kVXqj/Ld6SHwBtRKQ2A7la484cBCBP1fK8jCLtKv1BIoDvXwuJ8LPZWmLX0VMx4HqNH0=
+	t=1783948423; cv=none; b=QZRUM/KGpfvlpwuTNXnTgs1jtvwVUx7d0b/TXyvOi7IY8WzuYkOv1bWHXoWRI8wWlAN6Gj5l1NdDa/qAz6SxPMnPjUrz44r2BJaHhOrAeCthmwge1GKsd7c10f0L/VJZikjMsG5R01z1Xh/URJ+nvO9IqWXqrM23CUV28Ns20Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783948302; c=relaxed/simple;
-	bh=794YbEXyzIorMyKoNEFQ6cQ/F/QQjKG1DMjHHg8ga20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eaHugZe7aQbeX+om5kzLgLfj2qswgKL/uq/jMvZK6SljqgtHlR/OPCYOIqiFbRCVXwppe2ovWzMAZdx0zMfwVR6Cu6eCOfCBCqdaIXs6J2Vo+bPi8YodfB2RE6wLvn4OS720TCWj0MscoiTdYStX8pP7t1a4TCdGQVnYCYIPRHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nvas8LQI; arc=none smtp.client-ip=148.251.105.195
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1783948299;
-	bh=794YbEXyzIorMyKoNEFQ6cQ/F/QQjKG1DMjHHg8ga20=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nvas8LQIvvJDhQizpfs1AArtRbGcWBZKnvqebRXJGr7BQPAl0DYTfd5ENLJO5pyvU
-	 CU/OqUGLCIP1aGEd3AXR7wW6Dhz4O4uLvRgBYgZa3KrQYgEOovc9JTBxF6b9N+l9Yg
-	 zmr0436PoWjX7UK/l0zyurnom0LzXsVPtNKQGvYCKCv7YK32yOevPz6ICGHkAfx3vA
-	 rsYkuFU2jISdeVsummOH2689WSoDlW1uQn6Wgbu+V22iySHQRczPi/L6qVwmEjnpgN
-	 xCx5uPXADO/d/o7rwvHWjvbauMvZIpkxGdZVM9REwO1eAi/j4G2wedNOIF87vbSdaH
-	 5IFXzjbC0F5KA==
-Received: from [100.64.1.21] (unknown [100.64.1.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 40E1D17E010F;
-	Mon, 13 Jul 2026 15:11:39 +0200 (CEST)
-Message-ID: <298f5835-d607-41d7-b8da-7b19b8e8abdc@collabora.com>
-Date: Mon, 13 Jul 2026 15:11:38 +0200
+	s=arc-20240116; t=1783948423; c=relaxed/simple;
+	bh=KRL9D4/vGZvAPShqNWAbQI/QAL3cvWn2pUiV0A5RHq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b30buEmS8rUA1ty1DJkU8JDzG1molKzDK+H3EmtBXI8UQO/vOpWqc4qR1s23H36KfH2bdJ8//6QRZM5EbBL0YTacCEwdEudRDg1ORu5euKyf+gA8XOXgziaPmMxYLamK63eJAfuh072lKbhH8XJYwr0wcBkzPTcq2Itn+Ct4/6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=e0yVE8Rz; arc=none smtp.client-ip=194.117.254.33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=1lzz
+	3nAOspqkNKIQ+a3rbaThIUYxupcBWSHONil0Xa8=; b=e0yVE8RzxCXvPmM8/4a8
+	I8BGL8zIHsI+Gtv7+d79ivwNYMZq7kjdpAGE/wZM17vza3hL+ckZrcTaHnvCnjEw
+	cPJ7sHL8ee9eEzGJOKX+hYHq6F6fot+uYZbOC3PCpUf5v+TYhRBcyroZO5jzW+Si
+	2YsuDVF4Lan4LqX5I7NT3h+1BRV/kJSQJd+c6KNFj7yzcT+epbzJn+iC28iFZeZB
+	hz2KlzEFYUVFPvubB5NI4qIuxhciQ5S3L4AglNHcsbMsG/4M7HGlkT436ssCOwsK
+	LECu8eKrRr8Np9Ed1NLBdsWZuqKBW/kSdCxgQLbez+qAOQarwUApDCjp+wY36IVt
+	eA==
+Received: (qmail 2644192 invoked from network); 13 Jul 2026 15:13:39 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jul 2026 15:13:39 +0200
+X-UD-Smtp-Session: l3s3148p1@6vPP231WGooujntq
+Date: Mon, 13 Jul 2026 15:13:38 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Markus Stockhausen <markus.stockhausen@gmx.de>
+Cc: andi.shyti@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sander Vanheule <sander@svanheule.net>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v5] i2c: i2c-gpio: Enhance driver for buses with shared
+ SCL
+Message-ID: <alTkghp_ejexF9ss@shikoro>
+References: <20260713062021.2995641-1-markus.stockhausen@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] pinctrl: mediatek: Add driver for MT6858
-To: Nikolai Burov <nikolai.burov+review@abscue.de>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, nikolai.burov@jolla.com,
- Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Sean Wang <sean.wang@kernel.org>
-References: <20260710-mt6858-pinctrl-v1-0-f75ab558f0df@jolla.com>
- <20260710-mt6858-pinctrl-v1-2-f75ab558f0df@jolla.com>
- <89e4eb3d-a61c-410e-8ad5-e845b07f8029@collabora.com>
- <2d34c3f6-5f66-4b60-b9a2-180163964552@abscue.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <2d34c3f6-5f66-4b60-b9a2-180163964552@abscue.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i5ePiEom0yRrG9wJ"
+Content-Disposition: inline
+In-Reply-To: <20260713062021.2995641-1-markus.stockhausen@gmx.de>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=mail];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-39981-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[angelogioacchino.delregno@collabora.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,jolla.com,kernel.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FORGED_RECIPIENTS(0.00)[m:nikolai.burov+review@abscue.de,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:nikolai.burov@jolla.com,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:matthias.bgg@gmail.com,m:sean.wang@kernel.org,m:nikolai.burov@abscue.de,m:krzk@kernel.org,m:conor@kernel.org,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:markus.stockhausen@gmx.de,m:andi.shyti@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:sander@svanheule.net,m:bartosz.golaszewski@oss.qualcomm.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmx.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DMARC_NA(0.00)[sang-engineering.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-39982-lists,linux-gpio=lfdr.de,renesas];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[angelogioacchino.delregno@collabora.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,review,dt];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,collabora.com:from_mime,collabora.com:dkim,collabora.com:mid,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sang-engineering.com:from_mime,sang-engineering.com:dkim,shikoro:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7368774B75F
+X-Rspamd-Queue-Id: 7F01474B81B
 
-On 7/13/26 14:51, Nikolai Burov wrote:
-> On 7/13/26 10:01 AM, AngeloGioacchino Del Regno wrote:
-> [...]
->>> +    [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt6858_pin_mode_range),
->>> +    [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt6858_pin_dir_range),
->>> +    [PINCTRL_PIN_REG_DI] = MTK_RANGE(mt6858_pin_di_range),
->>> +    [PINCTRL_PIN_REG_DO] = MTK_RANGE(mt6858_pin_do_range),
->>> +    [PINCTRL_PIN_REG_SR] = MTK_RANGE(mt6858_pin_dir_range),
->>
->> This is Slew Rate, not Direction... And I think this is wrong.
->>
->> If you don't know where the slew rate registers are, or if that is an unsupported 
->> operation, just omit PINCTRL_PIN_REG_SR.
-> 
-> Thanks for noticing this! This seems to be a mistake in the downstream driver that 
-> I unintentionally copied over. I will remove the slew rate.
-> 
 
-No worries, it happens.
+--i5ePiEom0yRrG9wJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>
->>> +    [PINCTRL_PIN_REG_SMT] = MTK_RANGE(mt6858_pin_smt_range),
->>> +    [PINCTRL_PIN_REG_IES] = MTK_RANGE(mt6858_pin_ies_range),
->>> +    [PINCTRL_PIN_REG_PU] = MTK_RANGE(mt6858_pin_pu_range),
->>> +    [PINCTRL_PIN_REG_PD] = MTK_RANGE(mt6858_pin_pd_range),
->>> +    [PINCTRL_PIN_REG_DRV] = MTK_RANGE(mt6858_pin_drv_range),
->>> +    [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt6858_pin_pupd_range),
->>> +    [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt6858_pin_r0_range),
->>> +    [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt6858_pin_r1_range),
->>> +    [PINCTRL_PIN_REG_DRV_ADV] = MTK_RANGE(mt6858_pin_drv_adv_range),
->>> +    [PINCTRL_PIN_REG_RSEL] = MTK_RANGE(mt6858_pin_rsel_range),
->>> +};
->>> +
->>> +static const char * const mt6858_pinctrl_register_base_names[] = {
->>> +    "base", "lm", "rb", "bm2", "bm", "bm1", "lt", "lt1", "rt", "rt1",
->>
->> Fix ordering:
->>
->> "base", "lm", "rb", "bm", "bm1", "bm2", "lt", "lt1", "rt", "rt1",
-> 
-> The bases are already in ascending address order. I don't know what the 1 and 2 
-> suffixes in the names of the iocfg regions mean, they may just be a historical 
-> leftover. Are the names more important than the addresses here?
-> 
+Hi Markus,
 
-Eh, fair point. I guess it's fine then.
+>   - Send to LKML for Sashiko review
 
-For the numbers, that's because the registers for the same region of the chip
-(meaning physical region, really) are scattered all around... but bm2, bm, bm1
-refer to the same physical region (again, really physical, look at the bga array).
+So, the review is here[1] now and it is fortunately not complaining
+much. About the first issue ('bit_test'), I could imagine we add another
+bool to 'struct i2c_algo_bit_data' like 'disallow_bit_test' and bail out
+early if it is set? I didn't dive into the second issue ('ENOENT')
+because I guess this is just a little extra handling. And you are more
+into the details anyhow.
 
-> [...]
->>> +static const struct of_device_id mt6858_pinctrl_of_match[] = {
->>> +    { .compatible = "mediatek,mt6858-pinctrl", .data = &mt6858_data },
->>> +    { }
->>
->>      { /* sentinel */ }
-> 
-> Thanks!
-> 
-> [...]
->>> +    MTK_EINT_PIN(119, 0, 72, 0),
->>> +    MTK_EINT_PIN(120, 0, 73, 0),
->>> +    MTK_EINT_PIN(121, 0, 74, 0),
->>
->> Looks like you're missing ~70 pins here?
->>
->> If those have no EINT support, you can declare them as
->>
->>      MTK_EINT_PIN(122, EINT_INVALID_BASE, 0, 0),
->>
->> ...or you can add a macro to add a (sequential) range of pins with no EINT support.
-> 
-> Adding a variable number of mtk_eint_pin structs (with a different pin number 
-> inside each struct) doesn't seem possible using a single macro, so I'll just 
-> manually add all of them to the list.
-> 
-> While writing this, I was looking at the mt6878 driver, which also omits a range of 
-> pins. Should that be fixed as well?
-> 
+Happy hacking,
 
-If there are holes in between, yes, that wouldn't work.
+   Wolfram
 
-Honestly though, this is starting to be a problem - as in - up until now,
-practically all SoCs had EINTs for each pin, or no holes in between... but
-I can see that this is changing, as MT6991, MT6993 and now MT6858 all have
-those holes.
+[1] https://sashiko.dev/#/patchset/20260713062021.2995641-1-markus.stockhausen%40gmx.de
 
-This is a note and I'm not asking you to do this but, at some point, we should
-really add some logic to the mtk-eint driver so that it doesn't forcefully (and
-at this point in time, even stupidly) map/expect pin data at the same array
-index as the pin number.
 
-That's probably more important than fixing mt6878, but well, I understand that
-this stuff would take a bit more time than adding just a few entries in arrays
-right now, and I also understand that time may be lacking, so I am definitely
-not blocking the addition of 6858 for this (of course, as long as you fill up
-the holes there)
+--i5ePiEom0yRrG9wJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
-Angelo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmpU5H4ACgkQFA3kzBSg
+KbZrpA//fhNtwsaJEVdOlrHJxNrtxPzRfyFON0TWXlhKH+kVYPyWBkyxkYsOQQV/
+O8zIvdzd7ievrRCQO79efD5yGQ4TRptb9cENp1cpZXqH1863cFBvwidytIeDPzHJ
+tOrzZJGvxX6aN7EAV+luno7U/90o7/T3toEbSZ14yWmsGeRyzB2WrodMsiLTLOZg
+tijESQZoPGhmSetWLhetyB3/bxwmDez30u7nZV2X9SwggOp6/LUaHAoql9ocT24X
+s1z3z11zJ8stJcv6+c6owd13vmrlKxVWb3grva+DwmKJMGiT43yhEd90TNY/qH3X
+1uO1irnh+XiWzmK+RF6XNKB2wFdIjznIp2uSI+G55jlExefPXCjOshUV7k8evpi7
+OPzNkYPdOlUdR1mf3dQ/fbdqWVQlGhpwj6bmrnM4E8ZfxS4skyoaIx/5aThn31O5
+E2mfV6I+rnsT+medIfi9cIUXXw+ARLDN7QItfIpkxauHNwI7ycGRRMW7WLXly51V
+neZWaXYgRkO1815nQldqI7ln2tnCs0KF0Bj+woNBdnM6435HqTdz7cAooS+uceHj
+vSZYv3bSNHdNCfUdeyqceiuA9iDgzMHM1O1I0J0OSLiJAb/y4oOP1LhSW9CuPhWf
+G0QBMCEXWsahkAWY77o10HHBb2j3J3JoEoRjoX3jnKVDgvq654k=
+=vpML
+-----END PGP SIGNATURE-----
+
+--i5ePiEom0yRrG9wJ--
 
