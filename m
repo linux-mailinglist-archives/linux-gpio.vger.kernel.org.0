@@ -1,89 +1,83 @@
-Return-Path: <linux-gpio+bounces-39963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-39964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id OuuENGS0VGoZpwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-39963-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 11:48:20 +0200
+	id yrFIDAS0VGoNpwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-39964-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 11:46:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ACF574974F
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 11:48:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82785749739
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 11:46:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=DI0ePzf7;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=JhaQSBeb;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39963-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39963-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-39964-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-39964-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B6632304DFF9
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:45:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8CCA9301C6E4
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2026 09:46:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 216193E3D90;
-	Mon, 13 Jul 2026 09:45:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B70039EB7C;
+	Mon, 13 Jul 2026 09:46:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A626837701C
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 09:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0CB346784
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 09:46:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783935921; cv=none; b=TVmNQAVS61Unm+l4uxCOUBmqWLwLx6q6AhhN9K1ghrAhx8jizmmYGhjVwybwp6KPFTvqqpPtTlzO0xb3Aa/fjgp6L5Jg3dw4iEyl4xoWH6C5Z9N0AoD1TVoP4vwG+gW5Mb8EoJmG4/maXjCe9j9ENoac7Eba9JcosNz4flvs0fc=
+	t=1783936001; cv=none; b=llQ9hZa+lwne7ymzETwzXFqsn4tvgiwUCCeiM/sBk7IdXphwLdYLXUh0m2QOjloItLzxmm480KQfMiMjPZ94IqXS1mIk3hK7KAWbJjhLjngx/1FgZuZxzkYZXpOxKRgnZsWRkgk1KUpFeHfdfDfPMhnAI/Bt7aO5d8t1mPaUKeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783935921; c=relaxed/simple;
-	bh=ouuxFsl/C/GRvSsCa/RAzwrn+V4qnHZ4qWG5NdgGvn4=;
+	s=arc-20240116; t=1783936001; c=relaxed/simple;
+	bh=S1Jswu4gF0raqkyqNHhNG97xtcffgBXN4C7u+pxab5w=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UPxyDEmUrowZUV9fETxkYCm11pM9xcFuEPebkwi/DymAvr/OdCP/vNYzSEXA3V80nHqYGzbsSm2Tl04p8dXf6xZ3Px9ljbv63BCedXTAOf3F41XCAp2ReTYkK2j2E66zi3hMFoRFB9gBC0SIqqAxBzu4PUoQWC5EhwfeO+0APV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DI0ePzf7; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B5D1F0155B
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 09:45:20 +0000 (UTC)
+	 To:Cc:Content-Type; b=GRdTmPSaCi14QMAjvy6yRBFB9mDn14r1NktABJiz4suaUE/VX54huBCAvAoA23OtIzX1HjYFVps/DgSgwi6dQ9GRQItMQgyCLZbsVehJ+0GJtyQ5QsNfZzhUDI/YHAfRVgWTEWtBLfY98ib36dns9UmpKZFMPTCDsyC/dlfQmQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhaQSBeb; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B7861F00A3E
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 09:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783935920;
-	bh=DnRuzPMU2XYhVlhKrVQWCQjUZH4SWa17UwUD0HEYcFM=;
+	s=k20260515; t=1783935998;
+	bh=S1Jswu4gF0raqkyqNHhNG97xtcffgBXN4C7u+pxab5w=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=DI0ePzf7r9OluhomKWRCs8fWlNMI7NWyPvEezI1JDCBeclDNCE+K+CYd3DSGiyWf5
-	 Ma8ZZae/0yb62BM/zkdMJBQ1RfDpIVgbCtQp8f4wq2xRQowJAsizxQDNE+ncB0sv/1
-	 9M3dPmnjS2OQjGZcIuqG0GZV6jl6j+Yo6zR4sJc2I4sqQZDk3H+O4qwbazZM5qiaEU
-	 dZKwjsvdrjpqNLBUKMucKfjZREnXdf1jmW8RtP+WiO0juEyWu17jPPy7HmT4LWraag
-	 jE2To8b0qeG+EqE7bSLj1e19kTcY/2bFNEjOteM2IaevLSdX2vgS7bTEPjFZtD8vbD
-	 qx3CW6TeTNBVQ==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39c923b8c2aso25746321fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 02:45:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrwZDZlzdK3YJXBP5HSRPc0LIU+mIU6QGw8BUQAqxgxn2XrKqu3WNnh/lzaoNcO22oKFPoesRXF8XbV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNpvWSWYZ4UhcWgCTknKEOaYPkXXsTi2BKrnzx+7hlctLX10/2
-	4qWCWrudoe0VCqTI4Q8pc5jppEw9JTtzSzInH0dCcqofT5JqNZbVxmvmY2FP5/uZ8O0rEi/DUQA
-	FNexrDrPe4KTtazClmDryt6WIHyYqg8pMUQ2z20W2iw==
-X-Received: by 2002:a05:651c:154d:b0:39c:7200:b9b9 with SMTP id
- 38308e7fff4ca-39caa7feec7mr18650561fa.13.1783935919044; Mon, 13 Jul 2026
- 02:45:19 -0700 (PDT)
+	b=JhaQSBebJHsv88m59on73a78tG5oq7wc+mnZOZz5DbBtAJyhEsF4DmYkbBD199iJp
+	 EjX1S9Q6LEIkwO34VXtSO4s14YKJGCToUoQebcDlVkYcU0CGCjtuNJeEXLlFRdTeVJ
+	 eUQgAmd0YjDyJVkbz7Etthpep3cPo+cnadVRUfqfZ8kQRafS2M8uKMt7FNqQTy2u34
+	 JxTaFxXLPuy3ogX6ctrE7j12bcfHNpV5HkCm+Sdk4IwdxRfsKtQ9WgDF6ifd4U1MX+
+	 qk5V2a+oi2NNe8FbKZJZQmeDJmULhLVFjXIJ5Z+QXGB+aqLwX5t7nQ2illmfWrrOe8
+	 lZCAoW0ZcVdig==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-39ca0a30148so19351161fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2026 02:46:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rrp6FUkyzEXHJJrkBCgllobjjvh/XwtgmHtn6O9kJSH4pU/A9PMrnCkIFLFeE2hYcuQtBadjVUYiSXD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbCJqA9u/TCbgKa8XVEz/jA+aoiY3dH4SgtSWC188NV/tEfBb2
+	rqW/sW+putrOgku9B+vSH7i+wEn1p3co6WIItkZUSOpYwWffftqwFw12bzoaKaEzF5tSJJDqPDh
+	ml+QrA+ZmhJsWxwO4Id0oUAUsjQqH90lpKyiANfr70g==
+X-Received: by 2002:a05:651c:19ac:b0:39c:f58e:5c8a with SMTP id
+ 38308e7fff4ca-39cf58e6a1bmr15845141fa.21.1783935996856; Mon, 13 Jul 2026
+ 02:46:36 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 13 Jul 2026 02:45:17 -0700
+ HTTPREST; Mon, 13 Jul 2026 02:46:35 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 13 Jul 2026 02:45:17 -0700
+ HTTPREST; Mon, 13 Jul 2026 02:46:35 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <DJWR3RYAWYAI.LQC41HSN2I94@kernel.org>
+In-Reply-To: <CAMuHMdV415V23a9E2QM77iQdGePOoZYNk=+v0Hms6uxugKBu5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260710-swnode-fw-devlink-v3-0-993f31874e40@oss.qualcomm.com> <DJWR3RYAWYAI.LQC41HSN2I94@kernel.org>
-Date: Mon, 13 Jul 2026 02:45:17 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MeW_pjczz-5L+p2tqPw4TfgVPmB7t_hXdtb9cX0BDSHuA@mail.gmail.com>
-X-Gm-Features: AVVi8CdMA5ntkCzUjXOel5q6wno_jfrPVuwP-CefgxTNanHUX3nTYq61gbKoPlU
-Message-ID: <CAMRc=MeW_pjczz-5L+p2tqPw4TfgVPmB7t_hXdtb9cX0BDSHuA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] software node: provide support for fw_devlink
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, 
-	Rae Moar <raemoar63@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+References: <20260712093148.21446-2-wsa+renesas@sang-engineering.com> <CAMuHMdV415V23a9E2QM77iQdGePOoZYNk=+v0Hms6uxugKBu5g@mail.gmail.com>
+Date: Mon, 13 Jul 2026 02:46:35 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mce7WXrme_z_ZoUCHqYUAdP+Ee6rHB8TmRdeZ18kBH1Tw@mail.gmail.com>
+X-Gm-Features: AVVi8Cc0kqodj6tQl0eUIgkxrp0sz9RxCfHf8zbwTLuRtnTtrzGWp2JAJGQrxYo
+Message-ID: <CAMRc=Mce7WXrme_z_ZoUCHqYUAdP+Ee6rHB8TmRdeZ18kBH1Tw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sloppy-logic-analyzer: add a comment explaining the
+ buffer init
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.66 / 15.00];
@@ -91,151 +85,53 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-39964-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-39963-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:dakr@kernel.org,m:brendan.higgins@linux.dev,m:david@davidgow.net,m:raemoar63@gmail.com,m:andriy.shevchenko@linux.intel.com,m:djrscally@gmail.com,m:heikki.krogerus@linux.intel.com,m:sakari.ailus@linux.intel.com,m:brgl@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:linusw@kernel.org,m:dmitry.torokhov@gmail.com,m:linux-kernel@vger.kernel.org,m:linux-kselftest@vger.kernel.org,m:kunit-dev@googlegroups.com,m:linux-acpi@vger.kernel.org,m:driver-core@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sang-engineering.com:email];
 	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[linux.dev,davidgow.net,gmail.com,linux.intel.com,kernel.org,linuxfoundation.org,vger.kernel.org,googlegroups.com,lists.linux.dev,oss.qualcomm.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:geert@linux-m68k.org,m:linux-renesas-soc@vger.kernel.org,m:nihaal@cse.iitm.ac.in,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-gpio@vger.kernel.org,m:wsa+renesas@sang-engineering.com,m:wsa@sang-engineering.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2ACF574974F
+X-Rspamd-Queue-Id: 82785749739
 
-On Sun, 12 Jul 2026 18:59:04 +0200, Danilo Krummrich <dakr@kernel.org> said:
-> On Fri Jul 10, 2026 at 3:51 PM CEST, Bartosz Golaszewski wrote:
->> Bartosz Golaszewski (5):
->>       kunit: provide a set of fwnode-oriented helpers
->>       software node: add fw_devlink support
->>       software node: add kunit tests for fw_devlink support
->>       MAINTAINERS: add myself as reviewer of software node support
->>       gpio: kunit: add test cases verifying swnode devlink support
+On Mon, 13 Jul 2026 11:20:02 +0200, Geert Uytterhoeven
+<geert@linux-m68k.org> said:
+> Hi Wolfram,
 >
-> Overall looks good, but I think the two issues pointed out by Sashiko are valid.
-> In addition, I also found a memory leak in the gpiolib kunit test:
+> Thanks for your patch!
 >
-> 	unreferenced object 0xffff88810296b2c0 (size 32):
-> 	  comm "kunit_try_catch", pid 1096, jiffies 4294694235
-> 	  hex dump (first 32 bytes):
-> 	    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 	    66 6f 6f 00 00 00 00 00 00 00 00 00 00 00 00 00  foo.............
-> 	  backtrace (crc a62f59c2):
-> 	    __kmalloc_noprof+0x216/0x510
-> 	    desc_set_label+0x46/0xc0
-> 	    gpiod_request_commit+0xd5/0x140
-> 	    gpiod_request+0x49/0x170
-> 	    gpiod_find_and_request+0x2be/0x520
-> 	    gpiod_get_index+0x56/0x70
-> 	    devm_gpiod_get+0x1b/0x90
-> 	    0xffffffffc0401ff8
-> 	    platform_probe+0x58/0x90
-> 	    really_probe+0x1bc/0x490
-> 	    __driver_probe_device+0xa2/0x140
-> 	    driver_probe_device+0x1e/0x110
-> 	    __device_attach_driver+0xc2/0x140
-> 	    bus_for_each_drv+0x117/0x170
-> 	    __device_attach+0xd5/0x1c0
-> 	    device_initial_probe+0x34/0x50
+> On Sun, 12 Jul 2026 at 11:32, Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+>> To avoid more false positive reports of "leaking memory" when
+>> fops_buf_size_set() returns an error.
 >
-> I came up with the following diff to resolve those issues.
+> But who is freeing priv->blob.data when fops_buf_size_set() succeeds?
 >
-> diff --git a/drivers/base/test/swnode-devlink-test.c b/drivers/base/test/swnode-devlink-test.c
-> index 6f59f13214fc..143b9c4047a0 100644
-> --- a/drivers/base/test/swnode-devlink-test.c
-> +++ b/drivers/base/test/swnode-devlink-test.c
-> @@ -17,6 +17,10 @@
->  #include <kunit/platform_device.h>
->  #include <kunit/test.h>
->
-> +KUNIT_DEFINE_ACTION_WRAPPER(device_remove_software_node_wrapper,
-> +                           device_remove_software_node,
-> +                           struct device *);
-> +
->  static int swnode_count_suppliers(struct fwnode_handle *fwnode)
->  {
->         struct fwnode_link *link;
-> @@ -294,6 +298,9 @@ static void swnode_devlink_test_probe_order(struct kunit *test)
->
->         ret = device_add_software_node(&supplier->dev, &supplier_swnode);
->         KUNIT_ASSERT_EQ(test, ret, 0);
-> +       ret = kunit_add_action_or_reset(test, device_remove_software_node_wrapper,
-> +                                       &supplier->dev);
-> +       KUNIT_ASSERT_EQ(test, ret, 0);
->         ret = device_create_managed_software_node(&consumer->dev,
->                                                   consumer_props, NULL);
->         KUNIT_ASSERT_EQ(test, ret, 0);
-> @@ -313,8 +320,6 @@ static void swnode_devlink_test_probe_order(struct kunit *test)
->
->         /* Tear down the consumer (and its device link) before the supplier. */
->         kunit_platform_device_unregister(test, consumer);
-> -
-> -       device_remove_software_node(&supplier->dev);
->  }
->
->  static struct kunit_case swnode_test_cases[] = {
-> diff --git a/drivers/gpio/gpiolib-kunit.c b/drivers/gpio/gpiolib-kunit.c
-> index ad961cf97aee..7798f8a8e602 100644
-> --- a/drivers/gpio/gpiolib-kunit.c
-> +++ b/drivers/gpio/gpiolib-kunit.c
-> @@ -449,6 +449,9 @@ static void gpio_swnode_probe_defer_on_unregistered(struct kunit *test)
->
->         pdata = dev_get_platdata(&cons->dev);
->         KUNIT_ASSERT_EQ(test, pdata->gpio_err, 0);
-> +
-> +       /* Tear down the consumer before the provider to free the GPIO. */
-> +       kunit_platform_device_unregister(test, cons);
->  }
->
->  static int gpio_swnode_probe_order_test_init(struct kunit *test)
-> @@ -614,9 +617,17 @@ static struct kunit_case gpio_unbind_with_consumers_tests[] = {
->         { }
->  };
->
-> +static int gpio_unbind_test_init(struct kunit *test)
-> +{
-> +       device_link_wait_removal();
 
-Interestingly I noticed this in the GPIO test cases but not here...
-
-I also think that we should call device_link_wait_removal() *before* and
-*after* these cases to not affect other test suites - as pointed out by
-sashiko too.
-
-Let me send a v4.
+In case I was too eager picking it up, let me drop it from my tree before I
+pushed it out and wait for Wolfram's response.
 
 Bart
-
-> +
-> +       return 0;
-> +}
-> +
->  static struct kunit_suite gpio_unbind_with_consumers_test_suite = {
->         .name = "gpio-unbind-with-consumers",
->         .test_cases = gpio_unbind_with_consumers_tests,
-> +       .init = gpio_unbind_test_init,
->  };
->
->  kunit_test_suites(
->
 
