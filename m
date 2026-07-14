@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-40080-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40081-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kyn3Jk2NVmrU8wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40080-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 21:26:05 +0200
+	id OhKRNqSNVmr98wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40081-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 21:27:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 354D6758389
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 21:26:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 423C97583BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 21:27:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=chromium.org header.s=google header.b=jff1q7Gp;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40080-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40080-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=chromium.org header.s=google header.b="Y/fDTTRC";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40081-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40081-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=chromium.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A09FC3037EBF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 19:26:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB090316B410
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 19:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F814D2EC9;
-	Tue, 14 Jul 2026 19:26:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CE541DDF7;
+	Tue, 14 Jul 2026 19:26:03 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1CD47ECED
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2026 19:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368C3446837
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2026 19:25:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784057159; cv=none; b=kDFff1TjJJBmpPEgzqsUOlH7yNFGkfT62aLq79cx5SRo4Zz2q/wLw7dqxroU/F14yFYYRHaBC/+qGIwaCcmqOAELMXpXc1x3yx4Th953TZt+0RnKHPVY6O76h5wFHd2Hmr1zwfDmHtkcHEqZ4O04IottjOYD7EKMsRkJ3X3ilmE=
+	t=1784057162; cv=none; b=Wx6Gd6i7eXX+o7m3ZFX9vk1f1VQI0FT+Vow9Qf2I8g6G+lYC2BeqU6wUC7ccoTn/7aUbVucBSj60+M/hGviwiDG0IEAPdM9i3bHDEzO6YJqdgo2ewhSG0nPh2ab6eOgteskWLna2RDVcPWiRYT7vPIBzW5+R1O9LP/MI9rKIJkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784057159; c=relaxed/simple;
-	bh=ibcVXYLtVU7xGTbwp2n2UIwijtwTrZ8HpiRiIhPxTaY=;
+	s=arc-20240116; t=1784057162; c=relaxed/simple;
+	bh=J0YKlFtNy4CDBcxTAckyx8hsiYKO7Szf3eJ9mSEdqPM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hv8ShMDyB452CR+H+q4F+aUbtboCHXZxsAYK8UGbLAGzo/p9JYnHGpY9aWrOGXMBIq/oxG9qGcBh4imAYqBzJD9+8d/ns49FfArkQmTR7YOe1ngcvlXg1F2LFsAxOOO6BwROKsmrTsc2qukvkXjAekdY6Qj2Zq63Vwjw1bsdr5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jff1q7Gp; arc=none smtp.client-ip=209.85.160.45
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-44cf70de986so1447453fac.0
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2026 12:25:56 -0700 (PDT)
+	 MIME-Version; b=MhPqbsG4Zw1Wlh4ia8sGtiFn1Fyt/h1jFTsB1HJDBqscOP8oSSw5jcxHEMXLHuhwqEEdRNrMyN9N7zajBaj6jxLxefRudotreHCuqrprNIlNOuN+nq3u5Z0wPfizo1IMt0pctumPwTcDOkGW5Xvy6Z1lW25Gs1lVMw6xhCzOqkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Y/fDTTRC; arc=none smtp.client-ip=209.85.210.51
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7e9dc546f40so841880a34.1
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2026 12:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1784057154; x=1784661954; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1784057156; x=1784661956; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=QETVa7/EiIqTvvn2j77guxH/5vJlcjsNxn4OMO5PoXE=;
-        b=jff1q7GpPWpxae0j5yhbPgOlfTHT1S3vdbMz1R0bumCLiOOswpiYMZHfuD2eQ8vOjU
-         wueuVpZJgOxi13z8YSi2fo4ppWSvsF7antqhz7KOr/M9AnMtxkP+n6Fyw1InL4koC8I1
-         /iHCTSvjuCNh6KPrgn5lZPKwsEegSV/XPWGsg=
+        bh=4qhLkMDf0+YlirUGcXz6TF2rj0izbPoAZeNkitt1I2g=;
+        b=Y/fDTTRCMva/eF737gVO/UTnAjn0atvvXDpMLwMkz08IaRNfV4AcchSgOsrVGVgXp8
+         aCmjMl4ENs79AmT4ODlNox/MPUfzE4CgLS+DlxK7oZCREqrNkoRP/F8+Gu4ngKu6Rmh+
+         HLtS4w7rdtIO+i/+OLqkafIAs7aAqKPmg0RJo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784057154; x=1784661954;
+        d=1e100.net; s=20251104; t=1784057156; x=1784661956;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QETVa7/EiIqTvvn2j77guxH/5vJlcjsNxn4OMO5PoXE=;
-        b=PrgbMyC+bk+7NBTGqi64nT7WCsPXswX7WBAo5dswR6GPv+SsnULKor6mUoC8fP8bWN
-         t+feYFH4Ry59GK9rWLbUcy/Iq/GQUbFxsi6FMGkKdHHlZUPQ+T5tqooLWTWTHFun4dpB
-         mB3WCbFo7zq1Nvc3yoPwpGONLuw81kMdVwXaZBmIeW2BCf1me4MKghqyFFTXJeK/mFQm
-         2jstI/taiu+26GcYuv6Yb4ZlpT6xbBHJuuHp/d4C//pkg2fbwo7KCVIf5i7o7VvdQydZ
-         L1SxLlQto/bCx3Hji496TkxBZDXhfsMlyar7gFTh7AqxL7Rsu9EySI0pXAZwjJT6Etl/
-         zz1A==
-X-Forwarded-Encrypted: i=1; AHgh+RpQeTMPobZHcshJVwJOMglrrYfBPm3fIdDZLTT5Jw0VLWpOurT48A3q9ajU4ShnXhMtGnaFP3zkI6Yq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6BLGbcFb16X2LJPH3FZKll5zuyiVZxKOTDvYn899Hsp+Mbn/P
-	P7yizrCdUEdBn7n2je3LHY4rVVlLoxa7LvaKKE0xCwTtgWmpPKFNhcZW3W/HOsnsfA==
-X-Gm-Gg: AfdE7cn5EF0VcCr60UPWEBHE3/Y7gLgSRKd0vTmlQbNoyyZYnXzccHqyzn61ezhK/Ja
-	OorsXsWDoK/86lXri6KQEU3O3wM5xh0EEAB/muFNHLPNNs3WdtsYJE/QmU9BdhXhVcMtRBLkS1J
-	ENJ5vrqKQuxmLhmJpolzCbaHQqxLC8N8lSXJWrIZcmeZh2cNs29QJtUn4j4XBz+LYU4y+5aNWKw
-	dHpRGZ4E4zqQYhQldNMXHacL5+3n8jd2merqRTnHWx7MMZhWfHKzWS+et7uAdWsEHf+kKQr6Jjz
-	qfY+qfACdRraYAOEjhNmZezixDCr54XycFMZKPhL77YtwOGByBpet+9HWywxYC5K4VtCZbCmCb9
-	zT4jf4khOLmCWFiiAnvLnKC9QDb9FhQYNKl9RqNPfGteKbwyZXw20qpp9skqDDBGkxW5NIZbPuU
-	zxMT00Oss=
-X-Received: by 2002:a05:6870:171c:b0:456:550:95b1 with SMTP id 586e51a60fabf-4562b891d4dmr44356fac.28.1784057154639;
-        Tue, 14 Jul 2026 12:25:54 -0700 (PDT)
+        bh=4qhLkMDf0+YlirUGcXz6TF2rj0izbPoAZeNkitt1I2g=;
+        b=pQGDaz57H2kJCxpmz8vMpe1U2DKA9Bbi49Hfp1iKGvvI7/wfdrsLlf11DSZqFWlPT+
+         //424W0gYcaN8zm/DRU1BivZaIYyCFh1l9KOYZ47Fpedypl/3toej/lu05s+TsX2HI6C
+         yxqtAqU4jIWkZ0Duh+scFOrupQvHgqFmDPpbijYDq/Tf8wzfGdBirQtHQ38U2a5zg99h
+         FhAHu105y4fhXXoFHCw3c2emqmy7xwAmf0Ca2566omljFTRX1tMWDKzhYmcNMVZgdkPh
+         yDLguCv094XZKckcwQX5u4PcYgTC5CTo85GuqtLcRAO596dHfNiOR2gnH8GAs3OqrINW
+         QHgw==
+X-Forwarded-Encrypted: i=1; AFNElJ+Hpu4IgWsS+Yi01YJgBeNlRNqrp9bd/Vvy9Jz9wZw7XEnDqnaeZsJ93KxEDnc9G5xdjJfooan2//+E@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMNip0DfCguWyAVCdsguDJqOaRHoPJ2/AqGV6f2mNom87vTH+A
+	mjH9xlnbScesQEgI6QbZxR2hIyva2qKlOjS8Q6KhXciIWA09KjRf4/1MzwyQQZghTg==
+X-Gm-Gg: AfdE7cmJD4v9go9Vt9ZNYft0/E9ogKoJ4SbpbUFBkasDeOjmANhk6ew/jMSpaTBY2UC
+	3LFcrZ62Dzkm6UytDTJwwgd8SIrNZz/QyhyTz6flBYPLdEPq6EHfIt/nofQ1NlMrZ9+tNdwYq0F
+	Dhu09ceeaas78wd1L1XIcfsN8ccle04OVjlfj6C9phSTMMptroq455GgcEtHNoyaR2113EL87ug
+	IyycwqiG+XqRH2OTIh7FInfmo3r9hkZaM9GEdjjyyteZz30il9k/0j3RCHosMFOZ6Efm6osHUVd
+	4EHqyk+2Idr+ydo7WtAYSyWw68dFCxftn2jCBcchv2WHUUObSat61pAIlNUuTjx3PtV156M7BaN
+	O9OZpyT/1LvEM4F+LCfpT1BEXGpHlzcOcR9vqueJq8os9vQXuReLaadVvslp8AvQFcMcRcrR0nH
+	1S6REfb0qaHDiqgfsX1w==
+X-Received: by 2002:a05:6820:1b0e:b0:6a1:7af8:a048 with SMTP id 006d021491bc7-6a38b9f1f93mr9540469eaf.33.1784057156624;
+        Tue, 14 Jul 2026 12:25:56 -0700 (PDT)
 Received: from chromium.org ([174.51.25.52])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4519d89f7desm15759043fac.7.2026.07.14.12.25.52
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4519d89f7desm15759043fac.7.2026.07.14.12.25.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 12:25:53 -0700 (PDT)
+        Tue, 14 Jul 2026 12:25:56 -0700 (PDT)
 From: Simon Glass <sjg@chromium.org>
 To: Linus Walleij <linusw@kernel.org>
 Cc: Heiko Stuebner <heiko@sntech.de>,
@@ -85,11 +85,12 @@ Cc: Heiko Stuebner <heiko@sntech.de>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	Simon Glass <sjg@chromium.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
+	Jeffy Chen <jeffy.chen@rock-chips.com>,
+	huang lin <hl@rock-chips.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: gpio: rockchip,gpio-bank: Add rockchip,grf property
-Date: Tue, 14 Jul 2026 13:25:29 -0600
-Message-ID: <20260714132531.v2.1.d04a89a3849323a0dcee2c701cba43adbb0523b2@changeid>
+Subject: [PATCH v2 2/3] dt-bindings: pinctrl: rockchip: Add RV1106 compatible
+Date: Tue, 14 Jul 2026 13:25:30 -0600
+Message-ID: <20260714132531.v2.2.3a4f9d47d4dba36e14141f8796afe8907028aa9c@changeid>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260714192535.2082729-1-sjg@chromium.org>
 References: <20260714192535.2082729-1-sjg@chromium.org>
@@ -108,19 +109,19 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
 	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FORGED_SENDER(0.00)[sjg@chromium.org,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-40080-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40081-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:heiko@sntech.de,m:robh@kernel.org,m:jonas@kwiboo.se,m:conor+dt@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:krzk+dt@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:sjg@chromium.org,m:brgl@kernel.org,m:linux-kernel@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:heiko@sntech.de,m:robh@kernel.org,m:jonas@kwiboo.se,m:conor+dt@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-rockchip@lists.infradead.org,m:krzk+dt@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:sjg@chromium.org,m:jeffy.chen@rock-chips.com,m:hl@rock-chips.com,m:linux-kernel@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -133,43 +134,33 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[changeid:mid,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,chromium.org:from_mime,chromium.org:email,chromium.org:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[chromium.org:from_mime,chromium.org:email,chromium.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,changeid:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 354D6758389
+X-Rspamd-Queue-Id: 423C97583BF
 
-Some Rockchip SoCs, such as the RV1106, give each GPIO bank its own
-IO control (IOC) register block rather than grouping the registers of
-all banks into a shared GRF region. Add an optional rockchip,grf
-property to the gpio-bank binding so that each bank node can reference
-the syscon for its own IOC block.
+Add the compatible for the pin controller of the Rockchip RV1106 and
+its RV1103 package variant.
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
 
-Changes in v2:
-- Add new patch for the per-bank IOC reference
+(no changes since v1)
 
- .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml       | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-index bdd83f42615c..774e9c7de606 100644
---- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-+++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-@@ -44,6 +44,13 @@ properties:
-   power-domains:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+index 9b3cbeb54fed..81747bb53056 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+@@ -51,6 +51,7 @@ properties:
+       - rockchip,rk3576-pinctrl
+       - rockchip,rk3588-pinctrl
+       - rockchip,rv1103b-pinctrl
++      - rockchip,rv1106-pinctrl
+       - rockchip,rv1108-pinctrl
+       - rockchip,rv1126-pinctrl
  
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node managing the IO control registers
-+      of this bank, on SoCs such as the RV1106 where each GPIO bank has
-+      its own IOC block.
-+
- patternProperties:
-   "^.+-hog(-[0-9]+)?$":
-     type: object
 -- 
 2.43.0
 
