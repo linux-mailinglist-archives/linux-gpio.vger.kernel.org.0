@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-40068-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40069-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UboOLRZcVmr53wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40068-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:56:06 +0200
+	id DSvZB/VcVmpN4AAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40069-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:59:49 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22B0B756AFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:56:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 968E3756BD8
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:59:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=advantech.com header.s=selector2 header.b=XBfLfaTS;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40068-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40068-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=advantech.com header.s=selector2 header.b=YpHrM9dG;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40069-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40069-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=advantech.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 20DBA3079C59
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 15:55:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ADFD9319CD5D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 15:55:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC904968FC;
-	Tue, 14 Jul 2026 15:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 162184968FD;
+	Tue, 14 Jul 2026 15:55:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023110.outbound.protection.outlook.com [52.101.127.110])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023082.outbound.protection.outlook.com [40.107.44.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599E34963D9;
-	Tue, 14 Jul 2026 15:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B734963D9;
+	Tue, 14 Jul 2026 15:55:28 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784044523; cv=fail; b=t7Q198YYzpeTCofK5FoG61EQpVfR3iTC9qV0oJdCSWONdyK968aUalp6R5fWsNHaiDYQ5gWoNpSkXdKGIbgNQIRJx52WpXPBuyeMSbo3NORWU9f6aMifZL0DHLO4uCjujMPQlZfElghCB8yug7ypxIxxWSzT+iKfX+tar3xSP8k=
+	t=1784044531; cv=fail; b=mlJsQp5yCm/dgxKL5W/abkrcdvrgexLJefHDHlDIWWvyTFC6m2OJXlo6T23nXaABZHUne85e7xBmX1HgYIlxVTVOM1+yTrJlimbJ7Ats/CUzhVomgJrt3xHyEd2kavkQGmjTzePHBDFziL713EEVNMjX08jUhs3WMcWFsRAMImo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784044523; c=relaxed/simple;
-	bh=o3xQb+Kb4nE0n1YarbvAQPCz5oz9H0n4kTID+Qv3PbE=;
+	s=arc-20240116; t=1784044531; c=relaxed/simple;
+	bh=x3e7kqj2bst2UoKPib83ZPbUl4OUxQJZ3xCLzVd1xmE=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=MPu9g9bpvv7jwMXejrHWhYx5RH7nWlfagPUqjLSK3M+AaNxJN69mE0F4QxjXQHEe1QyVc0IJ2kUNO48ex6jwHf/QAf9RIqTNQWiIVzVyUaqBaKEXN0++FsEoxl+thOGqOQvfdoeIt+CLQEv3W8uWUbMH02UMHUv6l+hRfUv5tp0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=advantech.com; spf=pass smtp.mailfrom=advantech.de; dkim=pass (2048-bit key) header.d=advantech.com header.i=@advantech.com header.b=XBfLfaTS; arc=fail smtp.client-ip=52.101.127.110
+	 To:Cc:MIME-Version; b=snP2l2ncPzyJZIIsJUAAc6wQdf5ZQQb2aoDZmK/05kyvN98ISes6hTYL1QzZsDfyZ7NbaEQ9kCbMVXC86tUSDfVWd79brIcK6kvCyMTazMqLSV5ynYcE0t2Bo0wS20GBvJKy/Wda6rSnHdgi7FUGahjpyeAAl+nx61Mv/+rrJaQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=advantech.com; spf=pass smtp.mailfrom=advantech.de; dkim=pass (2048-bit key) header.d=advantech.com header.i=@advantech.com header.b=YpHrM9dG; arc=fail smtp.client-ip=40.107.44.82
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ybOy9YpxExhCxfIunpbX7eQC+WGHbVjWs+amcsokbgpewAJ7d+/gxxnihLkBKHNUzHSOXS8P8os3a2okwNiF4AGTndYKzWY2Gy5UhlaIcQBtTbmFEyPXa8a1y27ttOjlaw9F1fFBUySBuTLF3MeVtv1zqu5tXX/ClBIuNFXoTwKzV4/381INnKocD+dvC0oqu05bzYY2ivOrWO0KCm8W2cZVkkK4k7rC1Ib1upbvoI6KfExXEtorVIDLUG6bffIDfl9etffGGLlYfq7mQ5iq7QeBwZp8y55LfRJe4gcZJbesCwekFH2qiL08z5YBPO5lkNTnUAXPx2kbgFzOTRVBPQ==
+ b=FfgWtKqgmzKESlzgyVNaf5YLgYVQU6gjljlkBpSCWhTezA437gwO47F2aEE/qov48bltXwaHjPAObdqryC0nmsz9rz/Kj1DSJ1qqx/8lf8mLjiXUTR9aIS2VLoBWzjKQkX/LrYDGDGtPtERAKZMbGFE9smwkbfZ7MUi+ELDAOxVN0HSQXu9Zy/41pn/8GoEEm468yNF+Kp/KHXKSQzqvfnQgb/cFRedPrTfcvN9t4cd4+3I4luioG+FLczR9SW011KVJjllT0AvjWgvKY85HAEn30GFdWek6z6NgBk1bVdQZa9KxNb1TWGqaUxs0+DwrmXbqdCM8BScvoPB8IuelVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hF92Zx0ptTPN5PMTMy0OGCj/V0J9xXzMnxxdC0MJ3+A=;
- b=FtwZSjR0d674qtKx1nMPFzg1vkwJZ6sPkaTs9MmYPx6nqEPUT8uP9I2/XB5qoJP6aCnoQqeKdY7iCg94IQv5WM2uvC+nQoLZYjm6C14ma5l+b6l3aY5VjlLx0tV2tgPq4RDxtw061MfcidwRB6FpEJmvFxkM34YhaHQljKAFY71RC7+h4cJW97XYdnDc9HL6zNeru6jr2Qv/GQuxwG90uYh59mixgjq8ZEbGO5VDzgJtnb1iHWKDptC3iiaSPqZPloFU8f8g6+77MH60026zZrct0TUX5InBTdqF80zVXuLUChzcGIrESvHfGRt4LPcIhCvAjT6CwjsSIe5k8wpQxg==
+ bh=yhTCLPVF1YQbZpEE0GoOdYZUCVe8GMwCq6lBLPyRr3s=;
+ b=lb13d06Z8P2ulrflcpvrpvF0STGeL3fZUpBiGajxRU/zGnwfe5J6Egy7hqUIalzVEr6sLs4yEAm8DONtD/UvxhmAHg/BgAbyHgR7WBgSvQ4FqwbfHScfyKLnR7Dmwc0BObfVg4jmv2JTj3vKFeOpCXpvyUfvjXzXF7D+p/GSIqVjX79ttexgs6USQXk/oPtt+Jp7fsKMX/h4cedv4T9tddnmbzlcg2IgCOaNbzuckaRKZsTyDMxda3wneKygJNkw0I5sx/IBjUV88+/U0m7skqGcBYpifkMlnBLaGrVQ+jC1DdidPYBklzIzoMcLOrW35apCIUPAvintshSjfok6yQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=advantech.de; dmarc=pass action=none header.from=advantech.com;
  dkim=pass header.d=advantech.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=advantech.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hF92Zx0ptTPN5PMTMy0OGCj/V0J9xXzMnxxdC0MJ3+A=;
- b=XBfLfaTSIK/hUtLCLg1meH3mRbA0dOYuWjwENkRSu/HLgY+L3vQLoyZgTjCuaPt+x+YduQE1VfCqUMDDjnQ9DKXwdLpQ0gxWICjRyOgXlsB96xU9zMCq1Tqd0QDKKl/QSoBrSoqjPfCzfiSFerWp3pnUvPWAy8GxZnx1JKBlwv94S1iH13hf5zNQNG/cEvyEYWti+nW5LVZmhAeHhyJVbI47YjbkhiTxc6pT/PHp3CH0c9l6wGRXp3XIsQTkYFyTEgR++UQ++5On2TR5GqBvSi4bqd4yoGQxloinkpWDwP9sqey4RcuUBgRrErtRiY9ZEJhPlRewL2R+CSAmQG/aLQ==
+ bh=yhTCLPVF1YQbZpEE0GoOdYZUCVe8GMwCq6lBLPyRr3s=;
+ b=YpHrM9dGbz48cqw/isJfEfEFJoutmFLyysQE8EQud30W4J+rWL3Nmsr1OWtlm7sNkFDmThgxKX0YTEQoaVGCCJqnZ+lIkEck7T7rEb5fLlvNa4ydzyaalGF35GUyFI/LV75HSanfBC70o61lhUcxqArVrVUbJkBBhiy6NdxxQzRC1Er1oKWi9XcWBI+SGi04Wxk3OSEcRSq8lRlsNxWLvhlYVvoJTGM1fDi+Ed6ubzOYJBLNrGaykRKL3SHUp9JHNy6Y/2pNfniHOllq/xv7uUMsAnPlEvpkfbH0RFNRmMoaJQCGqvKHHDucEiE5PZbcowcZF9RJjTLv6Dw91Zs/Rw==
 Received: from PSAPR02MB4502.apcprd02.prod.outlook.com (2603:1096:301:21::6)
  by JH0PR02MB6851.apcprd02.prod.outlook.com (2603:1096:990:4d::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
- 2026 15:55:16 +0000
+ 2026 15:55:24 +0000
 Received: from PSAPR02MB4502.apcprd02.prod.outlook.com
  ([fe80::44e6:6433:8000:35aa]) by PSAPR02MB4502.apcprd02.prod.outlook.com
  ([fe80::44e6:6433:8000:35aa%3]) with mapi id 15.21.0202.018; Tue, 14 Jul 2026
- 15:55:16 +0000
+ 15:55:23 +0000
 From: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-Date: Tue, 14 Jul 2026 17:54:19 +0200
-Subject: [PATCH v2 5/8] Add Advantech EIO Backlight driver
+Date: Tue, 14 Jul 2026 17:54:20 +0200
+Subject: [PATCH v2 6/8] Add Advantech EIO Watchdog driver
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-upstream-v2-v2-5-76e5e41026db@advantech.com>
+Message-Id: <20260714-upstream-v2-v2-6-76e5e41026db@advantech.com>
 References: <20260714-upstream-v2-v2-0-76e5e41026db@advantech.com>
 In-Reply-To: <20260714-upstream-v2-v2-0-76e5e41026db@advantech.com>
 To: Lee Jones <lee@kernel.org>, Linus Walleij <linusw@kernel.org>, 
@@ -85,18 +85,18 @@ Cc: linux-kernel@vger.kernel.org, mfd@lists.linux.dev,
  Thomas Kastner <thomas.kastner@advantech.com>, 
  Ramiro Oliveira <ramiro.oliveira@advantech.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8206;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17129;
  i=ramiro.oliveira@advantech.com; h=from:subject:message-id;
- bh=o3xQb+Kb4nE0n1YarbvAQPCz5oz9H0n4kTID+Qv3PbE=;
- b=owEB7QES/pANAwAKAc7t0Ke8vbAJAcsmYgBqVlu4Qpw9ZQVUzW2aEdXdSLkU27l9+rR3TwCe8
- +w0eqXWF5mJAbMEAAEKAB0WIQS1Nkng0ZvJmBKh6GLO7dCnvL2wCQUCalZbuAAKCRDO7dCnvL2w
- CfzfDACYs7c+6KP777EuatLF71DYZOwuZH+Y//4ei5CCZjFp8gUZyWwo1YBLrqsd2MlthUE6RPl
- fZkRKAxAzwP6FnPUrw69M6uV4vD8j5Vvca3JrU1MioeUAi5l9XmxIPNYf8/FWYGEz9SYW0XHZdz
- vAA8Wk/xCTvB89YOb58ELuaisnVEZtP/9YyvS9I9DfFljtoKUVPAkXfPmANH9KTTVOf1lNdGuq7
- vJe541A3f7Ojru8p3HUQOo3WyLHLOKEJOuxlZpVS7JcRQD9VeWBHVNeQ9jl5OC+GSQhVNsc6Vir
- D/osHmk2ssIvUdMGZzehjEUlI/ZwR8q5+mJ4drrA/2y6B6NQJGg7nxdzHkqZuRQIiFTq+FgfQDa
- fEk3NEE8yPHI/4a36CHqrPa7F41ziSZOWlRB81MKJHhcCE/RHmT/EAImsgsRobluwuEf+OG3oZQ
- td993pYlZgCbkFGwN22IbGUrQNMJaxQG+wB0KKgr/AFObtUZK6VsKXtDIO4Nhn9iFhE1s=
+ bh=x3e7kqj2bst2UoKPib83ZPbUl4OUxQJZ3xCLzVd1xmE=;
+ b=owEB7QES/pANAwAKAc7t0Ke8vbAJAcsmYgBqVlu4pBwZdrsLLbYQJfkvWXvpkRBYwGKQ+wm+v
+ BKJ9Hkt2HeJAbMEAAEKAB0WIQS1Nkng0ZvJmBKh6GLO7dCnvL2wCQUCalZbuAAKCRDO7dCnvL2w
+ CSkkC/42Vbvt2pbEwf0QLAseE7aEycQAJ5n/V4lxuY1kwCo/tNCiqOUxnppnbGyFTqBUcWtblr3
+ o5kw52pMrNbZdnVJEjGFtbCJp4NUcYrd0EH3CN/Ofhknfnl+ZOhWlxP4XF7Ei0IvzENA5ogMtEt
+ t1ZDxmgGxv5dkqqN+wSIaC7pF/vh4rbGodCFYA3v0ziWDyohzjhX/SYrlmlh7nbLfernVqL7w4q
+ saUk8FuaBZcW9EnEjbMmnBiTZQdNAtj0mtGWfGTcAG0NyrwQQntT5a+njHy+PX9I7ZWY/67/N/E
+ zWlenAPJp6vr9Th3bNYmKjN4TGzqNcMgw2X7QO6o2Mp9CkyLTGMeVRjrgnOvI1xf9BHlF0oHeQd
+ dJ2YUrcMAUxoVYWy5R8CV2CHaDon8i2uc6EBLWWlsSTCh+DZSi2aApvNn3rQ1JaHWlLNOd1wch8
+ 5Xwq5mnKgtCb4whCOIMjjCzpHBceK/EAjXbq50c78fhJgVjWWSYo4AtIUvAZUjFCZ5BR4=
 X-Developer-Key: i=ramiro.oliveira@advantech.com; a=openpgp;
  fpr=B53649E0D19BC99812A1E862CEEDD0A7BCBDB009
 X-ClientProxiedBy: FR2P281CA0086.DEUP281.PROD.OUTLOOK.COM
@@ -110,80 +110,80 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PSAPR02MB4502:EE_|JH0PR02MB6851:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04be9ba1-081f-425c-b009-08dee1c04c78
+X-MS-Office365-Filtering-Correlation-Id: 51e44ada-22b0-41d2-8ccb-08dee1c050bc
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|23010399003|376014|366016|1800799024|38350700014|921020|56012099006|11063799006|55112099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|52116014|7416014|23010399003|376014|366016|1800799024|38350700014|921020|6133799003|56012099006|11063799006|55112099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	uiIhmfHlQy8myR2iwDyeiNrJ9KTzWlrgR6joso4QKaTUpMW/pYp/80I0i1Ubx4RRt9WOB8BJAsTaLyPE0lBvjhwGhGFfdD5p6Eof7tIyCZNMZDmCfQg2gUFkqkw2k5nJYvnqG7xoDmIebzIVgwGLpjb+CnZ+4ZSg5MwP9lymZUbm0n0c4AymuYWZN29tc8hNGwNjBh0NctMJqPwua7kE7rgrrvQFzUet3g+Kz88kILHc990RfeVEqBqM20ahxrapvCOADdvRXP6Zc6OTOhdh5mcdAsYFzi4M43xv58Uw2F7y1aNpuIXyPmGK4zrtaN50tWpORZ62XkbKiv4wTQ0wTeENlS1Wja4dnvm1y5lGq119EGvjMdN8wdiRod1n8JrZwDLY2mNQFYpE5f1lyp7NCKACa2Hc4N2FWE2VLZDFW3RWfDtm+ZKBF1XaJaVrDMtFHvxO8669TnFgDJxS4Pk08ZHEKUSiyLeDxewSVgizUeCd4mfzicxLXmVVna3PaU5LDeuh8cUSHkhjEhqTz9/YGbb4fTUvC5ndZf9u/cUSALdBCi3/l27Y3+roeGsQeAZpGlCRqIYBwAr7meCXCDX4r1Oamhk8keghXzTkw7Z8qySWUWMJx3A8eIbF7fJp+cODgO8bgN1f1b70W1Kj5LpXhu6g+H6tDWmJIqhQ0ZLOZjh25FNRRAFVp06J8SupWGzUWRDo/YtZzZcvR8XqWygRBJAHhOUg0BOufgV930AsRBs=
+	l5gmk82cKdxLa/ou6JNA36J12wlJmlQQnaCoHIyFsT0DVA2j7MdWdidawO03x4IlTH4vz58I2Vtuh9AGYHFgkagz7jnO8ddQXNnumRSsoVkEM188cIVDEOIHcbx6eGOLbHmDDf2R4B2xWRMlKvbnyzoROWslizbN3KNkZy3hbDWLzWylaINyGvUE7lYhuCmhy0x2AjWDufQhwJ7MPXtcrOUrTvtuOprcwhvVH4FeXqLcU+bA6+ydiWam5JcBAz1aQcUcNlunnM/eWNDtzAevAoiJkixh7p+SVbD8WchCiOVV6jZyuJFVY/FOD++QyOX7BSqG3vCBYekMr7Lbq+MwoUsl1cMiqF9usRWauVwXRzBFC1sE8TRDgWTMSytmthEpxcNF1NQkp9vni0GhwEjOEh3DB3IAtdSXGypoaMBr+axgv35fqKwWBVXqGHInzC+rtXrMNoapc4rx/mAH4GTtZXsN6rWLRPOpG0IO5qLKrC7p0Lecqrj3To/OeMzA02nTVWIRe/oxqkRKzJkt+FjpbAgSnOrTyAITP4dRq3bnXsJ02xrs3wffU+JhU6bH3aHqYN7b7vWtn9FB+IU4vJT0P2wqS7OgPU5OiL9gqDLjCMN+onjFcWXESdV+fJgEfSZ8JETxdF+pIFTupd7EoZNozxIySIhFLEmcOSNl8jgoCecoLkobg2oBRTfRhKkOnBsvdQCwzrei/rKYyDcQXz96qdAdKOghboBTlElUYiIARWs=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR02MB4502.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(23010399003)(376014)(366016)(1800799024)(38350700014)(921020)(56012099006)(11063799006)(55112099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR02MB4502.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(23010399003)(376014)(366016)(1800799024)(38350700014)(921020)(6133799003)(56012099006)(11063799006)(55112099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SnVodHhiYjJiWmc3WktlcS9wOHkrUFJhYXhvdVRyV1RPM09LcjhpNVVocklO?=
- =?utf-8?B?Y2N0ZnhaL0pqRDhMYW1CMThnMkk5M1FHUWZhRTZ2a3JybUJtZmwzWXF6c2to?=
- =?utf-8?B?N3hzY2psYk9vdkRqeW9CTy9BNXBQWjNWMS9aV3huVzRHTkFoZTc0aXk0dU9S?=
- =?utf-8?B?MjE0SFQrbldLSUp1TFJJQ251MTN5d1NtL0l4bDRDdHRWeWk3WE9PTURFMG1W?=
- =?utf-8?B?TmtYWEtESU9hZHVScmlxMUN5RWJvM2E1ellRdlAyeFZmK05nMFRCekJCdHh1?=
- =?utf-8?B?QzN1dFE2cDV5ZDVOTXZQcnN1L2ROVW9JMVVJU2VIeVlZTXNpY3QvS0FxR3l5?=
- =?utf-8?B?R3kyRVBJTHY5d1cwL1JxQXpFTG1PM3BVY2pVSVZqd0pGKzNSWkl4dC9XUmIv?=
- =?utf-8?B?ZmUyd1ZWL0poS1d5Y2lnalNieGxVR3hBRjk2azdxSDV2VW40VFhYcmZ5MGp2?=
- =?utf-8?B?V0Q0RFRIS1JTcXlmQUV2UHFEQ0ZQYWJ5NElaejA1dzZRZmwyQ2VhWkIyU2hs?=
- =?utf-8?B?WjNzK3k5WmtYVmpib2tzeGQwMzQzRGVOQU9LOElTR1p0d055N1FNV3FGdHd6?=
- =?utf-8?B?c2x2cXRlaStJbVNCUVBjNVJZM2szak9LbFNhV25vaklKMTlOQTVlR1NZbVBs?=
- =?utf-8?B?eEtBcG12N1dVbHZQQXFuMGR4R1MrWCtvWnVWWXQyQ1pRSVV3Z1ZpVWVLQ2ZN?=
- =?utf-8?B?N0pYU2VaQ2ZqWUJ1VExOTHg1dFlDaVNPbDJNUnBNT2F5bnlVTjFRd2VoVHdZ?=
- =?utf-8?B?ZXBJVEwzVXl6WTA4N1ZxbGc5WWoxWHB3NTJjam9RZzZkNXFFd0ZDN3pYQnp4?=
- =?utf-8?B?VTRMeDlsbGlrYTdyanJnclA2SWg2K0hTcjZwRXdHWlhsM1YremdlQzQ0eGoy?=
- =?utf-8?B?RlRmRkRHWVRPbVk1WmVBSkFZaEhyY3d4c3NVaUxvajRNVnh0ZFM2MjQ1TzY5?=
- =?utf-8?B?NXdyNmZSYkdNb3ZmTWcrQmJpVG5zNHpNcHdlWjFXOWRFN0xhNE4xVVVEYkNq?=
- =?utf-8?B?eEt6azN5U21NT1cyRFEzclAzQkx4V1VkU1BoOFlVSWZQNDdxMGVnQS80MDBS?=
- =?utf-8?B?M3JITmdFM2EyMkZiM2xEdVcwMjNRTjNvY1A3SVNTc0NDcGJzdTRHM2NCUy9k?=
- =?utf-8?B?cUcybHpiNWJFa0hzLzVvS0ZOc1Ztd29CYnNmV2tpaG5EKzBhSGpiRTFTN0Jo?=
- =?utf-8?B?V200UmowRWN6cE1IVUg4LzcyVWlFZ0dDMmZMdzdyMDZtOFdYU0FTYisvSTY2?=
- =?utf-8?B?TCtXVnp1WGFpcDBML2xqWXB6dm9qQW9SUXVNaTJobGQveWdOVFMwSVFiZDI5?=
- =?utf-8?B?UFNtYmdOdzRCTnZNM2ZYbnpyTEtrNUJBeTFmQmZUMnRKbFp5SGN5M2lkWmto?=
- =?utf-8?B?QUdLczVsYXJHT24ya1ZWcmNmT3BlckUwVmdFVU1haEd6dndRb3NteDVrT2dY?=
- =?utf-8?B?SVRiQXJUVlIxaDJTVEZuVlRLa0FXeS9Od2M3Wm5pUzJYeVhNaXJJL29KVWxo?=
- =?utf-8?B?VElFMitSUHpqOHhtSXpMbU9CQWtyL2wrUVZ1S0RtbkdZR2pXSm1YVVZacVdL?=
- =?utf-8?B?Wjc1VzRoL21nTzdRS2Mwci9JYzh6WmtzVUpYNms3dXgwQms3V0twU1VScklD?=
- =?utf-8?B?MmtDeEhsOFhFdldrYk1NVTN1cVphR0c2UjVtazV0WEE4MEV4bjhKcGFsMlY2?=
- =?utf-8?B?NnFPYkV2aHJpSkltYnV5UVdKNFlwcEoxTnNNSHROQ2MvWG1pLzFKOUc1cVpS?=
- =?utf-8?B?QlNJSXlHKzJucGJ3U0c0Y0c4ZStLWHZ4aTV5QlpuOW5KUHo2eVlkMDA1UlZ0?=
- =?utf-8?B?NUsxTE5SU3dFZWZvYVhpdEFrRHFYN2VnaG9TbGRnRDZyc3o5NVpxYUlNczNU?=
- =?utf-8?B?RTI5NlRJMklWS1Fwa3pEZG1hZHpjQlV0MitjaVRhRTRYVWFiWFdVU3dWdVdE?=
- =?utf-8?B?bHZtVmZHUlIxUlBybFArNFlVT3FSYkoxWXpBTVVYUTJEcDJhWjRGU3RxaDM1?=
- =?utf-8?B?RWZNMUlzN0w5OVpyekh4RDFidUZXK3UvS05OZGozbi8zcGZmZGJobUVVSDl2?=
- =?utf-8?B?Tm1DYTRMSzZOOENHSEhDRkZQYU9FRUZzOWtjb1I1UXErRXRsWTlycGZ0SzYw?=
- =?utf-8?B?cFNTZ0ViQ0dXSWs2UXpVOVh2SnRMbVlEb1ErT3B3akwrNHE2Y01VOXJHRVdj?=
- =?utf-8?B?YW9NTjlEVEg4R2JSU1NPNXN1d3dQTk1taU1sL25DVktrQ2xybkJMZWwxKytM?=
- =?utf-8?B?WUtTZHZIZnpnVHVaYmt3OEtrTTBZZ2NoYlJVMW9HRlcvQlNCSmkrOW0zUGM2?=
- =?utf-8?B?MFRvUGYwOW1nZnhiMFRDVmxwT3BVL3hGUDZoMEV1QnRjbkplaGZ5c0VMWUZK?=
- =?utf-8?Q?cqBNUgar3C43EyF4=3D?=
+	=?utf-8?B?cHlTN3NGMWlzdnMzT3E4ZjBIbldFUDhvc1Y5bE5lRngxWWJVaTlSVU9oOUh4?=
+ =?utf-8?B?QXRVRkNwSEZRQW9YNWFrVS9za3VKQjkrS1BVdnRPdDN1ajYvbnZBbG5JK0dJ?=
+ =?utf-8?B?MVhiUHdnbnJDc1VZVW1mNVJSekZBd0NtcFVHcVQzak5xeXlMTjBZU2xOd1RZ?=
+ =?utf-8?B?UUY0QnhaUHFYaTF6TEt5TStVNFJRMnhqaDVzSVllOElXQ1EzbG9RWGhueHNO?=
+ =?utf-8?B?K3B0SEJFTjI5UlBTU3RBUTBmeDRsNzRkT1JDOEl1MnlBM0hmSm90dnU2eGx4?=
+ =?utf-8?B?aVRxQ24xMWtDODBFRDJoTW4vTjU1djkxVk1qS1BaaFhtRnAwZ3M5NXpDMzk2?=
+ =?utf-8?B?MHhiTzVkZ1dRYk94STlVcXNORjduTXJFeUo5dVRpT004NGNqRWpDaHdRWk9S?=
+ =?utf-8?B?UFVMQnZGTXNPS09QMlY0VnQydWIxZlNHOENrUkptamtzVTlJZXhtd3R4OVl1?=
+ =?utf-8?B?b2Nsc0Q0Tm9uNFVIZnZMY2pnS0w1ZkN0NnVOcDNJSVJJdVMxWEYwRUN0dE92?=
+ =?utf-8?B?aGx2YlZEcExtZzFMWkhMTDYrZDNSdkpJOWQ3TllvTTJYSFMwZEQ3WTR3VDc1?=
+ =?utf-8?B?T2VITEdGdlgrSWJWZnNKL1RHREM4czdMbkc4a2NNOEt6YytlQmowcVVuWVFK?=
+ =?utf-8?B?bmlKV2llODZ6U2dHQjFuQkpUK3FVYU9BRDBBQUYwdVA5bnJZSHFiU0dKM2lB?=
+ =?utf-8?B?R2VpOHY3NFY2dWJJT2JTUVhidlBXTDB5eHhiNUUvbm1qalZBdGhNRUxhUHcr?=
+ =?utf-8?B?MGxVTitJV0xvQkdNQlBmRGhzdHkrYkVXc05NbUcxMlRJY2txdi9pKytWMElT?=
+ =?utf-8?B?cTRrcEczZTlUajkvODlRQXd1eEx4MkJJZGlxeDVtSzIzb3lpMXBQcUZXYmY2?=
+ =?utf-8?B?SDQzcG5RaXdNS00zcFViTlpkTk5TNmc1Njc5Y0dPMGppUlg2SHhLZ2ZhNlNn?=
+ =?utf-8?B?Q21SancvbTBGeVk0VXlzQ3o2c25BdnIvd0dZUlJ2a2JNNU1nS0ZlSnJYQWtI?=
+ =?utf-8?B?YjFMdGQ3TnBQeDFnRkRMUWgwenV0MmZYdjZSTXA3Z0xmcTduWEtndE5NYk90?=
+ =?utf-8?B?RnNjZzVHWk9jYmZjc3VrZWJZTCtidU4wdDVOOWZ0WDB3d0VaK2t6WGtqcEo0?=
+ =?utf-8?B?MHRLODUwVlNidVV3MVRsRER0enNTOTUvMDhtcXdkdDd1b1ZpTWthNHlLcFFI?=
+ =?utf-8?B?TDdGYVdhaHdYWWErNjZaaHI1czB3cDJJamlIUnZwNE5vRUNlU051QWFvWldx?=
+ =?utf-8?B?WHQvZFdleDVvNmNGQlpEYU13dWhvWFhqUVIveThiejV5ME0wQ1NWazRwaTdV?=
+ =?utf-8?B?aG95Q2l3NE05YTJINnI2VXZjeDYyZ1NURGVKNXd4NmhxTnNsL1lIOVdMajR6?=
+ =?utf-8?B?RXp2cUVySlBsSDdCUUVTZEs1bXlNZVhTeHcyUHJHb2x6eGxpdS9mTFlveXFl?=
+ =?utf-8?B?MkhZeDYySklSTjloQWQvbnc3NkpKWWhsUmNoUThDak85Y1hraUtET1lYWkRh?=
+ =?utf-8?B?bHRKTWUxOUhJT0VGTDBtZFBsbEFzazNNVjMzU3hxU2JyYlZ0ZWxnaE5qOUtn?=
+ =?utf-8?B?Z3AwaGYyem95eEVTRTZ2S09keUJ4UEVUODZ4Wml0WnQvaXBwZEIwMjF6RG9v?=
+ =?utf-8?B?bzRZa3ZQdDdUZUF2NFQyQnZBZWQvbllSZUhSWUJCNkZYZE8xRVlJVTEwOTlG?=
+ =?utf-8?B?SVd4eUZrdXpVc1plMkNTVW9MSVhpZGxUMXRoUU03L2JGR05YaStRbnorZ3lz?=
+ =?utf-8?B?aVY4dGdremFBMURVWHJEeGhGemhiK1phb2dKT05HOHh1OE5xMDRXbTNEa01J?=
+ =?utf-8?B?clIreGlPTTY4NTZ2dGV6b1MzV1hGQVhJQkFzWUlGSlZLWjkyOTRuMStrZTZ3?=
+ =?utf-8?B?RWNRM0xRSS9kekNkd1V2RHFxeDVaVHZaWG9lM2lkZTdyOStTTDRmNEpRb2hJ?=
+ =?utf-8?B?T1RVV3RvU3JYQ3crSGtNcGxUeXhjM1NmR1VsVzNvTjN5SmZBQVJvV3F1T1M4?=
+ =?utf-8?B?bGt3ZEk5OHl2c3FreTJPZThONWpZSlI3cW1DS05IZHZWczlYUUpkbUNYNXdX?=
+ =?utf-8?B?SnNtRFZXUXZRZ1I1cU9vMVJqVXpxMjN3T3B2SXZza1pPaW02NlNJUittTFJv?=
+ =?utf-8?B?dEpIaUtnYW1Yc0JId214RVhhc0xzMXhvd2p3T0toV0x2dE1SdW1wSGVyeWFz?=
+ =?utf-8?B?bmFZTXBsaTMwWTVzNmFEQW1FZDBqS1VwSjlLN0dCbytZU2JBZ1V6UUxXWWgy?=
+ =?utf-8?B?YVNxMGhKdTNZL0ZsZlZ2SkRTV3c3UUsyQ2wvWXJCdHgrc29QUmQzN3JLNUJr?=
+ =?utf-8?B?VnE5SlN6QS9FRkZqemVGQjlWMjRqc1d6cWtyWHVlNnFNYUZEOVI0MVNyRHA4?=
+ =?utf-8?Q?Kyk6K6jf13JfUcc4=3D?=
 X-OriginatorOrg: advantech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04be9ba1-081f-425c-b009-08dee1c04c78
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51e44ada-22b0-41d2-8ccb-08dee1c050bc
 X-MS-Exchange-CrossTenant-AuthSource: PSAPR02MB4502.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 15:55:16.7486
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 15:55:23.9166
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a77d40d9-dcba-4dda-b571-5f18e6da853f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A1dEubcnqGNG76Lx5Ryv8RPcY3OI1BiP2ozTxyOyLkqfMVbA+j4UClWr+wpAYIBYhVh+LWRWbRMQF1sqaIUU90JHsSFiMdbF18bz/0ioSok=
+X-MS-Exchange-CrossTenant-UserPrincipalName: pLtnVWyEXE32LKQm8jdoHUkVCPcizk0QrstmGr+f8Cy5Cw9GfSEXNSY1quB5muaaAnoh/dPZpnk1lwhNIgL4JCCFjPveIswWYQ1aBQQLG88=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR02MB6851
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[advantech.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[advantech.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40068-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40069-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[28];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS(0.00)[m:lee@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux@roeck-us.net,m:andi.shyti@kernel.org,m:danielt@kernel.org,m:jingoohan1@gmail.com,m:deller@gmx.de,m:wim@linux-watchdog.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:linux-kernel@vger.kernel.org,m:mfd@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-pm@vger.kernel.org,m:wenkai.chung@advantech.com.tw,m:francisco.aragon-trivino@advantech.com,m:hongzhi.wang@advantech.com,m:mikhail.tsukerman@advantech.com,m:thomas.kastner@advantech.com,m:ramiro.oliveira@advantech.com,s:lists@lfdr.de];
@@ -202,311 +202,711 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,advantech.com.tw:email,advantech.com:from_mime,advantech.com:mid,advantech.com:email,advantech.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[advantech.com.tw:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,advantech.com:from_mime,advantech.com:mid,advantech.com:email,advantech.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 22B0B756AFB
+X-Rspamd-Queue-Id: 968E3756BD8
 
-This driver controls the Video Backlight block of the Advantech EIO chip.
+This commit adds the driver to control the Advantech EIO Watchdog block,
+this block is included in the Advantech EIO Embedded Controller.
 
 Signed-off-by: Ramiro Oliveira <ramiro.oliveira@advantech.com>
 ---
- MAINTAINERS                      |   1 +
- drivers/video/backlight/Kconfig  |   6 +
- drivers/video/backlight/Makefile |   1 +
- drivers/video/backlight/eio_bl.c | 243 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 251 insertions(+)
+ MAINTAINERS                |   1 +
+ drivers/watchdog/Kconfig   |   7 +
+ drivers/watchdog/Makefile  |   1 +
+ drivers/watchdog/eio_wdt.c | 641 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 650 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e228d12a2326..d2d7d815ed44 100644
+index d2d7d815ed44..8d35fd7c5599 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -616,6 +616,7 @@ F:	drivers/gpio/gpio-eio.c
- F:	drivers/hwmon/eio-hwmon.c
+@@ -617,6 +617,7 @@ F:	drivers/hwmon/eio-hwmon.c
  F:	drivers/i2c/busses/i2c-eio.c
  F:	drivers/mfd/eio_core.c
-+F:	drivers/video/backlight/eio_bl.c
+ F:	drivers/video/backlight/eio_bl.c
++F:	drivers/watchdog/eio_wdt.c
  F:	include/linux/mfd/eio.h
  
  ADVANTECH SWBTN DRIVER
-diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index 7c66b8840d88..a5559a7db75d 100644
---- a/drivers/video/backlight/Kconfig
-+++ b/drivers/video/backlight/Kconfig
-@@ -522,6 +522,12 @@ config BACKLIGHT_RAVE_SP
- 	help
- 	  Support for backlight control on RAVE SP device.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 9f013d774897..bc0f13f4f79c 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -265,6 +265,13 @@ config DA9062_WATCHDOG
  
-+config BACKLIGHT_EIO
-+	tristate "Advantech EIO Backlight"
-+	depends on MFD_EIO && BACKLIGHT_CLASS_DEVICE
+ 	  This driver can be built as a module. The module name is da9062_wdt.
+ 
++config EIO_WATCHDOG
++	tristate "Advantech EIO Watchdog"
++	depends on MFD_EIO
 +	help
-+	  Backlight driver for Advantech EIO.
++	  Watchdog timer driver for the Advantech EIO.
++	  If unsure, say N.
 +
- config BACKLIGHT_LED
- 	tristate "Generic LED based Backlight Driver"
- 	depends on LEDS_CLASS && OF
-diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-index 34469711c6cd..724246242526 100644
---- a/drivers/video/backlight/Makefile
-+++ b/drivers/video/backlight/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_BACKLIGHT_CGBC)		+= cgbc_bl.o
- obj-$(CONFIG_BACKLIGHT_CLASS_DEVICE)	+= backlight.o
- obj-$(CONFIG_BACKLIGHT_DA903X)		+= da903x_bl.o
- obj-$(CONFIG_BACKLIGHT_DA9052)		+= da9052_bl.o
-+obj-$(CONFIG_BACKLIGHT_EIO)		+= eio_bl.o
- obj-$(CONFIG_BACKLIGHT_EP93XX)		+= ep93xx_bl.o
- obj-$(CONFIG_BACKLIGHT_GPIO)		+= gpio_backlight.o
- obj-$(CONFIG_BACKLIGHT_HP680)		+= hp680_bl.o
-diff --git a/drivers/video/backlight/eio_bl.c b/drivers/video/backlight/eio_bl.c
+ config GPIO_WATCHDOG
+ 	tristate "Watchdog device controlled through GPIO-line"
+ 	depends on GPIOLIB && (ACPI || OF)
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index cb78e9932eae..eee059cfe1da 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -229,6 +229,7 @@ obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
+ obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
+ obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
+ obj-$(CONFIG_DA9063_WATCHDOG) += da9063_wdt.o
++obj-$(CONFIG_EIO_WATCHDOG) += eio_wdt.o
+ obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
+ obj-$(CONFIG_WDAT_WDT) += wdat_wdt.o
+ obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
+diff --git a/drivers/watchdog/eio_wdt.c b/drivers/watchdog/eio_wdt.c
 new file mode 100644
-index 000000000000..c2826400de45
+index 000000000000..b3c036a004b3
 --- /dev/null
-+++ b/drivers/video/backlight/eio_bl.c
-@@ -0,0 +1,243 @@
++++ b/drivers/watchdog/eio_wdt.c
+@@ -0,0 +1,641 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Backlight driver for Advantech EIO Embedded controller.
++ * Advantech EIO Watchdog Driver
 + *
-+ * Copyright (C) 2025 Advantech Corporation. All rights reserved.
++ * Copyright (C) 2025 Advantech Co., Ltd.
 + */
 +
-+#include <linux/backlight.h>
-+#include <linux/errno.h>
++#include <linux/interrupt.h>
++#include <linux/jiffies.h>
 +#include <linux/mfd/core.h>
 +#include <linux/mfd/eio.h>
 +#include <linux/module.h>
++#include <linux/reboot.h>
 +#include <linux/uaccess.h>
++#include <linux/watchdog.h>
 +
-+#define PMC_BL_WRITE		0x20
-+#define PMC_BL_READ		0x21
++#define WATCHDOG_TIMEOUT	60
++#define WATCHDOG_PRETIMEOUT	10
 +
-+#define BL_CTRL_STATUS		0x00
-+#define BL_CTRL_ENABLE		0x12
-+#define BL_CTRL_ENABLE_INVERT	0x13
-+#define BL_CTRL_DUTY		0x14
-+#define BL_CTRL_INVERT		0x15
-+#define BL_CTRL_FREQ		0x16
++/* Support Flags */
++#define SUPPORT_AVAILABLE	BIT(0)
++#define SUPPORT_PWRBTN		BIT(3)
++#define SUPPORT_IRQ		BIT(4)
++#define SUPPORT_SCI		BIT(5)
++#define SUPPORT_PIN		BIT(6)
++#define SUPPORT_RESET		BIT(7)
 +
-+#define BL_MAX			2
++/* PMC registers */
++#define REG_STATUS		0x00
++#define REG_CONTROL		0x02
++#define REG_EVENT		0x10
++#define REG_PWR_EVENT_TIME	0x12
++#define REG_IRQ_EVENT_TIME	0x13
++#define REG_RESET_EVENT_TIME	0x14
++#define REG_PIN_EVENT_TIME	0x15
++#define REG_SCI_EVENT_TIME	0x16
++#define REG_IRQ_NUMBER		0x17
 +
-+#define BL_STATUS_AVAIL		0x01
-+#define BL_ENABLE_OFF		0x00
-+#define BL_ENABLE_ON		0x01
-+#define BL_ENABLE_AUTO		BIT(1)
++/* PMC command and control */
++#define CMD_WDT_WRITE		0x2A
++#define CMD_WDT_READ		0x2B
++#define CTRL_STOP		0x00
++#define CTRL_START		0x01
++#define CTRL_TRIGGER		0x02
 +
-+#define USE_DEFAULT		-1
-+#define THERMAL_MAX		100
++/* I/O register and its flags */
++#define IOREG_UNLOCK		0x87
++#define IOREG_LOCK		0xAA
++#define IOREG_LDN		0x07
++#define IOREG_LDN_PMCIO		0x0F
++#define IOREG_IRQ		0x70
++#define IOREG_WDT_STATUS	0x30
 +
-+static uint bri_freq = USE_DEFAULT;
-+module_param(bri_freq, uint, 0444);
-+MODULE_PARM_DESC(bri_freq, "Setup backlight PWM frequency.\n");
++/* Flags */
++#define FLAG_WDT_ENABLED	0x01
++#define FLAG_TRIGGER_IRQ	BIT(4)
 +
-+static int bri_invert = USE_DEFAULT;
-+module_param(bri_invert, int, 0444);
-+MODULE_PARM_DESC(bri_invert, "Setup backlight PWM polarity.\n");
++/* Mapping event type to supported bit */
++#define EVENT_BIT(type)	BIT(type + 2)
 +
-+static int bl_power_invert = USE_DEFAULT;
-+module_param(bl_power_invert, int, 0444);
-+MODULE_PARM_DESC(bl_power_invert, "Setup backlight enable pin polarity.\n");
++enum event_type {
++	EVENT_NONE,
++	EVENT_PWRBTN,
++	EVENT_IRQ,
++	EVENT_SCI,
++	EVENT_PIN
++};
 +
-+struct eio_bl_dev {
++struct eio_wdt_dev {
++	u32 event_type;
++	u32 support;
++	int irq;
++	unsigned long last_time;
++	struct regmap *iomap;
 +	struct device *mfd;
-+	u8 id;
++	struct device *dev;
++	struct watchdog_device wdd;
++	struct eio_dev *core;
 +};
 +
-+static int pmc_write(struct device *mfd, u8 ctrl, u8 dev_id, void *data)
-+{
-+	struct pmc_op op = {
-+		.cmd       = PMC_BL_WRITE,
-+		.control   = ctrl,
-+		.device_id = dev_id,
-+		.payload   = (u8 *)data,
-+		.size      = (ctrl == BL_CTRL_FREQ) ? 4 : 1,
-+	};
-+
-+	return eio_core_pmc_operation(mfd, &op);
-+}
-+
-+static int pmc_read(struct device *mfd, u8 ctrl, u8 dev_id, void *data)
-+{
-+	struct pmc_op op = {
-+		.cmd       = PMC_BL_READ,
-+		.control   = ctrl,
-+		.device_id = dev_id,
-+		.payload   = (u8 *)data,
-+		.size      = (ctrl == BL_CTRL_FREQ) ? 4 : 1,
-+	};
-+
-+	return eio_core_pmc_operation(mfd, &op);
-+}
-+
-+static int bl_update_status(struct backlight_device *bl)
-+{
-+	struct eio_bl_dev *eio_bl = bl_get_data(bl);
-+	u8 duty = clamp_val(backlight_get_brightness(bl), 0, THERMAL_MAX);
-+	u8 sw = backlight_is_blank(bl);
-+	int ret;
-+
-+	/* Setup PWM duty */
-+	ret = pmc_write(eio_bl->mfd, BL_CTRL_DUTY, eio_bl->id, &duty);
-+	if (ret)
-+		return ret;
-+
-+	/* Setup backlight enable pin */
-+	return pmc_write(eio_bl->mfd, BL_CTRL_ENABLE, eio_bl->id, &sw);
-+}
-+
-+static int bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct eio_bl_dev *eio_bl = bl_get_data(bl);
-+	u8 duty = 0;
-+	int ret;
-+
-+	ret = pmc_read(eio_bl->mfd, BL_CTRL_DUTY, eio_bl->id, &duty);
-+
-+	if (ret)
-+		return ret;
-+
-+	return duty;
-+}
-+
-+static const struct backlight_ops bl_ops = {
-+	.get_brightness = bl_get_brightness,
-+	.update_status	= bl_update_status,
-+	.options	= BL_CORE_SUSPENDRESUME,
++static char * const type_strs[] = {
++	"NONE",
++	"PWRBTN",
++	"IRQ",
++	"SCI",
++	"PIN",
 +};
 +
-+static int bl_init(struct device *dev, int id,
-+		   struct backlight_properties *props)
++static u32 type_regs[] = {
++	REG_RESET_EVENT_TIME,
++	REG_PWR_EVENT_TIME,
++	REG_IRQ_EVENT_TIME,
++	REG_SCI_EVENT_TIME,
++	REG_PIN_EVENT_TIME,
++};
++
++/* Specify the pin triggered on pretimeout or timeout */
++static char *event_type = "NONE";
++module_param(event_type, charp, 0);
++MODULE_PARM_DESC(event_type, "Watchdog timeout event type (NONE, PWRBTN, IRQ, SCI, PIN)");
++
++static int pmc_write(struct device *dev, u8 ctrl, void *data)
++{
++	struct pmc_op op = {
++		.cmd       = CMD_WDT_WRITE,
++		.control   = ctrl,
++		.payload   = data,
++		.size     = (ctrl <= REG_EVENT) ? 1 :
++			    (ctrl >= REG_IRQ_NUMBER) ? 1 : 4,
++	};
++	return eio_core_pmc_operation(dev, &op);
++}
++
++static int pmc_read(struct device *dev, u8 ctrl, void *data)
++{
++	struct pmc_op op = {
++		.cmd       = CMD_WDT_READ,
++		.control   = ctrl,
++		.payload   = data,
++		.size     = (ctrl <= REG_EVENT) ? 1 :
++			    (ctrl >= REG_IRQ_NUMBER) ? 1 : 4,
++	};
++	return eio_core_pmc_operation(dev, &op);
++}
++
++static int wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
++{
++	wdd->timeout = timeout;
++	return 0;
++}
++
++static int wdt_set_pretimeout(struct watchdog_device *wdd, unsigned int pretimeout)
++{
++	wdd->pretimeout = pretimeout;
++	return 0;
++}
++
++static int wdt_get_type(struct eio_wdt_dev *eio_wdt)
++{
++	int i;
++
++	for (i = 1; i < ARRAY_SIZE(type_strs); i++) {
++		if (strcasecmp(event_type, type_strs[i]) == 0) {
++			if ((eio_wdt->support & EVENT_BIT(i)) == 0) {
++				dev_err(eio_wdt->dev,
++					"This board doesn't support %s trigger type\n",
++					event_type);
++				return -EINVAL;
++			}
++			eio_wdt->event_type = i;
++			return 0;
++		}
++	}
++	return 0;
++}
++
++static int get_time(struct eio_wdt_dev *eio_wdt, u8 ctrl, u32 *val)
 +{
 +	int ret;
-+	u8 enabled = 0;
-+	u8 status = 0;
 +
-+	/* Check EC-supported backlight */
-+	ret = pmc_read(dev, BL_CTRL_STATUS, id, &status);
++	ret = pmc_read(eio_wdt->mfd, ctrl, val);
 +	if (ret)
 +		return ret;
 +
-+	if (!(status & BL_STATUS_AVAIL)) {
-+		dev_dbg(dev, "eio_bl%d hardware report disabled.\n", id);
-+		return -ENODEV;
-+	}
-+
-+	ret = pmc_read(dev, BL_CTRL_DUTY, id, &props->brightness);
-+	if (ret)
-+		return ret;
-+
-+	/* Invert PWM */
-+	if (bri_invert > USE_DEFAULT) {
-+		ret = pmc_write(dev, BL_CTRL_INVERT, id, &bri_invert);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = pmc_read(dev, BL_CTRL_INVERT, id, &bri_invert);
-+	if (ret)
-+		return ret;
-+
-+	if (bri_freq != USE_DEFAULT) {
-+		ret = pmc_write(dev, BL_CTRL_FREQ, id, &bri_freq);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = pmc_read(dev, BL_CTRL_FREQ, id, &bri_freq);
-+	if (ret)
-+		return ret;
-+
-+	if (bl_power_invert >= USE_DEFAULT) {
-+		ret = pmc_write(dev, BL_CTRL_ENABLE_INVERT, id, &bl_power_invert);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = pmc_read(dev, BL_CTRL_ENABLE_INVERT, id, &bl_power_invert);
-+	if (ret)
-+		return ret;
-+
-+	/* Read power state */
-+	ret = pmc_read(dev, BL_CTRL_ENABLE, id, &enabled);
-+	if (ret)
-+		return ret;
-+
-+	props->power = enabled ? BACKLIGHT_POWER_OFF : BACKLIGHT_POWER_ON;
++	/* ms to sec */
++	*val /= 1000;
 +
 +	return 0;
 +}
 +
-+static int bl_probe(struct platform_device *pdev)
++static int set_time(struct eio_wdt_dev *eio_wdt, u8 ctrl, u32 time)
 +{
-+	u8 id;
++	/* sec to ms */
++	time *= 1000;
++
++	return pmc_write(eio_wdt->mfd, ctrl, &time);
++}
++
++static int wdt_set_config(struct eio_wdt_dev *eio_wdt)
++{
++	int ret, type;
++	u32 event_time = 0;
++	u32 reset_time = 0;
++
++	if (eio_wdt->event_type > EVENT_PIN)
++		return -EFAULT;
++
++	/* Calculate event time and reset time */
++	if (eio_wdt->wdd.pretimeout && eio_wdt->wdd.timeout) {
++		if (eio_wdt->wdd.timeout < eio_wdt->wdd.pretimeout)
++			return -EINVAL;
++
++		reset_time = eio_wdt->wdd.timeout;
++		event_time = eio_wdt->wdd.timeout - eio_wdt->wdd.pretimeout;
++
++	} else if (eio_wdt->wdd.timeout) {
++		reset_time = eio_wdt->event_type ?	0 : eio_wdt->wdd.timeout;
++		event_time = eio_wdt->event_type ? eio_wdt->wdd.timeout : 0;
++	}
++
++	/* Set reset time */
++	ret = set_time(eio_wdt, REG_RESET_EVENT_TIME, reset_time);
++	if (ret)
++		return ret;
++
++	/* Set every other times */
++	for (type = 1; type < ARRAY_SIZE(type_regs); type++) {
++		ret = set_time(eio_wdt, type_regs[type],
++			       (eio_wdt->event_type == type) ? event_time : 0);
++		if (ret)
++			return ret;
++	}
++
++	dev_dbg(eio_wdt->dev, "Config wdt reset time %u\n", reset_time);
++	dev_dbg(eio_wdt->dev, "Config wdt event time %u\n", event_time);
++	dev_dbg(eio_wdt->dev, "Config wdt event type %s\n",
++		type_strs[eio_wdt->event_type]);
++
++	return 0;
++}
++
++static int wdt_get_config(struct eio_wdt_dev *eio_wdt)
++{
++	int ret, type;
++	u32 event_time = 0, reset_time = 0;
++
++	/* Get Reset Time */
++	ret = get_time(eio_wdt, REG_RESET_EVENT_TIME, &reset_time);
++	if (ret)
++		return ret;
++
++	dev_dbg(eio_wdt->dev, "Timeout H/W default timeout: %u secs\n", reset_time);
++
++	/* Get every other times */
++	for (type = 1; type < ARRAY_SIZE(type_regs); type++) {
++		if ((eio_wdt->support & EVENT_BIT(type)) == 0)
++			continue;
++
++		ret = get_time(eio_wdt, type_regs[type], &event_time);
++		if (ret)
++			return ret;
++
++		if (event_time == 0)
++			continue;
++
++		if (reset_time) {
++			if (reset_time < event_time)
++				continue;
++
++			eio_wdt->wdd.timeout    = reset_time;
++			eio_wdt->wdd.pretimeout = reset_time - event_time;
++
++			dev_dbg(eio_wdt->dev,
++				"Pretimeout H/W enabled with event %s of %u secs\n",
++				type_strs[type], eio_wdt->wdd.pretimeout);
++		} else {
++			eio_wdt->wdd.timeout    = event_time;
++			eio_wdt->wdd.pretimeout = 0;
++		}
++
++		eio_wdt->event_type = type;
++
++		dev_dbg(eio_wdt->dev, "Timeout H/W enabled of %u secs\n",
++			eio_wdt->wdd.timeout);
++		return 0;
++	}
++
++	eio_wdt->event_type         = EVENT_NONE;
++	eio_wdt->wdd.pretimeout     = reset_time ? 0 : WATCHDOG_PRETIMEOUT;
++	eio_wdt->wdd.timeout        = reset_time ? reset_time : WATCHDOG_TIMEOUT;
++
++	return 0;
++}
++
++static int set_ctrl(struct eio_wdt_dev *eio_wdt, u8 ctrl)
++{
++	return pmc_write(eio_wdt->mfd, REG_CONTROL, &ctrl);
++}
++
++static int wdt_start(struct watchdog_device *wdd)
++{
++	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
 +	int ret;
-+	struct device *dev = &pdev->dev;
-+	struct eio_dev *eio_dev = dev_get_drvdata(dev->parent);
 +
-+	if (!eio_dev) {
-+		dev_err(dev, "eio_core not present\n");
-+		return -ENODEV;
++	ret = wdt_set_config(eio_wdt);
++	if (ret)
++		return ret;
++
++	ret = set_ctrl(eio_wdt, CTRL_START);
++	if (!ret) {
++		eio_wdt->last_time = jiffies;
++		dev_dbg(eio_wdt->dev, "Watchdog started\n");
 +	}
 +
-+	for (id = 0; id < BL_MAX; id++) {
-+		char name[32];
-+		struct backlight_properties props;
-+		struct eio_bl_dev *eio_bl;
-+		struct backlight_device *bl;
-+
-+		memset(&props, 0, sizeof(props));
-+		props.type           = BACKLIGHT_RAW;
-+		props.max_brightness = THERMAL_MAX;
-+		props.power          = BACKLIGHT_POWER_OFF;
-+		props.brightness     = props.max_brightness;
-+		props.scale	     = BACKLIGHT_SCALE_NON_LINEAR;
-+
-+		eio_bl = devm_kzalloc(dev, sizeof(*eio_bl), GFP_KERNEL);
-+		if (!eio_bl)
-+			return -ENOMEM;
-+
-+		eio_bl->mfd = dev->parent;
-+		eio_bl->id  = id;
-+
-+		ret = bl_init(eio_bl->mfd, id, &props);
-+		if (ret) {
-+			dev_info(dev, "%d No Backlight %u enabled!\n", ret, id);
-+			continue;
-+		}
-+
-+		snprintf(name, sizeof(name), "%s%u", pdev->name, id);
-+
-+		bl = devm_backlight_device_register(dev, name, dev, eio_bl,
-+						    &bl_ops, &props);
-+
-+		if (IS_ERR(bl)) {
-+			ret = PTR_ERR(bl);
-+			if (ret == -EPROBE_DEFER)
-+				return ret;
-+
-+			dev_err(dev, "register %s failed: %d\n", name, ret);
-+			continue;
-+		}
-+	}
 +	return ret;
 +}
 +
-+static struct platform_driver bl_driver = {
-+	.probe  = bl_probe,
-+	.driver = {
-+		.name = "eio_bl",
-+	},
++static int wdt_stop(struct watchdog_device *wdd)
++{
++	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
++	int ret;
++
++	dev_dbg(eio_wdt->dev, "Watchdog stopped\n");
++	eio_wdt->last_time = 0;
++
++	ret = set_ctrl(eio_wdt, CTRL_STOP);
++	return ret;
++}
++
++static int wdt_ping(struct watchdog_device *wdd)
++{
++	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
++	int ret;
++
++	dev_dbg(eio_wdt->dev, "Watchdog ping\n");
++
++	ret = set_ctrl(eio_wdt, CTRL_TRIGGER);
++	if (!ret)
++		eio_wdt->last_time = jiffies;
++
++	return ret;
++}
++
++static int wdt_support(struct eio_wdt_dev *eio_wdt)
++{
++	u8 support;
++
++	if (pmc_read(eio_wdt->mfd, REG_STATUS, &support))
++		return -EIO;
++
++	if (!(support & SUPPORT_AVAILABLE))
++		return -ENODEV;
++
++	if ((support & SUPPORT_RESET) != SUPPORT_RESET)
++		return -ENODEV;
++
++	eio_wdt->support = support;
++
++	return 0;
++}
++
++static int wdt_get_irq_io(struct eio_wdt_dev *eio_wdt)
++{
++	int ret  = 0;
++	int idx  = EIO_PNP_INDEX;
++	int data = EIO_PNP_DATA;
++	struct regmap *map = eio_wdt->iomap;
++
++	mutex_lock(&eio_wdt->core->mutex);
++
++	/* Unlock EC IO port */
++	ret |= regmap_write(map, idx, IOREG_UNLOCK);
++	ret |= regmap_write(map, idx, IOREG_UNLOCK);
++
++	/* Select logical device to PMC */
++	ret |= regmap_write(map, idx,  IOREG_LDN);
++	ret |= regmap_write(map, data, IOREG_LDN_PMCIO);
++
++	/* Get IRQ number */
++	ret |= regmap_write(map, idx,  IOREG_IRQ);
++	ret |= regmap_read(map, data, &eio_wdt->irq);
++
++	/* Lock back */
++	ret |= regmap_write(map, idx, IOREG_LOCK);
++
++	mutex_unlock(&eio_wdt->core->mutex);
++
++	return ret ? -EIO : 0;
++}
++
++static int wdt_get_irq_pmc(struct eio_wdt_dev *eio_wdt)
++{
++	return pmc_read(eio_wdt->mfd, REG_IRQ_NUMBER, &eio_wdt->irq);
++}
++
++static int wdt_get_irq(struct eio_wdt_dev *eio_wdt)
++{
++	int ret;
++
++	if (!(eio_wdt->support & BIT(EVENT_IRQ)))
++		return -ENODEV;
++
++	ret = wdt_get_irq_pmc(eio_wdt);
++	if (ret) {
++		dev_err(eio_wdt->dev, "Error get irq by pmc\n");
++		return ret;
++	}
++
++	if (eio_wdt->irq)
++		return 0;
++
++	/* Fallback: get IRQ number from EC IO space */
++	ret = wdt_get_irq_io(eio_wdt);
++	if (ret) {
++		dev_err(eio_wdt->dev, "Error get irq by io\n");
++		return ret;
++	}
++
++	if (!eio_wdt->irq) {
++		dev_err(eio_wdt->dev, "Error IRQ number = 0\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int wdt_set_irq_io(struct eio_wdt_dev *eio_wdt)
++{
++	int ret  = 0;
++	int idx  = EIO_PNP_INDEX;
++	int data = EIO_PNP_DATA;
++	struct regmap *map = eio_wdt->iomap;
++
++	mutex_lock(&eio_wdt->core->mutex);
++
++	/* Unlock EC IO port */
++	ret = regmap_write(map, idx, IOREG_UNLOCK);
++	if (ret)
++		goto unlock;
++	ret = regmap_write(map, idx, IOREG_UNLOCK);
++	if (ret)
++		goto unlock;
++
++	/* Select logical device to PMC */
++	ret = regmap_write(map, idx, IOREG_LDN);
++	if (ret)
++		goto unlock;
++	ret = regmap_write(map, data, IOREG_LDN_PMCIO);
++	if (ret)
++		goto unlock;
++
++	/* Enable WDT */
++	ret = regmap_write(map, idx, IOREG_WDT_STATUS);
++	if (ret)
++		goto unlock;
++	ret = regmap_write(map, data, FLAG_WDT_ENABLED);
++	if (ret)
++		goto unlock;
++
++	/* Set IRQ number */
++	ret = regmap_write(map, idx, IOREG_IRQ);
++	if (ret)
++		goto unlock;
++	ret = regmap_write(map, data, eio_wdt->irq);
++	if (ret)
++		goto unlock;
++
++	/* Lock back */
++	ret = regmap_write(map, idx, IOREG_LOCK);
++
++unlock:
++	mutex_unlock(&eio_wdt->core->mutex);
++	return ret;
++}
++
++static int wdt_set_irq_pmc(struct eio_wdt_dev *eio_wdt)
++{
++	return pmc_write(eio_wdt->mfd, REG_IRQ_NUMBER, &eio_wdt->irq);
++}
++
++static int wdt_set_irq(struct eio_wdt_dev *eio_wdt)
++{
++	int ret;
++
++	if (!(eio_wdt->support & BIT(EVENT_IRQ)))
++		return -ENODEV;
++
++	ret = wdt_set_irq_io(eio_wdt);
++	if (ret) {
++		dev_err(eio_wdt->dev, "Error set irq by io\n");
++		return ret;
++	}
++
++	ret = wdt_set_irq_pmc(eio_wdt);
++	if (ret) {
++		dev_err(eio_wdt->dev, "Error set irq by pmc\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int wdt_get_irq_event(struct eio_wdt_dev *eio_wdt)
++{
++	u8 status;
++
++	if (pmc_read(eio_wdt->mfd, REG_EVENT, &status))
++		return 0;
++
++	return status;
++}
++
++static irqreturn_t wdt_isr(int irq, void *arg)
++{
++	return IRQ_WAKE_THREAD;
++}
++
++static irqreturn_t wdt_threaded_isr(int irq, void *arg)
++{
++	struct eio_wdt_dev *eio_wdt = arg;
++	u8 status = wdt_get_irq_event(eio_wdt) & FLAG_TRIGGER_IRQ;
++
++	if (!status)
++		return IRQ_NONE;
++
++	if (eio_wdt->wdd.pretimeout) {
++		watchdog_notify_pretimeout(&eio_wdt->wdd);
++	} else {
++		dev_crit(eio_wdt->dev, "Watchdog expired, rebooting\n");
++		emergency_restart();
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int query_irq(struct eio_wdt_dev *eio_wdt)
++{
++	int ret = 0;
++
++	ret = wdt_get_irq(eio_wdt);
++	if (ret)
++		return ret;
++
++	dev_dbg(eio_wdt->dev, "IRQ = %d\n", eio_wdt->irq);
++
++	return wdt_set_irq(eio_wdt);
++}
++
++static int wdt_init(struct eio_wdt_dev *eio_wdt)
++{
++	int ret;
++
++	ret = wdt_support(eio_wdt);
++	if (ret)
++		return ret;
++
++	ret = wdt_get_config(eio_wdt);
++	if (ret)
++		return ret;
++
++	ret = wdt_get_type(eio_wdt);
++	if (ret)
++		return ret;
++
++	if (eio_wdt->event_type == EVENT_IRQ)
++		ret = query_irq(eio_wdt);
++
++	return ret;
++}
++
++static const struct watchdog_ops wdt_ops = {
++	.owner		= THIS_MODULE,
++	.start		= wdt_start,
++	.stop		= wdt_stop,
++	.ping		= wdt_ping,
++	.set_timeout	= wdt_set_timeout,
++	.set_pretimeout = wdt_set_pretimeout,
 +};
 +
-+module_platform_driver(bl_driver);
++static struct watchdog_info wdinfo = {
++	.identity = KBUILD_MODNAME,
++	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
++		    WDIOF_PRETIMEOUT | WDIOF_MAGICCLOSE,
++};
++
++static int eio_wdt_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct eio_wdt_dev *eio_wdt;
++	struct watchdog_device *wdd;
++	int ret = 0;
++
++	eio_wdt = devm_kzalloc(dev, sizeof(*eio_wdt), GFP_KERNEL);
++	if (!eio_wdt)
++		return -ENOMEM;
++
++	eio_wdt->dev = dev;
++	eio_wdt->mfd = dev->parent;
++	eio_wdt->iomap = dev_get_regmap(dev->parent, NULL);
++	if (!eio_wdt->iomap)
++		return dev_err_probe(dev, -ENODEV, "parent regmap missing\n");
++
++	eio_wdt->core = dev_get_drvdata(dev->parent);
++	if (!eio_wdt->core)
++		return dev_err_probe(dev, -ENODEV, "eio_core not present\n");
++
++	ret = wdt_init(eio_wdt);
++	if (ret) {
++		dev_err(dev, "wdt_init fail\n");
++		return -EIO;
++	}
++
++	if (eio_wdt->event_type == EVENT_IRQ) {
++		ret = devm_request_threaded_irq(dev, eio_wdt->irq,
++						wdt_isr, wdt_threaded_isr,
++						IRQF_SHARED | IRQF_ONESHOT, pdev->name,
++						eio_wdt);
++		if (ret) {
++			dev_err_probe(dev, ret, "IRQ %u request fail: Disabled.\n",
++				eio_wdt->irq);
++			return ret;
++		}
++	}
++
++	wdd = &eio_wdt->wdd;
++	wdd->info        = &wdinfo;
++	wdd->ops         = &wdt_ops;
++	wdd->parent      = dev;
++	wdd->min_timeout = 1;
++	wdd->max_timeout = 0x7FFF;
++
++	if (ret) {
++		dev_err(dev, "Init timeout fail\n");
++		return ret;
++	}
++
++	watchdog_stop_on_reboot(&eio_wdt->wdd);
++	watchdog_stop_on_unregister(&eio_wdt->wdd);
++
++	watchdog_set_drvdata(&eio_wdt->wdd, eio_wdt);
++	platform_set_drvdata(pdev, eio_wdt);
++
++	ret = devm_watchdog_register_device(dev, &eio_wdt->wdd);
++	if (ret)
++		dev_err(dev, "Cannot register watchdog device (err: %d)\n", ret);
++
++	return ret;
++}
++
++static struct platform_driver eio_wdt_driver = {
++	.probe  = eio_wdt_probe,
++	.driver = {
++		.name = "eio_wdt",
++	},
++};
++module_platform_driver(eio_wdt_driver);
 +
 +MODULE_AUTHOR("Wenkai Chung <wenkai.chung@advantech.com.tw>");
 +MODULE_AUTHOR("Ramiro Oliveira <ramiro.oliveira@advantech.com>");
-+MODULE_DESCRIPTION("Backlight driver for Advantech EIO embedded controller");
++MODULE_DESCRIPTION("Watchdog interface for Advantech EIO embedded controller");
 +MODULE_LICENSE("GPL");
 
 -- 
