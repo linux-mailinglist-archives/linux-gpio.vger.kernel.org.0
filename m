@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-40064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id AqhPBT5cVmoJ4AAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40064-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:56:46 +0200
+	id N9sCNulbVmrp3wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40065-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:55:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6807756B2D
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:56:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CF2C756ACA
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 17:55:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=advantech.com header.s=selector2 header.b=bWNlKIGQ;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40064-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40064-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=advantech.com header.s=selector2 header.b=y8eoxC2g;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40065-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40065-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=advantech.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A4CF4311D2FD
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 15:54:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D0C2F306BF9D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 15:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525994963C5;
-	Tue, 14 Jul 2026 15:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275294968E6;
+	Tue, 14 Jul 2026 15:55:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022139.outbound.protection.outlook.com [52.101.126.139])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023111.outbound.protection.outlook.com [52.101.127.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04EC477E58;
-	Tue, 14 Jul 2026 15:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA42C3A4F55;
+	Tue, 14 Jul 2026 15:54:57 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784044495; cv=fail; b=r6evnYShLaHJe6B4ZzZlLBSLKT/7KeVNEAurr+v4dSmHYO65/jYNd9HPZBRxvel126m3yb8gW/8+/jIyQ0CnGKDqD9hZGBEGA9zMHuyViIQhsnPANECZWcQXdGKV9JAjwZbJA0nX5SV0+NtNp/sl192fiytcgoCc0cty7I61BcQ=
+	t=1784044499; cv=fail; b=WHH4+plf8MNkqd76s8GsFUyz7R8Ab4DyyxEDvU8m5dzmWEI8DtOuvSWUyr0kj5Np7cParhQMrbUgNRLUDbqsuXG6ulNLMzalWPwLUSQ3ZmJdOphajkQjg6gA01WjuNaGSDp+dlH4VCc3dg0CiXWV6rFUi4wyVxxt54yQ2zBdZPw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784044495; c=relaxed/simple;
-	bh=5fqFSVlKcSOCk0ZAGiLrMk7+/9IwudUEG1EYu5BN+EM=;
+	s=arc-20240116; t=1784044499; c=relaxed/simple;
+	bh=yXoPXr9j/J//s4BsCd+aMWOqeFtBKfUVrROXWUw0Ha8=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=EV7KQQSjyAyxvwjMO4c9pv7FcIT/p0kZFZz6wSROowU0m81ehY/T2DTp9ykdLOJwwfdwqiJWhXstmSjFC0e/wPJp9RaOfrUmCSNy7WNLozvotCzZspHj1sPzoavCT2nIGkK6uewUQJCJVG9Yrff/CIQrvZQyrJ09Kax4oyKJDhI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=advantech.com; spf=pass smtp.mailfrom=advantech.de; dkim=pass (2048-bit key) header.d=advantech.com header.i=@advantech.com header.b=bWNlKIGQ; arc=fail smtp.client-ip=52.101.126.139
+	 To:Cc:MIME-Version; b=kb8toQFXgb1r/OUOn0E8wfI25eONtj8SPyNMJu4yqZ0zcU8oc8xtrzkQU0N1t9TG9hdxmt3hC0SWmFgMvbM57beXwQMeYaJruIB3KmkpUFYsBGWcvONiKC9ifxDMn60bXTp1uSjA4RBpdjd8lGLnDX7UviXpg3ZL4I5YKeMUles=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=advantech.com; spf=pass smtp.mailfrom=advantech.de; dkim=pass (2048-bit key) header.d=advantech.com header.i=@advantech.com header.b=y8eoxC2g; arc=fail smtp.client-ip=52.101.127.111
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LqsJvOk+f9fvbySUkFZhGBCAGHV15oBMVOMCq8oEGq2VbBKo+V+BF8FRfcaV4v5k3Erl/PpSL1Blg2Vb5nsZOSaoJ6uRGCLv5X1cMtqC7x6DwqAelklLWhP87yLcPUMlraCUKBFB82Dm+sjdLHt/FfH4oBYKGFgAtZ/mzVbWaN4Ks4z9d4R4/8eT6SrDG65gj/iuvnwPQni7NH6u/Zwf8CizApfqQwVgoIwoB6xDAfyrBqa3/Rf1M748DbSEk0xNL4Aga8CBf+mAbV/IFiNUzTDvTT4zi7wi2ngiLtKxPgDMr9Y9zm2byHr3bbaVgvG8PUtWX/QHfhfhhDupN06KVg==
+ b=tvycWw+b0/RtTQzYUaXpu5+FUn23po47PwbSlvWMHJOjj0gB+2lv8O8VTj+QqCuBV78X/bZVR/3bUFXGSTL9t6eGvAh5ecw7tfAE0CUSoeBNeTNZbg0x+I4nPShXl++3CRXzGks3KSllDi5f7t/XeMusxD0Of9m1GVuHagUltS0W+dhLTDUW6FuOsL/4jyP9xuVZVhpUvQzMl8pHvLs6MiRM4N74mU+TmbddTvN5wj1nRrXYG6uDPDIfdrmSVIAw3CyfpcgOBf+Yzv8SiQaLKOUtmltFIs/l6gb03ZQ7jkbAeH/nbSaCnxBN99p4V+YMK9q4t2Y/OExMv58CAHpU/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6xXh+eMv3p7Mw2MYpT/fMMYlScBr2JGMK5VDkg/IB8k=;
- b=OjoUjzslrOo0r17V4lnPSqGNb40n8InkxoTJJ69OYQWVLGJmFoAUneQ0u+7YnjHDinlv5wn5USSSPENZOKOUr9Jd3ykMfjKyguG3OHQPvttMQhOwYwNh1hgHINLuf/LgtVy17pPTuR+pvEo+JoK+xmVV2icD8GktPNvSM04OoOyuXlQdbjMDHqWo+hk5utJChGutxO6Q2z5Ops3KOmXk+z3opG8eQ5PADDYN7OXYCOZcOtf6XibFgoRd71qs5yZJhT2t3BeOIXmddhbw44+bfURxCdvWJPCIRJ/w6B8QIPS8nzKh5Nehk0IJwAjbuLaLEvqTKib5Y3hfHhtp3wSIzg==
+ bh=Ft5cmZw/ESxt/eAfvxf5FBlZIIaLYIIu8rqsT+8XnbM=;
+ b=nGXRyBfqi9CNBtBgnyTPxBRYD9nHhb1P0cNh8yTu/h5xuwxYrA9amcW8UUNGD/kM0knoZlrwteqZbS5nE9Fm/3KTpuW0DA25RJN41ie0d7LyfAPTChrTnpHtzHDuPU3t/rtPiHlnZkLfiQvN+F+B5GRUjB3vn2bcQDxLN6mvur3LmyEI4RHMj+39xsLo1PkeT6fZGP9OKEA7nl0NCrYGTS9sZUKMqQPMbGDqhXj4RMuO9SACJVFtOBHAUnAoQ0EmEd3QMDryILzOPQNIHlh+CPnHiPsNQdqCARlJOjTnLgXJb8JMygcVomDHtNOC+CcC4cUwygKWMzbX8m40xThH5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=advantech.de; dmarc=pass action=none header.from=advantech.com;
  dkim=pass header.d=advantech.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=advantech.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6xXh+eMv3p7Mw2MYpT/fMMYlScBr2JGMK5VDkg/IB8k=;
- b=bWNlKIGQUJrrjZBzfDvgYqYGtvDwcOIO3KfbNtC5ICK92s2l1ZODTO8Pj9iR1hs+AUdcKrdszBoyw28s7PY1CBe40vOjEj+ByX++iDPEdDVBXcozGsdCh0xdzAGVw8oH3C3ludGY5kxhc9lZxo9U9Auf4gL0NJMkPihA2Ca5biwQ7r3cvSAhopmAyzU852Qekon/IaT6mmM2Wou0hZeTXKqvV1JbPQO2FUi52AaN1l6tJ+VmBBBGlkVtXGI0DPbDvMUdGP+Zpd2GA/bbjTGwUJvx93VbfVEozVdsxBxxkErE55fyTzpMUpJ4HcWjfi3xPDS4iqV07GLOeHMgWBC7TA==
+ bh=Ft5cmZw/ESxt/eAfvxf5FBlZIIaLYIIu8rqsT+8XnbM=;
+ b=y8eoxC2g5GgJlvRmLEPFXad9Vz5FzHWnUSZaIxIAN+7c+2whPthb9lhAdDx2IULqR/UkGm4LNt7UHR7YnnNCs8M/qC38rQJtgyeEDv5492q9tpRPWOQsZ/67/PrSmoyoYy+PFbcJXJNwKJ61UY3HDu+CaVC09Z9dO3tCbqVGo2M++8XBCVy5d1oFqRXliVIlVoixxrG/MCIVq6kty3xO6W1g6Kyot/l66FbXYYnWVmtejfgv3BumUbvWHQ3n+6lHvddW2l/To3Lu9XhD+vN1eIapvaBpYs08GCKXANqYOPYEKSbPS7p1RJ1PKQgf+zHPi2z2Gs6QDYOGB4Af+pADFw==
 Received: from PSAPR02MB4502.apcprd02.prod.outlook.com (2603:1096:301:21::6)
  by KL1PR02MB6189.apcprd02.prod.outlook.com (2603:1096:820:bd::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.20; Tue, 14 Jul
- 2026 15:54:47 +0000
+ 2026 15:54:54 +0000
 Received: from PSAPR02MB4502.apcprd02.prod.outlook.com
  ([fe80::44e6:6433:8000:35aa]) by PSAPR02MB4502.apcprd02.prod.outlook.com
  ([fe80::44e6:6433:8000:35aa%3]) with mapi id 15.21.0202.018; Tue, 14 Jul 2026
- 15:54:47 +0000
+ 15:54:54 +0000
 From: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-Date: Tue, 14 Jul 2026 17:54:15 +0200
-Subject: [PATCH v2 1/8] Add Advantech EIO driver
+Date: Tue, 14 Jul 2026 17:54:16 +0200
+Subject: [PATCH v2 2/8] Add Advantech EIO GPIO driver
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260714-upstream-v2-v2-1-76e5e41026db@advantech.com>
+Message-Id: <20260714-upstream-v2-v2-2-76e5e41026db@advantech.com>
 References: <20260714-upstream-v2-v2-0-76e5e41026db@advantech.com>
 In-Reply-To: <20260714-upstream-v2-v2-0-76e5e41026db@advantech.com>
 To: Lee Jones <lee@kernel.org>, Linus Walleij <linusw@kernel.org>, 
@@ -85,18 +85,18 @@ Cc: linux-kernel@vger.kernel.org, mfd@lists.linux.dev,
  Thomas Kastner <thomas.kastner@advantech.com>, 
  Ramiro Oliveira <ramiro.oliveira@advantech.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=22136;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8128;
  i=ramiro.oliveira@advantech.com; h=from:subject:message-id;
- bh=5fqFSVlKcSOCk0ZAGiLrMk7+/9IwudUEG1EYu5BN+EM=;
- b=owEB7QES/pANAwAKAc7t0Ke8vbAJAcsmYgBqVlu4nQIxBgJs58vtv8kZc+Pzr2XN42YpXL/KL
- HBM23r2jiuJAbMEAAEKAB0WIQS1Nkng0ZvJmBKh6GLO7dCnvL2wCQUCalZbuAAKCRDO7dCnvL2w
- CXhaDADE7ffeWy/YIPwnpQ9vIZcbbSj04fjnGhogj7Mewz6Wi4KsHrsiTSr/9P2KqX99hCMiQ+M
- mqkDVgCkGD+YSA5WTjH5n2LdUBoVtfPwydMu8y1aNWl7ULndHuMXWolOmDOdio+j1V2hbiwXk3K
- I998scFkta3xN6dr39JHgYjMUAzfC6ifna1BOpqsjk1ajJNJIcUb/k0hU7cJkHD2vOKNsmkmSqW
- 764YLuTr+ceeCY/avyHMB5SyCkcHULynA89MphsFyQlOD8r08bSkh+Qh7wmfSUy6ABLwd8iK7SH
- m2xYEsuuKtxdIi6UzeJK2R7kkzpvOKVNCiFHKqiQaFVuPYLRv4xx3BL5S1QX/6irtFzjBya7iON
- d8FkMvyzi2HK/6GSjjf+FsvTlBPnSiwenRzUkXXix55NoeRTSAaqkZFS/v4I45LUfjKg+Aw5bDi
- feVx6wS6ib/arwd1LDnrhzZ5VIU8ov6zfQet/TSvYltqGvX1rfaHvO5kHjnxcDxxDD9mY=
+ bh=yXoPXr9j/J//s4BsCd+aMWOqeFtBKfUVrROXWUw0Ha8=;
+ b=owEB7QES/pANAwAKAc7t0Ke8vbAJAcsmYgBqVlu41d/JnUp6TYH8eh2U11mxfVt7qdWZVYmdK
+ c6MQv/qGLqJAbMEAAEKAB0WIQS1Nkng0ZvJmBKh6GLO7dCnvL2wCQUCalZbuAAKCRDO7dCnvL2w
+ CcfKC/97BM/ELXZ3oJHm7oz9sctiRlpfvt3xAsGbWZiUqlkcLPr9+BT4UaetRPvKHykntE3KmFo
+ 73nKuLtJ77HRZyHwh+O0SLYGh+QtGmQOSF/Un349QiiuXSNNGGuMBNZV1IRvLa8cImkpE7Cv3yp
+ HSr0f3JtI3S3kBNf8T8Ogt/4EZN+nJBfh7Zs6kap4+L9NFPq+YXk9Vp+lLcBDQAd/pnEatfgDNr
+ a2UZ3dDfmnVoCcVa0d+QG0vgtyurAEIiS98tb5A50Zx+2RMiE630J4Ek68Cc3QPuP3FTEZwA0JP
+ kMTj0E2nA7MDHyZ3Ya3Z0SbcYQJ0bEU3zRIVNzwUITz4a6WdHrIycwkAFRgvCVkwgHS0OAScOag
+ DzHjCLz+5ZHSWezZs8FbSeW3zbqT6z0T5EQsVxgIHalRcZeK+FJmHi/e7in8hWSkPJCoNqtJ1yC
+ dVgdMAygUDtByGtwTpcCVl6vEEOCw2dJ08/cMDP0PYKWO1+XeYrycUkwlMRpphyJzuqsE=
 X-Developer-Key: i=ramiro.oliveira@advantech.com; a=openpgp;
  fpr=B53649E0D19BC99812A1E862CEEDD0A7BCBDB009
 X-ClientProxiedBy: FR2P281CA0086.DEUP281.PROD.OUTLOOK.COM
@@ -110,80 +110,80 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PSAPR02MB4502:EE_|KL1PR02MB6189:EE_
-X-MS-Office365-Filtering-Correlation-Id: e46a9163-5707-46fb-1d58-08dee1c03b12
+X-MS-Office365-Filtering-Correlation-Id: 72895e65-baf4-42b5-2af1-08dee1c03f4e
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|52116014|7416014|376014|921020|38350700014|3023799007|56012099006|11063799006|6133799003|22082099003|55112099003|18002099003;
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|52116014|7416014|376014|921020|38350700014|3023799007|56012099006|11063799006|22082099003|55112099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	o4rzbXB7fgSzMsC3xaRbWrtEbakb0oIaMmcbqcSFdvO1a5k7G/wBUHhmM7F71FZqOz0pM7gGDVqpA8lXZa34co4aJ+tkE6AIltSM9xgzd3cBVk1IqyraypxaivD+dr6dE5M7YQS2CQ6E7MKsrp6XcnbyiKJyITHzIaFNT6IgpKCV6D1VUx4vkYKWJXtPFVAaMG0tEg/y6FPTIS+juOXV8YlZ3UzuzCqRs1StV/pcs5rqX7W5p1bp5aRuzBl8zsjFG/kRCLLOQhcyi9MjTi3RYd38sZu7huK/2roiWTzITLNJz4AtFas7GgqrkFovIS7wjgo6oSaAsXGZ6OuDviEEdfYqRc3CVu5x6LVjc7/7E+6kszR4OWby2QpYhE51ZFQxQSM3yvlm4HI0gOlvXRH2PDZv0JiAdU/fYDKOt1bfZT5WubrDlObAvOINaCW4xQvLa2k5SCacFDla6EPRt0km3hPqUfwQQyfYama5kP6Lz+0ot7QDaC5hP5aUtKrtB0My+GwWltytH0DSVUuPwXFYsj3xOAuhf//vKSh8hn3uSopkkzNR5uijNsGqP2fiVGXEvd+RCdPIZ6mlPl0+5N/L5XG3OA5bTsXg6J1RGoHSWg8RJjtnb5iTyCcE/7+N/ppSJAQTuY1gpOZZOjjaucG7MMxJtYLx5N69cX2g+9YkzgVuqKPFkfnI0+L0IC+uihncGOs0a3Fd/ToPGAy8en0mIxR6bIh+jVkraLboBXi96/gbXagiXoZwMrSr2afNn8nB
+	Zx6Mr1onxSLzn+JKb9jofurSiGw0/9DQYOrgJoRHoDyDw5qiMnM8vwpVyZx75+A/0LUw2vOPy3mRu8k/m5mOe5O+BKxjZ/5OxAZcLulmKwspciA1CNYM/TMXvvv3C5XdzLsnPEfkQMNEVpcO0a9XfaQpv7KYbd1bZPDkS+y6LlEG0clysO9IXcfW/AfJDUuXEDX1Xlhj8dwImN2DqCgoiYn4CnXt15vsuq53X2IhKjvfBqTC4N/nwPZ4aAB/mBNbUN8boYcwXCMtFXsYgZZGlnvOiiqNjiHrMREJ4mcItKxAJAfECGYl/bsxsU/Q6dzarV8r1Gap8cXR78stCkg/2wjzGuQ+9cDzCma5H0R78uwBMYshAHeEUxh00n2o8DUoFQF7QrraVHhOSujR/LsQsN7PFsJn24y02rSCuckjEIUMRvjVBCuJujs1pBd2J8eQDer5FS5ZjRV5Wg3quiPrfWHqcFosSH2zw14YOWYhm2+9IcpuFDpTACBzoBTIifCGoebqGQKAzRwkqMfiR8VINW/uAUp3kCEJqwQKymYoRf85WKue7ti2i877kPk3TtdBjY6pW3/irdgoYJW0JwKRBaL5vzkIgYZ918m3O9kosiv28WiVx6SdNa+2FjDiHA71n463WIbKdY8qsFUX4EcDRcdmAlUY9zNDar9aC9g8qM7HFTDYfnaZ3GzyrMaL3cvMr80RyfE7/j03Sclfod/935T8arI1MCloXQToqce/Skcv+oliRjpSEDtNAosVRB5U
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR02MB4502.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(52116014)(7416014)(376014)(921020)(38350700014)(3023799007)(56012099006)(11063799006)(6133799003)(22082099003)(55112099003)(18002099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR02MB4502.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(52116014)(7416014)(376014)(921020)(38350700014)(3023799007)(56012099006)(11063799006)(22082099003)(55112099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NGVzVFBDWCtCemdxOXFLTTFyTlBpY3Q2Uk93SS9PeERpNlZVTTY5bDBKSFpx?=
- =?utf-8?B?NE5nTUZ1N0hMdGRCaklQV1R3ME9HYTN2WDkyYTd3TUVqOGFzcll1ZzNiUkpO?=
- =?utf-8?B?NG5KOVZ1WGxNYVJMcEJnQjZjUmZvNWMyeXhkSHhNM2FUNGd5UWplL3RsZVo5?=
- =?utf-8?B?cGFXWEVqaE43YkpydkNPdE9IZ3MrNVZCQzhmNDZoeUloclpkL1lFR1oxbXpT?=
- =?utf-8?B?SitKMERyR2h0THZtelhKSjF0WnB5dXRIS2lrVmtSVzZHczFGdEk1Wi84MnNB?=
- =?utf-8?B?N0VwaFFJWkhWM3Nzdzg3OG9OQXN4dVpKTzFzQVpsYmZZWlR5aFJBSDlib2lZ?=
- =?utf-8?B?a2s3dnBkdlFiaC91SUJ3SzZEeGRoc1lzdlI3SUl6MWY4b2RJRFZzeFFCV0Fq?=
- =?utf-8?B?c284US9TQkR5MWpITjRJZkN2L2dHWkFWdE8wWXBOVENFL1FsNlZ6Wkh0a1Mr?=
- =?utf-8?B?REswQ0hSOUswYmttbG15STNXeVhNTElTRUNNOWdhTHoyM3ZMRUNVcU9Va05W?=
- =?utf-8?B?MERlOEFDOFpMN1pyREN4QWRqRzdRaUdvN0JFdzI1WmwrMGxGdEVlQmFUTmEw?=
- =?utf-8?B?dTNoUDQweS9iU0FUTVRxUUFDS3Fod2FnUWl0QmwzcldjcC84SEdENjByakVl?=
- =?utf-8?B?U3EycUtkcUNsekE1b3RmRWJaUm8rOUhlVmJEOHZiUzlWTnpiSjlMajlySHFE?=
- =?utf-8?B?UU5kSFZYZ2d4U2tqSXhVMnRDaEovQnFkajZPRlBiNkloRFJHelJmMFA3L3BW?=
- =?utf-8?B?OTR0RFN6V09kMVhIMEU2WEhzZlRGU0NGYTU0YlhPdDFmTjMrUFFRZ3N0d0NR?=
- =?utf-8?B?UThzV0FXM0x2VEdrQ3BBZEROYjZXMEJMM3YyWmUwNCtTdlVYNFlMU1NNcWti?=
- =?utf-8?B?NUNVRitjV1FXMndtMldzWWNPazJtTjJCeTNtS1JiQnhqVHNUcUk1elY0QkZ6?=
- =?utf-8?B?MU11anJhQk5abHpXSTc3UEhRSGhOd2ZKa2pCUW1DR2VKZEJTWFJ4eGVDblJi?=
- =?utf-8?B?TGRmbGxkT0Q1a3ZGNFNLdEE0ODFtY3RlZitQdjVSbEU5dllJZ1NPMVNrSmR1?=
- =?utf-8?B?N2k4aGpVT1ZtaXJETTR6Ylh5d0UyQm1mOUtYbGt3aTA4a3VzSG53cnpJRnEw?=
- =?utf-8?B?bDNuSEZNWnhIZDV2N2lrTkNRQ0lWL3VkM3pmTVJnRlBaaUl4bVltWWVOeFdE?=
- =?utf-8?B?SWJGd25ILzRrTTVOSDhHdVZVUmU3NVYvd3RyUERQQitRTnlrTXV3aENvRjY1?=
- =?utf-8?B?S3VKRzdCNTd0OUtpem1OUWZKenphZXpNYm14NVRvTStOWlYvY3YxdW5NZHdR?=
- =?utf-8?B?TG9yY2dMMEFCUHVTTkRpc3JPS0NpeWNFZFRTWDhHYm1GRVVySk9TYXF5aHFu?=
- =?utf-8?B?MDc2Mk00dmdVVWxvUEtEQm0zWGpaUS9sWDBaTVNGWlFMVzNhbWRNZzFXZlds?=
- =?utf-8?B?UXlGNC9KTVdjNUt5SHVNQWRDQVFValp0K3NMR3R1WmxXQkdNclcyaVNheGZr?=
- =?utf-8?B?ZFdsQTV6ay9ha1RHNTNZVHQ3R3l0b1luS1Y3SlFnZW9Md1FYVTlkNzlRd0xI?=
- =?utf-8?B?OHJEWk56OGw5eVhWNk1jNjNBQmxBWkoyeDQxcGJlTjl2Y2tYNHpETFMyUGs3?=
- =?utf-8?B?bFY2UWJKSlh5UE9VMWhpWGZQT3N6ajJyWXFTY2cxOTVEWUQ2dnhBV1VGMG9z?=
- =?utf-8?B?UzlVcmJRYkdWRGtZdkdGZTY0SUIzUjkyUzlUb1dwUCtFQjZIdzZGYmdNUDFE?=
- =?utf-8?B?ZHNCMFpyUVZJNlNTZ3ZycTRPV1ppa3BXbGJkcWFPNS85NmZaOTljR1d2QW5D?=
- =?utf-8?B?eVhidTd6SE9BYk12OW9BUTVDaVZUYjlRNXJzcDQ2NWh4eG1BeXBaNXdrMmZF?=
- =?utf-8?B?TVpRZzVWM3JGOEhKWkVqdkVzYklBbitzQnYybnpQL0Mwd2YvdVMwWVFvUUZP?=
- =?utf-8?B?NU40QzQ4ckZUcEJWVlNiMWdFZlhwWk5kb1JMdWtJejk0MDNjeW1keWYvbG1i?=
- =?utf-8?B?VWFtdHoxdTJ5NDRVQkhtOERNSnRWWUxoTUo1c0RYbW5taHpEemVTMUYzRUxF?=
- =?utf-8?B?Uk5KRjFDS1lpaXlzRUpWendRVUF3K2ZLUy9UYXZBTmtvMGtUU0JjZzc3NXhh?=
- =?utf-8?B?Z203bzJWMkFZaGRtQWphdVZCZU84TGo1bm5WNEh1QmFrM0xqbHJNM2FpRXhP?=
- =?utf-8?B?NFRCYVhJNzNvbUt6WmRjU21Ua1luV1NtcklSUG84UEwxSFh6TW44T3JiS3c5?=
- =?utf-8?B?SmorbXAxbWdLaWwrYUVsR29veHBGSXNreVRzbEpFTlZmTE1xc2tTRTIvZVVS?=
- =?utf-8?B?WVZ5S1RmdzdOWVJ5NHNiSVpTREhjWjhQbmxENHVHc1BCVld6dVBua3VvMXhR?=
- =?utf-8?Q?4zyykuSi9KMrkoSM=3D?=
+	=?utf-8?B?T0RhRnVMMDFDQTNzMHRabHhvSmpYaE1udG1wZmRkSUtIRjFwK0FqalVYUUF5?=
+ =?utf-8?B?dDBubEwwUXlZZ2ZaNUtWcEZyTmlnVlJOTERlakJHYUMwdXpFLzMrNngxUWc2?=
+ =?utf-8?B?dEl5T2xYODBvWGNCZ3VUQytmeDZIM2lhNjhVMmZMWU9sV0xwcXNVSEMrQmFB?=
+ =?utf-8?B?VmFUUGRObUJld3Z5WGJvWG42ZHp2ckZvVnVWdEZTTm0yRE1GNTZ0V1YydFNZ?=
+ =?utf-8?B?WVNYbVlPbnUxTUlSeEdxby9UOUtEeTQ5bmJQSnhaRXhnUmFORHFiOFFuQi9X?=
+ =?utf-8?B?NkRIci82R0RjM0tHYUJ6ejU1Ylk4Q1hVZVdsMnloZmlSaUN2UlpyY0JIRzRw?=
+ =?utf-8?B?THlwOGNNV3JIZ0R3dWRVaVZYS0JMWEFVQkN5My96cEtxTC9VcHl0RHZpemZI?=
+ =?utf-8?B?QVZnUjNzeGlaMERVbzZQdXNVWGU0ZTR4NmFtMll0SDE4QzI5bXA4Tk91S1hz?=
+ =?utf-8?B?SnVhQm80SXV5ODJJV2k0U1hyVXpiaHVRNHpxYUVCbnlCYVRWUFExckRyaHEx?=
+ =?utf-8?B?MDhZMlR5VVE3RG1YcWNJMTk5c1oyMlVpMVJiTnhIaXJ1UHQyb2ZHODVYdVZs?=
+ =?utf-8?B?SmxEbEpySWlFUUhMeDZoZkpnUXpGRi9DRW9BaWlLZllhOStkVWRENGJscEhp?=
+ =?utf-8?B?bWpqUmVpVzE5UDEvY1EydkE4YVpkYjBWWis2K3JDWTJzdExoR0tNNDNIbFdi?=
+ =?utf-8?B?Wk9BR0ErK1pJT1pWdFVpbXR2eHRYSXRkT1ZXbk5KWFpxTW5CbVg2d0ZjSWo2?=
+ =?utf-8?B?Tm9yZXAxa055NSsyUE5CMHRNU1l2dzlCc09ZTjkrdXlUVU1pNm94RDlQZE1V?=
+ =?utf-8?B?WVJFaHl4Q28vODNvQ0p5TUx2S0lYRzdwaTUrQzEzZXQ5SjBvSFVyY29MR293?=
+ =?utf-8?B?RTd3WVBHODdQNWxNcEY4eHljMVJxN3R0aER4S2VxN05BbmcxWVh1WEpzMkhj?=
+ =?utf-8?B?UC9DRUdhNDgyaVo1d0R1SFVWNGdXRjRxNm5PamdOd1hwT3ZYNi82MitWaWlt?=
+ =?utf-8?B?NWVBSFp4RjdNcmdQZkptYi83RDdjOEpXeDArRWV5KzhPUUMyOWU4d21MdGNK?=
+ =?utf-8?B?eDZVWXRrUEE1R0pjNHV3dUNzK25lcitGWDcvMHlXVUN5cVdFYkxrKzJ2RXJI?=
+ =?utf-8?B?ZlJRL0RRNjVhYkprWmRTejdPdE5Ga0QxYmU4Qm1LUDkvek9PbEZCdkxRUXpj?=
+ =?utf-8?B?U3JEZWtITGNzZ1RlUWVlcndjWVJaV3FYdnJHTUNwUWJJbkNpTEswZXpBalcx?=
+ =?utf-8?B?a3FLTVh0aGlLS3hFdDluTzhxY2hZN3FXWWFWZnQvVllSY2lhTzJjVldqZ1Fy?=
+ =?utf-8?B?ZXhVUDNLME10TnR6NHpaRitiRUFIOFo5bTNtRUVNdjJ0WWdGcWY3NDV0dlMx?=
+ =?utf-8?B?UjJLRTJLRDU4WnRpSllWTHI5MUlwRlZPbUowWS9zL3ZLNWJtZ3RKSElxcmFo?=
+ =?utf-8?B?WFpsMFgxeEQwT2JXSFphNHE0TFZYeW40eWRNdFBLcHRPKzZkV0tOTW1JN0o4?=
+ =?utf-8?B?UWFlblpKRU9VQ041ZWRFcVB4WnpsMXVQZ0o0d3p6UVlKdDRaNGxPZTFWSmM2?=
+ =?utf-8?B?aHAzUTNjZTNPUmpVNVQwR0NtSGorTSt3WU9BcFRsc3pQOGE2dERQZDNzRGxq?=
+ =?utf-8?B?WVVGWGoyVHRrZHdsQTJWTFF4d28zR3p4QnhRSWNjbTJGR2ZjeThlazVLUGdO?=
+ =?utf-8?B?aEdiaXJwYWVKckJXZ2lYZ1lRc20yZkpIaXlYOWhHWnNHb1ZIWEJwNWJFNUtM?=
+ =?utf-8?B?amUyOHFQaDdkZUlmM3VReWErZ2xhUEdkYlpuQkZOcjh1bzVkajZ2YUFQczRB?=
+ =?utf-8?B?QjY1dHEvZW9EdFlpQ2NBeWZDQlVtTG8zYXFFbmlLTnFWN2FsVEg5QmZyWmNt?=
+ =?utf-8?B?aW1WcHNRYXFqYUJQSTFoWDR1dmZIN0VINVpxSjVsZEt3WE5qMHptVndzSUlk?=
+ =?utf-8?B?VmtJamhrZWVDK3hkRmNaSE12aTZvQ1BUTk1FSU9FM3gvREVOZjU0UDdmRyt1?=
+ =?utf-8?B?djkxVVcxZVp3U1FOSlRuWVVUdjRiUTFURTNwMm5qTzA5bVd2dGIzMTA4QUZI?=
+ =?utf-8?B?cCtkV0VrOUFGYnJrc29wRjJzUG5uVUZGNnAvLzFTQng0aGRxV0VoSTFRWUpp?=
+ =?utf-8?B?ekxSeEtUdG13YS8zNVUrdzRKeHMzY3ZSb21JanFMdXVpRzMwdUt4R1hWQnVU?=
+ =?utf-8?B?Nnp1NFNEMlBQeXBtL0Y0dDAvVklxWkE2aG5yTnlkR2U4NGJ4dFl5aUlPR2Rn?=
+ =?utf-8?B?STRPSFRpOGlLVmV0OVhDVGVZV0JJY1FKR2c1dWZZbUlWU2MrbklMUmp3dGpr?=
+ =?utf-8?B?TDNOdFU5aE5RV2I0dnhGYjhrZVlLV1RxVlQxTERDZlI5YXFONFNERVhBaVNK?=
+ =?utf-8?Q?fDqpilz/06JzkwV8=3D?=
 X-OriginatorOrg: advantech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e46a9163-5707-46fb-1d58-08dee1c03b12
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72895e65-baf4-42b5-2af1-08dee1c03f4e
 X-MS-Exchange-CrossTenant-AuthSource: PSAPR02MB4502.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 15:54:47.5483
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 15:54:54.6677
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a77d40d9-dcba-4dda-b571-5f18e6da853f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l81MH0F2QlYgf33id9ZRy1qa5u+o//U8+MAcXYACZCwu/KrZ6F5DAJfH5SICiK1ncxuf/7Bae06UKXILh/Za5Is8ejrofUTcDEzEeCrt1yc=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6ih+FJ64bHb3ndB7LY2E7rd69g/Z24JPTZfiqF98l1EXONs5MTri9PEUViOBM4IIjJfJismdYeg7xFxvaiBCvTrZtvec1UwVKemECT0zfQc=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB6189
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[advantech.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[advantech.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40064-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40065-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[28];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS(0.00)[m:lee@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux@roeck-us.net,m:andi.shyti@kernel.org,m:danielt@kernel.org,m:jingoohan1@gmail.com,m:deller@gmx.de,m:wim@linux-watchdog.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,m:linux-kernel@vger.kernel.org,m:mfd@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-pm@vger.kernel.org,m:wenkai.chung@advantech.com.tw,m:francisco.aragon-trivino@advantech.com,m:hongzhi.wang@advantech.com,m:mikhail.tsukerman@advantech.com,m:thomas.kastner@advantech.com,m:ramiro.oliveira@advantech.com,s:lists@lfdr.de];
@@ -202,860 +202,327 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,advantech.com.tw:email,advantech.com:from_mime,advantech.com:mid,advantech.com:email,advantech.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,advantech.com:from_mime,advantech.com:mid,advantech.com:email,advantech.com:dkim,advantech.com.tw:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A6807756B2D
+X-Rspamd-Queue-Id: 4CF2C756ACA
 
-Creating the core driver for Advantech EIO, all other drivers depend on this.
-
-This core driver provides register access and coordination for the EIO's
-subdevices (GPIO, watchdog, hwmon, thermal, backlight, I2C).
-This driver supports EIO-IS200, EIO-201, EIO-210 and EIO-211, these
-devices are available in several of Advantech x86-based boards, and
-provide several different interfaces like I2C, GPIO, Watchdog, Hardware
-Monitoring, Thermal Control, and Backlight control.
+This driver controls the GPIO component of the Advantech EIO chip.
 
 Signed-off-by: Ramiro Oliveira <ramiro.oliveira@advantech.com>
 ---
- MAINTAINERS             |   6 +
- drivers/mfd/Kconfig     |  10 +
- drivers/mfd/Makefile    |   1 +
- drivers/mfd/eio_core.c  | 644 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/eio.h | 124 ++++++++++
- 5 files changed, 785 insertions(+)
+ MAINTAINERS             |   7 ++
+ drivers/gpio/Kconfig    |   6 ++
+ drivers/gpio/Makefile   |   1 +
+ drivers/gpio/gpio-eio.c | 252 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 266 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dcffe9fc54f6..53b5f7412966 100644
+index 53b5f7412966..a7da47393815 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -615,6 +615,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/adv_swbutton.c
+@@ -609,6 +609,13 @@ S:	Maintained
+ F:	Documentation/scsi/advansys.rst
+ F:	drivers/scsi/advansys.c
  
 +ADVANTECH EIO DRIVER
 +M:	Ramiro Oliveira <ramiro.oliveira@advantech.com>
 +S:	Maintained
++F:	drivers/gpio/gpio-eio.c
 +F:	drivers/mfd/eio_core.c
 +F:	include/linux/mfd/eio.h
 +
- ADXL313 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
- M:	Lucas Stankus <lucas.p.stankus@gmail.com>
- S:	Supported
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 35f6e9b76d05..42d133a2eb8d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -517,6 +517,16 @@ config MFD_DLN2
- 	  etc. must be enabled in order to use the functionality of
- 	  the device.
+ ADVANTECH SWBTN DRIVER
+ M:	Andrea Ho <Andrea.Ho@advantech.com.tw>
+ L:	platform-driver-x86@vger.kernel.org
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f03c05288376..696065d77235 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -295,6 +295,12 @@ config GPIO_DWAPB
+ 	  Say Y or M here to build support for the Synopsys DesignWare APB
+ 	  GPIO block.
  
-+config MFD_EIO
-+	tristate "Advantech EIO core"
-+	select MFD_CORE
++config GPIO_EIO
++	tristate "Advantech EIO GPIO"
++	depends on MFD_EIO
 +	help
-+	  This enables support for the Advantech EIO multi-function device.
-+	  This core driver provides register access and coordination for the
-+	  EIO's subdevices (GPIO, watchdog, hwmon, thermal, backlight, I2C).
-+	  This driver supports EIO-IS200, EIO-201, EIO-210 and EIO-211.
++	  Say Y or M to build support for Advantech EIO GPIO block.
 +
-+
- config MFD_ENE_KB3930
- 	tristate "ENE KB3930 Embedded Controller support"
- 	depends on I2C
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index dd4bb7e77c33..2013de45528c 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
- obj-$(CONFIG_MFD_CS42L43)	+= cs42l43.o
- obj-$(CONFIG_MFD_CS42L43_I2C)	+= cs42l43-i2c.o
- obj-$(CONFIG_MFD_CS42L43_SDW)	+= cs42l43-sdw.o
-+obj-$(CONFIG_MFD_EIO)		+= eio_core.o
- obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
- obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
-diff --git a/drivers/mfd/eio_core.c b/drivers/mfd/eio_core.c
+ config GPIO_EIC_SPRD
+ 	tristate "Spreadtrum EIC support"
+ 	depends on ARCH_SPRD || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index fa14581e3995..628596705c21 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
+ obj-$(CONFIG_GPIO_DS4520)		+= gpio-ds4520.o
+ obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
+ obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
++obj-$(CONFIG_GPIO_EIO)			+= gpio-eio.o
+ obj-$(CONFIG_GPIO_ELKHARTLAKE)		+= gpio-elkhartlake.o
+ obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
+ obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
+diff --git a/drivers/gpio/gpio-eio.c b/drivers/gpio/gpio-eio.c
 new file mode 100644
-index 000000000000..25873c061812
+index 000000000000..34e1aefd0716
 --- /dev/null
-+++ b/drivers/mfd/eio_core.c
-@@ -0,0 +1,644 @@
++++ b/drivers/gpio/gpio-eio.c
+@@ -0,0 +1,252 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Advantech Embedded Controller base Driver
++ * GPIO driver for Advantech EIO Embedded controller.
 + *
-+ * This driver provides an interface to access the EIO Series EC
-+ * firmware via its own Power Management Channel (PMC) for subdrivers:
-+ *
-+ * A system may have one or two independent EIO devices.
-+ *
-+ * Copyright (C) 2025 Advantech Co., Ltd.
++ * Copyright (C) 2025 Advantech Corporation. All rights reserved.
 + */
 +
-+#include <linux/delay.h>
-+#include <linux/isa.h>
++#include <linux/errno.h>
++#include <linux/gpio/driver.h>
 +#include <linux/mfd/core.h>
 +#include <linux/mfd/eio.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/sysfs.h>
-+#include <linux/time.h>
-+#include <linux/uaccess.h>
 +
-+#define DEFAULT_TIMEOUT 5000
-+#define SLEEP_MAX	200
-+#define NUM_EC		1
++#define EIO_GPIO_MAX_PINS	48
++#define EIO_GPIO_WRITE		0x18
++#define EIO_GPIO_READ		0x19
 +
-+struct eio_dev_port {
-+	u16 idx_port;
-+	u16 data_port;
-+};
-+
-+static struct eio_dev_port pnp_port[] = {
-+	{ .idx_port = EIO_PNP_INDEX, .data_port = EIO_PNP_DATA },
-+	{ .idx_port = EIO_SUB_PNP_INDEX, .data_port = EIO_SUB_PNP_DATA },
-+};
-+
-+static struct mfd_cell eio_devs[] = {
-+	MFD_CELL_NAME("eio_wdt"),
-+	MFD_CELL_NAME("gpio_eio"),
-+	MFD_CELL_NAME("eio_hwmon"),
-+	MFD_CELL_NAME("i2c_eio"),
-+	MFD_CELL_NAME("eio_thermal"),
-+	MFD_CELL_NAME("eio_fan"),
-+	MFD_CELL_NAME("eio_bl"),
-+};
-+
-+static const struct regmap_range eio_range[] = {
-+	regmap_reg_range(EIO_PNP_INDEX, EIO_PNP_DATA),
-+	regmap_reg_range(EIO_SUB_PNP_INDEX, EIO_SUB_PNP_DATA),
-+	regmap_reg_range(0x200, 0x3FF),
-+};
-+
-+static const struct regmap_access_table volatile_regs = {
-+	.yes_ranges = eio_range,
-+	.n_yes_ranges = ARRAY_SIZE(eio_range),
-+};
-+
-+static const struct regmap_config pnp_regmap_config = {
-+	.name = "eio_core",
-+	.reg_bits = 16,
-+	.val_bits = 8,
-+	.volatile_table = &volatile_regs,
-+	.io_port = true,
-+	.cache_type = REGCACHE_NONE,
++struct eio_gpio_dev {
++	u64 avail;
++	int max;
++	struct gpio_chip chip;
++	struct device *dev;
 +};
 +
 +static struct {
-+	char name[32];
-+	int cmd;
-+	int ctrl;
-+	int dev;
 +	int size;
-+	enum {
-+		HEX,
-+		NUMBER,
-+		PNP_ID,
-+	} type;
-+} attrs[] = {
-+	{ "board_name", 0x53, 0x10, 0, 16 },
-+	{ "board_serial", 0x53, 0x1F, 0, 16 },
-+	{ "board_manufacturer", 0x53, 0x11, 0, 16 },
-+	{ "board_id", 0x53, 0x1E, 0, 4 },
-+	{ "firmware_version", 0x53, 0x21, 0, 4 },
-+	{ "firmware_name", 0x53, 0x22, 0, 16 },
-+	{ "firmware_build", 0x53, 0x23, 0, 26 },
-+	{ "firmware_date", 0x53, 0x24, 0, 16 },
-+	{ "chip_id", 0x53, 0x12, 0, 12 },
-+	{ "chip_detect", 0x53, 0x15, 0, 12 },
-+	{ "platform_type", 0x53, 0x13, 0, 16 },
-+	{ "platform_revision", 0x53, 0x04, 0x44, 4 },
-+	{ "eapi_version", 0x53, 0x04, 0x64, 4 },
-+	{ "eapi_id", 0x53, 0x31, 0, 4 },
-+	{ "boot_count", 0x55, 0x10, 0, 4, NUMBER },
-+	{ "powerup_hour", 0x55, 0x11, 0, 4, NUMBER },
-+	{ "pnp_id", 0x53, 0x04, 0x68, 4, PNP_ID },
++	bool write;
++} ctrl_para[] = {
++	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x02, false },
++	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
++	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
++	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
++	{ 0x01, true  }, { 0x01, true  }, { 0x02, true  }, { 0x02, true  },
++	{ 0x02, false }, { 0x10, false }
 +};
 +
-+static ssize_t info_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	uint i;
-+
-+	for (i = 0; i < ARRAY_SIZE(attrs); i++) {
-+		int ret;
-+		char str[32] = "";
-+		int val;
-+
-+		struct pmc_op op = {
-+			.cmd = attrs[i].cmd,
-+			.control = attrs[i].ctrl,
-+			.device_id = attrs[i].dev,
-+			.payload = (u8 *)str,
-+			.size = attrs[i].size,
-+		};
-+
-+		if (strcmp(attr->attr.name, attrs[i].name))
-+			continue;
-+
-+		ret = eio_core_pmc_operation(dev, &op);
-+		if (ret)
-+			return ret;
-+
-+		if (attrs[i].size != 4)
-+			return sysfs_emit(buf, "%s\n", str);
-+
-+		val = *(u32 *)str;
-+
-+		if (attrs[i].type == HEX)
-+			return sysfs_emit(buf, "0x%08X\n", val);
-+
-+		if (attrs[i].type == NUMBER)
-+			return sysfs_emit(buf, "%d\n", val);
-+
-+		if (attrs[i].type == PNP_ID)
-+			return sysfs_emit(buf, "%c%c%c, %X\n",
-+				(val >> 14 & 0x3F) + 0x40,
-+				((val >> 9 & 0x18) | (val >> 25 & 0x07)) + 0x40,
-+				(val >> 20 & 0x1F) + 0x40,
-+				val & 0xFFF);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+
-+PMC_DEVICE_ATTR_RO(board_name);
-+PMC_DEVICE_ATTR_RO(board_serial);
-+PMC_DEVICE_ATTR_RO(board_manufacturer);
-+PMC_DEVICE_ATTR_RO(firmware_name);
-+PMC_DEVICE_ATTR_RO(firmware_version);
-+PMC_DEVICE_ATTR_RO(firmware_build);
-+PMC_DEVICE_ATTR_RO(firmware_date);
-+PMC_DEVICE_ATTR_RO(chip_id);
-+PMC_DEVICE_ATTR_RO(chip_detect);
-+PMC_DEVICE_ATTR_RO(platform_type);
-+PMC_DEVICE_ATTR_RO(platform_revision);
-+PMC_DEVICE_ATTR_RO(board_id);
-+PMC_DEVICE_ATTR_RO(eapi_version);
-+PMC_DEVICE_ATTR_RO(eapi_id);
-+PMC_DEVICE_ATTR_RO(boot_count);
-+PMC_DEVICE_ATTR_RO(powerup_hour);
-+PMC_DEVICE_ATTR_RO(pnp_id);
-+
-+static struct attribute *pmc_attrs[] = {
-+	&dev_attr_board_name.attr,
-+	&dev_attr_board_serial.attr,
-+	&dev_attr_board_manufacturer.attr,
-+	&dev_attr_firmware_name.attr,
-+	&dev_attr_firmware_version.attr,
-+	&dev_attr_firmware_build.attr,
-+	&dev_attr_firmware_date.attr,
-+	&dev_attr_chip_id.attr,
-+	&dev_attr_chip_detect.attr,
-+	&dev_attr_platform_type.attr,
-+	&dev_attr_platform_revision.attr,
-+	&dev_attr_board_id.attr,
-+	&dev_attr_eapi_version.attr,
-+	&dev_attr_eapi_id.attr,
-+	&dev_attr_boot_count.attr,
-+	&dev_attr_powerup_hour.attr,
-+	&dev_attr_pnp_id.attr,
-+	NULL
++enum gpio_ctrl {
++	EIO_GPIO_STATUS = 0x0,
++	EIO_GPIO_GROUP_AVAIL = 0x3,
++	EIO_GPIO_ERROR = 0x04,
++	EIO_GPIO_PIN_DIR = 0x10,
++	EIO_GPIO_PIN_LEVEL = 0x11,
++	EIO_GPIO_GROUP_DIR = 0x12,
++	EIO_GPIO_GROUP_LEVEL = 0x13,
++	EIO_GPIO_MAPPING = 0x14,
++	EIO_GPIO_NAME = 0x15
 +};
 +
-+ATTRIBUTE_GROUPS(pmc);
++static struct {
++	int group;
++	int port;
++} group_map[] = {
++	{ 0, 0 }, { 0, 1 },
++	{ 1, 0 }, { 1, 1 },
++	{ 2, 0 }, { 2, 1 },
++	{ 3, 0 }, { 3, 1 },
++	{ 3, 2 }, { 3, 3 },
++	{ 3, 4 }, { 3, 5 },
++	{ 3, 6 }, { 3, 7 }
++};
 +
-+static int eio_pnp_read(struct device *dev, struct eio_dev_port *port, u8 idx, unsigned int *val)
++static int pmc_write(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
 +{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = regmap_write(eio->map, port->idx_port, idx);
-+	if (ret) {
-+		dev_err(dev, "Error port write 0x%X\n", port->idx_port);
-+		return ret;
-+	}
-+
-+	ret = regmap_read(eio->map, port->data_port, val);
-+	if (ret)
-+		dev_err(dev, "Error port read 0x%X\n", port->data_port);
-+
-+	return ret;
-+}
-+
-+static int eio_pnp_write(struct device *dev, struct eio_dev_port *port, u8 idx, u8 data)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = regmap_write(eio->map, port->idx_port, idx);
-+	if (ret) {
-+		dev_err(dev, "Error port write 0x%X %X\n", port->idx_port, port->data_port);
-+		return ret;
-+	}
-+
-+	ret = regmap_write(eio->map, port->data_port, data);
-+	if (ret)
-+		dev_err(dev, "Error port write 0x%X %X\n", port->idx_port, port->data_port);
-+
-+	return ret;
-+}
-+
-+static int eio_unlock_port(struct device *dev, struct eio_dev_port *port)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+
-+	/* Write 0x87 to index port twice to unlock IO port */
-+	ret = regmap_write(eio->map, port->idx_port, EIO_EXT_MODE_ENTER);
-+	if (ret) {
-+		dev_err(dev, "Error entering PNP mode on 0x%X: %d\n", port->idx_port, ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_write(eio->map, port->idx_port, EIO_EXT_MODE_ENTER);
-+	if (ret)
-+		dev_err(dev, "Error entering PNP mode on 0x%X: %d\n", port->idx_port, ret);
-+
-+	return ret;
-+}
-+
-+static int eio_lock_port(struct device *dev, struct eio_dev_port *port)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+	/* Write 0xAA to index port once to lock IO port */
-+	ret = regmap_write(eio->map, port->idx_port, EIO_EXT_MODE_EXIT);
-+	if (ret)
-+		dev_err(dev, "Error port write 0x%X\n", port->idx_port);
-+
-+	return ret;
-+}
-+
-+static int pmc_write_data(struct device *dev, int id, u8 value)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = eio_core_pmc_wait(dev, id, PMC_WAIT_INPUT);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(eio->map, eio->pmc[id].data, value);
-+	if (ret)
-+		dev_err(dev, "Error PMC write %X:%X\n",
-+			eio->pmc[id].data, value);
-+
-+	return ret;
-+}
-+
-+static int pmc_write_cmd(struct device *dev, int id, u8 value)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = eio_core_pmc_wait(dev, id, PMC_WAIT_INPUT);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(eio->map, eio->pmc[id].cmd, value);
-+	if (ret)
-+		dev_err(dev, "Error PMC write %X:%X\n",
-+			eio->pmc[id].cmd, value);
-+
-+	return ret;
-+}
-+
-+static int pmc_read_data(struct device *dev, int id, u8 *value)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = eio_core_pmc_wait(dev, id, PMC_WAIT_OUTPUT);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(eio->map, eio->pmc[id].data, &val);
-+	if (ret)
-+		dev_err(dev, "Error PMC read %X\n", eio->pmc[id].data);
-+	else
-+		*value = (u8)(val & 0xFF);
-+
-+	return ret;
-+}
-+
-+static int pmc_read_status(struct device *dev, int id)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	unsigned int val;
-+
-+	if (regmap_read(eio->map, eio->pmc[id].status, &val)) {
-+		dev_err(dev, "Error PMC read %X\n",
-+			eio->pmc[id].status);
-+		return 0;
-+	}
-+
-+	return val;
-+}
-+
-+static void pmc_clear(struct device *dev, int id)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	unsigned int val;
-+
-+	/* Check if input buffer blocked */
-+	if ((pmc_read_status(dev, id) & EIO_PMC_STATUS_IBF) == 0)
-+		return;
-+
-+	/* Read out previous garbage */
-+	if (regmap_read(eio->map, eio->pmc[id].data, &val))
-+		dev_err(dev, "Error pmc clear\n");
-+
-+	usleep_range(10, 100);
-+}
-+
-+int eio_core_pmc_wait(struct device *dev, int id, enum eio_pmc_wait wait)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	uint val;
-+	int timeout = DEFAULT_TIMEOUT;
-+
-+	if (wait == PMC_WAIT_INPUT)
-+		return regmap_read_poll_timeout(eio->map, eio->pmc[id].status,
-+						val, (val & EIO_PMC_STATUS_IBF) == 0,
-+						SLEEP_MAX, timeout);
-+	return regmap_read_poll_timeout(eio->map,
-+					eio->pmc[id].status, val,
-+					(val & EIO_PMC_STATUS_OBF) != 0,
-+					SLEEP_MAX, timeout);
-+}
-+EXPORT_SYMBOL_GPL(eio_core_pmc_wait);
-+
-+int eio_core_pmc_operation(struct device *dev, struct pmc_op *op)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	u8 i;
-+	int ret;
-+	bool reading = op->cmd & EIO_FLAG_PMC_READ;
-+
-+	mutex_lock(&eio->mutex);
-+
-+	pmc_clear(dev, op->chip);
-+
-+	ret = pmc_write_cmd(dev, op->chip, op->cmd);
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_write_data(dev, op->chip, op->control);
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_write_data(dev, op->chip, op->device_id);
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_write_data(dev, op->chip, op->size);
-+	if (ret)
-+		goto err;
-+
-+	for (i = 0; i < op->size; i++) {
-+		if (reading)
-+			ret = pmc_read_data(dev, op->chip, &op->payload[i]);
-+		else
-+			ret = pmc_write_data(dev, op->chip, op->payload[i]);
-+
-+		if (ret)
-+			break;
-+	}
-+
-+err:
-+	mutex_unlock(&eio->mutex);
-+	if (ret)
-+		return ret;
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL_GPL(eio_core_pmc_operation);
-+
-+static int get_pmc_port(struct device *dev, int id,
-+			struct eio_dev_port *port)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	struct _pmc_port *pmc = &eio->pmc[id];
-+	int ret;
-+	unsigned int high, low;
-+
-+	ret = eio_unlock_port(dev, port);
-+	if (ret)
-+		return ret;
-+
-+	/* Switch to PMC device page */
-+	ret = eio_pnp_write(dev, port, EIO_LDN, EIO_LDN_PMC1);
-+	if (ret)
-+		return ret;
-+
-+	/* Active this device */
-+	ret = eio_pnp_write(dev, port, EIO_LDAR, EIO_LDAR_LDACT);
-+	if (ret)
-+		return ret;
-+
-+	/* Get PMC data port */
-+	ret = eio_pnp_read(dev, port, EIO_IOBA0H, &high);
-+	if (ret)
-+		return ret;
-+	ret = eio_pnp_read(dev, port, EIO_IOBA0L, &low);
-+	if (ret)
-+		return ret;
-+	pmc->data = (high << 8) | low;
-+
-+	/* Get PMC cmd */
-+	ret = eio_pnp_read(dev, port, EIO_IOBA1H, &high);
-+	if (ret)
-+		return ret;
-+	ret = eio_pnp_read(dev, port, EIO_IOBA1L, &low);
-+	if (ret)
-+		return ret;
-+	pmc->cmd = (high << 8) | low;
-+
-+	/* Disable IRQ */
-+	ret = eio_pnp_write(dev, port, EIO_IRQCTRL, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = eio_lock_port(dev, port);
-+	if (ret)
-+		return ret;
-+
-+	/* Make sure IO ports are not occupied */
-+	if (!devm_request_region(dev, pmc->data, 2, KBUILD_MODNAME)) {
-+		dev_err(dev, "Request region %X error\n", pmc->data);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int eio_init(struct device *dev)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	u16 chip_id;
-+	unsigned int msb, lsb;
-+	int tmp;
-+	int ret = -ENOMEM;
-+
-+	for (int chip = 0; chip < ARRAY_SIZE(pnp_port); chip++) {
-+		struct eio_dev_port *port = pnp_port + chip;
-+
-+		if (!devm_request_region(dev, pnp_port[chip].idx_port,
-+					 pnp_port[chip].data_port -
-+						 pnp_port[chip].idx_port,
-+					 KBUILD_MODNAME))
-+			continue;
-+
-+		ret = eio_unlock_port(dev, port);
-+		if (ret)
-+			return ret;
-+
-+		ret = eio_pnp_read(dev, port, EIO_CHIPID1, &msb);
-+		if (ret)
-+			return ret;
-+
-+		ret = eio_pnp_read(dev, port, EIO_CHIPID2, &lsb);
-+		if (ret)
-+			return ret;
-+
-+		chip_id = (msb << 8) | lsb;
-+
-+		if (chip_id != EIO200_CHIPID && chip_id != EIO201_211_CHIPID)
-+			continue;
-+
-+		/* Turn on the enable flag */
-+		ret = eio_pnp_read(dev, port, EIO_SIOCTRL, &tmp);
-+		if (ret)
-+			return ret;
-+
-+		tmp |= EIO_SIOCTRL_SIOEN;
-+
-+		ret = eio_pnp_write(dev, port, EIO_SIOCTRL, tmp);
-+		if (ret)
-+			return ret;
-+
-+		ret = eio_lock_port(dev, port);
-+		if (ret)
-+			return ret;
-+
-+		ret = get_pmc_port(dev, chip, port);
-+		if (ret)
-+			return ret;
-+
-+		if (chip == 0)
-+			eio->flag |= EIO_F_CHIP_EXIST;
-+		else
-+			eio->flag |= EIO_F_SUB_CHIP_EXIST;
-+	}
-+
-+	return ret;
-+}
-+
-+static uint8_t acpi_ram_access(struct device *dev, uint8_t offset)
-+{
-+	uint8_t val;
-+	int ret;
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+
-+	/* We only store information on primary EC */
-+	int chip = 0;
-+
-+	mutex_lock(&eio->mutex);
-+
-+	pmc_clear(dev, chip);
-+
-+	ret = pmc_write_cmd(dev, chip, EIO_PMC_CMD_ACPIRAM_READ);
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_write_data(dev, chip, offset);
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_write_data(dev, chip, sizeof(val));
-+	if (ret)
-+		goto err;
-+
-+	ret = pmc_read_data(dev, chip, &val);
-+	if (ret)
-+		goto err;
-+
-+	ret = val;
-+
-+err:
-+	mutex_unlock(&eio->mutex);
-+	return ret;
-+}
-+
-+static int firmware_code_base(struct device *dev)
-+{
-+	struct eio_dev *eio = dev_get_drvdata(dev);
-+	u8 ic_vendor, ic_code, code_base;
-+
-+	ic_vendor = acpi_ram_access(dev, EIO_ACPIRAM_ICVENDOR);
-+	ic_code = acpi_ram_access(dev, EIO_ACPIRAM_ICCODE);
-+	code_base = acpi_ram_access(dev, EIO_ACPIRAM_CODEBASE);
-+
-+	if (ic_vendor != 'R')
-+		return -ENODEV;
-+
-+	if (ic_code != EIO200_ICCODE && ic_code != EIO201_ICCODE &&
-+	    ic_code != EIO211_ICCODE)
-+		goto err;
-+
-+	if (code_base == EIO_ACPIRAM_CODEBASE_NEW) {
-+		eio->flag |= EIO_F_NEW_CODE_BASE;
-+		return 0;
-+	}
-+
-+	if (code_base == 0 &&
-+	    (ic_code != EIO201_ICCODE && ic_code != EIO211_ICCODE)) {
-+		dev_info(dev, "Old code base not supported.");
-+		return -ENODEV;
-+	}
-+
-+err:
-+	/* Codebase error. This should only happen on firmware error. */
-+	dev_err(dev,
-+		"Codebase check fail: vendor: 0x%X, code: 0x%X, base: 0x%X\n",
-+		ic_vendor, ic_code, code_base);
-+	return -ENODEV;
-+}
-+
-+static int eio_probe(struct device *dev, unsigned int id)
-+{
-+	int ret = 0;
-+	struct eio_dev *eio;
-+
-+	eio = devm_kzalloc(dev, sizeof(*eio), GFP_KERNEL);
-+	if (!eio)
++	struct pmc_op op = {
++		 .cmd       = EIO_GPIO_WRITE,
++		 .control   = ctrl,
++		 .device_id = dev_id,
++		 .payload   = (u8 *)data,
++	};
++
++	if (ctrl >= ARRAY_SIZE(ctrl_para))
 +		return -ENOMEM;
 +
-+	eio->dev = dev;
-+	mutex_init(&eio->mutex);
++	if (!ctrl_para[ctrl].write)
++		return -EINVAL;
 +
-+	eio->iomem = devm_ioport_map(dev, 0, EIO_SUB_PNP_DATA + 1);
-+	if (IS_ERR(eio->iomem))
-+		return PTR_ERR(eio->iomem);
++	op.size = ctrl_para[ctrl].size;
 +
-+	eio->map = devm_regmap_init_mmio(dev, eio->iomem, &pnp_regmap_config);
-+	if (IS_ERR(eio->map))
-+		return PTR_ERR(eio->map);
-+
-+	/* Publish instance for subdrivers (dev_get_drvdata(dev->parent)) */
-+	dev_set_drvdata(dev, eio);
-+
-+	if (eio_init(dev))
-+		return -ENODEV;
-+
-+	ret = firmware_code_base(dev);
-+	if (ret) {
-+		dev_err(dev, "Chip code base check fail\n");
-+		return ret;
-+	}
-+
-+	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+				   eio_devs, ARRAY_SIZE(eio_devs),
-+				   NULL, 0, NULL);
-+	if (ret)
-+		dev_err(dev, "Cannot register child devices (error = %d)\n", ret);
-+
-+	return ret;
++	return eio_core_pmc_operation(mfd_dev, &op);
 +}
 +
-+static struct isa_driver eio_driver = {
-+	.probe    = eio_probe,
-+	.driver = {
-+		.name = "eio_core",
-+		.dev_groups = pmc_groups,
-+	},
++static int pmc_read(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
++{
++	struct pmc_op op = {
++		 .cmd       = EIO_GPIO_READ,
++		 .control   = ctrl,
++		 .device_id = dev_id,
++		 .payload   = (u8 *)data,
++	};
++
++	if (ctrl > ARRAY_SIZE(ctrl_para))
++		return -ENOMEM;
++
++	op.size = ctrl_para[ctrl].size;
++
++	return eio_core_pmc_operation(mfd_dev, &op);
++}
++
++static int get_dir(struct gpio_chip *chip, unsigned int offset)
++{
++	u8 dir;
++	int ret;
++
++	ret = pmc_read(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
++	if (ret)
++		return ret;
++
++	return dir ? 0 : 1;
++}
++
++static int dir_input(struct gpio_chip *chip, unsigned int offset)
++{
++	u8 dir = 0;
++
++	return pmc_write(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
++}
++
++static int dir_output(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	u8 dir = 1;
++	u8 val = value;
++
++	pmc_write(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
++
++	return pmc_write(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &val);
++}
++
++static int gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	u8 level;
++	int ret;
++
++	ret = pmc_read(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &level);
++	if (ret)
++		return ret;
++
++	return level;
++}
++
++static int gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
++{
++	u8 val = value;
++
++	return pmc_write(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &val);
++}
++
++static int check_support(struct device *dev)
++{
++	u8  data;
++	int ret;
++
++	ret = pmc_read(dev, EIO_GPIO_STATUS, 0, &data);
++	if (ret)
++		return ret;
++
++	if ((data & 0x01) == 0)
++		return -EOPNOTSUPP;
++
++	return 0;
++}
++
++static int check_pin(struct device *dev, int pin)
++{
++	int ret;
++	int group, bit;
++	u16 data;
++
++	/* Get pin mapping */
++	ret = pmc_read(dev, EIO_GPIO_MAPPING, pin, &data);
++	if (ret)
++		return ret;
++
++	if ((data & 0xFF) > ARRAY_SIZE(group_map))
++		return -EINVAL;
++
++	group = group_map[data & 0xFF].group;
++	bit   = data >> 8;
++
++	/* Check mapped pin */
++	ret = pmc_read(dev, EIO_GPIO_GROUP_AVAIL, group, &data);
++	if (ret)
++		return ret;
++
++	return data & BIT(bit) ? 0 : -EOPNOTSUPP;
++}
++
++static int gpio_init(struct device *mfd, struct eio_gpio_dev *eio_gpio)
++{
++	int ret, i;
++
++	ret = check_support(mfd);
++	if (ret)
++		return dev_err_probe(eio_gpio->dev, ret, "GPIO not supported\n");
++
++	eio_gpio->avail = 0;
++
++	for (i = 0 ; i < EIO_GPIO_MAX_PINS ; i++) {
++		ret = check_pin(mfd, i);
++		if (ret)
++			continue;
++
++		eio_gpio->avail |= BIT(i);
++		eio_gpio->max = i + 1;
++	}
++
++	return eio_gpio->max ? 0 : -EOPNOTSUPP;
++}
++
++static int gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct eio_gpio_dev *eio_gpio;
++	struct eio_dev *eio_dev = dev_get_drvdata(dev->parent);
++
++	if (!eio_dev)
++		return dev_err_probe(dev, -ENODEV, "Error contact eio_core\n");
++
++	eio_gpio = devm_kzalloc(dev, sizeof(*eio_gpio), GFP_KERNEL);
++	if (!eio_gpio)
++		return -ENOMEM;
++
++	eio_gpio->dev = dev;
++
++	if (gpio_init(dev->parent, eio_gpio))
++		return -EIO;
++
++	eio_gpio->chip.parent = dev->parent;
++	eio_gpio->chip.ngpio = eio_gpio->max;
++	eio_gpio->chip.label = KBUILD_MODNAME;
++	eio_gpio->chip.owner = THIS_MODULE;
++	eio_gpio->chip.direction_input = dir_input;
++	eio_gpio->chip.get = gpio_get;
++	eio_gpio->chip.direction_output = dir_output;
++	eio_gpio->chip.set = gpio_set;
++	eio_gpio->chip.get_direction = get_dir;
++	eio_gpio->chip.base = -1;
++	eio_gpio->chip.can_sleep = true;
++
++	return devm_gpiochip_add_data(dev, &eio_gpio->chip, eio_gpio);
++}
++
++static struct platform_driver gpio_driver = {
++	.probe  = gpio_probe,
++	.driver = { .name = KBUILD_MODNAME, },
 +};
-+module_isa_driver(eio_driver, NUM_EC);
++
++module_platform_driver(gpio_driver);
 +
 +MODULE_AUTHOR("Wenkai Chung <wenkai.chung@advantech.com.tw>");
 +MODULE_AUTHOR("Ramiro Oliveira <ramiro.oliveira@advantech.com>");
-+MODULE_DESCRIPTION("Advantech EIO series EC core driver");
++MODULE_DESCRIPTION("GPIO driver for Advantech EIO embedded controller");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/eio.h b/include/linux/mfd/eio.h
-new file mode 100644
-index 000000000000..c2daad41318b
---- /dev/null
-+++ b/include/linux/mfd/eio.h
-@@ -0,0 +1,124 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2025 Advantech Co., Ltd.
-+ */
-+
-+#ifndef _MFD_EIO_H_
-+#define _MFD_EIO_H_
-+
-+#include <linux/io.h>
-+#include <linux/regmap.h>
-+
-+/* CHIP ID versions */
-+#define EIO_CHIPID1		0x20
-+#define EIO_CHIPID2		0x21
-+#define EIO_CHIPVER		0x22
-+#define EIO_SIOCTRL		0x23
-+#define EIO_SIOCTRL_SIOEN	BIT(0)
-+#define EIO_SIOCTRL_SWRST	BIT(1)
-+#define EIO_IRQCTRL		0x70
-+#define EIO200_CHIPID		0x9610
-+#define EIO201_211_CHIPID	0x9620
-+#define EIO200_ICCODE		0x10
-+#define EIO201_ICCODE		0x20
-+#define EIO211_ICCODE		0x21
-+
-+/* LPC PNP */
-+#define EIO_PNP_INDEX		0x299
-+#define EIO_PNP_DATA		0x29A
-+#define EIO_SUB_PNP_INDEX	0x499
-+#define EIO_SUB_PNP_DATA	0x49A
-+#define EIO_EXT_MODE_ENTER	0x87
-+#define EIO_EXT_MODE_EXIT	0xAA
-+
-+/* LPC LDN */
-+#define EIO_LDN			0x07
-+#define EIO_LDN_PMC0		0x0C
-+#define EIO_LDN_PMC1		0x0D
-+
-+/* PMC registers */
-+#define EIO_PMC_STATUS_IBF	BIT(1)
-+#define EIO_PMC_STATUS_OBF	BIT(0)
-+#define EIO_LDAR		0x30
-+#define EIO_LDAR_LDACT		BIT(0)
-+#define EIO_IOBA0H		0x60
-+#define EIO_IOBA0L		0x61
-+#define EIO_IOBA1H		0x62
-+#define EIO_IOBA1L		0x63
-+#define EIO_FLAG_PMC_READ	BIT(0)
-+
-+/* PMC command list */
-+#define EIO_PMC_CMD_ACPIRAM_READ	0x31
-+#define EIO_PMC_CMD_CFG_SAVE		0x56
-+
-+/* OLD PMC */
-+#define EIO_PMC_NO_INDEX	0xFF
-+
-+/* ACPI RAM Address Table */
-+#define EIO_ACPIRAM_VERSIONSECTION	(0xFA)
-+#define EIO_ACPIRAM_ICVENDOR		(EIO_ACPIRAM_VERSIONSECTION + 0x00)
-+#define EIO_ACPIRAM_ICCODE		(EIO_ACPIRAM_VERSIONSECTION + 0x01)
-+#define EIO_ACPIRAM_CODEBASE		(EIO_ACPIRAM_VERSIONSECTION + 0x02)
-+
-+#define EIO_ACPIRAM_CODEBASE_NEW	BIT(7)
-+
-+/* Firmware */
-+#define EIO_F_SUB_NEW_CODE_BASE	BIT(6)
-+#define EIO_F_SUB_CHANGED	BIT(7)
-+#define EIO_F_NEW_CODE_BASE	BIT(8)
-+#define EIO_F_CHANGED		BIT(9)
-+#define EIO_F_SUB_CHIP_EXIST	BIT(30)
-+#define EIO_F_CHIP_EXIST	BIT(31)
-+
-+/* Others */
-+#define EIO_EC_NUM	2
-+
-+struct _pmc_port {
-+	union {
-+		u16 cmd;
-+		u16 status;
-+	};
-+	u16 data;
-+};
-+
-+struct pmc_op {
-+	u8  cmd;
-+	u8  control;
-+	u8  device_id;
-+	u8  size;
-+	u8  *payload;
-+	u8  chip;
-+};
-+
-+enum eio_rw_operation {
-+	OPERATION_READ,
-+	OPERATION_WRITE,
-+};
-+
-+struct eio_dev {
-+	struct device *dev;
-+	struct regmap *map;
-+	void __iomem  *iomem;
-+	struct mutex mutex; /* Protects PMC command access */
-+	struct _pmc_port pmc[EIO_EC_NUM];
-+	u32 flag;
-+};
-+
-+int eio_core_pmc_operation(struct device *dev, struct pmc_op *operation);
-+
-+enum eio_pmc_wait {
-+	PMC_WAIT_INPUT,
-+	PMC_WAIT_OUTPUT,
-+};
-+
-+int eio_core_pmc_wait(struct device *dev, int id, enum eio_pmc_wait wait);
-+
-+#define PMC_DEVICE_ATTR_RO(_name)                                             \
-+	static ssize_t _name##_show(struct device *dev,                       \
-+				    struct device_attribute *attr, char *buf) \
-+	{                                                                     \
-+		return info_show(dev, attr, buf);                             \
-+	}                                                                     \
-+	static DEVICE_ATTR_RO(_name)
-+
-+#endif
 
 -- 
 2.43.0
