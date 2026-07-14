@@ -1,169 +1,158 @@
-Return-Path: <linux-gpio+bounces-40086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SzXkAFiZVmp8+wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40086-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 22:17:28 +0200
+	id nVAEFJeaVmrG+wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40087-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 22:22:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A7D3758AF4
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 22:17:27 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02A78758B3D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 22:22:46 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=cyberchaos.dev header.s=mail header.b="tjN/8m7L";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40086-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40086-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=cyberchaos.dev;
+	dkim=pass header.d=lunn.ch header.s=20171124 header.b=TWSX3Uo1;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40087-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40087-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=lunn.ch;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 00C1D30797BB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 20:17:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C0CA7301D4E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 20:22:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE6B2E62A9;
-	Tue, 14 Jul 2026 20:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877483264FB;
+	Tue, 14 Jul 2026 20:22:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.cyberchaos.dev (mail.cyberchaos.dev [195.39.247.168])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696C4427FB4;
-	Tue, 14 Jul 2026 20:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A112DEA95;
+	Tue, 14 Jul 2026 20:22:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784060242; cv=none; b=H7stuTHttyPkR4c54Ub/6odEH8qEbx9EIJ86OJUYHhFwTKM6fgXYXWZcfOpzIB7V8QK3/C5E50xgYA6oLTvrFY3UwiHLovuu1bRmQJSK+y68ih1eVvcUUY5cf9YPhKDlaXIl8RM1zw/zMDz7l6Y2bNXXVoomdao05L/VrFoQcEk=
+	t=1784060560; cv=none; b=iF92oSdNid3RO9vLOTI+warQ34XTSzKX9B5itSYttyG7UTXIO2ior0UMEmW2tw/Qq/2ZHYNAbfgAk0i76Z4a5NVK/w2jZOJTIb110cnuL+xWvt70F5xWOIeempP8PdQr4QzFQqweSb7QjU0q5OrRIXbSy6+xZMtzX/89MWOh948=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784060242; c=relaxed/simple;
-	bh=mCkwUnsR1fBOIOb27f0NoQumZOK3szpsu/04nApDvdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LQ781M3rW+Qt5fQu6h9dFC4XdJrlIQmjtoRxE6DK/O3vv4sg60JhyihD4f1ZN6ac49oluj0tiOdIxzn/uv6QwGbdvh4G+fC4IoIFQClkuK3vH1v3gSphXqIbojVTOg3A191UmZYClGYrO+J5fVZD8+bcTeZaVaIrwvYsj+YWHVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyberchaos.dev; spf=pass smtp.mailfrom=cyberchaos.dev; dkim=pass (1024-bit key) header.d=cyberchaos.dev header.i=@cyberchaos.dev header.b=tjN/8m7L; arc=none smtp.client-ip=195.39.247.168
-Message-ID: <aa4836dd-2550-40cb-b0ee-c5df1ad54ece@cyberchaos.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberchaos.dev;
-	s=mail; t=1784060236;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AA21xBD9Q5Qe5hVx+FxIwd0X/SmbnFEGy+/VQWU77zE=;
-	b=tjN/8m7LbLXhnzZ2y4b1CDHAMtDhQ108OPUAmno49iH2axmfZYlweKYwcgWu7M0Sv/H8rF
-	Fh4aGmxaUT5TJIjqUR8piJQmCuLnwhWAC3EDXHdGpecHs+j/ZHwu8xYHKrk/kQGBHxT7t6
-	YB7rzvEsnVADMFnxr+P2upd8RgsgnQo=
-Date: Tue, 14 Jul 2026 22:17:10 +0200
+	s=arc-20240116; t=1784060560; c=relaxed/simple;
+	bh=MFpXe0hwZAI39MmHBMAi4Buu7rRntpAi9pLML/7VCJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcZxDF+C2xVYhiOVbDNAuE0M/fyWMdVU3V17EXNWbgGeuyNsuTMhTYgNwy7PxX3WtgDwscIEKTgReeh62+8TU1j+9QSv9ftFAoW7zVidwZvQgXIoeTlWqKt3InQxQoV+i9Mldc0ndhtAJABkrs/D/sC62TY0ar7ZqnLo9vkwVWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TWSX3Uo1; arc=none smtp.client-ip=156.67.10.101
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=R8CZEsf4KA93sMMtuykRokWiVz8pAkcIvLnEk4m256s=; b=TWSX3Uo1ZeMp3SXSd/7mfSE4ch
+	eeKsLjJT8UVnFNL2XwXmsBHSmnhXmRGrcyKimyZbMP6BFnTDGzc//E+dB2msSK1oMOnCXxi/MdNqD
+	Om5dKdeXmDaI0JX4tSdS13UknVCcZlqUSxC8oVoWVRIkKhMWuPv8hQHdN4joZaQkgqps=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1wjjeA-00CFO0-Hx; Tue, 14 Jul 2026 22:22:30 +0200
+Date: Tue, 14 Jul 2026 22:22:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Shenwei Wang (OSS)" <shenwei.wang@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shenwei Wang <shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	dl-linux-imx <linux-imx@nxp.com>,
+	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
+	"b-padhi@ti.com" <b-padhi@ti.com>
+Subject: Re: [PATCH v14 1/5] docs: driver-api: gpio: rpmsg gpio driver over
+ rpmsg bus
+Message-ID: <68a9dd77-a07b-4ea5-ad66-9e2bda490d20@lunn.ch>
+References: <20260625155432.815185-1-shenwei.wang@oss.nxp.com>
+ <20260625155432.815185-2-shenwei.wang@oss.nxp.com>
+ <alUdg9iTysXCFUa5@p14s>
+ <PAXPR04MB918568AE7B2364EC9D16427689F92@PAXPR04MB9185.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 09/10] dt-bindings: arm: apple: Add M4 based devices
-To: Sven Peter <sven@kernel.org>, Yureka Lilian <yureka@cyberchaos.dev>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Janne Grunau <j@jannau.net>,
- Neal Gompa <neal@gompa.dev>, Thomas Gleixner <tglx@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Hector Martin <marcan@marcan.st>,
- Linus Walleij <linusw@kernel.org>, Mark Kettenis <kettenis@openbsd.org>,
- Andi Shyti <andi.shyti@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Sasha Finkelstein <k@chaosmail.tech>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
- <20260705-apple-m4-initial-devicetrees-v1-9-e5655ee56523@cyberchaos.dev>
- <cd9da9aa-6e91-4534-a86c-a4421aafbd38@kernel.org>
-Content-Language: en-US
-From: Yureka Lilian <yureka@cyberchaos.dev>
-In-Reply-To: <cd9da9aa-6e91-4534-a86c-a4421aafbd38@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB918568AE7B2364EC9D16427689F92@PAXPR04MB9185.eurprd04.prod.outlook.com>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[cyberchaos.dev,reject];
-	R_DKIM_ALLOW(-0.20)[cyberchaos.dev:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
+	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-40087-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40086-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:sven@kernel.org,m:yureka@cyberchaos.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lpieralisi@kernel.org,m:j@jannau.net,m:neal@gompa.dev,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:marcan@marcan.st,m:linusw@kernel.org,m:kettenis@openbsd.org,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[yureka@cyberchaos.dev,linux-gpio@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RCVD_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS(0.00)[m:shenwei.wang@oss.nxp.com,m:mathieu.poirier@linaro.org,m:linusw@kernel.org,m:brgl@kernel.org,m:corbet@lwn.net,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:andersson@kernel.org,m:frank.li@nxp.com,m:s.hauer@pengutronix.de,m:skhan@linuxfoundation.org,m:linux-gpio@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:kernel@pengutronix.de,m:festevam@gmail.com,m:shenwei.wang@nxp.com,m:peng.fan@nxp.com,m:devicetree@vger.kernel.org,m:linux-remoteproc@vger.kernel.org,m:imx@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-imx@nxp.com,m:arnaud.pouliquen@foss.st.com,m:b-padhi@ti.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	FREEMAIL_CC(0.00)[linaro.org,kernel.org,lwn.net,nxp.com,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,foss.st.com,ti.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[yureka@cyberchaos.dev,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[cyberchaos.dev:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[lunn.ch:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,cyberchaos.dev:from_mime,cyberchaos.dev:mid,cyberchaos.dev:email,cyberchaos.dev:dkim]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lunn.ch:from_mime,lunn.ch:dkim,lunn.ch:mid,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8A7D3758AF4
+X-Rspamd-Queue-Id: 02A78758B3D
 
-On 7/14/26 21:50, Sven Peter wrote:
->
->
-> On 7/5/26 15:17, Yureka Lilian wrote:
->> The Apple devices with the t8132 SoC (M4) are very similar to their M3
->> predecessors.
->>
->> In addition to the MacBook Pro and the various MacBook Air and iMac
->> variants, a Mac mini is offered again with the M4.
->>
->> Signed-off-by: Yureka Lilian <yureka@cyberchaos.dev>
->> ---
->>   Documentation/devicetree/bindings/arm/apple.yaml | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/apple.yaml 
->> b/Documentation/devicetree/bindings/arm/apple.yaml
->> index e49403c73f9d..3262292252d2 100644
->> --- a/Documentation/devicetree/bindings/arm/apple.yaml
->> +++ b/Documentation/devicetree/bindings/arm/apple.yaml
->> @@ -315,6 +315,18 @@ properties:
->>             - const: apple,t8122
->>             - const: apple,arm-platform
->
-> Please also add M4 to the top of the binding in the description.
-Ack
->>   +      - description: Apple M4 SoC based platforms
->> +        items:
->> +          - enum:
->> +              - apple,j604  # MacBook Pro (14-inch, M4, 2024)
->> +              - apple,j623  # iMac (24-inch, 2x USB-C, M4, 2024)
->> +              - apple,j624  # iMac (24-inch, 4x USB-C, M4, 2024)
->> +              - apple,j713  # MacBook Air (13-inch, M3, 2025)
->> +              - apple,j715  # MacBook Air (15-inch, M3, 2025)
-> Copy/paste errors: these two should be M4 as well and I think the ones 
-> at the top should be 2025 instead of 2024, shouldn't they?
-I have the M3->M4 typo fixes queued locally. Only the MacBook Air was 
-released in 2025, the others in 2024 (according to Wikipedia at least).
->
->
-> Best,
->
-> Sven
+> The two fields above are required for rpmsg-gpio, but not for virtio-gpio.
+> 
+> In the rpmsg-gpio case, interrupt detection and handling occur on the remote processor. The 
+> interrupt information (such as the GPIO line and trigger type) must therefore be sent to Linux 
+> through this notification message.
+> 
+> In contrast, for virtio-gpio, interrupt handling is performed on the local processor. Since Linux already 
+> has all the necessary interrupt context, the information is not needed.
 
+Are you sure about that?
 
-My intention is to rebase and send out v2 with the fixes I've 
-accumulated locally once the M3 Pro/Max device trees have been merged 
-into apple-soc.
+virtio_gpio_irq_set_type() sets:
 
+        irq_line->type = type;
+        irq_line->update_pending = true;
 
+virtio_gpio_irq_bus_sync_unlock() looks at update_pending and does
+virtio_gpio_req(), passing irq_line->type as type.
 
-Thanks,
+This then gets filled into:
 
-— Yureka
+/* Virtio GPIO Request / Response */
+struct virtio_gpio_request {
+	__le16 type;
+	__le16 gpio;
+	__le32 value;
+};
 
+which gets scatter/gathered over the virtqueue to the peer.
+
+      Andrew
 
