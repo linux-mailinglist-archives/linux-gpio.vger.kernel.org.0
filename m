@@ -1,56 +1,57 @@
-Return-Path: <linux-gpio+bounces-40012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40011-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4iXSGFPVVWp/uAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40012-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 08:21:07 +0200
+	id Nq+yLkPVVWp3uAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40011-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 08:20:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2237751705
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 08:21:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12BFB7516EE
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 08:20:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmx.de header.s=s31663417 header.b=gEpFqgpN;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40012-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40012-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmx.de header.s=s31663417 header.b=M29BEGDF;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40011-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40011-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=gmx.de;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 992EB308D67C
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 06:20:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 824E13058D9E
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2026 06:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D613D649D;
-	Tue, 14 Jul 2026 06:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803B33D7D93;
+	Tue, 14 Jul 2026 06:20:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FA837A847;
-	Tue, 14 Jul 2026 06:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA532281525;
+	Tue, 14 Jul 2026 06:20:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784010038; cv=none; b=VRrXOn6tiPzV3jsH34dW7t02llRuS589dgowMYdOxwR7YaixnqfYmZt8+5IkyZgACNcRaRE891UVstBK4wPP4zDg4gekXxKuA3NF3bffELhCX8G8+8i/xqH8uqpRvZ/jLpi9pEI2MNFaM3rDyO9J9MrnB3K46dF06TC0HDQsp/M=
+	t=1784010037; cv=none; b=WXCdpzjGzqj6LYA+Rj7LYQgDKhzVvmLJdtG37Nzb+Z73uu7aWz45GNRMCIZolVnjIOUVlLakdwx89Oc1m65x3dYAfhd3LOLDanuah6AU7MY3Nf6j3sFE9EuvvOxUfauSksgvMCKeUruQfsnlkbBlPfu3x1Mm4/2+xQ+CA7itKQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784010038; c=relaxed/simple;
-	bh=g+/YhdtQSwMbFUHDU1sosrufGCb63rHWYw7lEzc/9LY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Txccmj5lxkmbsNujXG2Ty+LpzC6z5/Bs1oiaUPwRGx+KtPRtjp9VPduHhvhX0ngaF0Bcu9x+5Lj6zehbWed2hrxG60iolj/ANBYUyzU9oODRNzkvIXlS2ntLuxVoObayAVO/oGlwqqp6DFNRWVLwkbaK1BbAsSLeT5DH+oqQliE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b=gEpFqgpN; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1784010037; c=relaxed/simple;
+	bh=0cEndoD0RSiayClQwWa022DXlQ8SuZpIyLPxQm+m/dw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sWoWaZx6Uf+9tSxFCu55ivkYV4nw2RBPME/+/yjJXeb+nnpnVEomegIDd8O0AtZD6WF1oyad2oiAKbqrOg9306I+10GtPloG0HQYaY7cqjzpETz91n6HGdn/21exRz8FrQLjrZHlq2+PE/jmzuBVh+fetI2/H8Hb7X+ATWxuhxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b=M29BEGDF; arc=none smtp.client-ip=212.227.15.15
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
 	s=s31663417; t=1784010029; x=1784614829;
 	i=markus.stockhausen@gmx.de;
-	bh=7DiVzZvG6AgnuHRgRcDDHRh+Budd4Dc5b9A0WfDiw38=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	bh=SCU+g1Q54pIAKmlekAdvDSCRya3ekTVYOJwisBHbRqQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=gEpFqgpNN6eEqSA+B5SP3dZ65DL1M3fDEfcMV3KTuI3ViShcFwnaYLBDvnYTXp5A
-	 +nXccu26B9rnKGIX71e3CdwY4JbhoYn5CPRo/xDVWMvrOLT6jLoC1GzuO1G9ch4bi
-	 hxADEuBclyzTtA5/j503qsQ2ox7rkkmofQAJlWztnNKEGL/5thTKxPr7p3cIyiwlY
-	 ZIa4Y82WSXP0NVsMPo/oeqKNhDV4EaBw+clvglBAqv5MjMVb0ujRxoFF2NqbN/GPE
-	 OgSkkgt7A6f1mTsRi0KW7lW6AypUPhrTvMYYRCu/P2FVwQb04ys5LzqDkz0GesEip
-	 LXupHdmCYfCKUS/s5g==
+	b=M29BEGDF6JQK28SCitsdj//kO2ud2T88VVr5gaSAMQVUlCPVLcCzXu5CXI8EHJID
+	 nasZ8/fahHbMy05ONK9AhcAeQCrrCiFDjmLgirDqZLuylm3n7lofBf9FPiOSg2ncB
+	 nXI3EsyaZr6rgR0P07XDkp21Tm1eP+wAFDYljV8mxPLkGP+IGblNDI3yexVwIV4Ee
+	 N6Tvge7C2CFDfe9YV6TYO8z5YYk3hNHCELbbhOIYUkyM+iifc1pQEw62V9qsm/OUd
+	 5jU5WesSuY5+qWX0KuVv5efBRY6DOmAOx0XpshW5u1Y10DGuwGAwn6XxNM1fSDrPR
+	 zkGx7hOD8pV4R3ZxXg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mo6qv-1xPU9f3XgZ-00aW7C; Tue, 14
- Jul 2026 08:20:28 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MKKUv-1wTEhe0J03-00UrKk; Tue, 14
+ Jul 2026 08:20:29 +0200
 From: Markus Stockhausen <markus.stockhausen@gmx.de>
 To: wsa+renesas@sang-engineering.com,
 	andi.shyti@kernel.org,
@@ -60,10 +61,12 @@ To: wsa+renesas@sang-engineering.com,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Markus Stockhausen <markus.stockhausen@gmx.de>
-Subject: [PATCH v6 0/2] i2c: i2c-gpio: Enhance driver for buses with shared SCL
-Date: Tue, 14 Jul 2026 08:20:16 +0200
-Message-ID: <20260714062018.3009830-1-markus.stockhausen@gmx.de>
+Subject: [PATCH v6 1/2] i2c: algo: bit: Allow to skip bit test
+Date: Tue, 14 Jul 2026 08:20:17 +0200
+Message-ID: <20260714062018.3009830-2-markus.stockhausen@gmx.de>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260714062018.3009830-1-markus.stockhausen@gmx.de>
+References: <20260714062018.3009830-1-markus.stockhausen@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,92 +74,92 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HbcjX/Wm/bewFp9PAFu9jUqnJIxWTgMuEo1oPKhF0EqWo4wVXrj
- xnthRvF38dP4ddCL60kXhgWnY2LBKctqXtF2/JKPEuR9+1Pfg4X4ndPFGVM7kQzk4Kn9FhH
- X0vdwkmmgjUubScRVqzRhF6iE9ErFfjvvkOGOSoUGlzU8z6+uaau8pxqB6vVwNEaX5IpiHw
- tZRnGW3irvOWUcjP84f0Q==
+X-Provags-ID: V03:K1:lmcjE8a2NcaSV4p/cCyBxoNTLCMW/5EGeSh9HI/KGFhS6ef1RlT
+ FqCZzIzdnSgjzOz2lU4J3BnBegSpQRYf3QDvqe6YpUCAtx0oDa48kkLzo/Y+Svfd5VGvWHI
+ kW+JplyPv3uvbgn9Ku6L6bAH0r+C6d4ANwA8oypboiRa/OgVBKHuakI+4tCnPGU3GGjpogB
+ vfLzxZhJPeW5wJ44ZDNkg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YOJeVpMfrxs=;ha31mZjYNuuWb2d+XcdeaGR5znW
- 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
+UI-OutboundReport: notjunk:1;M01:P0:0V8YWA10NUk=;cGeEJWMKSOl4AjJgRw9u1lR2CPv
+ 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
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -171,7 +174,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[gmx.de];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40012-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40011-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:wsa+renesas@sang-engineering.com,m:andi.shyti@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-i2c@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:markus.stockhausen@gmx.de,m:wsa@sang-engineering.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -193,75 +196,54 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,gmx.de:from_mime,gmx.de:mid,gmx.de:email,gmx.de:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D2237751705
+X-Rspamd-Queue-Id: 12BFB7516EE
 
-This series adds support for devices with multiple I2C buses=20
-that share a single clock line.
+An I2C bus can make use of shared resources. E.g. two gpio based buses
+that share a single SCL line. To synchronize access to the bus the driver
+might use locking with the help of i2c_lock_operations(). While this
+works for normal transfers it is not available during initialization.
+
+Especially if i2c-algo-bit module is loaded with parameter bit_test
+it will issue some basic sanity checks that will access the bus without
+locking. This might interfere badly with concurrent transfers. Even
+if these are well synchronized via locks.
+
+Allow the consumer of an algorithm to override if the bit_test is allowed
+or not. For this add a new boolean attribute named skip_bit_test to
+i2c_algo_bit_data. If set the test is not run.
 
 Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
 =2D--
+ drivers/i2c/algos/i2c-algo-bit.c | 2 +-
+ include/linux/i2c-algo-bit.h     | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-v5 -> v6
-  - Add legacy system detection (without dts/fwnode)
-  - Add skip_bit_test setting to algorithm options via pre-commit
-  - Make use of skip_bit_test in the driver
-v5: https://lore.kernel.org/linux-i2c/20260713062021.2995641-1-markus.stoc=
-khausen@gmx.de/
-v5 Sashiko: https://sashiko.dev/#/patchset/20260713062021.2995641-1-markus=
-.stockhausen%40gmx.de
-
-v4 -> v5
-  - Whitespace cleanup
-  - Send to LKML for Sashiko review
-  - Add Reviewed-by
-v4: https://lore.kernel.org/linux-i2c/20260709062534.2864521-1-markus.stoc=
-khausen@gmx.de/
-
-v3 -> v4
-  - add Reviewed-by and Tested-by
-v3: https://lore.kernel.org/linux-i2c/20260520173129.1382489-1-markus.stoc=
-khausen@gmx.de/
-
-v2 -> v3
-  - Fix lockdep_set_class() with DEBUG_LOCK_ALLOC=3Dy
-v2: https://lore.kernel.org/linux-i2c/20260518161013.900504-1-markus.stock=
-hausen@gmx.de/
-
-v1 -> v2
-  - Convert fault injector to scl->gpio (reported by test robot)
-  - Use rt_mutex and i2c_lock_operations instead of pre/post_xfer
-    (logic taken from i2c-cht-wc.c and enhanced)
-  - i2c_gpio_lookup_scl()
-    - Improve list control flow
-    - Improve comment
-    - Carve out SCL node comparison into i2c_gpio_scl_matches()
-  - Drop "valid" attribute and directly check gpiod instead
-  - Improve fwnode args check for #gpio-cells=3D1 case
-  - Add sda/scl cleanup during probe failures
-  - Replace dev_info() with dev_dbg()
-  - Reflect changed locking in commmit message
-  - Tested with config option GPIO_SHARED/GPIO_SHARED_PROXY
-    as requested by Bartosz
-v1: https://lore.kernel.org/linux-i2c/20260514092042.3265986-1-markus.stoc=
-khausen@gmx.de/
-
-v0 -> v1
-  - Initially this enhancement was submitted as a new driver with
-    a new devicetree structure. After some discussion Wolfram
-    advised to make only an enhancement to the i2c-gpio driver.
-v0: https://lore.kernel.org/linux-i2c/20260511162528.84508-1-markus.stockh=
-ausen@gmx.de/
-
-
-Markus Stockhausen (2):
-  i2c: algo: bit: Allow to skip bit test
-  i2c: i2c-gpio: Enhance driver for buses with shared SCL
-
- drivers/i2c/algos/i2c-algo-bit.c |   2 +-
- drivers/i2c/busses/i2c-gpio.c    | 223 +++++++++++++++++++++++++++++--
- include/linux/i2c-algo-bit.h     |   1 +
- 3 files changed, 211 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/i2c/algos/i2c-algo-bit.c b/drivers/i2c/algos/i2c-algo=
+-bit.c
+index d1d9a6c1a1e2..7ca565cbff5b 100644
+=2D-- a/drivers/i2c/algos/i2c-algo-bit.c
++++ b/drivers/i2c/algos/i2c-algo-bit.c
+@@ -639,7 +639,7 @@ static int __i2c_bit_add_bus(struct i2c_adapter *adap,
+ 	struct i2c_algo_bit_data *bit_adap =3D adap->algo_data;
+ 	int ret;
+=20
+-	if (bit_test) {
++	if (bit_test && !bit_adap->skip_bit_test) {
+ 		ret =3D test_bus(adap);
+ 		if (bit_test >=3D 2 && ret < 0)
+ 			return -ENODEV;
+diff --git a/include/linux/i2c-algo-bit.h b/include/linux/i2c-algo-bit.h
+index 7fd5575a368f..c4c43aec1e67 100644
+=2D-- a/include/linux/i2c-algo-bit.h
++++ b/include/linux/i2c-algo-bit.h
+@@ -34,6 +34,7 @@ struct i2c_algo_bit_data {
+ 				   maximum 50 us for SMBus */
+ 	int timeout;		/* in jiffies */
+ 	bool can_do_atomic;	/* callbacks don't sleep, we can be atomic */
++	bool skip_bit_test;	/* override bit_test module parameter */
+ };
+=20
+ int i2c_bit_add_bus(struct i2c_adapter *);
 =2D-=20
 2.54.0
 
