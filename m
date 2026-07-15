@@ -1,71 +1,71 @@
-Return-Path: <linux-gpio+bounces-40132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id NZ1AM6KNV2o9WwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40132-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 15:39:46 +0200
+	id 7sk2IHGNV2olWwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40133-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 15:38:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72D9875EC86
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 15:39:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8AC575EC3F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 15:38:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=V8q6pHaZ;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40132-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40132-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b="Chu/mVAM";
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40133-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40133-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E1967308CD5A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 13:33:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 62E67300615F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 13:33:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2402F28FF;
-	Wed, 15 Jul 2026 13:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3454E30BF52;
+	Wed, 15 Jul 2026 13:33:04 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287EB2C0F69;
-	Wed, 15 Jul 2026 13:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BEF2F1FEA;
+	Wed, 15 Jul 2026 13:33:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784122381; cv=none; b=Gcbeg2hF0D10b9n4onlUzT6bqBcJeVjyTrZBmhET7YTkIXF0WDOCtFZTA/q361fKFlmu/fh6s8Vfx0lakUrvbsJIUB20c/eKvjHxcKYzAXc0nVjxUA9qkxDEVTXKwF/db//TIXHZIQ1+GUBOEqkZV9To5MgfNLu1jWUJT3OSbkE=
+	t=1784122383; cv=none; b=Hod57/TU7jndMfCY+2UylG35KH3oIEiHbAtzVaqVj5hQyqTnts5HiBCIHNV0aSIrP43RxpAXQmoFDu1kzuPyDPaeVsXsuHKBtuLx4aKPvvxF5NVV1660VVYu4PQpIsGvSuPGR0ayOV3W1JOIk6aVt9nzWITwfeQIgZirMGWasyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784122381; c=relaxed/simple;
-	bh=IxmMHGlk8QYVrm0sRclpevzaV41U2O/Tz4T7FD9aDlg=;
+	s=arc-20240116; t=1784122383; c=relaxed/simple;
+	bh=wETEMVUUn3cqT0N5rzG+JWF3qRKrr0LvQm9ujivrpV0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=InSMlXn9rGp2IWiuuYxTD0R2+MGojHIXgOha/78lZyWnyKf9nKfAzzL2lYX54SA/vt6GUy7dQ2l/SHxwKz1cO7eUPRKCsKjzchzE8xMQijZ50x4ZBQ9YoHv9ueKT3nY/9m3H2Ld5chULZzWl5h/yRJqKn995Y7J0luqruC0+L9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=V8q6pHaZ; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBcdiE3599393;
+	 MIME-Version; b=X/8581KNfLA37gmWoMRP8KYN/BsBGPPiV5thrYTDqR73X3VkCIrWGw2g/3oNzk6hn58VKEWVTvjcGsTguHZ6fRZxE6aY7RlIcP4k3s7iKMp1XOnr9HASy4E5PfwIFXiqbT0ZssbH/EDG6unTUgqCptFsDLk7qASdcl8BtNbzP7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Chu/mVAM; arc=none smtp.client-ip=205.220.168.131
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBcaX23678275;
 	Wed, 15 Jul 2026 13:32:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=SmT8RyveJfh
-	yP/PpXdzjE4NBjTlADskcP+xvISj7b48=; b=V8q6pHaZwTeq+g6BH7St3Swd0Zf
-	wyYuOcNj/lBABIW+gdUCfyurPhIDXu+ibb4O7QCQKy26kWrQJYnOqwnA/5EMJEra
-	IhJdYeQfzuUkwFoVDxZ4ewETgNEHF/sgAE94DJrzehVy+7KdxHBNg2U//9vGl17d
-	gKvStsj7ljW5CUl9RhnXBUIsIii1mi2R9BVMWVRdTrfCCvZ+V3UqL/OzsTXahgjS
-	/r0nqv5jWuC8t8REqqxgE7FD+dEGgzNxIJEomveOMeu0JOaWDI/nDtZr/K9bfztC
-	3dShmK6W/YapS9N1POhyWXpoWu5crIMtEovYrfQ1LJdcBMKnlZFYWJnnxWQ==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=en7fkzazS5l
+	h29S+a3oR9DKE2ehDeoRw9xRNNFQCKr0=; b=Chu/mVAMl2JdF845Fham29iYYKD
+	q7Ji7hN7pFkDnDpjaKPislQjjtUimxgU6ttgqQMx/t7GJGwCzkt8Q9vbxUvlR7fX
+	XwbjkPWsgMBWuOfrsDmcRsTXPAfjO7V+/aVwlzPLF0lTIsdFM9qz9dq5JZ/bQ7Uq
+	HY0dXw9xcA9i/T7rdy17v2gk7vBlnrfp9qS/MkFDrx/cu1W28Y/zYsETm/F7SFEU
+	IQUu5VOCmfW/R1jPUwr81bVDEfLiYcjWYgJYPD9ckkRxiAU+70QOk/qwAMMCOyef
+	tQZvThaOOarVtlfjWBWiaK7uCCTnkJtSiVyiNP1vVOIyqWl7ByppoqPjKFQ==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fe7q60vb2-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fe6529b5a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 15 Jul 2026 13:32:50 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 66FDWkkv030469;
+	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 66FDWk6D030470;
 	Wed, 15 Jul 2026 13:32:46 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4fbewk39sa-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4fbewk39se-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 15 Jul 2026 13:32:46 +0000 (GMT)
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 66FDWkY7030438;
+	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 66FDWkSg030442;
 	Wed, 15 Jul 2026 13:32:46 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 66FDWjIC030432
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 66FDWjiu030430
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 15 Jul 2026 13:32:46 +0000 (GMT)
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
-	id D771863D; Wed, 15 Jul 2026 19:02:44 +0530 (+0530)
+	id DC90A63E; Wed, 15 Jul 2026 19:02:44 +0530 (+0530)
 From: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Bartosz Golaszewski <brgl@kernel.org>,
@@ -80,10 +80,11 @@ Cc: Krzysztof Kozlowski <krzk@kernel.org>,
         Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sound@vger.kernel.org
-Subject: [PATCH v3 3/4] dt-bindings: pinctrl: qcom,hawi-lpass-lpi-pinctrl: Add Hawi LPI pinctrl
-Date: Wed, 15 Jul 2026 19:02:42 +0530
-Message-Id: <20260715133243.3170821-4-prasad.kumpatla@oss.qualcomm.com>
+        linux-sound@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: [PATCH v3 4/4] pinctrl: qcom: hawi-lpass-lpi: add Hawi LPASS LPI TLMM
+Date: Wed, 15 Jul 2026 19:02:43 +0530
+Message-Id: <20260715133243.3170821-5-prasad.kumpatla@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260715133243.3170821-1-prasad.kumpatla@oss.qualcomm.com>
 References: <20260715133243.3170821-1-prasad.kumpatla@oss.qualcomm.com>
@@ -96,33 +97,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QCInternal: smtphost
 X-QCInternal: smtphost
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzNCBTYWx0ZWRfX5sGhQPHZt7Pu
- p3uVjk4VyT2NZCbBV/1zVAFfdA1M89Mpw7mVlTBkPygqPXVVr4Mzb/in1xY2mITd392VAbcMIf7
- dO70bP1cNg9g9ufJhuQlx8ZMW+ujxAQ=
-X-Proofpoint-ORIG-GUID: waTUtrirLlrIhMKxf9RXCX5r6QXUbOQ8
-X-Proofpoint-GUID: waTUtrirLlrIhMKxf9RXCX5r6QXUbOQ8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzNCBTYWx0ZWRfXyc+PmUh5E2IV
- nySnb52+nwlVgIfuA4ErZEyIXUlWBKO0fYHNE03zaXwIuEuTWyWRoY3O5TLueSmibPnzhUTZe8e
- HWwA1C7GNjFkKpovDWLsddC6wuXWtEwmiHr83b8czy0E7MDh/yV2tNMzBCJ2IST9npBOUQxhi7q
- 3Gq5mSChQ5ZAAwtCtcqLmJ/EBB56hFErncdn6PMpLziU3yIUlbf9VMty8q8vE4mBoMLR2WtSMym
- bm0oUt3V6OLptlOmG61YmWiBOh7M10qzb6NRFc9aET+B8pIwMeIXJNE02C9y6VvgM/zioFnOEm8
- rEmvmnE+sYGmyePfg8UZ4/kwyh2vaxPfL9GA+9XLnYmb/KsMWX0/Ixd66A/DHsaITFLeAbfxIGf
- JHGp0XHgVpWU9KUNfeVf80lYeg9M7XviOGf4fPFMBJ5H4pug1yxoWXTufQsPtjlTEci4v2w7Qzi
- 0CjjuJ1n/Ixf9snmbFQ==
-X-Authority-Analysis: v=2.4 cv=BajoFLt2 c=1 sm=1 tr=0 ts=6a578c02 cx=c_pps
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEzNCBTYWx0ZWRfX14AbHXMzTCSL
+ w12Ehj3bSuaIPvlxngyUS1US9b5dFNTucAYZ+bhFjHVSg4rP+S9FzOgoAH4yWixt0jXMPXymqwv
+ d8mUbIvttocAmQE8YD01Lgfho6zrEEdx37KESTJ2lv2B3WseXEycZ65NZoy+0kNmRB//KhsQgfS
+ xiqxXGWCUY9QEx1fBbXsKxJ/Rplov01R8vt8yNwtN9t/cfDZIoCA0Zk0SKxfJMCd0hvV7LI6k+n
+ wHU0gsD61zbX+VD80TlFa6dns6XzCL1FUpfUsZAGnHcd3LknVj9HHF3hJJ4e9RFacpjHkLmqZm5
+ V5Wm8wZjvU+RyrRjSSPSV18PUaz4L9HE9jLfOHzkq3/YZoWf0jU4ahH1mTx6McA7i0EJxMzre3Z
+ +j/OXRRsQ40Z9mPmTXJnGxYakfJ9ar/5InBUASHgImr7JG+o7lYS2uBmvJxVTT38ZjpIVyWGosG
+ WWKkG6seH239xN8SvKw==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEzNCBTYWx0ZWRfX9zAR0H1xR1vo
+ 8ozTYw7ZfwNVtJFg/w71GlFp2xgT3mv299NyEsd9SLyoPMReGlC2LwfSKtpdpRnkBF/2Gt9xxhO
+ Otrk40y1HN6bpXOy4W44Kg7wM5+mbzU=
+X-Authority-Analysis: v=2.4 cv=bKcm5v+Z c=1 sm=1 tr=0 ts=6a578c02 cx=c_pps
  a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=ZpdpYltYx_vBUK5n70dp:22 a=gEfo2CItAAAA:8 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
- a=bT5XQOCXPleopHcqzpYA:9 a=sptkURWiP4Gy88Gu7hUp:22
+ a=yOCtJkima9RkubShWh1s:22 a=EUspDBNiAAAA:8 a=RGdtN6rq-GqljJF8V3QA:9
+ a=O8hF6Hzn-FEA:10
+X-Proofpoint-ORIG-GUID: nKDen-WdsMNW1xYt7SZbYJ_YsvoYGtii
+X-Proofpoint-GUID: nKDen-WdsMNW1xYt7SZbYJ_YsvoYGtii
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-15_02,2026-07-15_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 bulkscore=0
- impostorscore=0 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607150134
+ lowpriorityscore=0 spamscore=0 bulkscore=0 clxscore=1015 adultscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 priorityscore=1501 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150134
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -130,16 +130,16 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-40132-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-40133-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com,oss.qualcomm.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:andersson@kernel.org,m:brgl@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:srini@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:prasad.kumpatla@oss.qualcomm.com,m:krzk@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-sound@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:andersson@kernel.org,m:brgl@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:srini@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:prasad.kumpatla@oss.qualcomm.com,m:krzk@kernel.org,m:srinivas.kandagatla@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-sound@vger.kernel.org,m:konrad.dybcio@oss.qualcomm.com,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
@@ -150,143 +150,347 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[prasad.kumpatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:from_mime,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email,vger.kernel.org:from_smtp,devicetree.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:from_mime,oss.qualcomm.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCVD_COUNT_SEVEN(0.00)[10]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 72D9875EC86
+X-Rspamd-Queue-Id: C8AC575EC3F
 X-Rspamd-Action: no action
 
-Add bindings for the pin controller in Low Power Audio SubSystem (LPASS)
-of Qualcomm Hawi SoC.
+Add pin controller driver for the Low Power Audio SubSystem (LPASS)
+Low Power Island (LPI) of Qualcomm Hawi SoC.
 
-The controller has 23 GPIOs (gpio0-gpio22) with functions including
-SoundWire, I2S, DMIC, VA I2S, ext_mclk1, slimbus and lpass_lpi_dbg_clk.
+The controller has 23 GPIOs with SoundWire, I2S, DMIC, VA I2S,
+ext_mclk1 and slimbus mux functions.
 
+Two pins (gpio13, gpio22) require 6 mux slots due to a test_bus
+entry occupying a middle hardware slot. Add LPI_PINGROUP6 macro
+to pinctrl-lpass-lpi.h to support pins with 5 alternate functions.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
 ---
- .../pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml  | 109 ++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml
+ drivers/pinctrl/qcom/Kconfig                  |  10 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ drivers/pinctrl/qcom/pinctrl-hawi-lpass-lpi.c | 244 ++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h      |  17 ++
+ 4 files changed, 272 insertions(+)
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-hawi-lpass-lpi.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 18db35022..707067b92 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -62,6 +62,16 @@ config PINCTRL_LPASS_LPI
+ 	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+ 	  (Low Power Island) found on the Qualcomm Technologies Inc SoCs.
+ 
++config PINCTRL_HAWI_LPASS_LPI
++	tristate "Qualcomm Technologies Inc Hawi LPASS LPI pin controller driver"
++	depends on ARM64 || COMPILE_TEST
++	depends on PINCTRL_LPASS_LPI
++	help
++	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
++	  (Low Power Island) found on the Qualcomm Technologies Inc Hawi
++	  platform.
++
+ config PINCTRL_MILOS_LPASS_LPI
+ 	tristate "Qualcomm Milos LPASS LPI pin controller driver"
+ 	depends on ARM64 || COMPILE_TEST
+diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+index 43ecd246a..987a79f9d 100644
+--- a/drivers/pinctrl/qcom/Makefile
++++ b/drivers/pinctrl/qcom/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_PINCTRL_APQ8084)	+= pinctrl-apq8084.o
+ obj-$(CONFIG_PINCTRL_ELIZA)	+= pinctrl-eliza.o
+ obj-$(CONFIG_PINCTRL_GLYMUR)	+= pinctrl-glymur.o
+ obj-$(CONFIG_PINCTRL_HAWI)	+= pinctrl-hawi.o
++obj-$(CONFIG_PINCTRL_HAWI_LPASS_LPI) += pinctrl-hawi-lpass-lpi.o
+ obj-$(CONFIG_PINCTRL_IPQ4019)	+= pinctrl-ipq4019.o
+ obj-$(CONFIG_PINCTRL_IPQ5018)	+= pinctrl-ipq5018.o
+ obj-$(CONFIG_PINCTRL_IPQ8064)	+= pinctrl-ipq8064.o
+diff --git a/drivers/pinctrl/qcom/pinctrl-hawi-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-hawi-lpass-lpi.c
 new file mode 100644
-index 000000000..af6858175
+index 000000000..7036bf4c6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,hawi-lpass-lpi-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pinctrl/qcom/pinctrl-hawi-lpass-lpi.c
+@@ -0,0 +1,244 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
++ */
 +
-+title: Qualcomm Hawi SoC LPASS LPI TLMM
++#include <linux/gpio/driver.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_runtime.h>
 +
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-+  - Prasad Kumpatla <prasad.kumpatla@oss.qualcomm.com>
++#include "pinctrl-lpass-lpi.h"
 +
-+description:
-+  Top Level Mode Multiplexer pin controller in the Low Power Audio SubSystem
-+  (LPASS) Low Power Island (LPI) of Qualcomm Hawi SoC.
++enum lpass_lpi_functions {
++	LPI_MUX_dmic1_clk,
++	LPI_MUX_dmic1_data,
++	LPI_MUX_dmic2_clk,
++	LPI_MUX_dmic2_data,
++	LPI_MUX_dmic3_clk,
++	LPI_MUX_dmic3_data,
++	LPI_MUX_dmic4_clk,
++	LPI_MUX_dmic4_data,
++	LPI_MUX_ext_mclk1_a,
++	LPI_MUX_ext_mclk1_b,
++	LPI_MUX_ext_mclk1_c,
++	LPI_MUX_ext_mclk1_d,
++	LPI_MUX_ext_mclk1_e,
++	LPI_MUX_i2s0_clk,
++	LPI_MUX_i2s0_data,
++	LPI_MUX_i2s0_ws,
++	LPI_MUX_i2s1_clk,
++	LPI_MUX_i2s1_data,
++	LPI_MUX_i2s1_ws,
++	LPI_MUX_i2s2_clk,
++	LPI_MUX_i2s2_data,
++	LPI_MUX_i2s2_ws,
++	LPI_MUX_i2s3_clk,
++	LPI_MUX_i2s3_data,
++	LPI_MUX_i2s3_ws,
++	LPI_MUX_lpass_lpi_dbg_clk,
++	LPI_MUX_qca_swr_clk,
++	LPI_MUX_qca_swr_data,
++	LPI_MUX_slimbus_clk,
++	LPI_MUX_slimbus_data,
++	LPI_MUX_swr_rx_clk,
++	LPI_MUX_swr_rx_data,
++	LPI_MUX_swr_tx_clk,
++	LPI_MUX_swr_tx_clk1,
++	LPI_MUX_swr_tx_data,
++	LPI_MUX_va_i2s0_clk,
++	LPI_MUX_va_i2s0_data,
++	LPI_MUX_va_i2s0_ws,
++	LPI_MUX_wsa2_swr_clk,
++	LPI_MUX_wsa2_swr_data,
++	LPI_MUX_wsa_swr_clk,
++	LPI_MUX_wsa_swr_data,
++	LPI_MUX_gpio,
++	LPI_MUX__,
++};
 +
-+properties:
-+  compatible:
-+    const: qcom,hawi-lpass-lpi-pinctrl
++static const struct pinctrl_pin_desc hawi_lpi_pins[] = {
++	PINCTRL_PIN(0, "gpio0"),
++	PINCTRL_PIN(1, "gpio1"),
++	PINCTRL_PIN(2, "gpio2"),
++	PINCTRL_PIN(3, "gpio3"),
++	PINCTRL_PIN(4, "gpio4"),
++	PINCTRL_PIN(5, "gpio5"),
++	PINCTRL_PIN(6, "gpio6"),
++	PINCTRL_PIN(7, "gpio7"),
++	PINCTRL_PIN(8, "gpio8"),
++	PINCTRL_PIN(9, "gpio9"),
++	PINCTRL_PIN(10, "gpio10"),
++	PINCTRL_PIN(11, "gpio11"),
++	PINCTRL_PIN(12, "gpio12"),
++	PINCTRL_PIN(13, "gpio13"),
++	PINCTRL_PIN(14, "gpio14"),
++	PINCTRL_PIN(15, "gpio15"),
++	PINCTRL_PIN(16, "gpio16"),
++	PINCTRL_PIN(17, "gpio17"),
++	PINCTRL_PIN(18, "gpio18"),
++	PINCTRL_PIN(19, "gpio19"),
++	PINCTRL_PIN(20, "gpio20"),
++	PINCTRL_PIN(21, "gpio21"),
++	PINCTRL_PIN(22, "gpio22"),
++};
 +
-+  reg:
-+    items:
-+      - description: LPASS LPI TLMM Control and Status registers
++static const char * const gpio_groups[] = {
++	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
++	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
++	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
++	"gpio22",
++};
 +
-+  clocks:
-+    items:
-+      - description: LPASS LPR(Low Power Resource) voting clock
-+      - description: LPASS Audio voting clock
++static const char * const swr_tx_clk_groups[] = { "gpio0" };
++static const char * const i2s0_clk_groups[] = { "gpio0" };
++static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio14" };
++static const char * const i2s0_ws_groups[] = { "gpio1" };
++static const char * const swr_rx_clk_groups[] = { "gpio3" };
++static const char * const i2s0_data_groups[] = { "gpio2", "gpio3", "gpio4", "gpio5" };
++static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5" };
++static const char * const ext_mclk1_c_groups[] = { "gpio5" };
++static const char * const dmic1_clk_groups[] = { "gpio6" };
++static const char * const va_i2s0_clk_groups[] = { "gpio6" };
++static const char * const dmic1_data_groups[] = { "gpio7" };
++static const char * const va_i2s0_ws_groups[] = { "gpio7" };
++static const char * const dmic2_clk_groups[] = { "gpio8" };
++static const char * const va_i2s0_data_groups[] = { "gpio8", "gpio9" };
++static const char * const dmic2_data_groups[] = { "gpio9" };
++static const char * const ext_mclk1_b_groups[] = { "gpio9" };
++static const char * const i2s1_clk_groups[] = { "gpio10" };
++static const char * const wsa_swr_clk_groups[] = { "gpio10" };
++static const char * const i2s1_ws_groups[] = { "gpio11" };
++static const char * const wsa_swr_data_groups[] = { "gpio11", "gpio21" };
++static const char * const dmic3_clk_groups[] = { "gpio12" };
++static const char * const i2s3_clk_groups[] = { "gpio12" };
++static const char * const dmic3_data_groups[] = { "gpio13" };
++static const char * const i2s3_ws_groups[] = { "gpio13" };
++static const char * const ext_mclk1_a_groups[] = { "gpio13" };
++static const char * const lpass_lpi_dbg_clk_groups[] = { "gpio13" };
++static const char * const swr_tx_clk1_groups[] = { "gpio14" };
++static const char * const ext_mclk1_d_groups[] = { "gpio14" };
++static const char * const i2s1_data_groups[] = { "gpio15", "gpio16", "gpio21", "gpio22" };
++static const char * const wsa2_swr_clk_groups[] = { "gpio15" };
++static const char * const wsa2_swr_data_groups[] = { "gpio16", "gpio22" };
++static const char * const dmic4_clk_groups[] = { "gpio17" };
++static const char * const i2s3_data_groups[] = { "gpio17", "gpio18" };
++static const char * const dmic4_data_groups[] = { "gpio18" };
++static const char * const i2s2_clk_groups[] = { "gpio19" };
++static const char * const slimbus_clk_groups[] = { "gpio19" };
++static const char * const qca_swr_clk_groups[] = { "gpio19" };
++static const char * const i2s2_ws_groups[] = { "gpio20" };
++static const char * const slimbus_data_groups[] = { "gpio20" };
++static const char * const qca_swr_data_groups[] = { "gpio20" };
++static const char * const i2s2_data_groups[] = { "gpio21", "gpio22" };
++static const char * const ext_mclk1_e_groups[] = { "gpio22" };
 +
-+  clock-names:
-+    items:
-+      - const: lpr
-+      - const: audio
++static const struct lpi_pingroup hawi_groups[] = {
++	LPI_PINGROUP(0, 11, swr_tx_clk, i2s0_clk, _, _),
++	LPI_PINGROUP(1, 11, swr_tx_data, i2s0_ws, _, _),
++	LPI_PINGROUP(2, 11, swr_tx_data, i2s0_data, _, _),
++	LPI_PINGROUP(3, 11, swr_rx_clk, i2s0_data, _, _),
++	LPI_PINGROUP(4, 11, swr_rx_data, i2s0_data, _, _),
++	LPI_PINGROUP(5, 11, swr_rx_data, ext_mclk1_c, i2s0_data, _),
++	LPI_PINGROUP(6, LPI_NO_SLEW, dmic1_clk, va_i2s0_clk, _, _),
++	LPI_PINGROUP(7, LPI_NO_SLEW, dmic1_data, va_i2s0_ws, _, _),
++	LPI_PINGROUP(8, LPI_NO_SLEW, dmic2_clk, va_i2s0_data, _, _),
++	LPI_PINGROUP(9, LPI_NO_SLEW, dmic2_data, va_i2s0_data, ext_mclk1_b, _),
++	LPI_PINGROUP(10, 11, i2s1_clk, wsa_swr_clk, _, _),
++	LPI_PINGROUP(11, 11, i2s1_ws, wsa_swr_data, _, _),
++	LPI_PINGROUP(12, LPI_NO_SLEW, dmic3_clk, i2s3_clk, _, _),
++	LPI_PINGROUP6(13, LPI_NO_SLEW, dmic3_data, i2s3_ws, ext_mclk1_a, _, lpass_lpi_dbg_clk),
++	LPI_PINGROUP(14, 11, swr_tx_data, swr_tx_clk1, ext_mclk1_d, _),
++	LPI_PINGROUP(15, 11, i2s1_data, wsa2_swr_clk, _, _),
++	LPI_PINGROUP(16, 11, i2s1_data, wsa2_swr_data, _, _),
++	LPI_PINGROUP(17, LPI_NO_SLEW, dmic4_clk, i2s3_data, _, _),
++	LPI_PINGROUP(18, LPI_NO_SLEW, dmic4_data, i2s3_data, _, _),
++	LPI_PINGROUP(19, LPI_NO_SLEW, i2s2_clk, slimbus_clk, qca_swr_clk, _),
++	LPI_PINGROUP(20, LPI_NO_SLEW, i2s2_ws, slimbus_data, qca_swr_data, _),
++	LPI_PINGROUP(21, 11, i2s2_data, _, wsa_swr_data, i2s1_data),
++	LPI_PINGROUP6(22, 11, i2s2_data, ext_mclk1_e, _, i2s1_data, wsa2_swr_data),
++};
 +
-+patternProperties:
-+  "-state$":
-+    oneOf:
-+      - $ref: "#/$defs/qcom-hawi-lpass-state"
-+      - patternProperties:
-+          "-pins$":
-+            $ref: "#/$defs/qcom-hawi-lpass-state"
-+        additionalProperties: false
++static const struct lpi_function hawi_functions[] = {
++	LPI_FUNCTION(gpio),
++	LPI_FUNCTION(dmic1_clk),
++	LPI_FUNCTION(dmic1_data),
++	LPI_FUNCTION(dmic2_clk),
++	LPI_FUNCTION(dmic2_data),
++	LPI_FUNCTION(dmic3_clk),
++	LPI_FUNCTION(dmic3_data),
++	LPI_FUNCTION(dmic4_clk),
++	LPI_FUNCTION(dmic4_data),
++	LPI_FUNCTION(ext_mclk1_a),
++	LPI_FUNCTION(ext_mclk1_b),
++	LPI_FUNCTION(ext_mclk1_c),
++	LPI_FUNCTION(ext_mclk1_d),
++	LPI_FUNCTION(ext_mclk1_e),
++	LPI_FUNCTION(i2s0_clk),
++	LPI_FUNCTION(i2s0_data),
++	LPI_FUNCTION(i2s0_ws),
++	LPI_FUNCTION(i2s1_clk),
++	LPI_FUNCTION(i2s1_data),
++	LPI_FUNCTION(i2s1_ws),
++	LPI_FUNCTION(i2s2_clk),
++	LPI_FUNCTION(i2s2_data),
++	LPI_FUNCTION(i2s2_ws),
++	LPI_FUNCTION(i2s3_clk),
++	LPI_FUNCTION(i2s3_data),
++	LPI_FUNCTION(i2s3_ws),
++	LPI_FUNCTION(lpass_lpi_dbg_clk),
++	LPI_FUNCTION(qca_swr_clk),
++	LPI_FUNCTION(qca_swr_data),
++	LPI_FUNCTION(slimbus_clk),
++	LPI_FUNCTION(slimbus_data),
++	LPI_FUNCTION(swr_rx_clk),
++	LPI_FUNCTION(swr_rx_data),
++	LPI_FUNCTION(swr_tx_clk),
++	LPI_FUNCTION(swr_tx_clk1),
++	LPI_FUNCTION(swr_tx_data),
++	LPI_FUNCTION(va_i2s0_clk),
++	LPI_FUNCTION(va_i2s0_data),
++	LPI_FUNCTION(va_i2s0_ws),
++	LPI_FUNCTION(wsa2_swr_clk),
++	LPI_FUNCTION(wsa2_swr_data),
++	LPI_FUNCTION(wsa_swr_clk),
++	LPI_FUNCTION(wsa_swr_data),
++};
 +
-+$defs:
-+  qcom-hawi-lpass-state:
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    $ref: qcom,lpass-lpi-common.yaml#/$defs/qcom-tlmm-state
-+    unevaluatedProperties: false
++static const struct lpi_pinctrl_variant_data hawi_lpi_data = {
++	.pins = hawi_lpi_pins,
++	.npins = ARRAY_SIZE(hawi_lpi_pins),
++	.groups = hawi_groups,
++	.ngroups = ARRAY_SIZE(hawi_groups),
++	.functions = hawi_functions,
++	.nfunctions = ARRAY_SIZE(hawi_functions),
++	.flags = LPI_FLAG_SLEW_RATE_SAME_REG,
++};
 +
-+    properties:
-+      pins:
-+        description:
-+          List of gpio pins affected by the properties specified in this
-+          subnode.
-+        items:
-+          pattern: "^gpio([0-9]|1[0-9]|2[0-2])$"
++static const struct of_device_id lpi_pinctrl_of_match[] = {
++	{
++		.compatible = "qcom,hawi-lpass-lpi-pinctrl",
++		.data = &hawi_lpi_data,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
 +
-+      function:
-+        enum: [dmic1_clk, dmic1_data, dmic2_clk, dmic2_data, dmic3_clk,
-+               dmic3_data, dmic4_clk, dmic4_data, ext_mclk1_a, ext_mclk1_b,
-+               ext_mclk1_c, ext_mclk1_d, ext_mclk1_e, gpio, i2s0_clk,
-+               i2s0_data, i2s0_ws, i2s1_clk, i2s1_data, i2s1_ws, i2s2_clk,
-+               i2s2_data, i2s2_ws, i2s3_clk, i2s3_data, i2s3_ws,
-+               lpass_lpi_dbg_clk, qca_swr_clk, qca_swr_data, slimbus_clk,
-+               slimbus_data, swr_rx_clk, swr_rx_data, swr_tx_clk, swr_tx_clk1,
-+               swr_tx_data, va_i2s0_clk, va_i2s0_data, va_i2s0_ws,
-+               wsa2_swr_clk, wsa2_swr_data, wsa_swr_clk, wsa_swr_data]
-+        description:
-+          Specify the alternative function to be configured for the specified
-+          pins.
++static const struct dev_pm_ops lpi_pinctrl_pm_ops = {
++	RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
++};
 +
-+allOf:
-+  - $ref: qcom,lpass-lpi-common.yaml#
++static struct platform_driver lpi_pinctrl_driver = {
++	.driver = {
++		.name = "qcom-hawi-lpass-lpi-pinctrl",
++		.of_match_table = lpi_pinctrl_of_match,
++		.pm = pm_ptr(&lpi_pinctrl_pm_ops),
++	},
++	.probe = lpi_pinctrl_probe,
++	.remove = lpi_pinctrl_remove,
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
++module_platform_driver(lpi_pinctrl_driver);
++MODULE_DESCRIPTION("Qualcomm Hawi LPI GPIO pin control driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+index 6ba0c4eba..056c4a774 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+@@ -92,6 +92,23 @@ struct pinctrl_pin_desc;
+ 		.pin_offset = 0,				\
+ 	}
+ 
++#define LPI_PINGROUP6(id, soff, f1, f2, f3, f4, f5)		\
++	{							\
++		.pin = id,					\
++		.slew_offset = soff,				\
++		.slew_base_spare_1 = false,			\
++		.funcs = (int[]){				\
++			LPI_MUX_gpio,				\
++			LPI_MUX_##f1,				\
++			LPI_MUX_##f2,				\
++			LPI_MUX_##f3,				\
++			LPI_MUX_##f4,				\
++			LPI_MUX_##f5,				\
++		},						\
++		.nfuncs = 6,					\
++		.pin_offset = 0,				\
++	}
 +
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
-+
-+    lpass_tlmm: pinctrl@7f60000 {
-+        compatible = "qcom,hawi-lpass-lpi-pinctrl";
-+        reg = <0x07f60000 0x20000>;
-+
-+        clocks = <&q6prmcc LPASS_HW_LPR_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+                 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+        clock-names = "lpr", "audio";
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&lpass_tlmm 0 0 23>;
-+
-+        tx-swr-sleep-clk-state {
-+            pins = "gpio0";
-+            function = "swr_tx_clk";
-+            drive-strength = <2>;
-+            bias-pull-down;
-+        };
-+    };
+ /*
+  * Slew rate control is done in the same register as rest of the
+  * pin configuration.
 -- 
 2.34.1
 
