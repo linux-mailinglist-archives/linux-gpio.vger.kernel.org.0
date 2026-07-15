@@ -1,214 +1,484 @@
-Return-Path: <linux-gpio+bounces-40113-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40114-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id KpIsJCt7V2ojPAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-40113-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:20:59 +0200
+	id pge6F1B9V2q/SQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40114-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:30:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDCFB75E085
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:20:58 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2B1C75E23B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:30:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=CmZ7BBxW;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=kGCyIrqP;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40113-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40113-lists+linux-gpio=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LAgfM15h;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40114-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40114-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 835DB3048DCE
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 12:16:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8054630470E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 12:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB5E466B53;
-	Wed, 15 Jul 2026 12:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7CF46AF10;
+	Wed, 15 Jul 2026 12:24:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69BC44C65F
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BC94432F2
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:24:33 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784117784; cv=none; b=mmUhZpxtViQn/sM+0RjNj7YXh9DY6jdc1VBH3wbCrUFl1A0TGFEVWwnHQDREfJhMVw3AU4JCejKT3VV+Ty+fQg1JB0WsgGKjthTUx16NsW9hGA9QSIj6gagWwyrhCpGrvaQ9FEUBKqzImcI/auW4t1WNJcGuWsmf0dJmxaVywYI=
+	t=1784118275; cv=none; b=REIELolD2Q0YO8stY2o+GiX8aqlhwciezVJ3h+vYXAFd9vaQ29IJkvcOO6xBPBgqXJ7KpO07HrrGNUri7dwe4DmIsfUO1GiDFUQk4laSIV2ZZY3mVZHrOO/FdI9/uNtMMWpnqWaG+EaWv/H1ya2dhYtNBpcet59V/eSBcc0vt8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784117784; c=relaxed/simple;
-	bh=ZgQliYmVE1lBTHE0bj1zPBkcxEn4Bdvmrj3fE184mjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CXUrayrWS87ikNi18bG6/v4J4vge1jUU/uiS+r6ShZaBKldgdhmlvjHupnJyMZER9UEFRCjDdzGtfwZJQZ5e7dL4r9jk4Uu3dcC+xGHm8X8AhHDURBJEouJpYiDpcaV0bv9BSOr5OwEYGDwBRYbo3qJ1hNrlHEhNQc3nRNFj6iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CmZ7BBxW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kGCyIrqP; arc=none smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FBca1Q3766603
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4xAzEXbpzsfN0W9pJf/x1CRXBQ/6tp9oQ7JRTKhYAFk=; b=CmZ7BBxWHNVIiE7b
-	9K5FHG5xi11tYAg6Pz3uhz4my7oUvjcWXl4PmgKDnAXWxzL2YxIuDxV/ReM+bbKa
-	2cydCZkDYBl9ZiWSNAvRG7wToFurk3xmONkySWWIy0zyQZ2r6VNZXt29gk8/XRs0
-	oY3Zgd/VcHam5DI4T7YD96kxET6QvI2SqvW0ilWo38MOj0mfJIUPGPNlMSbW5ebx
-	RgmD4T2oqIx7gZALqFl5wl6aXQEhIc31ND/r8iKfO/HyF2ZfDRJS00zNfLEBLyjA
-	uiAB6m+ZvnbUijQ6g0CSZ83AX+vW+RFPgh8+Gv/8kCFNnhUbtKqjelEhe4GLtJhz
-	9RUN6g==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fe8558j1u-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:16:19 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51ebdfceddcso6831181cf.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 05:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1784117779; x=1784722579; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=4xAzEXbpzsfN0W9pJf/x1CRXBQ/6tp9oQ7JRTKhYAFk=;
-        b=kGCyIrqPIc5hf1Lxje5ozJk+s7G6AwSg0ofJBBoMXuptDH02GLwfANBHOPrDfL6M6/
-         Xbi1n5omT+f0BdFinbaU4q2MH0coxe1/ANEFXMnCD+Jjby2tuaGel5Wb2BzGVnkBY5q8
-         m5XUKkdcQgb8quwNnQrogEeXl0Qigg22+ftT4hOf0PLZ1U2yA1hiU6Ca7s6eGeDY5ZsS
-         rXrewlDo7ENS1hwAhEXN+6sGFeRx0mP2faPCgj/tQelWKTjPoXugwVA0+CdLy14sxQoF
-         o0aVTMsyViF2+B/cSY6dUJMUpdveSvDd7pHghM0iZ6BhxpzzJe340doC2gMUcTeactM5
-         AvmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784117779; x=1784722579;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=4xAzEXbpzsfN0W9pJf/x1CRXBQ/6tp9oQ7JRTKhYAFk=;
-        b=PURtT33ADY7PznE0Ni9pSDyixbpfiPS4NVkz2fRGshStlaZmA3P9CEyi0CUSgAKGVC
-         F06UD6wMeWei2oG28pL8OyTyxb+MM35UCoDhvjBTrdCcLiOexyEQZNRBWoVQkut3DxpX
-         PtvBiZvqSO/gs/pVL3GliwedN38Cy0FeVENVBF/V/j+VEoLWucpoUSJgtesHFmT1dgUy
-         jC8RPCflY41h4k+JEFq3gpSEEI+yEIPcweGNKK0J6uy04V8pGBBYkUllxnSpyyLNHsJL
-         5sTGHwBGBSslz/2YSvGrs7rDYiF3Dhrtsql39oJxDnMtGibdkX7NHW/6UAJ4g/MAZIkS
-         l5wA==
-X-Forwarded-Encrypted: i=1; AHgh+Rr8RHJd3dVpgUgVj1d3Hv1ohrBLHswpnij3KKemtYBiuu2M0WJUIsaidPbIt5C6LGGSdV1ceD/3jCX6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGgU52RwxVCOo9LDlf6odqmoDJuwuFqvPvOslbMPO/q3/7CVtK
-	twarPFQanr+jQv8Zm+54z5Dyl17OyzhyFSGLudj1qUMgOjyQQW+I2caKI5dB0uqaTR1R4H32JsU
-	HqhQTimaE580gljUSjBlDCGsQgyI6S9GVFfyOCdkw6XT1j53nzcK6PS0MwDUWhWli
-X-Gm-Gg: AfdE7cn3as37Xwq9qKIytpXEJd2idH9HU7MwJWGClZzIHDANH9PGnb6lQQxDrt3Rt5Y
-	TGjlg5gagQdnAR8vKnFfKeMthtQErKpa6DG45PUmT1pWqxTcG5qTXZzlEzNiTB74Jy1jefBCUcQ
-	ZUMSpjz+Zcaq4GvyFEdaLVjz1wFhwv9V9mSWabfGCTwOyZg5FtIu2WoF6n4QxR3L3XaCIf/1CVt
-	t1fuDcn5uLUUJU46+6xWaGfwoRzzOk26SsIDoO07slO2uEZ6wyeS/7nLSYW0/UbTorG/E/88A9S
-	Z54PdHpZhqKVEuluaL2vo77EXidLva7Qju3vfTOQC8dd6W8wVnSIYGRDcKEGCWQ47TiFT/7TNtr
-	w9iKTkFkWkfDDMaUVPIrsP3i7cz7YrmhS7ih/5sU=
-X-Received: by 2002:ac8:7e84:0:b0:51a:8c97:9391 with SMTP id d75a77b69052e-51e4f12e7admr23055241cf.72.1784117778354;
-        Wed, 15 Jul 2026 05:16:18 -0700 (PDT)
-X-Received: by 2002:ac8:7e84:0:b0:51a:8c97:9391 with SMTP id d75a77b69052e-51e4f12e7admr23054651cf.72.1784117777741;
-        Wed, 15 Jul 2026 05:16:17 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:1716:4a80:ed58:2ab3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f464caeffsm14947235f8f.36.2026.07.15.05.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2026 05:16:16 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Daniel Golle <daniel@makrotopia.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH] gpiolib: tolerate gpio-hogs lacking a hogging state
-Date: Wed, 15 Jul 2026 14:16:15 +0200
-Message-ID: <178411777251.18877.15051361128846466144.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <4c67cf0839ccf57db35a826df6d8fc779531509a.1783974733.git.daniel@makrotopia.org>
-References: <4c67cf0839ccf57db35a826df6d8fc779531509a.1783974733.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1784118275; c=relaxed/simple;
+	bh=WjkkhX8AE55jsgJgX1FzkMHLBoKDh6l6Q8k1teC3sDk=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eUdZwzh2GRWxoGwLx7WCha+Gk7OLM8oYqfJ3+wlrc/V3JPKbY5lcUag1LD0TwvSJm1uRVhZqlYmNgOct9dCPw35zDtyK07r2W+ETj6fOkDIWEaZn8RjcBwD4O8XWoi1g35GM1bp93sBDZeTYWbPxl/uFZTQd7llojyPUTt9URFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAgfM15h; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30E01F00AC4
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784118271;
+	bh=PclXy2Uq7OPMyI+t/qU2+B3wDB55fTcxu4iOX0BaM3I=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=LAgfM15hhVaC15vSj8XQxsRNvGquqsgUOdks7kt343R7a1N5g9nUkhGh/uXHD9xfk
+	 nHuL0dFcxgvuhWFebeKG/ml37YscroM+LGpmg6vTy/NYhLFGJkXcxF49V5NileYc42
+	 yFcBl+s67bzQ7PDTJyhysHWIH3tWgPuHTNtr9YG4smlEOxhmeOTfhh5daJaeq0q4VC
+	 dVM8Wgqjwvx9UaMSkun0m/2IJKP0e4vLDNXe4PMhRzEKFuvISWLu21N/04zi2Ia3kf
+	 EMfQpJbcuN8aNGEmfLMx1xjXLy5cpYICzJI1CA7lIsIjNYsegE++dezSLCFahJvia/
+	 vzzxugae/c9Fg==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5b159850b16so1817374e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 05:24:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rq3rWWAbjd/sG/ETeSOyypGKczlOw6uTBnBoY/hVt/KCevppRuZCf3cwqW1Wt/AwUaPOjIxcdl3e5Wm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Ev7fHk8HwMqLJDKj3uklsj4F9cNFN8OQCFtFfe3wjJTZtNRv
+	8cfyn5y/voNM4zEVZizJezqj30fJ907D9i97UKxNPq5yOOd+RYoD52lH5hcQuGMeZ5TaMDPCYdL
+	Z3xWhldXT1VvkOUPZUJYOKl+x53JflX81H3BQl2GxIQ==
+X-Received: by 2002:a05:6512:3a87:b0:5b0:12e1:4879 with SMTP id
+ 2adb3069b0e04-5b1582c715emr2068822e87.60.1784118270190; Wed, 15 Jul 2026
+ 05:24:30 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 05:24:27 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 05:24:27 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260714-upstream-v2-v2-2-76e5e41026db@advantech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: EylSTT09hZ6LU2b9FyS1uyySeRA1Dcl9
-X-Authority-Analysis: v=2.4 cv=KOlqylFo c=1 sm=1 tr=0 ts=6a577a13 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=LCXYudziaqtIdDzv8-QA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDEyMCBTYWx0ZWRfX30i9dNHFrtEv
- SgXWTYX+59PWoH5PHLOp3xUrFKoRjr7Yso+K1/8UgCOpnrQg2+t5Ruvo3eBXp3gyaa0Nxh8ECrV
- fOcW7z0Q3+fg4x7F/nTWKu6veMGJ/pdCMixv88sLmx1GB7kOCWepB8wl5gv6pTYtJnHK1q4K1rz
- 7jAo4VTFWr/dTBUZjyzhVotTRbAfzMRr/wfSPK3oxNV4XrU7cObRK6v0WY8tVYXgxMF2+iPEXw8
- tVALwuRNDv3v2fmRQeKPFJFa/c6SAgk/f5hbIF3ya02MXUBnTIzylp1+IWKruFqIlvhbYhR9Tag
- 6QZH5GwYE/GyP/3sx1JAlVO8rPwHpR+1rz3L7Ilo6nuxn35Xx8Y4Lgfl75ZqnJ+ksuu4kfYBifL
- LKxVKeKv/RxBcSxTMwNoajWg1ZtHCEogSI08jXvvBUdnfSbykopav75rLJyzxvV/5uiw6obl1mb
- vadbRlVLaBOz4PI8/mg==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDEyMCBTYWx0ZWRfX2jnGyWWIx+Jz
- oxwYnYxtnZrJve7mwJxEnSp6oX2BV6lVVY7y6BTxONH8RmKAjOSwosSrqBexGqUtxDm7S3w2ga1
- CSKY7PtWiPQR1TylvExqLt3i3Ra+r3g=
-X-Proofpoint-ORIG-GUID: EylSTT09hZ6LU2b9FyS1uyySeRA1Dcl9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-15_02,2026-07-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 impostorscore=0 malwarescore=0 spamscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 lowpriorityscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607150120
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+References: <20260714-upstream-v2-v2-0-76e5e41026db@advantech.com> <20260714-upstream-v2-v2-2-76e5e41026db@advantech.com>
+Date: Wed, 15 Jul 2026 05:24:27 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mcnbv++YhPvocyiv9m_vuy2hWeuJ2sk9BNH=j7U3-dBFQ@mail.gmail.com>
+X-Gm-Features: AUfX_mzXdlShUuByf9jSWwdYpIzB9dN3xsnMMdNBfJC8EmPDXbPafGgehOl5DxQ
+Message-ID: <CAMRc=Mcnbv++YhPvocyiv9m_vuy2hWeuJ2sk9BNH=j7U3-dBFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] Add Advantech EIO GPIO driver
+To: Ramiro Oliveira <ramiro.oliveira@advantech.com>
+Cc: linux-kernel@vger.kernel.org, mfd@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Wenkai Chung <wenkai.chung@advantech.com.tw>, 
+	Francisco Aragon-Trivino <francisco.aragon-trivino@advantech.com>, 
+	Hongzhi Wang <hongzhi.wang@advantech.com>, 
+	Mikhail Tsukerman <mikhail.tsukerman@advantech.com>, 
+	Thomas Kastner <thomas.kastner@advantech.com>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Andi Shyti <andi.shyti@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-40113-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40114-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[28];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com,public-files.de,linux.intel.com,vger.kernel.org,lists.infradead.org,makrotopia.org];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:brgl@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:frank-w@public-files.de,m:andriy.shevchenko@linux.intel.com,m:mika.westerberg@linux.intel.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:daniel@makrotopia.org,m:bartosz.golaszewski@oss.qualcomm.com,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS(0.00)[m:ramiro.oliveira@advantech.com,m:linux-kernel@vger.kernel.org,m:mfd@lists.linux.dev,m:linux-gpio@vger.kernel.org,m:linux-hwmon@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fbdev@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-pm@vger.kernel.org,m:wenkai.chung@advantech.com.tw,m:francisco.aragon-trivino@advantech.com,m:hongzhi.wang@advantech.com,m:mikhail.tsukerman@advantech.com,m:thomas.kastner@advantech.com,m:lee@kernel.org,m:linusw@kernel.org,m:brgl@kernel.org,m:linux@roeck-us.net,m:andi.shyti@kernel.org,m:danielt@kernel.org,m:jingoohan1@gmail.com,m:deller@gmx.de,m:wim@linux-watchdog.org,m:rafael@kernel.org,m:daniel.lezcano@kernel.org,m:rui.zhang@intel.com,m:lukasz.luba@arm.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,lists.freedesktop.org,advantech.com.tw,advantech.com,kernel.org,roeck-us.net,gmail.com,gmx.de,linux-watchdog.org,intel.com,arm.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[advantech.com.tw:email,vger.kernel.org:from_smtp,advantech.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DDCFB75E085
+X-Rspamd-Queue-Id: C2B1C75E23B
+X-Rspamd-Action: no action
 
+On Tue, 14 Jul 2026 17:54:16 +0200, Ramiro Oliveira
+<ramiro.oliveira@advantech.com> said:
+> This driver controls the GPIO component of the Advantech EIO chip.
+>
 
-On Tue, 14 Jul 2026 00:30:53 +0100, Daniel Golle wrote:
-> Commit d1d564ec4992 ("gpio: move hogs into GPIO core") made
-> gpiochip_add_hog() return -EINVAL for hog nodes lacking any of the
-> 'input', 'output-low' or 'output-high' properties. The error is
-> propagated by gpiochip_hog_lines() and fails registration of the
-> whole GPIO chip.
-> 
-> The previous OF-specific implementation tolerated such nodes:
-> of_parse_own_gpio() warned "no hogging state specified, bailing out"
-> and of_gpiochip_add_hog() stopped processing the node without failing
-> chip registration.
-> 
-> [...]
+The subject should be: "gpio: add a driver for the Advantech EIO GPIO
+controller"
+or similar.
 
-Applied, thanks!
+> Signed-off-by: Ramiro Oliveira <ramiro.oliveira@advantech.com>
+> ---
+>  MAINTAINERS             |   7 ++
+>  drivers/gpio/Kconfig    |   6 ++
+>  drivers/gpio/Makefile   |   1 +
+>  drivers/gpio/gpio-eio.c | 252 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 266 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 53b5f7412966..a7da47393815 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -609,6 +609,13 @@ S:	Maintained
+>  F:	Documentation/scsi/advansys.rst
+>  F:	drivers/scsi/advansys.c
+>
+> +ADVANTECH EIO DRIVER
+> +M:	Ramiro Oliveira <ramiro.oliveira@advantech.com>
+> +S:	Maintained
+> +F:	drivers/gpio/gpio-eio.c
+> +F:	drivers/mfd/eio_core.c
+> +F:	include/linux/mfd/eio.h
 
-[1/1] gpiolib: tolerate gpio-hogs lacking a hogging state
-      https://git.kernel.org/brgl/c/e1cc8fa0fb9e5112d15f2c310b68ac316981c06c
+Shouldn't this be part of the MFD entry?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> +
+>  ADVANTECH SWBTN DRIVER
+>  M:	Andrea Ho <Andrea.Ho@advantech.com.tw>
+>  L:	platform-driver-x86@vger.kernel.org
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index f03c05288376..696065d77235 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -295,6 +295,12 @@ config GPIO_DWAPB
+>  	  Say Y or M here to build support for the Synopsys DesignWare APB
+>  	  GPIO block.
+>
+> +config GPIO_EIO
+> +	tristate "Advantech EIO GPIO"
+> +	depends on MFD_EIO
+> +	help
+> +	  Say Y or M to build support for Advantech EIO GPIO block.
+> +
+>  config GPIO_EIC_SPRD
+>  	tristate "Spreadtrum EIC support"
+>  	depends on ARCH_SPRD || COMPILE_TEST
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index fa14581e3995..628596705c21 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -64,6 +64,7 @@ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
+>  obj-$(CONFIG_GPIO_DS4520)		+= gpio-ds4520.o
+>  obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
+>  obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
+> +obj-$(CONFIG_GPIO_EIO)			+= gpio-eio.o
+>  obj-$(CONFIG_GPIO_ELKHARTLAKE)		+= gpio-elkhartlake.o
+>  obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
+>  obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
+> diff --git a/drivers/gpio/gpio-eio.c b/drivers/gpio/gpio-eio.c
+> new file mode 100644
+> index 000000000000..34e1aefd0716
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-eio.c
+> @@ -0,0 +1,252 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * GPIO driver for Advantech EIO Embedded controller.
+> + *
+> + * Copyright (C) 2025 Advantech Corporation. All rights reserved.
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/eio.h>
+> +#include <linux/module.h>
+> +
+> +#define EIO_GPIO_MAX_PINS	48
+> +#define EIO_GPIO_WRITE		0x18
+> +#define EIO_GPIO_READ		0x19
+> +
+> +struct eio_gpio_dev {
+> +	u64 avail;
+> +	int max;
+> +	struct gpio_chip chip;
+> +	struct device *dev;
+> +};
+> +
+> +static struct {
+> +	int size;
+> +	bool write;
+> +} ctrl_para[] = {
+
+Please use a common prefix for all symbols. "eio_gpio" like above is fine.
+
+> +	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x02, false },
+> +	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
+> +	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
+> +	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
+> +	{ 0x01, true  }, { 0x01, true  }, { 0x02, true  }, { 0x02, true  },
+> +	{ 0x02, false }, { 0x10, false }
+> +};
+> +
+> +enum gpio_ctrl {
+> +	EIO_GPIO_STATUS = 0x0,
+> +	EIO_GPIO_GROUP_AVAIL = 0x3,
+> +	EIO_GPIO_ERROR = 0x04,
+> +	EIO_GPIO_PIN_DIR = 0x10,
+> +	EIO_GPIO_PIN_LEVEL = 0x11,
+> +	EIO_GPIO_GROUP_DIR = 0x12,
+> +	EIO_GPIO_GROUP_LEVEL = 0x13,
+> +	EIO_GPIO_MAPPING = 0x14,
+> +	EIO_GPIO_NAME = 0x15
+> +};
+> +
+> +static struct {
+> +	int group;
+> +	int port;
+> +} group_map[] = {
+> +	{ 0, 0 }, { 0, 1 },
+> +	{ 1, 0 }, { 1, 1 },
+> +	{ 2, 0 }, { 2, 1 },
+> +	{ 3, 0 }, { 3, 1 },
+> +	{ 3, 2 }, { 3, 3 },
+> +	{ 3, 4 }, { 3, 5 },
+> +	{ 3, 6 }, { 3, 7 }
+> +};
+> +
+> +static int pmc_write(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
+> +{
+> +	struct pmc_op op = {
+> +		 .cmd       = EIO_GPIO_WRITE,
+> +		 .control   = ctrl,
+> +		 .device_id = dev_id,
+> +		 .payload   = (u8 *)data,
+> +	};
+> +
+> +	if (ctrl >= ARRAY_SIZE(ctrl_para))
+> +		return -ENOMEM;
+> +
+> +	if (!ctrl_para[ctrl].write)
+> +		return -EINVAL;
+> +
+> +	op.size = ctrl_para[ctrl].size;
+> +
+> +	return eio_core_pmc_operation(mfd_dev, &op);
+> +}
+> +
+> +static int pmc_read(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
+> +{
+> +	struct pmc_op op = {
+> +		 .cmd       = EIO_GPIO_READ,
+> +		 .control   = ctrl,
+> +		 .device_id = dev_id,
+> +		 .payload   = (u8 *)data,
+> +	};
+> +
+> +	if (ctrl > ARRAY_SIZE(ctrl_para))
+> +		return -ENOMEM;
+> +
+> +	op.size = ctrl_para[ctrl].size;
+> +
+> +	return eio_core_pmc_operation(mfd_dev, &op);
+> +}
+> +
+> +static int get_dir(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	u8 dir;
+> +	int ret;
+> +
+> +	ret = pmc_read(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dir ? 0 : 1;
+> +}
+> +
+> +static int dir_input(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	u8 dir = 0;
+> +
+> +	return pmc_write(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
+> +}
+> +
+> +static int dir_output(struct gpio_chip *chip, unsigned int offset, int value)
+> +{
+> +	u8 dir = 1;
+> +	u8 val = value;
+> +
+> +	pmc_write(chip->parent, EIO_GPIO_PIN_DIR, offset, &dir);
+> +
+> +	return pmc_write(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &val);
+> +}
+> +
+> +static int gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	u8 level;
+> +	int ret;
+> +
+> +	ret = pmc_read(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &level);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return level;
+> +}
+> +
+> +static int gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> +{
+> +	u8 val = value;
+> +
+> +	return pmc_write(chip->parent, EIO_GPIO_PIN_LEVEL, offset, &val);
+> +}
+> +
+> +static int check_support(struct device *dev)
+> +{
+> +	u8  data;
+> +	int ret;
+> +
+> +	ret = pmc_read(dev, EIO_GPIO_STATUS, 0, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if ((data & 0x01) == 0)
+> +		return -EOPNOTSUPP;
+> +
+> +	return 0;
+> +}
+> +
+> +static int check_pin(struct device *dev, int pin)
+> +{
+> +	int ret;
+> +	int group, bit;
+
+Why not put all ints on the same line? Same elsewhere.
+
+> +	u16 data;
+> +
+> +	/* Get pin mapping */
+> +	ret = pmc_read(dev, EIO_GPIO_MAPPING, pin, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if ((data & 0xFF) > ARRAY_SIZE(group_map))
+> +		return -EINVAL;
+> +
+> +	group = group_map[data & 0xFF].group;
+> +	bit   = data >> 8;
+> +
+> +	/* Check mapped pin */
+> +	ret = pmc_read(dev, EIO_GPIO_GROUP_AVAIL, group, &data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return data & BIT(bit) ? 0 : -EOPNOTSUPP;
+> +}
+> +
+> +static int gpio_init(struct device *mfd, struct eio_gpio_dev *eio_gpio)
+> +{
+> +	int ret, i;
+> +
+> +	ret = check_support(mfd);
+> +	if (ret)
+
+This warrants an -ENODEV. We don't want to retry probe here, do we?
+
+> +		return dev_err_probe(eio_gpio->dev, ret, "GPIO not supported\n");
+> +
+> +	eio_gpio->avail = 0;
+> +
+> +	for (i = 0 ; i < EIO_GPIO_MAX_PINS ; i++) {
+> +		ret = check_pin(mfd, i);
+> +		if (ret)
+> +			continue;
+> +
+> +		eio_gpio->avail |= BIT(i);
+> +		eio_gpio->max = i + 1;
+> +	}
+> +
+> +	return eio_gpio->max ? 0 : -EOPNOTSUPP;
+> +}
+> +
+> +static int gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct eio_gpio_dev *eio_gpio;
+> +	struct eio_dev *eio_dev = dev_get_drvdata(dev->parent);
+> +
+> +	if (!eio_dev)
+> +		return dev_err_probe(dev, -ENODEV, "Error contact eio_core\n");
+
+-ENODEV is used for silently bailing out of probe and telling the driver core
+to not defer. Basically it means: this device cannot be enabled on this system
+or is not present at all. This means: don't use dev_err_probe() and don't emit
+any logs. Just return -ENODEV.
+
+Though it makes me think - can this even happen at all? MFD cells won't get
+created if parent's probe() failed.
+
+> +
+> +	eio_gpio = devm_kzalloc(dev, sizeof(*eio_gpio), GFP_KERNEL);
+> +	if (!eio_gpio)
+> +		return -ENOMEM;
+> +
+> +	eio_gpio->dev = dev;
+> +
+> +	if (gpio_init(dev->parent, eio_gpio))
+
+Can you use the ret = gpio_init() pattern for consistency with the rest of the
+code?
+
+> +		return -EIO;
+> +
+> +	eio_gpio->chip.parent = dev->parent;
+> +	eio_gpio->chip.ngpio = eio_gpio->max;
+> +	eio_gpio->chip.label = KBUILD_MODNAME;
+> +	eio_gpio->chip.owner = THIS_MODULE;
+> +	eio_gpio->chip.direction_input = dir_input;
+> +	eio_gpio->chip.get = gpio_get;
+> +	eio_gpio->chip.direction_output = dir_output;
+> +	eio_gpio->chip.set = gpio_set;
+> +	eio_gpio->chip.get_direction = get_dir;
+> +	eio_gpio->chip.base = -1;
+> +	eio_gpio->chip.can_sleep = true;
+> +
+> +	return devm_gpiochip_add_data(dev, &eio_gpio->chip, eio_gpio);
+> +}
+> +
+> +static struct platform_driver gpio_driver = {
+> +	.probe  = gpio_probe,
+> +	.driver = { .name = KBUILD_MODNAME, },
+> +};
+> +
+> +module_platform_driver(gpio_driver);
+> +
+> +MODULE_AUTHOR("Wenkai Chung <wenkai.chung@advantech.com.tw>");
+> +MODULE_AUTHOR("Ramiro Oliveira <ramiro.oliveira@advantech.com>");
+> +MODULE_DESCRIPTION("GPIO driver for Advantech EIO embedded controller");
+> +MODULE_LICENSE("GPL");
+>
+> --
+> 2.43.0
+>
+>
+
+Bart
 
