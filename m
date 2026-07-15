@@ -1,82 +1,86 @@
-Return-Path: <linux-gpio+bounces-40100-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uUqVDF5BV2rEIAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-40100-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 10:14:22 +0200
+	id UAlrJnFCV2oMIQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-40101-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 10:18:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF2E975BC67
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 10:14:21 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D7DF75BCDC
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 10:18:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=BiLuzT9k;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40100-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40100-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Y+vkypAF;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40101-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40101-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2B3CA30067A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 08:14:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 442FD30022AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 08:18:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D9A33CAA2F;
-	Wed, 15 Jul 2026 08:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E08C3CC323;
+	Wed, 15 Jul 2026 08:18:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC02C3C7685
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 08:14:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695AE3C4B6A
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 08:18:45 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784103257; cv=none; b=TshsKuCYoz+KeBLVkuXc7dQVyGew359tB9RueAtucNSoK8bee1EL+IEz027+xRF2cJsyH9QaTeX/TwOoUqylVQP4WmenD/DM5I0zE//sCocE45Tp8GsFFsvlYsABEoNBGwT3nbN/swWzoGRRiLktUnWOZWJvUskA/+ymMDysEmg=
+	t=1784103527; cv=none; b=Y9UDzSj4V5QsqhKYapXddT+Au3ZJBmXtxSGv3+lLTlZ18kxlfoPwBu9xkCIVx8f8mkyYBLFo+AAleABXM3QJggDaa01NIFOqeJAoDFQrTNldEdlwrqkOSxxqzttGlxAwphmM7v0WNeQzbOMO9V1Nekf9ijCv6XfkWXVkvqz1lMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784103257; c=relaxed/simple;
-	bh=Xbj4Fpyb8sudi7VfnET8afsvimGSmtQ+d0AYrPbJ4LQ=;
+	s=arc-20240116; t=1784103527; c=relaxed/simple;
+	bh=tL9ke4GV6oGp+YWHUNQKE8E8soXN35upf5Ca2OWsGO4=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Izt0F9jW0Xjc66kvAMN7+U2M0LaSYB2plU79O1UdaoVvqdYrJdD/7AzOAv15ucRcEp9ZS9+vVc8EoKKbgF2s/nGyXGPQ5ZMWKrhHYjWqwfkFY3Z4EG+zPwFABlgTt0j/0qea4gUVBr4+zzESM41UG+FnJHPlXkhYVjgMpvNHzzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiLuzT9k; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 804541F00A3E
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 08:14:16 +0000 (UTC)
+	 To:Cc:Content-Type; b=T/Mzk8+cKTBfuX7BJFPlNrDe0h1fYz1qPrm2GjuhorNg+rBCgUXRT9PpJTch59OjGSgfOVakXuzcsbbOKHAO4okcrAhT4pypvWbG0/jzTEkvDZSFmVwyjIVGMkKNi+d02+nsTBmlkmO0lX9zo5aMk7W+btuO0abiG9GNiMDa2Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+vkypAF; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204121F00A3D
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 08:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784103256;
-	bh=2Tn6XIPZu6ZTk85lCpL0PLwZwWQy2iXUZrc+HzZ20Cg=;
+	s=k20260515; t=1784103525;
+	bh=8hGVZh4PoHLjhUPeUZDk7YT9r2Csoy+q60RG1t1sPcs=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=BiLuzT9k66iZr/kE41oySL8+/WHbkcX2Gzm6q+uXSRHBl0nOrRiJ7AmiMkimqcBK+
-	 +pvQJqnz0Hj3mFClMfnO+WKyS8pRsqAN2QBX655LP4r7RJJXEmPB1qbPkE4rTzrLTV
-	 hUFLDTvto/8pVf3HrCnxHJG98XGwT0Z7WBUSuw21rI+MlfGff7Zuyfqi3pq7AgQqx8
-	 0H3SCX+zZOP01uTiqTrEvIARgLIW7xwVA1a/lIbWsH1/nQhiO7cboLPoBXshjyUBJp
-	 rNgNBQ13lMq6+1aAfSnllgVHeYxfsie30d8Oga8D4gQxUC7gueOLL+281tM9w0LBuc
-	 OQnyvwCt/JOUw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5aeb8c19017so7535409e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 01:14:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoXOHVE6/DvblshqMwgNqNEVpOXe4X+vdORbCvN549NKRn/cHPhG9IUeGrZCK9r1IFeXwbnf/neit2e@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOqmlBcc0/eErcU9sde0vnM7Ggw50hL3Gugok8fBkfAgvt3S+I
-	ysJ6wHNWU0hyNXq0RPdV6HbZPz4QHhpk9YXJ5DFwCeW1fOnDpJYor9lnx5ryFLndTv4RqCAa0Vn
-	mRIcGNRe28taVpac8SB3r5OOsBgSJ9LRcF91faDGAiQ==
-X-Received: by 2002:a05:6512:6691:20b0:5aa:6e86:55e5 with SMTP id
- 2adb3069b0e04-5b158259071mr1149428e87.13.1784103255165; Wed, 15 Jul 2026
- 01:14:15 -0700 (PDT)
+	b=Y+vkypAFF2VaKmeNBsJM168DosyIXULOV/1fpLuzsTul1sgGvXaBR4KZ6xOeIC+2j
+	 Ci+eiuoe5uMuHswoUkQiT4cMDUrKyJHoTFFQmF37me/jk2bry6CyrZbFe4/+NfwFcX
+	 SG7ighaYJUwUSjtA22Qc2YIC4pFU+ExRU41dvQRVxxFMEEaWzAjIETlABGoFhH67vD
+	 hcmZwvOC5bee6CUqAe029xw9LtrSlXAKvUsDYQycVXhHx0+E6TaxSvcfjZ5xskzofp
+	 L3QcfMeKA0I8rSRy0J4LVEzwZYEL7usUigDcxEmdjKlPkyB9vRYGbpTIPLxVrXraLs
+	 6i7e19kgfMjHw==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-39c7ed5410bso27600271fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 01:18:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rrhe0KwhvPBUep90l8fYRF8mh22EClKnS/IuLkzMhLGSFPC3zWNT8+nEQU/cFy+Zo7F6SElatRDabwg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/e9LlL5CoJEWvyeQgTbh3hyqZc9EEvLCEdzymfHWKoD3Ypc47
+	8O8gC5inVQCnCPGMCSyxN3+Ynm5sDU0/ml2K3GhH6qGWtt3DUWCuubezUhH6N+tKkeVB4ArAVBx
+	fe4XZzDJPzRunv0KpCAKjrrj2Wq4KCgnBM+wroTeJgg==
+X-Received: by 2002:a2e:a58f:0:b0:39c:7919:fcf1 with SMTP id
+ 38308e7fff4ca-39db6d81975mr4644921fa.33.1784103523816; Wed, 15 Jul 2026
+ 01:18:43 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 15 Jul 2026 01:14:14 -0700
+ HTTPREST; Wed, 15 Jul 2026 01:18:41 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 15 Jul 2026 01:14:14 -0700
+ HTTPREST; Wed, 15 Jul 2026 01:18:41 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260715080747.1638097-1-chou.cosmo@gmail.com>
+In-Reply-To: <20260711210131.236025-3-marex@nabladev.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260715080747.1638097-1-chou.cosmo@gmail.com>
-Date: Wed, 15 Jul 2026 01:14:14 -0700
-X-Gmail-Original-Message-ID: <CAMRc=McauRSXGQfCSDCQD6bM78f91yxPGFGn+QE4oJG=KfmUkw@mail.gmail.com>
-X-Gm-Features: AUfX_mxaiUCrnljmC66dl2tD6cjzJ-COL8OTuJd71_8AqlyFeIXYAm0XeLoeDJA
-Message-ID: <CAMRc=McauRSXGQfCSDCQD6bM78f91yxPGFGn+QE4oJG=KfmUkw@mail.gmail.com>
-Subject: Re: [PATCH] leds: pca9532: Fix phantom device registration on missing hardware
-To: Cosmo Chou <chou.cosmo@gmail.com>
-Cc: linusw@kernel.org, brgl@kernel.org, linux-leds@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	cosmo.chou@quantatw.com, lee@kernel.org, pavel@kernel.org, riku.voipio@iki.fi
+References: <20260711210131.236025-1-marex@nabladev.com> <20260711210131.236025-3-marex@nabladev.com>
+Date: Wed, 15 Jul 2026 01:18:41 -0700
+X-Gmail-Original-Message-ID: <CAMRc=McWngnxX1TE7jj+4hr25PN6o4rZGW+Jm2CivXtzA53CwA@mail.gmail.com>
+X-Gm-Features: AUfX_mwKBsfMiGTO8O5kdCZA1clS20B1ees3zGV3oL0u74_c0uWhHuUReKtAFA8
+Message-ID: <CAMRc=McWngnxX1TE7jj+4hr25PN6o4rZGW+Jm2CivXtzA53CwA@mail.gmail.com>
+Subject: Re: [PATCH 02/10] dt-bindings: gpio: pca95xx: Document Kinetic KTS1622
+To: Marek Vasut <marex@nabladev.com>, 
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	kernel@dh-electronics.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.66 / 15.00];
@@ -84,87 +88,120 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-40100-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email,mail.gmail.com:mid];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-40101-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:chou.cosmo@gmail.com,m:linusw@kernel.org,m:brgl@kernel.org,m:linux-leds@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:cosmo.chou@quantatw.com,m:lee@kernel.org,m:pavel@kernel.org,m:riku.voipio@iki.fi,m:choucosmo@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:marex@nabladev.com,m:konstantin@linuxfoundation.org,m:linux-arm-kernel@lists.infradead.org,m:alexandre.torgue@foss.st.com,m:brgl@kernel.org,m:conor+dt@kernel.org,m:krzk+dt@kernel.org,m:linusw@kernel.org,m:robh@kernel.org,m:devicetree@vger.kernel.org,m:kernel@dh-electronics.com,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:conor@kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nabladev.com:email,vger.kernel.org:from_smtp,dh-electronics.com:email,st.com:email,mail.gmail.com:mid,infradead.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,stormreply.com:email];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AF2E975BC67
+X-Rspamd-Queue-Id: 3D7DF75BCDC
 
-On Wed, 15 Jul 2026 10:07:47 +0200, Cosmo Chou <chou.cosmo@gmail.com> said:
-> The initial PWM and PSC register writes in pca9532_configure() do not
-> check the return values of i2c_smbus_write_byte_data(). If the I2C
-> device is physically absent from the bus, the write fails with -ENXIO.
-> However, the driver ignores this error and allows probe() to complete
-> successfully.
+On Sat, 11 Jul 2026 22:59:31 +0200, Marek Vasut <marex@nabladev.com> said:
+> The Kinetic Technologies KTS1622 is a 16-bit general-purpose I/O
+> expander via the I2C bus for microcontrollers when additional I/Os
+> are needed while keeping interconnections to the minimum. Datasheet
+> comparison suggests that it is compatible with TCAL6416, add the
+> compatible string and TCAL6416 as a fallback compatible.
 >
-> This results in the registration of phantom LED class devices and
-> gpiochips backed by non-existent hardware. Subsequent GPIO reads from
-> these phantom chips return bogus values (due to -ENXIO being truncated
-> to an unsigned char in pca9532_gpio_get_value()), silently corrupting
-> hardware state tracking in userspace.
->
-> Propagate the I2C write failures back to probe() so the driver core
-> can gracefully abort binding and release devres-managed resources.
->
-> Fixes: e14fa82439d3 ("leds: Add pca9532 led driver")
-> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
+> Signed-off-by: Marek Vasut <marex@nabladev.com>
 > ---
->  drivers/leds/leds-pca9532.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Bartosz Golaszewski <brgl@kernel.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Linus Walleij <linusw@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: kernel@dh-electronics.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-> index f3bf59495b68..9606c5b294ed 100644
-> --- a/drivers/leds/leds-pca9532.c
-> +++ b/drivers/leds/leds-pca9532.c
-> @@ -397,10 +397,14 @@ static int pca9532_configure(struct i2c_client *client,
->  	for (i = 0; i < 2; i++)	{
->  		data->pwm[i] = pdata->pwm[i];
->  		data->psc[i] = pdata->psc[i];
-> -		i2c_smbus_write_byte_data(client, PCA9532_REG_PWM(maxleds, i),
-> -			data->pwm[i]);
-> -		i2c_smbus_write_byte_data(client, PCA9532_REG_PSC(maxleds, i),
-> -			data->psc[i]);
-> +		err = i2c_smbus_write_byte_data(client, PCA9532_REG_PWM(maxleds, i),
-> +						data->pwm[i]);
-> +		if (err < 0)
-> +			return err;
-> +		err = i2c_smbus_write_byte_data(client, PCA9532_REG_PSC(maxleds, i),
-> +						data->psc[i]);
-> +		if (err < 0)
-> +			return err;
->  	}
->
->  	data->hw_blink = true;
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> index 4f955f855e1ab..4631388a7d914 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> @@ -22,6 +22,9 @@ properties:
+>        - items:
+>            - const: diodes,pi4ioe5v6534q
+>            - const: nxp,pcal6534
+> +      - items:
+> +          - const: kinetic,kts1622
+> +          - const: ti,tcal6416
+>        - items:
+>            - enum:
+>                - exar,xra1202
 > --
-> 2.43.0
+> 2.53.0
 >
 >
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Hi Konstantin!
+
+I applied this patch with b4 and tried to generate the .thanks email. It failed
+like so:
+
+$ b4 ty -all
+Auto-thankanating commits in gpio/for-next
+Found 9 of your commits since 1.week
+Calculating patch hashes, may take a moment...
+  Located: [PATCH 00/10] arm64: dts: st: Add support for DH
+electronics STM32MP23xx/STM32MP25xx DHCOS SoM and Breakout Board and
+DHSBC
+---
+Generating 1 thank-you letters
+  Writing: ./marex_nabladev_com_patch_00_10_arm64_dts_st_add_support_for_dh_electronics_stm32mp23xx_stm32mp25xx_dhcos_som_and_breakout_board_and_dhsbc.thanks
+Traceback (most recent call last):
+  File "/usr/bin/b4", line 8, in <module>
+    sys.exit(cmd())
+             ~~~^^
+  File "/usr/lib/python3/dist-packages/b4/command.py", line 417, in cmd
+    cmdargs.func(cmdargs)
+    ~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/b4/command.py", line 113, in cmd_ty
+    b4.ty.main(cmdargs)
+    ~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/b4/ty.py", line 681, in main
+    auto_thankanator(cmdargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/b4/ty.py", line 386, in auto_thankanator
+    send_messages(applied, wantbranch, cmdargs)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/b4/ty.py", line 452, in send_messages
+    with open(outfile, 'wb') as fh:
+         ~~~~^^^^^^^^^^^^^^^
+OSError: [Errno 36] File name too long:
+'./marex_nabladev_com_patch_00_10_arm64_dts_st_add_support_for_dh_electronics_stm32mp23xx_stm32mp25xx_dhcos_som_and_breakout_board_and_dhsbc.thanks'
+
+The name is under the 255 byte limit, is this a b4 bug/limitation?
+
+Thanks,
+Bart
 
