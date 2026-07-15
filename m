@@ -1,154 +1,164 @@
-Return-Path: <linux-gpio+bounces-40109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ly15Cal1V2o0OgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-40109-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 13:57:29 +0200
+	id r2nfNRx7V2r9OwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-40110-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:20:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F78475DD70
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 13:57:28 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0AF675E082
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:20:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fNZDHjf4;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40109-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40109-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=htydiT+o;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40110-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40110-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 16B2C300FFAF
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 11:54:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E931A3050099
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 12:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A9544B675;
-	Wed, 15 Jul 2026 11:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A855446AEEA;
+	Wed, 15 Jul 2026 12:08:43 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B323E448D03;
-	Wed, 15 Jul 2026 11:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8245544C662
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:08:38 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784116466; cv=none; b=AGljYsGOVdQOyB5s/LNe+VY9DLgPwT2AvOfS29iFxQLVtesXbl6wb3dt/86K+HfhoOKD8HvjGtV/QomJO4bvDJt521kejn8ET2ueEDptcyJzwBHoo4Juu4/buaA8TqpEHm+SLNmPq/NZSAMhfZMeJyF5BlfRSESDsObfDU+RpyU=
+	t=1784117321; cv=none; b=IZ94wALCYjonGr13k3oGs0AmtzV+biZZVA1G9vc+usJ+86rvmBG7OErmzJB8//Kej8vUyrpoXkwDN9RyNrZYlhUWdOVu6tDbDpKks77WZx/BaFxTdUbU2oUx/+oOibXwzPa48nt6/m1ZQMuGc2Mdb4xP2OJqwlGi0Ql+66ngcK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784116466; c=relaxed/simple;
-	bh=QlrEBqDfEOM99CdxCSEmbIGJD3ufJLBLKfyY36+xuio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AyBQay2k29WqtAlkTwbugw3TCUzbsSdnxusMa7NerLFo4jdAfBbMp2iELh+AHtNZuUckw1vel9WFgrg6HEQHC+CQwid5pZatvrgd4wiNOgTipal4mZ5M4OioHcgmbw0frExtzmfeCO8hSh6HSb+3rHjsgUwGuTY/aJWf5BKpsng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNZDHjf4; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A970A1F000E9;
-	Wed, 15 Jul 2026 11:54:24 +0000 (UTC)
+	s=arc-20240116; t=1784117321; c=relaxed/simple;
+	bh=O3D4DuMVlFnowfwB55XmZhgK8QP5M8Jnyw3tCtKzBZE=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dhGu17E2gy67c6hWihppKhTe57hdcSWAFEsmFcVhmsyKAiJQqsDKw0bThtQc7BOB9GaAoaooelVpt4627bX5YjWSB17/IRDgZG1ejBHe/GeeD2JYKiSLzR+xPQLdVDXHX6tPDZL8MmBB9t6c0vsF+iTA/fajPt1EaizHH92817U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htydiT+o; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E8EC1F00ACA
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784116465;
-	bh=NhYA8Q87BJfBKaDY8l8b3XCkSJcIvDIgrVKuDPrrVU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fNZDHjf47/6qyfV3dTP/PwYhCyIUwJk59M534fYVEwd27t7s27j7w+t61qwIAovWz
-	 /RLkinCG8LMZgdFKyH5lnWq3r6QSPMR+5FabagDLhDJfIeXCrPVGrQiuXQhJCBajlC
-	 Mf7mCJ3xl42M16V0VRH6F7RdJtPfG+YkDioqlek9TFtcmCUJ7VZbmbImaCFP8JdeSL
-	 NLPiSreUsgwRCMow00aQhon2Zd+gBMg8vrzRkZbdpYRUc2mgVvQJ7JiWdBZsCdzlrw
-	 D8bEZQ7Gu/f5ZFngpSENEzIuCSQty3vOvM30x9Mkfelf05wlH+/Cw6vU/fyJVZreFV
-	 Ozz9d9EyEaLnw==
-Date: Wed, 15 Jul 2026 13:54:22 +0200
-From: Thierry Reding <thierry.reding@kernel.org>
-To: Prathamesh Shete <pshete@nvidia.com>
-Cc: linusw@kernel.org, jonathanh@nvidia.com, linux-gpio@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, u.kleine-koenig@baylibre.com, 
-	dakr@kernel.org, bhelgaas@google.com
-Subject: Re: [PATCH] pinctrl: tegra264: fix DAP2 DIN/DOUT mux functions
-Message-ID: <ald0pajFVzOEEfnB@orome>
-References: <20260715101636.547305-1-pshete@nvidia.com>
+	s=k20260515; t=1784117317;
+	bh=PAbQMU3a4zsk62hRhiYERiZWy5WaKH4uugNgN6vzCrg=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=htydiT+oBRyNeK4R/AwGY+qFYk4IT7UVR839fWR3r67TEb37R4AplS0mYG1q+RNuK
+	 bZyBEIRamrijZGVGAqxb+hbTOcfACvKPmMn0ZW4MXIlCqxH3bJVG1F7zOCfDiv6u73
+	 Zp3e/VXhtebvzy77KsGk6mCY8d6l/17g22VnXIH+4w16D5NxMd/e/6gbbZUZHoJBaE
+	 QlN9PaWo4r+DzMOSoX71zFh32NGOjk5HW+y+SY/sJ12ebwLkO42bZDvvyi4DdKM24A
+	 kmag4Ujsd9puGy12UBfL95WMmOzGdQd9UHFB7DwMlwzHrKZgnhTVbTiBrK2E0amxLi
+	 9QRfDCqUxhQyA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-39c86945164so44531441fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 05:08:37 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwqZxOWAQkNVq+aWCP+KdpTO9OIcLqFG3wNPQ8r2bX31lcMitcX
+	xi32iJueR76kiDDH61RuiXkLGSmApqhaWw4V4E35PputpqTlugG4S6FQIkXzNnlY1gNvGA9QoPV
+	JOGhUusnx6VNEhb4ixZug6xtHr8NpVPOP4AdJ8F8rEg==
+X-Received: by 2002:a05:651c:b2a:b0:394:184:f7a7 with SMTP id
+ 38308e7fff4ca-39db6ba2f04mr6775831fa.6.1784117316161; Wed, 15 Jul 2026
+ 05:08:36 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 12:08:34 +0000
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 12:08:34 +0000
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260715114701.7713-1-hardikprakash.official@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tw5m5fn7rkukkfxk"
-Content-Disposition: inline
-In-Reply-To: <20260715101636.547305-1-pshete@nvidia.com>
+References: <20260715114701.7713-1-hardikprakash.official@gmail.com>
+Date: Wed, 15 Jul 2026 12:08:34 +0000
+X-Gmail-Original-Message-ID: <CAMRc=MdCn7BtFCQvraax5vV1t+G=Tjs4OP4ikd7RquFAj+G=Ww@mail.gmail.com>
+X-Gm-Features: AUfX_my3syVuuoAttMGOdOgurOycsXARkvaCzELF8v-pCujG44vgqsxmC-_c92M
+Message-ID: <CAMRc=MdCn7BtFCQvraax5vV1t+G=Tjs4OP4ikd7RquFAj+G=Ww@mail.gmail.com>
+Subject: Re: [PATCH v11] i2c: designware: defer probe if child GpioInt
+ controllers are not bound
+To: Hardik Prakash <hardikprakash.official@gmail.com>
+Cc: linux-gpio@vger.kernel.org, wsa@kernel.org, andriy.shevchenko@intel.com, 
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com, 
+	linusw@kernel.org, nathan@kernel.org, chaitanya.kumar.borah@intel.com, 
+	linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.76 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-40110-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hardikprakash.official@gmail.com,m:linux-gpio@vger.kernel.org,m:wsa@kernel.org,m:andriy.shevchenko@intel.com,m:mario.limonciello@amd.com,m:brgl@bgdev.pl,m:basavaraj.natikar@amd.com,m:linusw@kernel.org,m:nathan@kernel.org,m:chaitanya.kumar.borah@intel.com,m:linux-i2c@vger.kernel.org,m:hardikprakashofficial@gmail.com,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mail.gmail.com:mid];
+	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-40109-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:pshete@nvidia.com,m:linusw@kernel.org,m:jonathanh@nvidia.com,m:linux-gpio@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:u.kleine-koenig@baylibre.com,m:dakr@kernel.org,m:bhelgaas@google.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[thierry.reding@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thierry.reding@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:email,vger.kernel.org:from_smtp,orome:mid]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7F78475DD70
+X-Rspamd-Queue-Id: D0AF675E082
 
-
---tw5m5fn7rkukkfxk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pinctrl: tegra264: fix DAP2 DIN/DOUT mux functions
-MIME-Version: 1.0
-
-On Wed, Jul 15, 2026 at 10:16:36AM +0000, Prathamesh Shete wrote:
-> The dap2_din_pv7 and dap2_dout_pw0 pin groups were assigned swapped
-> primary mux functions: dap2_din_pv7 (data input) was muxed to
-> I2S2_SDATA_OUT and dap2_dout_pw0 (data output) to I2S2_SDATA_IN. As a
-> result the I2S2 data-in and data-out signals were routed to the wrong
-> pins, breaking DAP2 audio.
->=20
-> Correct the functions so dap2_din_pv7 uses I2S2_SDATA_IN and dap2_dout_pw0
-> uses I2S2_SDATA_OUT. The register offsets and drive-group macros are
-> already correct and are left unchanged.
->=20
-> Fixes: c98506206912 ("pinctrl: tegra: Add Tegra264 pinmux driver")
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+On Wed, 15 Jul 2026 13:47:01 +0200, Hardik Prakash
+<hardikprakash.official@gmail.com> said:
+> I2C controllers may have child devices with GpioInt resources that
+> depend on GPIO controllers being fully initialized. If the I2C
+> controller probes and enumerates children before the referenced GPIO
+> controller has completed probe, GPIO interrupts may not be properly
+> configured, leading to device failures.
+>
+> On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
+> AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
+> pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
+> AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
+> fail with lost arbitration errors:
+>
+>   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
+>   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
+>   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
+>   2.348157  lost arbitration
+>
+> Add a dependency check that walks ACPI child devices and defers probe
+> until any referenced GPIO controller is bound.
+>
+> Fixes: 3812a9e84265 ("pinctrl-amd: enable IRQ for WACF2200 touchscreen on Lenovo Yoga 7 14AGP11")
+> Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Hardik Prakash <hardikprakash.official@gmail.com>
+> Assisted-by: Claude:claude-sonnet-5
+> Assisted-by: DeepSeek:deepseek-v4-pro
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221494
 > ---
->  drivers/pinctrl/tegra/pinctrl-tegra264.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/i2c/busses/i2c-designware-platdrv.c | 80 +++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+> v10 -> v11:
+> - Replaced custom gpio_controller_ref list with gpio_device_find_by_fwnode(),
+>   as suggested by Andy, dropping the linked list and dedup logic (~60 lines)
+> - Moved resource-skip explanation from commit message into a code comment
+> - Fixed device_is_bound() to check gpio_device_to_device(gdev)->parent
+>   rather than the gpio_device's own internal class device, which never
+>   has a driver bound to it
+>
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Please include the entire changelog in every new iteration. I believe I gave
+my Ack for this and now it's gone. I have no idea why because there's neither
+a complete changelog nor links to previous versions.
 
---tw5m5fn7rkukkfxk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmpXdO4ACgkQ3SOs138+
-s6F8Hg//ZABoImgatqapHITAK1K7gYn5UKftAxB+Odp6CXuBcRf/OQdZZ7URcosK
-1BzFzGQKzdOQOvZo7G8hMbdJUPPjQImMuiV9FwVatSNrY5t5yzHoN0UQf+3/trph
-stTDhAw4tDcFDEvqmQDIlQmjOgfydM4fDWGyybPLIGWqnM2dHPRqu5NuWh/QO1yP
-A8P/QMwqL2l1aZebZRVosbLOZwxeh1eHroaeA628EDOOyKW0tBFTMHrVVW4ASxBK
-4mrDoVexKxiNKpWEqvBYlgKG850GoH6syURrzVrFNi/lgZ9+p45lajfjTMagMWUF
-NvFCRCCY2M0zrBaDRnhFYbBjlaB5RGR/4c54U7urj9Z85MP0Lnu4Md99BjIolf3q
-QFLiXClYEML2Qr/WD6u6nY8eUrw+1Rq94iS6LNFaM9FmRoh0GR8vVYZ8ei5tFw48
-KXHq9p3I3JGxy3UYzQSs+YmXNM6DEVGbDkcXGVYgL1GSQa9aEBxBibux00EcbrvA
-D3PmUEvGWBy514cPaXTHsWNB44Ud7xpXKNstpkwduG6Nzu80SUiHfcBLZkus2GCS
-77ZcOQw7iVHv5Voo7aE+pqngztk79wGx3hiu785WsRdB27dPXsb/DqDwcQ1FUukn
-Xvjzz7PN5wAQuA65mNPJpPhVB3Rje3eP3Swhm60ZFazdQNayALg=
-=7ciO
------END PGP SIGNATURE-----
-
---tw5m5fn7rkukkfxk--
+Bart
 
