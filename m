@@ -1,147 +1,171 @@
-Return-Path: <linux-gpio+bounces-40104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id yQevDE1OV2reIwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-40104-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 11:09:33 +0200
+	id we0jFHZVV2rEJQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-40105-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 11:40:06 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D32875C418
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 11:09:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A32B775C961
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 11:40:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=VvwrNlJ2;
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40104-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40104-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NYO1jeM4;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40105-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40105-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F1B83301147A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 09:08:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DF60C301547B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 09:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C483EDE4F;
-	Wed, 15 Jul 2026 09:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45D2A43A7E2;
+	Wed, 15 Jul 2026 09:40:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922373ED3A5
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 09:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E19A30CD80
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 09:39:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784106532; cv=none; b=NUrSlr1IGfY50FCHI2eaQCLNn+h2p7YJOU6fWZQvqJJg0/Fd1D3RtJ0X1b2MqFr3XKdibJtnSGTtaW2CoRXcaqgMWuNyUwKAkLIzSzvvA4WkUhBBlUSOL3mBC+0psUfWyR6F6vdGLUmIn6mopfO80NU8dPLLyQmAr7PkcKY9Nk0=
+	t=1784108392; cv=none; b=J1XELFrItz4oQu/NMiytUj2+wVJWCpcMK6TM7/j5fANTwAjYotJlpBNTrKGVvokLjCZWH8qbZWrLeilUbcegbUxwTP96S/vwffPxWSJioqhCJuQHsKa6DpjHD9RoE6Xw0jgXhEK928xue4WwxdjgRnst8UCGrCOaEPqicnbB4tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784106532; c=relaxed/simple;
-	bh=UiaxwdsErN1/01E9RU1yk8353v6GsUb6rdk2/6geu9k=;
+	s=arc-20240116; t=1784108392; c=relaxed/simple;
+	bh=Qz3sYTsIi1/xJ6sQjJpB8d/Dlyku/yQ8I5SmQ6xascA=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XcjqjV7oWuyDghVDG7I3Psb640mohcgWvFFXg6doMvuwRu6oOJye7QqaHcm0ZebnaVfcUkqt99+9qARUyEUJMCTc6QqaHqh3vNtXYAuC6u4zqusxW2gr1UnsuXGJ1+mXVLwAgFoFMrH/wmBZB6OFbYuz8mU6gOz7FW35qu5YZc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvwrNlJ2; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64E0D1F000E9
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 09:08:51 +0000 (UTC)
+	 To:Cc:Content-Type; b=uDTYN0un0QfWc6G5gHNp4VCZt0O0eiOXckAoY1F35AadeWei/UmDezBDjipqyNWzi9XvNH/O42x6+jNI7eMYkqcZwhW0ScJ+UC3no9Y0QBk6tAe++0TBOTqO0AuDzmlytpQ5ouRjVm76vAwgVqYzmCn3CMMY4PcvQUYuh4ZfME4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYO1jeM4; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 899A21F000E9
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 09:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784106531;
-	bh=UiaxwdsErN1/01E9RU1yk8353v6GsUb6rdk2/6geu9k=;
+	s=k20260515; t=1784108379;
+	bh=vgP1ciFHHEy2aNX8fdXiSkbeB9jhlrSut/HtS4LRTiQ=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=VvwrNlJ2E4ImcE+WIU4fcDSflBItrwzaZva7OQKwqvf1/8iCr7tNjNqEDUB8Qddd6
-	 vAaJ1l85GRH6mp8gtGDoVb7J/TOHkO9u9gqOTwDPAXBbazh0fR+aVqn4U2mIgL+iga
-	 I/LQcj8n4vbduvEO+g7d+tZ+0T/fgtoCfXyKFnXJecHSKL1HKnS8M4o95GArBuX8B+
-	 NzyzTHtpnL+uGGqSJDpP5cVFHN3DvH6y4QtTswaNmrdZk+ly0P30GNnZsdt/eRJcAf
-	 9pf/PXncDC7HfzbPz1wF48ECQleFNcAzuu5ynwsAd2pfahI8eTeLpHExotOq5ckNIk
-	 Ix+B90lcLr0GQ==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-39c9107baa7so51847041fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 02:08:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rr8MB+ZRLGbBphYAEk56ZyRcSCC74Jaqp3X5NcExWpwmXNxk+Kdt/JTSykSPjzRGdmmFxCA4PyxOb++@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtOTzcOYsjOY2HgVDyjTDJY8AT/Qpdgw/CuRKdal3vV8VgV/AS
-	xtnvYWCRZCpPEKv2Ds1sNmMXizkN0LU5YASpwsqoFS4qH6Bm5/nqwoATcxsHF9gEfArpc4vETGg
-	DNquIUqrpVHOMxep9N32HrkQ1XeMpV6WLOF5q5GrWvg==
-X-Received: by 2002:a2e:bc27:0:b0:39c:a09d:c48b with SMTP id
- 38308e7fff4ca-39db6db0f2bmr5333171fa.36.1784106530137; Wed, 15 Jul 2026
- 02:08:50 -0700 (PDT)
+	b=NYO1jeM41wwN6HWceYVuKj0b1Cd9a2bRnQX9tuTArr02xM4nwvjlCcayOUyc426Cb
+	 /x/5zwvH2xjxnYpgY9KpK+iCGs1MUwJmTxaofOJ2M1Xy8bu6Kpd/I/vBfCxl8/iw0B
+	 CEpcsiqI0ub78bGkrY92DiJQ+r/ftetLOS0lsp4/66vNMnFYUHSoOAaQRHtbtzB083
+	 0fjFAkAF4qgtZlDVDMw8PkOwj2hZ9WKE/bUG0e8RIJ3fSwOyoxMpkPVXp81CBrmqmW
+	 8FAC0ai8uhNxhBMp/6Nd7ejo2z8eV5Ta624kJDGffWN1mfk+t6Z1OqcJawrpaDM+QD
+	 aGhoH6yQil2FQ==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5b01910b499so1721031e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 02:39:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpzWIGhJbWDTZIU6k49wNQfQ2wkjzYwUUWWbcI55I6ofrSb+t6JDjZk6WZPIi8v/e8EIdN3WVhduB8w@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAdfoILPMkBkX4o/3ZMsF1eThrFkp/a1o3coGY6LdiKfxJYrZZ
+	PYcrIzJsD3PDOzxmND6yhMhT3gxGQi3qZCz5bSXmDs+tv9rrv25s/pdStqBLMFsYpSMofn8hfof
+	DTFzGxOTbbfTgEl4tdU+N3Etw/eIZeO4+wR9bWn6Jag==
+X-Received: by 2002:a05:6512:1383:b0:5ae:b62b:68b2 with SMTP id
+ 2adb3069b0e04-5b01c3e61f9mr5225339e87.2.1784108378264; Wed, 15 Jul 2026
+ 02:39:38 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 15 Jul 2026 02:08:48 -0700
+ HTTPREST; Wed, 15 Jul 2026 02:39:37 -0700
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 15 Jul 2026 02:08:48 -0700
+ HTTPREST; Wed, 15 Jul 2026 02:39:37 -0700
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <aldGhpswOfyjd8vO@ashevche-desk.local>
+In-Reply-To: <20260710183439.996923-3-adilov@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <alV0wIgZAY_InGYV@google.com> <alX2Q3OcJHVmamWM@ashevche-desk.local>
- <CAMRc=MckJVi5bPtBh9p9D3SHaJcyvf19B2J-u7fbDiTA=CLdJA@mail.gmail.com> <aldGhpswOfyjd8vO@ashevche-desk.local>
-Date: Wed, 15 Jul 2026 02:08:48 -0700
-X-Gmail-Original-Message-ID: <CAMRc=McMxkpz3O+ho_4qGhFA3W+ok0YVtWz--q4dnhGsAPJi8g@mail.gmail.com>
-X-Gm-Features: AUfX_myqr1qMTTlxikqcOdvfAxMiRE6w0BKmQT53Pufpd7tEUr6YcOyZNk5jJoc
-Message-ID: <CAMRc=McMxkpz3O+ho_4qGhFA3W+ok0YVtWz--q4dnhGsAPJi8g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: remove trailing comma from sentinel in GPIO_LOOKUP_SINGLE
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>
+References: <20260710183439.996923-1-adilov@disroot.org> <20260710183439.996923-3-adilov@disroot.org>
+Date: Wed, 15 Jul 2026 02:39:37 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MddZxoi_=QCFYp1PM8OwsWbz-Tsmoa7TMkQ1bh+qf-pdA@mail.gmail.com>
+X-Gm-Features: AUfX_mxMp8HTvBCGjbXg4xiW_glQFNWxFavr5ZgIi8rTBWEzgus20rE8H7XP2fw
+Message-ID: <CAMRc=MddZxoi_=QCFYp1PM8OwsWbz-Tsmoa7TMkQ1bh+qf-pdA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: realtek-otto: decide bank_read/write by device endianness
+To: Rustam Adilov <adilov@disroot.org>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Sander Vanheule <sander@svanheule.net>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-5.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-40104-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-40105-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:adilov@disroot.org,m:linusw@kernel.org,m:brgl@kernel.org,m:sander@svanheule.net,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,disroot.org:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:linusw@kernel.org,m:linux-gpio@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dmitry.torokhov@gmail.com,m:brgl@kernel.org,m:dmitrytorokhov@gmail.com,s:lists@lfdr.de];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0D32875C418
+X-Rspamd-Queue-Id: A32B775C961
 
-On Wed, 15 Jul 2026 10:36:22 +0200, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> said:
-> On Wed, Jul 15, 2026 at 08:11:06AM +0000, Bartosz Golaszewski wrote:
->> On Tue, 14 Jul 2026 10:41:39 +0200, Andy Shevchenko
->> <andriy.shevchenko@linux.intel.com> said:
->> > On Mon, Jul 13, 2026 at 04:29:16PM -0700, Dmitry Torokhov wrote:
->> >> The GPIO_LOOKUP_SINGLE macro defines a lookup table with a single entry
->> >
->> > GPIO_LOOKUP_SINGLE()
->>
->> I fixed it when applying.
+On Fri, 10 Jul 2026 20:34:39 +0200, Rustam Adilov <adilov@disroot.org> said:
+> In order to have a working gpio controller with SWAP_IO_SPACE,
+> the way bank_read and bank_write are defined must be changed and
+> separated from GPIO_PORTS_REVERSED flag. That also includes the
+> flags parameter used by gpio_generic_chip_config.
 >
-> Thanks!
+> To achieve it, use the device_is_big_endian() to decide the
+> bank_read/write parameter and the flag.
 >
->> >> followed by an empty sentinel entry. The sentinel entry has a trailing
->> >> comma which is unnecessary. Remove it.
->> >
->> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>
->> I queued it but I do consider it a bit of a needless churn TBH.
+> Signed-off-by: Rustam Adilov <adilov@disroot.org>
+> ---
+>  drivers/gpio/gpio-realtek-otto.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 >
-> You should really be against Uwe's patches then! :-)
+> diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek-otto.c
+> index 491fde846d46..f96072fbce92 100644
+> --- a/drivers/gpio/gpio-realtek-otto.c
+> +++ b/drivers/gpio/gpio-realtek-otto.c
+> @@ -393,16 +393,19 @@ static int realtek_gpio_probe(struct platform_device *pdev)
+>
+>  	raw_spin_lock_init(&ctrl->lock);
+>
+> -	if (dev_flags & GPIO_PORTS_REVERSED) {
+> -		gen_gc_flags = 0;
+> -		ctrl->bank_read = realtek_gpio_bank_read;
+> -		ctrl->bank_write = realtek_gpio_bank_write;
+> +	if (dev_flags & GPIO_PORTS_REVERSED)
+>  		ctrl->line_imr_pos = realtek_gpio_line_imr_pos;
+> -	} else {
+> +	else
+> +		ctrl->line_imr_pos = realtek_gpio_line_imr_pos_swapped;
+> +
+> +	if (device_is_big_endian(dev)) {
+>  		gen_gc_flags = GPIO_GENERIC_BIG_ENDIAN_BYTE_ORDER;
+>  		ctrl->bank_read = realtek_gpio_bank_read_swapped;
+>  		ctrl->bank_write = realtek_gpio_bank_write_swapped;
+> -		ctrl->line_imr_pos = realtek_gpio_line_imr_pos_swapped;
+> +	} else {
+> +		gen_gc_flags = 0;
+> +		ctrl->bank_read = realtek_gpio_bank_read;
+> +		ctrl->bank_write = realtek_gpio_bank_write;
+>  	}
+>
+>  	config = (struct gpio_generic_chip_config) {
+> --
+> 2.55.0
+>
 >
 
-He's fixing more stuff and removing trailing commas is just part of it. And as
-you can see - I did apply it and will apply Uwe's series too.
+Can you look at the sashiko report? I think it's right about this change
+possibly breaking existing devicetrees. Can we keep big-endian as the
+default?
 
 Bart
 
