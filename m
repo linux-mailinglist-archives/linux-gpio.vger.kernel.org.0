@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-40117-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40118-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id E8gbB41+V2pATQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-40117-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:35:25 +0200
+	id MlbfE81+V2pZTQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-40118-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:36:29 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C1F375E340
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:35:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E74E75E37B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 14:36:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="g3LXj/0N";
-	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40117-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40117-lists+linux-gpio=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=KOe2Bz3P;
+	spf=pass (mail.lfdr.de: domain of "linux-gpio+bounces-40118-lists+linux-gpio=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-gpio+bounces-40118-lists+linux-gpio=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 03B8A304CAD5
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 12:29:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A6FCB3054194
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2026 12:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0867747A0B4;
-	Wed, 15 Jul 2026 12:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACAA46AEF2;
+	Wed, 15 Jul 2026 12:29:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18473477E4A
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A55845BD7F
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 12:29:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784118579; cv=none; b=Ae9/bEAPQFkH93j9eRajTH4FFQN1JNgekUTazvx4N2y5dQCj/YuyUfE7JhF/GYGIWsw2q4sqzxvaTBIzgnN6ds/CIeX6ZmyoFN440NpVcchARU8lDJiP/WnBfch1B2R0BGT/Odj6LeILhx11x9IqYHq5Wzn2oz1K50hWFpz6OuQ=
+	t=1784118584; cv=none; b=UQYfQp2lWbzVyp56+CAXehafOVFOGfa1RwdtY03P3up/TAEHsd5TjrXS5va43rZOUayQRhprIfvaHUbJjfUWWYUpyX7YI/CmVGX6Gn9485+c2SovQxicErRaZWScr//ujwz1oClmNBheBke7GNAEYnOCyvsYfszrOFuwg7LK1Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784118579; c=relaxed/simple;
-	bh=7llQApEnqRUf+y2HW6MDlK9YjCFwPMY/ybzG2yeXDo0=;
+	s=arc-20240116; t=1784118584; c=relaxed/simple;
+	bh=KY8T9GZ0q7wGAoC2CqLDc1Ng1zwHtvMAIUMn0uKmUko=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TsEVhlhbY/ptphSGuiz1tdLyQIRRMOhHtuKyAECjWMv78EBOBBaqG4NPgXR0KVcFWibZx9bK6PTM+vApgoV7KomwbJrTePNJACGRT47J0vOvfW1Yv7RzuWuBE1s6IobPYU621X5BmTHf0bUMPVZkULn3valTfd//D0F57DGL2e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g3LXj/0N; arc=none smtp.client-ip=209.85.128.53
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-493bfe9f886so29094685e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 05:29:36 -0700 (PDT)
+	 MIME-Version; b=tiih6muEKJE7MVlIqRYcwk3IJ+U1yi0AWLhiBR3k3z40nkUyCNVxBZaMJUEqoyGdWSbXklomOavaSVvneX6bPWz+dCVMAucNbEwZiq3GH86WhrbRIznn6sYtVG8ugCycbSr2cRyW0wEwJZ+J4rizkjk4tuXYV5DpS7E0jLLoxns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOe2Bz3P; arc=none smtp.client-ip=209.85.128.45
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-493f45e206dso4496095e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2026 05:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784118575; x=1784723375; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784118578; x=1784723378; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=hGjJScr/bxpJuGG5Tma4ac3F09jinueH/67kipY/w2k=;
-        b=g3LXj/0NCWmbARhwAEQZcK2gY0s1UZYCXc7wrAZfXdZnYKE3hmoGGGFlZ+mu98cEC7
-         ieRkYbUqynfgtIsSAW+3siQt/6dj+x724lzWamWhG1RlO7jToxoOcwDtsg7irBOe49h+
-         EBUlM6TNLPa3QF7shS2eFbcAUeWgxYoT2MLP3492uNljHeLMiPKj6AALcG9v7VDb0OoO
-         jfSQH3kiL1sBlfar0e8TcEzZDjnk7EZYtAcTOztfiYdn03YM8YSh0w9Sb5lFk0y6skeB
-         SbITDURaSYzlrVRkJVZLscDq6Y6h5+NsdzG6r6RAhkEIIMBhSLWHORkDS68hEPAtxFGP
-         RuAQ==
+        bh=+ffpOVmxEgLoaCWkah67vyuTnecgePb6qoQjLtT9PDs=;
+        b=KOe2Bz3PFqwuUxq9Nd2YZders41XCYGAxnEk22UdkJ9P5rpQhg0jSNTgNu87sLEO2I
+         fAWK1ON5mo/6nMsGB4CAdVIqAN29JNJfKCP3wZ8SJBIjDotQg7fBBGkmvIpJbVjKCt7Y
+         Dh4VGJQruFxRL7IDfqzPSMPSewhSOSPRJp/A1hEKzxChtik0qvAs9q3Lc40CtvCfBbxO
+         ng86BzcMT9i2rkODe62TfxXKb0XZhkACZEvDW9L25Lb+cVdTO9L+M21rBE2fRGAl/J59
+         IFqRoSyRhnrB+rnASS4FqTGuf1CfvIPcUIdutzTWSjpSHEeCCV72sFXJQrCz04kjwL8K
+         G3yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784118575; x=1784723375;
+        d=1e100.net; s=20251104; t=1784118578; x=1784723378;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=hGjJScr/bxpJuGG5Tma4ac3F09jinueH/67kipY/w2k=;
-        b=BZB2Q56PesL7bGqe6S9ka6ZUDi60jnmgUg8ZtDsrq7NE6HSRukmhODShB34TIqALmF
-         5r6KySFkB88NFeEmMlQta18p+AKEPahiDDRfQs8bIeaW5tynb6zmq6FyHNcr775eonhO
-         eG4tmgQWgJTBe7tiCCVv31+iAJbCIADHLWZMDP3i1b0QEs+yleFSwQ/4cevpgdV3mNsY
-         FCBTqalqQdDaYJrWxaEbZJ0XKERx+DH6lSlrzc4oe5Fo/RedL/60ea7Z/4XZe14StM10
-         yGa7FgZ4CyOkV7/twnb1sdDKHZzHCOvsM/1kbQdGqbBLHLlIA53URr4+zj0Jmjmho9aW
-         gMUA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq9HtKRLz3SC68WcTFVbaZSZU4PlnvafsZWsfF843ZPNu4HWmCizXz4f7eXqtKv4vklLEEZdhC/XhOF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJjZjuC9q+yvGs3GR32c1tDaOCxEzn+ZwsUmkFu/5Yx8uTWTcm
-	7kTfVZ3xq6POG1MYo+NYA6XvrhpfvqGny2QxTRvoJojp+tc1w2N/oqu0
-X-Gm-Gg: AfdE7ck6YTVUsZP8B5LRZkDEBhNDXTM53Fvuso3ykF9msFi7wIaq9ismSWdouP+B8VU
-	+VsmLGq6t5alA2et3WhqB7fq9GVJGtQg+zjgO1dl6OzCfYIN3U+afkE3GcjA5Ekoq8grywnDu2y
-	EiUwLsuOCCmGKbg4GXlB5gu0spHmE76XvbhXUQkSHDiFN2VKXrvv+1kvSZdrBRy5C2RfXrZwXIH
-	YSwyOHYi2Edk+nHrUX6+2MclU0slt0SrBPAgaGYhgIRsh93hwADCBTjCDprFKeBssXL2PYGPBhA
-	GHZNBJvW+wiMuveZ6gTEsdRqXe5hooV+aen/FeKWyVn/oRmPvPzgmzqVKnbhUOtuBO1GOlhrHCD
-	7dZEjDNLS+M3giWvmLPI3pkiOQkjLTLzGpN4HmhD8zmSczv6ttGp9ToJvW7Hv43+RqEAVM0h8fu
-	Yp7XOzEjJYlYYOxV62HqsLqpFWrELvqruMWA==
-X-Received: by 2002:a05:600c:3b20:b0:493:e974:41ac with SMTP id 5b1f17b1804b1-4953c168d09mr28802015e9.16.1784118574883;
-        Wed, 15 Jul 2026 05:29:34 -0700 (PDT)
+        bh=+ffpOVmxEgLoaCWkah67vyuTnecgePb6qoQjLtT9PDs=;
+        b=Id6FxzMDorfdLYhe22VF904Xf2syIqtxAkO48C0Ie5OHYlZU2b82Y6hCdN+TPSEw8i
+         D6rrWWhD6PyJzk+lNpApfof/jYPIeZocS64Zz+eqbVUbT+JxgFRYcfDTZcFuPRLwbTGS
+         hZFUkVzcVCj0/C9fqCMx6+J0CfDqTAln/StctPoJUvLupr1QC/DehtaGXYVLCvejF7gc
+         6NP4oGMi7V21MsL4aD66qO5nfw2DCnWBBqBraKTrFfVpWWtOcNrTkn3jfetWxPtZSWKe
+         h8HxH2zgLZ5XrVOUIUqihOhlk138e1+tfP+HBm/j6LI+aYEEQ4dn7FZKcKWGozn+fzcW
+         Zcrg==
+X-Forwarded-Encrypted: i=1; AHgh+RqjKjDZS59BbKEKmG1zimz2prSRQzZmkvFy/k3/bGOLTmhJJ4QTPf8Nihjx50cfBtPw+rjUZAfoOL8S@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBX57h+ph8hIVUY8K56ICA8eq6eFZ/JrbS1lUA5SJeenvO68c/
+	IyYjw8icbfNkk9O7kVGXGg0RYCBi/knlaKVkNXZ1XgwYcGX4Rv99p1A0
+X-Gm-Gg: AfdE7ckUKrr6wB4vRXfPGMTwbCR9qActysTET0cBHEV2Y/j+YjfKNrNE5rB1EQs4F/F
+	MsMjBlZ5NgSZM9T8K7AhjSLkQxRAUxb7tMBjbKGfkKCMVyLjJ23YA17cYhe+QkgNMVYSEU+esG9
+	OaXhtlWz/8VSe26+7x7QL3iSLOnN2NkseYfAJKPMLEkjRO9NoIqFR6GerQir8eRAlLccxXVdIps
+	nY8GRyuQQSlWrNK9oT2uM04/46O3yFvqImN8f8AEXuJBcpeZQ4gmT3T8175TMqYZ4mzSXeJcvYq
+	LejjHbBQ44a0fxfQGToZWN4UvafW/MfV3BxJhgaZjf58fajKfdepDPv28E6yMbCvmTUzbUvkfVI
+	wmKB6RW5Gzupkte7UEn6JgsFm8litb0jK4WGs2+L7Gz0GABNuQ48vDm8gmmwUmWOlpz65YtF2z9
+	BOWboAzkKq7SD5fN+4tkXvAEs=
+X-Received: by 2002:a05:600c:8b65:b0:493:f478:4c71 with SMTP id 5b1f17b1804b1-493f8885308mr177231885e9.7.1784118577373;
+        Wed, 15 Jul 2026 05:29:37 -0700 (PDT)
 Received: from taln60.nuvoton.co.il ([212.199.177.18])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4950a32a2casm216770715e9.12.2026.07.15.05.29.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4950a32a2casm216770715e9.12.2026.07.15.05.29.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2026 05:29:33 -0700 (PDT)
+        Wed, 15 Jul 2026 05:29:36 -0700 (PDT)
 From: Tomer Maimon <tmaimon77@gmail.com>
 To: andrew@codeconstruct.com.au,
 	linusw@kernel.org,
@@ -89,9 +89,9 @@ Cc: openbmc@lists.ozlabs.org,
 	venture@google.com,
 	yuenn@google.com,
 	benjaminfair@google.com
-Subject: [PATCH v1 2/8] pinctrl: npcm8xx: enable RMII outputs from RMII groups
-Date: Wed, 15 Jul 2026 15:29:17 +0300
-Message-Id: <20260715122923.1938327-3-tmaimon77@gmail.com>
+Subject: [PATCH v1 3/8] pinctrl: npcm8xx: support RG2 drive strength selection
+Date: Wed, 15 Jul 2026 15:29:18 +0300
+Message-Id: <20260715122923.1938327-4-tmaimon77@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260715122923.1938327-1-tmaimon77@gmail.com>
 References: <20260715122923.1938327-1-tmaimon77@gmail.com>
@@ -116,7 +116,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	FREEMAIL_CC(0.00)[lists.ozlabs.org,vger.kernel.org,gmail.com,google.com];
-	TAGGED_FROM(0.00)[bounces-40117-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-40118-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -137,118 +137,153 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1C1F375E340
+X-Rspamd-Queue-Id: 4E74E75E37B
 X-Rspamd-Action: no action
 
-NPCM8xx uses GCR_INTCR4 bits to release the R1, R2 and RMII3
-transmit outputs from Hi-Z.
+RG2 pins 110-113 and 208-209 do not use the per-bank ODSC bit that the
+driver relies on for the rest of the drive-strength handling. Their
+strength is encoded in GCR_DSCNT[7:6] and supports four values: 8, 12,
+16 and 24mA.
 
-Those bits need to follow the mandatory r1, r2 and rmii3 pin
-groups. The R1_OEn, R2_OEn and R3_OEn side groups are optional and
-should not be required just to enable RMII transmit outputs.
-
-Program the INTCR4 bits when the corresponding RMII groups are
-selected and clear them again when those pins switch back to GPIO or
-another shared function.
+Mark those pins as a dedicated drive-strength class and translate the
+pinconf get/set operations to the shared GCR_DSCNT field so the full
+hardware range becomes available.
 
 Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 ---
- drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 61 +++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 75 ++++++++++++++++++++---
+ 1 file changed, 67 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-index c859dca4b..1d5b3c648 100644
+index 1d5b3c648..8d7dfb326 100644
 --- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
 +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
-@@ -26,6 +26,7 @@
- #define NPCM8XX_GCR_SRCNT	0x068
- #define NPCM8XX_GCR_FLOCKR1	0x074
- #define NPCM8XX_GCR_DSCNT	0x078
-+#define NPCM8XX_GCR_INTCR4	0x0c0
- #define NPCM8XX_GCR_I2CSEGSEL	0x0e0
- #define NPCM8XX_GCR_MFSEL1	0x260
- #define NPCM8XX_GCR_MFSEL2	0x264
-@@ -78,6 +79,9 @@
- #define NPCM8XX_GPIO_PER_BANK	32
- #define NPCM8XX_GPIO_BANK_NUM	8
- #define NPCM8XX_GCR_NONE	0
-+#define NPCM8XX_INTCR4_R1_RMII_EN	BIT(12)
-+#define NPCM8XX_INTCR4_R2_RMII_EN	BIT(13)
-+#define NPCM8XX_INTCR4_RMII3_EN	BIT(14)
+@@ -82,6 +82,8 @@
+ #define NPCM8XX_INTCR4_R1_RMII_EN	BIT(12)
+ #define NPCM8XX_INTCR4_R2_RMII_EN	BIT(13)
+ #define NPCM8XX_INTCR4_RMII3_EN	BIT(14)
++#define NPCM8XX_GCR_DSCNT_RG2DS_SHIFT	6
++#define NPCM8XX_GCR_DSCNT_RG2DS_MASK	GENMASK(7, 6)
  
  #define NPCM8XX_DEBOUNCE_MAX		4
  #define NPCM8XX_DEBOUNCE_NSEC		40
-@@ -1796,6 +1800,61 @@ static const struct pinctrl_pin_desc npcm8xx_pins[] = {
- 	PINCTRL_PIN(251, "JM2/CP1_GPIO"),
- 	};
+@@ -1287,6 +1289,7 @@ static struct pinfunction npcm8xx_funcs[] = {
+ #define DRIVE_STRENGTH_LO_SHIFT		8
+ #define DRIVE_STRENGTH_HI_SHIFT		12
+ #define DRIVE_STRENGTH_MASK		GENMASK(15, 8)
++#define DSTR_RG2			BIT(16)
  
-+static u32 npcm8xx_rmii_output_enable_mask(unsigned int pin)
-+{
-+	switch (pin) {
-+	case 178:
-+	case 179:
-+	case 180:
-+	case 181:
-+	case 182:
-+	case 193:
-+	case 201:
-+		return NPCM8XX_INTCR4_R1_RMII_EN;
-+	case 84:
-+	case 85:
-+	case 86:
-+	case 87:
-+	case 88:
-+	case 89:
-+	case 200:
-+		return NPCM8XX_INTCR4_R2_RMII_EN;
-+	case 110:
-+	case 111:
-+	case 209:
-+	case 210:
-+	case 211:
-+	case 214:
-+	case 215:
-+		return NPCM8XX_INTCR4_RMII3_EN;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static void npcm8xx_set_rmii_output_enable(struct regmap *gcr_regmap,
-+					   const unsigned int *pin,
-+					   int pin_number, int mode)
-+{
-+	u32 mask = 0;
-+	u32 val = 0;
-+	u32 bit;
-+	int i;
-+
-+	for (i = 0; i < pin_number; i++) {
-+		bit = npcm8xx_rmii_output_enable_mask(pin[i]);
-+		mask |= bit;
-+
-+		if ((mode == fn_r1 && bit == NPCM8XX_INTCR4_R1_RMII_EN) ||
-+		    (mode == fn_r2 && bit == NPCM8XX_INTCR4_R2_RMII_EN) ||
-+		    (mode == fn_rmii3 && bit == NPCM8XX_INTCR4_RMII3_EN))
-+			val |= bit;
-+	}
-+
-+	if (mask)
-+		regmap_update_bits(gcr_regmap, NPCM8XX_GCR_INTCR4, mask, val);
-+}
-+
- /* Enable mode in pin group */
- static void npcm8xx_setfunc(struct regmap *gcr_regmap, const unsigned int *pin,
- 			    int pin_number, int mode)
-@@ -1834,6 +1893,8 @@ static void npcm8xx_setfunc(struct regmap *gcr_regmap, const unsigned int *pin,
- 						   BIT(cfg->bit4) : 0);
- 		}
- 	}
-+
-+	npcm8xx_set_rmii_output_enable(gcr_regmap, pin, pin_number, mode);
+ #define DSTR(lo, hi)	(((lo) << DRIVE_STRENGTH_LO_SHIFT) | \
+ 			 ((hi) << DRIVE_STRENGTH_HI_SHIFT))
+@@ -1419,10 +1422,10 @@ static const struct npcm8xx_pincfg pincfg[] = {
+ 	NPCM8XX_PINCFG(107,	i3c5, MFSEL3, 22,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(108,	sg1mdio, MFSEL4, 21,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(109,	sg1mdio, MFSEL4, 21,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+-	NPCM8XX_PINCFG(110,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		SLEW),
+-	NPCM8XX_PINCFG(111,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		SLEW),
+-	NPCM8XX_PINCFG(112,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+-	NPCM8XX_PINCFG(113,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
++	NPCM8XX_PINCFG(110,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
++	NPCM8XX_PINCFG(111,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
++	NPCM8XX_PINCFG(112,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
++	NPCM8XX_PINCFG(113,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
+ 	NPCM8XX_PINCFG(114,	smb0, MFSEL1, 6,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(115,	smb0, MFSEL1, 6,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+ 	NPCM8XX_PINCFG(116,	smb1, MFSEL1, 7,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		0),
+@@ -1513,8 +1516,8 @@ static const struct npcm8xx_pincfg pincfg[] = {
+ 	NPCM8XX_PINCFG(201,	r1, MFSEL3, 9,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		GPO),
+ 	NPCM8XX_PINCFG(202,	smb0c, I2CSEGSEL, 1,	fm0, MFSEL6, 16,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW),
+ 	NPCM8XX_PINCFG(203,	faninx, MFSEL3, 3,	spi1cs0, MFSEL3, 4,	fm1, MFSEL6, 17,	none, NONE, 0,		none, NONE, 0,		DSTR(8, 12)),
+-	NPCM8XX_PINCFG(208,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		SLEW), /* DSCNT */
+-	NPCM8XX_PINCFG(209,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		SLEW), /* DSCNT */
++	NPCM8XX_PINCFG(208,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	none, NONE, 0,		none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
++	NPCM8XX_PINCFG(209,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		DSTR_RG2 | SLEW),
+ 	NPCM8XX_PINCFG(210,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		DSTR(8, 12) | SLEW),
+ 	NPCM8XX_PINCFG(211,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	rmii3, MFSEL5, 11,	none, NONE, 0,		none, NONE, 0,		DSTR(8, 12) | SLEW),
+ 	NPCM8XX_PINCFG(212,	rg2, MFSEL4, 24,	ddr, MFSEL3, 26,	r3rxer, MFSEL6, 30,	none, NONE, 0,		none, NONE, 0,		DSTR(8, 12) | SLEW),
+@@ -1954,6 +1957,56 @@ static int npcm8xx_set_slew_rate(struct npcm8xx_gpio *bank,
+ 	return 0;
  }
  
- static int npcm8xx_get_slew_rate(struct npcm8xx_gpio *bank,
++static int npcm8xx_get_rg2_drive_strength(struct npcm8xx_pinctrl *npcm)
++{
++	u32 val;
++	int ret;
++
++	ret = regmap_read(npcm->gcr_regmap, NPCM8XX_GCR_DSCNT, &val);
++	if (ret)
++		return ret;
++
++	switch ((val & NPCM8XX_GCR_DSCNT_RG2DS_MASK) >>
++		NPCM8XX_GCR_DSCNT_RG2DS_SHIFT) {
++	case 0:
++		return 8;
++	case 1:
++		return 12;
++	case 2:
++		return 16;
++	case 3:
++		return 24;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int npcm8xx_set_rg2_drive_strength(struct npcm8xx_pinctrl *npcm, int nval)
++{
++	u32 val;
++
++	switch (nval) {
++	case 8:
++		val = 0;
++		break;
++	case 12:
++		val = 1;
++		break;
++	case 16:
++		val = 2;
++		break;
++	case 24:
++		val = 3;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return regmap_update_bits(npcm->gcr_regmap, NPCM8XX_GCR_DSCNT,
++				  NPCM8XX_GCR_DSCNT_RG2DS_MASK,
++				  val << NPCM8XX_GCR_DSCNT_RG2DS_SHIFT);
++}
++
+ static int npcm8xx_get_drive_strength(struct pinctrl_dev *pctldev,
+ 				      unsigned int pin)
+ {
+@@ -1962,10 +2015,13 @@ static int npcm8xx_get_drive_strength(struct pinctrl_dev *pctldev,
+ 		&npcm->gpio_bank[pin / NPCM8XX_GPIO_PER_BANK];
+ 	int gpio = pin % bank->chip.gc.ngpio;
+ 	unsigned long pinmask = BIT(gpio);
+-	int flg, val;
+-	u32 ds = 0;
++	int flg, ds;
++	u32 val;
+ 
+ 	flg = pincfg[pin].flag;
++	if (flg & DSTR_RG2)
++		return npcm8xx_get_rg2_drive_strength(npcm);
++
+ 	if (!(flg & DRIVE_STRENGTH_MASK))
+ 		return -EINVAL;
+ 
+@@ -1984,6 +2040,9 @@ static int npcm8xx_set_drive_strength(struct npcm8xx_pinctrl *npcm,
+ 	int gpio = BIT(pin % bank->chip.gc.ngpio);
+ 	int v;
+ 
++	if (pincfg[pin].flag & DSTR_RG2)
++		return npcm8xx_set_rg2_drive_strength(npcm, nval);
++
+ 	v = pincfg[pin].flag & DRIVE_STRENGTH_MASK;
+ 
+ 	if (DSLO(v) == nval)
 -- 
 2.34.1
 
